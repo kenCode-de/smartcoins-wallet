@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000">
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:onClick="backbutton"
+    android:text="Back"
+    />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From: "
+            android:textSize="20dp"
+            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="yasir-mobile"
+                android:textSize="20dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="To: "
+            android:textSize="20dp"
+            />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="muzzammil"
+                android:textSize="20dp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+
+        <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="BTS"
+                android:textSize="30dp"
+                android:gravity="center"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="000"
+                android:textSize="30dp"
+                android:layout_weight=".3"
+                android:layout_gravity="right"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="836.6557 BTS is available"
+                android:textSize="12dp"
+                android:layout_weight=".7"
+                android:layout_gravity="right"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Reward Points:"
+                android:textSize="20dp"
+                android:gravity="center"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="000"
+                android:textSize="30dp"
+                android:layout_weight=".3"
+                android:layout_gravity="right"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="836.6557 OBITS is available"
+                android:textSize="12dp"
+                android:layout_weight=".7"
+                android:layout_gravity="right"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#E0FFFF"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Remaing Balance:"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0.100 EUR(OBITS)"
+            android:gravity="center_vertical"
+            android:textAlignment="textEnd"
+            android:textSize="15dp"
+            />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:paddingTop="20dp">
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/seven" android:text="7" />
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/eight" android:text="8" />
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/nine" android:text="9" />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:paddingTop="20dp">
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/four" android:text="4" />
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/five" android:text="5" />
+        <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/six" android:text="6" />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:paddingTop="20dp">
+    <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/one" android:text="1" />
+    <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/two" android:text="2" />
+    <Button android:layout_width="55dp" android:layout_height="wrap_content" android:id = "@+id/three" android:text="3" />
+</LinearLayout>
+
+</LinearLayout>
