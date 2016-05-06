@@ -18,14 +18,14 @@ public class BalancesActivity extends AppCompatActivity {
     }
 
     public void populateTabs() {
-        TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
-        TabHost.TabSpec tab1 = tabHost.newTabSpec("BALANCES");
-        TabHost.TabSpec tab2 = tabHost.newTabSpec("CONTACTS");
-        tab1.setIndicator("Tab1");
-        tab1.setContent(new Intent(this, BalancesActivity.class));
-        tab2.setIndicator("Tab2");
-        tab2.setContent(new Intent(this, BalancesActivity.class));
-        tabHost.addTab(tab1);
-        tabHost.addTab(tab2);
+//        TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
+//        TabHost.TabSpec tab1 = tabHost.newTabSpec("BALANCES");
+//        TabHost.TabSpec tab2 = tabHost.newTabSpec("CONTACTS");
+//        tab1.setIndicator("Tab1");
+//        tab1.setContent(new Intent(this, BalancesActivity.class));
+//        tab2.setIndicator("Tab2");
+//        tab2.setContent(new Intent(this, BalancesActivity.class));
+//        tabHost.addTab(tab1);
+//        tabHost.addTab(tab2);
     }
 }
