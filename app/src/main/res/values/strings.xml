@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Smartcoins Wallet</string>
+    <string name="logo">logo</string>
+    <string name="user_mobile">user_mobile</string>
+    <string name="receive">recieve</string>
+    <string name="camera">camera</string>
+    <string name="send">send</string>
+    <string name="receiveText">recieveText</string>
+    <string name="cameraText">cameraText</string>
+    <string name="sendText">sendText</string>
+    <string name="blockText">blockText</string>
+    <string name="status">status</string>
+    <string name="options">options</string>
+</resources>
