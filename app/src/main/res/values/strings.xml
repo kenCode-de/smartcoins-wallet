@@ -22,4 +22,10 @@
     <string name="agreement">Agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
+    <string name="kindly_create_account">Kindly create account</string>
+    <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
+    <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
+    <string name="mismatch_pin">mismatch pin</string>
+    <string name="sharePref_account_name">account_name</string>
+    <string name="txt_pin">pin</string>
 </resources>
