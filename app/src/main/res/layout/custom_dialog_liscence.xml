@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_height="250dp"
+        android:layout_width="wrap_content">
+    <TextView
+        android:id="@+id/dialog_txt_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Some times in your application, if you wanted to ask the user about taking a decision between yes or no in response of any particular action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog."/>
+</ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/ScrollView">
+
+        <Button
+            android:id="@+id/dialog_btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="@color/pink"
+            android:textColor="@color/white"
+            android:text="@string/cancel_and_exit"/>
+
+        <Button
+            android:id="@+id/dialog_btn_agree"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="@color/green"
+            android:textColor="@color/white"
+            android:text="@string/i_agree"/>
+    </LinearLayout>
+</RelativeLayout>
