@@ -93,8 +93,6 @@
 
     </LinearLayout>
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -113,4 +111,5 @@
             android:layout_weight="1.2"
             android:text="@string/block_number"/>
     </LinearLayout>
+
 </LinearLayout>
