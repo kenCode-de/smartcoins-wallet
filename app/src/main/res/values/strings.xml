@@ -28,4 +28,8 @@
     <string name="mismatch_pin">mismatch pin</string>
     <string name="sharePref_account_name">account_name</string>
     <string name="txt_pin">pin</string>
+    <string name="txt_brain_key">Brainkey</string>
+    <string name="txt_brain_key_info">This Brainkey is not compatible with BTS 1.0 \n (Use a backup file instead)</string>
+    <string name="create_wallet">CREATE WALLET</string>
+    <string name="cancel">CANCEL</string>
 </resources>
