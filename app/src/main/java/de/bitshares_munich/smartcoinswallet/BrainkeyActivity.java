@@ -1,6 +1,8 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ public class BrainkeyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brainkey);
         ButterKnife.bind(this);
+        etBrainKey.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
 
     }
 
@@ -45,6 +48,19 @@ public class BrainkeyActivity extends BaseActivity {
         } else if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
         } else {
+            String temp = etBrainKey.getText().toString();
+            if (temp.contains(" ")) {
+                String arr[] = temp.split(" ");
+                if (arr.length == 16) {
+                    Intent intent = new Intent(getApplicationContext(), BalancesActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
+            }
 
         }
     }
