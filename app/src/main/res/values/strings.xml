@@ -11,4 +11,21 @@
     <string name="blockText">blockText</string>
     <string name="status">status</string>
     <string name="options">options</string>
+    <string name="account_create_register_or_import">ACCOUNT CREATE/REGISTER OR IMPORT</string>
+    <string name="txt_account_name">Account Name</string>
+    <string name="txt_6_digits_pin">6-digits PIN</string>
+    <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
+    <string name="create">CREATE</string>
+    <string name="existing_account">Existing Account</string>
+    <string name="v_1_0_beta">v 1.0 beta</string>
+    <string name="block_number">block#5957356</string>
+    <string name="agreement">Agreement</string>
+    <string name="cancel_and_exit">Cancel and Exit</string>
+    <string name="i_agree">I Agree</string>
+    <string name="kindly_create_account">Kindly create account</string>
+    <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
+    <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
+    <string name="mismatch_pin">mismatch pin</string>
+    <string name="sharePref_account_name">account_name</string>
+    <string name="txt_pin">pin</string>
 </resources>

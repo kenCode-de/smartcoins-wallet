@@ -68,26 +68,37 @@ public class SendScreen extends Activity{
    //     edto.setFilters(new InputFilter[]{filter});
         edto.addTextChangedListener(mTextEditorWatcher);
 
-        edto.setOnKeyListener(new View.OnKeyListener()
-        {
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                if (keyCode == KeyEvent.KEYCODE_DEL) {
-                    // this is for backspace
-                    Log.i("IME_TEST", "DEL KEY");
-                }
-                    //check if the right key was pressed
+        edto.setOnKeyListener(new View.OnKeyListener() {
+                                      @Override         public boolean onKey(View v, int keyCode, KeyEvent event) {
+                                          //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+                                           if(keyCode == KeyEvent.KEYCODE_DEL){
+                                            Log.i("falcon","backspace Keypressed");
+                                           }
+                                          return false;
+                                      }
+                                  }
+        );
 
-                    if (keyCode == KeyEvent.KEYCODE_DEL) {
-                        editTextset = false;
-                       Log.i("aa","aa");
-                        return true;
-                    }
-
+//        edto.setOnKeyListener(new View.OnKeyListener()
+//        {
+//            public boolean onKey(View v, int keyCode, KeyEvent event)
+//            {
+//                if (keyCode == KeyEvent.KEYCODE_DEL) {
+//                    // this is for backspace
+//                    Log.i("IME_TEST", "DEL KEY");
 //                }
-                return false;
-            }
-        });
+//                    //check if the right key was pressed
+//
+//                    if (keyCode == KeyEvent.KEYCODE_DEL) {
+//                        editTextset = false;
+//                       Log.i("aa","aa");
+//                        return true;
+//                    }
+//
+////                }
+//                return false;
+//            }
+//        });
 
         handler = new Handler();
                 handler.postDelayed(new Runnable() {

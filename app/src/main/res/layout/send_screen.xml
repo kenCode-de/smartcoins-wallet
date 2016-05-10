@@ -112,7 +112,7 @@
                 android:textSize="15sp"
                 android:gravity="center"
                 android:id="@+id/popS"
-                android:textColor="#000"
+                android:textColor="#002"
                 />
             <Button
                 android:layout_width="wrap_content"
