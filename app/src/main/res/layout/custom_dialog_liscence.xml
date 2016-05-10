@@ -29,6 +29,7 @@
             android:layout_weight="0.50"
             android:background="@color/pink"
             android:textColor="@color/white"
+            android:textSize="13dp"
             android:text="@string/cancel_and_exit"/>
 
         <Button
@@ -38,6 +39,7 @@
             android:layout_weight="0.50"
             android:background="@color/green"
             android:textColor="@color/white"
+            android:textSize="13dp"
             android:text="@string/i_agree"/>
     </LinearLayout>
 </RelativeLayout>
