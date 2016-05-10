@@ -12,10 +12,13 @@
 bin/
 gen/
 out/
+.idea/
 
 # Gradle files
 .gradle/
 build/
+!build.gradle
+!.gitignore
 
 # Local configuration file (sdk path, etc)
 local.properties
