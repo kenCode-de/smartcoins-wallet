@@ -54,7 +54,8 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:maxLength="8"/>
+        android:gravity="top"
+        android:maxLines="8"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -76,6 +77,7 @@
             android:textColor="@color/white"
             android:layout_margin="10dp"
             android:layout_gravity="center"
+            android:id="@+id/btnCancel"
             android:text="@string/cancel"/>
         <Button
             android:layout_width="wrap_content"
@@ -85,6 +87,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:layout_gravity="center"
+            android:id="@+id/btnWallet"
             android:text="@string/create_wallet"/>
 
     </LinearLayout>

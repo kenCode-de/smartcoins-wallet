@@ -68,7 +68,9 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        showDialogLiscence();
+        if(!Helper.containKeySharePref(getApplicationContext(),getString(R.string.agreement))) {
+            showDialogLiscence();
+        }
     }
 
     private void showDialogLiscence() {
@@ -87,6 +89,7 @@ public class AccountActivity extends AppCompatActivity {
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.agreement),true);
                 dialog.cancel();
             }
         });
