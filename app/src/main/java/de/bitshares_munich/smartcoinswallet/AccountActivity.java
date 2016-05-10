@@ -1,5 +1,6 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -70,7 +72,8 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void showDialogLiscence() {
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this,R.style.stylishDialog);
+        dialog.setTitle(R.string.agreement);
         dialog.setContentView(R.layout.custom_dialog_liscence);
         Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +91,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
         dialog.setCancelable(false);
-        dialog.setTitle(R.string.agreement);
+
         dialog.show();
     }
 
