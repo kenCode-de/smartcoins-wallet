@@ -23,15 +23,12 @@
         </activity>
 
         <activity
-<<<<<<< HEAD
             android:name=".SendScreen"
             android:screenOrientation="portrait">
         </activity>
 
 
         <activity
-=======
->>>>>>> 646838efe4a8038387127dccdd872dcb50d16005
             android:name=".ExistingAccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
