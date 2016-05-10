@@ -34,4 +34,6 @@
     <string name="cancel">CANCEL</string>
     <string name="please_enter_brainkey">Please enter brainkey</string>
     <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
+    <string name="balances">Balances</string>
+    <string name="contacts">Contacts</string>
 </resources>

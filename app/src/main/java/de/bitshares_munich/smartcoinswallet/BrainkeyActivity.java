@@ -52,7 +52,7 @@ public class BrainkeyActivity extends BaseActivity {
             if (temp.contains(" ")) {
                 String arr[] = temp.split(" ");
                 if (arr.length == 16) {
-                    Intent intent = new Intent(getApplicationContext(), BalancesActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
