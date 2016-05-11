@@ -36,4 +36,7 @@
     <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
     <string name="balances">Balances</string>
     <string name="contacts">Contacts</string>
+    <string name="receive_uppercase">RECEIVE</string>
+    <string name="send_UpperCase">SEND</string>
+    <string name="transactions">Transactions</string>
 </resources>
