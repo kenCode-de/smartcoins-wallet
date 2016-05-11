@@ -11,12 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.koushikdutta.async.http.WebSocket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 
 
@@ -30,7 +36,8 @@ public class AccountActivity extends AppCompatActivity {
 
     @Bind(R.id.etPinConfirmation)
     EditText etPinConfirmation;
-
+    public int socketCounter;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
         validationAccountName();
+        gson = new Gson();
 
     }
 
@@ -66,13 +74,13 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if(!Helper.containKeySharePref(getApplicationContext(),getString(R.string.agreement))) {
+        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.agreement))) {
             showDialogLiscence();
         }
     }
 
     private void showDialogLiscence() {
-        final Dialog dialog = new Dialog(this,R.style.stylishDialog);
+        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
         dialog.setTitle(R.string.agreement);
         dialog.setContentView(R.layout.custom_dialog_liscence);
         Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
@@ -87,7 +95,7 @@ public class AccountActivity extends AppCompatActivity {
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.agreement),true);
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
                 dialog.cancel();
             }
         });
@@ -118,7 +126,7 @@ public class AccountActivity extends AppCompatActivity {
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
-        if (etAccountName.getText().toString().length() == 0) {
+      /*  if (etAccountName.getText().toString().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
         } else if (etPin.getText().length() < 5) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
@@ -129,13 +137,48 @@ public class AccountActivity extends AppCompatActivity {
         } else {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.sharePref_account_name), etAccountName.getText().toString());
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
+        }*/
+        //SocketCounter 1 (Database) SocketCounter 2 (History)
+        socketCounter = 0;
+        if (Application.webSocketG.isOpen()) {
+            Application.webSocketG.send("{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}");
+            Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
+                public void onStringAvailable(String s) {
+                    if (s.contains("true")) {
+                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"database\",[]],\"id\":2}");
+                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}");
+                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}");
+                        socketCounter = 1;
+                    } else if (socketCounter == 1) {
+                        try {
+                            System.out.println("I got a string: " + s);
+                            JSONObject jsonObject = new JSONObject(s);
+                            int id = jsonObject.getInt("id");
+                            if (id == 2) {
+                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_database), jsonObject.getInt("result"));
+                            } else if (id == 3) {
+                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
+                            } else if (id == 4) {
+                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_history), jsonObject.getInt("result"));
+                            }
+                        } catch (JSONException e) {
+
+                        }
+
+                    }
+
+
+                }
+            });
         }
+
     }
 
     @OnClick(R.id.tvExistingAccount)
     public void existingAccount(TextView textView) {
-        Intent intent=new Intent(getApplicationContext(),ExistingAccountActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         startActivity(intent);
     }
+
 
 }

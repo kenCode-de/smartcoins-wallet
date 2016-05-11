@@ -27,4 +27,5 @@ dependencies {
     compile'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:design:23.3.0'
+    compile 'com.koushikdutta.async:androidasync:2.+'
 }

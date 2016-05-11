@@ -39,4 +39,7 @@
     <string name="receive_uppercase">RECEIVE</string>
     <string name="send_UpperCase">SEND</string>
     <string name="transactions">Transactions</string>
+    <string name="sharePref_database">database</string>
+    <string name="sharePref_network_broadcast">network_broadcast</string>
+    <string name="sharePref_history">history</string>
 </resources>
