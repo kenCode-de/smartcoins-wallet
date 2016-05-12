@@ -19,46 +19,67 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import de.bitshares_munich.utils.Helper;
+
 /**
- * Created by afnan on 5/6/16.
+ * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
 public class SendScreen extends Activity{
     Context context;
     Boolean setting=false;
     TextView addnum;
     View view;
+
+  //  @Bind(R.id.edto)
     EditText edto;
+
+ //   @Bind(R.id.popS)
     static TextView popView;
-    Handler handler;
-    Boolean editTextset = false;
+
+//    @Bind(R.id.webView)
+    WebView webView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.send_screen);
         context = getApplicationContext();
-        view = this.getWindow().getDecorView().findViewById(android.R.id.content);
-        popView = (TextView)findViewById(R.id.popS);
+        ButterKnife.bind(this);
 
-        edto = (EditText)findViewById(R.id.edto);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-              switch (v.getId()){
-                  case R.id.d1:
-                      break;
-                  case R.id.d2:
-                      break;
-                  default:{setting=false;
-                      if (addnum!=null)
-                          addnum.setBackgroundResource(0);}
-              }
-                return false;
-            }
-        });
+        view = this.getWindow().getDecorView().findViewById(android.R.id.content);
+
+       view.setOnTouchListener(OnTouchView);
+        edto = (EditText) findViewById(R.id.edto);
+        edto.addTextChangedListener(mTextEditorWatcher);
+
+       popView = (TextView) findViewById(R.id.popS);
+        webView = (WebView) findViewById(R.id.webView);
+
+        //edto = (EditText) findViewById(R.id.edto);
+     //   edto.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//        view.setOnTouchListener(new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//              switch (v.getId()){
+//                  case R.id.d1:
+//                      break;
+//                  case R.id.d2:
+//                      break;
+//                  default:{setting=false;
+//                      if (addnum!=null)
+//                          addnum.setBackgroundResource(0);}
+//              }
+//                return false;
+//            }
+//        });
 //        edto.setOnClickListener(new View.OnClickListener() {
 //                                    @Override
 //                                    public void onClick(View v) {
@@ -66,18 +87,20 @@ public class SendScreen extends Activity{
 //                                    }
 //        });
    //     edto.setFilters(new InputFilter[]{filter});
-        edto.addTextChangedListener(mTextEditorWatcher);
-
-        edto.setOnKeyListener(new View.OnKeyListener() {
-                                      @Override         public boolean onKey(View v, int keyCode, KeyEvent event) {
-                                          //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
-                                           if(keyCode == KeyEvent.KEYCODE_DEL){
-                                            Log.i("falcon","backspace Keypressed");
-                                           }
-                                          return false;
-                                      }
-                                  }
-        );
+//
+//        edto.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+//                                           @Override
+//                                           public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+//                                               //You can identify which key pressed buy checking keyCode value with KeyEvent.KEYCODE_
+//
+//                                               if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+//                                                   onEdittext();
+//                                               }
+//                                               return false;
+//                                           }
+//                                       }
+//        );
+    }
 
 //        edto.setOnKeyListener(new View.OnKeyListener()
 //        {
@@ -100,28 +123,28 @@ public class SendScreen extends Activity{
 //            }
 //        });
 
-        handler = new Handler();
-                handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(editTextset){
-                    String str = edto.getText().toString();
-                    str = str.replace("...", "");
-                    if(str.length()>10){
-                        str=str+"...";
-                        edto.setText(str);
-                        edto.setSelection(str.length());
-                    }
-                    editTextset = false;
-                }
-                handler.postDelayed(this, 1);
-
-            }
-        }, 1);
-    }
-    void editClick(){
-
-    }
+//        handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(editTextset){
+//                    String str = edto.getText().toString();
+//                    str = str.replace("...", "");
+//                    if(str.length()>10){
+//                        str=str+"...";
+//                        edto.setText(str);
+//                        edto.setSelection(str.length());
+//                    }
+//                    editTextset = false;
+//                }
+//                handler.postDelayed(this, 1);
+//
+//            }
+//        }, 1);
+   // }
+//    void editClick(){
+//
+//    }
 //    InputFilter filter = new InputFilter() {
 //        public CharSequence filter(CharSequence source, int start, int end,
 //                                   Spanned dest, int dstart, int dend) {
@@ -141,14 +164,33 @@ public class SendScreen extends Activity{
 //        }
 //    };
 
+         View.OnTouchListener OnTouchView = new View.OnTouchListener(){
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()){
+            case R.id.d1:
+                break;
+            case R.id.d2:
+                break;
+            default:{setting=false;
+                if (addnum!=null)
+                    addnum.setBackgroundResource(0);}
+        }
+        return false;
+    }
+        };
+
         private final TextWatcher mTextEditorWatcher = new TextWatcher() {
-        int total;String str;
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-        editTextset = true;
+            if (edto.getText().length() > 0) {
+
+                bitShareAccountName(40, Helper.md5(edto.getText().toString()));
+            }
+
+
         }
 
         public void afterTextChanged(Editable s) {
@@ -208,7 +250,8 @@ public class SendScreen extends Activity{
         if(addnumG.equals("000")){
             addnumG = "";
         }
-       addnum.setText(addnumG+number);
+        addnumG = addnumG+number;
+       addnum.setText(addnumG);
     }
     public void adding(View v){
         if (addnum!=null)
@@ -248,6 +291,13 @@ public class SendScreen extends Activity{
     }
     public static void popShow(String str){
         popView.setText(str);
+    }
+
+    private void bitShareAccountName(int size, String encryptText) {
+        String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
 
 }

@@ -6,14 +6,23 @@
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60sp"
         android:background="#0099D5">
 <Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="30sp"
+    android:layout_height="30sp"
     android:onClick="backbutton"
-    android:text="Back"
+    android:background="@drawable/righticon"
+    android:layout_gravity="center"
+    android:layout_marginLeft="20sp"
     />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logoicon"
+            android:layout_gravity="center"
+
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="5sp"
@@ -80,12 +89,11 @@
                 android:scrollHorizontally="true"
 
                 />
-                <Button
-                    android:layout_width="70sp"
-                    android:layout_height="30sp"
-                    android:text=":Br"
+                <WebView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight=".6"
-                    android:layout_gravity="center"
+                    android:id="@+id/webView"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -102,24 +110,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal"
+
             >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:onClick="popupwindow"
+android:layout_gravity="center"
+                >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="BTS"
-                android:textSize="15sp"
+                android:textSize="17sp"
                 android:gravity="center"
                 android:id="@+id/popS"
                 android:textColor="#002"
+
                 />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:layout_width="20sp"
+                android:layout_height="match_parent"
+
+                />
+            <ImageView
+                android:layout_width="20sp"
+                android:layout_height="20sp"
                 android:layout_gravity="center"
-                android:onClick="popupwindow"
+                android:src="@drawable/spinnericon"
+
                 />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -258,25 +281,26 @@
         android:orientation="vertical"
         >
     <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/seven" android:text="7" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/eight" android:text="8" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/nine" android:text="9" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/seven" android:text="7" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/eight" android:text="8" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/nine" android:text="9" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
     </LinearLayout>
     <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/four" android:text="4" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/five" android:text="5" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/six" android:text="6" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/four" android:text="4" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/five" android:text="5" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/six" android:text="6" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
     </LinearLayout>
     </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <Button
+    <ImageButton
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:text="back"
-        android:background="@drawable/border"
+        android:layout_height="match_parent"
+        android:src="@drawable/erorricon"
         android:id="@+id/back"
+        android:background="@drawable/border"
         android:onClick="backbtn"
         android:backgroundTint="#DD4739"
         />
@@ -296,13 +320,13 @@
         android:orientation="vertical"
         >
     <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-   <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/one" android:text="1" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-    <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/two" android:text="2" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-    <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/three" android:text="3" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
+   <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/one" android:text="1" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+    <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/two" android:text="2" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+    <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/three" android:text="3" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
 </LinearLayout>
     <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="160sp" android:layout_height="50sp" android:id = "@+id/zero" android:text="0" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
-        <Button android:layout_width="80sp" android:layout_height="50sp" android:id = "@+id/doublezero" android:text="00" android:background="@drawable/border" android:onClick="digitClick" android:textSize="20sp"/>
+        <Button android:layout_width="160sp" android:layout_height="40sp" android:id = "@+id/zero" android:text="0" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/doublezero" android:text="00" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
     </LinearLayout>
     </LinearLayout>
 
@@ -391,12 +415,12 @@ android:id="@+id/dot"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="#fff"
-        android:textSize="15sp"
+        android:textSize="17sp"
         />
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SEND"
+        android:src="@drawable/sendicon"
         android:gravity="center"
         android:layout_weight="1"
         />
