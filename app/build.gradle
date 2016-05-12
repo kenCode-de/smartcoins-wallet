@@ -26,6 +26,9 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'me.dm7.barcodescanner:zxing:1.8.4'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.koushikdutta.async:androidasync:2.+'
 }
