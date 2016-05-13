@@ -16,6 +16,7 @@
         android:largeHeap="true"
         >
         <activity android:name=".AccountActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +37,16 @@
 
         <activity
             android:name=".qrcodeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".BrainkeyActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ImportBackupActivity"
             android:screenOrientation="portrait">
         </activity>
 
