@@ -40,7 +40,7 @@ public class BalancesFragment extends Fragment {
 
         }
         for (int j = 0; j < 50; j++) {
-            View customView1 = layoutInflater.inflate(R.layout.items_rows_balances, null);
+            View customView1 = layoutInflater.inflate(R.layout.items_rows_transactions, null);
             llTransactions.addView(customView1);
         }
 
