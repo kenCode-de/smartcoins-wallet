@@ -12,40 +12,255 @@
     tools:context="de.bitshares_munich.smartcoinswallet.SettingActivity"
     tools:showIn="@layout/activity_setting">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:weightSum="4"
+            android:id="@+id/l1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.5"
+                android:textSize="13sp"
+                android:text="@string/backup_asset"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#002"
+                    android:id="@+id/spinner1backup_asset"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:weightSum="4"
+            android:layout_below="@+id/l1"
+            android:id="@+id/l2"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.5"
+                android:textSize="13sp"
+                android:text="@string/taxable_country"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#002"
+                    android:id="@+id/spinner2taxable_country"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="50dp"
         android:weightSum="4"
-        android:background="@drawable/edittext_background_layer"
+        android:layout_below="@+id/l2"
+        android:id="@+id/l3"
+        android:layout_gravity="center"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/backup_asset"/>
+            android:layout_weight="2.5"
+            android:textSize="13sp"
+            android:text="@string/preferred_lang"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="horizontal"
-            android:weightSum="4"
+            android:layout_weight="1.5"
+            android:background="@drawable/edittext_background_layer"
             >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:textStyle="bold"
-            android:textSize="15dp"
-            android:textColor="#002"
-            android:text="Choose Asset"/>
-            <ImageView
-                android:layout_width="20sp"
-                android:layout_height="20sp"
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#002"
+                android:id="@+id/spinner3preferred_lang"
+                android:layout_weight="2"
                 android:layout_gravity="center"
-                android:src="@drawable/spinnericon"
-                android:layout_weight="1"
                 />
         </LinearLayout>
     </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:weightSum="4"
+            android:layout_below="@+id/l3"
+            android:id="@+id/l4"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.5"
+                android:textSize="13sp"
+                android:text="@string/date_time"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#002"
+                    android:id="@+id/spinner4date_time"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l4"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:id="@+id/l5"
+        >
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/check_for_updates"
+            android:layout_weight="1"
+            android:id="@+id/check_for_updates"
+            android:layout_marginTop="5dp"
+            android:onClick="onCheck"
+            />
+        <CheckBox
+            android:text="@string/automatically_install"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/automatically_install"
+            android:layout_marginTop="5dp"
+            android:onClick="onCheck"
+            />
+        <CheckBox
+            android:text="@string/require_pin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/require_pin"
+            android:layout_marginTop="5dp"
+            android:onClick="onCheck"
+            />
+        <CheckBox
+            android:text="@string/close_bitshare"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/close_bitshare"
+            android:layout_marginTop="5dp"
+            android:gravity="start"
+            android:onClick="onCheck"
+            />
+        <CheckBox
+            android:text="@string/always_donate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/always_donate"
+            android:layout_marginTop="5dp"
+            android:gravity="start"
+            android:onClick="onCheck"
+            />
+        <CheckBox
+            android:text="@string/hide_donations"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/hide_donations"
+            android:layout_marginTop="5dp"
+            android:gravity="start"
+            android:onClick="onCheck"
+            />
+
+    </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/l5"
+           android:layout_marginTop="10dp"
+            android:id="@+id/l6"
+           android:orientation="horizontal"
+           android:weightSum="4"
+           >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/backup"
+            android:text="@string/backup"
+            android:layout_weight="3"
+            android:onClick="onClickbtn"
+            />
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/backup_brainkey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_brainkey"
+            android:onClick="onClickbtn"
+            />
+       </LinearLayout>
+        <Button
+            android:id="@+id/secure_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/l6"
+            android:text="@string/secure_pin"
+            android:onClick="onClickbtn"
+            />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/secure_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/large_text"
+            />
+
+    </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
