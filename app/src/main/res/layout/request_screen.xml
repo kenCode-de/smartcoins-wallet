@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:background="#0099D5"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+        <Button
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:onClick="backbutton"
+            android:background="@drawable/righticon"
+            android:layout_gravity="center"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logoicon"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:id="@+id/d1"
+        android:layout_above="@+id/d2"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/seven" android:text="7" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/eight" android:text="8" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/nine" android:text="9" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+            </LinearLayout>
+            <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/four" android:text="4" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/five" android:text="5" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/six" android:text="6" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/erorricon"
+                android:id="@+id/back"
+                android:background="@drawable/border"
+                android:onClick="backbtn"
+                android:backgroundTint="#DD4739"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:id="@+id/d2"
+        android:layout_above="@+id/action"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/one" android:text="1" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/two" android:text="2" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/three" android:text="3" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
+                <Button android:layout_width="170sp" android:layout_height="70sp" android:id = "@+id/zero" android:text="0" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+                <Button android:layout_width="85sp" android:layout_height="70sp" android:id = "@+id/doublezero" android:text="00" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:text="."
+                android:background="@drawable/border"
+                android:id="@+id/dot"
+                android:textSize="20sp"
+                android:onClick="digitClick"
+                android:textAlignment="center"
+                />
+        </LinearLayout>
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:id="@+id/action"
+            android:layout_alignParentBottom="true"
+            >
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="70sp"
+                android:text="CANCEL"
+                android:layout_weight="1"
+                android:backgroundTint="#DD4739"
+                android:textColor="#fff"
+                />
+            <Button
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="70sp"
+                android:text="NEXT"
+                android:backgroundTint="#70882E"
+                android:textColor="#fff"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

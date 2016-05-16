@@ -66,44 +66,45 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
     @Override
     public void handleResult(Result rawResult) {
         // Do something with the result here
-        final StringBuilder sResult = new StringBuilder();
+ //       final StringBuilder sResult = new StringBuilder();
         mScannerView.stopCamera();
-        String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Content-Type","application/json");
-            client.get(toGet, null , new AsyncHttpResponseHandler(){
-                @Override
-            public void onStart() {
-                Log.i("euro", "start");
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
-                try {
-                    byte[] bytes = timeline;
-                    String s = new String(bytes);
-                    sResult.append(s);
-                    Log.i("euro", s);
-                }catch (Exception j){
-                    Log.i("euro", j+"");
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.i("euro", "failed");
-            }
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-                Log.i("euro", "retry");
-
-            }
-        });
-        parseStringtoJson(sResult.toString());
-        finishWithResult();
+        workingQrcode(rawResult.toString());
+//        String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
+//        AsyncHttpClient client = new AsyncHttpClient();
+//        client.addHeader("Content-Type","application/json");
+//            client.get(toGet, null , new AsyncHttpResponseHandler(){
+//                @Override
+//            public void onStart() {
+//                Log.i("euro", "start");
+//            }
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
+//                try {
+//                    byte[] bytes = timeline;
+//                    String s = new String(bytes);
+//                    sResult.append(s);
+//                    Log.i("euro", s);
+//                }catch (Exception j){
+//                    Log.i("euro", j+"");
+//                }
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+//                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+//                Log.i("euro", "failed");
+//            }
+//            @Override
+//            public void onRetry(int retryNo) {
+//                // called when request is retried
+//                Log.i("euro", "retry");
+//
+//            }
+//        });
+//        parseStringtoJson(sResult.toString());
+//        finishWithResult();
     }
 
-    void parseStringtoJson(String myJson){
+    HashMap<String,String> parseStringtoJson(String myJson){
         try {
             HashMap<String,String> parsedData = new HashMap<>();
             String getOne = returnParse(myJson,"json");
@@ -126,6 +127,7 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
             }
 
 
+            return parsedData;
 
 
         }
@@ -133,6 +135,7 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
             Log.i("kopi","error: " + j +"");
 
         }
+        return null;
     }
     String returnParse(String Json , String req) throws JSONException{
         JSONObject myJson = new JSONObject(Json);
@@ -140,13 +143,50 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
     }
 
 
-    private void finishWithResult() {
+    private void finishWithResult(HashMap<String,String> parseddata) {
         Bundle conData = new Bundle();
-     //   conData.putString("sResult", sResult);
+        Log.i("kamal","1:"+parseddata+"1");
+        conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent();
         intent.putExtras(conData);
         setResult(RESULT_OK, intent);
         finish();
+    }
+    void workingQrcode(String rawResult){
+        final StringBuilder sResult = new StringBuilder();
+        String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Content-Type","application/json");
+        client.get(toGet, null , new AsyncHttpResponseHandler(){
+            @Override
+            public void onStart() {
+                Log.i("euro", "start");
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
+                try {
+                    byte[] bytes = timeline;
+                    String s = new String(bytes);
+                    sResult.append(s);
+                    Log.i("euro", sResult.toString());
+                }catch (Exception j){
+                    Log.i("euro", j+"");
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                Log.i("euro", "failed");
+            }
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+                Log.i("euro", "retry");
+
+            }
+        });
+
+        finishWithResult(parseStringtoJson(sResult.toString()));
     }
 
 }

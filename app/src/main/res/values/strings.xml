@@ -54,7 +54,9 @@
     <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
     <string name="backup">BACKUP</string>
+    <string name="checkbox_donate">Donate 2 BTS to the Support Developers at Bitshares Munich</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
+
     <string name="secure_pin">EDIT YOUR 6-DIGIT PIN TO SECURE</string>
 
     <string name="large_text">

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
 //        decomposeAlgorithm.decompositionalgo("fd");
 //
 //        String r= "KqPVtdU4BtpnRTbJAwguTnSCYKCh1ZzQDeZzPXx8QEdUe1UiJbVZ3r6ktHgPgGUEDoRCtFVPcUWWhwbuwvcHrYb1QNan8ZbZayfct4SGN6eQvEgzYgPeGTC3Ei6js2JujQcSwFRWfQ64QTnxQSbnrbPJHTHGZW7Uz9nPLFZnA3ZM4RhNEkRwCkxmvLZT4LcBKayXpEaVfRZgp7LpHgpRtXAc9TkaGEGonCTym1KGobhyPJS4UuTEJJyXJRD7LuZP8ChtSuJGpbHgRvBAfSF7e9fmx3pmUmmhVQEmcwchcZzcGug33VJhoRcoxp57sG3V2CJCBVJTnkAHyzkFnQb4ppH9PHRoQf6jzGctpSFVf1rKhwebovKg8tqw9MZWQd9BYHeyLJZKDnYobrvK4DdA1YHejrpAmH6qTbqkeTKm9mmQHE54hQ5YXmvFK3qd2nzn5VxPNSVuNy4qsBz1b8BR5A5R25QR47yx4BxSv6a3DY6wK6UxQzc2N3TwZdqFXE8C6g2UKXswrkK5q4cKeY8VGJ";
@@ -117,8 +118,7 @@ public class MainActivity extends AppCompatActivity {
 //        catch (Exception e){
 //            Log.i("euro", "nahi hwa 2"+e);
 //        }
-            Intent intent = new Intent(getApplicationContext(), qrcodeActivity.class);
-    startActivity(intent);
+
     }
     //    Intent intent = new Intent(getApplicationContext(), qrcodeActivity.class);
 //    startActivityForResult(intent,90);
@@ -136,4 +136,18 @@ public class MainActivity extends AppCompatActivity {
 //                break;
 //        }
 //    }
+
+public void settings(View v){
+    Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+    startActivity(intent);
+}
+    public void sendscreen(View v){
+        Intent intent = new Intent(getApplicationContext(), SendScreen.class);
+        startActivity(intent);
+    }
+public void recieve(View v){
+    Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+    startActivity(intent);
+}
+
 }

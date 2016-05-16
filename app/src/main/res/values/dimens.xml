@@ -9,4 +9,7 @@
     <dimen name="app_bar_height">70sp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="layout_margin">35sp</dimen>
+    <dimen name="webview_margin">30sp</dimen>
+
 </resources>
