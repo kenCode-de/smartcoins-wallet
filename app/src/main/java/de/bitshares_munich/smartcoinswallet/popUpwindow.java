@@ -133,4 +133,15 @@ public class popUpwindow {
         popupWindow.showAsDropDown(v, -5, 0);
     }
 
+
+
+    //inialize in other activity like this
+//    popupwindow(v,selectBTSAmount);
+
+
+//    public void popupwindow(View v,TextView textview){
+//        popUpwindow p =new popUpwindow(this,textview);
+//        p.show(v);
+//    }
+
 }

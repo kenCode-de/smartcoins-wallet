@@ -39,6 +39,12 @@
 <activity android:name=".RecieveActivity" android:screenOrientation="portrait"
     android:theme="@style/AppTheme"
     />
+        <activity android:name=".RequestActivity" android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            />
+        <activity android:name=".PaymentRecieved" android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            />
         <activity
             android:name=".qrcodeActivity"
             android:screenOrientation="portrait">
