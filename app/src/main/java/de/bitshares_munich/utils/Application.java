@@ -23,15 +23,15 @@ public class Application extends android.app.Application {
     public static int socketCounter;
     public static Context context;
     static IAccount iAccount;
-    public static String blockHead;
+    public static String blockHead="";
 
     @Override
     public void onCreate() {
         super.onCreate();
         ButterKnife.setDebug(true);
         context = getApplicationContext();
+        blockHead="";
         webSocketConnection();
-        blockHead = "";
 
 
     }
@@ -79,7 +79,7 @@ public class Application extends android.app.Application {
                         socketCounter = 1;
                     } else if (socketCounter == 1) {
                         try {
-                            System.out.println("I got a string: " + s);
+                            //System.out.println("I got a string: " + s);
                             JSONObject jsonObject = new JSONObject(s);
                             int id = 0;
                             if (jsonObject.has("id")) {
@@ -122,8 +122,7 @@ public class Application extends android.app.Application {
                 break;
             }
         }
-        Log.v("qa",blockHead);
-        return blockHead = "block#"+json.substring(start, end - 1);
+        return blockHead = "block# "+json.substring(start, end);
     }
 
 }

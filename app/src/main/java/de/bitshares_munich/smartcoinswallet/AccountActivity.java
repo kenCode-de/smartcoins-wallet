@@ -12,6 +12,7 @@ import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +21,17 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.TinyDB;
 
 
 public class AccountActivity extends AppCompatActivity implements IAccount {
@@ -53,12 +58,15 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
     @Bind(R.id.tvAppVersion)
     TextView tvAppVersion;
 
+    @Bind(R.id.ivSocketConnected)
+    ImageView ivSocketConnected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
-        tvAppVersion.setText("v"+BuildConfig.VERSION_NAME+getString(R.string.beta));
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         validationAccountName();
         gson = new Gson();
         application = new Application();
@@ -92,7 +100,7 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
 
     }
 
-    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 3000) {
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(1000, 1000) {
         public void onTick(long millisUntilFinished) {
         }
 
@@ -187,7 +195,21 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.sharePref_account_name), etAccountName.getText().toString());
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
         }*/
-        //SocketCounter 1 (Database) SocketCounter 2 (History)
+        TinyDB tinydb = new TinyDB(getApplicationContext());
+        AccountDetails ad1 = new AccountDetails();
+        ad1.id=1;
+
+
+        ArrayList<AccountDetails> arrayList = new ArrayList<>();
+
+        arrayList.add(ad1);
+        arrayList.add(ad1);
+
+        tinydb.putListObject("allWinners",arrayList);
+
+
+        ArrayList<AccountDetails> ad = tinydb.getListObject("allWinners", AccountDetails.class);
+        ad.clear();
 
 
     }
@@ -224,12 +246,14 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             for (int i = 0; i < jsonArray.length(); i++) {
-                String temp = jsonArray.getJSONArray(i).getString(0);
+               final String temp = jsonArray.getJSONArray(i).getString(0);
                 if (temp.equals(etAccountName.getText().toString())) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tvErrorAccountName.setText(getString(R.string.account_name_already_exist));
+                            String acName=getString(R.string.account_name_already_exist);
+                            String format=String.format(acName,temp);
+                            tvErrorAccountName.setText(format);
                             tvErrorAccountName.setVisibility(View.VISIBLE);
                         }
                     });
@@ -243,20 +267,31 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
         }
     }
 
-    private void updateBlockNumberHead()
-    {
+    private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                tvBlockNumberHead.setText(Application.blockHead);
-                handler.postDelayed(this, 3000);
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen()) {
+                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                        tvBlockNumberHead.setText(Application.blockHead);
+
+
+                    } else {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Application.webSocketConnection();
+
+                    }
+
+
+                }
+                handler.postDelayed(this, 1000);
             }
         };
 
-        String versionName = BuildConfig.VERSION_NAME;
-        handler.postDelayed(updateTask, 3000);
+        handler.postDelayed(updateTask, 1000);
 
     }
 }

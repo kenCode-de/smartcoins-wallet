@@ -18,7 +18,8 @@
         android:largeHeap="true"
         android:name="de.bitshares_munich.utils.Application"
         >
-        <activity android:name=".AccountActivity">
+        <activity android:name=".AccountActivity"
+        android:theme="@style/MyMaterialTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
