@@ -35,6 +35,18 @@
         android:layout_height="50sp"
         android:onClick="recieve"
         android:text="recieve"
-
         android:id="@+id/recieve"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:onClick="request"
+        android:text="request"
+        android:id="@+id/request"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:onClick="payment"
+        android:text="payment recieved"
+        android:id="@+id/payment"
+        />
 </LinearLayout>

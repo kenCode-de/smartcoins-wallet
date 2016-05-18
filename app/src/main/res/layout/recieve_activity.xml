@@ -13,7 +13,7 @@
         <Button
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:onClick="backbutton"
+            android:id="@+id/backbutton"
             android:background="@drawable/righticon"
             android:layout_gravity="center"
             />
@@ -76,21 +76,22 @@
             android:background="@color/gray"
             android:id="@+id/blankline"
             />
-        <Button
+        <ImageView
             android:layout_alignParentLeft="true"
             android:layout_marginTop="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/blankline"
-            android:text="Reload"
+            android:src="@drawable/change_icon"
             />
-        <Button
+        <ImageView
             android:layout_alignParentRight="true"
             android:layout_marginTop="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/blankline"
-            android:text="share"
+            android:src="@drawable/share_icon"
+            android:id="@+id/sharebtn"
             />
         </RelativeLayout>
     </LinearLayout>

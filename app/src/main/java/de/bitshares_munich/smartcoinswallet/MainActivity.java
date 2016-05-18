@@ -149,5 +149,11 @@ public void recieve(View v){
     Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
     startActivity(intent);
 }
-
+    public void request(View v){
+        Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intent);
+    }public void payment(View v){
+        Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
+        startActivity(intent);
+    }
 }

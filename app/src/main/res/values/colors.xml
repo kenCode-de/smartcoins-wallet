@@ -9,12 +9,9 @@
     <color name="green">#147b00</color>
     <color name="black">#000000</color>
     <color name="skyblue">#BFD1FF</color>
+
     <color name="red">#ff0000</color>
-
-
-    <!--    <color name="colorPrimary">#125688</color>
-        <color name="colorPrimaryDark">#125688</color>
-        <color name="colorAccent">#c8e8ff</color>-->
+    
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
