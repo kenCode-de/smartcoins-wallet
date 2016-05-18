@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.bitshares_munich.smartcoinswallet">
+
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,8 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:largeHeap="true"
+        android:name="de.bitshares_munich.utils.Application"
         >
-        <activity android:name=".MainActivity">
+        <activity android:name=".AccountActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

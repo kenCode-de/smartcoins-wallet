@@ -1,9 +1,11 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -11,22 +13,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.koushikdutta.async.http.WebSocket;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountActivity extends AppCompatActivity implements IAccount {
 
     @Bind(R.id.etAccountName)
     EditText etAccountName;
@@ -36,16 +39,32 @@ public class AccountActivity extends AppCompatActivity {
 
     @Bind(R.id.etPinConfirmation)
     EditText etPinConfirmation;
-    public int socketCounter;
+
     Gson gson;
+    ProgressDialog progressDialog;
+    Application application;
+
+    @Bind(R.id.tvErrorAccountName)
+    TextView tvErrorAccountName;
+
+    @Bind(R.id.tvBlockNumberHead)
+    TextView tvBlockNumberHead;
+
+    @Bind(R.id.tvAppVersion)
+    TextView tvAppVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
+        tvAppVersion.setText("v"+BuildConfig.VERSION_NAME+getString(R.string.beta));
         validationAccountName();
         gson = new Gson();
+        application = new Application();
+        application.registerCallback(this);
+        progressDialog = new ProgressDialog(this);
+        updateBlockNumberHead();
 
     }
 
@@ -66,9 +85,39 @@ public class AccountActivity extends AppCompatActivity {
 
         if (etAccountName.getText().length() > 0) {
             myLowerCaseTimer.cancel();
+            myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
+            myAccountNameValidationTimer.start();
         }
 
+    }
+
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 3000) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            createBitShareAN(false);
+        }
+    };
+
+
+    public void createBitShareAN(boolean focused) {
+        if (!focused) {
+
+            if (etAccountName.getText().length() > 2) {
+                tvErrorAccountName.setText("");
+                tvErrorAccountName.setVisibility(View.GONE);
+                if (Application.webSocketG.isOpen()) {
+                    // int databaseIndent=Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.sharePref_database));
+                    String socketText = getString(R.string.lookup_account_a) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    Application.webSocketG.send(socketText);
+
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -139,38 +188,7 @@ public class AccountActivity extends AppCompatActivity {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
         }*/
         //SocketCounter 1 (Database) SocketCounter 2 (History)
-        socketCounter = 0;
-        if (Application.webSocketG.isOpen()) {
-            Application.webSocketG.send("{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}");
-            Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
-                public void onStringAvailable(String s) {
-                    if (s.contains("true")) {
-                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"database\",[]],\"id\":2}");
-                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}");
-                        Application.webSocketG.send("{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}");
-                        socketCounter = 1;
-                    } else if (socketCounter == 1) {
-                        try {
-                            System.out.println("I got a string: " + s);
-                            JSONObject jsonObject = new JSONObject(s);
-                            int id = jsonObject.getInt("id");
-                            if (id == 2) {
-                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_database), jsonObject.getInt("result"));
-                            } else if (id == 3) {
-                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
-                            } else if (id == 4) {
-                                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.sharePref_history), jsonObject.getInt("result"));
-                            }
-                        } catch (JSONException e) {
 
-                        }
-
-                    }
-
-
-                }
-            });
-        }
 
     }
 
@@ -180,5 +198,65 @@ public class AccountActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
+        }
+    }
 
+    private void hideDialog() {
+
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.hide();
+            }
+        }
+
+    }
+
+    @Override
+    public void checkAccount(JSONObject jsonObject) {
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("result");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                String temp = jsonArray.getJSONArray(i).getString(0);
+                if (temp.equals(etAccountName.getText().toString())) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvErrorAccountName.setText(getString(R.string.account_name_already_exist));
+                            tvErrorAccountName.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                    break;
+                }
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void updateBlockNumberHead()
+    {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                tvBlockNumberHead.setText(Application.blockHead);
+                handler.postDelayed(this, 3000);
+            }
+        };
+
+        String versionName = BuildConfig.VERSION_NAME;
+        handler.postDelayed(updateTask, 3000);
+
+    }
 }

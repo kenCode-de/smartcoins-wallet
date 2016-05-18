@@ -149,4 +149,26 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="txt_validating_account">Validating account...</string>
+    <string name="validating_account">Validating Account...</string>
+    <string name="account_name_should_be_longer">Account name should be longer</string>
+    <string name="account_name_already_exist">Account Name already exist</string>
+    <string name="login_api">{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
+    </string>
+    <string name="database_indentifier">
+        {\"method\":\"call\",\"params\":[1,\"database\",[]],\"id\":2}
+    </string>
+    <string name="network_broadcast_identifier">
+        {\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}
+    </string>
+    <string name="history_identifier">{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}
+    </string>
+    <string name="subscribe_callback">
+        {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
+    </string>
+    <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
+    <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
+    </string>
+    <string name="head_block_number">head_block_number</string>
+    <string name="beta">" beta"</string>
 </resources>
