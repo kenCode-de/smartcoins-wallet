@@ -54,7 +54,6 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ "
         android:gravity="top"
         android:maxLines="8"/>
 

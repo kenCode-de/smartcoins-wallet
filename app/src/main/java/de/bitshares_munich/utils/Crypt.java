@@ -38,7 +38,7 @@ public class Crypt {
     private static final String characterEncoding = "UTF-8";
     private static final String cipherTransformation = "AES/CBC/PKCS5Padding";
     private static final String aesEncryptionAlgorithm = "AES";
-    private static final String key = "1234567890123456";
+    private static final String key = "63f0d433-972f-4199-b51d-f56222270215";
     private static byte[] ivBytes = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     private static byte[] keyBytes;
 
