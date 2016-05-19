@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 /**
  * Created by Syed Muhammad Muzzammil on 13/5/16.
  */
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,6 +33,8 @@ public class SettingActivity extends AppCompatActivity  {
     final String preferred_lang = "preferred_lang";
     final String backup_asset = "backup_asset";
     final String date_time = "date_time";
+    final String register_new_account = "register_new_account";
+
     ArrayAdapter<String> iniAdapter;
 
     @Override
@@ -77,6 +80,12 @@ public class SettingActivity extends AppCompatActivity  {
         spinner4date_time.setOnItemSelectedListener(new SpinnerActivity(3));
         setSelection = selectionPostion(date_time);
         if(setSelection!=-1) spinner4date_time.setSelection(setSelection);
+        setCheckedButtons();
+        Spinner spinner5imported_created_accounts = (Spinner) findViewById(R.id.spinner5_imported_created_accounts);
+        createSpinner(spinner5imported_created_accounts);
+        spinner5imported_created_accounts.setOnItemSelectedListener(new SpinnerActivity(4));
+        setSelection = selectionPostion(register_new_account);
+        if(setSelection!=-1) spinner5imported_created_accounts.setSelection(setSelection);
         setCheckedButtons();
     }
     public void createSpinner(Spinner spinner){
@@ -124,15 +133,16 @@ public class SettingActivity extends AppCompatActivity  {
             default:break;
         }
     }
-    public void onClickbtn(View v){
-        switch (v.getId()){
-            case R.id.backup:
-                break;
-            case R.id.backup_brainkey:
-                break;
-            case R.id.secure_pin:
-                break;
-        }
+    public void onClickBackupBrainkeybtn(View v){
+
+    }
+    public void onClickSecurePinbtn(View v){
+                final Dialog dialog = new Dialog(SettingActivity.this);
+                dialog.setContentView(R.layout.settings_dialog);
+                dialog.show();
+    }
+    public void onClickBackbtn(View v){
+
     }
     Boolean isCHecked(View v){
         CheckBox checkBox = (CheckBox)v;
@@ -154,6 +164,9 @@ public class SettingActivity extends AppCompatActivity  {
                 break;
             case 3:
                 Helper.storeStringSharePref(this, date_time, value);
+                break;
+            case 4:
+                Helper.storeStringSharePref(this, register_new_account, value);
                 break;
         }
     }

@@ -34,6 +34,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  */
 public class qrcodeActivity extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
+    String sResult;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -138,14 +139,15 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         return null;
     }
     String returnParse(String Json , String req) throws JSONException{
+        if(Json.contains(req)){
         JSONObject myJson = new JSONObject(Json);
-        return  myJson.getString(req);
+        return  myJson.getString(req);}
+        else return "null";
     }
 
 
     private void finishWithResult(HashMap<String,String> parseddata) {
         Bundle conData = new Bundle();
-        Log.i("kamal","1:"+parseddata+"1");
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent();
         intent.putExtras(conData);
@@ -153,7 +155,6 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         finish();
     }
     void workingQrcode(String rawResult){
-        final StringBuilder sResult = new StringBuilder();
         String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Content-Type","application/json");
@@ -167,8 +168,9 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
                 try {
                     byte[] bytes = timeline;
                     String s = new String(bytes);
-                    sResult.append(s);
-                    Log.i("euro", sResult.toString());
+                    finishWithResult(parseStringtoJson(s));
+
+                    Log.i("euro", sResult);
                 }catch (Exception j){
                     Log.i("euro", j+"");
                 }
@@ -186,7 +188,6 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
             }
         });
 
-        finishWithResult(parseStringtoJson(sResult.toString()));
     }
 
 }

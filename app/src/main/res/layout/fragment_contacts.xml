@@ -1,14 +1,52 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#BFE5F5"
+    >
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="two"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/FirstLayout"
+        android:background="#FFFFFF"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/personicon"
+            android:id="@+id/pic1"
+            android:layout_marginRight="0sp"
+            android:layout_toLeftOf="@+id/pic2"
+            android:layout_marginBottom="5sp"
+            android:layout_marginTop="10sp"
+            />
+        <ImageView
+            android:id="@+id/pic2"
+            android:layout_marginBottom="5sp"
+            android:layout_marginTop="10sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/groupicon"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20sp"
+            />
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contactslist"
+        android:background="#FFFFFF"
+        >
+    </ListView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"/>
 
-</RelativeLayout>
+</LinearLayout>

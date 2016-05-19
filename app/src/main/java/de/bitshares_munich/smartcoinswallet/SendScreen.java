@@ -23,9 +23,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +36,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,6 +53,8 @@ public class SendScreen extends Activity {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";
+    ArrayAdapter<String> iniAdapter;
+    final String register_new_account = "register_new_account";
 
 
     @Bind(R.id.FirstChild)
@@ -87,8 +94,8 @@ public class SendScreen extends Activity {
     WebView webviewTo;
 
 
-    @Bind(R.id.editTextFrom)
-    TextView editTextFrom;
+//    @Bind(R.id.editTextFrom)
+//    TextView editTextFrom;
 
     @Bind(R.id.editTextTo)
     TextView editTextTo;
@@ -105,6 +112,9 @@ public class SendScreen extends Activity {
     @Bind(R.id.editTextAsset)
     EditText editTextAsset;
 
+    @Bind(R.id.spinnerFrom)
+    Spinner spinnerFrom;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +127,7 @@ public class SendScreen extends Activity {
     void init(){
         setCheckboxAvailabilty();
         setBackUpAsset();
+        setSpinner();
     }
     void screenOne(){
         FourthChild_LOYALTI.setVisibility(View.GONE);
@@ -130,12 +141,12 @@ public class SendScreen extends Activity {
     void screenThree(){
         SixthChild_Memo.setVisibility(View.GONE);
     }
-    @OnTextChanged(R.id.editTextFrom)
-    void onTextChangedFrom(CharSequence text) {
-        if (editTextFrom.getText().length() > 0) {
-            loadWebView(webviewFrom , 34, Helper.md5(editTextFrom.getText().toString()));
-        }
-    }
+//    @OnTextChanged(R.id.editTextFrom)
+//    void onTextChangedFrom(CharSequence text) {
+//        if (editTextFrom.getText().length() > 0) {
+//            loadWebView(webviewFrom , 34, Helper.md5(editTextFrom.getText().toString()));
+//        }
+//    }
 
     @OnTextChanged(R.id.editTextTo)
     void onTextChangedTo(CharSequence text) {
@@ -167,9 +178,8 @@ public class SendScreen extends Activity {
     }
     @OnClick(R.id.scanning)
     void OnScanning(){
-        //Intent intent = new Intent(context, qrcodeActivity.class);startActivityForResult(intent,90);
-        HashMap<String,String> hash =  parseStringtoJson("{\"json\":\"{\\\"to\\\":\\\"srk\\\",\\\"to_label\\\":\\\"srk\\\",\\\"currency\\\":\\\"BTS\\\",\\\"memo\\\":\\\"Order: 8f04a475-4c1a-4bb5-a548-b7e1fafaefa7 #sapos\\\",\\\"ruia\\\":\\\"1.3.541\\\",\\\"line_items\\\":[{\\\"label\\\":\\\"Your Purchase\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"1.6977125632925415E8\\\"},{\\\"label\\\":\\\"Donation fee\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"848859.0826970935\\\"}],\\\"note\\\":\\\"\\\",\\\"callback\\\":\\\"http://188.166.147.110:8000/transaction/1.2.88346/8f04a475-4c1a-4bb5-a548-b7e1fafaefa7\\\"}\",\"status\":\"success\"}");
-        onScanResult(hash);
+        Intent intent = new Intent(context, qrcodeActivity.class);startActivityForResult(intent,90);
+       // HashMap<String,String> hash =  parseStringtoJson("{\"json\":\"{\\\"to\\\":\\\"srk\\\",\\\"to_label\\\":\\\"srk\\\",\\\"currency\\\":\\\"BTS\\\",\\\"memo\\\":\\\"Order: 8f04a475-4c1a-4bb5-a548-b7e1fafaefa7 #sapos\\\",\\\"ruia\\\":\\\"1.3.541\\\",\\\"line_items\\\":[{\\\"label\\\":\\\"Your Purchase\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"1.6977125632925415E8\\\"},{\\\"label\\\":\\\"Donation fee\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"848859.0826970935\\\"}],\\\"note\\\":\\\"\\\",\\\"callback\\\":\\\"http://188.166.147.110:8000/transaction/1.2.88346/8f04a475-4c1a-4bb5-a548-b7e1fafaefa7\\\"}\",\"status\":\"success\"}");
     }
     @OnClick(R.id.selectBTSAmount)
     void onSelectBTSAmount(View v){
@@ -187,56 +197,18 @@ public class SendScreen extends Activity {
     void imageviewAsset(View v){
         popupwindow(v,selectBTSAsset);
     }
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
                     Bundle res = data.getExtras();
                      HashMap<String, String>  parseddata = (HashMap<String, String>) res.getSerializable("sResult");
+                    onScanResult(parseddata);
                     Log.i("kamal",parseddata+"");
                 }
                 break;
         }
     }
-    HashMap<String,String> parseStringtoJson(String myJson){
-        try {
-            HashMap<String,String> parsedData = new HashMap<>();
-            String getOne = returnParse(myJson,"json");
-            parsedData.put("to",returnParse(getOne,"to"));
-            parsedData.put("to_label",returnParse(getOne,"to_label"));
-            parsedData.put("currency",returnParse(getOne,"currency"));
-            parsedData.put("memo",returnParse(getOne,"memo"));
-            parsedData.put("ruia",returnParse(getOne,"ruia"));
-            parsedData.put("note",returnParse(getOne,"note"));
-            parsedData.put("callback",returnParse(getOne,"callback"));
-
-            String line_items = returnParse(getOne,"line_items");
-            JSONArray jsonRootObject = new JSONArray(line_items);
-
-            for(int i=0;i<jsonRootObject.length();i++) {
-                String jArray = jsonRootObject.get(i).toString();
-                parsedData.put("label"+i, returnParse(jArray, "label"));
-                parsedData.put("quantity"+i, returnParse(jArray, "quantity"));
-                parsedData.put("price"+i, returnParse(jArray, "price"));
-            }
-
-
-            return parsedData;
-
-
-        }
-        catch (JSONException j){
-            Log.i("kopi","error: " + j +"");
-
-        }
-        return null;
-    }
-    String returnParse(String Json , String req) throws JSONException{
-        JSONObject myJson = new JSONObject(Json);
-        return  myJson.getString(req);
-    }
-
-
     void onScanResult(HashMap<String,String> hash){
         editTextTo.setText(hash.get("to"));
        // memo_edit.setText(hash.get("memo"));
@@ -253,5 +225,48 @@ public class SendScreen extends Activity {
         else {FourthChild_LOYALTI.setVisibility(View.GONE);
             StatusTwo_LOYALTI.setVisibility(View.GONE);}
     }
+    public void createSpinner(Spinner spinner){
+        List<String> categories = new ArrayList<String>();
+        categories.add("Automobile");
+        categories.add("Business Services");
+        categories.add("Computers");
+        categories.add("Education");
+        categories.add("Personal");
+        categories.add("Travel");
 
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(dataAdapter);
+        iniAdapter = dataAdapter;
+    }
+    void setSpinner(){
+        createSpinner(spinnerFrom);
+        int setSelection=-1;
+        spinnerFrom.setOnItemSelectedListener(new SpinnerActivity(0));
+        setSelection = selectionPostion(register_new_account);
+        if(setSelection!=-1) spinnerFrom.setSelection(setSelection);
+    }
+    public int selectionPostion(String compareValue){
+        compareValue = Helper.fetchStringSharePref(this,compareValue);
+        if (!compareValue.equals(null)) {
+            return iniAdapter.getPosition(compareValue);
+        }
+        return -1;
+    }
+    public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
+        int selectedid;
+        SpinnerActivity(int id){
+            selectedid = id;
+        }
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            // On selecting a spinner item
+            String item = parent.getItemAtPosition(position).toString();
+            loadWebView(webviewFrom , 34, Helper.md5(item));        }
+        public void onNothingSelected(AdapterView<?> arg0) {
+            // TODO Auto-generated method stub
+        }
+    }
 }
