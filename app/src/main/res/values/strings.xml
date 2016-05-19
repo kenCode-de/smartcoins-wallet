@@ -49,15 +49,16 @@
     <string name="date_time">Display Dates and Times as</string>
     <string name="check_for_updates">Check for updates on startup</string>
     <string name="automatically_install">Automatically install major version</string>
-    <string name="require_pin">Require PIN to Open wallet</string>
+    <string name="require_pin">Require PIN/Pattern to send funds &amp; view memos</string>
     <string name="close_bitshare">Automatically close Bitshares Wallet after 3 minutes of inactivity</string>
     <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
-    <string name="backup">BACKUP</string>
+    <string name="backup">BACKUP.bin</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at Bitshares Munich</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
-
-    <string name="secure_pin">EDIT YOUR 6-DIGIT PIN TO SECURE</string>
+    <string name="imported_created_accounts">Imported/Created Accounts</string>
+    <string name="register_new_account">REGISTER NEW ACCOUNT</string>
+    <string name="secure_pin">EDIT PIN</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"

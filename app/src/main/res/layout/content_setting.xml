@@ -150,10 +150,63 @@
             </LinearLayout>
         </LinearLayout>
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:weightSum="4"
+            android:layout_below="@+id/l4"
+            android:id="@+id/l41"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2.5"
+                android:textSize="13sp"
+                android:text="@string/imported_created_accounts"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/fresh_icon"
+                    />
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#002"
+                    android:id="@+id/spinner5_imported_created_accounts"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/register_new_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/l41"
+            android:text="@string/register_new_account"
+            android:onClick="onClickbtn"
+            android:background="#70882E"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            />
+
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/l4"
+        android:layout_below="@+id/register_new_account"
         android:orientation="vertical"
         android:layout_marginTop="10dp"
         android:id="@+id/l5"
@@ -225,38 +278,89 @@
            android:layout_marginTop="10dp"
             android:id="@+id/l6"
            android:orientation="horizontal"
-           android:weightSum="4"
+           android:weightSum="3"
            >
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/backup"
-            android:text="@string/backup"
-            android:layout_weight="3"
-            android:onClick="onClickbtn"
-            />
-        <Button
             android:layout_weight="1"
-            android:id="@+id/backup_brainkey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/backup_brainkey"
-            android:onClick="onClickbtn"
-            />
+            android:weightSum="2"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:src="@drawable/backup_ic"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:onClick="onClickBackbtn"
+                />
+            <TextView
+                android:onClick="onClickBackbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/backup"
+                android:layout_gravity="center"
+
+                />
+        </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:weightSum="2"
+               android:orientation="vertical"
+               >
+               <ImageView
+                   android:layout_height="match_parent"
+                   android:layout_width="wrap_content"
+                   android:src="@drawable/brainkey_ic"
+                   android:layout_weight="1"
+                   android:layout_gravity="center"
+                   android:onClick="onClickBackupBrainkeybtn"
+                   />
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:onClick="onClickBackupBrainkeybtn"
+                   android:text="@string/backup_brainkey"
+                   android:gravity="center"
+
+                   />
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:weightSum="2"
+               android:orientation="vertical"
+               >
+               <ImageView
+                   android:layout_height="match_parent"
+                   android:layout_width="wrap_content"
+                   android:src="@drawable/pin_ic"
+                   android:layout_weight="1"
+                   android:layout_gravity="center"
+                   android:onClick="onClickSecurePinbtn"
+                   />
+               <TextView
+                   android:onClick="onClickSecurePinbtn"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:text="@string/secure_pin"
+                   android:layout_gravity="center"
+
+                   />
+           </LinearLayout>
        </LinearLayout>
-        <Button
-            android:id="@+id/secure_pin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/l6"
-            android:text="@string/secure_pin"
-            android:onClick="onClickbtn"
-            />
+
 
         <TextView
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/secure_pin"
+            android:layout_below="@+id/l6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/large_text"

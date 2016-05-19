@@ -49,4 +49,6 @@
         android:text="payment recieved"
         android:id="@+id/payment"
         />
+
+
 </LinearLayout>

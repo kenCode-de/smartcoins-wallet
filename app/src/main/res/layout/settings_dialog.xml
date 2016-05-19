@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:text="PIN"
+        android:textSize="20sp"
+        android:gravity="center|left"
+        android:textColor="#000"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"
+        android:id="@+id/id223"
+        android:layout_below="@+id/title"
+
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/id223"
+        android:id="@+id/l123"
+        >
+    <RadioButton
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:id="@+id/radiobtnFirst"
+        android:text="CREATE"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+
+        />
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"
+        android:id="@+id/id2"
+        android:layout_below="@+id/l123"
+
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/id2"
+        android:id="@+id/l1233"
+        >
+        <RadioButton
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:id="@+id/radiobtnSec"
+            android:text="EDIT"
+            android:textSize="20sp"
+            android:textColor="#000"
+            />
+    </LinearLayout>
+</RelativeLayout>

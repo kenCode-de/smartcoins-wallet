@@ -69,25 +69,34 @@
                     android:id="@+id/webviewFrom"
                     android:layout_alignParentLeft="true"
                     />
-                <EditText
-                    android:layout_marginLeft="5sp"
-                    android:layout_marginRight="5sp"
-                    android:layout_width="match_parent"
-                    android:background="@null"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:layout_height="match_parent"
-                    android:id="@+id/editTextFrom"
-                    android:layout_toLeftOf="@+id/imageviewFrom"
-                    android:layout_toRightOf="@+id/webviewFrom"
-                    />
-                    <ImageView
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/imageviewFrom"
-                        android:layout_width="20sp"
+                    <Spinner
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/spinnericon"
-                        />
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginRight="5sp"
+                        android:layout_toRightOf="@+id/webviewFrom"
+                        android:id="@+id/spinnerFrom"
+                        >
+                    </Spinner>
+                <!--<EditText-->
+                    <!--android:layout_marginLeft="5sp"-->
+                    <!--android:layout_marginRight="5sp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:background="@null"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:maxLines="1"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:id="@+id/editTextFrom"-->
+                    <!--android:layout_toLeftOf="@+id/imageviewFrom"-->
+                    <!--android:layout_toRightOf="@+id/webviewFrom"-->
+                    <!--/>-->
+                    <!--<ImageView-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:id="@+id/imageviewFrom"-->
+                        <!--android:layout_width="20sp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/spinnericon"-->
+                        <!--/>-->
                 </RelativeLayout>
                 <Button
                     android:layout_width="match_parent"
@@ -156,24 +165,23 @@
                             android:maxLines="1"
                             android:layout_height="match_parent"
                             android:id="@+id/editTextTo"
-                            android:layout_toLeftOf="@+id/imageviewTo"
                             android:layout_toRightOf="@+id/webviewTo"
                             />
-                        <ImageView
-                            android:layout_alignParentRight="true"
-                            android:id="@+id/imageviewTo"
-                            android:layout_width="20sp"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/spinnericon"
-                            />
+                        <!--<ImageView-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:id="@+id/imageviewTo"-->
+                            <!--android:layout_width="20sp"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:src="@drawable/spinnericon"-->
+                            <!--/>-->
                     </RelativeLayout>
-                    <Button
+                    <ImageButton
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="4"
-                        android:background="@null"
-                        android:text="Camera icon"
+                        android:src="@drawable/photo_icon"
                         android:id="@+id/scanning"
+                        android:background="@null"
                         />
                 </LinearLayout>
 
