@@ -25,6 +25,7 @@
         android:singleLine="true"
         android:maxLines="1"
         android:layout_height="40dp"
+        android:text="123456"
         android:maxLength="6"/>
 
     <TextView
@@ -41,7 +42,9 @@
         android:singleLine="true"
         android:maxLines="1"
         android:layout_height="40dp"
+        android:text="123456"
         android:maxLength="6"/>
+
 
     <TextView
         android:layout_width="match_parent"
@@ -55,6 +58,7 @@
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
         android:gravity="top"
+        android:text="vaguity narine townlet rockaby taurian beadily cyan unbear adactyl dimble agamian upburst fasting amaltas dossal nexus"
         android:maxLines="8"/>
 
     <TextView
