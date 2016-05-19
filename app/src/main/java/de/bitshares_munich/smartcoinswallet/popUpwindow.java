@@ -1,7 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
 /**
- * Created by afnan on 5/9/16.
+ * Created by Syed Muhammad Muzzammil on 5/9/16.
  */
 import android.app.Activity;
 import android.content.Context;

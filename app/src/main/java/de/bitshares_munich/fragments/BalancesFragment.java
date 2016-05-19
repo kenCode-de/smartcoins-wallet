@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.MainActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;

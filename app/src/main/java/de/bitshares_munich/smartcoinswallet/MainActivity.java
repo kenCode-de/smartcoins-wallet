@@ -7,32 +7,39 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import de.bitshares_munich.Interfaces.BalancesDelegate;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements BalancesDelegate{
+    Gson gson;
+    BalancesLoad balancesLoad;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
-            jsonToMap("{\"json\":\"{\\\"to\\\":\\\"srk\\\",\\\"to_label\\\":\\\"srk\\\",\\\"currency\\\":\\\"BTS\\\",\\\"memo\\\":\\\"Order: 8f04a475-4c1a-4bb5-a548-b7e1fafaefa7 #sapos\\\",\\\"ruia\\\":\\\"1.3.541\\\",\\\"line_items\\\":[{\\\"label\\\":\\\"Your Purchase\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"1.6977125632925415E8\\\"},{\\\"label\\\":\\\"Donation fee\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"848859.0826970935\\\"}],\\\"note\\\":\\\"\\\",\\\"callback\\\":\\\"http://188.166.147.110:8000/transaction/1.2.88346/8f04a475-4c1a-4bb5-a548-b7e1fafaefa7\\\"}\",\"status\":\"success\"}");
-        }catch (Exception e){
-
-        }
+        gson = new Gson();
+        balancesLoad = new BalancesLoad(this,this);
+        balancesLoad.get_json_account_balances("mbilal-knysys","7");
 
 //        decomposeAlgorithm.decompositionalgo("fd");
 //
@@ -168,7 +175,7 @@ public void recieve(View v){
         Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
         startActivity(intent);
     }
-    public static void jsonToMap(String t) throws JSONException {
+    HashMap<String, String> jsonToMap(String t) throws JSONException {
 
         HashMap<String, String> map = new HashMap<String, String>();
         JSONObject jObject = new JSONObject(t);
@@ -177,11 +184,125 @@ public void recieve(View v){
         while( keys.hasNext() ){
             String key = (String)keys.next();
             String value = jObject.getString(key);
-            map.put(key, value);
+            if(key.equals("asset_id")){
+                map.put(key, value);
+            }
+        }
+        return map;
+    }
+    HashMap<String, ArrayList<String>> jsonArrayToMap(String t) throws JSONException {
+        JSONArray myArray = new JSONArray(t);
+        ArrayList<String> array = new ArrayList<>();
+        HashMap<String, ArrayList<String>> pairs = new HashMap<String, ArrayList<String>>();
+        for (int i = 0; i < myArray.length(); i++) {
+            JSONObject j = myArray.optJSONObject(i);
+            Iterator it = j.keys();
+            while (it.hasNext()) {
+                String n = (String) it.next();
+                if(n.equals("asset_id")){
+                    array.add(j.getString(n));
+                    pairs.put("asset_id",array);
+                }
+            }
+        }
+        return pairs;
+    }
+    void getJson(String s){
+        HashMap<String, String> pair = new HashMap<String, String>();
+        HashMap<String, ArrayList<String>>  pairs = new HashMap<String,ArrayList<String>>();
+        try {
+            Object json = new JSONTokener(s).nextValue();
+            if (json instanceof JSONObject){
+                pair = jsonToMap(s);
+                if(pair.containsKey("asset_id"))
+                balancesLoad.get_asset(pair.get("asset_id"),"99");
+            }
+            else if(json instanceof JSONArray){
+                pairs = jsonArrayToMap(s);
+                if(pairs.containsKey("asset_id"))
+                balancesLoad.get_asset(pairs.get("asset_id"),"99");
+            }
+        }catch (Exception e){
 
         }
+    }
 
-        System.out.println("json : "+jObject);
-        System.out.println("map : "+map);
+    @Override
+    public void OnUpdate(String s,int id){
+        String convert;ArrayList<String> ids;ArrayList<String> precisons;ArrayList<String> symbols;
+        try {
+            if (id == 7) {
+                JSONObject jsonObject = new JSONObject(s);
+                if (jsonObject.has("result")) {
+                    convert = jsonObject.getString("result");
+                    getJson(convert);
+                }
+            }
+        }catch (Exception e){
+
+        }
+        if(id==99) {
+            String result = returnParse(s,"result");
+           if(checkJsonStatus(result)==1) {
+               ids = returnRootValues(result,"id");
+               precisons = returnRootValues(result, "precision");
+               symbols = returnRootValues(result, "symbol");
+               for (int i = 0; i < ids.size(); i++) {
+                    Log.i("falconBhai","found:id:"+ids.get(i));
+                   Log.i("falconBhai","found:precisons:"+precisons.get(i));
+                   Log.i("falconBhai","found:symbols:"+symbols.get(i));
+               }
+           }
+        }
+
+    }
+    String returnParse(String Json , String req){
+        try {
+            if(Json.contains(req)){
+                JSONObject myJson = new JSONObject(Json);
+                return  myJson.getString(req);}
+        }catch (Exception e){}
+        return "";
+    }
+    int checkJsonStatus(String Json){
+        try {
+            Object json = new JSONTokener(Json).nextValue();
+//                return  myJson.getString(req);
+            if (json instanceof JSONObject) {
+                return 0;
+            } else if (json instanceof JSONArray) {
+                return 1;
+            }
+        }catch (Exception e){
+            return -1;
+        }
+        return -1;
+    }
+    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req){
+        try {
+            JSONArray myArray = new JSONArray(Json);
+            ArrayList<String> array = new ArrayList<>();
+            HashMap<String, ArrayList<String>> pairs = new HashMap<String, ArrayList<String>>();
+            for (int i = 0; i < myArray.length(); i++) {
+                JSONObject j = myArray.optJSONObject(i);
+                Iterator it = j.keys();
+                while (it.hasNext()) {
+                    String n = (String) it.next();
+                    if (n.equals(req)) {
+                        array.add(j.getString(n));
+                        pairs.put(req, array);
+                    }
+                }
+
+            }
+            return pairs;
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+    ArrayList<String> returnRootValues(String json , String key) {
+        HashMap<String, ArrayList<String>> pairs = returnParseArray(json,key);
+        return  pairs.get(key);
     }
 }
