@@ -24,7 +24,7 @@ public class ExistingAccountActivity extends BaseActivity {
 
     @OnClick(R.id.tvBackup)
     public void importBackup(TextView textView) {
-        Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
-        startActivity(intent);
+       /* Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
+        startActivity(intent);*/
     }
 }

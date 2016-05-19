@@ -26,7 +26,7 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".AccountActivity"
-        android:theme="@style/MyMaterialTheme">
+            android:theme="@style/AppTheme">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,9 +47,9 @@
             android:theme="@style/AppTheme"
             >
         </activity>
-<activity android:name=".RecieveActivity" android:screenOrientation="portrait"
-    android:theme="@style/AppTheme"
-    />
+        <activity android:name=".RecieveActivity" android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            />
         <activity android:name=".RequestActivity" android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             />

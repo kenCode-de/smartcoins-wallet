@@ -5,10 +5,11 @@ package de.bitshares_munich.models;
  */
 public class AccountDetails {
 
-    public int id;
-    public String name;
-    public String wif;
-    public String pub;
-    public String brainKey;
-    public boolean isDefault;
+    public String status;
+    public String brain_key;
+    public String address;
+    public String account_id;
+    public String pub_key;
+    public String wif_key;
+    public String msg;
 }

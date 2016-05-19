@@ -162,6 +162,7 @@
     <string name="network_broadcast_identifier">
         {\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}
     </string>
+
     <string name="history_identifier">{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}
     </string>
     <string name="subscribe_callback">
@@ -172,4 +173,10 @@
     </string>
     <string name="head_block_number">head_block_number</string>
     <string name="beta">" beta"</string>
+    <string name="txt_no_internet_connection">No internet connection</string>
+    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
+    </string>
+    <string name="importing_your_wallet">Importing your wallet...</string>
+    <string name="pref_account_from_brainkey">account_from_brainkey</string>
 </resources>
