@@ -29,15 +29,16 @@ public class popUpwindow {
     String popUpContents[];
     PopupWindow popupWindow;
     Context context;
+    TextView textView;
 
-    popUpwindow(Context c) {
+    popUpwindow(Context c,TextView textview) {
         context = c;
         List<String> optionsList = new ArrayList<String>();
         optionsList.add("BTS::1");
         optionsList.add("CNY::2");
         optionsList.add("EUR::3");
         optionsList.add("USD::4");
-
+        textView = textview;
         popUpContents = new String[optionsList.size()];
 
         optionsList.toArray(popUpContents);
@@ -123,11 +124,24 @@ public class popUpwindow {
             // get the text and set it as the button text
             String selectedItemText = ((TextView) v).getText().toString();
 //
-            SendScreen.popShow(selectedItemText);
+           //SendScreen.popShow(selectedItemText);
+            textView.setText(selectedItemText);
         }
     }
     public void show(View v){
 
         popupWindow.showAsDropDown(v, -5, 0);
     }
+
+
+
+    //inialize in other activity like this
+//    popupwindow(v,selectBTSAmount);
+
+
+//    public void popupwindow(View v,TextView textview){
+//        popUpwindow p =new popUpwindow(this,textview);
+//        p.show(v);
+//    }
+
 }

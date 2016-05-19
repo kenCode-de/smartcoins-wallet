@@ -7,427 +7,449 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60sp"
-        android:background="#0099D5">
-<Button
-    android:layout_width="30sp"
-    android:layout_height="30sp"
-    android:onClick="backbutton"
-    android:background="@drawable/righticon"
-    android:layout_gravity="center"
-    android:layout_marginLeft="20sp"
-    />
+        android:background="#0099D5"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+        <Button
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:onClick="backbutton"
+            android:background="@drawable/righticon"
+            android:layout_gravity="center"
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/logoicon"
             android:layout_gravity="center"
-
             />
     </LinearLayout>
-    <LinearLayout
-        android:layout_marginTop="5sp"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="15dp"
-        >
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+        <LinearLayout
+            android:layout_marginTop="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/FirstChild"
+            >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:weightSum="10"
             >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="From: "
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="#00060A"
-            />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="yasir-mobile"
-                android:textSize="15sp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:orientation="horizontal"
-            >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="To: "
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:layout_weight=".8"
-            />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/edittext_background_layer"
-                android:orientation="horizontal"
-                android:layout_weight=".2"
-                >
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="15sp"
-                android:minWidth="50sp"
-                android:background="@null"
-                android:singleLine="true"
-                android:layout_weight=".4"
-                android:id="@+id/edto"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:scrollHorizontally="true"
-
-                />
-                <WebView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".6"
-                    android:id="@+id/webView"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        >
-
-        <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            >
-            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:onClick="popupwindow"
-android:layout_gravity="center"
-                >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="BTS"
-                android:textSize="17sp"
-                android:gravity="center"
-                android:id="@+id/popS"
-                android:textColor="#002"
-
-                />
-            <TextView
-                android:layout_width="20sp"
-                android:layout_height="match_parent"
-
-                />
-            <ImageView
-                android:layout_width="20sp"
-                android:layout_height="20sp"
-                android:layout_gravity="center"
-                android:src="@drawable/spinnericon"
-
-                />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="000"
-                android:textSize="20sp"
-                android:layout_weight=".4"
-                android:layout_gravity="right"
-                android:id="@+id/addnum1"
-                android:onClick="adding"
-                android:textColor="#000"
-                android:gravity="center"
-
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="836.6557 BTS is available"
-                android:textSize="12dp"
-                android:layout_weight=".6"
-                android:layout_gravity="right"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:background="#000"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Reward Points:"
+                android:text="From: "
                 android:textSize="15sp"
-                android:gravity="center"
-                android:textColor="#000"
-
+                android:textColor="#00060A"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_margin"
+                android:orientation="horizontal"
+                android:weightSum="5"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/edittext_background_layer"
+                    >
+                <WebView
+                    android:layout_width="@dimen/webview_margin"
+                    android:layout_height="@dimen/webview_margin"
+                    android:id="@+id/webviewFrom"
+                    android:layout_alignParentLeft="true"
+                    />
+                <EditText
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="5sp"
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextFrom"
+                    android:layout_toLeftOf="@+id/imageviewFrom"
+                    android:layout_toRightOf="@+id/webviewFrom"
+                    />
+                    <ImageView
+                        android:layout_alignParentRight="true"
+                        android:id="@+id/imageviewFrom"
+                        android:layout_width="20sp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/spinnericon"
+                        />
+                </RelativeLayout>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:background="@null"
+                    />
+            </LinearLayout>
+
+
+
+
+
+
+
 
         </LinearLayout>
 
+</LinearLayout>
         <LinearLayout
+            android:layout_marginTop="5sp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/FirstChild"
+            android:id="@+id/SecChild"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:weightSum="10"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To: "
+                    android:textSize="15sp"
+                    android:textColor="#00060A"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_margin"
+                    android:orientation="horizontal"
+                    android:weightSum="5"
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_background_layer"
+                        >
+                        <WebView
+                            android:layout_width="@dimen/webview_margin"
+                            android:layout_height="@dimen/webview_margin"
+                            android:id="@+id/webviewTo"
+                            android:layout_alignParentLeft="true"
+                            />
+                        <EditText
+                            android:layout_marginLeft="5sp"
+                            android:layout_marginRight="5sp"
+                            android:layout_width="match_parent"
+                            android:background="@null"
+                            android:singleLine="true"
+                            android:maxLines="1"
+                            android:layout_height="match_parent"
+                            android:id="@+id/editTextTo"
+                            android:layout_toLeftOf="@+id/imageviewTo"
+                            android:layout_toRightOf="@+id/webviewTo"
+                            />
+                        <ImageView
+                            android:layout_alignParentRight="true"
+                            android:id="@+id/imageviewTo"
+                            android:layout_width="20sp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/spinnericon"
+                            />
+                    </RelativeLayout>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:background="@null"
+                        android:text="Camera icon"
+                        android:id="@+id/scanning"
+                        />
+                </LinearLayout>
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_below="@+id/SecChild"
+            android:id="@+id/ThirdChild"
             >
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="000"
-                android:textSize="20sp"
-                android:layout_weight=".4"
-                android:layout_gravity="right"
-                android:id="@+id/addnum2"
-                android:onClick="adding"
-                android:textColor="#000"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Amount: "
+                android:textSize="15sp"
+                android:textColor="#00060A"
                 />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_margin"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <EditText
+                    android:layout_alignParentRight="true"
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:text="59"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextAmount"
+                    android:gravity="center"
+                    android:textAlignment="textEnd"
+                    android:layout_marginRight="100sp"
+                    />
+                <TextView
+                    android:layout_toLeftOf="@+id/imageviewAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="BTS"
+                    android:gravity="center"
+                    android:textSize="17sp"
+                    android:id="@+id/selectBTSAmount"
+                    />
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/imageviewAmount"
+                    android:layout_width="20sp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/spinnericon"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_below="@+id/ThirdChild"
+            android:text="Warning! only nn BTS is available"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:gravity="right"
+            android:id="@+id/warningStatus"
+            />
+        <LinearLayout
+            android:layout_marginTop="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/warningStatus"
+            android:id="@+id/FourthChild"
+            >
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="836.6557 OBITS is available"
-                android:textSize="12dp"
-                android:layout_weight=".6"
-                android:layout_gravity="right"
+                android:layout_height="wrap_content"
+                android:text="Loyalty Points: "
+                android:textSize="15sp"
+                android:textColor="#00060A"
                 />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_margin"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <EditText
+                    android:layout_alignParentRight="true"
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:text="18"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextLoyalty"
+                    android:gravity="center"
+                    android:textAlignment="textEnd"
+                    android:layout_marginRight="100sp"
+                    />
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="FABLES"
+                    android:gravity="center"
+                    android:textSize="17sp"
+                    android:layout_marginRight="7sp"
+                    android:id="@+id/selectBTSLoyalty"
+                    />
+
+            </RelativeLayout>
         </LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35sp"
-        android:orientation="horizontal"
-        android:background="#BFE4F4"
-        >
         <TextView
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
+            android:layout_below="@+id/FourthChild"
+            android:text="nn FABLES is available"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Remaing Balance:"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#000"
-            android:gravity="center_vertical"
-            android:layout_weight="1"
-            />
-        <TextView
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0.100 EUR(OBITS)"
-            android:gravity="center_vertical"
-            android:textAlignment="textEnd"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="#000"
-
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:clickable="true"
-        android:id="@+id/d1"
-        >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-    <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/seven" android:text="7" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/eight" android:text="8" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/nine" android:text="9" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-    </LinearLayout>
-    <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/four" android:text="4" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/five" android:text="5" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/six" android:text="6" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp" />
-    </LinearLayout>
-    </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/erorricon"
-        android:id="@+id/back"
-        android:background="@drawable/border"
-        android:onClick="backbtn"
-        android:backgroundTint="#DD4739"
-        />
-</LinearLayout>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:clickable="true"
-        android:id="@+id/d2"
-        >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-   <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/one" android:text="1" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-    <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/two" android:text="2" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-    <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/three" android:text="3" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-</LinearLayout>
-    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_gravity="left" android:gravity="left">
-        <Button android:layout_width="160sp" android:layout_height="40sp" android:id = "@+id/zero" android:text="0" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-        <Button android:layout_width="80sp" android:layout_height="40sp" android:id = "@+id/doublezero" android:text="00" android:background="@drawable/border" android:onClick="digitClick" android:textSize="25sp"/>
-    </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" android:text="."
-            android:background="@drawable/border"
-android:id="@+id/dot"
-            android:textSize="20sp"
-            android:onClick="digitClick"
-            android:textAlignment="center"
-            />
-    </LinearLayout>
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height=".5dp" android:background="#BFE4F4"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="60sp"
-        android:orientation="vertical"
-        android:layout_marginLeft="20sp"
-        android:layout_marginRight="20sp"
-        android:layout_marginTop="5sp"
-
-        >
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Memo : "
+            android:textSize="15sp"
+            android:gravity="right"
+            android:id="@+id/StatusTwo"
+            />
+        <LinearLayout
+            android:layout_marginTop="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/StatusTwo"
+            android:id="@+id/FifthChild"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Backup Asset: "
+                android:textSize="15sp"
+                android:textColor="#00060A"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_margin"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <EditText
+                    android:layout_alignParentRight="true"
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:text="344"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextAsset"
+                    android:gravity="center"
+                    android:textAlignment="textEnd"
+                    android:layout_marginRight="100sp"
+                    />
+                <TextView
+                    android:layout_toLeftOf="@+id/imageviewAsset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="OBITS"
+                    android:gravity="center"
+                    android:textSize="17sp"
+                    android:id="@+id/selectBTSAsset"
+                    />
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/imageviewAsset"
+                    android:layout_width="20sp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/spinnericon"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_below="@+id/FifthChild"
+            android:text="nn OBITS is available"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:gravity="right"
+            android:id="@+id/StatusThree"
+            />
+        <TextView
+            android:layout_below="@+id/StatusThree"
+            android:text="(nn BTS + n.nn OBITS = nnnn BTS )"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="15sp"
             android:gravity="center"
-
+            android:textColor="#000"
+            android:id="@+id/StatusFourth"
             />
         <LinearLayout
+            android:layout_marginTop="5sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/edittext_background_layer"
+            android:orientation="vertical"
+            android:layout_below="@+id/StatusFourth"
+            android:id="@+id/SixthChild"
             >
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="25sp"
-                android:text="Order : "
-                android:textSize="16sp"
-                android:textColor="#000"
-                android:layout_gravity="center"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Memo: "
+                android:textSize="15sp"
+                android:textColor="#00060A"
                 />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="25sp"
-            android:textSize="16sp"
-            android:layout_gravity="center"
-            android:background="@null"
-            android:hint="00000"
-            android:textColor="#000"
-            />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/layout_margin"
+                android:background="@drawable/edittext_background_layer"
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:background="@null"
+                    android:text="344"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editTextMemo"
+                    android:gravity="left"
+                    android:textSize="15sp"
+                    />
+            </RelativeLayout>
         </LinearLayout>
+        <CheckBox
+            android:text="@string/checkbox_donate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/SixthChild"
+            android:id="@+id/checkbox_donate"
+            android:layout_marginTop="5sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/layout_margin"
+            android:background="#DD4739"
+            android:layout_marginTop="10sp"
+            android:orientation="horizontal"
+            android:onClick="send"
+            android:clickable="true"
+            android:id="@+id/Sendbtn"
+            android:layout_below="@id/checkbox_donate"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="SEND"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="#fff"
+                android:textSize="17sp"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/sendicon"
+                android:gravity="center"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                />
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="40sp"
-    android:background="#DD4739"
-    android:layout_marginTop="10sp"
-    android:layout_marginLeft="20sp"
-    android:layout_marginRight="20sp"
-    android:orientation="horizontal"
-    android:onClick="send"
-    android:clickable="true"
-    >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="SEND"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:textColor="#fff"
-        android:textSize="17sp"
-        />
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/sendicon"
-        android:gravity="center"
-        android:layout_weight="1"
-        />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        />
-</LinearLayout>
-    </LinearLayout>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:background="#0099D5"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+        <Button
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:id="@+id/backbutton"
+            android:background="@drawable/righticon"
+            android:layout_gravity="center"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logoicon"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_above="@+id/LowerChild"
+            android:id="@+id/UpperChild"
+            android:layout_width="match_parent"
+            android:layout_height="400sp"
+            android:orientation="vertical"
+            android:weightSum="5"
+            android:layout_marginBottom="10sp"
+            android:layout_marginTop="10sp"
+            >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:weightSum="5"
+            android:layout_weight="1"
+            android:background="@drawable/simple_line"
+            >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="nnnn"
+            android:gravity="center_vertical|right"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:textColor="#000"
+            />
+
+            <TextView
+                android:textSize="20sp"
+                android:textColor="#000"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="BTS"
+                android:gravity="center_vertical|right"
+                android:layout_weight="4"
+                />
+
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:weightSum="2"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Payment Recieved"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:textColor="#000"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="5"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="4"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="From"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                    <TextView
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="\ttext"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="4"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="To"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                    <TextView
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="\ttext"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="4"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Amount"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                    <TextView
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="\tn.nnnn BTS"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="4"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Memo"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                    <TextView
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="\tText"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"
+                    android:weightSum="4"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="Fee"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                        android:textColor="#000"
+                        />
+                     <TextView
+                        android:layout_weight="2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:text="\tn.nnnn BTS"
+                        android:gravity="center_vertical" android:textSize="20sp"
+                         android:textColor="#000"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/LowerChild"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_alignParentBottom="true"
+            android:backgroundTint="#70882E"
+            android:gravity="center"
+            android:text="OK"
+            android:textColor="#fff"
+            />
+
+    </RelativeLayout>
+</LinearLayout>
