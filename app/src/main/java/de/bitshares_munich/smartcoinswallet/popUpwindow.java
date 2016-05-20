@@ -3,10 +3,8 @@ package de.bitshares_munich.smartcoinswallet;
 /**
  * Created by Syed Muhammad Muzzammil on 5/9/16.
  */
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,10 +31,18 @@ public class popUpwindow {
     popUpwindow(Context c,TextView textview) {
         context = c;
         List<String> optionsList = new ArrayList<String>();
-        optionsList.add("BTS::1");
-        optionsList.add("CNY::2");
-        optionsList.add("EUR::3");
-        optionsList.add("USD::4");
+        optionsList.add("AUD::1");
+        optionsList.add("BTC::2");
+        optionsList.add("BTS::3");
+        optionsList.add("CHF::4");
+        optionsList.add("EUR::5");
+        optionsList.add("GOLD::6");
+        optionsList.add("HKD::7");
+        optionsList.add("KRW::8");
+        optionsList.add("MXN::9");
+        optionsList.add("SGD::10");
+        optionsList.add("SILVER::11");
+        optionsList.add("TRY::12");
         textView = textview;
         popUpContents = new String[optionsList.size()];
 
