@@ -128,7 +128,7 @@ public class Helper {
 
     public static int fetchIntSharePref(Context context, String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(key, 9999);
+        return preferences.getInt(key, 0);
     }
 
 
