@@ -42,8 +42,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     ArrayList<AccountDetails> accountDetails;
     String accountId = "";
     String to ="";
-    String account_name ="";
-
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
 
@@ -106,6 +104,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @OnClick(R.id.recievebtn)
     public void GoToRecieveActivity() {
         Intent intent = new Intent(getActivity(), RecieveActivity.class);
+        intent.putExtra(getString(R.string.to),to);
+        intent.putExtra(getString(R.string.account_id),accountId);
         startActivity(intent);
     }
 

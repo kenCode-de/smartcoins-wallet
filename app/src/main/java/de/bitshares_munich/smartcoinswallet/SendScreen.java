@@ -1,29 +1,13 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.BinderThread;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,9 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.async.http.WebSocket;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,10 +26,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IExchangeRate;
+import de.bitshares_munich.models.AccountAssets;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.TinyDB;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
@@ -57,9 +42,10 @@ public class SendScreen extends Activity implements IExchangeRate {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";
-    ArrayAdapter<String> iniAdapter;
-    final String register_new_account = "register_new_account";
     Application application = new Application();
+    TinyDB tinyDB;
+    ArrayList<AccountDetails> accountDetails;
+    AccountAssets selectedAccountAsset;
 
 
     @Bind(R.id.FirstChild)
@@ -83,8 +69,8 @@ public class SendScreen extends Activity implements IExchangeRate {
     @Bind(R.id.StatusFourth)
     TextView StatusFourth;
 
-    @Bind(R.id.selectBTSAmount)
-    TextView selectBTSAmount;
+    @Bind(R.id.spAssets)
+    Spinner spAssets;
 
     @Bind(R.id.selectBTSAsset)
     TextView selectBTSAsset;
@@ -105,14 +91,17 @@ public class SendScreen extends Activity implements IExchangeRate {
     @Bind(R.id.editTextTo)
     TextView editTextTo;
 
+    @Bind(R.id.tvAmountStatus)
+    TextView tvAmountStatus;
+
     @Bind(R.id.checkbox_donate)
     CheckBox checkbox_donate;
 
     @Bind(R.id.editTextMemo)
     EditText memo_edit;
 
-    @Bind(R.id.editTextAmount)
-    EditText editTextAmount;
+    @Bind(R.id.etAmount)
+    EditText etAmount;
 
     @Bind(R.id.editTextAsset)
     EditText editTextAsset;
@@ -128,6 +117,11 @@ public class SendScreen extends Activity implements IExchangeRate {
         ButterKnife.bind(this);
         application.registerExchangeRateCallback(this);
 
+        tinyDB = new TinyDB(context);
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        if (accountDetails.size() == 1){
+            AccountDetails accountDetail = accountDetails.get(0);
+        }
         init();
         screenOne();
     }
@@ -161,7 +155,27 @@ public class SendScreen extends Activity implements IExchangeRate {
             loadWebView(webviewTo , 34, Helper.md5(editTextTo.getText().toString()));
         }
     }
+    @OnTextChanged(R.id.etAmount)
+    void onAmountChanged(CharSequence text) {
+        updateAmountStatus();
+    }
+    @OnItemSelected(R.id.spinnerFrom) void onItemSelected(int position) {
+        populateAssetsSpinner();
 
+    }
+    @OnItemSelected(R.id.spAssets) void onAssetsSelected(int position) {
+        updateAmountStatus();
+
+    }
+    public void updateAmountStatus(){
+        String selectedAsset = spAssets.getSelectedItem().toString();
+        Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+        if (etAmount.getText().length() > 0) {
+            tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), "nn", selectedAsset));
+        }else{
+            tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+        }
+    }
     private void loadWebView(WebView webView , int size, String encryptText) {
         String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = webView.getSettings();
@@ -189,14 +203,6 @@ public class SendScreen extends Activity implements IExchangeRate {
     void OnScanning(){
         Intent intent = new Intent(context, qrcodeActivity.class);startActivityForResult(intent,90);
        // HashMap<String,String> hash =  parseStringtoJson("{\"json\":\"{\\\"to\\\":\\\"srk\\\",\\\"to_label\\\":\\\"srk\\\",\\\"currency\\\":\\\"BTS\\\",\\\"memo\\\":\\\"Order: 8f04a475-4c1a-4bb5-a548-b7e1fafaefa7 #sapos\\\",\\\"ruia\\\":\\\"1.3.541\\\",\\\"line_items\\\":[{\\\"label\\\":\\\"Your Purchase\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"1.6977125632925415E8\\\"},{\\\"label\\\":\\\"Donation fee\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"848859.0826970935\\\"}],\\\"note\\\":\\\"\\\",\\\"callback\\\":\\\"http://188.166.147.110:8000/transaction/1.2.88346/8f04a475-4c1a-4bb5-a548-b7e1fafaefa7\\\"}\",\"status\":\"success\"}");
-    }
-    @OnClick(R.id.selectBTSAmount)
-    void onSelectBTSAmount(View v){
-        popupwindow(v,selectBTSAmount);
-    }
-    @OnClick(R.id.imageviewAmount)
-    void imageviewAmount(View v){
-        popupwindow(v,selectBTSAmount);
     }
     @OnClick(R.id.selectBTSAsset)
     void onSelectBTSAsset(View v){
@@ -226,8 +232,8 @@ public class SendScreen extends Activity implements IExchangeRate {
         if(hash.get("memo")!=null){
             SixthChild_Memo.setVisibility(View.GONE);
         }else SixthChild_Memo.setVisibility(View.VISIBLE);
-        editTextAmount.setText(hash.get("price0")+hash.get("price1"));
-        selectBTSAmount.setText(hash.get("currency"));
+        etAmount.setText(hash.get("price0")+hash.get("price1"));
+//        selectBTSAmount.setText(hash.get("currency"));
         String loyaltypoints = hash.get("ruia");
         if(loyaltypoints!=null) {selectBTSLoyalty.setText(loyaltypoints);
             FourthChild_LOYALTI.setVisibility(View.VISIBLE);
@@ -236,36 +242,38 @@ public class SendScreen extends Activity implements IExchangeRate {
         else {FourthChild_LOYALTI.setVisibility(View.GONE);
             StatusTwo_LOYALTI.setVisibility(View.GONE);}
     }
-    public void createSpinner(Spinner spinner){
-        List<String> categories = new ArrayList<String>();
-        categories.add("Automobile");
-        categories.add("Business Services");
-        categories.add("Computers");
-        categories.add("Education");
-        categories.add("Personal");
-        categories.add("Travel");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
-
+    public void createSpinner(List<String> spinnerArray, Spinner spinner){
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinner.setAdapter(dataAdapter);
-        iniAdapter = dataAdapter;
+    }
+    public void populateAccountsSpinner(){
+        List<String> spinnerArray =  new ArrayList<String>();
+        for (int i=0; i<accountDetails.size(); i++){
+            AccountDetails accountDetail = accountDetails.get(i);
+            spinnerArray.add(accountDetail.account_name);
+        }
+        createSpinner(spinnerArray,spinnerFrom);
+    }
+    public void populateAssetsSpinner(){
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
+        List<String> spinnerArray =  new ArrayList<String>();
+        for (int i=0; i<accountDetails.size(); i++){
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_name.equals(selectedAccount)){
+                for (int j=0; j<accountDetail.AccountAssets.size(); j++){
+                    selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                    spinnerArray.add(selectedAccountAsset.symbol);
+                }
+            }
+        }
+        createSpinner(spinnerArray,spAssets);
     }
     void setSpinner(){
-        createSpinner(spinnerFrom);
-        int setSelection=-1;
-        spinnerFrom.setOnItemSelectedListener(new SpinnerActivity(0));
-        setSelection = selectionPostion(register_new_account);
-        if(setSelection!=-1) spinnerFrom.setSelection(setSelection);
+        populateAccountsSpinner();
+        populateAssetsSpinner();
     }
-    public int selectionPostion(String compareValue){
-        compareValue = Helper.fetchStringSharePref(this,compareValue);
-        if (!compareValue.equals(null)) {
-            return iniAdapter.getPosition(compareValue);
-        }
-        return -1;
-    }
+
     public void get_exchange_rate(){
         if (application.webSocketG.isOpen()) {
 
@@ -288,20 +296,6 @@ public class SendScreen extends Activity implements IExchangeRate {
                     Toast.makeText(context, R.string.str_trading_pair_not_exist, Toast.LENGTH_SHORT).show();
                 }
             });
-        }
-    }
-    public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
-        int selectedid;
-        SpinnerActivity(int id){
-            selectedid = id;
-        }
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // On selecting a spinner item
-            String item = parent.getItemAtPosition(position).toString();
-            loadWebView(webviewFrom , 34, Helper.md5(item));        }
-        public void onNothingSelected(AdapterView<?> arg0) {
-            // TODO Auto-generated method stub
         }
     }
 }

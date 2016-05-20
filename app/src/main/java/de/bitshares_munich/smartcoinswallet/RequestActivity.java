@@ -21,11 +21,25 @@ public class RequestActivity extends Activity {
     @Bind(R.id.popwin1)
     TextView popwin;
 
+    String to = "";
+    String account_id = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_screen);
         ButterKnife.bind(this);
+        Intent intent = getIntent();
+
+
+        if (intent.hasExtra(getString(R.string.to))) {
+            to = intent.getStringExtra(getString(R.string.to));
+
+        }
+        if (intent.hasExtra(getString(R.string.account_id))) {
+            account_id = intent.getStringExtra(getString(R.string.account_id));
+
+        }
     }
 
     @OnClick(R.id.backbutton)
@@ -54,6 +68,8 @@ public class RequestActivity extends Activity {
             Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
             intent.putExtra(getString(R.string.price), editTextView.getText().toString());
             intent.putExtra(getString(R.string.currency), popwin.getText().toString());
+            intent.putExtra(getString(R.string.to), to);
+            intent.putExtra(getString(R.string.account_id), account_id);
             startActivity(intent);
         }
     }

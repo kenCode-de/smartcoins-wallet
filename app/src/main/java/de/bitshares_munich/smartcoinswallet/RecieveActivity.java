@@ -38,7 +38,7 @@ import retrofit2.Response;
 public class RecieveActivity extends Activity {
 
     @Bind(R.id.username)
-    TextView username;
+    TextView tvUsername;
 
     @Bind(R.id.notfound)
     TextView notfound;
@@ -48,6 +48,12 @@ public class RecieveActivity extends Activity {
 
     ProgressDialog progressDialog;
 
+    String price = "";
+    String currency = "";
+
+    String to = "";
+    String account_id = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +62,18 @@ public class RecieveActivity extends Activity {
         progressDialog = new ProgressDialog(this);
         showDialog("", "Loading...");
         Intent intent = getIntent();
-        String price = "";
-        String currency = "";
+
+
+        if (intent.hasExtra(getString(R.string.to))) {
+            to = intent.getStringExtra(getString(R.string.to));
+            tvUsername.setText("Pay to: "+to);
+
+        }
+        if (intent.hasExtra(getString(R.string.account_id))) {
+            account_id = intent.getStringExtra(getString(R.string.account_id));
+
+        }
+
         if (intent.hasExtra(getString(R.string.price))) {
             price = intent.getStringExtra(getString(R.string.price));
         }
@@ -68,14 +84,13 @@ public class RecieveActivity extends Activity {
         if (price.isEmpty()) {
             notfound.setText(getString(R.string.no_amount_requested));
         } else {
-            notfound.setText(price + " " + currency + " requested");
+            notfound.setText("Amount: "+price + " " + currency + " requested");
 
         }
 
-        String qrJson = creatingQrJson("yasir-mobile", "yasir-mobile", currency, price);
+        String qrJson = creatingQrJson(to, to, currency, price, account_id);
         getQrHashKey(this, qrJson);
     }
-
 
     @OnClick(R.id.backbutton)
     void onBackButtonPressed() {
@@ -100,10 +115,10 @@ public class RecieveActivity extends Activity {
         }
     }
 
-    private String creatingQrJson(String to, String toLabel, String currency, String price) {
+    private String creatingQrJson(String to, String toLabel, String currency, String price, String account_id) {
         String orderId = UUID.randomUUID().toString();
-        String accountId = "";
-        String callback = getString(R.string.qr_callback_url) + accountId + "/" + orderId;
+
+        String callback = getString(R.string.qr_callback_url) + account_id + "/" + orderId;
 
         String json = "{" +
                 "\"to\":\"" + to + "\"," +
@@ -208,6 +223,8 @@ public class RecieveActivity extends Activity {
     @OnClick(R.id.ivGotoKeypad)
     void gotoKeypad() {
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
+        intent.putExtra(getString(R.string.to),to);
+        intent.putExtra(getString(R.string.account_id),account_id);
         startActivity(intent);
     }
 
