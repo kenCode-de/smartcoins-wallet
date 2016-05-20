@@ -1,7 +1,7 @@
 package de.bitshares_munich.models;
 
 /**
- * Created by afnan on 5/19/16.
+ * Created by Syed Muhammad Muzzammil on 5/19/16.
  */
 
 
