@@ -4,11 +4,14 @@ import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.QrHash;
+import de.bitshares_munich.models.TransactionSmartCoin;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface IWebService {
 
@@ -26,7 +29,10 @@ public interface IWebService {
     Call<AccountDetails> getAccount(@Body Map<String, String> params);
 
     @Headers({"Content-Type: application/json"})
-    @POST("/get_qr_hash_json")
+    @POST("/get_qr_hash/")
     Call<QrHash> getQrHash(@Body Map<String, String> params);
+
+    @GET("/get_transactions/{accountId}/{orderId}")
+    Call<TransactionSmartCoin[]> getTransactionSmartCoin(@Path("accountId") String accountId, @Path("orderId") String orderId);
 
 }
