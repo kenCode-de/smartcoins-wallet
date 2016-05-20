@@ -57,6 +57,8 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
     @Bind(R.id.ivSocketConnected)
     ImageView ivSocketConnected;
 
+   // icon_setting
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -289,5 +291,11 @@ public class AccountActivity extends AppCompatActivity implements IAccount {
 
         handler.postDelayed(updateTask, 1000);
 
+    }
+
+    @OnClick(R.id.OnClickSettings)
+    void OnClickSettings(){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
     }
 }

@@ -1,5 +1,7 @@
 package de.bitshares_munich.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by qasim on 5/18/16.
  */
@@ -12,4 +14,6 @@ public class AccountDetails {
     public String pub_key;
     public String wif_key;
     public String msg;
+    public ArrayList<AccountAssets> AccountAssets;
+    public Boolean isSelected;
 }

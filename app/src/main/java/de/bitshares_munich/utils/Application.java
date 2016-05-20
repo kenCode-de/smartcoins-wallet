@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.R;
 
 /**
