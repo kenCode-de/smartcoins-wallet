@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class AccountDetails {
 
     public String status;
+    public String account_name;
     public String brain_key;
     public String address;
     public String account_id;
