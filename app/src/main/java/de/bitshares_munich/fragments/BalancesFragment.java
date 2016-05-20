@@ -30,6 +30,7 @@ import de.bitshares_munich.smartcoinswallet.MainActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
+import de.bitshares_munich.smartcoinswallet.TransactionActivity;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.TinyDB;
 
@@ -87,7 +88,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
      //   new AssestsActivty(getContext(),"yasir-ibrahim" , this);
         new AssestsActivty(getContext(),to , this);
-     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        new TransactionActivity(getContext(),accountId , this);
+
+        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tv_account_name.setText(to);
 
 
@@ -149,16 +152,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
        }
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         BalanceAssetsUpdate(sym,pre,am);
-//        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-//        if (accountDetails1.size() == 1) {
-//           accountDetails1.get(0).AccountAssets = accountAssets;
-//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).id);
-//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).precision);
-//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).symbol);
-//
-//        }
     }
-
     public void BalanceAssetsUpdate(final ArrayList<String> sym ,final ArrayList<String> pre ,final ArrayList<String>  am){
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -232,6 +226,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
         return  Double.toString(value/ok);
     }
+
 }
 
 

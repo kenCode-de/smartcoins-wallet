@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="de.bitshares_munich.smartcoinswallet"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -17,8 +17,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TabActivity"
-                  android:theme="@style/MyMaterialTheme">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,14 +28,14 @@
         </activity>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".TabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/MyMaterialTheme"/>
 
 
         <activity android:name=".AccountActivity"
-                  android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"/>
 
         <activity android:name=".MainActivity">
 
@@ -47,17 +47,17 @@
             android:name=".SendScreen"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-        >
+            >
         </activity>
         <activity android:name=".RecieveActivity" android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme"
-        />
+            android:theme="@style/AppTheme"
+            />
         <activity android:name=".RequestActivity" android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme"
-        />
+            android:theme="@style/AppTheme"
+            />
         <activity android:name=".PaymentRecieved" android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme"
-        />
+            android:theme="@style/AppTheme"
+            />
         <activity
             android:name=".qrcodeActivity"
             android:screenOrientation="portrait">
