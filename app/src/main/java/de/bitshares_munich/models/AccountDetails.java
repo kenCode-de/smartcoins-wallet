@@ -17,4 +17,6 @@ public class AccountDetails {
     public String msg;
     public ArrayList<AccountAssets> AccountAssets;
     public Boolean isSelected;
+    public String account_name;
+
 }

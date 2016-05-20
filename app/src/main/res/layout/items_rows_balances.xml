@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="BTS"/>
+            android:text=""/>
 
         <TextView
             android:layout_width="0dp"
@@ -25,7 +25,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="836.555575"/>
+            android:text=""/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="USD"/>
+            android:text=""/>
 
         <TextView
             android:layout_width="0dp"
@@ -42,7 +42,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="836.555575"/>
+            android:text=""/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
