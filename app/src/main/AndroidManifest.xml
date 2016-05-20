@@ -17,8 +17,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TabActivity"
-                  android:theme="@style/MyMaterialTheme">
+        <activity android:name=".SplashActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -28,10 +28,10 @@
         </activity>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".TabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/MyMaterialTheme"/>
 
 
         <activity android:name=".AccountActivity"

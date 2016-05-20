@@ -191,4 +191,7 @@
     <string name="amount_should_be_greater_than_zero">Amount should be greater than zero</string>
     <string name="no_amount_requested">No amount requested</string>
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
+    <string name="to">to</string>
+    <string name="account_id">accountId</string>
+    <string name="account_name">account_name</string>
 </resources>
