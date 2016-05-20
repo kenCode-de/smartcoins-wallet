@@ -14,12 +14,9 @@ import java.util.Iterator;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
-import de.bitshares_munich.models.AccountAssets;
-import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.utils.TinyDB;
 
 /**
- * Created by afnan on 5/19/16.
+ * Created by Syed Muhammad Muzzammil on 5/19/16.
  */
 public class AssestsActivty  implements BalancesDelegate {
     BalancesLoad balancesLoad;
@@ -27,7 +24,6 @@ public class AssestsActivty  implements BalancesDelegate {
     ArrayList<String> precisons;
     ArrayList<String> symbols;
     ArrayList<String> ammount;
-    TinyDB tinyDB;
     Context context;
     AssetDelegate assetDelegate;
 
@@ -36,6 +32,7 @@ public class AssestsActivty  implements BalancesDelegate {
         ids = new ArrayList<>();
         precisons = new ArrayList<>();
         symbols = new ArrayList<>();
+        ammount = new ArrayList<>();
         balancesLoad = new BalancesLoad(context,this);
         assetDelegate = instance;
         balancesLoad.get_json_account_balances(account_name,"999");
@@ -65,8 +62,9 @@ public class AssestsActivty  implements BalancesDelegate {
             Iterator it = j.keys();
             while (it.hasNext()) {
                 String n = (String) it.next();
-                if(n.equals("account")){
-                    ammount.add(j.getString(n));
+                if(n.equals("amount")){
+                  ammount.add(j.getString(n));
+                    Log.i("chama","212");
                 }
                 if(n.equals("asset_id")){
                     array.add(j.getString(n));
@@ -98,8 +96,8 @@ public class AssestsActivty  implements BalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id){
+        Log.i("uncle",s);
         String convert;
-        Log.i("anaml",s);
         try {
             if (id == 999) {
                 JSONObject jsonObject = new JSONObject(s);
@@ -112,11 +110,14 @@ public class AssestsActivty  implements BalancesDelegate {
 
         }
         if(id==99) {
+            Log.i("uncle","actiooi");
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
+                Log.i("uncle","actiooi");
                 ids = returnRootValues(result,"id");
                 precisons = returnRootValues(result, "precision");
                 symbols = returnRootValues(result, "symbol");
+                Log.i("uncle","actiweooi");
                 AddinAssets();
             }
 
@@ -172,38 +173,7 @@ public class AssestsActivty  implements BalancesDelegate {
         HashMap<String, ArrayList<String>> pairs = returnParseArray(json,key);
         return  pairs.get(key);
     }
-    void AddinAssets() {                Log.i("frg","kajl");
-        assetDelegate.isUpdate(ids,symbols,precisons,ammount);}
-//        ArrayList<AccountDetails> accountDetails;
-//        ArrayList<AccountAssets> accountAssets = new ArrayList<>();
-//        for(int i = 0 ; i < ids.size() ;i++){
-//            AccountAssets account1Assets = new AccountAssets();
-//            account1Assets.id = ids.get(i);
-//            account1Assets.precision = precisons.get(i);
-//            account1Assets.symbol = symbols.get(i);
-//            accountAssets.add(account1Assets);
-//            Log.i("frg",ids.get(i));
-//            Log.i("frg",precisons.get(i));
-//            Log.i("frg",symbols.get(i));
-//        }
-//
-//        accountDetails = tinyDB.getListObject(context.getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-//        Log.i("anaml", "2nd:" + accountDetails.toString() + "");
-//       if(accountDetails.size()==1) {
-//            accountDetails.get(0).isSelected = true;
-//            accountDetails.get(0).AccountAssets = accountAssets;
-//       }
-//        tinyDB.putListObject(context.getString(R.string.pref_account_from_brainkey), accountDetails);
-//        assetDelegate.isUpdate(true);
-//
-//        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(context.getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-//        Log.i("anaml", "2nd:" + accountDetails1.toString() + "");
-//        if (accountDetails1.size() == 1) {
-////            accountDetails1.get(0).isSelected = true;
-////            accountDetails1.get(0).AccountAssets = accountAssets;
-//            Log.i("anaml", "2nd:" + accountDetails1.get(0).isSelected + "");
-//            Log.i("anaml", "2nd:" + accountDetails1.get(0).AccountAssets.get(0).account_id + "");
-//            Log.i("anaml", "2nd:" + accountDetails1.get(0).AccountAssets.get(1).account_id + "");
-//        }
-//        }
+    void AddinAssets() {
+        assetDelegate.isUpdate(ids,symbols,precisons,ammount);
+    }
 }

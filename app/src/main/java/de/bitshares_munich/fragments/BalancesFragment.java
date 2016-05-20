@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+
+import com.google.android.gms.common.server.converter.StringToIntConverter;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 
@@ -34,6 +38,7 @@ import de.bitshares_munich.utils.TinyDB;
  */
 public class BalancesFragment extends Fragment implements AssetDelegate {
 
+    ArrayList<AccountDetails> accountDetails;
 
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
@@ -60,33 +65,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
         new AssestsActivty(getContext(),"mbilal-knysys" , this);
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-//        AccountAssets account1Assets = new AccountAssets();
-//        account1Assets.account_id = "034";
-//        AccountAssets account2Assets = new AccountAssets();
-//        account2Assets.account_id = "0344546";
-//        ArrayList<AccountAssets> accountAssets = new ArrayList<>();
-//        accountAssets.add(account1Assets);
-//        accountAssets.add(account2Assets);
-//
-//        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-//        if (accountDetails.size() == 1) {
-//            accountDetails.get(0).isSelected = true;
-//            accountDetails.get(0).AccountAssets = accountAssets;
-//            Log.i("opo", accountDetails.get(0).isSelected + "");
-//            Log.i("opo", accountDetails.get(0).AccountAssets.get(0).account_id + "");
+
+     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        for (int i = 0; i < 5; i++) {
+//            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+//            LinearLayout layout = (LinearLayout) customView;
+//            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+//            int count1 = layout1.getChildCount();
+//            TextView textView = (TextView) layout1.getChildAt(0);
+//            textView.setText("dfgfd");
+//            llBalances.addView(customView);
 //        }
-//        tinyDB.putListObject(getString(R.string.pref_account_from_brainkey), accountDetails);
-
-
-
-        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < 5; i++) {
-            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-
-            llBalances.addView(customView);
-
-        }
         for (int j = 0; j < 50; j++) {
             View customView1 = layoutInflater.inflate(R.layout.items_rows_transactions, null);
             llTransactions.addView(customView1);
@@ -116,43 +107,98 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void isUpdate(ArrayList<String> ids , ArrayList<String> sym ,ArrayList<String> pre , ArrayList<String>  am){
-        Log.i("anaml", "2nd:" + ids + "");
-        ArrayList<AccountDetails> accountDetails;
+        Log.i("uncle","aay1");
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
         for(int i = 0 ; i < ids.size() ;i++){
-            AccountAssets account1Assets = new AccountAssets();
-            account1Assets.id = ids.get(i);
-            account1Assets.precision = pre.get(i);
-            account1Assets.symbol = sym.get(i);
-            account1Assets.ammount = am.get(i);
+            AccountAssets accountAsset = new AccountAssets();
+            Log.i("uncle","aay1");
+            accountAsset.id = ids.get(i);
+            accountAsset.precision = pre.get(i);
+            accountAsset.symbol = sym.get(i);
+            accountAsset.ammount = am.get(i);
+            Log.i("uncle","aay1"+ids.get(i));
+            Log.i("uncle","aay1"+pre.get(i));
+            Log.i("uncle","aay1"+sym.get(i));
+           // Log.i("uncle","aay1"+am.get(i));
 
-            accountAssets.add(account1Assets);
-
+            accountAssets.add(accountAsset);
         }
-
-        accountDetails = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-        Log.i("anaml", "2nd:" + accountDetails.toString() + "");
        if(accountDetails.size()==1) {
             accountDetails.get(0).isSelected = true;
             accountDetails.get(0).AccountAssets = accountAssets;
+       } else {
+           for(int i = 0 ; i < accountDetails.size() ; i++){
+                if(accountDetails.get(i).isSelected){
+                    accountDetails.get(0).AccountAssets = accountAssets;
+                    break;
+                }
+           }
        }
-        tinyDB.putListObject(getString(R.string.pref_account_from_brainkey), accountDetails);
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+        BalanceAssetsUpdate(sym,pre,am);
+//        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
+//        if (accountDetails1.size() == 1) {
+//           accountDetails1.get(0).AccountAssets = accountAssets;
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).id);
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).precision);
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).symbol);
+//
+//        }
+    }
 
-        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-        Log.i("anaml", "2nd:" + accountDetails1.toString() + "");
-        if (accountDetails1.size() == 1) {
-           accountDetails1.get(0).AccountAssets = accountAssets;
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).isSelected + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(0).id + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(1).id + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(0).precision + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(1).precision + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(0).symbol + "");
-            Log.i("donyahoo", "2nd:" + accountDetails1.get(0).AccountAssets.get(1).symbol + "");
+    public void BalanceAssetsUpdate(final ArrayList<String> sym ,final ArrayList<String> pre ,final ArrayList<String>  am){
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+               // for (int i = 0; i < 5; i++) {
+                    View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+            LinearLayout layout = (LinearLayout) customView;
+            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+            TextView textView = (TextView) layout1.getChildAt(0);
+            textView.setText(sym.get(0));
+                TextView textView1 = (TextView) layout1.getChildAt(1);
+                textView1.setText(returnFromPower(pre.get(0),am.get(0)));
+                TextView textView2 = (TextView) layout1.getChildAt(2);
+                    textView2.setText(sym.get(1));
+                TextView textView3 = (TextView) layout1.getChildAt(3);
+                textView3.setText(returnFromPower(pre.get(1),am.get(1)));
+                llBalances.addView(customView);
+              //  }
+            }
+        });
 
+
+
+
+
+
+
+
+
+
+
+//        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        for (int i = 0; i < 5; i++) {
+////            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+////            LinearLayout layout = (LinearLayout) customView;
+////            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+////            int count1 = layout1.getChildCount();
+////            TextView textView = (TextView) layout1.getChildAt(0);
+////            textView.setText("dfgsdfd");
+//            View customView1 = layoutInflater.inflate(R.layout.items_rows_balances, null);
+//            llBalances.addView(customView1);
+//        }
+    }
+    String returnFromPower(String i,String str){
+        int ok=1;
+        Log.i("popu",i);
+        Log.i("popu",str);
+        for(int k = 0 ; k<Integer.parseInt(i) ; k++ ){
+            ok = ok*10;
         }
-        }
-
+        int value = Integer.parseInt(str);
+        return  new Double(value/ok).toString();
+    }
 }
 
 

@@ -32,6 +32,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.async.http.WebSocket;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,17 +46,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.Interfaces.IExchangeRate;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends Activity {
+public class SendScreen extends Activity implements IExchangeRate {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";
     ArrayAdapter<String> iniAdapter;
     final String register_new_account = "register_new_account";
+    Application application = new Application();
 
 
     @Bind(R.id.FirstChild)
@@ -121,6 +126,8 @@ public class SendScreen extends Activity {
         setContentView(R.layout.send_screen);
         context = getApplicationContext();
         ButterKnife.bind(this);
+        application.registerExchangeRateCallback(this);
+
         init();
         screenOne();
     }
@@ -258,6 +265,30 @@ public class SendScreen extends Activity {
             return iniAdapter.getPosition(compareValue);
         }
         return -1;
+    }
+    public void get_exchange_rate(){
+        if (application.webSocketG.isOpen()) {
+
+            int db_identifier = Helper.fetchIntSharePref(context,context.getString(R.string.database_indentifier));
+            String params = "{\"id\":7,\"method\":\"call\",\"params\":["+db_identifier+",\"get_limit_orders\",[\"1.3.121\",\"1.3.120\",1]]}";
+            application.webSocketG.send(params);
+        }
+    }
+    @Override
+    public void callback_exchange_rate(JSONObject result) throws JSONException {
+        if (result.length() > 0) {
+            JSONObject sell_price = (JSONObject) result.get("sell_price");
+            JSONObject base = (JSONObject) sell_price.get("quote");
+            String base_amount = base.get("amount").toString();
+            JSONObject quote = (JSONObject) sell_price.get("base");
+            String quote_amount = quote.get("amount").toString();
+        }else{
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(context, R.string.str_trading_pair_not_exist, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
     public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
         int selectedid;
