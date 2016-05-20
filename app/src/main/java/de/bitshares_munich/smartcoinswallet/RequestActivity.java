@@ -1,10 +1,11 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,14 +27,40 @@ public class RequestActivity extends Activity {
         setContentView(R.layout.request_screen);
         ButterKnife.bind(this);
     }
+
     @OnClick(R.id.backbutton)
-    void onBackButtonPressed(){
+    void onBackButtonPressed() {
         super.onBackPressed();
     }
 
-    public void digitClick(View v){
-        String number="";
-        switch (v.getId()){
+    @OnClick(R.id.tvCancel)
+    void cancel() {
+        finish();
+    }
+
+    @OnClick(R.id.tvNext)
+    void next() {
+        String inputNumb = editTextView.getText().toString();
+        Double value = 0.0;
+        if (!inputNumb.isEmpty())
+            value = Double.valueOf(inputNumb);
+
+        if (inputNumb.isEmpty()) {
+            Toast.makeText(getApplicationContext(), getString(R.string.please_enter_amount), Toast.LENGTH_SHORT).show();
+        } else if (value <= 0) {
+            Toast.makeText(getApplicationContext(), R.string.amount_should_be_greater_than_zero, Toast.LENGTH_SHORT).show();
+        } else {
+
+            Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+            intent.putExtra(getString(R.string.price), editTextView.getText().toString());
+            intent.putExtra(getString(R.string.currency), popwin.getText().toString());
+            startActivity(intent);
+        }
+    }
+
+    public void digitClick(View v) {
+        String number = "";
+        switch (v.getId()) {
             case R.id.one:
                 number = "1";
                 break;
@@ -68,46 +95,48 @@ public class RequestActivity extends Activity {
                 number = "00";
                 break;
             case R.id.dot:
-                if(!editTextView.getText().toString().contains("."))
-                number = ".";
+                if (!editTextView.getText().toString().contains("."))
+                    number = ".";
                 break;
         }
-            addNumber(number);
+        addNumber(number);
     }
 
-    void addNumber(String number){
+    void addNumber(String number) {
 //        TextView addnum1 = (TextView)findViewById(R.id.addnum1);
         String addnumG = editTextView.getText().toString();
-        if(addnumG.equals("000")){
+        if (addnumG.equals("000")) {
             addnumG = "";
         }
-        addnumG = addnumG+number;
+        addnumG = addnumG + number;
         editTextView.setText(addnumG);
     }
-    public void backbtn(View v){
 
-            String addnumG = editTextView.getText().toString();
-            if(!addnumG.equals("000")) {
+    public void backbtn(View v) {
 
-                if (addnumG.length() > 0) {
-                    addnumG = method(addnumG);
-                }
-                if (addnumG.isEmpty()) {
-                    addnumG = "000";
-                }
-                editTextView.setText(addnumG);
+        String addnumG = editTextView.getText().toString();
+        if (!addnumG.equals("000")) {
+
+            if (addnumG.length() > 0) {
+                addnumG = method(addnumG);
             }
+
+            editTextView.setText(addnumG);
+        }
     }
+
     public String method(String str) {
-        str = str.substring(0, str.length()-1);
+        str = str.substring(0, str.length() - 1);
         return str;
     }
-        public void popupwindow(View v,TextView textview){
-        popUpwindow p =new popUpwindow(this,textview);
+
+    public void popupwindow(View v, TextView textview) {
+        popUpwindow p = new popUpwindow(this, textview);
         p.show(v);
     }
-    public void showpop(View v){
-        popupwindow(v,popwin);
+
+    public void showpop(View v) {
+        popupwindow(v, popwin);
     }
 
 }

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +20,7 @@ import com.google.zxing.common.BitMatrix;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,9 +40,6 @@ public class RecieveActivity extends Activity {
     @Bind(R.id.username)
     TextView username;
 
-    @Bind(R.id.amount)
-    TextView amount;
-
     @Bind(R.id.notfound)
     TextView notfound;
 
@@ -57,24 +54,26 @@ public class RecieveActivity extends Activity {
         setContentView(R.layout.recieve_activity);
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
-        showDialog("","Loading...");
-        String qrJson = creatingQrJson("yasir-mobile", "yasir-mobile", "BTS", "4000");
+        showDialog("", "Loading...");
+        Intent intent = getIntent();
+        String price = "";
+        String currency = "";
+        if (intent.hasExtra(getString(R.string.price))) {
+            price = intent.getStringExtra(getString(R.string.price));
+        }
+        if (intent.hasExtra(getString(R.string.currency))) {
+            currency = intent.getStringExtra(getString(R.string.currency));
+        }
+
+        if (price.isEmpty()) {
+            notfound.setText(getString(R.string.no_amount_requested));
+        } else {
+            notfound.setText(price + " " + currency + " requested");
+
+        }
+
+        String qrJson = creatingQrJson("yasir-mobile", "yasir-mobile", currency, price);
         getQrHashKey(this, qrJson);
-       /* final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-
-                String qrHash = "KqPVtdU4BtpnRTbJAwguTnSCYKCh1ZzQDeZzPXx8QEdUe1UiJbVZ3r6ktHgPgGUEDoRCtFVPcUWWhwbuwvcHrYb1QNan8ZbZayfct4SGN6eQvEgzYgPeGTC3Ei6js2JujQcSwFRWfQ64QTnxQSbnrbPJHTHGZW7Uz9nPLFZnA3ZM4RhNEkRwCkxmvLZT4LcBKayXpEaVfRZgp7LpHgpRtXAc9TkaGEGonCTym1KGobhyPJS4UuTEJJyXJRD7LuZP8ChtSuJGpbHgRvBAfSF7e9fmx3pmUmmhVQEmcwchcZzcGug33VJhoRcoxp57sG3V2CJCBVJTnkAHyzkFnQb4ppH9PHRoQf6jzGctpSFVf1rKhwebovKg8tqw9MZWQd9BYHeyLJZKDnYobrvK4DdA1YHejrpAmH6qTbqkeTKm9mmQHE54hQ5YXmvFK3qd2nzn5VxPNSVuNy4qsBz1b8BR5A5R25QR47yx4BxSv6a3DY6wK6UxQzc2N3TwZdqFXE8C6g2UKXswrkK5q4cKeY8VGJ";
-                try {
-                    Bitmap bitmap = encodeAsBitmap(qrHash, "#006500");
-                    qrimage.setImageBitmap(bitmap);
-                } catch (Exception e) {
-
-                }
-            }
-        }, 500);*/
     }
 
 
@@ -102,6 +101,10 @@ public class RecieveActivity extends Activity {
     }
 
     private String creatingQrJson(String to, String toLabel, String currency, String price) {
+        String orderId = UUID.randomUUID().toString();
+        String accountId = "";
+        String callback = getString(R.string.qr_callback_url) + accountId + "/" + orderId;
+
         String json = "{" +
                 "\"to\":\"" + to + "\"," +
                 "\"to_label\":\"" + toLabel + "\"," +
@@ -116,11 +119,11 @@ public class RecieveActivity extends Activity {
                 "]," +
                 "\"note\":\"\"," +
                 "\"ruia\":\"\"," +
-                "\"callback\":\"\"" +
+                "\"callback\":\"" + callback + "\"" +
                 "}";
 
-        Log.v("qqr",json.replace("\\",""));
-        return json.replace("\\","");
+        Log.v("qqr", json.replace("\\", ""));
+        return json.replace("\\", "");
     }
 
     Bitmap encodeAsBitmap(String str, String qrColor) throws WriterException {
@@ -201,4 +204,11 @@ public class RecieveActivity extends Activity {
         }
 
     }
+
+    @OnClick(R.id.ivGotoKeypad)
+    void gotoKeypad() {
+        Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
+        startActivity(intent);
+    }
+
 }
