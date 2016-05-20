@@ -168,11 +168,13 @@ public class SendScreen extends Activity implements IExchangeRate {
         webSettings.setJavaScriptEnabled(true);
         webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
+
     void setCheckboxAvailabilty(){
         if(Helper.fetchBoolianSharePref(this,always_donate)){
             checkbox_donate.setChecked(true);
         }else checkbox_donate.setVisibility(View.GONE);
     }
+
     void setBackUpAsset(){
         String asset =Helper.fetchStringSharePref(this,backup_asset);
         if(asset!=null) {
@@ -204,12 +206,14 @@ public class SendScreen extends Activity implements IExchangeRate {
     void imageviewAsset(View v){
         popupwindow(v,selectBTSAsset);
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
                     Bundle res = data.getExtras();
                      HashMap<String, String>  parseddata = (HashMap<String, String>) res.getSerializable("sResult");
+
                     onScanResult(parseddata);
                     Log.i("kamal",parseddata+"");
                 }
