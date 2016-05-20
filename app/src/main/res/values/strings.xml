@@ -179,4 +179,7 @@
     </string>
     <string name="importing_your_wallet">Importing your wallet...</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
+    <string name="pref_wallet_accounts">wallet_accounts</string>
+    <string name="qr_hash_url">http://188.166.147.110:9002</string>
+    <string name="unable_to_create_qr_code">Unable to generate Qr code</string>
 </resources>

@@ -139,9 +139,21 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         return null;
     }
     String returnParse(String Json , String req) throws JSONException{
-        if(Json.contains(req)){
-        JSONObject myJson = new JSONObject(Json);
-        return  myJson.getString(req);}
+        if(Json.contains(req))
+        {
+            JSONObject myJson = new JSONObject(Json);
+            String requiredObj = myJson.getString(req);
+
+            //String trimmedString = requiredObj.substring(1, requiredObj.length() - 1);
+
+            if (requiredObj.startsWith("\""))
+            {
+                requiredObj = requiredObj.substring(1, requiredObj.length() - 1);
+            }
+
+            String cleanedResult = requiredObj.replace("\\","");
+            return  cleanedResult;
+        }
         else return "null";
     }
 
@@ -168,9 +180,10 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
                 try {
                     byte[] bytes = timeline;
                     String s = new String(bytes);
+                    Log.i("euro", s);
                     finishWithResult(parseStringtoJson(s));
 
-                    Log.i("euro", sResult);
+                    ;
                 }catch (Exception j){
                     Log.i("euro", j+"");
                 }
