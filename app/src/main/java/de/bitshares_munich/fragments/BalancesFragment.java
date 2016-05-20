@@ -39,6 +39,9 @@ import de.bitshares_munich.utils.TinyDB;
 public class BalancesFragment extends Fragment implements AssetDelegate {
 
     ArrayList<AccountDetails> accountDetails;
+    String accountId = "";
+    String to ="";
+    String account_name ="";
 
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
@@ -47,6 +50,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     LinearLayout llTransactions;
 
     TinyDB tinyDB;
+
+    @Bind(R.id.account_name)
+    TextView tv_account_name;
 
     public BalancesFragment() {
         // Required empty public constructor
@@ -64,20 +70,27 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
-        new AssestsActivty(getContext(),"mbilal-knysys" , this);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        if (accountDetails.size() == 1) {
+            accountDetails.get(0).isSelected = true;
+            to = accountDetails.get(0).account_name;
+            accountId = accountDetails.get(0).account_id;
 
-
+        } else {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    to = accountDetails.get(i).account_name;
+                    accountId = accountDetails.get(i).account_id;
+                    break;
+                }
+            }
+        }
+     //   new AssestsActivty(getContext(),"yasir-ibrahim" , this);
+        new AssestsActivty(getContext(),to , this);
      LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        for (int i = 0; i < 5; i++) {
-//            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-//            LinearLayout layout = (LinearLayout) customView;
-//            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-//            int count1 = layout1.getChildCount();
-//            TextView textView = (TextView) layout1.getChildAt(0);
-//            textView.setText("dfgfd");
-//            llBalances.addView(customView);
-//        }
+        tv_account_name.setText(to);
+
+
         for (int j = 0; j < 50; j++) {
             View customView1 = layoutInflater.inflate(R.layout.items_rows_transactions, null);
             llTransactions.addView(customView1);
@@ -150,20 +163,41 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-               // for (int i = 0; i < 5; i++) {
-                    View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-            LinearLayout layout = (LinearLayout) customView;
-            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-            TextView textView = (TextView) layout1.getChildAt(0);
-            textView.setText(sym.get(0));
-                TextView textView1 = (TextView) layout1.getChildAt(1);
-                textView1.setText(returnFromPower(pre.get(0),am.get(0)));
-                TextView textView2 = (TextView) layout1.getChildAt(2);
-                    textView2.setText(sym.get(1));
-                TextView textView3 = (TextView) layout1.getChildAt(3);
-                textView3.setText(returnFromPower(pre.get(1),am.get(1)));
-                llBalances.addView(customView);
-              //  }
+
+                for (int i = 0; i < sym.size(); i+=2) {
+                    int counter = 1;
+                    int op = sym.size();
+                    int pr;
+                    if((op-i)>2){
+                        pr=2;
+                    }else pr=op-i;
+                View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+                LinearLayout layout = (LinearLayout) customView;
+                LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+                    for(int l = i ; l<i+pr; l++) {
+                        if (counter == 1) {
+                            TextView textView = (TextView) layout1.getChildAt(0);
+                            textView.setText(sym.get(l));
+                            TextView textView1 = (TextView) layout1.getChildAt(1);
+                            textView1.setText(returnFromPower(pre.get(l), am.get(i)));
+                        }
+                        if (counter == 2) {
+                                TextView textView2 = (TextView) layout1.getChildAt(2);
+                                textView2.setText(sym.get(l));
+                                TextView textView3 = (TextView) layout1.getChildAt(3);
+                                textView3.setText(returnFromPower(pre.get(l), am.get(l)));
+                            llBalances.addView(customView);
+                        }
+                        if (counter == 1 && i == sym.size() - 1) {
+                            llBalances.addView(customView);
+                        }
+
+                        if (counter == 1) {
+                            counter = 2;
+                        } else counter = 1;
+
+                    }
+                }
             }
         });
 
@@ -190,14 +224,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //        }
     }
     String returnFromPower(String i,String str){
-        int ok=1;
-        Log.i("popu",i);
-        Log.i("popu",str);
-        for(int k = 0 ; k<Integer.parseInt(i) ; k++ ){
+        Double ok = 1.0;
+        Double pre = Double.valueOf(i);
+        Double value = Double.valueOf(str);
+        for(int k = 0 ; k<pre ; k++ ){
             ok = ok*10;
         }
-        int value = Integer.parseInt(str);
-        return  new Double(value/ok).toString();
+        return  Double.toString(value/ok);
     }
 }
 
