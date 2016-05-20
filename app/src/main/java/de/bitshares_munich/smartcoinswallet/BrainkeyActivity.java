@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -95,11 +96,12 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        tinyDB.putObject(getString(R.string.pref_account_from_brainkey), accountDetails);
+                        ArrayList<AccountDetails> arrayList = new ArrayList<>();
+                        arrayList.add(accountDetails);
+                        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), arrayList);
                         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                         startActivity(intent);
                     }
-
 
                 } else {
                     hideDialog();

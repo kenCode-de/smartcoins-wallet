@@ -7,13 +7,16 @@ import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
 import com.koushikdutta.async.http.WebSocket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.smartcoinswallet.SendScreen;
 
 /**
  * Created by qasim on 5/9/16.
@@ -24,6 +27,7 @@ public class Application extends android.app.Application {
     public static int socketCounter;
     public static Context context;
     static IAccount iAccount;
+    static IExchangeRate iExchangeRate;
     public static String blockHead="";
 
     @Override
@@ -39,6 +43,9 @@ public class Application extends android.app.Application {
 
     public void registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
+    }
+    public void registerExchangeRateCallback(IExchangeRate callbackClass) {
+        iExchangeRate = callbackClass;
     }
 
     public static void webSocketConnection() {
@@ -99,6 +106,13 @@ public class Application extends android.app.Application {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
                                 }
+                            } else if (id == 7) {
+                                JSONArray jsonArray = (JSONArray) jsonObject.get("result");
+                                JSONObject obj = new JSONObject();
+                                if (jsonArray.length() != 0) {
+                                    obj = (JSONObject) jsonArray.get(1);
+                                }
+                                iExchangeRate.callback_exchange_rate(obj);
                             }
                         } catch (JSONException e) {
 
