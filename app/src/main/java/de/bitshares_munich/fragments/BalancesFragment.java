@@ -38,6 +38,7 @@ import de.bitshares_munich.utils.TinyDB;
  */
 public class BalancesFragment extends Fragment implements AssetDelegate {
 
+    ArrayList<AccountDetails> accountDetails;
 
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
@@ -64,6 +65,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
         new AssestsActivty(getContext(),"mbilal-knysys" , this);
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
 
      LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -106,7 +108,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Override
     public void isUpdate(ArrayList<String> ids , ArrayList<String> sym ,ArrayList<String> pre , ArrayList<String>  am){
         Log.i("uncle","aay1");
-        ArrayList<AccountDetails> accountDetails;
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
         for(int i = 0 ; i < ids.size() ;i++){
             AccountAssets accountAsset = new AccountAssets();
@@ -122,7 +123,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
             accountAssets.add(accountAsset);
         }
-        accountDetails = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
        if(accountDetails.size()==1) {
             accountDetails.get(0).isSelected = true;
             accountDetails.get(0).AccountAssets = accountAssets;
@@ -134,16 +134,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
            }
        }
-        tinyDB.putListObject(getString(R.string.pref_account_from_brainkey), accountDetails);
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         BalanceAssetsUpdate(sym,pre,am);
-        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
-        if (accountDetails1.size() == 1) {
-           accountDetails1.get(0).AccountAssets = accountAssets;
-            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).id);
-            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).precision);
-            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).symbol);
-
-        }
+//        ArrayList<AccountDetails> accountDetails1 = tinyDB.getListObject(getString(R.string.pref_account_from_brainkey), AccountDetails.class);
+//        if (accountDetails1.size() == 1) {
+//           accountDetails1.get(0).AccountAssets = accountAssets;
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).id);
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).precision);
+//            Log.i("NAMA","22aay1"+accountDetails1.get(0).AccountAssets.get(0).symbol);
+//
+//        }
     }
 
     public void BalanceAssetsUpdate(final ArrayList<String> sym ,final ArrayList<String> pre ,final ArrayList<String>  am){
