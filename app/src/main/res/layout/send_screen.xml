@@ -222,7 +222,7 @@
                     android:background="@null"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:id="@+id/editTextAmount"
+                    android:id="@+id/etAmount"
                     android:gravity="center"
                     android:textAlignment="textEnd"
                     android:layout_weight="1"
@@ -231,7 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
-                    android:layout_toRightOf="@+id/editTextAmount"
+                    android:layout_toRightOf="@+id/etAmount"
                     android:id="@+id/spAssets"
                     >
                 </Spinner>
@@ -239,19 +239,19 @@
         </LinearLayout>
         <TextView
             android:layout_below="@+id/ThirdChild"
-            android:text="Warning! only nn BTS is available"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:gravity="right"
-            android:id="@+id/warningStatus"
+            android:id="@+id/tvAmountStatus"
             />
         <LinearLayout
             android:layout_marginTop="5sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/warningStatus"
+            android:layout_below="@+id/tvAmountStatus"
             android:id="@+id/FourthChild"
             >
             <TextView

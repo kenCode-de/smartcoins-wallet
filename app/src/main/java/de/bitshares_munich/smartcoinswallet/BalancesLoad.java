@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Helper;
 
 
 /**
@@ -49,6 +51,13 @@ public class BalancesLoad{
     }
     void get_asset(String asset, String id) {
         getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+        bConnection();
+    }
+    void get_relative_account_history(String account_id, String id) {
+        int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
+//"{\"id\":" + id + ",\"method\":\"call\",\"params\":[2,\"get_relative_account_history\",[\"" + account_id +"\",0,10,0]]}";
+        getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0,10,0]]}";
+        Log.i("opop",getDetails);
         bConnection();
     }
     void bConnection() {

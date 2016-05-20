@@ -1,29 +1,13 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.BinderThread;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.util.StringBuilderPrinter;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,9 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.koushikdutta.async.http.WebSocket;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,11 +42,10 @@ public class SendScreen extends Activity implements IExchangeRate {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";
-    ArrayAdapter<String> iniAdapter;
-    final String register_new_account = "register_new_account";
     Application application = new Application();
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
+    AccountAssets selectedAccountAsset;
 
 
     @Bind(R.id.FirstChild)
@@ -111,14 +91,17 @@ public class SendScreen extends Activity implements IExchangeRate {
     @Bind(R.id.editTextTo)
     TextView editTextTo;
 
+    @Bind(R.id.tvAmountStatus)
+    TextView tvAmountStatus;
+
     @Bind(R.id.checkbox_donate)
     CheckBox checkbox_donate;
 
     @Bind(R.id.editTextMemo)
     EditText memo_edit;
 
-    @Bind(R.id.editTextAmount)
-    EditText editTextAmount;
+    @Bind(R.id.etAmount)
+    EditText etAmount;
 
     @Bind(R.id.editTextAsset)
     EditText editTextAsset;
@@ -172,8 +155,26 @@ public class SendScreen extends Activity implements IExchangeRate {
             loadWebView(webviewTo , 34, Helper.md5(editTextTo.getText().toString()));
         }
     }
+    @OnTextChanged(R.id.etAmount)
+    void onAmountChanged(CharSequence text) {
+        updateAmountStatus();
+    }
     @OnItemSelected(R.id.spinnerFrom) void onItemSelected(int position) {
         populateAssetsSpinner();
+
+    }
+    @OnItemSelected(R.id.spAssets) void onAssetsSelected(int position) {
+        updateAmountStatus();
+
+    }
+    public void updateAmountStatus(){
+        String selectedAsset = spAssets.getSelectedItem().toString();
+        Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+        if (etAmount.getText().length() > 0) {
+            tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), "nn", selectedAsset));
+        }else{
+            tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+        }
     }
     private void loadWebView(WebView webView , int size, String encryptText) {
         String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
@@ -231,7 +232,7 @@ public class SendScreen extends Activity implements IExchangeRate {
         if(hash.get("memo")!=null){
             SixthChild_Memo.setVisibility(View.GONE);
         }else SixthChild_Memo.setVisibility(View.VISIBLE);
-        editTextAmount.setText(hash.get("price0")+hash.get("price1"));
+        etAmount.setText(hash.get("price0")+hash.get("price1"));
 //        selectBTSAmount.setText(hash.get("currency"));
         String loyaltypoints = hash.get("ruia");
         if(loyaltypoints!=null) {selectBTSLoyalty.setText(loyaltypoints);
@@ -261,8 +262,8 @@ public class SendScreen extends Activity implements IExchangeRate {
             AccountDetails accountDetail = accountDetails.get(i);
             if (accountDetail.account_name.equals(selectedAccount)){
                 for (int j=0; j<accountDetail.AccountAssets.size(); j++){
-                    AccountAssets accountAsset = accountDetail.AccountAssets.get(j);
-                    spinnerArray.add(accountAsset.symbol);
+                    selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                    spinnerArray.add(selectedAccountAsset.symbol);
                 }
             }
         }

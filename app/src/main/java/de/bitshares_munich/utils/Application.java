@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.ButterKnife;
+import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.smartcoinswallet.BalancesLoad;
@@ -28,6 +29,7 @@ public class Application extends android.app.Application {
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
+    static BalancesDelegate iBalancesDelegate;
     public static String blockHead="";
 
     @Override
@@ -46,6 +48,9 @@ public class Application extends android.app.Application {
     }
     public void registerExchangeRateCallback(IExchangeRate callbackClass) {
         iExchangeRate = callbackClass;
+    }
+    public void registerBalancesDelegate(BalancesDelegate callbackClass) {
+        iBalancesDelegate = callbackClass;
     }
 
     public static void webSocketConnection() {
@@ -113,6 +118,10 @@ public class Application extends android.app.Application {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
                                 iExchangeRate.callback_exchange_rate(obj);
+                            }else if (id == 8) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
                             }
                         } catch (JSONException e) {
 

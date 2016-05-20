@@ -194,6 +194,11 @@
     <string name="to">to</string>
     <string name="account_id">accountId</string>
     <string name="account_name">account_name</string>
+
     <string name="failed_transaction">Failed Transaction</string>
     <string name="node_server_url">http://188.166.147.110:8000</string>
+
+    <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
+    <string name="str_balance_available">%1$s %2$s available</string>
+
 </resources>
