@@ -178,6 +178,7 @@
     <string name="beta">" beta"</string>
     <string name="txt_no_internet_connection">No internet connection</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
     <string name="importing_your_wallet">Importing your wallet...</string>
@@ -201,5 +202,8 @@
 
     <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
     <string name="str_balance_available">%1$s %2$s available</string>
+    <string name="str_invalid_amount">Please enter valid amount</string>
+    <string name="str_invalid_receiver">Please enter valid To account</string>
+    <string name="str_transaction_failed">Transaction Failed</string>
 
 </resources>

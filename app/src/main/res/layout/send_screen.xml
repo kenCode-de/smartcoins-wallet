@@ -404,9 +404,9 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:background="@null"
-                    android:text="344"
+                    android:text=""
                     android:layout_height="match_parent"
-                    android:id="@+id/editTextMemo"
+                    android:id="@+id/etMemo"
                     android:gravity="left"
                     android:textSize="15sp"
                     />
@@ -426,9 +426,8 @@
             android:background="#DD4739"
             android:layout_marginTop="10sp"
             android:orientation="horizontal"
-            android:onClick="send"
             android:clickable="true"
-            android:id="@+id/Sendbtn"
+            android:id="@+id/btnSend"
             android:layout_below="@id/checkbox_donate"
             >
             <TextView

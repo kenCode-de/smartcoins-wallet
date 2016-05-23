@@ -5,6 +5,7 @@ import java.util.Map;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.TransactionSmartCoin;
+import de.bitshares_munich.models.TransferResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -34,5 +35,9 @@ public interface IWebService {
 
     @GET("/get_transactions/{accountId}/{orderId}")
     Call<TransactionSmartCoin[]> getTransactionSmartCoin(@Path("accountId") String accountId, @Path("orderId") String orderId);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<TransferResponse> getTransferResponse(@Body Map<String, String> params);
 
 }

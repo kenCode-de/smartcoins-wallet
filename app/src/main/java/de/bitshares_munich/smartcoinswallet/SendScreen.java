@@ -1,6 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,9 +35,16 @@ import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.TinyDB;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
@@ -49,6 +57,8 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
+    boolean validReceiver = false;
+    ProgressDialog progressDialog;
 
 
     @Bind(R.id.FirstChild)
@@ -103,8 +113,8 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @Bind(R.id.checkbox_donate)
     CheckBox checkbox_donate;
 
-    @Bind(R.id.editTextMemo)
-    EditText memo_edit;
+    @Bind(R.id.etMemo)
+    EditText etMemo;
 
     @Bind(R.id.etAmount)
     EditText etAmount;
@@ -114,6 +124,9 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
 
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
+
+    @Bind(R.id.btnSend)
+    LinearLayout btnSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +190,14 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @OnItemSelected(R.id.spAssets) void onAssetsSelected(int position) {
         updateAmountStatus();
 
+    }
+    @OnClick(R.id.btnSend)
+    public void setBtnSend(View view) {
+        if (validateSend()){
+            progressDialog = new ProgressDialog(this);
+            showDialog("", "Transferring Funds...");
+            transferAmount();
+        }
     }
     public void updateAmountStatus(){
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -303,7 +324,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     }
     void onScanResult(HashMap<String,String> hash){
         etReceiverAccount.setText(hash.get("to"));
-       // memo_edit.setText(hash.get("memo"));
+       // etMemo.setText(hash.get("memo"));
         if(hash.get("memo")!=null){
             SixthChild_Memo.setVisibility(View.GONE);
         }else SixthChild_Memo.setVisibility(View.VISIBLE);
@@ -357,6 +378,72 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
             application.webSocketG.send(params);
         }
     }
+    public boolean validateSend(){
+        if (spinnerFrom.getSelectedItem().toString().equals("")){
+            return false;
+        }
+        else if(!validReceiver){
+            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (etAmount.getText().length() == 0 ){
+            Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(Double.parseDouble(etAmount.getText().toString()) == 0){
+            Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+    public void transferAmount() {
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
+        String privateKey = "";
+        for (int i=0; i<accountDetails.size(); i++){
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_name.equals(selectedAccount)){
+                try {
+                    privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        HashMap hm = new HashMap();
+        hm.put("method","transfer");
+        hm.put("wifkey",privateKey);
+        hm.put("from_account",spinnerFrom.getSelectedItem().toString());
+        hm.put("to_account",etReceiverAccount.getText().toString());
+        hm.put("amount",String.format("%.4f",Double.parseDouble(etAmount.getText().toString())));
+        hm.put("asset_symbol", spAssets.getSelectedItem().toString());
+        hm.put("memo", etMemo.getText().toString());
+
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.transfer_server_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<TransferResponse> postingService = service.getTransferResponse(hm);
+        postingService.enqueue(new Callback<TransferResponse>() {
+            @Override
+            public void onResponse(Response<TransferResponse> response) {
+                if (response.isSuccess()) {
+                    TransferResponse resp = response.body();
+                    if (resp.status.equals("success")){
+                        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+                hideDialog();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+//                if (progressDialog.isShowing())
+//                    progressDialog.dismiss();
+            }
+        });
+    }
     @Override
     public void callback_exchange_rate(JSONObject result) throws JSONException {
         if (result.length() > 0) {
@@ -383,6 +470,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
                 final String temp = jsonArray.getJSONArray(i).getString(0);
                 if (temp.equals(etReceiverAccount.getText().toString())) {
                     found = true;
+                    validReceiver = true;
                 }
             }
             if (!found){
@@ -399,5 +487,24 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         } catch (Exception e) {
 
         }
+    }
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
+        }
+    }
+
+    private void hideDialog() {
+
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
+        }
+
     }
 }
