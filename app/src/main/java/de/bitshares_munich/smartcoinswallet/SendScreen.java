@@ -58,6 +58,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
     boolean validReceiver = false;
+    boolean validAmount = false;
     ProgressDialog progressDialog;
 
 
@@ -70,8 +71,8 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @Bind(R.id.ThirdChild)
     LinearLayout ThirdChild;
 
-    @Bind(R.id.SixthChild)
-    LinearLayout SixthChild_Memo;
+    @Bind(R.id.llMemo)
+    LinearLayout llMemo;
 
     @Bind(R.id.FourthChild)
     LinearLayout FourthChild_LOYALTI;
@@ -160,7 +161,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
        // StatusFourth.setVisibility(View.GONE);
     }
     void screenThree(){
-        SixthChild_Memo.setVisibility(View.GONE);
+        llMemo.setVisibility(View.GONE);
     }
 //    @OnTextChanged(R.id.editTextFrom)
 //    void onTextChangedFrom(CharSequence text) {
@@ -221,11 +222,15 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
             if (enteredAmount != 0){
                 String remainingBalance = "0";
                 if (enteredAmount > selectedBalance){
-                    etAmount.setText(selectedBalance.toString());
+                    //etAmount.setText(selectedBalance.toString());
+                    validAmount = false;
+                    tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
                 }else{
+                    validAmount = true;
                     remainingBalance = String.format("%.4f",(selectedBalance - enteredAmount));
+                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
                 }
-                tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), remainingBalance, selectedAsset));
+
             }else{
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
             }
@@ -298,7 +303,6 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @OnClick(R.id.scanning)
     void OnScanning(){
         Intent intent = new Intent(context, qrcodeActivity.class);startActivityForResult(intent,90);
-       // HashMap<String,String> hash =  parseStringtoJson("{\"json\":\"{\\\"to\\\":\\\"srk\\\",\\\"to_label\\\":\\\"srk\\\",\\\"currency\\\":\\\"BTS\\\",\\\"memo\\\":\\\"Order: 8f04a475-4c1a-4bb5-a548-b7e1fafaefa7 #sapos\\\",\\\"ruia\\\":\\\"1.3.541\\\",\\\"line_items\\\":[{\\\"label\\\":\\\"Your Purchase\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"1.6977125632925415E8\\\"},{\\\"label\\\":\\\"Donation fee\\\",\\\"quantity\\\":1,\\\"price\\\":\\\"848859.0826970935\\\"}],\\\"note\\\":\\\"\\\",\\\"callback\\\":\\\"http://188.166.147.110:8000/transaction/1.2.88346/8f04a475-4c1a-4bb5-a548-b7e1fafaefa7\\\"}\",\"status\":\"success\"}");
     }
     @OnClick(R.id.selectBTSAsset)
     void onSelectBTSAsset(View v){
@@ -314,29 +318,41 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
             case 90:
                 if (resultCode == RESULT_OK) {
                     Bundle res = data.getExtras();
-                     HashMap<String, String>  parseddata = (HashMap<String, String>) res.getSerializable("sResult");
-
-                    onScanResult(parseddata);
-                    Log.i("kamal",parseddata+"");
+                    try {
+                        onScanResult(res.getString("sResult"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }
     }
-    void onScanResult(HashMap<String,String> hash){
-        etReceiverAccount.setText(hash.get("to"));
-       // etMemo.setText(hash.get("memo"));
-        if(hash.get("memo")!=null){
-            SixthChild_Memo.setVisibility(View.GONE);
-        }else SixthChild_Memo.setVisibility(View.VISIBLE);
-        etAmount.setText(hash.get("price0")+hash.get("price1"));
-//        selectBTSAmount.setText(hash.get("currency"));
-        String loyaltypoints = hash.get("ruia");
-        if(loyaltypoints!=null) {selectBTSLoyalty.setText(loyaltypoints);
-            FourthChild_LOYALTI.setVisibility(View.VISIBLE);
-            StatusTwo_LOYALTI.setVisibility(View.VISIBLE);
+    void onScanResult(String result) throws JSONException {
+        JSONObject resJson = new JSONObject(result);
+        resJson = new JSONObject(resJson.get("json").toString());
+        etReceiverAccount.setText(resJson.get("to").toString());
+        validReceiver = true;
+        spAssets.setSelection(getSpinnerIndex(spAssets,resJson.get("currency").toString()));
+        if(resJson.get("memo")!=null){
+            llMemo.setVisibility(View.GONE);
+            etMemo.setText(resJson.get("memo").toString());
+        }else llMemo.setVisibility(View.VISIBLE);
+        JSONArray lineItems = new JSONArray(resJson.get("line_items").toString());
+        Double totalAmount = 0.0;
+        for (int i=0; i<lineItems.length(); i++){
+            JSONObject lineItem = (JSONObject) lineItems.get(i);
+            totalAmount += (Double.parseDouble(lineItem.get("quantity").toString()) * Double.parseDouble(lineItem.get("price").toString()));
         }
-        else {FourthChild_LOYALTI.setVisibility(View.GONE);
-            StatusTwo_LOYALTI.setVisibility(View.GONE);}
+
+        etAmount.setText(totalAmount.toString());
+//        selectBTSAmount.setText(hash.get("currency"));
+//        String loyaltypoints = hash.get("ruia");
+//        if(loyaltypoints!=null) {selectBTSLoyalty.setText(loyaltypoints);
+//            FourthChild_LOYALTI.setVisibility(View.VISIBLE);
+//            StatusTwo_LOYALTI.setVisibility(View.VISIBLE);
+//        }
+//        else {FourthChild_LOYALTI.setVisibility(View.GONE);
+//            StatusTwo_LOYALTI.setVisibility(View.GONE);}
     }
     public void createSpinner(List<String> spinnerArray, Spinner spinner){
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
@@ -385,7 +401,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         else if(!validReceiver){
             Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
-        }else if (etAmount.getText().length() == 0 ){
+        }else if (!validAmount){
             Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }else if(Double.parseDouble(etAmount.getText().toString()) == 0){
@@ -444,6 +460,18 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
             }
         });
     }
+    private int getSpinnerIndex(Spinner spinner, String myString)
+    {
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
     @Override
     public void callback_exchange_rate(JSONObject result) throws JSONException {
         if (result.length() > 0) {
@@ -477,6 +505,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        validReceiver = false;
                         String acName = getString(R.string.account_name_not_exist);
                         String format = String.format(acName, etReceiverAccount.getText().toString());
                         tvErrorRecieverAccount.setText(format);
