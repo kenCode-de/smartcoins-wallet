@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -16,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -38,7 +41,7 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends Activity implements IExchangeRate {
+public class SendScreen extends Activity implements IExchangeRate, IAccount {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";
@@ -88,8 +91,11 @@ public class SendScreen extends Activity implements IExchangeRate {
 //    @Bind(R.id.editTextFrom)
 //    TextView editTextFrom;
 
-    @Bind(R.id.editTextTo)
-    TextView editTextTo;
+    @Bind(R.id.etReceiverAccount)
+    EditText etReceiverAccount;
+
+    @Bind(R.id.tvErrorRecieverAccount)
+    TextView tvErrorRecieverAccount;
 
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
@@ -116,6 +122,7 @@ public class SendScreen extends Activity implements IExchangeRate {
         context = getApplicationContext();
         ButterKnife.bind(this);
         application.registerExchangeRateCallback(this);
+        application.registerCallback(this);
 
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -149,10 +156,14 @@ public class SendScreen extends Activity implements IExchangeRate {
 //        }
 //    }
 
-    @OnTextChanged(R.id.editTextTo)
+    @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
-        if (editTextTo.getText().length() > 0) {
-            loadWebView(webviewTo , 34, Helper.md5(editTextTo.getText().toString()));
+        if (etReceiverAccount.getText().length() > 0) {
+            loadWebView(webviewTo , 34, Helper.md5(etReceiverAccount.getText().toString()));
+            myLowerCaseTimer.cancel();
+            myAccountNameValidationTimer.cancel();
+            myLowerCaseTimer.start();
+            myAccountNameValidationTimer.start();
         }
     }
     @OnTextChanged(R.id.etAmount)
@@ -168,10 +179,35 @@ public class SendScreen extends Activity implements IExchangeRate {
 
     }
     public void updateAmountStatus(){
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String selectedAsset = spAssets.getSelectedItem().toString();
+        for (int i=0; i<accountDetails.size(); i++){
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_name.equals(selectedAccount)){
+                for (int j=0; j<accountDetail.AccountAssets.size(); j++){
+                    AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                    if (tempAccountAsset.symbol.toLowerCase().equals(selectedAsset.toLowerCase())){
+                        selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                        break;
+                    }
+                }
+            }
+        }
+
         Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
         if (etAmount.getText().length() > 0) {
-            tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), "nn", selectedAsset));
+            Double enteredAmount = Double.parseDouble(etAmount.getText().toString());
+            if (enteredAmount != 0){
+                String remainingBalance = "0";
+                if (enteredAmount > selectedBalance){
+                    etAmount.setText(selectedBalance.toString());
+                }else{
+                    remainingBalance = String.format("%.4f",(selectedBalance - enteredAmount));
+                }
+                tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), remainingBalance, selectedAsset));
+            }else{
+                tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+            }
         }else{
             tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
         }
@@ -181,6 +217,45 @@ public class SendScreen extends Activity implements IExchangeRate {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
+    }
+
+    CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            if (!etReceiverAccount.getText().toString().equals(etReceiverAccount.getText().toString().toLowerCase())) {
+                etReceiverAccount.setText(etReceiverAccount.getText().toString().toLowerCase());
+                etReceiverAccount.setSelection(etReceiverAccount.getText().toString().length());
+            }
+        }
+    };
+
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(1000, 1000) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            createBitShareAN(false);
+        }
+    };
+
+
+    public void createBitShareAN(boolean focused) {
+        if (!focused) {
+
+            if (etReceiverAccount.getText().length() > 2) {
+                tvErrorRecieverAccount.setText("");
+                tvErrorRecieverAccount.setVisibility(View.GONE);
+                if (Application.webSocketG.isOpen()) {
+                    String socketText = getString(R.string.lookup_account_a) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    Application.webSocketG.send(socketText);
+
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     void setCheckboxAvailabilty(){
@@ -227,7 +302,7 @@ public class SendScreen extends Activity implements IExchangeRate {
         }
     }
     void onScanResult(HashMap<String,String> hash){
-        editTextTo.setText(hash.get("to"));
+        etReceiverAccount.setText(hash.get("to"));
        // memo_edit.setText(hash.get("memo"));
         if(hash.get("memo")!=null){
             SixthChild_Memo.setVisibility(View.GONE);
@@ -296,6 +371,33 @@ public class SendScreen extends Activity implements IExchangeRate {
                     Toast.makeText(context, R.string.str_trading_pair_not_exist, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+    @Override
+    public void checkAccount(JSONObject jsonObject) {
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("result");
+            boolean found = false;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                final String temp = jsonArray.getJSONArray(i).getString(0);
+                if (temp.equals(etReceiverAccount.getText().toString())) {
+                    found = true;
+                }
+            }
+            if (!found){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String acName = getString(R.string.account_name_not_exist);
+                        String format = String.format(acName, etReceiverAccount.getText().toString());
+                        tvErrorRecieverAccount.setText(format);
+                        tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        } catch (Exception e) {
+
         }
     }
 }

@@ -164,7 +164,7 @@
                             android:singleLine="true"
                             android:maxLines="1"
                             android:layout_height="match_parent"
-                            android:id="@+id/editTextTo"
+                            android:id="@+id/etReceiverAccount"
                             android:layout_toRightOf="@+id/webviewTo"
                             />
                         <!--<ImageView-->
@@ -184,7 +184,15 @@
                         android:background="@null"
                         />
                 </LinearLayout>
-
+                <TextView
+                    android:visibility="gone"
+                    android:text=""
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:gravity="right"
+                    android:id="@+id/tvErrorRecieverAccount"
+                    />
 
 
 
@@ -224,6 +232,7 @@
                     android:maxLines="1"
                     android:id="@+id/etAmount"
                     android:gravity="center"
+                    android:inputType="numberDecimal"
                     android:textAlignment="textEnd"
                     android:layout_weight="1"
                     />
