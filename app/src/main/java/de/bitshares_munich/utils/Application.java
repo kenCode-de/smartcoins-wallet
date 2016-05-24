@@ -17,7 +17,10 @@ import org.json.JSONObject;
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.Interfaces.IAccountObject;
+import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.IExchangeRate;
+import de.bitshares_munich.Interfaces.ITransactionObject;
 import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
@@ -33,6 +36,9 @@ public class Application extends android.app.Application {
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
     static BalancesDelegate iBalancesDelegate;
+    static ITransactionObject iTransactionObject;
+    static IAccountObject iAccountObject;
+    static IAssetObject iAssetObject;
     public static String blockHead="";
 
     @Override
@@ -54,6 +60,15 @@ public class Application extends android.app.Application {
     }
     public void registerBalancesDelegate(BalancesDelegate callbackClass) {
         iBalancesDelegate = callbackClass;
+    }
+    public void registerTransactionObject(ITransactionObject callbackClass) {
+        iTransactionObject = callbackClass;
+    }
+    public void registerAccountObjectCallback(IAccountObject callbackClass) {
+        iAccountObject = callbackClass;
+    }
+    public void registerAssetObjectCallback(IAssetObject callbackClass) {
+        iAssetObject = callbackClass;
     }
 
     public static void webSocketConnection() {
@@ -138,6 +153,18 @@ public class Application extends android.app.Application {
                             }else if (id == 8) {
                                 if (iBalancesDelegate != null) {
                                     iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }else if (id == 12) {
+                                if (iTransactionObject != null) {
+                                    iTransactionObject.checkTransactionObject(jsonObject);
+                                }
+                            }else if (id == 13) {
+                                if (iAccountObject != null) {
+                                    iAccountObject.accountObjectCallback(jsonObject);
+                                }
+                            }else if (id == 14) {
+                                if (iAssetObject != null) {
+                                    iAssetObject.assetObjectCallback(jsonObject);
                                 }
                             }
                             else if (id == 9) {

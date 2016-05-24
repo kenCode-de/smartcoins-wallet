@@ -224,6 +224,8 @@ public class RecieveActivity extends Activity {
                         TransactionSmartCoin[] transactions = response.body();
                         Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
                         intent.putExtra("block",transactions[0].block);
+                        intent.putExtra("receiver_id",transactions[0].account_id);
+                        intent.putExtra("sender_id",transactions[0].sender_id);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     } else {

@@ -3,6 +3,7 @@ package de.bitshares_munich.utils;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.DecodeMemo;
 import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.models.TransferResponse;
@@ -39,5 +40,9 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<TransferResponse> getTransferResponse(@Body Map<String, String> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<DecodeMemo> getDecodedMemo(@Body Map<String, String> params);
 
 }
