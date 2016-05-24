@@ -2,10 +2,13 @@ package de.bitshares_munich.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.WebSocket;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequestImpl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,15 +73,29 @@ public class Application extends android.app.Application {
 
     public static void webSocketConnection() {
         iAccount = iAccount;
-        AsyncHttpGet get = new AsyncHttpGet(context.getString(R.string.url_bitshares_openledger));
-        get.setTimeout(1000000000);
+        final AsyncHttpGet get = new AsyncHttpGet(context.getString(R.string.url_bitshares_openledger));
+        get.setTimeout(20000);//000000);
+
+        //System.setProperty("https.protocols", "TLSv1");
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
+
+
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 if (ex != null) {
+                    if (ex.getMessage().contains("handshake_failure"))
+                    {
+                        //webSocketConnection();
+                        //Toast.makeText(context,ex.getMessage() + "Your system does not supports new SSL ciphering.", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        webSocketConnection();
+                    }
                     ex.printStackTrace();
                     return;
                 }
+
 
                 Application.webSocketG = webSocket;
                 sendInitialSocket(context);
@@ -150,6 +167,20 @@ public class Application extends android.app.Application {
                                     iAssetObject.assetObjectCallback(jsonObject);
                                 }
                             }
+                            else if (id == 9) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            } else if (id == 10) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }
+                            else if (id == 11) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }
                         } catch (JSONException e) {
 
                         }
@@ -158,6 +189,9 @@ public class Application extends android.app.Application {
 
                 }
             });
+
+
+
 
         }
     }
