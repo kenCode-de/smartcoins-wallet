@@ -64,6 +64,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     LinearLayout llBalances;
 
     private SortableTableView<TransactionDetails> tableView;
+    static List<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
 
@@ -112,7 +113,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
         // replace myTrabsactions with actual data
-        List<TransactionDetails> myTransactions = new ArrayList<>();
+        myTransactions = new ArrayList<>();
         updateSortTableView(tableView,myTransactions);
 
         final Handler handler = new Handler();
@@ -356,6 +357,30 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         public int compare(TransactionDetails one, TransactionDetails two) {
             return compareFloats(one.getAmount(),two.getAmount());
         }
+    }
+    @Override
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails){
+
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.YEAR, 2016);
+//        cal.set(Calendar.MONTH, 3);
+//        cal.set(Calendar.DATE, 1);
+//        cal.set(Calendar.HOUR_OF_DAY, 14);
+//        cal.set(Calendar.MINUTE, 33);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//
+//        Date myDate = cal.getTime();
+//
+//        myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",100,"OBITS",(float)3.33,"USD"));
+
+        myTransactions = transactionDetails;
+        tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+//        getActivity().runOnUiThread(new Runnable() {
+//            public void run() {
+//                myTransactions = transactionDetails;
+//            }
+//        });
     }
 
 }

@@ -54,7 +54,7 @@ public class TransactionActivity implements BalancesDelegate {
     int memo_in_work;
     int memo_total_size;
 
-    ArrayList<TransactionDetails> transactionDetails;
+
 
 
     HashMap<String,HashMap<String,String>> arrayof_Amount_AssetId = new HashMap<>();
@@ -72,6 +72,7 @@ public class TransactionActivity implements BalancesDelegate {
     String wifkey;
     public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key){
         context = c;
+        assetDelegate = instance;
         balancesDelegate = this;
         application.registerBalancesDelegate(this);
         accountid = account_id;
@@ -384,6 +385,7 @@ public class TransactionActivity implements BalancesDelegate {
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
     }
     void onLastCall(){
+        List<TransactionDetails> transactionDetails = new ArrayList<>();
         for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++) {
             try {
                 HashMap<String, String> mapof_All = new HashMap<>();
@@ -414,7 +416,7 @@ public class TransactionActivity implements BalancesDelegate {
                 testing("error" , e , "Try,Catch");
             }
         }
-
+        assetDelegate.TransactionUpdate(transactionDetails);
     }
     String returnFromPower(String i,String str){
         Double ok = 1.0;
