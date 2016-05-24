@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -83,7 +84,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
@@ -120,12 +121,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             @Override
             public void run() {
                 try {
-                    View childView = tableView.getDataAdapter().getView(0, null, tableView);
-                    childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                    float height3 = childView.getMeasuredHeight();
-                    if ( height3 > 0 ) {
-                        tableViewparent.setMinimumHeight((int) (height3 * 5));
-                    }
+                    View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
+                    int height1 = scrollViewBalances.getHeight();
+
+
+                    View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
+                    int height2 = transactionsExportHeader.getHeight();
+
+                    tableViewparent.setMinimumHeight(height1 - (height2) );
+
+//                    View childView = tableView.getDataAdapter().getView(0, null, tableView);
+//                    childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//                    float height3 = childView.getMeasuredHeight();
+//                    if ( height3 > 0 ) {
+//                        tableViewparent.setMinimumHeight((int) (height * 5));
+//                    }
                 }
                 catch (Exception e)
                 {
@@ -317,6 +327,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",(float)l,"OBITS",(float)3.33,"USD"));
         }
         */
+
     }
 
     private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
