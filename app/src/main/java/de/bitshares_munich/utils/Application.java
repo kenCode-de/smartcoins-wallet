@@ -123,6 +123,20 @@ public class Application extends android.app.Application {
                                     iBalancesDelegate.OnUpdate(s,id);
                                 }
                             }
+                            else if (id == 9) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            } else if (id == 10) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }
+                            else if (id == 11) {
+                                if (iBalancesDelegate != null) {
+                                    iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }
                         } catch (JSONException e) {
 
                         }
