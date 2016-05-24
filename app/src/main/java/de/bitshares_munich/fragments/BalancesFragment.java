@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -116,10 +117,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                View childView = tableView.getDataAdapter().getView(0, null, tableView);
-                childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                float height3 = childView.getMeasuredHeight();
-                tableViewparent.setMinimumHeight((int)(height3*5));
+                try {
+                    View childView = tableView.getDataAdapter().getView(0, null, tableView);
+                    childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    float height3 = childView.getMeasuredHeight();
+                    if ( height3 > 0 ) {
+                        tableViewparent.setMinimumHeight((int) (height3 * 5));
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
             }
         };
         handler.postDelayed(updateTask, 2000);
