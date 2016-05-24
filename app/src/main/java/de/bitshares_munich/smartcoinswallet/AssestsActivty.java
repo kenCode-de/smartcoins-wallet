@@ -110,14 +110,12 @@ public class AssestsActivty  implements BalancesDelegate {
 
         }
         if(id==99) {
-            Log.i("uncle","actiooi");
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
                 Log.i("uncle","actiooi");
                 ids = returnRootValues(result,"id");
                 precisons = returnRootValues(result, "precision");
                 symbols = returnRootValues(result, "symbol");
-                Log.i("uncle","actiweooi");
                 AddinAssets();
             }
 

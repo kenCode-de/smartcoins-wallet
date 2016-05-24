@@ -58,6 +58,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     ArrayList<AccountDetails> accountDetails;
     String accountId = "";
     String to ="";
+    String wifkey = "";
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
 
@@ -89,19 +90,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             accountDetails.get(0).isSelected = true;
             to = accountDetails.get(0).account_name;
             accountId = accountDetails.get(0).account_id;
-
+            wifkey = accountDetails.get(0).wif_key;
         } else {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     to = accountDetails.get(i).account_name;
                     accountId = accountDetails.get(i).account_id;
+                    wifkey = accountDetails.get(i).wif_key;
                     break;
                 }
             }
         }
 
         new AssestsActivty(getContext(),to , this);
-        new TransactionActivity(getContext(),accountId , this);
+        new TransactionActivity(getContext(),accountId , this , wifkey);
         tv_account_name.setText(to);
 
         //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
