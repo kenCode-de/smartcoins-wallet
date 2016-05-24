@@ -213,10 +213,13 @@
                         android:textColor="#000"
                         />
                     <TextView
+                        android:id="@+id/tvMemo"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
                         android:layout_weight="2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="\tText"
+                        android:text=""
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
                         />
@@ -264,7 +267,7 @@
             android:layout_width="match_parent"
             android:layout_height="50sp"
             android:layout_alignParentBottom="true"
-            android:backgroundTint="@color/green"
+            android:background="#70882E"
             android:gravity="center"
             android:text="OK"
             android:textColor="#fff"

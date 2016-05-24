@@ -12,14 +12,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.IAccountObject;
 import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.ITransactionObject;
+import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.DecodeMemo;
+import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.TinyDB;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
@@ -45,6 +58,8 @@ public class PaymentRecieved extends Activity implements ITransactionObject,IAcc
     TextView tvAmount;
     @Bind(R.id.tvFee)
     TextView tvFee;
+    @Bind(R.id.tvMemo)
+    TextView tvMemo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +155,54 @@ public class PaymentRecieved extends Activity implements ITransactionObject,IAcc
             amountObj = (JSONObject) resultObj.get("amount");
             feeObj = (JSONObject) resultObj.get("fee");
             getAssetObject(amountObj.get("asset_id").toString(),feeObj.get("asset_id").toString());
+            if (resultObj.has("memo")){
+                decodeMemo(resultObj.get("memo").toString(),resultObj.get("to").toString());
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
+    private void decodeMemo(String memo,String accountId) {
+        String privateKey = "";
+        TinyDB tinyDB = new TinyDB(getApplicationContext());
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for (int i=0; i<accountDetails.size(); i++){
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_id.equals(accountId)){
+                try {
+                    privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        HashMap hm = new HashMap();
+        hm.put("method","decode_memo");
+        hm.put("wifkey",privateKey);
+        hm.put("memo", memo);
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
+        postingService.enqueue(new Callback<DecodeMemo>() {
+            @Override
+            public void onResponse(Response<DecodeMemo> response) {
+                if (response.isSuccess()) {
+                    DecodeMemo resp = response.body();
+                    if (resp.status.equals("success")){
+                        tvMemo.setText(resp.msg);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
+    }
+
     @Override
     public void assetObjectCallback(JSONObject jsonObject){
         try {
