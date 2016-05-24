@@ -311,6 +311,7 @@
             android:id="@+id/StatusTwo"
             />
         <LinearLayout
+            android:visibility="gone"
             android:layout_marginTop="5sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -363,6 +364,7 @@
             </RelativeLayout>
         </LinearLayout>
         <TextView
+            android:visibility="gone"
             android:layout_below="@+id/FifthChild"
             android:text="nn OBITS is available"
             android:layout_width="match_parent"
@@ -372,6 +374,7 @@
             android:id="@+id/StatusThree"
             />
         <TextView
+            android:visibility="gone"
             android:layout_below="@+id/StatusThree"
             android:text="(nn BTS + n.nn OBITS = nnnn BTS )"
             android:layout_width="match_parent"
@@ -387,7 +390,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/StatusFourth"
-            android:id="@+id/SixthChild"
+            android:id="@+id/llMemo"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -416,7 +419,7 @@
             android:text="@string/checkbox_donate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/SixthChild"
+            android:layout_below="@+id/llMemo"
             android:id="@+id/checkbox_donate"
             android:layout_marginTop="5sp"
             />

@@ -158,7 +158,7 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
     }
 
 
-    private void finishWithResult(HashMap<String,String> parseddata) {
+    private void finishWithResult(String parseddata) {
         Bundle conData = new Bundle();
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent();
@@ -181,7 +181,7 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
                     byte[] bytes = timeline;
                     String s = new String(bytes);
                     Log.i("euro", s);
-                    finishWithResult(parseStringtoJson(s));
+                    finishWithResult(s);
 
                     ;
                 }catch (Exception j){

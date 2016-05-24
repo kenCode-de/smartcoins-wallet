@@ -221,12 +221,11 @@ public class RecieveActivity extends Activity {
             public void onResponse(Response<TransactionSmartCoin[]> response) {
                 if (response.isSuccess()) {
                     if (response.body().length > 0) {
+                        TransactionSmartCoin[] transactions = response.body();
                         Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
+                        intent.putExtra("block",transactions[0].block);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        // TransactionSmartCoin[] transaction = response.body();
-
-
                     } else {
                         if (!isFinishing()) {
                             Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
