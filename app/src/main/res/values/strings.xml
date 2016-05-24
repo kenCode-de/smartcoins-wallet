@@ -154,6 +154,7 @@
     <string name="validating_account">Validating Account...</string>
     <string name="account_name_should_be_longer">Account name should be longer</string>
     <string name="account_name_already_exist">Account Name %s already exist</string>
+    <string name="account_name_not_exist">Account Name %s does not exist</string>
     <string name="login_api">{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
     </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
@@ -177,13 +178,14 @@
     <string name="beta">" beta"</string>
     <string name="txt_no_internet_connection">No internet connection</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
     <string name="importing_your_wallet">Importing your wallet...</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="str_trading_pair_not_exist">Trading pair does not exist</string>
     <string name="pref_wallet_accounts">wallet_accounts</string>
-    <string name="qr_hash_url">http://188.166.147.110:9002</string>
+    <string name="qr_hash_url">http://188.166.147.110:8000</string>
     <string name="unable_to_create_qr_code">Unable to generate Qr code</string>
     <string name="price">price</string>
     <string name="currency">currency</string>
@@ -194,6 +196,14 @@
     <string name="to">to</string>
     <string name="account_id">accountId</string>
     <string name="account_name">account_name</string>
+
+    <string name="failed_transaction">Failed Transaction</string>
+    <string name="node_server_url">http://188.166.147.110:8000</string>
+
     <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
     <string name="str_balance_available">%1$s %2$s available</string>
+    <string name="str_invalid_amount">Please enter valid amount</string>
+    <string name="str_invalid_receiver">Please enter valid To account</string>
+    <string name="str_transaction_failed">Transaction Failed</string>
+
 </resources>

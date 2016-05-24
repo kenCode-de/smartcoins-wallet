@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.QrHash;
+import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import retrofit2.Call;
@@ -53,6 +53,7 @@ public class RecieveActivity extends Activity {
 
     String to = "";
     String account_id = "";
+    String orderId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +62,13 @@ public class RecieveActivity extends Activity {
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
         showDialog("", "Loading...");
+        orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
 
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
-            tvUsername.setText("Pay to: "+to);
+            tvUsername.setText("Pay to: " + to);
 
         }
         if (intent.hasExtra(getString(R.string.account_id))) {
@@ -76,20 +78,30 @@ public class RecieveActivity extends Activity {
 
         if (intent.hasExtra(getString(R.string.price))) {
             price = intent.getStringExtra(getString(R.string.price));
+        } else {
+            price = "0";
         }
         if (intent.hasExtra(getString(R.string.currency))) {
             currency = intent.getStringExtra(getString(R.string.currency));
+        } else {
+            currency = "BTS";
         }
 
         if (price.isEmpty()) {
             notfound.setText(getString(R.string.no_amount_requested));
         } else {
-            notfound.setText("Amount: "+price + " " + currency + " requested");
+            notfound.setText("Amount: " + price + " " + currency + " requested");
 
         }
 
-        String qrJson = creatingQrJson(to, to, currency, price, account_id);
-        getQrHashKey(this, qrJson);
+        HashMap hm = new HashMap();
+        hm.put("account_name", to);
+        hm.put("memo", "Order: " + orderId);
+        hm.put("amount", price);
+        hm.put("fee", 0);
+        hm.put("symbol", currency);
+        hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId);
+        getQrHashKey(this, hm);
     }
 
     @OnClick(R.id.backbutton)
@@ -113,32 +125,6 @@ public class RecieveActivity extends Activity {
         } catch (Exception e) {
 
         }
-    }
-
-    private String creatingQrJson(String to, String toLabel, String currency, String price, String account_id) {
-        String orderId = UUID.randomUUID().toString();
-
-        String callback = getString(R.string.qr_callback_url) + account_id + "/" + orderId;
-
-        String json = "{" +
-                "\"to\":\"" + to + "\"," +
-                "\"to_label\":\"" + toLabel + "\"," +
-                "\"currency\":\"" + currency + "\"," +
-                "\"memo\": \"\"," +
-                "\"line_items\":[" +
-                "{" +
-                "\"label\":\"\"," +
-                "\"quantity\":1," +
-                "\"price\":\"" + price + "\"" +
-                "}" +
-                "]," +
-                "\"note\":\"\"," +
-                "\"ruia\":\"\"," +
-                "\"callback\":\"" + callback + "\"" +
-                "}";
-
-        Log.v("qqr", json.replace("\\", ""));
-        return json.replace("\\", "");
     }
 
     Bitmap encodeAsBitmap(String str, String qrColor) throws WriterException {
@@ -166,13 +152,10 @@ public class RecieveActivity extends Activity {
         return bitmap;
     }
 
-    public void getQrHashKey(final Activity activity, String json) {
+    public void getQrHashKey(final Activity activity, HashMap hashMap) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.qr_hash_url));
         IWebService service = sg.getService(IWebService.class);
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("json", json);
-
         final Call<QrHash> postingService = service.getQrHash(hashMap);
         postingService.enqueue(new Callback<QrHash>() {
             @Override
@@ -183,6 +166,7 @@ public class RecieveActivity extends Activity {
                     try {
                         Bitmap bitmap = encodeAsBitmap(qrHash.hash, "#006500");
                         qrimage.setImageBitmap(bitmap);
+                        callIPNSmartCoins(activity);
                     } catch (Exception e) {
                     }
 
@@ -223,9 +207,51 @@ public class RecieveActivity extends Activity {
     @OnClick(R.id.ivGotoKeypad)
     void gotoKeypad() {
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
-        intent.putExtra(getString(R.string.to),to);
-        intent.putExtra(getString(R.string.account_id),account_id);
+        intent.putExtra(getString(R.string.to), to);
+        intent.putExtra(getString(R.string.account_id), account_id);
         startActivity(intent);
     }
+
+    public void callIPNSmartCoins(final Activity activity) {
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.node_server_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<TransactionSmartCoin[]> postingService = service.getTransactionSmartCoin(account_id, orderId);
+        postingService.enqueue(new Callback<TransactionSmartCoin[]>() {
+            @Override
+            public void onResponse(Response<TransactionSmartCoin[]> response) {
+                if (response.isSuccess()) {
+                    if (response.body().length > 0) {
+                        TransactionSmartCoin[] transactions = response.body();
+                        Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
+                        intent.putExtra("block",transactions[0].block);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        if (!isFinishing()) {
+                            Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+                if (!isFinishing()) {
+                    Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
 }

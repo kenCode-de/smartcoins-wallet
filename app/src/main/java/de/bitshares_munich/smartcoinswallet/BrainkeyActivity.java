@@ -100,6 +100,7 @@ public class BrainkeyActivity extends BaseActivity {
                         arrayList.add(accountDetails);
                         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), arrayList);
                         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
 

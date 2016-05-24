@@ -4,9 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-
               android:weightSum="3"
+              android:background="@color/white"
               tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
+
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_weight="0.3"
@@ -14,8 +15,6 @@
                   android:paddingLeft="@dimen/activity_horizontal_margin"
                   android:paddingRight="@dimen/activity_horizontal_margin"
                   android:paddingTop="@dimen/activity_vertical_margin">
-
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,54 +79,69 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/create"/>
-
-
     </LinearLayout>
-    <TextView
-        android:id="@+id/tvExistingAccount"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.2"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:text="@string/existing_account"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:background="#dddddd"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:weightSum="4">
+        android:layout_height="wrap_content"
+        android:layout_weight="2.7"
+        android:orientation="vertical"
+        android:weightSum="1">
         <TextView
-            android:id="@+id/tvAppVersion"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/tvBlockNumberHead"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"/>
-        <ImageView
-            android:id="@+id/ivSocketConnected"
-            android:layout_width="0dp"
+            android:layout_weight="0.1"
+            android:id="@+id/tvExistingAccount"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:src="@drawable/icon_disconnecting"/>
+            android:padding="16dp"
+            android:text="@string/existing_account"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:layout_gravity="left"
+            android:textAlignment="gravity"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="bottom"
+            android:background="@color/bottomBarColor"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            >
+            <TextView
+                android:id="@+id/tvAppVersion"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@color/bottomBarColor"/>
 
-        <ImageView android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:layout_weight="0.5"
-                   android:src="@drawable/icon_setting"
-                    android:id="@+id/OnClickSettings"
-            />
+            <TextView
+                android:background="@color/bottomBarColor"
+                android:id="@+id/tvBlockNumberHead"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"/>
+            <ImageView
+                android:id="@+id/ivSocketConnected"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_disconnecting"/>
+
+            <ImageView android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="0.5"
+                       android:layout_gravity="center"
+                       android:src="@drawable/icon_setting"
+                       android:id="@+id/OnClickSettings"
+                />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

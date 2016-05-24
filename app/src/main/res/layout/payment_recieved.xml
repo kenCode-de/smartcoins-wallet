@@ -33,7 +33,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin">
 
         <LinearLayout
-            android:layout_above="@+id/LowerChild"
+            android:layout_above="@+id/btnOk"
             android:id="@+id/UpperChild"
             android:layout_width="match_parent"
             android:layout_height="400sp"
@@ -73,6 +73,7 @@
         </LinearLayout>
         
         <LinearLayout
+            android:background="@drawable/thank_you"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
@@ -250,11 +251,11 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/LowerChild"
+            android:id="@+id/btnOk"
             android:layout_width="match_parent"
             android:layout_height="50sp"
             android:layout_alignParentBottom="true"
-            android:backgroundTint="#70882E"
+            android:backgroundTint="@color/green"
             android:gravity="center"
             android:text="OK"
             android:textColor="#fff"

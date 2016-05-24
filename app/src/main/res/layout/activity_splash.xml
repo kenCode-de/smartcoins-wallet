@@ -3,8 +3,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
-    <ImageView android:layout_width="match_parent" android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp"
+        android:background="@color/colorPrimary">
+    <ImageView android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
                android:layout_gravity="center"
-               android:src="@drawable/bts"/>
+               android:src="@drawable/logoicon"
+        android:background="@color/colorPrimary"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:padding="10dp"
+            android:background="@color/colorPrimary"
+            android:text="Smartcoins Wallet"/>
+        </LinearLayout>
+
 
 </LinearLayout>
