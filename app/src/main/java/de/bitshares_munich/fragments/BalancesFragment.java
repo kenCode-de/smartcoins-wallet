@@ -1,10 +1,13 @@
 package de.bitshares_munich.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +20,19 @@ import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
+import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.MainActivity;
@@ -31,8 +40,14 @@ import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.TransactionActivity;
+import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.TinyDB;
+import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.TableDataAdapter;
+import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
+import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 
 /**
  * Created by qasim on 5/10/16.
@@ -45,8 +60,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
 
-    @Bind(R.id.llTransactions)
-    LinearLayout llTransactions;
+    private SortableTableView<TransactionDetails> tableView;
 
     TinyDB tinyDB;
 
@@ -64,8 +78,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
@@ -84,19 +98,37 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
             }
         }
-     //   new AssestsActivty(getContext(),"yasir-ibrahim" , this);
+
         new AssestsActivty(getContext(),to , this);
         new TransactionActivity(getContext(),accountId , this);
-
-        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tv_account_name.setText(to);
 
+        //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
+        final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
-        for (int j = 0; j < 50; j++) {
-            View customView1 = layoutInflater.inflate(R.layout.items_rows_transactions, null);
-            llTransactions.addView(customView1);
-        }
+        // replace myTrabsactions with actual data
+        List<TransactionDetails> myTransactions = new ArrayList<>();
+        updateSortTableView(tableView,myTransactions);
 
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                View childView = tableView.getDataAdapter().getView(0, null, tableView);
+                childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                float height3 = childView.getMeasuredHeight();
+                tableViewparent.setMinimumHeight((int)(height3*5));
+            }
+        };
+        handler.postDelayed(updateTask, 2000);
+
+        // To generate pdf use following cmds
+        //TableDataAdapter myAdapter = tableView.getDataAdapter();
+        //List<TransactionDetails> det =  myAdapter.getData();
+        //pdfTable myTable = new pdfTable(getContext(),getActivity(),"Transactions-scwall");
+        //myTable.createTable(det);
 
         return rootView;
     }
@@ -119,6 +151,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public void QrCodeActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.exportButton)
+    public void onExportButton() {
+        TableDataAdapter myAdapter = tableView.getDataAdapter();
+        List<TransactionDetails> det =  myAdapter.getData();
+        pdfTable myTable = new pdfTable(getContext(),getActivity(),"Transactions-scwall");
+        myTable.createTable(det);
     }
 
     @Override
@@ -225,6 +265,75 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             ok = ok*10;
         }
         return  Double.toString(value/ok);
+    }
+
+    public void updateSortTableView (SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions)
+    {
+        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "S/R", "Details", "Amount");
+        simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
+        tableView.setHeaderAdapter(simpleTableHeaderAdapter);
+
+        tableView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
+        tableView.setColumnWeight(0, 17);
+        tableView.setColumnWeight(1, 12);
+        tableView.setColumnWeight(2, 30);
+        tableView.setColumnWeight(3, 20);
+        tableView.setColumnComparator(0, new TransactionsDateComparator());
+        tableView.setColumnComparator(1, new TransactionsSendRecieveComparator());
+        tableView.setColumnComparator(3, new TransactionsAmountComparator());
+
+        tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+
+        /*
+        TableDataAdapter myAdapter = tableView.getDataAdapter();
+        List<TransactionDetails> det =  myAdapter.getData();
+        float height = tableView.getHeight();
+
+
+        for(int l=0; l<=30; l++){
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, 2016);
+            cal.set(Calendar.MONTH, 3);
+            cal.set(Calendar.DATE, l);
+            cal.set(Calendar.HOUR_OF_DAY, 14);
+            cal.set(Calendar.MINUTE, 33);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            Date myDate = cal.getTime();
+
+            myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",(float)l,"OBITS",(float)3.33,"USD"));
+        }
+        */
+    }
+
+    private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
+        @Override
+        public int compare(TransactionDetails one, TransactionDetails two) {
+            return one.getDate().compareTo(two.getDate());
+        }
+    }
+
+    private static class TransactionsSendRecieveComparator implements Comparator<TransactionDetails> {
+        @Override
+        public int compare(TransactionDetails one, TransactionDetails two) {
+            return one.getSent().compareTo(two.getSent());
+        }
+    }
+
+    private static int compareFloats(float change1, float change2) {
+        if (change1 < change2) return -1;
+        if (change1 == change2) return 0; // Fails on NaN however, not sure what you want
+        if (change2 > change2) return 1;
+        return 0;
+    }
+
+    private static class TransactionsAmountComparator implements Comparator<TransactionDetails> {
+        @Override
+        public int compare(TransactionDetails one, TransactionDetails two) {
+            return compareFloats(one.getAmount(),two.getAmount());
+        }
     }
 
 }

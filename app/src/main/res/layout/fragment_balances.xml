@@ -1,14 +1,17 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:nestedScrollingEnabled="true">
 
 <LinearLayout
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
               android:weightSum="3"
               android:orientation="vertical">
 
     <TextView
+        android:background="@color/whiteColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
@@ -64,21 +67,21 @@
                 android:text="@string/send_UpperCase"/>
         </LinearLayout>
     </LinearLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:layout_marginTop="10dp"
-    android:background="@color/skyblue">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginLeft="16dp"
-        android:layout_gravity="center"
-        android:textSize="17dp"
-        android:text="@string/balances"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/transactionsHeader">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginLeft="16dp"
+            android:layout_gravity="center"
+            android:textSize="17dp"
+            android:text="@string/balances"/>
 
-</LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llBalances"
@@ -89,8 +92,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/skyblue">
+        android:background="@color/transactionsHeader">
         <TextView
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -98,16 +102,43 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:text="@string/transactions"/>
+        <Button
+            android:id="@+id/exportButton"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Export"
+            android:textColor="@color/whiteColor"
+            android:background="@color/colorPrimary"/>
     </LinearLayout>
+
+
     <LinearLayout
-        android:id="@+id/llTransactions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:id="@+id/tableViewparent"
+        android:isScrollContainer="true">
+        <de.codecrafters.tableview.SortableTableView
+            xmlns:table="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/tableView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            table:tableView_columnCount="4"
+            table:tableView_headerElevation="10"
+            table:tableView_headerColor="@color/transactionsHeader"
+
+
+            android:background="@color/whiteColor"
+            android:backgroundTint="@color/whiteColor"
+            table:theme="@style/AppTheme"
+            android:scrollbars="vertical"
+            android:nestedScrollingEnabled="true"
+            >
+        </de.codecrafters.tableview.SortableTableView>
     </LinearLayout>
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
+
 </LinearLayout>
 
 </ScrollView>

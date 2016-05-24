@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:id="@+id/transactiondate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="29 Apr"
+        android:fontFamily="sans-serif-light"
+        android:textSize="10pt"
+        android:textColor="@color/blackColor"
+        android:textAlignment="center"/>
+    <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp"
+        android:id="@+id/transactiontime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8:38 AM"
+        android:fontFamily="sans-serif"
+        android:textSize="6pt"
+        android:textColor="@color/blackColor"
+        android:textAlignment="center"/>
+    <TextView
+        android:paddingLeft="10dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        android:id="@+id/transactionttimezone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ACDST"
+        android:fontFamily="sans-serif"
+        android:textSize="6pt"
+        android:textColor="@color/blackColor"
+        android:textAlignment="center"/>
+
+</LinearLayout>

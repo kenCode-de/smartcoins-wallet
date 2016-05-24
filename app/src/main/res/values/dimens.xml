@@ -11,5 +11,6 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="layout_margin">35sp</dimen>
     <dimen name="webview_margin">30sp</dimen>
+    <dimen name="transactionsheaderpading">5dp</dimen>
 
 </resources>

@@ -18,4 +18,11 @@
 
     <color name="bottomBarColor">#dddddd</color>
 
+    <color name="blackColor">#000000</color>
+    <color name="whiteColor">#ffffff</color>
+    <color name="recieveamount">#669900</color>
+    <color name="sendamount">#DC473A</color>
+    <color name="transactionsHeader">#BFE5F5</color>
+    <color name="transactionsseparator">#CCCCCC</color>
+
 </resources>
