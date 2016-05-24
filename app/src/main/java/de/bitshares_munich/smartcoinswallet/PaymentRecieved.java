@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class PaymentRecieved extends Activity implements ITransactionObject,IAcc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_recieved);
         ButterKnife.bind(this);
+        playSound();
         application.registerTransactionObject(this);
         application.registerAccountObjectCallback(this);
         application.registerAssetObjectCallback(this);
@@ -93,6 +95,14 @@ public class PaymentRecieved extends Activity implements ITransactionObject,IAcc
             int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
             String params = "{\"id\":14,\"method\":\"call\",\"params\":["+db_identifier+",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
             Application.webSocketG.send(params);
+        }
+    }
+    public void playSound() {
+        try {
+            MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.ch_ching);
+            mediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     @Override
