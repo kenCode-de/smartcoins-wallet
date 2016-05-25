@@ -53,7 +53,7 @@ public class TransactionActivity implements BalancesDelegate {
     int assets_id_total_size;
     int memo_in_work;
     int memo_total_size;
-
+    int number_of_transactions_in_queue;
 
 
 
@@ -62,6 +62,7 @@ public class TransactionActivity implements BalancesDelegate {
     HashMap<String,String> timestamp;
     ArrayList<HashMap<String,String>> memos = new ArrayList<>();
     HashMap<String,String> decodememos = new HashMap<>();;
+    HashMap<String,String> eRecipts = new HashMap<>();;
 
     BalancesDelegate balancesDelegate;
     String accountid;
@@ -70,7 +71,7 @@ public class TransactionActivity implements BalancesDelegate {
     HashMap<String,String> Names_from_Api = new HashMap<>();
     HashMap<String,HashMap<String,String>> Symbols_Precisions = new HashMap<>();
     String wifkey;
-    public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key){
+    public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key , int number_of_transactions_loaded){
         context = c;
         assetDelegate = instance;
         balancesDelegate = this;
@@ -80,12 +81,12 @@ public class TransactionActivity implements BalancesDelegate {
         wifkey = Crypt.getInstance().decrypt_string(wif_key);}
         catch (Exception e){
             testing("namak",e,"wifkey");
-        }
+        };
         timestamp = new HashMap<>();
         if(account_id!=null)
-        get_relative_account_history(account_id,"8");
+        get_relative_account_history(account_id,"8",number_of_transactions_loaded);
     }
-    void get_relative_account_history(final String account_id, final String id) {
+    void get_relative_account_history(final String account_id, final String id,final int n) {
 
         final Handler handler = new Handler();
 
@@ -94,13 +95,12 @@ public class TransactionActivity implements BalancesDelegate {
             public void run() {
                 if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
                 {
-
                         int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0,10,0]]}";
+                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0,25,"+n+"]]}";
                         Application.webSocketG.send(getDetails);
                 }
                 else {
-                    get_relative_account_history(account_id,id);
+                    get_relative_account_history(account_id,id,n);
 
                 }
             }
@@ -112,6 +112,7 @@ public class TransactionActivity implements BalancesDelegate {
     @Override
     public void OnUpdate(String s,int id) {
         if(id==8){
+            testing("special",s,"");
             onFirstCall(s);
         }
         if(id==9){
@@ -155,11 +156,12 @@ public class TransactionActivity implements BalancesDelegate {
                 Symbols_Precisions.put(asset_ids.get(assets_id_in_work),de);
                 if(assets_id_in_work==(assets_id_total_size-1)){
                     testing("namak","","testing");
+
                     HashMap<String,String> def = new HashMap<>();
                     memo_in_work = 0;
                     def = memos.get(memo_in_work);
                     decodeMemo(def.get("memo"),def.get("memo_id"));
-                    // onLastCall();
+               //     onLastCall();
                 }
                 assets_id_in_work++;
                 if(assets_id_in_work<asset_ids.size()) get_asset(asset_ids.get(assets_id_in_work),"11");
@@ -168,9 +170,17 @@ public class TransactionActivity implements BalancesDelegate {
     }
     void onFirstCall(String s) {
         String result = returnParse(s, "result");
+        int totalarrays = TotalArraysOfObj(result);
+        if(totalarrays!=-1) {
+            for (int i = 0; i < totalarrays; i++) {
+                eRecipts.put(Integer.toString(i),returnArrayObj(result,i));
+            }
+        }
+        testing("special",eRecipts,"eRecipts");
         HashMap<String, ArrayList<String>> arrayofOP = returnParseArray(result, "op");
         HashMap<String, ArrayList<String>> arrayofblock_num = returnParseArray(result, "block_num");
         blocks = arrayofblock_num.get("block_num");
+        number_of_transactions_in_queue = arrayofOP.get("op").size();
         for (int i = 0; i < arrayofOP.get("op").size(); i++) {
             String breakArray = returnArrayObj(arrayofOP.get("op").get(i), 1);
             HashMap<String, String> mapof_All = new HashMap<>();
@@ -302,14 +312,29 @@ public class TransactionActivity implements BalancesDelegate {
                                 decodeMemo(def.get("memo"), def.get("memo_id"));
                             }
                         }
+                    }else if(resp.status.equals("failure")){
+                        if(memo_in_work<memo_total_size) {
+                            decodememos.put(key,"----");
+                            if(memo_in_work==(memo_total_size-1)){
+                                onLastCall();
+                            }
+                            HashMap<String, String> def = new HashMap<>();
+                            memo_in_work++;
+                            if(memo_in_work<memos.size()) {
+                                def = memos.get(memo_in_work);
+                                decodeMemo(def.get("memo"), def.get("memo_id"));
+                            }
+                        }
                     }
                 } else {
+                    Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
 
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
+                testing("bijli",t,"past_break");
             }
         });
     }
@@ -354,7 +379,13 @@ public class TransactionActivity implements BalancesDelegate {
         }catch (Exception e){}
         return "";
     }
-
+    int TotalArraysOfObj(String Json){
+        try {
+            JSONArray myArray = new JSONArray(Json);
+            return myArray.length();
+        }catch (Exception e){}
+        return -1;
+    }
     void get_Time(String block_num,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
       //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
@@ -397,9 +428,13 @@ public class TransactionActivity implements BalancesDelegate {
                 String from = Names_from_Api.get(fromid);
                 String toid = mapof_All.get("to");
                 String to = Names_from_Api.get(toid);
-                String memo = "";
+                String memo = "----";
+                String eRecipt = "";
                 if (decodememos.containsKey(Integer.toString(i))) {
                     memo = decodememos.get(Integer.toString(i));
+                }
+                if (eRecipts.containsKey(Integer.toString(i))) {
+                    eRecipt = eRecipts.get(Integer.toString(i));
                 }
               //  String memo = mapof_All.get("message");
                 String assetid = mapof_All.get("asset_id");
@@ -410,13 +445,13 @@ public class TransactionActivity implements BalancesDelegate {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Date formatted = null;
                 formatted = formatter.parse(Date);
-                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "");
+                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt);
                 transactionDetails.add(object);
             }catch(Exception e){
                 testing("error" , e , "Try,Catch");
             }
         }
-        assetDelegate.TransactionUpdate(transactionDetails);
+        assetDelegate.TransactionUpdate(transactionDetails,number_of_transactions_in_queue);
     }
     String returnFromPower(String i,String str){
         Double ok = 1.0;

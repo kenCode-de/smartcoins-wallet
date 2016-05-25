@@ -16,9 +16,10 @@ public class TransactionDetails {
     public String assetSymbol;
     public float faitAmount;
     public String faitAssetSymbol;
+    public String eReceipt;
 
     public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, float _Amount,
-                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol)
+                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt)
     {
         this.Date = _date;
         this.Sent = _Sent;
@@ -29,6 +30,7 @@ public class TransactionDetails {
         this.assetSymbol = _assetSymbol;
         this.faitAmount = _faitAmount;
         this.faitAssetSymbol = _faitAssetSymbol;
+        eReceipt = _eReceipt;
     }
 
     public Date getDate()

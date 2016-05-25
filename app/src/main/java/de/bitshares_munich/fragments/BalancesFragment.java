@@ -60,8 +60,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     String accountId = "";
     String to ="";
     String wifkey = "";
+    @Bind(R.id.load_more_values)
+    Button load_more_values;
+
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
+    int number_of_transactions_loaded;
 
     private SortableTableView<TransactionDetails> tableView;
     static List<TransactionDetails> myTransactions;
@@ -70,6 +74,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Bind(R.id.account_name)
     TextView tv_account_name;
+
 
     public BalancesFragment() {
         // Required empty public constructor
@@ -84,6 +89,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
+
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
@@ -103,9 +109,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
             }
         }
-
+        load_more_values.setVisibility(View.GONE);
         new AssestsActivty(getContext(),to , this);
-        new TransactionActivity(getContext(),accountId , this , wifkey);
+        number_of_transactions_loaded = 0;
+        new TransactionActivity(getContext(),accountId , this , wifkey , number_of_transactions_loaded);
+       number_of_transactions_loaded=number_of_transactions_loaded+25;
         tv_account_name.setText(to);
 
         //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -359,8 +367,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
     }
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails){
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,int number_of_transactions_in_queue){
 
+        if(number_of_transactions_in_queue<25)
+            load_more_values.setVisibility(View.GONE);
+        else {
+            load_more_values.setVisibility(View.VISIBLE);
+            load_more_values.setEnabled(true);
+        }
 //        Calendar cal = Calendar.getInstance();
 //        cal.set(Calendar.YEAR, 2016);
 //        cal.set(Calendar.MONTH, 3);
@@ -373,16 +387,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //        Date myDate = cal.getTime();
 //
 //        myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",100,"OBITS",(float)3.33,"USD"));
+//        myTransactions.addAll(myTransactions);
+        myTransactions.addAll(transactionDetails);
+     //   myTransactions=transactionDetails;
 
-        myTransactions = transactionDetails;
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+
 //        getActivity().runOnUiThread(new Runnable() {
 //            public void run() {
 //                myTransactions = transactionDetails;
 //            }
 //        });
     }
-
+    @OnClick(R.id.load_more_values)
+    public void Load_more_Values(){
+        load_more_values.setEnabled(false);
+        new TransactionActivity(getContext(),accountId , this , wifkey , number_of_transactions_loaded);
+        number_of_transactions_loaded=number_of_transactions_loaded+25;
+   }
 }
 
 
