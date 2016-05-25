@@ -92,6 +92,13 @@ public class Support_Methods {
         }
         return -1;
     }
-
+    public static int TotalArraysOfObj(String Json){
+        try {
+            JSONArray myArray = new JSONArray(Json);
+            return myArray.length();
+        }catch (Exception e){            testing("Support_Methods",e,"TotalArraysOfObj");
+        }
+        return -1;
+    }
 
 }

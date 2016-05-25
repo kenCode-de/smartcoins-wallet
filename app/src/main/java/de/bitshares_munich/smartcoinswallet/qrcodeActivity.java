@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.*;
+import de.bitshares_munich.utils.Support_Methods;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -34,7 +35,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  */
 public class qrcodeActivity extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
-    String sResult;
+    int id;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -44,6 +45,9 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+        Intent intent = getIntent();
+        id = intent.getIntExtra("id",-1);
+        Support_Methods.testing("qrcode",id,"od");
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -166,6 +170,14 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         setResult(RESULT_OK, intent);
         finish();
     }
+    private void StartWithfinishWithResult(String parseddata) {
+        Bundle conData = new Bundle();
+        conData.putSerializable("sResult",parseddata);
+        Intent intent = new Intent(qrcodeActivity.this, SendScreen.class);
+        intent.putExtras(conData);
+        intent.putExtra("id",5);
+startActivity(intent);          finish();
+    }
     void workingQrcode(String rawResult){
         String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
         AsyncHttpClient client = new AsyncHttpClient();
@@ -181,7 +193,11 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
                     byte[] bytes = timeline;
                     String s = new String(bytes);
                     Log.i("euro", s);
-                    finishWithResult(s);
+                    if (id==0) {
+                        finishWithResult(s);
+                    }else if(id==1){
+                        StartWithfinishWithResult(s);
+                    }
 
                     ;
                 }catch (Exception j){

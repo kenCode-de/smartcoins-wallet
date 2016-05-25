@@ -179,7 +179,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @OnClick(R.id.qrCamera)
     public void QrCodeActivity() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getContext(), qrcodeActivity.class);
+        intent.putExtra("id",1);
         startActivity(intent);
     }
 
