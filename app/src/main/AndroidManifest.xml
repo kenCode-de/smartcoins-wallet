@@ -69,6 +69,14 @@
             android:name=".BrainkeyActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".Share_Contact"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Add_Edit_Contacts"
+            android:screenOrientation="portrait">
+        </activity>
 
         <activity
             android:name=".ImportBackupActivity"
