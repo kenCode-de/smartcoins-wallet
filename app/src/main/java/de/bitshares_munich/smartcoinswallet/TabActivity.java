@@ -48,18 +48,19 @@ public class TabActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
-
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setTitle("");
         toolbar.setNavigationIcon(R.mipmap.btslogo);
-
         setupViewPager(viewPager);
-
         tabLayout.setupWithViewPager(viewPager);
-
         updateBlockNumberHead();
+    }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        Application.setCurrentActivity(this);
     }
 
     private void setupViewPager(ViewPager viewPager) {
