@@ -19,6 +19,7 @@
         android:padding="16dp"
         android:textStyle="bold"
         android:textSize="21dp"
+        android:textColor="@color/black"
         android:id="@+id/account_name"
         android:text="Yasir-mobile"/>
     <LinearLayout
@@ -81,6 +82,7 @@
             android:layout_marginLeft="16dp"
             android:layout_gravity="center"
             android:textSize="17dp"
+            android:textColor="@color/black"
             android:text="@string/balances"/>
 
     </LinearLayout>
@@ -104,6 +106,7 @@
             android:layout_marginLeft="16dp"
             android:layout_gravity="center"
             android:textSize="17dp"
+            android:textColor="@color/black"
             android:text="@string/transactions"/>
         <Button
             android:id="@+id/exportButton"

@@ -206,4 +206,9 @@
     <string name="str_invalid_receiver">Please enter valid To account</string>
     <string name="str_transaction_failed">Transaction Failed</string>
 
+    <string name="e_receipt">e_receipt</string>
+
+    <string name="e_receipt_activity_name">e-Receipt</string>
+
+
 </resources>
