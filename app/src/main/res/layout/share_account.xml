@@ -54,7 +54,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OPEN EMAIL APPLICATION"
+            android:text="@string/share_btn_text"
             android:layout_gravity="center"
             android:backgroundTint="#FF4081"
             android:textColor="#FFFFFF"
