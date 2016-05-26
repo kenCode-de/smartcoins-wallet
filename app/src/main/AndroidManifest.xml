@@ -36,11 +36,11 @@
         <activity
             android:name=".AccountActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity"/>
         <activity
             android:name=".SendScreen"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".RecieveActivity"
             android:screenOrientation="portrait"
@@ -58,7 +58,17 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".BrainkeyActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Share_Contact"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Add_Edit_Contacts"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name=".ImportBackupActivity"
             android:screenOrientation="portrait"/>

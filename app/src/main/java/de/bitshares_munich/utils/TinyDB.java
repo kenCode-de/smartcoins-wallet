@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.smartcoinswallet.List_View_Activity;
 
 
 public class TinyDB {
@@ -331,7 +332,18 @@ public class TinyDB {
         }
         return objects;
     }
+    public ArrayList<List_View_Activity.ListviewContactItem> getContactObject(String key, Class<?> mClass) {
+        Gson gson = new Gson();
 
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<List_View_Activity.ListviewContactItem> objects = new ArrayList<>();
+
+        for (String jObjString : objStrings) {
+            List_View_Activity.ListviewContactItem value = (List_View_Activity.ListviewContactItem) gson.fromJson(jObjString, mClass);
+            objects.add(value);
+        }
+        return objects;
+    }
 
     public Object getObject(String key, Class<?> classOfT) {
 
@@ -492,6 +504,16 @@ public class TinyDB {
     }*/
 
     public void putListObject(String key, ArrayList<AccountDetails> objArray) {
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for (Object obj : objArray) {
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+
+    public void putContactsObject(String key, ArrayList<List_View_Activity.ListviewContactItem> objArray ) {
         checkForNullKey(key);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();
