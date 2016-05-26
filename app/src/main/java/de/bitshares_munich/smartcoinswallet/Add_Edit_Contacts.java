@@ -205,7 +205,7 @@ public class Add_Edit_Contacts extends Activity implements IAccount{
                     @Override
                     public void run() {
                         SaveContact.setEnabled(true);
-                        warning.setText("Account name Validate.");
+                        warning.setText(R.string.account_name_validate);
                         warning.setVisibility(View.VISIBLE);   }
                 });
             }

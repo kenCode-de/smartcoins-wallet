@@ -44,7 +44,6 @@ public class List_View_Activity extends BaseAdapter {
         public List_View_Activity(Context _context) {
             context = _context;
             tinyDB = new TinyDB(context);
-         //   contactsDelegate = _contactsDelegate;
             mInflater = LayoutInflater.from(context);
             listContact = GetlistContact();
         }
