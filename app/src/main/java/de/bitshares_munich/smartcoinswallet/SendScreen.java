@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -57,6 +56,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
+    AccountAssets loyaltyAsset;
     boolean validReceiver = false;
     boolean validAmount = false;
     ProgressDialog progressDialog;
@@ -74,11 +74,11 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
 
-    @Bind(R.id.FourthChild)
-    LinearLayout FourthChild_LOYALTI;
+    @Bind(R.id.llLoyalty)
+    LinearLayout llLoyalty;
 
-    @Bind(R.id.StatusTwo)
-    TextView StatusTwo_LOYALTI;
+    @Bind(R.id.tvLoyaltyStatus)
+    TextView tvLoyaltyStatus;
 
     @Bind(R.id.StatusFourth)
     TextView StatusFourth;
@@ -89,8 +89,8 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @Bind(R.id.selectBTSAsset)
     TextView selectBTSAsset;
 
-    @Bind(R.id.selectBTSLoyalty)
-    TextView selectBTSLoyalty;
+    @Bind(R.id.tvLoyalty)
+    TextView tvLoyalty;
 
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
@@ -129,6 +129,9 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     @Bind(R.id.btnSend)
     LinearLayout btnSend;
 
+    @Bind(R.id.etLoyalty)
+    EditText etLoyalty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,24 +143,16 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
 
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (accountDetails.size() == 1){
-            AccountDetails accountDetail = accountDetails.get(0);
-        }
         init();
-        screenOne();
     }
     void init(){
         setCheckboxAvailabilty();
         setBackUpAsset();
         setSpinner();
     }
-    void screenOne(){
-        FourthChild_LOYALTI.setVisibility(View.GONE);
-        StatusTwo_LOYALTI.setVisibility(View.GONE);
-    }
     void screenTwo(){
-        FourthChild_LOYALTI.setVisibility(View.GONE);
-        StatusTwo_LOYALTI.setVisibility(View.GONE);
+        llLoyalty.setVisibility(View.GONE);
+        tvLoyaltyStatus.setVisibility(View.GONE);
        // StatusFourth.setVisibility(View.GONE);
     }
     void screenThree(){
@@ -192,6 +187,25 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         updateAmountStatus();
 
     }
+    @OnTextChanged(R.id.etLoyalty)
+    void onLoyaltyChanged(CharSequence text){
+        if (text != null & !text.toString().equals("")){
+            if (text.toString().equals(".")){
+                text = "0.";
+            }
+            Double loyaltyAmount = Double.parseDouble(text.toString());
+            Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
+            if (loyaltyAmount > loyaltyBalance){
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+            }else{
+                String remainingBalance = String.format("%.4f",(loyaltyBalance - loyaltyAmount));
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
+            }
+//            tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+
+
+        }
+    }
     @OnClick(R.id.btnSend)
     public void setBtnSend(View view) {
         if (validateSend()){
@@ -218,7 +232,11 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
 
         Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
         if (etAmount.getText().length() > 0) {
-            Double enteredAmount = Double.parseDouble(etAmount.getText().toString());
+            String enteredAmountStr = etAmount.getText().toString();
+            if (enteredAmountStr.equals(".")){
+                enteredAmountStr = "0.";
+            }
+            Double enteredAmount = Double.parseDouble(enteredAmountStr);
             if (enteredAmount != 0){
                 String remainingBalance = "0";
                 if (enteredAmount > selectedBalance){
@@ -333,6 +351,7 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         etReceiverAccount.setText(resJson.get("to").toString());
         validReceiver = true;
         spAssets.setSelection(getSpinnerIndex(spAssets,resJson.get("currency").toString()));
+        spAssets.setEnabled(false);
         if(resJson.get("memo")!=null){
             llMemo.setVisibility(View.GONE);
             etMemo.setText(resJson.get("memo").toString());
@@ -345,14 +364,35 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         }
 
         etAmount.setText(totalAmount.toString());
+        etAmount.setEnabled(false);
 //        selectBTSAmount.setText(hash.get("currency"));
-//        String loyaltypoints = hash.get("ruia");
-//        if(loyaltypoints!=null) {selectBTSLoyalty.setText(loyaltypoints);
-//            FourthChild_LOYALTI.setVisibility(View.VISIBLE);
-//            StatusTwo_LOYALTI.setVisibility(View.VISIBLE);
-//        }
-//        else {FourthChild_LOYALTI.setVisibility(View.GONE);
-//            StatusTwo_LOYALTI.setVisibility(View.GONE);}
+        String loyaltypoints = resJson.get("ruia").toString();
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
+        if(loyaltypoints!=null) {
+            for (int i=0; i<accountDetails.size(); i++){
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)){
+                    for (int j=0; j<accountDetail.AccountAssets.size(); j++){
+                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                        if (tempAccountAsset.id.equals(loyaltypoints)){
+                            loyaltyAsset = accountDetail.AccountAssets.get(j);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (loyaltyAsset != null) {
+                Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
+                tvLoyalty.setText(loyaltyAsset.symbol);
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+                llLoyalty.setVisibility(View.VISIBLE);
+                tvLoyaltyStatus.setVisibility(View.VISIBLE);
+            }
+        }
+        else {
+            llLoyalty.setVisibility(View.GONE);
+            tvLoyaltyStatus.setVisibility(View.GONE);
+        }
     }
     public void createSpinner(List<String> spinnerArray, Spinner spinner){
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
