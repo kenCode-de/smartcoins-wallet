@@ -6,151 +6,165 @@
             android:id="@+id/scrollViewBalances"
             android:background="@color/whiteColor">
 
-<LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:weightSum="3"
-              android:orientation="vertical">
-
-    <TextView
-        android:background="@color/whiteColor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textStyle="bold"
-        android:textSize="21dp"
-        android:id="@+id/account_name"
-        android:text="Yasir-mobile"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:weightSum="3"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1.7"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/recievebtn"
-                android:src="@mipmap/icon_receive"/>
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/receive_uppercase"/>
-        </LinearLayout>
-        <ImageView
-            android:id="@+id/qrCamera"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/icon_camera"/>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1.3"
-            android:layout_height="wrap_content"
-
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/sendbtn"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/icon_send"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/send_UpperCase"/>
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/transactionsHeader">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_marginLeft="16dp"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:text="@string/balances"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llBalances"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical">
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/transactionsExportHeader"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/transactionsHeader">
+
         <TextView
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
+            android:background="@color/whiteColor"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:textStyle="bold"
-            android:layout_marginLeft="16dp"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:text="@string/transactions"/>
-        <Button
-            android:id="@+id/exportButton"
-            android:layout_margin="5dp"
-            android:layout_width="wrap_content"
+            android:textSize="21dp"
+            android:id="@+id/account_name"
+            android:text="Yasir-mobile"/>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Export"
-            android:textColor="@color/whiteColor"
-            android:background="@color/colorPrimary"/>
-    </LinearLayout>
+            android:weightSum="3"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1.1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/recievebtn"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/icon_receive"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/receive_uppercase"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/qrCamera"
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="75dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/icon_camera"/>
+            <View android:layout_width="0dp"
+                  android:layout_height="1dp"
+                  android:layout_gravity="center"
+                  android:layout_weight="0.3"
+                  android:background="#dc473a"
+                  android:layout_marginLeft="-14dp"
+            ></View>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-31dp"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/sendbtn"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+
+                    android:src="@mipmap/icon_send"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/send_UpperCase"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/transactionsHeader">
+            <TextView
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="center"
+                android:textSize="17dp"
+                android:text="@string/balances"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBalances"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/transactionsExportHeader"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/transactionsHeader">
+            <TextView
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="center"
+                android:textSize="17dp"
+                android:text="@string/transactions"/>
+            <Button
+                android:id="@+id/exportButton"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Export"
+                android:textColor="@color/whiteColor"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tableViewparent"
-        android:isScrollContainer="true"
-        android:orientation="vertical"
-        android:weightSum="2"
-        >
-        <de.codecrafters.tableview.SortableTableView
-            xmlns:table="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/tableView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            table:tableView_columnCount="4"
-            table:tableView_headerElevation="10"
-            table:tableView_headerColor="@color/transactionsHeader"
-            android:layout_weight="1.9"
-            android:background="@color/whiteColor"
-            android:backgroundTint="@color/whiteColor"
-            table:theme="@style/AppTheme"
-            android:scrollbars="vertical"
-            android:nestedScrollingEnabled="true"
+            android:id="@+id/tableViewparent"
+            android:isScrollContainer="true"
+            android:orientation="vertical"
+            android:weightSum="2"
+        >
+            <de.codecrafters.tableview.SortableTableView
+                xmlns:table="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/tableView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                table:tableView_columnCount="4"
+                table:tableView_headerElevation="10"
+                table:tableView_headerColor="@color/transactionsHeader"
+                android:layout_weight="1.9"
+                android:background="@color/whiteColor"
+                android:backgroundTint="@color/whiteColor"
+                table:theme="@style/AppTheme"
+                android:scrollbars="vertical"
+                android:nestedScrollingEnabled="true"
             >
-        </de.codecrafters.tableview.SortableTableView>
-       <Button
-           android:layout_weight="0.1"
-           android:layout_width="match_parent"
-           android:layout_height="35dp"
-           android:id="@+id/load_more_values"
-           android:text="show more"
-           android:layout_gravity="bottom"
-           />
-    </LinearLayout>
+            </de.codecrafters.tableview.SortableTableView>
+            <Button
+                android:layout_weight="0.1"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:id="@+id/load_more_values"
+                android:text="show more"
+                android:layout_gravity="bottom"
+            />
+        </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
 
 </ScrollView>

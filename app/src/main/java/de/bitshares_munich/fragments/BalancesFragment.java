@@ -46,6 +46,7 @@ import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.tableViewClickListener;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -89,7 +90,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
-
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
@@ -120,9 +120,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
-        // replace myTrabsactions with actual data
+        // replace myTransactions with actual data
         myTransactions = new ArrayList<>();
         updateSortTableView(tableView,myTransactions);
+
+
+        tableView.addDataClickListener(new tableViewClickListener(getContext()));
 
         final Handler handler = new Handler();
 
@@ -132,19 +135,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 try {
                     View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
                     int height1 = scrollViewBalances.getHeight();
-
-
                     View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
                     int height2 = transactionsExportHeader.getHeight();
-
                     tableViewparent.setMinimumHeight(height1 - (height2) );
-
-//                    View childView = tableView.getDataAdapter().getView(0, null, tableView);
-//                    childView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-//                    float height3 = childView.getMeasuredHeight();
-//                    if ( height3 > 0 ) {
-//                        tableViewparent.setMinimumHeight((int) (height * 5));
-//                    }
                 }
                 catch (Exception e)
                 {
@@ -153,12 +146,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             }
         };
         handler.postDelayed(updateTask, 2000);
-
-        // To generate pdf use following cmds
-        //TableDataAdapter myAdapter = tableView.getDataAdapter();
-        //List<TransactionDetails> det =  myAdapter.getData();
-        //pdfTable myTable = new pdfTable(getContext(),getActivity(),"Transactions-scwall");
-        //myTable.createTable(det);
 
         return rootView;
     }
@@ -265,29 +252,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-//        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        for (int i = 0; i < 5; i++) {
-////            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-////            LinearLayout layout = (LinearLayout) customView;
-////            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-////            int count1 = layout1.getChildCount();
-////            TextView textView = (TextView) layout1.getChildAt(0);
-////            textView.setText("dfgsdfd");
-//            View customView1 = layoutInflater.inflate(R.layout.items_rows_balances, null);
-//            llBalances.addView(customView1);
-//        }
     }
+
     String returnFromPower(String i,String str){
         Double ok = 1.0;
         Double pre = Double.valueOf(i);
@@ -300,7 +266,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     public void updateSortTableView (SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions)
     {
-        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "S/R", "Details", "Amount");
+        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "All", "To/From", "Amount");
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         tableView.setHeaderAdapter(simpleTableHeaderAdapter);
 
@@ -355,10 +321,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     private static int compareFloats(float change1, float change2) {
-        if (change1 < change2) return -1;
-        if (change1 == change2) return 0; // Fails on NaN however, not sure what you want
-        if (change2 > change2) return 1;
-        return 0;
+        if (change1 < change2)
+        {
+            return -1;
+        }
+        else if (change1 == change2)
+        {
+            return 0; // Fails on NaN however, not sure what you want
+        }
+        else if (change2 > change2)
+        {
+            return 1;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     private static class TransactionsAmountComparator implements Comparator<TransactionDetails> {
@@ -367,39 +345,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             return compareFloats(one.getAmount(),two.getAmount());
         }
     }
-    @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,int number_of_transactions_in_queue){
 
+    @Override
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,int number_of_transactions_in_queue)
+    {
         if(number_of_transactions_in_queue<25)
+        {
             load_more_values.setVisibility(View.GONE);
-        else {
+        }
+        else
+        {
             load_more_values.setVisibility(View.VISIBLE);
             load_more_values.setEnabled(true);
         }
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(Calendar.YEAR, 2016);
-//        cal.set(Calendar.MONTH, 3);
-//        cal.set(Calendar.DATE, 1);
-//        cal.set(Calendar.HOUR_OF_DAY, 14);
-//        cal.set(Calendar.MINUTE, 33);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-//
-//        Date myDate = cal.getTime();
-//
-//        myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",100,"OBITS",(float)3.33,"USD"));
-//        myTransactions.addAll(myTransactions);
+
         myTransactions.addAll(transactionDetails);
-     //   myTransactions=transactionDetails;
-
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
-
-//        getActivity().runOnUiThread(new Runnable() {
-//            public void run() {
-//                myTransactions = transactionDetails;
-//            }
-//        });
     }
+
     @OnClick(R.id.load_more_values)
     public void Load_more_Values(){
         load_more_values.setEnabled(false);

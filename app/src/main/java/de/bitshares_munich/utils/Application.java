@@ -1,7 +1,14 @@
 package de.bitshares_munich.utils;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
@@ -40,6 +47,17 @@ public class Application extends android.app.Application {
     static IAccountObject iAccountObject;
     static IAssetObject iAssetObject;
     public static String blockHead="";
+    private static Activity currentActivity;
+
+    public static void setCurrentActivity(Activity _activity)
+    {
+        Application.currentActivity = _activity;
+    }
+
+    public static Activity getCurrentActivity()
+    {
+        return Application.currentActivity;
+    }
 
     @Override
     public void onCreate() {
@@ -48,8 +66,6 @@ public class Application extends android.app.Application {
         context = getApplicationContext();
         blockHead="";
         webSocketConnection();
-
-
     }
 
     public void registerCallback(IAccount callbackClass) {
@@ -83,28 +99,37 @@ public class Application extends android.app.Application {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 if (ex != null) {
+                    final Exception myEx = ex;
                     if (ex.getMessage().contains("handshake_failure"))
                     {
+                        if ( currentActivity != null )
+                        {
+                            currentActivity.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(context,"Your system does not supports new SSL ciphering. Error : " + myEx.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                         //webSocketConnection();
-                        //Toast.makeText(context,ex.getMessage() + "Your system does not supports new SSL ciphering.", Toast.LENGTH_LONG).show();
                     }
                     else
                     {
+                        if ( webSocket != null )
+                        {
+                            if ( webSocket.isOpen() )
+                            {
+                                webSocket.close();
+                            }
+                        }
                         webSocketConnection();
                     }
                     ex.printStackTrace();
                     return;
                 }
-
-
                 Application.webSocketG = webSocket;
                 sendInitialSocket(context);
-
             }
-
         });
-
-
     }
 
     public static void sendInitialSocket(final Context context) {

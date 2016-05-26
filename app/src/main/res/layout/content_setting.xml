@@ -75,7 +75,7 @@
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:textColor="#002"
-                    android:id="@+id/spinner2taxable_country"
+                    android:id="@+id/spCountry"
                     android:layout_weight="2"
                     android:layout_gravity="center"
                     />
@@ -109,7 +109,7 @@
                 android:textStyle="bold"
                 android:textSize="15sp"
                 android:textColor="#002"
-                android:id="@+id/spinner3preferred_lang"
+                android:id="@+id/spLanguage"
                 android:layout_weight="2"
                 android:layout_gravity="center"
                 />
