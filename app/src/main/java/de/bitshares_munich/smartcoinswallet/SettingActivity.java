@@ -18,7 +18,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Helper;
 
 public class SettingActivity extends AppCompatActivity  {
@@ -36,37 +40,31 @@ public class SettingActivity extends AppCompatActivity  {
     final String register_new_account = "register_new_account";
 
     ArrayAdapter<String> iniAdapter;
+    @Bind(R.id.spCountry)
+    Spinner spCountry;
+
+    @Bind(R.id.spLanguage)
+    Spinner spLanguage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        ButterKnife.bind(this);
         init();
+        populateDropDowns();
     }
-    public class SpinnerActivity implements AdapterView.OnItemSelectedListener {
-        int selectedid;
-        SpinnerActivity(int id){
-            selectedid = id;
-        }
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            // On selecting a spinner item
-            String item = parent.getItemAtPosition(position).toString();
-            saveinPref(selectedid,item);
-        }
-        public void onNothingSelected(AdapterView<?> arg0) {
-            // TODO Auto-generated method stub
-        }
-    }
+
     public void init(){
-        int setSelection=-1;
+      /*  int setSelection=-1;
         Spinner spinner1backup_asset = (Spinner) findViewById(R.id.spinner1backup_asset);
         createSpinner(spinner1backup_asset);
         spinner1backup_asset.setOnItemSelectedListener(new SpinnerActivity(0));
         setSelection = selectionPostion(backup_asset);
         if(setSelection!=-1) spinner1backup_asset.setSelection(setSelection);
-        Spinner spinner2taxable_country = (Spinner) findViewById(R.id.spinner2taxable_country);
-        createSpinner(spinner2taxable_country);
+        Spinner spCountry = (Spinner) findViewById(R.id.spCountry);
+        createSpinner(spCountry);
         spinner2taxable_country.setOnItemSelectedListener(new SpinnerActivity(1));
         setSelection = selectionPostion(taxable_country);
         if(setSelection!=-1) spinner2taxable_country.setSelection(setSelection);
@@ -85,10 +83,11 @@ public class SettingActivity extends AppCompatActivity  {
         createSpinner(spinner5imported_created_accounts);
         spinner5imported_created_accounts.setOnItemSelectedListener(new SpinnerActivity(4));
         setSelection = selectionPostion(register_new_account);
-        if(setSelection!=-1) spinner5imported_created_accounts.setSelection(setSelection);
+        if(setSelection!=-1) spinner5imported_created_accounts.setSelection(setSelection);*/
         setCheckedButtons();
     }
-    public void createSpinner(Spinner spinner){
+
+    /*public void createSpinner(Spinner spinner){
         List<String> categories = new ArrayList<String>();
         categories.add("Automobile");
         categories.add("Business Services");
@@ -103,7 +102,8 @@ public class SettingActivity extends AppCompatActivity  {
 
         spinner.setAdapter(dataAdapter);
         iniAdapter = dataAdapter;
-    }
+    }*/
+
     public void onCheck(View v){
         switch (v.getId()){
             case R.id.check_for_updates:
@@ -133,17 +133,21 @@ public class SettingActivity extends AppCompatActivity  {
             default:break;
         }
     }
+
     public void onClickBackupBrainkeybtn(View v){
 
     }
+
     public void onClickSecurePinbtn(View v){
                 final Dialog dialog = new Dialog(SettingActivity.this);
                 dialog.setContentView(R.layout.settings_dialog);
                 dialog.show();
     }
+
     public void onClickBackbtn(View v){
 
     }
+
     Boolean isCHecked(View v){
         CheckBox checkBox = (CheckBox)v;
         if(checkBox.isChecked()){
@@ -151,6 +155,7 @@ public class SettingActivity extends AppCompatActivity  {
         }
         return false;
     }
+
     public void saveinPref(int id,String value){
         switch (id) {
             case 0:
@@ -170,6 +175,7 @@ public class SettingActivity extends AppCompatActivity  {
                 break;
         }
     }
+
     public int selectionPostion(String compareValue){
         compareValue = Helper.fetchStringSharePref(this,compareValue);
         if (!compareValue.equals(null)) {
@@ -177,6 +183,7 @@ public class SettingActivity extends AppCompatActivity  {
         }
     return -1;
     }
+
     void setCheckedButtons(){
         CheckBox checkBox;
     if(Helper.fetchBoolianSharePref(this,check_for_updates)){
@@ -203,5 +210,68 @@ public class SettingActivity extends AppCompatActivity  {
             checkBox = (CheckBox)findViewById(R.id.hide_donations);
             checkBox.setChecked(true);
         }
+    }
+
+    private void populateDropDowns() {
+
+        ArrayList<String> countries = Helper.getCountriesArray();
+        ArrayAdapter<String> adapterCountry = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, countries);
+        adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCountry.setAdapter(adapterCountry);
+        final AdapterView.OnItemSelectedListener listener = spCountry.getOnItemSelectedListener();
+        String country = Helper.fetchStringSharePref(getApplicationContext(), "country");
+        if (country != "") {
+            spCountry.setSelection(Integer.parseInt(country));
+        } else {
+
+            Locale locale = Locale.GERMANY;
+            final int index = countries.indexOf(locale.getDisplayCountry()+" (EUR)");
+            if (index > 0) {
+                spCountry.post(new Runnable() {
+                    public void run() {
+                        spCountry.setSelection(index);
+                    }
+                });
+            }
+
+        }
+
+        ArrayList<LangCode> langArray = new ArrayList<>();
+        ArrayList<String> getLangCode =
+                null;
+        getLangCode = Helper.getLanguages();
+        for (int i = 0; i < getLangCode.size(); i++) {
+
+            if (getLangCode.get(i).equalsIgnoreCase("zh-rTW")) {
+                LangCode langCode = new LangCode();
+                langCode.code = "zh-rTW";
+                langCode.lang = "繁體中文";
+                langArray.add(langCode);
+            } else {
+                LangCode langCode = new LangCode();
+                Locale locale = new Locale(getLangCode.get(i));
+                langCode.lang = locale.getDisplayLanguage(locale);
+                langCode.code = getLangCode.get(i);
+                langArray.add(langCode);
+            }
+
+        }
+
+        ArrayAdapter<LangCode> adapter_lang = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
+        adapter_lang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spLanguage.setAdapter(adapter_lang);
+        String langCode = Helper.fetchStringSharePref(getApplicationContext(), "language");
+        if (langCode != "") {
+            for (int i = 0; i < langArray.size(); i++) {
+                LangCode lc = langArray.get(i);
+                if (lc.code.equalsIgnoreCase(langCode)) {
+                    spLanguage.setSelection(i);
+                }
+            }
+        } else {
+            spLanguage.setSelection(13);
+        }
+
     }
 }

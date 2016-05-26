@@ -3,8 +3,6 @@ package de.bitshares_munich.utils;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -238,19 +236,41 @@ public class Helper {
 
     }
 
-    public static ArrayList<String> getCountriesArray() {
+    public static ArrayList<String> getCountriesArray1() {
         Locale[] locales = Locale.getAvailableLocales();
         ArrayList<String> countries = new ArrayList<String>();
         for (Locale locale : locales) {
             String country = locale.getDisplayCountry();
+            Currency currency = Currency.getInstance(locale);
             if (country.trim().length() > 0 && !countries.contains(country) && !country.trim().equals("World")) {
-                countries.add(country);
+                countries.add(country + " (" + currency + ")");
             }
         }
         Collections.sort(countries);
         setCountriesISOMap();
         return countries;
     }
+
+
+    public static ArrayList<String> getCountriesArray() {
+        String[] locales = Locale.getISOCountries();
+        ArrayList<String> countries = new ArrayList<String>();
+        for (String countryCode : locales) {
+
+            Locale locale = new Locale("", countryCode);
+            Currency currency = Currency.getInstance(locale);
+            try {
+                countries.add(locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")");
+            } catch (Exception e) {
+
+            }
+
+            Collections.sort(countries);
+
+        }
+        return countries;
+    }
+
 
     public static void setCountriesISOMap() {
         String[] isoCountryCodes = Locale.getISOCountries();
