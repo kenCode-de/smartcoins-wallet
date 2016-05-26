@@ -112,7 +112,6 @@ public class TransactionActivity implements BalancesDelegate {
     @Override
     public void OnUpdate(String s,int id) {
         if(id==8){
-            testing("special",s,"");
             onFirstCall(s);
         }
         if(id==9){

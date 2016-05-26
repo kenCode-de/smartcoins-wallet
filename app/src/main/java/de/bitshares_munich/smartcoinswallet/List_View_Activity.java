@@ -1,36 +1,18 @@
 package de.bitshares_munich.smartcoinswallet;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import de.bitshares_munich.Interfaces.BalancesDelegate;
-import de.bitshares_munich.Interfaces.ContactsDelegate;
-import de.bitshares_munich.fragments.ContactsFragment;
-import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.Support_Methods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
