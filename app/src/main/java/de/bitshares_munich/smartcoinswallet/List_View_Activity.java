@@ -102,7 +102,7 @@ public class List_View_Activity  extends BaseAdapter {
 
         return contactlist;
     }
-    public class ListviewContactItem{
+    public static class ListviewContactItem{
         String name;
         String account;
         void SetName(String n){

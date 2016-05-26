@@ -48,6 +48,15 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
+//         //        Intent intent = getIntent();
+//        Bundle res = intent.getExtras()
+//        if(res.containsKey("sResult") && res.containsKey("id")){
+//
+//        try { if(res.getInt("id")==5){
+//            onScanResult(res.getString("sResult"));}
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }}
 public class SendScreen extends Activity implements IExchangeRate, IAccount {
     Context context;
     final String always_donate = "always_donate";
@@ -144,6 +153,19 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if(res!=null){
+            if(res.containsKey("sResult") && res.containsKey("id")){
+                try {
+                    if(res.getInt("id")==5){
+                        onScanResult(res.getString("sResult"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     void init(){
         setCheckboxAvailabilty();
@@ -320,7 +342,9 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     }
     @OnClick(R.id.scanning)
     void OnScanning(){
-        Intent intent = new Intent(context, qrcodeActivity.class);startActivityForResult(intent,90);
+        Intent intent = new Intent(context, qrcodeActivity.class);
+        intent.putExtra("id",0);
+        startActivityForResult(intent,90);
     }
     @OnClick(R.id.selectBTSAsset)
     void onSelectBTSAsset(View v){

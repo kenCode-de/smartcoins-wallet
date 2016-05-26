@@ -121,18 +121,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tableViewparent"
-        android:isScrollContainer="true">
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:weightSum="2"
+        >
         <de.codecrafters.tableview.SortableTableView
             xmlns:table="http://schemas.android.com/apk/res-auto"
             android:id="@+id/tableView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             table:tableView_columnCount="4"
             table:tableView_headerElevation="10"
             table:tableView_headerColor="@color/transactionsHeader"
-
-
+            android:layout_weight="1.9"
             android:background="@color/whiteColor"
             android:backgroundTint="@color/whiteColor"
             table:theme="@style/AppTheme"
@@ -140,6 +141,14 @@
             android:nestedScrollingEnabled="true"
             >
         </de.codecrafters.tableview.SortableTableView>
+       <Button
+           android:layout_weight="0.1"
+           android:layout_width="match_parent"
+           android:layout_height="35dp"
+           android:id="@+id/load_more_values"
+           android:text="show more"
+           android:layout_gravity="bottom"
+           />
     </LinearLayout>
 
 </LinearLayout>
