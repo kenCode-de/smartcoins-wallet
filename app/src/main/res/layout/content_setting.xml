@@ -143,7 +143,7 @@
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:textColor="#002"
-                    android:id="@+id/spinner4date_time"
+                    android:id="@+id/spTimeZones"
                     android:layout_weight="2"
                     android:layout_gravity="center"
                     />
@@ -182,7 +182,7 @@
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:textColor="#002"
-                    android:id="@+id/spinner5_imported_created_accounts"
+                    android:id="@+id/spAccounts"
                     android:layout_weight="2"
                     android:layout_gravity="center"
                     />

@@ -258,13 +258,12 @@ public class Helper {
         for (String countryCode : locales) {
 
             Locale locale = new Locale("", countryCode);
-            Currency currency = Currency.getInstance(locale);
             try {
+            Currency currency = Currency.getInstance(locale);
                 countries.add(locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")");
             } catch (Exception e) {
 
             }
-
             Collections.sort(countries);
 
         }
