@@ -46,6 +46,7 @@ import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.tableViewClickListener;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -119,9 +120,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
-        // replace myTrabsactions with actual data
+        // replace myTransactions with actual data
         myTransactions = new ArrayList<>();
         updateSortTableView(tableView,myTransactions);
+
+
+        tableView.addDataClickListener(new tableViewClickListener(getContext()));
 
         final Handler handler = new Handler();
 
@@ -262,7 +266,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     public void updateSortTableView (SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions)
     {
-        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "S/R", "Details", "Amount");
+        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "All", "To/From", "Amount");
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         tableView.setHeaderAdapter(simpleTableHeaderAdapter);
 
@@ -317,10 +321,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     private static int compareFloats(float change1, float change2) {
-        if (change1 < change2) return -1;
-        if (change1 == change2) return 0; // Fails on NaN however, not sure what you want
-        if (change2 > change2) return 1;
-        return 0;
+        if (change1 < change2)
+        {
+            return -1;
+        }
+        else if (change1 == change2)
+        {
+            return 0; // Fails on NaN however, not sure what you want
+        }
+        else if (change2 > change2)
+        {
+            return 1;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     private static class TransactionsAmountComparator implements Comparator<TransactionDetails> {
