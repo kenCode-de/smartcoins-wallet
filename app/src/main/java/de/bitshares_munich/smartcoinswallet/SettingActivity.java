@@ -2,30 +2,31 @@ package de.bitshares_munich.smartcoinswallet;
 /**
  * Created by Syed Muhammad Muzzammil on 13/5/16.
  */
+
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.TinyDB;
 
-public class SettingActivity extends AppCompatActivity  {
+public class SettingActivity extends AppCompatActivity {
 
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";
@@ -46,17 +47,24 @@ public class SettingActivity extends AppCompatActivity  {
     @Bind(R.id.spLanguage)
     Spinner spLanguage;
 
+    @Bind(R.id.spTimeZones)
+    Spinner spTimeZones;
+
+    @Bind(R.id.spAccounts)
+    Spinner spAccounts;
+    TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
         init();
         populateDropDowns();
     }
 
-    public void init(){
+    public void init() {
       /*  int setSelection=-1;
         Spinner spinner1backup_asset = (Spinner) findViewById(R.id.spinner1backup_asset);
         createSpinner(spinner1backup_asset);
@@ -87,76 +95,60 @@ public class SettingActivity extends AppCompatActivity  {
         setCheckedButtons();
     }
 
-    /*public void createSpinner(Spinner spinner){
-        List<String> categories = new ArrayList<String>();
-        categories.add("Automobile");
-        categories.add("Business Services");
-        categories.add("Computers");
-        categories.add("Education");
-        categories.add("Personal");
-        categories.add("Travel");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
-
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(dataAdapter);
-        iniAdapter = dataAdapter;
-    }*/
-
-    public void onCheck(View v){
-        switch (v.getId()){
+    public void onCheck(View v) {
+        switch (v.getId()) {
             case R.id.check_for_updates:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,check_for_updates,true);
-                else Helper.storeBoolianSharePref(this,check_for_updates,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, check_for_updates, true);
+                else Helper.storeBoolianSharePref(this, check_for_updates, false);
                 break;
             case R.id.automatically_install:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,automatically_install,true);
-                else Helper.storeBoolianSharePref(this,automatically_install,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, automatically_install, true);
+                else Helper.storeBoolianSharePref(this, automatically_install, false);
                 break;
             case R.id.require_pin:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,require_pin,true);
-                else Helper.storeBoolianSharePref(this,require_pin,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, require_pin, true);
+                else Helper.storeBoolianSharePref(this, require_pin, false);
                 break;
             case R.id.close_bitshare:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,close_bitshare,true);
-                else Helper.storeBoolianSharePref(this,close_bitshare,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, close_bitshare, true);
+                else Helper.storeBoolianSharePref(this, close_bitshare, false);
                 break;
             case R.id.always_donate:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,always_donate,true);
-                else Helper.storeBoolianSharePref(this,always_donate,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
+                else Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
-                if(isCHecked(v)) Helper.storeBoolianSharePref(this,hide_donations,true);
-                else Helper.storeBoolianSharePref(this,hide_donations,false);
+                if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
+                else Helper.storeBoolianSharePref(this, hide_donations, false);
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 
-    public void onClickBackupBrainkeybtn(View v){
+    public void onClickBackupBrainkeybtn(View v) {
 
     }
 
-    public void onClickSecurePinbtn(View v){
-                final Dialog dialog = new Dialog(SettingActivity.this);
-                dialog.setContentView(R.layout.settings_dialog);
-                dialog.show();
+    public void onClickSecurePinbtn(View v) {
+        final Dialog dialog = new Dialog(SettingActivity.this);
+        dialog.setContentView(R.layout.settings_dialog);
+        dialog.show();
     }
 
-    public void onClickBackbtn(View v){
+    public void onClickBackbtn(View v) {
 
     }
 
-    Boolean isCHecked(View v){
-        CheckBox checkBox = (CheckBox)v;
-        if(checkBox.isChecked()){
+    Boolean isCHecked(View v) {
+        CheckBox checkBox = (CheckBox) v;
+        if (checkBox.isChecked()) {
             return true;
         }
         return false;
     }
 
-    public void saveinPref(int id,String value){
+    public void saveinPref(int id, String value) {
         switch (id) {
             case 0:
                 Helper.storeStringSharePref(this, backup_asset, value);
@@ -176,38 +168,38 @@ public class SettingActivity extends AppCompatActivity  {
         }
     }
 
-    public int selectionPostion(String compareValue){
-        compareValue = Helper.fetchStringSharePref(this,compareValue);
+    public int selectionPostion(String compareValue) {
+        compareValue = Helper.fetchStringSharePref(this, compareValue);
         if (!compareValue.equals(null)) {
-           return iniAdapter.getPosition(compareValue);
+            return iniAdapter.getPosition(compareValue);
         }
-    return -1;
+        return -1;
     }
 
-    void setCheckedButtons(){
+    void setCheckedButtons() {
         CheckBox checkBox;
-    if(Helper.fetchBoolianSharePref(this,check_for_updates)){
-        checkBox = (CheckBox)findViewById(R.id.check_for_updates);
-        checkBox.setChecked(true);
-    }
-        if(Helper.fetchBoolianSharePref(this,automatically_install)){
-            checkBox = (CheckBox)findViewById(R.id.automatically_install);
+        if (Helper.fetchBoolianSharePref(this, check_for_updates)) {
+            checkBox = (CheckBox) findViewById(R.id.check_for_updates);
             checkBox.setChecked(true);
         }
-        if(Helper.fetchBoolianSharePref(this,require_pin)){
-            checkBox = (CheckBox)findViewById(R.id.require_pin);
+        if (Helper.fetchBoolianSharePref(this, automatically_install)) {
+            checkBox = (CheckBox) findViewById(R.id.automatically_install);
             checkBox.setChecked(true);
         }
-        if(Helper.fetchBoolianSharePref(this,close_bitshare)){
-            checkBox = (CheckBox)findViewById(R.id.close_bitshare);
+        if (Helper.fetchBoolianSharePref(this, require_pin)) {
+            checkBox = (CheckBox) findViewById(R.id.require_pin);
             checkBox.setChecked(true);
         }
-        if(Helper.fetchBoolianSharePref(this,always_donate)){
-            checkBox = (CheckBox)findViewById(R.id.always_donate);
+        if (Helper.fetchBoolianSharePref(this, close_bitshare)) {
+            checkBox = (CheckBox) findViewById(R.id.close_bitshare);
             checkBox.setChecked(true);
         }
-        if(Helper.fetchBoolianSharePref(this,hide_donations)){
-            checkBox = (CheckBox)findViewById(R.id.hide_donations);
+        if (Helper.fetchBoolianSharePref(this, always_donate)) {
+            checkBox = (CheckBox) findViewById(R.id.always_donate);
+            checkBox.setChecked(true);
+        }
+        if (Helper.fetchBoolianSharePref(this, hide_donations)) {
+            checkBox = (CheckBox) findViewById(R.id.hide_donations);
             checkBox.setChecked(true);
         }
     }
@@ -226,7 +218,7 @@ public class SettingActivity extends AppCompatActivity  {
         } else {
 
             Locale locale = Locale.GERMANY;
-            final int index = countries.indexOf(locale.getDisplayCountry()+" (EUR)");
+            final int index = countries.indexOf(locale.getDisplayCountry() + " (EUR)");
             if (index > 0) {
                 spCountry.post(new Runnable() {
                     public void run() {
@@ -258,9 +250,9 @@ public class SettingActivity extends AppCompatActivity  {
 
         }
 
-        ArrayAdapter<LangCode> adapter_lang = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
-        adapter_lang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spLanguage.setAdapter(adapter_lang);
+        ArrayAdapter<LangCode> adapterLanguage = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
+        adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), "language");
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
@@ -273,5 +265,56 @@ public class SettingActivity extends AppCompatActivity  {
             spLanguage.setSelection(13);
         }
 
+
+        //Time Zones
+        ArrayList<String> arrayTimeZones = new ArrayList<>();
+
+        String[] ids = TimeZone.getAvailableIDs();
+        for (String id : ids) {
+            arrayTimeZones.add(displayTimeZone(TimeZone.getTimeZone(id)));
+        }
+        Collections.sort(arrayTimeZones);
+        arrayTimeZones.add(0, getString(R.string.select_timezone));
+        ArrayAdapter<String> adapterTimezone = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayTimeZones);
+        adapterTimezone.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spTimeZones.setAdapter(adapterTimezone);
+
+
+        // AccountsName
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        ArrayList<String> arrayAccountName = new ArrayList<>();
+        for (int i = 0; i < accountDetails.size(); i++) {
+            arrayAccountName.add(accountDetails.get(i).account_name);
+
+        }
+        Collections.sort(arrayAccountName);
+
+        ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
+        adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spAccounts.setAdapter(adapterAccountName);
+
     }
+
+    private static String displayTimeZone(TimeZone tz) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(tz);
+        long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
+                - TimeUnit.HOURS.toMinutes(hours);
+        minutes = Math.abs(minutes);
+        //String temp= calendar.getTimeZone().getDisplayName(false, TimeZone.SHORT);
+        String result = "";
+        if (hours > 0) {
+
+            result = String.format("%s (GMT+%d:%02d)", tz.getID(), hours, minutes);
+        } else {
+            result = String.format("%s (GMT%d:%02d)", tz.getID(), hours, minutes);
+        }
+
+        return result;
+
+
+    }
+
 }

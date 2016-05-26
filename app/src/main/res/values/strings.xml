@@ -205,5 +205,6 @@
     <string name="str_invalid_amount">Please enter valid amount</string>
     <string name="str_invalid_receiver">Please enter valid To account</string>
     <string name="str_transaction_failed">Transaction Failed</string>
+    <string name="select_timezone">Select TimeZone</string>
 
 </resources>

@@ -108,15 +108,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
+                    android:background="@drawable/border"
                 >
                     <ImageButton
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/erorricon"
                         android:id="@+id/back"
-                        android:background="@drawable/border"
                         android:onClick="backbtn"
-                        android:backgroundTint="#DD4739"
+                        android:background="#DD4739"
+                        android:src="@drawable/erorricon"
+
                     />
                 </LinearLayout>
 
