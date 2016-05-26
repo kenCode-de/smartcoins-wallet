@@ -2,26 +2,17 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.util.Xml;
-import android.view.View;
-import android.widget.Toast;
+
 import com.loopj.android.http.*;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.zxing.Result;
-import com.koushikdutta.async.http.body.StringBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +21,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.*;
-import de.bitshares_munich.utils.Support_Methods;
+import de.bitshares_munich.utils.SupportMethods;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -71,7 +62,7 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         verifyCameraPermissions(this);
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
-        Support_Methods.testing("qrcode",id,"od");
+        SupportMethods.testing("qrcode",id,"od");
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
         // ATTENTION: This was auto-generated to implement the App Indexing API.

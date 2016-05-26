@@ -159,7 +159,7 @@
     <string name="account_name_should_be_longer">Account name should be longer</string>
     <string name="account_name_already_exist">Account Name %s already exist</string>
     <string name="account_name_not_exist">Account Name %s does not exist</string>
-    <string name="account_name_validate">Account name validate</string>
+    <string name="account_name_validate">Account name is valid</string>
     <string name="login_api">{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
     </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}

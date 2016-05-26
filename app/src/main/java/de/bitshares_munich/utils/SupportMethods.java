@@ -14,7 +14,7 @@ import java.util.Iterator;
 /**
  * Created by Syed Muhammad Muzzammil on 5/24/16.
  */
-public class Support_Methods {
+public class SupportMethods {
     public static String ConvertValueintoPrecision(String precision,String number){
         Double ok = 1.0;
         Double pre = Double.valueOf(precision);
@@ -29,7 +29,7 @@ public class Support_Methods {
             if(Json.contains(Req)){
                 JSONObject myJson = new JSONObject(Json);
                 return  myJson.getString(Req);}
-        }catch (Exception e){ testing("Support_Methods",e,"ParseJsonObject");}
+        }catch (Exception e){ testing("SupportMethods",e,"ParseJsonObject");}
         return "";
     }
     public static String ParseObjectFromJsonArray(String Json , int position){
@@ -38,7 +38,7 @@ public class Support_Methods {
             if(myArray.length()>=position){
                 return  myArray.get(position).toString();
             }
-        }catch (Exception e){            testing("Support_Methods",e,"ParseObjectFromJsonArray");
+        }catch (Exception e){            testing("SupportMethods",e,"ParseObjectFromJsonArray");
         }
         return "";
     }
@@ -62,7 +62,7 @@ public class Support_Methods {
             }
             return pairs;
         }catch (Exception e){
-            testing("Support_Methods",e,"ParseJsonArray");
+            testing("SupportMethods",e,"ParseJsonArray");
         }
         return null;
     }
@@ -88,7 +88,7 @@ public class Support_Methods {
                 return 1;
             }
         }catch (Exception e){
-            testing("Support_Methods",e,"CheckJsonFormat");
+            testing("SupportMethods",e,"CheckJsonFormat");
         }
         return -1;
     }
@@ -96,7 +96,7 @@ public class Support_Methods {
         try {
             JSONArray myArray = new JSONArray(Json);
             return myArray.length();
-        }catch (Exception e){            testing("Support_Methods",e,"TotalArraysOfObj");
+        }catch (Exception e){            testing("SupportMethods",e,"TotalArraysOfObj");
         }
         return -1;
     }

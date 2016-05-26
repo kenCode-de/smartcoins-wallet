@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical" android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60sp"
@@ -14,13 +14,13 @@
             android:id="@+id/backbutton"
             android:background="@drawable/righticon"
             android:layout_gravity="center"
-        />
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/logoicon"
             android:layout_gravity="center"
-        />
+            />
     </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     android:maxLines="1"
                     android:maxLength="20"
                     android:id="@+id/editTextView"
-                />
+                    />
 
                 <TextView
                     android:textSize="20sp"
@@ -66,14 +66,14 @@
                     android:layout_weight="3.8"
                     android:id="@+id/popwin1"
                     android:onClick="showpop"
-                />
+                    />
                 <ImageView
                     android:id="@+id/popwin2"
                     android:onClick="showpop"
                     android:layout_width="20sp"
                     android:layout_height="match_parent"
                     android:src="@drawable/spinnericon"
-                />
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,14 +83,14 @@
                 android:clickable="true"
                 android:id="@+id/d1"
                 android:weightSum="4"
-            >
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:weightSum="2"
-                >
+                    >
                     <LinearLayout android:layout_weight="1" android:orientation="horizontal"  android:layout_width="match_parent" android:layout_height="match_parent" android:layout_gravity="left" android:gravity="left" android:weightSum="3">
                         <Button android:layout_weight="1" android:layout_width="match_parent" android:layout_height="match_parent" android:id = "@+id/seven" android:text="7" android:textColor="@drawable/button_text" android:background="@drawable/border_set" android:onClick="digitClick" android:textSize="25sp"/>
                         <Button android:layout_weight="1" android:layout_width="match_parent" android:layout_height="match_parent" android:id = "@+id/eight" android:text="8" android:textColor="@drawable/button_text"  android:background="@drawable/border_set" android:onClick="digitClick" android:textSize="25sp"/>
@@ -106,17 +106,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                    android:background="@drawable/border"
-                >
+                 >
+
                     <ImageButton
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/back"
                         android:onClick="backbtn"
-                        android:background="#DD4739"
                         android:src="@drawable/erorricon"
-
-                    />
+                        android:backgroundTint="#DD4739"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
@@ -128,14 +127,14 @@
                 android:clickable="true"
                 android:id="@+id/d2"
                 android:weightSum="4"
-            >
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:weightSum="2"
-                >
+                    >
                     <LinearLayout android:layout_weight="1" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_gravity="left" android:gravity="left" android:weightSum="3">
                         <Button android:layout_weight="1" android:textColor="@drawable/button_text" android:layout_width="match_parent" android:layout_height="match_parent" android:id = "@+id/one" android:text="1" android:background="@drawable/border_set" android:onClick="digitClick" android:textSize="25sp"/>
                         <Button android:layout_weight="1" android:textColor="@drawable/button_text" android:layout_width="match_parent" android:layout_height="match_parent" android:id = "@+id/two" android:text="2" android:background="@drawable/border_set" android:onClick="digitClick" android:textSize="25sp"/>
@@ -151,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                >
+                    >
                     <Button
                         android:textColor="@drawable/button_text"
                         android:layout_width="match_parent"
@@ -162,7 +161,7 @@
                         android:textSize="20sp"
                         android:onClick="digitClick"
                         android:textAlignment="center"
-                    />
+                        />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -172,7 +171,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2"
                 android:id="@+id/action"
-            >
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70sp"
@@ -180,14 +179,14 @@
                     android:background="#DD4739"
                     android:orientation="horizontal"
                     android:weightSum="4"
-                >
+                    >
                     <ImageView
                         android:layout_weight="3"
                         android:layout_width="match_parent"
                         android:layout_height="30sp"
                         android:src="@drawable/back_icon"
                         android:layout_gravity="center"
-                    />
+                        />
                     <TextView
                         android:id="@+id/tvCancel"
                         android:layout_weight="1"
@@ -198,7 +197,7 @@
                         android:background="@null"
                         android:textSize="20sp"
                         android:gravity="center"
-                    />
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -218,14 +217,14 @@
                         android:background="@null"
                         android:textSize="20sp"
                         android:gravity="center"
-                    />
+                        />
                     <ImageView
                         android:layout_weight="3"
                         android:layout_width="match_parent"
                         android:layout_height="30sp"
                         android:src="@drawable/next_icon"
                         android:layout_gravity="center"
-                    />
+                        />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
