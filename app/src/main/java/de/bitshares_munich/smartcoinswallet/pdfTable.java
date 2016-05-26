@@ -182,6 +182,7 @@ public class pdfTable {
         }
         catch(Exception e){
             Log.d("pdfException",e.getMessage());
+            Toast.makeText(myContext, "Unable to generate pdf. Please retry. Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         }
     }

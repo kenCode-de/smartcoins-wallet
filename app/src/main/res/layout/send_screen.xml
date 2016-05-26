@@ -257,11 +257,12 @@
             />
         <LinearLayout
             android:layout_marginTop="5sp"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/tvAmountStatus"
-            android:id="@+id/FourthChild"
+            android:id="@+id/llLoyalty"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -281,9 +282,10 @@
                     android:background="@null"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:text="18"
+                    android:text=""
                     android:layout_height="match_parent"
-                    android:id="@+id/editTextLoyalty"
+                    android:id="@+id/etLoyalty"
+                    android:inputType="numberDecimal"
                     android:gravity="center"
                     android:textAlignment="textEnd"
                     android:layout_marginRight="100sp"
@@ -292,23 +294,24 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="FABLES"
+                    android:text=""
                     android:gravity="center"
                     android:textSize="17sp"
                     android:layout_marginRight="7sp"
-                    android:id="@+id/selectBTSLoyalty"
+                    android:id="@+id/tvLoyalty"
                     />
 
             </RelativeLayout>
         </LinearLayout>
         <TextView
-            android:layout_below="@+id/FourthChild"
+            android:layout_below="@+id/llLoyalty"
+            android:visibility="gone"
             android:text="nn FABLES is available"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:gravity="right"
-            android:id="@+id/StatusTwo"
+            android:id="@+id/tvLoyaltyStatus"
             />
         <LinearLayout
             android:visibility="gone"
@@ -316,7 +319,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/StatusTwo"
+            android:layout_below="@+id/tvLoyaltyStatus"
             android:id="@+id/FifthChild"
             >
             <TextView

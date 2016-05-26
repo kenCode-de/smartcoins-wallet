@@ -48,8 +48,6 @@ public class Application extends android.app.Application {
         context = getApplicationContext();
         blockHead="";
         webSocketConnection();
-
-
     }
 
     public void registerCallback(IAccount callbackClass) {
