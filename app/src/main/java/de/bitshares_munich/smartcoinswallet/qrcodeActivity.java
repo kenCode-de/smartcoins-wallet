@@ -1,13 +1,16 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
@@ -42,9 +45,30 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
      */
     private GoogleApiClient client;
 
+    // Camera Permissions
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static String[] PERMISSIONS_CAMERA = {
+            Manifest.permission.CAMERA
+    };
+
+    public static void verifyCameraPermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_CAMERA,
+                    REQUEST_CAMERA_PERMISSION
+            );
+        }
+    }
+
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+        verifyCameraPermissions(this);
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
         Support_Methods.testing("qrcode",id,"od");
