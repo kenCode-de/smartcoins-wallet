@@ -99,35 +99,47 @@ public class Application extends android.app.Application {
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
                 if (ex != null) {
+                    Log.d("exception websocket",ex.toString());
                     final Exception myEx = ex;
-                    if (ex.getMessage().contains("handshake_failure"))
-                    {
-                        if ( currentActivity != null )
-                        {
-                            currentActivity.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(context,"Your system does not supports new SSL ciphering. Error : " + myEx.getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                        //webSocketConnection();
-                    }
-                    else
-                    {
-                        if ( webSocket != null )
-                        {
-                            if ( webSocket.isOpen() )
-                            {
-                                webSocket.close();
+                    Log.d("exception websocket",myEx.toString());
+                    try {
+                        if (ex.getMessage().contains("handshake_failure")) {
+                            Log.d("exception3 websocket", "inside");
+                            if (currentActivity != null) {
+                                Log.d("exception websocket", "inside again");
+                                currentActivity.runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(context, "Your system does not supports new SSL ciphering. Error : " + myEx.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
                             }
+                            //webSocketConnection();
+                            Log.d("exception websocket", "getting out");
+                        } else {
+                            Log.d("exception websocket", "webbb socket");
+                            if (webSocket != null) {
+                                Log.d("exception websocket", "inside webbb socket");
+                                if (webSocket.isOpen()) {
+                                    Log.d("exception websocket", "is open");
+                                    webSocket.close();
+                                    Log.d("exception websocket", "closed");
+                                }
+                            }
+                            webSocketConnection();
                         }
-                        webSocketConnection();
                     }
-                    ex.printStackTrace();
+                    catch (Exception e)
+                    {
+                        Log.d("exception websocket", e.getMessage());
+                    }
+                    //ex.printStackTrace();
                     return;
                 }
+                Log.d("exception websocket","before making application.websocketg");
                 Application.webSocketG = webSocket;
+                Log.d("exception websocket","sending initial socket");
                 sendInitialSocket(context);
+                Log.d("exception websocket","completed");
             }
         });
     }
