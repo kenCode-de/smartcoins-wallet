@@ -205,5 +205,6 @@
     <string name="str_invalid_amount">Please enter valid amount</string>
     <string name="str_invalid_receiver">Please enter valid To account</string>
     <string name="str_transaction_failed">Transaction Failed</string>
+    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
 
 </resources>

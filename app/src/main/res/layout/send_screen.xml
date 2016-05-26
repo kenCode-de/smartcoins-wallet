@@ -385,14 +385,14 @@
             android:textSize="15sp"
             android:gravity="center"
             android:textColor="#000"
-            android:id="@+id/StatusFourth"
+            android:id="@+id/tvTotalStatus"
             />
         <LinearLayout
             android:layout_marginTop="5sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/StatusFourth"
+            android:layout_below="@+id/tvTotalStatus"
             android:id="@+id/llMemo"
             >
             <TextView
