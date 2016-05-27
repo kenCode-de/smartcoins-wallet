@@ -32,7 +32,7 @@ import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends BaseActivity {
 
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";

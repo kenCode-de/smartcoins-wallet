@@ -48,7 +48,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends Activity implements IExchangeRate, IAccount {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount {
     Context context;
     final String always_donate = "always_donate";
     final String backup_asset = "backup_asset";

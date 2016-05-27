@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import de.bitshares_munich.utils.SupportMethods;
 
-public class eReceiptActivity extends AppCompatActivity {
+public class eReceiptActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

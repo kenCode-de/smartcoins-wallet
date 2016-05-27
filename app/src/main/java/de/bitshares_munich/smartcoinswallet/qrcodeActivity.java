@@ -27,7 +27,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 /**
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
-public class qrcodeActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class qrcodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     int id;
     /**

@@ -11,7 +11,7 @@ import butterknife.OnClick;
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
-public class Share_Contact extends Activity {
+public class Share_Contact extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
