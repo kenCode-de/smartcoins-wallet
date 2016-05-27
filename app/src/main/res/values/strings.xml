@@ -231,6 +231,7 @@
     <string name="create_pin">Create PIN</string>
     <string name="pin_changed_successfully">PIN changed successfully</string>
     <string name="incorrect_old_pin">Incorrect old PIN</string>
+    <string name="str_backup_symbol">backup_symbol</string>
 
 
 </resources>

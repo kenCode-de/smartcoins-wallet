@@ -231,7 +231,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         if (validateSend()){
             progressDialog = new ProgressDialog(this);
             showDialog("", "Transferring Funds...");
-            transferAmount();
+            if (Double.parseDouble(etAmount.getText().toString()) != 0){
+                String mainAmount = String.format("%.4f",Double.parseDouble(etAmount.getText().toString()));
+                String mainAsset = spAssets.getSelectedItem().toString();
+                transferAmount(mainAmount,mainAsset);
+            }
+            if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0){
+                String loyaltyAmount = String.format("%.4f",Double.parseDouble(etLoyalty.getText().toString()));
+                String loyaltyAsset = tvLoyalty.getText().toString();
+                transferAmount(loyaltyAmount,loyaltyAsset);
+            }
         }
     }
     public void updateAmountStatus(){
@@ -332,9 +341,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     }
 
     void setBackUpAsset(){
-        String asset =Helper.fetchStringSharePref(this,backup_asset);
-        if(asset!=null) {
-            editTextAsset.setText(asset);
+        String backupAsset = Helper.fetchStringSharePref(this,getString(R.string.str_backup_symbol));
+        if(backupAsset!=null) {
+            editTextAsset.setText(backupAsset);
         }
     }
     public void popupwindow(View v,TextView textview){
@@ -473,7 +482,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         }
         return true;
     }
-    public void transferAmount() {
+    public void transferAmount(String amount, String symbol) {
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String privateKey = "";
         for (int i=0; i<accountDetails.size(); i++){
@@ -491,8 +500,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         hm.put("wifkey",privateKey);
         hm.put("from_account",spinnerFrom.getSelectedItem().toString());
         hm.put("to_account",etReceiverAccount.getText().toString());
-        hm.put("amount",String.format("%.4f",Double.parseDouble(etAmount.getText().toString())));
-        hm.put("asset_symbol", spAssets.getSelectedItem().toString());
+        hm.put("amount", amount);
+        hm.put("asset_symbol", symbol);
         hm.put("memo", etMemo.getText().toString());
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.transfer_server_url));
@@ -504,9 +513,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
                 if (response.isSuccess()) {
                     TransferResponse resp = response.body();
                     if (resp.status.equals("success")){
-                        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if (!isFinishing()) {
+                            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }else{
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
