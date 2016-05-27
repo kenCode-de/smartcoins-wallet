@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="de.bitshares_munich.smartcoinswallet.SettingActivity"
-    tools:showIn="@layout/activity_setting">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:paddingBottom="@dimen/activity_vertical_margin"
+                                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                                            android:paddingRight="@dimen/activity_horizontal_margin"
+                                            android:paddingTop="@dimen/activity_vertical_margin"
+                                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                            tools:context="de.bitshares_munich.smartcoinswallet.SettingActivity"
+                                            tools:showIn="@layout/activity_setting">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,17 +34,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:background="@drawable/edittext_background_layer"
-                >
+            >
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:textColor="#002"
-                    android:id="@+id/spinner1backup_asset"
+                    android:id="@+id/spBackupAsset"
                     android:layout_weight="2"
                     android:layout_gravity="center"
-                    />
+                />
             </LinearLayout>
         </LinearLayout>
 
@@ -68,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:background="@drawable/edittext_background_layer"
-                >
+            >
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -78,43 +78,43 @@
                     android:id="@+id/spCountry"
                     android:layout_weight="2"
                     android:layout_gravity="center"
-                    />
+                />
             </LinearLayout>
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="50dp"
-        android:weightSum="4"
-        android:layout_below="@+id/l2"
-        android:id="@+id/l3"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2.5"
-            android:textSize="13sp"
-            android:text="@string/preferred_lang"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:background="@drawable/edittext_background_layer"
-            >
-            <Spinner
+            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:weightSum="4"
+            android:layout_below="@+id/l2"
+            android:id="@+id/l3"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#002"
-                android:id="@+id/spLanguage"
-                android:layout_weight="2"
-                android:layout_gravity="center"
+                android:layout_weight="2.5"
+                android:textSize="13sp"
+                android:text="@string/preferred_lang"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:background="@drawable/edittext_background_layer"
+            >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#002"
+                    android:id="@+id/spLanguage"
+                    android:layout_weight="2"
+                    android:layout_gravity="center"
                 />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -136,7 +136,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:background="@drawable/edittext_background_layer"
-                >
+            >
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -146,7 +146,7 @@
                     android:id="@+id/spTimeZones"
                     android:layout_weight="2"
                     android:layout_gravity="center"
-                    />
+                />
             </LinearLayout>
         </LinearLayout>
 
@@ -170,12 +170,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.5"
                 android:background="@drawable/edittext_background_layer"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/fresh_icon"
-                    />
+            >
+
                 <Spinner
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -185,7 +181,7 @@
                     android:id="@+id/spAccounts"
                     android:layout_weight="2"
                     android:layout_gravity="center"
-                    />
+                />
             </LinearLayout>
         </LinearLayout>
 
@@ -200,162 +196,162 @@
             android:background="#70882E"
             android:textColor="#fff"
             android:textSize="20sp"
-            />
+        />
 
 
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/register_new_account"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:id="@+id/l5"
-        >
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/check_for_updates"
-            android:layout_weight="1"
-            android:id="@+id/check_for_updates"
-            android:layout_marginTop="5dp"
-            android:onClick="onCheck"
-            />
-        <CheckBox
-            android:text="@string/automatically_install"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/automatically_install"
-            android:layout_marginTop="5dp"
-            android:onClick="onCheck"
-            />
-        <CheckBox
-            android:text="@string/require_pin"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/require_pin"
-            android:layout_marginTop="5dp"
-            android:onClick="onCheck"
-            />
-        <CheckBox
-            android:text="@string/close_bitshare"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/close_bitshare"
-            android:layout_marginTop="5dp"
-            android:gravity="start"
-            android:onClick="onCheck"
-            />
-        <CheckBox
-            android:text="@string/always_donate"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/always_donate"
-            android:layout_marginTop="5dp"
-            android:gravity="start"
-            android:onClick="onCheck"
-            />
-        <CheckBox
-            android:text="@string/hide_donations"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/hide_donations"
-            android:layout_marginTop="5dp"
-            android:gravity="start"
-            android:onClick="onCheck"
-            />
-
-    </LinearLayout>
-
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_below="@+id/l5"
-           android:layout_marginTop="10dp"
-            android:id="@+id/l6"
-           android:orientation="horizontal"
-           android:weightSum="3"
-           >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:weightSum="2"
+            android:layout_below="@+id/register_new_account"
             android:orientation="vertical"
-            >
-            <ImageView
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
-                android:src="@drawable/backup_ic"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:onClick="onClickBackbtn"
-                />
-            <TextView
-                android:onClick="onClickBackbtn"
+            android:layout_marginTop="10dp"
+            android:id="@+id/l5"
+        >
+            <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:text="@string/check_for_updates"
                 android:layout_weight="1"
-                android:text="@string/backup"
-                android:layout_gravity="center"
+                android:id="@+id/check_for_updates"
+                android:layout_marginTop="5dp"
+                android:onClick="onCheck"
+            />
+            <CheckBox
+                android:text="@string/automatically_install"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/automatically_install"
+                android:layout_marginTop="5dp"
+                android:onClick="onCheck"
+            />
+            <CheckBox
+                android:text="@string/require_pin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/require_pin"
+                android:layout_marginTop="5dp"
+                android:onClick="onCheck"
+            />
+            <CheckBox
+                android:text="@string/close_bitshare"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/close_bitshare"
+                android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:onClick="onCheck"
+            />
+            <CheckBox
+                android:text="@string/always_donate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/always_donate"
+                android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:onClick="onCheck"
+            />
+            <CheckBox
+                android:text="@string/hide_donations"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/hide_donations"
+                android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:onClick="onCheck"
+            />
 
-                />
         </LinearLayout>
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:weightSum="2"
-               android:orientation="vertical"
-               >
-               <ImageView
-                   android:layout_height="match_parent"
-                   android:layout_width="wrap_content"
-                   android:src="@drawable/brainkey_ic"
-                   android:layout_weight="1"
-                   android:layout_gravity="center"
-                   android:onClick="onClickBackupBrainkeybtn"
-                   />
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:layout_weight="1"
-                   android:onClick="onClickBackupBrainkeybtn"
-                   android:text="@string/backup_brainkey"
-                   android:gravity="center"
 
-                   />
-           </LinearLayout>
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:weightSum="2"
-               android:orientation="vertical"
-               >
-               <ImageView
-                   android:layout_height="match_parent"
-                   android:layout_width="wrap_content"
-                   android:src="@drawable/pin_ic"
-                   android:layout_weight="1"
-                   android:layout_gravity="center"
-                   android:onClick="onClickSecurePinbtn"
-                   />
-               <TextView
-                   android:onClick="onClickSecurePinbtn"
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:layout_weight="1"
-                   android:text="@string/secure_pin"
-                   android:layout_gravity="center"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l5"
+            android:layout_marginTop="10dp"
+            android:id="@+id/l6"
+            android:orientation="horizontal"
+            android:weightSum="3"
+        >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:orientation="vertical"
+            >
+                <ImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/backup_ic"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:onClick="onClickBackbtn"
+                />
+                <TextView
+                    android:onClick="onClickBackbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/backup"
+                    android:layout_gravity="center"
 
-                   />
-           </LinearLayout>
-       </LinearLayout>
+                />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:orientation="vertical"
+            >
+                <ImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/brainkey_ic"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:onClick="onClickBackupBrainkeybtn"
+                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClickBackupBrainkeybtn"
+                    android:text="@string/backup_brainkey"
+                    android:gravity="center"
+
+                />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="2"
+                android:orientation="vertical"
+            >
+                <ImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/pin_ic"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:onClick="onClickSecurePinbtn"
+                />
+                <TextView
+                    android:onClick="onClickSecurePinbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/secure_pin"
+                    android:layout_gravity="center"
+
+                />
+            </LinearLayout>
+        </LinearLayout>
 
 
         <TextView
@@ -364,7 +360,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/large_text"
-            />
+        />
 
     </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

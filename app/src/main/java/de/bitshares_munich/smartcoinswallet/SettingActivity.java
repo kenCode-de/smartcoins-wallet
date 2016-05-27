@@ -4,13 +4,17 @@ package de.bitshares_munich.smartcoinswallet;
  */
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
+import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Helper;
@@ -34,13 +40,9 @@ public class SettingActivity extends AppCompatActivity {
     final String close_bitshare = "close_bitshare";
     final String always_donate = "always_donate";
     final String hide_donations = "hide_donations";
-    final String taxable_country = "taxable_country";
-    final String preferred_lang = "preferred_lang";
-    final String backup_asset = "backup_asset";
     final String date_time = "date_time";
     final String register_new_account = "register_new_account";
 
-    ArrayAdapter<String> iniAdapter;
     @Bind(R.id.spCountry)
     Spinner spCountry;
 
@@ -52,6 +54,10 @@ public class SettingActivity extends AppCompatActivity {
 
     @Bind(R.id.spAccounts)
     Spinner spAccounts;
+
+    @Bind(R.id.spBackupAsset)
+    Spinner spBackupAsset;
+
     TinyDB tinyDB;
 
     @Override
@@ -65,33 +71,6 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void init() {
-      /*  int setSelection=-1;
-        Spinner spinner1backup_asset = (Spinner) findViewById(R.id.spinner1backup_asset);
-        createSpinner(spinner1backup_asset);
-        spinner1backup_asset.setOnItemSelectedListener(new SpinnerActivity(0));
-        setSelection = selectionPostion(backup_asset);
-        if(setSelection!=-1) spinner1backup_asset.setSelection(setSelection);
-        Spinner spCountry = (Spinner) findViewById(R.id.spCountry);
-        createSpinner(spCountry);
-        spinner2taxable_country.setOnItemSelectedListener(new SpinnerActivity(1));
-        setSelection = selectionPostion(taxable_country);
-        if(setSelection!=-1) spinner2taxable_country.setSelection(setSelection);
-        Spinner spinner3preferred_lang = (Spinner) findViewById(R.id.spinner3preferred_lang);
-        createSpinner(spinner3preferred_lang);
-        spinner3preferred_lang.setOnItemSelectedListener(new SpinnerActivity(2));
-        setSelection = selectionPostion(preferred_lang);
-        if(setSelection!=-1) spinner3preferred_lang.setSelection(setSelection);
-        Spinner spinner4date_time = (Spinner) findViewById(R.id.spinner4date_time);
-        createSpinner(spinner4date_time);
-        spinner4date_time.setOnItemSelectedListener(new SpinnerActivity(3));
-        setSelection = selectionPostion(date_time);
-        if(setSelection!=-1) spinner4date_time.setSelection(setSelection);
-        setCheckedButtons();
-        Spinner spinner5imported_created_accounts = (Spinner) findViewById(R.id.spinner5_imported_created_accounts);
-        createSpinner(spinner5imported_created_accounts);
-        spinner5imported_created_accounts.setOnItemSelectedListener(new SpinnerActivity(4));
-        setSelection = selectionPostion(register_new_account);
-        if(setSelection!=-1) spinner5imported_created_accounts.setSelection(setSelection);*/
         setCheckedButtons();
     }
 
@@ -131,9 +110,10 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     public void onClickSecurePinbtn(View v) {
-        final Dialog dialog = new Dialog(SettingActivity.this);
-        dialog.setContentView(R.layout.settings_dialog);
-        dialog.show();
+
+        Intent intent=new Intent(getApplicationContext(),PinActivity.class);
+        startActivity(intent);
+        //showDialogPinRequest();
     }
 
     public void onClickBackbtn(View v) {
@@ -146,34 +126,6 @@ public class SettingActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
-
-    public void saveinPref(int id, String value) {
-        switch (id) {
-            case 0:
-                Helper.storeStringSharePref(this, backup_asset, value);
-                break;
-            case 1:
-                Helper.storeStringSharePref(this, taxable_country, value);
-                break;
-            case 2:
-                Helper.storeStringSharePref(this, preferred_lang, value);
-                break;
-            case 3:
-                Helper.storeStringSharePref(this, date_time, value);
-                break;
-            case 4:
-                Helper.storeStringSharePref(this, register_new_account, value);
-                break;
-        }
-    }
-
-    public int selectionPostion(String compareValue) {
-        compareValue = Helper.fetchStringSharePref(this, compareValue);
-        if (!compareValue.equals(null)) {
-            return iniAdapter.getPosition(compareValue);
-        }
-        return -1;
     }
 
     void setCheckedButtons() {
@@ -212,9 +164,11 @@ public class SettingActivity extends AppCompatActivity {
         adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCountry.setAdapter(adapterCountry);
         final AdapterView.OnItemSelectedListener listener = spCountry.getOnItemSelectedListener();
-        String country = Helper.fetchStringSharePref(getApplicationContext(), "country");
-        if (country != "") {
-            spCountry.setSelection(Integer.parseInt(country));
+
+        Boolean isCountry = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_country));
+        if (isCountry) {
+            int indexCountry = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_country));
+            spCountry.setSelection(indexCountry);
         } else {
 
             Locale locale = Locale.GERMANY;
@@ -253,7 +207,7 @@ public class SettingActivity extends AppCompatActivity {
         ArrayAdapter<LangCode> adapterLanguage = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spLanguage.setAdapter(adapterLanguage);
-        String langCode = Helper.fetchStringSharePref(getApplicationContext(), "language");
+        String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
@@ -279,19 +233,54 @@ public class SettingActivity extends AppCompatActivity {
         adapterTimezone.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spTimeZones.setAdapter(adapterTimezone);
 
+        Boolean isTimezone = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_timezone));
+        if (isTimezone) {
+            int indexTimezone = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_timezone));
+            spTimeZones.setSelection(indexTimezone);
+        } else {
+            spTimeZones.setSelection(0);
+        }
+
 
         // AccountsName
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         ArrayList<String> arrayAccountName = new ArrayList<>();
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
-
         }
-        Collections.sort(arrayAccountName);
 
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
+
+
+        //Asset
+        ArrayList<AccountAssets> accountAssets = null;
+        for (int i = 0; i < accountDetails.size(); i++) {
+
+            if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
+                accountAssets = accountDetails.get(i).AccountAssets;
+            }
+
+        }
+        if (accountAssets != null) {
+            ArrayList<String> arrayAccountAssets = new ArrayList<>();
+            for (int j = 0; j < accountAssets.size(); j++) {
+                arrayAccountAssets.add(accountAssets.get(j).symbol);
+            }
+            ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
+            adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spBackupAsset.setAdapter(adapterAccountAssets);
+
+            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+            if (isBackupAsset) {
+                int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+                spBackupAsset.setSelection(indexBackupAsset);
+            } else {
+                spBackupAsset.setSelection(0);
+            }
+        }
+
 
     }
 
@@ -316,5 +305,69 @@ public class SettingActivity extends AppCompatActivity {
 
 
     }
+
+    @OnItemSelected(R.id.spAccounts)
+    void onItemSelectedAccount(int position) {
+        if (position >= 0) {
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
+        }
+    }
+
+    @OnItemSelected(R.id.spCountry)
+    void onItemSelectedCountry(int position) {
+        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_country), position);
+    }
+
+    @OnItemSelected(R.id.spTimeZones)
+    void onItemSelectedTimeZone(int position) {
+        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+    }
+
+    @OnItemSelected(R.id.spBackupAsset)
+    void onItemSelectedBackupAsset(int position) {
+        if (position >= 0) {
+            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
+        }
+    }
+
+    @OnItemSelected(R.id.spLanguage)
+    void onItemSelectedLanguage(int position) {
+
+        LangCode langSelection = (LangCode) spLanguage.getSelectedItem();
+        // Helper.setLocale(langSelection.code, getResources());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
+
+    }
+
+    private void showDialogPinRequest() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.activity_create_pin);
+        dialog.setTitle("Create Pin");
+        Button btnCreate = (Button) dialog.findViewById(R.id.btnCreate);
+        final EditText etOldPin = (EditText) dialog.findViewById(R.id.etOldPin);
+        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+        final EditText etPinConfirmation = (EditText) dialog.findViewById(R.id.etOldPin);
+
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (etOldPin.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_old_6_digit_pin, Toast.LENGTH_SHORT).show();
+                } else if (etPin.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
+                } else if (etPinConfirmation.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+                } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+                } else {
+                    Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
+                    Toast.makeText(getApplicationContext(), R.string.pin_created_successfully, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
+
+    }
+
 
 }
