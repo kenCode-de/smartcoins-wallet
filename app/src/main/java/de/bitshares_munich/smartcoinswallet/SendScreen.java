@@ -341,9 +341,9 @@ public class SendScreen extends Activity implements IExchangeRate, IAccount {
     }
 
     void setBackUpAsset(){
-        String asset =Helper.fetchStringSharePref(this,backup_asset);
-        if(asset!=null) {
-            editTextAsset.setText(asset);
+        String backupAsset = Helper.fetchStringSharePref(this,getString(R.string.str_backup_symbol));
+        if(backupAsset!=null) {
+            editTextAsset.setText(backupAsset);
         }
     }
     public void popupwindow(View v,TextView textview){
