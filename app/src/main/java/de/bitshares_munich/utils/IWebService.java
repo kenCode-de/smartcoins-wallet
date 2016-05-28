@@ -17,15 +17,6 @@ import retrofit2.http.Path;
 
 public interface IWebService {
 
-
-   /* @Headers({"Content-Type: application/json"})
-    @POST("/get_qr_hash/")
-    Call<QrHash> getQrHash(@Body Map<String, String> params);
-
-    @Headers({"Content-Type: application/json"})
-    @POST("/ws/")
-    Call<AccountBlock> verifyAccount(@Body Map<String, Object> params);*/
-
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<AccountDetails> getAccount(@Body Map<String, String> params);

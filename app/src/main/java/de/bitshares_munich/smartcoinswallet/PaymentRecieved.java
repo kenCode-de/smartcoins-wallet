@@ -37,7 +37,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
-public class PaymentRecieved extends Activity implements ITransactionObject,IAccountObject,IAssetObject {
+public class PaymentRecieved extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
     Application application = new Application();
     String receiver_id;
     String sender_id;

@@ -36,7 +36,7 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/25/16.
  */
-public class Add_Edit_Contacts extends Activity implements IAccount{
+public class Add_Edit_Contacts extends BaseActivity implements IAccount{
     Boolean add = false;
     Boolean edit = false;
     TinyDB tinyDB;

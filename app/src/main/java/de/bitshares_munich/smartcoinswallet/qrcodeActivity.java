@@ -27,7 +27,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 /**
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
-public class qrcodeActivity extends Activity implements ZXingScannerView.ResultHandler {
+public class qrcodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     int id;
     /**
@@ -191,7 +191,8 @@ public class qrcodeActivity extends Activity implements ZXingScannerView.ResultH
         Intent intent = new Intent(qrcodeActivity.this, SendScreen.class);
         intent.putExtras(conData);
         intent.putExtra("id",5);
-startActivity(intent);          finish();
+        startActivity(intent);
+        finish();
     }
     void workingQrcode(String rawResult){
         String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;

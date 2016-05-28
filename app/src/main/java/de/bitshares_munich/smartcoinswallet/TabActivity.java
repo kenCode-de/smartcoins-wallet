@@ -19,7 +19,7 @@ import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.utils.Application;
 
-public class TabActivity extends AppCompatActivity {
+public class TabActivity extends BaseActivity {
 
 
     @Bind(R.id.toolbar)
@@ -56,12 +56,12 @@ public class TabActivity extends AppCompatActivity {
         updateBlockNumberHead();
     }
 
-    @Override
+ /*   @Override
     protected void onResume()
     {
         super.onResume();
         Application.setCurrentActivity(this);
-    }
+    }*/
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());

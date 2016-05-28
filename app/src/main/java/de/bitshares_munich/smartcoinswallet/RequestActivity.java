@@ -14,7 +14,7 @@ import butterknife.OnClick;
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
-public class RequestActivity extends Activity {
+public class RequestActivity extends BaseActivity {
     @Bind(R.id.editTextView)
     TextView editTextView;
 

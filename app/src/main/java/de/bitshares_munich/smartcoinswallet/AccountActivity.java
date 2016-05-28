@@ -30,7 +30,7 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 
 
-public class AccountActivity extends AppCompatActivity implements IAccount {
+public class AccountActivity extends BaseActivity implements IAccount {
 
     @Bind(R.id.etAccountName)
     EditText etAccountName;

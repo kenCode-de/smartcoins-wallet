@@ -23,6 +23,7 @@
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
     <string name="kindly_create_account">Kindly create account</string>
+    <string name="please_enter_old_6_digit_pin">Please enter old 6-digit pin</string>
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="mismatch_pin">mismatch pin</string>
@@ -182,7 +183,7 @@
     <string name="head_block_number">head_block_number</string>
     <string name="beta">" beta"</string>
     <string name="txt_no_internet_connection">No internet connection</string>
-    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="account_from_brainkey_url">http://192.168.0.130:9003</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
@@ -218,7 +219,19 @@
     <string name="e_receipt">e_receipt</string>
 
     <string name="e_receipt_activity_name">e-Receipt</string>
-
+    <string name="pref_country">country</string>
+    <string name="pref_timezone">timezone</string>
+    <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_account_name">account_name</string>
+    <string name="pref_language">language</string>
+    <string name="old_pin">Old 6-digits PIN</string>
+    <string name="pin_created_successfully">PIN created successfully</string>
+    <string name="edit_pin">Edit PIN</string>
+    <string name="txt_edit">SAVE</string>
+    <string name="create_pin">Create PIN</string>
+    <string name="pin_changed_successfully">PIN changed successfully</string>
+    <string name="incorrect_old_pin">Incorrect old PIN</string>
+    <string name="str_backup_symbol">backup_symbol</string>
 
 
 </resources>

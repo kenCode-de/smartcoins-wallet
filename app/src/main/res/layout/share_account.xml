@@ -56,8 +56,9 @@
             android:layout_height="wrap_content"
             android:text="@string/share_btn_text"
             android:layout_gravity="center"
-            android:backgroundTint="#FF4081"
+            android:background="#FF4081"
             android:textColor="#FFFFFF"
+            android:padding="5dp"
             android:id="@+id/sharetofriend"
             />
 </LinearLayout>

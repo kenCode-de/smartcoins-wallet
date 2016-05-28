@@ -35,7 +35,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/16/16.
  */
-public class RecieveActivity extends Activity {
+public class RecieveActivity extends BaseActivity {
 
     @Bind(R.id.username)
     TextView tvUsername;

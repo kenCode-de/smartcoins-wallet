@@ -73,6 +73,7 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
     TextView TvOpInTrx;
 
 
+
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
 
