@@ -1,5 +1,9 @@
 package de.bitshares_munich.utils;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -7,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,6 +20,8 @@ import java.util.Iterator;
  * Created by Syed Muhammad Muzzammil on 5/24/16.
  */
 public class SupportMethods {
+    public static String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static File extStorageFile = new File(extStorage);
     public static String ConvertValueintoPrecision(String precision,String number){
         Double ok = 1.0;
         Double pre = Double.valueOf(precision);
@@ -100,5 +107,32 @@ public class SupportMethods {
         }
         return -1;
     }
-
+    public static void openPdf(Context context,String file){
+        try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.fromFile(new File(extStorageFile, file + ".pdf"));
+                intent.setDataAndType(uri, "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                context.startActivity(intent);
+                }
+        catch (Exception e){
+            testing("SupportMethods",e,"openPdf");
+        }
+    }
+    public static void sendPdfViaEmail(Context context,String file,String subject , String emailBody ){
+        try {
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, "");
+            email.putExtra(Intent.EXTRA_SUBJECT, subject);
+            email.putExtra(Intent.EXTRA_TEXT, emailBody);
+            Uri uri = Uri.fromFile(new File(extStorageFile, file + ".pdf"));
+            email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.setType("application/pdf");
+            email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(email);
+        }
+        catch (Exception e){
+            testing("SupportMethods",e,"sendPdfViaEmail");
+        }
+    }
 }

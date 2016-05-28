@@ -73,6 +73,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     TinyDB tinyDB;
 
+    @Bind(R.id.tableViewparent)
+    LinearLayout tableViewparent;
+
     @Bind(R.id.account_name)
     TextView tv_account_name;
 
@@ -93,6 +96,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+        tableViewparent.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
             accountDetails.get(0).isSelected = true;
@@ -181,33 +185,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void isUpdate(ArrayList<String> ids , ArrayList<String> sym ,ArrayList<String> pre , ArrayList<String>  am){
-        Log.i("uncle","aay1");
+
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
         for(int i = 0 ; i < ids.size() ;i++){
             AccountAssets accountAsset = new AccountAssets();
-            Log.i("uncle","aay1");
+
             accountAsset.id = ids.get(i);
             accountAsset.precision = pre.get(i);
             accountAsset.symbol = sym.get(i);
             accountAsset.ammount = am.get(i);
-            Log.i("uncle","aay1"+ids.get(i));
-            Log.i("uncle","aay1"+pre.get(i));
-            Log.i("uncle","aay1"+sym.get(i));
+
            // Log.i("uncle","aay1"+am.get(i));
 
             accountAssets.add(accountAsset);
         }
-       if(accountDetails.size()==1) {
-            accountDetails.get(0).isSelected = true;
-            accountDetails.get(0).AccountAssets = accountAssets;
-       } else {
+//       if(accountDetails.size()==1) {
+//            accountDetails.get(0).isSelected = true;
+//            accountDetails.get(0).AccountAssets = accountAssets;
+//       } else {
            for(int i = 0 ; i < accountDetails.size() ; i++){
                 if(accountDetails.get(i).isSelected){
-                    accountDetails.get(0).AccountAssets = accountAssets;
+                    accountDetails.get(i).AccountAssets = accountAssets;
                     break;
                 }
            }
-       }
+//       }
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         BalanceAssetsUpdate(sym,pre,am);
     }
@@ -358,7 +360,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             load_more_values.setVisibility(View.VISIBLE);
             load_more_values.setEnabled(true);
         }
-
+        tableViewparent.setVisibility(View.VISIBLE);
         myTransactions.addAll(transactionDetails);
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
     }

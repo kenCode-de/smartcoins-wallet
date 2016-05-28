@@ -33,6 +33,11 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
         //Toast.makeText(myContext, clickedtdString, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Application.getCurrentActivity(), eReceiptActivity.class);
         intent.putExtra( myContext.getResources().getString(R.string.e_receipt),td.eReceipt);
+        intent.putExtra( "Memo",td.Memo);
+        intent.putExtra( "Date",td.getDateString()+" "+td.getTimeString()+" "+td.getTimeZone());
+        intent.putExtra( "To",td.To);
+        intent.putExtra( "From",td.From);
+
         Application.getCurrentActivity().startActivity(intent);
     }
 }
