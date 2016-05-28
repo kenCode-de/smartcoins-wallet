@@ -5,8 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +20,9 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -111,13 +117,15 @@ public class RecieveActivity extends BaseActivity {
 
     @OnClick(R.id.sharebtn)
     public void TellaFriend() {
-//        Drawable loadImage = getResources().getDrawable(R.drawable.sample);
-//           String str = Helper.saveToInternalStorage(this,((BitmapDrawable) loadImage).getBitmap());
-//        Log.i("path",str);
+        qrimage.buildDrawingCache();
+        Bitmap bitmap = qrimage.getDrawingCache();
+        File mFile = savebitmap(bitmap);
+        //Drawable loadImage = getDrawable(qrimage);
+//        String str = Helper.saveToInternalStorage(this,((BitmapDrawable) loadImage).getBitmap());
         try {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-            Uri uri = Uri.parse("android.resource://de.bitshares_munich.smartcoinswallet/drawable/bts");
-            //        Uri uri = Uri.parse(str);
+            Uri uri = null;
+            uri = Uri.fromFile(mFile);
             sharingIntent.setData(uri);
             sharingIntent.setType("image/png");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
@@ -126,7 +134,26 @@ public class RecieveActivity extends BaseActivity {
 
         }
     }
+    private File savebitmap(Bitmap bmp) {
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+        OutputStream outStream = null;
+        File file = new File(extStorageDirectory, "QrImage" + ".png");
+        if (file.exists()) {
+            file.delete();
+            file = new File(extStorageDirectory, "QrImage" + ".png");
+        }
 
+        try {
+            outStream = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return file;
+    }
     Bitmap encodeAsBitmap(String str, String qrColor) throws WriterException {
         BitMatrix result;
         try {

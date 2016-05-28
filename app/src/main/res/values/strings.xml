@@ -183,7 +183,7 @@
     <string name="head_block_number">head_block_number</string>
     <string name="beta">" beta"</string>
     <string name="txt_no_internet_connection">No internet connection</string>
-    <string name="account_from_brainkey_url">http://192.168.0.130:9003</string>
+    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
