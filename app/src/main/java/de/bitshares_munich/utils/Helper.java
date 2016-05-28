@@ -24,18 +24,24 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
+
+import de.bitshares_munich.smartcoinswallet.R;
 
 /**
  * Created by qasim on 4/7/16.
  */
 public class Helper {
-
+    Gson gson;
     public static final ArrayList<String> languages = new ArrayList<>();
     public static Map<String, String> countriesISOMap = new HashMap<String, String>();
 
@@ -259,7 +265,7 @@ public class Helper {
 
             Locale locale = new Locale("", countryCode);
             try {
-            Currency currency = Currency.getInstance(locale);
+                Currency currency = Currency.getInstance(locale);
                 countries.add(locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")");
             } catch (Exception e) {
 
@@ -308,6 +314,59 @@ public class Helper {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols(locale);
         return decimalFormatSymbols.getDecimalSeparator();
 
+    }
+
+    public static String convertDateToGMT(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(date);
+            return result;
+
+        } else {
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM");
+            String result = destFormat.format(date);
+            return result;
+        }
+    }
+
+
+    public static String convertTimeToGMT(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+
+            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(date);
+            return result;
+
+        } else {
+            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            String result = destFormat.format(date);
+            return result;
+        }
+    }
+
+    public static String convertTimeZoneToGMT(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeZone(tz);
+            return calendar.getTimeZone().getDisplayName(false, TimeZone.SHORT);
+
+        } else {
+            return "UTC";
+        }
     }
 
 }

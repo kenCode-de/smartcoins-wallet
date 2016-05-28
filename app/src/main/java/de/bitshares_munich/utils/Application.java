@@ -90,7 +90,7 @@ public class Application extends android.app.Application {
     public static void webSocketConnection() {
         iAccount = iAccount;
         final AsyncHttpGet get = new AsyncHttpGet(context.getString(R.string.url_bitshares_openledger));
-        get.setTimeout(20000);//000000);
+        get.setTimeout(5*60*1000);//000000);
 
         //System.setProperty("https.protocols", "TLSv1");
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {

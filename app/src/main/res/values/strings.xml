@@ -54,7 +54,7 @@
     <string name="close_bitshare">Automatically close Bitshares Wallet after 3 minutes of inactivity</string>
     <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
-    <string name="backup">BACKUP.bin</string>
+    <string name="backup">IMPORT BACKUP</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at Bitshares Munich</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
@@ -183,7 +183,7 @@
     <string name="head_block_number">head_block_number</string>
     <string name="beta">" beta"</string>
     <string name="txt_no_internet_connection">No internet connection</string>
-    <string name="account_from_brainkey_url">http://192.168.0.130:9003</string>
+    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
@@ -232,6 +232,7 @@
     <string name="pin_changed_successfully">PIN changed successfully</string>
     <string name="incorrect_old_pin">Incorrect old PIN</string>
     <string name="str_backup_symbol">backup_symbol</string>
+    <string name="date_time_zone">dateTimeZone</string>
 
 
 </resources>

@@ -6,7 +6,6 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.DateTimeZone;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
@@ -60,14 +60,19 @@ public class SettingActivity extends BaseActivity {
 
     TinyDB tinyDB;
 
+    ArrayList<AccountDetails> accountDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        setBackButton(true);
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
+
     }
 
     public void init() {
@@ -111,13 +116,14 @@ public class SettingActivity extends BaseActivity {
 
     public void onClickSecurePinbtn(View v) {
 
-        Intent intent=new Intent(getApplicationContext(),PinActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PinActivity.class);
         startActivity(intent);
         //showDialogPinRequest();
     }
 
     public void onClickBackbtn(View v) {
-
+        Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
+        startActivity(intent);
     }
 
     Boolean isCHecked(View v) {
@@ -243,7 +249,7 @@ public class SettingActivity extends BaseActivity {
 
 
         // AccountsName
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
         ArrayList<String> arrayAccountName = new ArrayList<>();
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
@@ -309,6 +315,15 @@ public class SettingActivity extends BaseActivity {
     @OnItemSelected(R.id.spAccounts)
     void onItemSelectedAccount(int position) {
         if (position >= 0) {
+            for (int i = 0; i < accountDetails.size(); i++) {
+
+                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
+                    accountDetails.get(i).isSelected = true;
+                } else {
+                    accountDetails.get(i).isSelected = false;
+                }
+
+            }
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
         }
     }
@@ -320,13 +335,18 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spTimeZones)
     void onItemSelectedTimeZone(int position) {
-        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+        if (position > 0) {
+
+            String temp[]=spTimeZones.getSelectedItem().toString().split(" ");
+            Helper.storeStringSharePref(getApplicationContext(),getString(R.string.date_time_zone),temp[0]);
+            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+        }
     }
 
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
         if (position >= 0) {
-            Helper.storeStringSharePref(getApplicationContext(),getString(R.string.str_backup_symbol),spBackupAsset.getSelectedItem().toString());
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.str_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
         }
     }

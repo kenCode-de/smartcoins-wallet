@@ -1,7 +1,11 @@
 package de.bitshares_munich.models;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import de.bitshares_munich.utils.Helper;
 
 /**
  * Created by developer on 5/24/16.
@@ -17,9 +21,10 @@ public class TransactionDetails {
     public float faitAmount;
     public String faitAssetSymbol;
     public String eReceipt;
+    Context context;
 
     public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, float _Amount,
-                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt)
+                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt,Context context)
     {
         this.Date = _date;
         this.Sent = _Sent;
@@ -31,6 +36,8 @@ public class TransactionDetails {
         this.faitAmount = _faitAmount;
         this.faitAssetSymbol = _faitAssetSymbol;
         eReceipt = _eReceipt;
+        this.context=context;
+
     }
 
     public Date getDate()
@@ -42,23 +49,27 @@ public class TransactionDetails {
 
     public String getDateString()
     {
-        SimpleDateFormat df = new SimpleDateFormat("dd MMM");
+        /*SimpleDateFormat df = new SimpleDateFormat("dd MMM");
         String formattedDate = df.format(this.Date);
-        return formattedDate;//Calendar.getInstance().getTime();
+        return formattedDate;//Calendar.getInstance().getTime();*/
+        return Helper.convertDateToGMT(this.Date,context);
+
     }
 
     public String getTimeString()
     {
-        SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+     /*   SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
         String formattedDate = df.format(this.Date);
-        return formattedDate;//Calendar.getInstance().getTime();
+        return formattedDate;//Calendar.getInstance().getTime();*/
+        return Helper.convertTimeToGMT(this.Date,context);
     }
 
     public String getTimeZone()
     {
-        //SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
+       /* //SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
         //String formattedDate = df.format(this.Date);
-        return "UTC";//Calendar.getInstance().getTime();
+        return "UTC";//Calendar.getInstance().getTime();*/
+        return Helper.convertTimeZoneToGMT(this.Date,context);
     }
 
     public Boolean getSent ()
