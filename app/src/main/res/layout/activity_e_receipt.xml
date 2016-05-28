@@ -1,12 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    >
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="de.bitshares_munich.smartcoinswallet.eReceiptActivity">
+    android:background="@drawable/edittext_bg"
+    android:id="@+id/relativelayout"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:id="@+id/ll_heading"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        >
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="Raw transaction :"
+        android:gravity="center|left"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_weight="1"
+        />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Send PDF"
+            android:id="@+id/buttonSend"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_heading"
+        android:id="@+id/ll_First"
+        android:background="@drawable/edittext_bg"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="id"
+            android:textColor="@color/black"
+            android:gravity="left|center"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/TvId"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_First"
+        android:id="@+id/ll_Sec"
+        android:background="@drawable/edittext_bg"
+
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="time stamp"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/TvBlockNum"
+
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_Sec"
+        android:id="@+id/ll_Third"
+        android:background="@drawable/edittext_bg"
+
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="trx_in_block"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/TvTrxInBlock"
+
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_Third"
+        android:id="@+id/ll_Third_op"
+        android:orientation="vertical"
+        android:background="@drawable/edittext_bg"
+        >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:gravity="left|center"
+        android:textColor="@color/black"
+        android:text="operations"
+        android:id="@+id/tv_op_heading"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_operations"
+        android:orientation="vertical"
+        >
+
+    </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_Third_op"
+        android:id="@+id/ll_Fourth"
+        android:background="@drawable/edittext_bg"
+
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="op_in_trx"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/TvOpInTrx"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_Fourth"
+        android:id="@+id/ll_Fifth"
+        android:background="@drawable/edittext_bg"
+
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="virtual_op"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:id="@+id/TvVirtualOp"
+            android:textColor="@color/black"
+            android:text=""
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_margin"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_below="@+id/ll_Fifth"
+        android:id="@+id/ll_Sixth"
+        android:background="@drawable/edittext_bg"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="operation_results"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="left|center"
+            android:textColor="@color/black"
+            android:text=""
+            android:id="@+id/TvOperationsResults"
+            />
+    </LinearLayout>
 
 </RelativeLayout>
+</ScrollView>

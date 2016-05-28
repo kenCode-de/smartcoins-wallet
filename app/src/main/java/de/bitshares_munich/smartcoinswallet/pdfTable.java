@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.models.TransactionDetails;
@@ -185,5 +187,69 @@ public class pdfTable {
             Toast.makeText(myContext, "Unable to generate pdf. Please retry. Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         }
+    }
+    public void createTransactionpdf (HashMap<String,String> map)
+    {
+
+        Document document = new Document();
+
+        try {
+            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String filePath = combinePath(extStorage, filename + ".pdf");
+            createEmptyFile(filePath);
+            PdfWriter.getInstance(document,new FileOutputStream(filePath));
+
+            document.open();
+
+            PdfPTable table = new PdfPTable(1); // 2 columns.
+            PdfPCell cell1 = new PdfPCell(new Paragraph("Raw Transaction : "));
+            table.addCell(cell1);
+            table.completeRow();
+
+            document.add(table);
+
+            document.add(addforCell("id",map.get("id")));
+            document.add(addforCell("time",map.get("time")));
+            document.add(addforCell("trx_in_block",map.get("trx_in_block")));
+            document.add(addforCell("operations","----"));
+            String detailsFee = String.format("amount: %s\nsymbol: %s",map.get("amountFee"),map.get("symbolFee"));
+            document.add(addforCell("fee",detailsFee));
+            document.add(addforCell("from",map.get("from")));
+            document.add(addforCell("to",map.get("to")));
+            String detailsAmount = String.format("amount: %s\nsymbol: %s",map.get("amountAmount"),map.get("symbolAmount"));
+            document.add(addforCell("amount",detailsAmount));
+            document.add(addforCell("memo",map.get("memo")));
+            document.add(addforCell("extensions",map.get("extensions")));
+            document.add(addforCell("op_in_trx",map.get("op_in_trx")));
+            document.add(addforCell("virtual_op",map.get("virtual_op")));
+            document.add(addforCell("operation_results",map.get("operation_results")));
+
+
+            document.close();
+
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.putExtra(Intent.EXTRA_EMAIL, "receiver_email_address");
+            email.putExtra(Intent.EXTRA_SUBJECT, "subject");
+            email.putExtra(Intent.EXTRA_TEXT, "email body");
+            Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
+            email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.setType("application/pdf");
+            email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            myContext.startActivity(email);
+        }
+        catch(Exception e){
+            Log.d("pdfException",e.getMessage());
+            Toast.makeText(myContext, "Unable to generate pdf. Please retry. Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+    PdfPTable addforCell(String subject , String detail){
+        PdfPTable table = new PdfPTable(2); // 2 columns.
+        PdfPCell cell1 = new PdfPCell(new Paragraph(subject));
+        PdfPCell cell2 = new PdfPCell(new Paragraph(detail));
+        table.addCell(cell1);
+        table.addCell(cell2);
+        table.completeRow();
+        return table;
     }
 }

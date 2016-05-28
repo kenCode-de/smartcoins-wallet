@@ -69,7 +69,10 @@
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
         android:gravity="top"
+        android:text="vaguity narine townlet rockaby taurian beadily cyan unbear adactyl dimble agamian upburst fasting amaltas dossal nexus
+"
         android:maxLines="8"/>
+
 
     <TextView
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
