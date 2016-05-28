@@ -73,6 +73,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     TinyDB tinyDB;
 
+    @Bind(R.id.tableViewparent)
+    LinearLayout tableViewparent;
+
     @Bind(R.id.account_name)
     TextView tv_account_name;
 
@@ -93,6 +96,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+        tableViewparent.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
             accountDetails.get(0).isSelected = true;
@@ -356,7 +360,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             load_more_values.setVisibility(View.VISIBLE);
             load_more_values.setEnabled(true);
         }
-
+        tableViewparent.setVisibility(View.VISIBLE);
         myTransactions.addAll(transactionDetails);
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
     }
