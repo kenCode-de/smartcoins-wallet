@@ -320,7 +320,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/tvLoyaltyStatus"
-            android:id="@+id/FifthChild"
+            android:id="@+id/llBackupAsset"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -340,35 +340,28 @@
                     android:background="@null"
                     android:singleLine="true"
                     android:maxLines="1"
-                    android:text="344"
+                    android:text=""
                     android:layout_height="match_parent"
-                    android:id="@+id/editTextAsset"
+                    android:id="@+id/etBackupAsset"
                     android:gravity="center"
                     android:textAlignment="textEnd"
                     android:layout_marginRight="100sp"
                     />
                 <TextView
-                    android:layout_toLeftOf="@+id/imageviewAsset"
+                    android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="OBITS"
+                    android:text="BTS"
                     android:gravity="center"
                     android:textSize="17sp"
-                    android:id="@+id/selectBTSAsset"
-                    />
-
-                <ImageView
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/imageviewAsset"
-                    android:layout_width="20sp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/spinnericon"
+                    android:layout_marginRight="7sp"
+                    android:id="@+id/tvBackupAsset"
                     />
             </RelativeLayout>
         </LinearLayout>
         <TextView
             android:visibility="gone"
-            android:layout_below="@+id/FifthChild"
+            android:layout_below="@+id/llBackupAsset"
             android:text="nn OBITS is available"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

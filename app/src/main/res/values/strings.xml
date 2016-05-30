@@ -231,7 +231,7 @@
     <string name="create_pin">Create PIN</string>
     <string name="pin_changed_successfully">PIN changed successfully</string>
     <string name="incorrect_old_pin">Incorrect old PIN</string>
-    <string name="str_backup_symbol">backup_symbol</string>
+    <string name="pref_backup_symbol">backup_symbol</string>
     <string name="date_time_zone">dateTimeZone</string>
     <string name="pref_always_donate">always_donate</string>
 

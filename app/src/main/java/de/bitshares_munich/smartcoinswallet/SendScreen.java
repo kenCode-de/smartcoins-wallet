@@ -49,7 +49,6 @@ import retrofit2.Response;
  */
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount {
     Context context;
-    final String backup_asset = "backup_asset";
     Application application = new Application();
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
@@ -60,6 +59,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount;
     boolean alwaysDonate = false;
+    String backupAsset;
 
 
     @Bind(R.id.FirstChild)
@@ -77,6 +77,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.llLoyalty)
     LinearLayout llLoyalty;
 
+    @Bind(R.id.llBackupAsset)
+    LinearLayout llBackupAsset;
+
     @Bind(R.id.tvLoyaltyStatus)
     TextView tvLoyaltyStatus;
 
@@ -86,21 +89,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.spAssets)
     Spinner spAssets;
 
-    @Bind(R.id.selectBTSAsset)
-    TextView selectBTSAsset;
-
     @Bind(R.id.tvLoyalty)
     TextView tvLoyalty;
+
+    @Bind(R.id.tvBackupAsset)
+    TextView tvBackupAsset;
 
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
 
     @Bind(R.id.webviewTo)
     WebView webviewTo;
-
-
-//    @Bind(R.id.editTextFrom)
-//    TextView editTextFrom;
 
     @Bind(R.id.etReceiverAccount)
     EditText etReceiverAccount;
@@ -120,8 +119,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.etAmount)
     EditText etAmount;
 
-    @Bind(R.id.editTextAsset)
-    EditText editTextAsset;
+    @Bind(R.id.etBackupAsset)
+    EditText etBackupAsset;
 
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
@@ -347,30 +346,19 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     }
 
     void setBackUpAsset(){
-        String backupAsset = Helper.fetchStringSharePref(this,getString(R.string.str_backup_symbol));
+        backupAsset = Helper.fetchStringSharePref(this,getString(R.string.pref_backup_symbol));
         if(backupAsset!=null) {
-            editTextAsset.setText(backupAsset);
+            llBackupAsset.setVisibility(View.VISIBLE);
+            tvBackupAsset.setText(backupAsset);
         }
     }
-    public void popupwindow(View v,TextView textview){
-        popUpwindow p =new popUpwindow(context,textview);
-        p.show(v);
-    }
+
     @OnClick(R.id.scanning)
     void OnScanning(){
         Intent intent = new Intent(context, qrcodeActivity.class);
         intent.putExtra("id",0);
         startActivityForResult(intent,90);
     }
-    @OnClick(R.id.selectBTSAsset)
-    void onSelectBTSAsset(View v){
-        popupwindow(v,selectBTSAsset);
-    }
-    @OnClick(R.id.imageviewAsset)
-    void imageviewAsset(View v){
-        popupwindow(v,selectBTSAsset);
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 90:
