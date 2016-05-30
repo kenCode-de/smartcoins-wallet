@@ -285,13 +285,6 @@ public class Helper {
         }
     }
 
-    public static String[] getFaitCurrency(String country) {
-        Locale countryLocale = new Locale("", countriesISOMap.get(country));
-        Currency currency = Currency.getInstance(countryLocale);
-        String[] arr = {currency.getCurrencyCode(), currency.getSymbol()};
-        return arr;
-    }
-
     public static void setLocale(String lang, Resources res) {
         Locale myLocale = new Locale(lang);
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -366,6 +359,16 @@ public class Helper {
 
         } else {
             return "UTC";
+        }
+    }
+
+    public static String getFadeCurrency(Context context) {
+        Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
+        if (isFade) {
+            String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
+            return currency[1].replace("(","").replace(")","");
+        } else {
+            return "";
         }
     }
 
