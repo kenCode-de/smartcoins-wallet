@@ -423,7 +423,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/llMemo"
-            android:id="@+id/checkbox_donate"
+            android:id="@+id/cbAlwaysDonate"
             android:layout_marginTop="5sp"
             />
         <LinearLayout
@@ -434,7 +434,7 @@
             android:orientation="horizontal"
             android:clickable="true"
             android:id="@+id/btnSend"
-            android:layout_below="@id/checkbox_donate"
+            android:layout_below="@id/cbAlwaysDonate"
             >
             <TextView
                 android:layout_width="match_parent"
