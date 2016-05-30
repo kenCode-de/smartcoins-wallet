@@ -18,10 +18,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.smartcoinswallet.List_View_Activity;
+import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 
 
 public class TinyDB {
@@ -332,14 +333,14 @@ public class TinyDB {
         }
         return objects;
     }
-    public ArrayList<List_View_Activity.ListviewContactItem> getContactObject(String key, Class<?> mClass) {
+    public ArrayList<ListViewActivity.ListviewContactItem> getContactObject(String key, Class<?> mClass) {
         Gson gson = new Gson();
 
         ArrayList<String> objStrings = getListString(key);
-        ArrayList<List_View_Activity.ListviewContactItem> objects = new ArrayList<>();
+        ArrayList<ListViewActivity.ListviewContactItem> objects = new ArrayList<>();
 
         for (String jObjString : objStrings) {
-            List_View_Activity.ListviewContactItem value = (List_View_Activity.ListviewContactItem) gson.fromJson(jObjString, mClass);
+            ListViewActivity.ListviewContactItem value = (ListViewActivity.ListviewContactItem) gson.fromJson(jObjString, mClass);
             objects.add(value);
         }
         return objects;
@@ -354,6 +355,13 @@ public class TinyDB {
         return value;
     }
 
+    public HashMap getHashmap(String key) {
+        String json = getString(key);
+        HashMap value = new Gson().fromJson(json, HashMap.class);
+        if (value == null)
+            return value = new HashMap<>();
+        return value;
+    }
 
     // Put methods
 
@@ -513,7 +521,13 @@ public class TinyDB {
         putListString(key, objStrings);
     }
 
-    public void putContactsObject(String key, ArrayList<List_View_Activity.ListviewContactItem> objArray ) {
+    public void putHashmapObject(String key, HashMap<String,String> map) {
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        putString(key, gson.toJson(map));
+    }
+
+    public void putContactsObject(String key, ArrayList<ListViewActivity.ListviewContactItem> objArray ) {
         checkForNullKey(key);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();

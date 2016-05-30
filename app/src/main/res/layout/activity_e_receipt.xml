@@ -4,6 +4,44 @@
     android:layout_height="match_parent"
     android:background="#fff"
     >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:id="@+id/header"
+            android:background="#0099D5"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+            <Button
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:background="@drawable/righticon"
+                android:layout_gravity="center"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logoicon"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="10sp"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="eReceipt"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="20sp"
+                />
+        </LinearLayout>
+
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,9 +52,10 @@
     android:background="@drawable/edittext_bg"
     android:id="@+id/relativelayout"
     >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_margin"
+        android:layout_height="@dimen/items_ereciptImage"
         android:id="@+id/ll_heading"
         android:weightSum="2"
         android:orientation="horizontal"
@@ -24,19 +63,35 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:text="Raw transaction :"
+        android:text=""
         android:gravity="center|left"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:layout_weight="1"
         />
-        <Button
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Send PDF"
+            android:weightSum="4"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="Email PDF"
             android:id="@+id/buttonSend"
             />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/imageEmail"
+                android:layout_weight="3"
+                android:layout_gravity="right"
+                />
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -234,4 +289,5 @@
     </LinearLayout>
 
 </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

@@ -1,9 +1,5 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,7 +31,7 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/25/16.
  */
-public class Add_Edit_Contacts extends BaseActivity implements IAccount{
+public class AddEditContacts extends BaseActivity implements IAccount{
     Boolean add = false;
     Boolean edit = false;
     TinyDB tinyDB;
@@ -113,8 +108,8 @@ public class Add_Edit_Contacts extends BaseActivity implements IAccount{
     }
     @OnClick(R.id.SaveContact)
     public void AddContatcs(){
-        List_View_Activity.ListviewContactItem contact = new List_View_Activity.ListviewContactItem();
-        ArrayList<List_View_Activity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", List_View_Activity.ListviewContactItem.class);
+        ListViewActivity.ListviewContactItem contact = new ListViewActivity.ListviewContactItem();
+        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         String _contactname = Contactname.getText().toString();
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();

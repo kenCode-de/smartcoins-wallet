@@ -37,6 +37,7 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
         intent.putExtra( "Date",td.getDateString()+" "+td.getTimeString()+" "+td.getTimeZone());
         intent.putExtra( "To",td.To);
         intent.putExtra( "From",td.From);
+        intent.putExtra( "Sent",td.Sent);
 
         Application.getCurrentActivity().startActivity(intent);
     }

@@ -69,12 +69,11 @@
         <activity
             android:name=".eReceiptActivity"
             android:screenOrientation="portrait"
-
             >
 
     </activity>
         <activity
-            android:name=".Add_Edit_Contacts"
+            android:name=".AddEditContacts"
             android:screenOrientation="portrait">
         </activity>
 

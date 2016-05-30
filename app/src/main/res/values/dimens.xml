@@ -14,5 +14,6 @@
     <dimen name="transactionsheaderpading">5dp</dimen>
     <dimen name="items_erecipt">70dp</dimen>
     <dimen name="items_ereciptDouble">140dp</dimen>
+    <dimen name="items_ereciptImage">130dp</dimen>
 
 </resources>

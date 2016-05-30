@@ -18,12 +18,12 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/18/16.
  */
-public class List_View_Activity extends BaseAdapter {
+public class ListViewActivity extends BaseAdapter {
         ArrayList<ListviewContactItem> listContact;
         Context context;
         private LayoutInflater mInflater;
         TinyDB tinyDB;
-        public List_View_Activity(Context _context) {
+        public ListViewActivity(Context _context) {
             context = _context;
             tinyDB = new TinyDB(context);
             mInflater = LayoutInflater.from(context);
@@ -65,7 +65,7 @@ public class List_View_Activity extends BaseAdapter {
                 holder.edit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Integer index = (Integer) v.getTag();
-                        Intent intent = new Intent(context, Add_Edit_Contacts.class);
+                        Intent intent = new Intent(context, AddEditContacts.class);
                         intent.putExtra("id",index);
                         intent.putExtra("name",listContact.get(index).GetName());
                         intent.putExtra("account",listContact.get(index).GetAccount());
@@ -148,7 +148,7 @@ public class List_View_Activity extends BaseAdapter {
         webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
     void removeFromlist(int id){
-        ArrayList<List_View_Activity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", List_View_Activity.ListviewContactItem.class);
+        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         contacts.remove(id);
         tinyDB.putContactsObject("Contacts", contacts);
     }

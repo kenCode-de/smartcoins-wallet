@@ -50,5 +50,11 @@
         android:id="@+id/payment"
         />
 
-
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:indeterminateDrawable="@drawable/loader_homescreen" >
+    </ProgressBar>
 </LinearLayout>

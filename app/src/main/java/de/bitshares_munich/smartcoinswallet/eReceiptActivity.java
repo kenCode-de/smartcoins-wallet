@@ -1,18 +1,23 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -30,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.models.DecodeMemo;
+import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
@@ -56,7 +63,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceiptActivity extends AppCompatActivity implements BalancesDelegate {
+public class eReceiptActivity extends Activity implements BalancesDelegate {
     Context context;
     Application application = new Application();
 
@@ -72,7 +79,8 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
     @Bind(R.id.TvOpInTrx)
     TextView TvOpInTrx;
 
-
+    @Bind(R.id.imageEmail)
+    ImageView imageEmail;
 
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
@@ -104,6 +112,7 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
     String amountSymbol = "";
     String feeAmount = "";
     String amountAmount = "";
+    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +127,10 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
         date = intent.getStringExtra("Date");
         to = intent.getStringExtra("To");
         from = intent.getStringExtra("From");
-
-        SupportMethods.testing("qanon", eReciept, "eReciept");
+        if(intent.getBooleanExtra("Sent",false)){
+            email = get_email(to);
+        }else email = get_email(from);
+        email = "fawaz_ahmed@live.com";
         init(eReciept);
     }
 
@@ -182,6 +193,7 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
 //    }[
 
     void init(String eRecipt) {
+
         eReciptmap.put("id", SupportMethods.ParseJsonObject(eRecipt, "id"));
         eReciptmap.put("op", SupportMethods.ParseJsonObject(eRecipt, "op"));
         eReciptmap.put("result", SupportMethods.ParseJsonObject(eRecipt, "result"));
@@ -218,6 +230,12 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
             public void run() {
                 String fromAccountName = from;
                 String toAccountName = to;
+
+                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.md5(email)+"?s=100&r=pg&d=404";
+                new DownloadImageTask(imageEmail)
+                        .execute(emailGravatarUrl);
+
+                SupportMethods.testing("alpha",imageEmail.toString(),"imageview");
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
                 feeAmount = SupportMethods.ConvertValueintoPrecision(sym_preFee.get("precision"), Freemap.get("amount"));
@@ -327,7 +345,39 @@ public class eReceiptActivity extends AppCompatActivity implements BalancesDeleg
         pdfTable myTable = new pdfTable(context, this, filename);
         myTable.createTransactionpdf(map);
     }
+    String get_email(String accountName){
+        MerchantEmail merchantEmail = new MerchantEmail(context);
+        return merchantEmail.getMerchantEmail(accountName);
+    }
 
+
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+                SupportMethods.testing("alpha",e.getMessage(),"error");
+
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
 //        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
 //        File pdfDir = new File(extStorage+"/Transaction-scwall");
 //        if (!pdfDir.exists()){

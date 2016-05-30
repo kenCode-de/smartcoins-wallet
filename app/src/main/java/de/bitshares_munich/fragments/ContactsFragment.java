@@ -12,8 +12,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.ContactsDelegate;
-import de.bitshares_munich.smartcoinswallet.Add_Edit_Contacts;
-import de.bitshares_munich.smartcoinswallet.List_View_Activity;
+import de.bitshares_munich.smartcoinswallet.AddEditContacts;
+import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.Share_Contact;
 
@@ -25,7 +25,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
 
     @Bind(R.id.contactslist)
     ListView contactslist;
-    List_View_Activity adapter;
+    ListViewActivity adapter;
 
 
     public ContactsFragment() {
@@ -52,7 +52,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         ButterKnife.bind(this, view);
         contactsDelegate=this;
 
-        adapter = new List_View_Activity(getActivity());
+        adapter = new ListViewActivity(getActivity());
         contactslist.setAdapter(adapter);
 //        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -77,7 +77,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     }
     @OnClick(R.id.addcontact)
     public void AddContact(){
-        Intent intent = new Intent(getActivity(), Add_Edit_Contacts.class);
+        Intent intent = new Intent(getActivity(), AddEditContacts.class);
         intent.putExtra("activity",99999);
         startActivity(intent);
     }
@@ -88,13 +88,13 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
 //        contactslist.setVisibility(ListView.VISIBLE);
 //        adapter.clear();
       adapter.loadmore();
-//        adapter = new List_View_Activity(getActivity());
+//        adapter = new ListViewActivity(getActivity());
 //        adapter.clear();
 //// Add data to collection..
 //        collection.add();
 //// Refresh your listview..
 //        listview.getAdapter().notifyDataSetChanged();
-        adapter = new List_View_Activity(getActivity());
+        adapter = new ListViewActivity(getActivity());
       contactslist.setAdapter(adapter);
     }
     @OnClick(R.id.sharecontact)
