@@ -4,9 +4,11 @@ package de.bitshares_munich.smartcoinswallet;
  */
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,7 @@ import butterknife.OnItemSelected;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
@@ -42,6 +44,7 @@ public class SettingActivity extends BaseActivity {
     final String hide_donations = "hide_donations";
     final String date_time = "date_time";
     final String register_new_account = "register_new_account";
+    String brainKey = "";
 
     @Bind(R.id.spCountry)
     Spinner spCountry;
@@ -60,14 +63,19 @@ public class SettingActivity extends BaseActivity {
 
     TinyDB tinyDB;
 
+    ArrayList<AccountDetails> accountDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        setBackButton(true);
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
+
     }
 
     public void init() {
@@ -106,18 +114,19 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void onClickBackupBrainkeybtn(View v) {
-
+        showDialogCopyBrainKey();
     }
 
     public void onClickSecurePinbtn(View v) {
 
-        Intent intent=new Intent(getApplicationContext(),PinActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PinActivity.class);
         startActivity(intent);
         //showDialogPinRequest();
     }
 
     public void onClickBackbtn(View v) {
-
+        Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
+        startActivity(intent);
     }
 
     Boolean isCHecked(View v) {
@@ -243,7 +252,7 @@ public class SettingActivity extends BaseActivity {
 
 
         // AccountsName
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
         ArrayList<String> arrayAccountName = new ArrayList<>();
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
@@ -277,7 +286,12 @@ public class SettingActivity extends BaseActivity {
                 int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
                 spBackupAsset.setSelection(indexBackupAsset);
             } else {
-                spBackupAsset.setSelection(0);
+                int index = arrayAccountAssets.indexOf("BTS");
+                if (index >= 0) {
+                    spBackupAsset.setSelection(index);
+                } else {
+                    spBackupAsset.setSelection(0);
+                }
             }
         }
 
@@ -309,6 +323,16 @@ public class SettingActivity extends BaseActivity {
     @OnItemSelected(R.id.spAccounts)
     void onItemSelectedAccount(int position) {
         if (position >= 0) {
+            for (int i = 0; i < accountDetails.size(); i++) {
+
+                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
+                    accountDetails.get(i).isSelected = true;
+                    brainKey = accountDetails.get(i).brain_key;
+                } else {
+                    accountDetails.get(i).isSelected = false;
+                }
+
+            }
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
         }
     }
@@ -320,13 +344,18 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spTimeZones)
     void onItemSelectedTimeZone(int position) {
-        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+        if (position > 0) {
+
+            String temp[] = spTimeZones.getSelectedItem().toString().split(" ");
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.date_time_zone), temp[0]);
+            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+        }
     }
 
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
         if (position >= 0) {
-            Helper.storeStringSharePref(getApplicationContext(),getString(R.string.str_backup_symbol),spBackupAsset.getSelectedItem().toString());
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
         }
     }
@@ -340,34 +369,37 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    private void showDialogPinRequest() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.activity_create_pin);
-        dialog.setTitle("Create Pin");
-        Button btnCreate = (Button) dialog.findViewById(R.id.btnCreate);
-        final EditText etOldPin = (EditText) dialog.findViewById(R.id.etOldPin);
-        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
-        final EditText etPinConfirmation = (EditText) dialog.findViewById(R.id.etOldPin);
+    private void showDialogCopyBrainKey() {
+        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        dialog.setTitle(getString(R.string.backup_brainkey));
+        dialog.setContentView(R.layout.activity_copybrainkey);
+        final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
+        try {
+            etBrainKey.setText(Crypt.getInstance().decrypt_string(brainKey));
+        } catch (Exception e) {
 
-        btnCreate.setOnClickListener(new View.OnClickListener() {
+        }
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etOldPin.getText().length() < 5) {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_old_6_digit_pin, Toast.LENGTH_SHORT).show();
-                } else if (etPin.getText().length() < 5) {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-                } else if (etPinConfirmation.getText().length() < 5) {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-                } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-                } else {
-                    Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
-                    Toast.makeText(getApplicationContext(), R.string.pin_created_successfully, Toast.LENGTH_SHORT).show();
-                }
+                dialog.cancel();
             }
         });
-        dialog.show();
+        Button btnCopy = (Button) dialog.findViewById(R.id.btnCopy);
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label",etBrainKey.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                dialog.cancel();
+            }
+        });
+        dialog.setCancelable(false);
 
+        dialog.show();
     }
 
 

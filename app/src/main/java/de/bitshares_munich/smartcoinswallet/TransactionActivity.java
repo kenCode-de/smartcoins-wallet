@@ -444,7 +444,7 @@ public class TransactionActivity implements BalancesDelegate {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Date formatted = null;
                 formatted = formatter.parse(Date);
-                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt);
+                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt,context);
                 transactionDetails.add(object);
             }catch(Exception e){
                 testing("error" , e , "Try,Catch");

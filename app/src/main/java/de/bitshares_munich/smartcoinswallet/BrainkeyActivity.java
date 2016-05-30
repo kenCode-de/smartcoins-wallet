@@ -15,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.TinyDB;
@@ -41,6 +42,7 @@ public class BrainkeyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_brainkey);
         ButterKnife.bind(this);
+        setBackButton(true);
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
     }
@@ -62,6 +64,7 @@ public class BrainkeyActivity extends BaseActivity {
         } else if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
         } else {
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
             String temp = etBrainKey.getText().toString();
             if (temp.contains(" ")) {
                 String arr[] = temp.split(" ");
