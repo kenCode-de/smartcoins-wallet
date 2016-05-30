@@ -355,7 +355,7 @@ public class SettingActivity extends BaseActivity {
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
         if (position >= 0) {
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.str_backup_symbol), spBackupAsset.getSelectedItem().toString());
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
         }
     }

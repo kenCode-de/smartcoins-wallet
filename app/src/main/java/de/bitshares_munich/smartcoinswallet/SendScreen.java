@@ -1,6 +1,5 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -50,8 +49,6 @@ import retrofit2.Response;
  */
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount {
     Context context;
-    final String always_donate = "always_donate";
-    final String backup_asset = "backup_asset";
     Application application = new Application();
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
@@ -61,9 +58,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     boolean validAmount = false;
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount;
+    boolean alwaysDonate = false;
+    String backupAsset;
 
 
-            @Bind(R.id.FirstChild)
+    @Bind(R.id.FirstChild)
     LinearLayout FirstChild;
 
     @Bind(R.id.SecChild)
@@ -78,6 +77,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.llLoyalty)
     LinearLayout llLoyalty;
 
+    @Bind(R.id.llBackupAsset)
+    LinearLayout llBackupAsset;
+
     @Bind(R.id.tvLoyaltyStatus)
     TextView tvLoyaltyStatus;
 
@@ -87,21 +89,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.spAssets)
     Spinner spAssets;
 
-    @Bind(R.id.selectBTSAsset)
-    TextView selectBTSAsset;
-
     @Bind(R.id.tvLoyalty)
     TextView tvLoyalty;
+
+    @Bind(R.id.tvBackupAsset)
+    TextView tvBackupAsset;
 
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
 
     @Bind(R.id.webviewTo)
     WebView webviewTo;
-
-
-//    @Bind(R.id.editTextFrom)
-//    TextView editTextFrom;
 
     @Bind(R.id.etReceiverAccount)
     EditText etReceiverAccount;
@@ -112,8 +110,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
 
-    @Bind(R.id.checkbox_donate)
-    CheckBox checkbox_donate;
+    @Bind(R.id.cbAlwaysDonate)
+    CheckBox cbAlwaysDonate;
 
     @Bind(R.id.etMemo)
     EditText etMemo;
@@ -121,8 +119,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.etAmount)
     EditText etAmount;
 
-    @Bind(R.id.editTextAsset)
-    EditText editTextAsset;
+    @Bind(R.id.etBackupAsset)
+    EditText etBackupAsset;
 
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
@@ -144,6 +142,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
 
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
         init();
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
@@ -234,12 +233,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
             if (Double.parseDouble(etAmount.getText().toString()) != 0){
                 String mainAmount = String.format("%.4f",Double.parseDouble(etAmount.getText().toString()));
                 String mainAsset = spAssets.getSelectedItem().toString();
-                transferAmount(mainAmount,mainAsset);
+                transferAmount(mainAmount,mainAsset,etReceiverAccount.getText().toString());
             }
             if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0){
                 String loyaltyAmount = String.format("%.4f",Double.parseDouble(etLoyalty.getText().toString()));
                 String loyaltyAsset = tvLoyalty.getText().toString();
-                transferAmount(loyaltyAmount,loyaltyAsset);
+                transferAmount(loyaltyAmount,loyaltyAsset,etReceiverAccount.getText().toString());
+            }
+            if (alwaysDonate || cbAlwaysDonate.isChecked()){
+                transferAmount("2","BTS","bitshares-munich");
             }
         }
     }
@@ -335,36 +337,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     }
 
     void setCheckboxAvailabilty(){
-        if(Helper.fetchBoolianSharePref(this,always_donate)){
-            checkbox_donate.setChecked(true);
-        }else checkbox_donate.setVisibility(View.GONE);
+        if(Helper.fetchBoolianSharePref(this,getString(R.string.pref_always_donate))){
+            cbAlwaysDonate.setVisibility(View.GONE);
+            alwaysDonate = true;
+        }else{
+            cbAlwaysDonate.setChecked(true);
+        }
     }
 
     void setBackUpAsset(){
-        String backupAsset = Helper.fetchStringSharePref(this,getString(R.string.str_backup_symbol));
+        backupAsset = Helper.fetchStringSharePref(this,getString(R.string.pref_backup_symbol));
         if(backupAsset!=null) {
-            editTextAsset.setText(backupAsset);
+            llBackupAsset.setVisibility(View.VISIBLE);
+            tvBackupAsset.setText(backupAsset);
         }
     }
-    public void popupwindow(View v,TextView textview){
-        popUpwindow p =new popUpwindow(context,textview);
-        p.show(v);
-    }
+
     @OnClick(R.id.scanning)
     void OnScanning(){
         Intent intent = new Intent(context, qrcodeActivity.class);
         intent.putExtra("id",0);
         startActivityForResult(intent,90);
     }
-    @OnClick(R.id.selectBTSAsset)
-    void onSelectBTSAsset(View v){
-        popupwindow(v,selectBTSAsset);
-    }
-    @OnClick(R.id.imageviewAsset)
-    void imageviewAsset(View v){
-        popupwindow(v,selectBTSAsset);
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case 90:
@@ -482,7 +476,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         }
         return true;
     }
-    public void transferAmount(String amount, String symbol) {
+    public void transferAmount(String amount, String symbol,String toAccount) {
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String privateKey = "";
         for (int i=0; i<accountDetails.size(); i++){
@@ -499,7 +493,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         hm.put("method","transfer");
         hm.put("wifkey",privateKey);
         hm.put("from_account",spinnerFrom.getSelectedItem().toString());
-        hm.put("to_account",etReceiverAccount.getText().toString());
+        hm.put("to_account",toAccount);
         hm.put("amount", amount);
         hm.put("asset_symbol", symbol);
         hm.put("memo", etMemo.getText().toString());
