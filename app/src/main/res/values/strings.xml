@@ -187,6 +187,7 @@
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
+    <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
     <string name="importing_your_wallet">Importing your wallet...</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="str_trading_pair_not_exist">Trading pair does not exist</string>

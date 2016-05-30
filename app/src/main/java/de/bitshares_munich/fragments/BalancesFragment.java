@@ -19,8 +19,11 @@ import android.widget.TextView;
 
 
 import com.google.android.gms.common.server.converter.StringToIntConverter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.utils.L;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -46,6 +49,8 @@ import de.bitshares_munich.smartcoinswallet.TransactionActivity;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.tableViewClickListener;
 import de.codecrafters.tableview.SortableTableView;
@@ -57,8 +62,9 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
  * Created by qasim on 5/10/16.
  */
 public class BalancesFragment extends Fragment implements AssetDelegate {
-
+    Application application = new Application();
     ArrayList<AccountDetails> accountDetails;
+    int accountDetailsId;
     String accountId = "";
     String to ="";
     String wifkey = "";
@@ -92,6 +98,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
+        application.registerAssetDelegate(this);
+
     }
 
     @Override
@@ -100,7 +108,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
-     //   tableViewparent.setVisibility(View.VISIBLE);
+        //   tableViewparent.setVisibility(View.VISIBLE);
         tableViewparent.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
@@ -111,6 +119,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         } else {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
+                    accountDetailsId = i;
                     to = accountDetails.get(i).account_name;
                     accountId = accountDetails.get(i).account_id;
                     wifkey = accountDetails.get(i).wif_key;
@@ -118,6 +127,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
             }
         }
+        isLifeTime(accountId,"15");
         load_more_values.setVisibility(View.GONE);
         new AssestsActivty(getContext(),to , this);
         number_of_transactions_loaded = 0;
@@ -356,9 +366,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails,final int number_of_transactions_in_queue)
     {
-        progressBar.setVisibility(View.GONE);
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
+
         if(number_of_transactions_in_queue<25)
         {
             load_more_values.setVisibility(View.GONE);
@@ -371,6 +381,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tableViewparent.setVisibility(View.VISIBLE);
         myTransactions.addAll(transactionDetails);
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -381,6 +392,60 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         new TransactionActivity(getContext(),accountId , this , wifkey , number_of_transactions_loaded);
         number_of_transactions_loaded=number_of_transactions_loaded+25;
    }
+    void isLifeTime(final String name_id, final String id){
+        final int db_id = Helper.fetchIntSharePref(getContext(),getContext().getString(R.string.sharePref_database));
+        //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
+
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
+                {
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+                    SupportMethods.testing("getLifetime",getDetails,"getDetails");
+                    Application.webSocketG.send(getDetails);
+                }
+                else {
+                    isLifeTime(name_id,id);
+
+                }
+            }
+        };
+
+        handler.postDelayed(updateTask, 1000);
+    }
+    @Override
+    public void getLifetime(String s,int id){
+        String result = SupportMethods.ParseJsonObject(s,"result");
+        String nameObject = SupportMethods.ParseObjectFromJsonArray(result,0);
+        String expiration = SupportMethods.ParseJsonObject(nameObject,"membership_expiration_date");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date1 = dateFormat.parse(expiration);
+            Date date2 = dateFormat.parse("1969-12-31T23:59:59");
+            if (date2.after(date1)) {
+                SupportMethods.testing("getLifetime","true","s");
+                accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                if(accountDetails.size()>accountDetailsId) accountDetails.get(accountDetailsId).isLifeTime = true;
+                else if(accountDetails.size() == 1) {
+                    accountDetails.get(0).isLifeTime = true;
+                }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+
+            } else {
+
+                SupportMethods.testing("getLifetime","false","s");
+
+            }
+        }catch (Exception e){
+            SupportMethods.testing("getLifetime",getContext().getString(R.string.life_time_validation_date),"s");
+
+        }
+
+    }
 }
 
 

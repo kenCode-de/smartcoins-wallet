@@ -11,5 +11,5 @@ import de.bitshares_munich.models.TransactionDetails;
 public interface AssetDelegate {
     void isUpdate(ArrayList<String> id,ArrayList<String> sym , ArrayList<String>  pre,ArrayList<String>  am);
     void TransactionUpdate(List<TransactionDetails> transactionDetails,int nos);
-
+    void getLifetime(String s,int id);
 }
