@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -64,6 +65,9 @@ public class SettingActivity extends BaseActivity {
     TinyDB tinyDB;
 
     ArrayList<AccountDetails> accountDetails;
+
+    @Bind(R.id.ivLifeTime)
+    ImageView ivLifeTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,6 +332,11 @@ public class SettingActivity extends BaseActivity {
                 if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
                     accountDetails.get(i).isSelected = true;
                     brainKey = accountDetails.get(i).brain_key;
+                    if (accountDetails.get(i).isLifeTime) {
+                        ivLifeTime.setVisibility(View.VISIBLE);
+                    } else {
+                        ivLifeTime.setVisibility(View.GONE);
+                    }
                 } else {
                     accountDetails.get(i).isSelected = false;
                 }
@@ -392,7 +401,7 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("label",etBrainKey.getText().toString());
+                ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                 clipboard.setPrimaryClip(clip);
                 dialog.cancel();
             }
