@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
@@ -64,6 +65,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.load_more_values)
     Button load_more_values;
 
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
     int number_of_transactions_loaded;
@@ -96,6 +100,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+     //   tableViewparent.setVisibility(View.VISIBLE);
         tableViewparent.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
@@ -349,8 +354,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,int number_of_transactions_in_queue)
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,final int number_of_transactions_in_queue)
     {
+        progressBar.setVisibility(View.GONE);
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
         if(number_of_transactions_in_queue<25)
         {
             load_more_values.setVisibility(View.GONE);
@@ -363,6 +371,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tableViewparent.setVisibility(View.VISIBLE);
         myTransactions.addAll(transactionDetails);
         tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+            }
+        });
     }
 
     @OnClick(R.id.load_more_values)

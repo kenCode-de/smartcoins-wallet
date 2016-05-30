@@ -61,7 +61,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".Share_Contact"
+            android:name=".ShareContact"
             android:screenOrientation="portrait">
         </activity>
 

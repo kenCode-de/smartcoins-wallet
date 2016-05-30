@@ -15,7 +15,7 @@ import de.bitshares_munich.Interfaces.ContactsDelegate;
 import de.bitshares_munich.smartcoinswallet.AddEditContacts;
 import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.Share_Contact;
+import de.bitshares_munich.smartcoinswallet.ShareContact;
 
 /**
  * Created by qasim on 5/10/16.
@@ -99,7 +99,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     }
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
-        Intent intent = new Intent(getActivity(), Share_Contact.class);
+        Intent intent = new Intent(getActivity(), ShareContact.class);
         startActivity(intent);
     }
 }

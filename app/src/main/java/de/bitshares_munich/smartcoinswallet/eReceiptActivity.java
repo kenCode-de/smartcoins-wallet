@@ -130,7 +130,7 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
         if(intent.getBooleanExtra("Sent",false)){
             email = get_email(to);
         }else email = get_email(from);
-        email = "fawaz_ahmed@live.com";
+//        email = "fawaz_ahmed@live.com";
         init(eReciept);
     }
 
@@ -231,7 +231,7 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
                 String fromAccountName = from;
                 String toAccountName = to;
 
-                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.md5(email)+"?s=100&r=pg&d=404";
+                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.md5(email)+"?s=130&r=pg&d=404";
                 new DownloadImageTask(imageEmail)
                         .execute(emailGravatarUrl);
 
@@ -324,6 +324,8 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
     public void onSendButton() {
         String filename = "Transaction-scwall";
 
+
+
         map.put("id",eReciptmap.get("id"));
         map.put("time",date);
         map.put("trx_in_block",eReciptmap.get("trx_in_block"));
@@ -343,7 +345,12 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
 
 
         pdfTable myTable = new pdfTable(context, this, filename);
-        myTable.createTransactionpdf(map);
+        if (imageEmail.getVisibility() == View.VISIBLE) {
+            myTable.createTransactionpdf(map,imageEmail);
+        } else {
+            myTable.createTransactionpdf(map,null);
+
+        }
     }
     String get_email(String accountName){
         MerchantEmail merchantEmail = new MerchantEmail(context);
@@ -375,7 +382,8 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+           if(result==null) bmImage.setVisibility(View.GONE);
+            else bmImage.setImageBitmap(result);
         }
     }
 //        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();

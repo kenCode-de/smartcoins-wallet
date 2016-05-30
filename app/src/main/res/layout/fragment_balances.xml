@@ -119,6 +119,14 @@
                 android:layout_gravity="center"
                 android:textSize="17dp"
                 android:text="@string/transactions"/>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:indeterminateDrawable="@drawable/loader_homescreen" >
+            </ProgressBar>
             <Button
                 android:id="@+id/exportButton"
                 android:layout_margin="5dp"

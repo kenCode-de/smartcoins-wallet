@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.itextpdf.text.Document;
@@ -188,7 +189,7 @@ public class pdfTable {
 
         }
     }
-    public void createTransactionpdf (HashMap<String,String> map)
+    public void createTransactionpdf (HashMap<String,String> map, ImageView imageView)
     {
 
         Document document = new Document();
@@ -201,6 +202,27 @@ public class pdfTable {
 
             document.open();
 
+            if(imageView!=null) {
+                try {
+                    PdfPTable table1 = new PdfPTable(1); // 2 columns.
+                    PdfPCell cell1 = new PdfPCell(new Paragraph("Raw Transaction : "));
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] imageInByte = stream.toByteArray();
+                    Image myImage = Image.getInstance(imageInByte);
+                    myImage.scalePercent(25);
+                    PdfPCell sendReceiveCell = new PdfPCell(myImage, false);
+                    sendReceiveCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    sendReceiveCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    table1.addCell(sendReceiveCell);
+                    table1.completeRow();
+                    document.add(table1);
+                } catch (Exception e) {
+
+                }
+            }
             PdfPTable table = new PdfPTable(1); // 2 columns.
             PdfPCell cell1 = new PdfPCell(new Paragraph("Raw Transaction : "));
             table.addCell(cell1);

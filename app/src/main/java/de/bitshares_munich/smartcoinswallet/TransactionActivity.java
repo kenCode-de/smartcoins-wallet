@@ -158,9 +158,10 @@ public class TransactionActivity implements BalancesDelegate {
 
                     HashMap<String,String> def = new HashMap<>();
                     memo_in_work = 0;
+                    if(memos.size()>0){
                     def = memos.get(memo_in_work);
-                    decodeMemo(def.get("memo"),def.get("memo_id"));
-               //     onLastCall();
+                    decodeMemo(def.get("memo"),def.get("memo_id"));}
+                    else onLastCall();
                 }
                 assets_id_in_work++;
                 if(assets_id_in_work<asset_ids.size()) get_asset(asset_ids.get(assets_id_in_work),"11");

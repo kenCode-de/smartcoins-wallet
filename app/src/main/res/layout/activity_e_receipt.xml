@@ -53,52 +53,33 @@
     android:id="@+id/relativelayout"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/items_ereciptImage"
-        android:id="@+id/ll_heading"
-        android:weightSum="2"
-        android:orientation="horizontal"
-        >
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:text=""
-        android:gravity="center|left"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_weight="1"
-        />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:weightSum="4"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
 
         <Button
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Email PDF"
             android:id="@+id/buttonSend"
+            android:layout_alignParentRight="true"
             />
 
             <ImageView
+                android:layout_marginTop="10sp"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/imageEmail"
                 android:layout_weight="3"
                 android:layout_gravity="right"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/buttonSend"
                 />
-        </LinearLayout>
-    </LinearLayout>
+
     <LinearLayout
+        android:layout_marginTop="10sp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_margin"
         android:orientation="horizontal"
         android:weightSum="3"
-        android:layout_below="@+id/ll_heading"
+        android:layout_below="@+id/imageEmail"
         android:id="@+id/ll_First"
         android:background="@drawable/edittext_bg"
         >

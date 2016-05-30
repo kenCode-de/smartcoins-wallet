@@ -81,7 +81,7 @@ public class TabActivity extends BaseActivity {
             counterBlockCheck = 0;
             return true;
         }
-        else if ( counterBlockCheck++ >= 3 )
+        else if ( counterBlockCheck++ >= 30 )
         {
             return false;
         }
