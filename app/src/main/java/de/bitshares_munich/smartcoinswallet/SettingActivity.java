@@ -348,7 +348,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spCountry)
     void onItemSelectedCountry(int position) {
-        Helper.storeStringSharePref(getApplicationContext(),getString(R.string.pref_fade_currency),spCountry.getSelectedItem().toString());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
         Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_country), position);
     }
 
@@ -380,7 +380,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void showDialogCopyBrainKey() {
-String temp=        Helper.getFadeCurrency(this);
+
         final Dialog dialog = new Dialog(this, R.style.stylishDialog);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);

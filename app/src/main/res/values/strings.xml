@@ -236,6 +236,7 @@
     <string name="copy">Copy</string>
     <string name="pref_always_donate">always_donate</string>
     <string name="pref_fade_currency">fade_currency</string>
+    <string name="pin_verification">UNLOCKED</string>
 
 
 </resources>
