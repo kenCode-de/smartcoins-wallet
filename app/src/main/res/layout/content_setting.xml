@@ -207,7 +207,6 @@
                 android:layout_below="@+id/l41"
                 android:layout_marginTop="10dp"
                 android:background="#70882E"
-                android:onClick="onClickbtn"
                 android:text="@string/register_new_account"
                 android:textColor="#fff"
                 android:textSize="20sp"
