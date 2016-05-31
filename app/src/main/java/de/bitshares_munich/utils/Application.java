@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.ButterKnife;
+import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountObject;
@@ -47,6 +48,7 @@ public class Application extends android.app.Application {
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
     static BalancesDelegate iBalancesDelegate;
+    static AssetDelegate iAssetDelegate;
     static ITransactionObject iTransactionObject;
     static IAccountObject iAccountObject;
     static IAssetObject iAssetObject;
@@ -81,6 +83,9 @@ public class Application extends android.app.Application {
     }
     public void registerBalancesDelegate(BalancesDelegate callbackClass) {
         iBalancesDelegate = callbackClass;
+    }
+    public void registerAssetDelegate(AssetDelegate callbackClass) {
+        iAssetDelegate = callbackClass;
     }
     public void registerTransactionObject(ITransactionObject callbackClass) {
         iTransactionObject = callbackClass;
@@ -221,6 +226,11 @@ public class Application extends android.app.Application {
                             else if (id == 11) {
                                 if (iBalancesDelegate != null) {
                                     iBalancesDelegate.OnUpdate(s,id);
+                                }
+                            }
+                            else if (id == 15) {
+                                if (iAssetDelegate != null) {
+                                    iAssetDelegate.getLifetime(s,id);
                                 }
                             }
                         } catch (JSONException e) {
