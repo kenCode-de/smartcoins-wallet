@@ -284,7 +284,7 @@ public class Application extends android.app.Application {
             });
             dialog.setCancelable(false);
 
-            dialog.show();
+//            dialog.show();
         }
     }
 

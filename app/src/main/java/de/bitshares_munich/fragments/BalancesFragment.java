@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.gson.Gson;
@@ -76,11 +77,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.load_more_values)
     Button load_more_values;
 
+    @Bind(R.id.scrollViewBalances)
+    ScrollView scrollViewBalances;
+
     @Bind(R.id.backLine)
     View backLine;
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+
+    @Bind(R.id.progressBar1)
+    ProgressBar progressBar1;
 
     @Bind(R.id.qrCamera)
     ImageView qrCamera;
@@ -119,49 +126,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
-// Start the animation like this
-
-
-
-       // backLine.setVisibility(View.VISIBLE);
-
-        //   tableViewparent.setVisibility(View.VISIBLE);
         tableViewparent.setVisibility(View.GONE);
-        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (accountDetails.size() == 1) {
-            accountDetails.get(0).isSelected = true;
-            to = accountDetails.get(0).account_name;
-            accountId = accountDetails.get(0).account_id;
-            wifkey = accountDetails.get(0).wif_key;
-        } else {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    accountDetailsId = i;
-                    to = accountDetails.get(i).account_name;
-                    accountId = accountDetails.get(i).account_id;
-                    wifkey = accountDetails.get(i).wif_key;
-                    break;
-                }
-            }
-        }
-        isLifeTime(accountId,"15");
         load_more_values.setVisibility(View.GONE);
-        new AssestsActivty(getContext(), to, this);
-        number_of_transactions_loaded = 0;
-        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
-        number_of_transactions_loaded = number_of_transactions_loaded + 25;
-        tv_account_name.setText(to);
-
-        //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
         // replace myTransactions with actual data
-        myTransactions = new ArrayList<>();
-        updateSortTableView(tableView, myTransactions);
-
-
-        tableView.addDataClickListener(new tableViewClickListener(getContext()));
 
         final Handler handler = new Handler();
 
@@ -180,8 +150,115 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             }
         };
         handler.postDelayed(updateTask, 2000);
+//        tableViewparent.setVisibility(View.GONE);
+//        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+//        if (accountDetails.size() == 1) {
+//            accountDetails.get(0).isSelected = true;
+//            to = accountDetails.get(0).account_name;
+//            accountId = accountDetails.get(0).account_id;
+//            wifkey = accountDetails.get(0).wif_key;
+//        } else {
+//            for (int i = 0; i < accountDetails.size(); i++) {
+//                if (accountDetails.get(i).isSelected) {
+//                    accountDetailsId = i;
+//                    to = accountDetails.get(i).account_name;
+//                    accountId = accountDetails.get(i).account_id;
+//                    wifkey = accountDetails.get(i).wif_key;
+//                    break;
+//                }
+//            }
+//        }
+//        isLifeTime(accountId,"15");
+//        load_more_values.setVisibility(View.GONE);
+//        new AssestsActivty(getContext(), to, this);
+//        number_of_transactions_loaded = 0;
+//        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+//        number_of_transactions_loaded = number_of_transactions_loaded + 25;
+//        tv_account_name.setText(to);
+//
+//        //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
+//        final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
+//
+//        // replace myTransactions with actual data
+//        myTransactions = new ArrayList<>();
+//        updateSortTableView(tableView, myTransactions);
+//
+//
+//        tableView.addDataClickListener(new tableViewClickListener(getContext()));
+//
+//        final Handler handler = new Handler();
+//
+//        final Runnable updateTask = new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
+//                    int height1 = scrollViewBalances.getHeight();
+//                    View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
+//                    int height2 = transactionsExportHeader.getHeight();
+//                    tableViewparent.setMinimumHeight(height1 - (height2));
+//                } catch (Exception e) {
+//
+//                }
+//            }
+//        };
+//        handler.postDelayed(updateTask, 2000);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Inflate the layout for this fragment
+        scrollViewBalances.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
+
+        scrollViewBalances.pageScroll(View.FOCUS_UP);
+
+
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        tableViewparent.setVisibility(View.GONE);
+        load_more_values.setVisibility(View.GONE);
+        //for(int i=0;i<3;i++){
+       // final View rootView = layoutInflater.inflate(R.layout.fragment_balances, null, false);
+
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        if (accountDetails.size() == 1) {
+            accountDetails.get(0).isSelected = true;
+            to = accountDetails.get(0).account_name;
+            accountId = accountDetails.get(0).account_id;
+            wifkey = accountDetails.get(0).wif_key;
+        } else {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    accountDetailsId = i;
+                    to = accountDetails.get(i).account_name;
+                    accountId = accountDetails.get(i).account_id;
+                    wifkey = accountDetails.get(i).wif_key;
+                    break;
+                }
+            }
+        }
+        myTransactions = new ArrayList<>();
+        updateSortTableView(tableView, myTransactions);
+
+        llBalances.removeAllViews();
+
+        tableView.addDataClickListener(new tableViewClickListener(getContext()));
+
+        isLifeTime(accountId,"15");
+        progressBar1.setVisibility(View.VISIBLE);
+        new AssestsActivty(getContext(), to, this);
+        number_of_transactions_loaded = 0;
+        progressBar.setVisibility(View.VISIBLE);
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+        number_of_transactions_loaded = number_of_transactions_loaded + 25;
+        tv_account_name.setText(to);
+
+        //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @OnClick(R.id.recievebtn)
@@ -248,7 +325,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+                llBalances.removeAllViews();
                 for (int i = 0; i < sym.size(); i += 2) {
                     int counter = 1;
                     int op = sym.size();
@@ -283,6 +360,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                     }
                 }
+                progressBar1.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -393,6 +471,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @OnClick(R.id.load_more_values)
     public void Load_more_Values() {
         load_more_values.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
         new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
         number_of_transactions_loaded = number_of_transactions_loaded + 25;
    }
@@ -451,6 +530,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     }
     void startAnimation(){
+        scrollViewBalances.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
+        scrollViewBalances.pageScroll(View.FOCUS_UP);
         qrCamera.setVisibility(View.INVISIBLE);
         backLine.setVisibility(View.INVISIBLE);
         final Animation animationFadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
