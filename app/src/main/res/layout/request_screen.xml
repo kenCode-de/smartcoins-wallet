@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text=""
-                    android:gravity="end|right"
+                    android:gravity="center|right"
                     android:layout_weight="1.2"
                     android:textSize="20sp"
                     android:textColor="#000"
@@ -107,7 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
-                 >
+                    android:background="#DD4739"
+                    >
 
                     <ImageButton
                         android:layout_width="match_parent"
@@ -115,7 +116,7 @@
                         android:id="@+id/back"
                         android:onClick="backbtn"
                         android:src="@drawable/erorricon"
-                        android:backgroundTint="#DD4739"
+                        android:background="#DD4739"
                         />
                 </LinearLayout>
 

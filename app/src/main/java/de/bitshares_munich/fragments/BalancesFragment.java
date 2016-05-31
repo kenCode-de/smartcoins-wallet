@@ -481,29 +481,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
         number_of_transactions_loaded = number_of_transactions_loaded + 25;
    }
-    void isLifeTime(final String name_id, final String id){
-        final int db_id = Helper.fetchIntSharePref(getContext(),getContext().getString(R.string.sharePref_database));
-        //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
+    void isLifeTime(final String name_id, final String id) {
+        try {
+            final int db_id = Helper.fetchIntSharePref(getContext(), getContext().getString(R.string.sharePref_database));
+            //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
 
-        final Handler handler = new Handler();
+            final Handler handler = new Handler();
 
-        final Runnable updateTask = new Runnable() {
-            @Override
-            public void run() {
-                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
-                {
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-                    SupportMethods.testing("getLifetime",getDetails,"getDetails");
-                    Application.webSocketG.send(getDetails);
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+                        SupportMethods.testing("getLifetime", getDetails, "getDetails");
+                        Application.webSocketG.send(getDetails);
+                    } else {
+                        isLifeTime(name_id, id);
+
+                    }
                 }
-                else {
-                    isLifeTime(name_id,id);
+            };
 
-                }
-            }
-        };
-
-        handler.postDelayed(updateTask, 1000);
+            handler.postDelayed(updateTask, 1000);
+        }catch (Exception e){
+            
+        }
     }
     @Override
     public void getLifetime(String s,int id){
@@ -541,7 +543,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         qrCamera.setVisibility(View.INVISIBLE);
         backLine.setVisibility(View.INVISIBLE);
         final Animation animationFadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.animation);
+        final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.home_anim);
         animationRigthtoLeft.setInterpolator(new AccelerateDecelerateInterpolator());
         qrCamera.postDelayed(new Runnable() {
             public void run() {

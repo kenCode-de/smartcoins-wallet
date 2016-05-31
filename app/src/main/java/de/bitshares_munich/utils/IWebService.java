@@ -14,6 +14,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface IWebService {
 
@@ -35,5 +37,8 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<DecodeMemo> getDecodedMemo(@Body Map<String, String> params);
+
+    @GET
+    Call<Void> sendCallback(@Url String urlSubString, @Query("block") String block, @Query("trx") String trx);
 
 }
