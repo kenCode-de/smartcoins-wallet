@@ -72,7 +72,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         ButterKnife.setDebug(true);
         context = getApplicationContext();
-        showDialogPin();
+        //showDialogPin();
         blockHead="";
         webSocketConnection();
     }
@@ -272,6 +272,7 @@ public class Application extends android.app.Application {
         return blockHead = "block# "+json.substring(start, end);
     }
 
+    /*
     private void showDialogPin() {
         if (Helper.containKeySharePref(context, context.getString(R.string.txt_pin))) {
             final Dialog dialog = new Dialog(context, R.style.stylishDialog);
@@ -297,5 +298,6 @@ public class Application extends android.app.Application {
             //dialog.show();
         }
     }
+    */
 
 }
