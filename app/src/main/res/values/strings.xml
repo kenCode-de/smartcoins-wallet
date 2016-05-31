@@ -18,7 +18,7 @@
     <string name="create">CREATE</string>
     <string name="existing_account">Existing Account</string>
     <string name="v_1_0_beta">v 1.0 beta</string>
-    <string name="block_number">block#5957356</string>
+    <string name="block_number">block# -------</string>
     <string name="agreement">Agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
@@ -54,7 +54,7 @@
     <string name="close_bitshare">Automatically close Bitshares Wallet after 3 minutes of inactivity</string>
     <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
-    <string name="backup">IMPORT BRAINKEY</string>
+    <string name="backup">BACKUP .bin</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at Bitshares Munich</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
@@ -181,7 +181,7 @@
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
     </string>
     <string name="head_block_number">head_block_number</string>
-    <string name="beta">" beta"</string>
+    <string name="beta">""</string>
     <string name="txt_no_internet_connection">No internet connection</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
@@ -219,7 +219,7 @@
 
     <string name="e_receipt">e_receipt</string>
 
-    <string name="e_receipt_activity_name">e-Receipt</string>
+
     <string name="pref_country">country</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
@@ -237,6 +237,17 @@
     <string name="copy">Copy</string>
     <string name="pref_always_donate">always_donate</string>
     <string name="pref_fade_currency">fade_currency</string>
+    <string name="pin_verification">UNLOCKED</string>
 
+    // Screen Names
+    <string name="send_screen_name">Send</string>
+    <string name="rcv_screen_name">Receive</string>
+    <string name="request_amount_screen_name">Amount</string>
+    <string name="payment_rcvd_screen_name">Thankyou</string>
+    <string name="e_receipt_activity_name">e-Receipt</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="qr_code_activity_name">Scan QR</string>
+    <string name="share_account_activity_name">Share with friends</string>
+    <string name="add_contact_activity_name">Add Contact</string>
 
 </resources>

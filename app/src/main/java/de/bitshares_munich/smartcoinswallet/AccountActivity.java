@@ -293,9 +293,11 @@ public class AccountActivity extends BaseActivity implements IAccount {
 
     }
 
+    /*
     @OnClick(R.id.OnClickSettings)
     void OnClickSettings(){
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
+    */
 }

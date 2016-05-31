@@ -51,6 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.6"
                 android:layout_height="75dp"
+                android:visibility="invisible"
                 android:layout_gravity="center"
                 android:src="@mipmap/icon_camera"/>
             <View android:layout_width="0dp"
@@ -58,7 +59,9 @@
                   android:layout_gravity="center"
                   android:layout_weight="0.3"
                   android:background="#dc473a"
+                android:visibility="invisible"
                   android:layout_marginLeft="-14dp"
+                android:id="@+id/backLine"
             ></View>
 
             <LinearLayout
@@ -72,7 +75,6 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-
                     android:src="@mipmap/icon_send"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -85,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
+            android:weightSum="3"
             android:background="@color/transactionsHeader">
             <TextView
                 android:textColor="@color/black"
@@ -93,9 +96,18 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="16dp"
                 android:layout_gravity="center"
+                android:layout_weight="2"
                 android:textSize="17dp"
                 android:text="@string/balances"/>
-
+            <ProgressBar
+                android:layout_weight="1"
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:indeterminateDrawable="@drawable/loader_homescreen" >
+            </ProgressBar>
         </LinearLayout>
 
         <LinearLayout
@@ -104,6 +116,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/whiteSpaceAfterBalances"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:orientation="vertical"
+            android:background="@color/whiteColor">
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/transactionsExportHeader"
             android:layout_width="match_parent"
@@ -154,8 +175,8 @@
                 android:layout_height="match_parent"
                 table:tableView_columnCount="4"
                 table:tableView_headerElevation="10"
-                table:tableView_headerColor="@color/transactionsHeader"
                 android:layout_weight="1.9"
+                table:tableView_headerColor="@color/transactionsHeader"
                 android:background="@color/whiteColor"
                 android:backgroundTint="@color/whiteColor"
                 table:theme="@style/AppTheme"

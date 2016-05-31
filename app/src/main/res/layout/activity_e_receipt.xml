@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="60sp"
             android:id="@+id/header"

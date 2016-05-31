@@ -66,6 +66,9 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_recieved);
         ButterKnife.bind(this);
+
+        setBackButton(true);
+
         playSound();
         application.registerTransactionObject(this);
         application.registerAccountObjectCallback(this);

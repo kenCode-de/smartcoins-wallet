@@ -14,6 +14,7 @@ public class ExistingAccountActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_existing_account);
         ButterKnife.bind(this);
+        setBackButton(true);
     }
 
     @OnClick(R.id.tvImportBrainKey)

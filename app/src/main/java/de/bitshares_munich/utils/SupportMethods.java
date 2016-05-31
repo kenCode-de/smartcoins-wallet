@@ -2,16 +2,20 @@ package de.bitshares_munich.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -133,6 +137,32 @@ public class SupportMethods {
         }
         catch (Exception e){
             testing("SupportMethods",e,"sendPdfViaEmail");
+        }
+    }
+    public static void sendPngViaEmail(Context context, ImageView image){
+        image.buildDrawingCache();
+        Bitmap bitmap = image.getDrawingCache();
+        OutputStream outStream = null;
+        File mFile = new File(extStorageFile, "Image" + ".png");
+        if (mFile.exists()) {
+            mFile.delete();
+            mFile = new File(extStorageFile, "Image" + ".png");
+        }
+        try {
+            outStream = new FileOutputStream(mFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.flush();
+            outStream.close();
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            Uri uri = null;
+            uri = Uri.fromFile(mFile);
+            sharingIntent.setData(uri);
+            sharingIntent.setType("image/png");
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            context.startActivity(Intent.createChooser(sharingIntent, "Hello Sir"));
+        }
+        catch (Exception e){
+            testing("SupportMethods",e,"sendPngViaEmail");
         }
     }
 }
