@@ -1,14 +1,10 @@
 package de.bitshares_munich.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-
 import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -25,11 +19,9 @@ import com.nostra13.universalimageloader.utils.L;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,8 +32,6 @@ import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
-import de.bitshares_munich.smartcoinswallet.BalancesLoad;
-import de.bitshares_munich.smartcoinswallet.MainActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
@@ -66,7 +56,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     ArrayList<AccountDetails> accountDetails;
     int accountDetailsId;
     String accountId = "";
-    String to ="";
+    String to = "";
     String wifkey = "";
     @Bind(R.id.load_more_values)
     Button load_more_values;
@@ -103,8 +93,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
@@ -129,10 +118,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
         isLifeTime(accountId,"15");
         load_more_values.setVisibility(View.GONE);
-        new AssestsActivty(getContext(),to , this);
+        new AssestsActivty(getContext(), to, this);
         number_of_transactions_loaded = 0;
-        new TransactionActivity(getContext(),accountId , this , wifkey , number_of_transactions_loaded);
-       number_of_transactions_loaded=number_of_transactions_loaded+25;
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+        number_of_transactions_loaded = number_of_transactions_loaded + 25;
         tv_account_name.setText(to);
 
         //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -141,7 +130,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         // replace myTransactions with actual data
         myTransactions = new ArrayList<>();
-        updateSortTableView(tableView,myTransactions);
+        updateSortTableView(tableView, myTransactions);
 
 
         tableView.addDataClickListener(new tableViewClickListener(getContext()));
@@ -156,10 +145,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     int height1 = scrollViewBalances.getHeight();
                     View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
                     int height2 = transactionsExportHeader.getHeight();
-                    tableViewparent.setMinimumHeight(height1 - (height2) );
-                }
-                catch (Exception e)
-                {
+                    tableViewparent.setMinimumHeight(height1 - (height2));
+                } catch (Exception e) {
 
                 }
             }
@@ -172,8 +159,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @OnClick(R.id.recievebtn)
     public void GoToRecieveActivity() {
         Intent intent = new Intent(getActivity(), RecieveActivity.class);
-        intent.putExtra(getString(R.string.to),to);
-        intent.putExtra(getString(R.string.account_id),accountId);
+        intent.putExtra(getString(R.string.to), to);
+        intent.putExtra(getString(R.string.account_id), accountId);
         startActivity(intent);
     }
 
@@ -186,23 +173,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @OnClick(R.id.qrCamera)
     public void QrCodeActivity() {
         Intent intent = new Intent(getContext(), qrcodeActivity.class);
-        intent.putExtra("id",1);
+        intent.putExtra("id", 1);
         startActivity(intent);
     }
 
     @OnClick(R.id.exportButton)
     public void onExportButton() {
         TableDataAdapter myAdapter = tableView.getDataAdapter();
-        List<TransactionDetails> det =  myAdapter.getData();
-        pdfTable myTable = new pdfTable(getContext(),getActivity(),"Transactions-scwall");
+        List<TransactionDetails> det = myAdapter.getData();
+        pdfTable myTable = new pdfTable(getContext(), getActivity(), "Transactions-scwall");
         myTable.createTable(det);
     }
 
     @Override
-    public void isUpdate(ArrayList<String> ids , ArrayList<String> sym ,ArrayList<String> pre , ArrayList<String>  am){
+    public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
 
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
-        for(int i = 0 ; i < ids.size() ;i++){
+        for (int i = 0; i < ids.size(); i++) {
             AccountAssets accountAsset = new AccountAssets();
 
             accountAsset.id = ids.get(i);
@@ -210,7 +197,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             accountAsset.symbol = sym.get(i);
             accountAsset.ammount = am.get(i);
 
-           // Log.i("uncle","aay1"+am.get(i));
+            // Log.i("uncle","aay1"+am.get(i));
 
             accountAssets.add(accountAsset);
         }
@@ -218,32 +205,33 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //            accountDetails.get(0).isSelected = true;
 //            accountDetails.get(0).AccountAssets = accountAssets;
 //       } else {
-           for(int i = 0 ; i < accountDetails.size() ; i++){
-                if(accountDetails.get(i).isSelected){
-                    accountDetails.get(i).AccountAssets = accountAssets;
-                    break;
-                }
-           }
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                accountDetails.get(i).AccountAssets = accountAssets;
+                break;
+            }
+        }
 //       }
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        BalanceAssetsUpdate(sym,pre,am);
+        BalanceAssetsUpdate(sym, pre, am);
     }
-    public void BalanceAssetsUpdate(final ArrayList<String> sym ,final ArrayList<String> pre ,final ArrayList<String>  am){
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                for (int i = 0; i < sym.size(); i+=2) {
+                for (int i = 0; i < sym.size(); i += 2) {
                     int counter = 1;
                     int op = sym.size();
                     int pr;
-                    if((op-i)>2){
-                        pr=2;
-                    }else pr=op-i;
-                View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                LinearLayout layout = (LinearLayout) customView;
-                LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-                    for(int l = i ; l<i+pr; l++) {
+                    if ((op - i) > 2) {
+                        pr = 2;
+                    } else pr = op - i;
+                    View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+                    LinearLayout layout = (LinearLayout) customView;
+                    LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+                    for (int l = i; l < i + pr; l++) {
                         if (counter == 1) {
                             TextView textView = (TextView) layout1.getChildAt(0);
                             textView.setText(sym.get(l));
@@ -251,10 +239,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             textView1.setText(returnFromPower(pre.get(l), am.get(i)));
                         }
                         if (counter == 2) {
-                                TextView textView2 = (TextView) layout1.getChildAt(2);
-                                textView2.setText(sym.get(l));
-                                TextView textView3 = (TextView) layout1.getChildAt(3);
-                                textView3.setText(returnFromPower(pre.get(l), am.get(l)));
+                            TextView textView2 = (TextView) layout1.getChildAt(2);
+                            textView2.setText(sym.get(l));
+                            TextView textView3 = (TextView) layout1.getChildAt(3);
+                            textView3.setText(returnFromPower(pre.get(l), am.get(l)));
                             llBalances.addView(customView);
                         }
                         if (counter == 1 && i == sym.size() - 1) {
@@ -271,18 +259,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
-    String returnFromPower(String i,String str){
+    String returnFromPower(String i, String str) {
         Double ok = 1.0;
         Double pre = Double.valueOf(i);
         Double value = Double.valueOf(str);
-        for(int k = 0 ; k<pre ; k++ ){
-            ok = ok*10;
+        for (int k = 0; k < pre; k++) {
+            ok = ok * 10;
         }
-        return  Double.toString(value/ok);
+        return Double.toString(value / ok);
     }
 
-    public void updateSortTableView (SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions)
-    {
+    public void updateSortTableView(SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions) {
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "All", "To/From", "Amount");
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         tableView.setHeaderAdapter(simpleTableHeaderAdapter);
@@ -338,20 +325,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     private static int compareFloats(float change1, float change2) {
-        if (change1 < change2)
-        {
+        if (change1 < change2) {
             return -1;
-        }
-        else if (change1 == change2)
-        {
+        } else if (change1 == change2) {
             return 0; // Fails on NaN however, not sure what you want
-        }
-        else if (change2 > change2)
-        {
+        } else if (change2 > change2) {
             return 1;
-        }
-        else
-        {
+        } else {
             return 1;
         }
     }
@@ -359,38 +339,34 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     private static class TransactionsAmountComparator implements Comparator<TransactionDetails> {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
-            return compareFloats(one.getAmount(),two.getAmount());
+            return compareFloats(one.getAmount(), two.getAmount());
         }
     }
 
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails,final int number_of_transactions_in_queue)
-    {
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
+
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-
-        if(number_of_transactions_in_queue<25)
-        {
-            load_more_values.setVisibility(View.GONE);
-        }
-        else
-        {
-            load_more_values.setVisibility(View.VISIBLE);
-            load_more_values.setEnabled(true);
-        }
-        tableViewparent.setVisibility(View.VISIBLE);
-        myTransactions.addAll(transactionDetails);
-        tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+                if (number_of_transactions_in_queue < 25) {
+                    load_more_values.setVisibility(View.GONE);
+                } else {
+                    load_more_values.setVisibility(View.VISIBLE);
+                    load_more_values.setEnabled(true);
+                }
+                tableViewparent.setVisibility(View.VISIBLE);
+                myTransactions.addAll(transactionDetails);
+                tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                 progressBar.setVisibility(View.GONE);
             }
         });
     }
 
     @OnClick(R.id.load_more_values)
-    public void Load_more_Values(){
+    public void Load_more_Values() {
         load_more_values.setEnabled(false);
-        new TransactionActivity(getContext(),accountId , this , wifkey , number_of_transactions_loaded);
-        number_of_transactions_loaded=number_of_transactions_loaded+25;
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+        number_of_transactions_loaded = number_of_transactions_loaded + 25;
    }
     void isLifeTime(final String name_id, final String id){
         final int db_id = Helper.fetchIntSharePref(getContext(),getContext().getString(R.string.sharePref_database));

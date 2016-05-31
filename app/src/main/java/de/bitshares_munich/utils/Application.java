@@ -2,11 +2,15 @@ package de.bitshares_munich.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +70,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         ButterKnife.setDebug(true);
         context = getApplicationContext();
+        showDialogPin();
         blockHead="";
         webSocketConnection();
     }
@@ -185,7 +190,7 @@ public class Application extends android.app.Application {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
                                 }
-                            } else if (id == 7) {
+                            } else if (id == 100 || id==200) {
                                 JSONArray jsonArray = (JSONArray) jsonObject.get("result");
                                 JSONObject obj = new JSONObject();
                                 if (jsonArray.length() != 0) {
@@ -255,6 +260,32 @@ public class Application extends android.app.Application {
             }
         }
         return blockHead = "block# "+json.substring(start, end);
+    }
+
+    private void showDialogPin() {
+        if (Helper.containKeySharePref(context, context.getString(R.string.txt_pin))) {
+            final Dialog dialog = new Dialog(context, R.style.stylishDialog);
+            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            dialog.setTitle(R.string.pin_verification);
+            dialog.setContentView(R.layout.activity_alert_pin_dialog);
+            Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+            final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+            btnDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
+                    if (etPin.getText().toString().equals(savedPIN)) {
+                        dialog.cancel();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            dialog.setCancelable(false);
+
+            dialog.show();
+        }
     }
 
 }
