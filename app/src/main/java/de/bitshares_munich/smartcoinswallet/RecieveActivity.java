@@ -106,7 +106,7 @@ public class RecieveActivity extends BaseActivity {
         hm.put("amount", price);
         hm.put("fee", 0);
         hm.put("symbol", currency);
-        hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId);
+        hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId + "/");
         getQrHashKey(this, hm);
     }
 
