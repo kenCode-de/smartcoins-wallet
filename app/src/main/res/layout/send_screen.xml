@@ -9,7 +9,8 @@
         android:layout_height="60sp"
         android:background="#0099D5"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone">
         <Button
             android:layout_width="30sp"
             android:layout_height="30sp"
