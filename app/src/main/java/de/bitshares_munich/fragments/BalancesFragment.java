@@ -1,5 +1,10 @@
 package de.bitshares_munich.fragments;
 
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +13,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -56,13 +68,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     ArrayList<AccountDetails> accountDetails;
     int accountDetailsId;
     String accountId = "";
-    String to = "";
+
+    Handler handler = new Handler();
+    String to ="";
+
     String wifkey = "";
     @Bind(R.id.load_more_values)
     Button load_more_values;
 
+    @Bind(R.id.backLine)
+    View backLine;
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+
+    @Bind(R.id.qrCamera)
+    ImageView qrCamera;
 
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
@@ -90,6 +111,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tinyDB = new TinyDB(getContext());
         application.registerAssetDelegate(this);
 
+
     }
 
     @Override
@@ -97,6 +119,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+// Start the animation like this
+
+
+
+       // backLine.setVisibility(View.VISIBLE);
+
         //   tableViewparent.setVisibility(View.VISIBLE);
         tableViewparent.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -421,6 +449,47 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         }
 
+    }
+    void startAnimation(){
+        qrCamera.setVisibility(View.INVISIBLE);
+        backLine.setVisibility(View.INVISIBLE);
+        final Animation animationFadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+        final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.animation);
+        animationRigthtoLeft.setInterpolator(new AccelerateDecelerateInterpolator());
+        qrCamera.postDelayed(new Runnable() {
+            public void run() {
+                qrCamera.startAnimation(animationRigthtoLeft);
+                qrCamera.setVisibility(View.VISIBLE);
+            }
+        }, 333);
+
+
+        backLine.postDelayed(new Runnable() {
+            public void run() {
+                backLine.setVisibility(View.VISIBLE);
+                backLine.startAnimation(animationFadeIn);
+            }
+        }, 999);
+
+    }
+    @Override
+    public void setUserVisibleHint(boolean visible){
+        super.setUserVisibleHint(visible);
+        if (visible){
+
+            if(qrCamera!=null && backLine!=null) {
+                startAnimation();
+            } else {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(qrCamera!=null && backLine!=null) {
+                            startAnimation();
+                        }else handler.postDelayed(this, 333);
+                    }
+                }, 333);
+            }
+        }
     }
 }
 

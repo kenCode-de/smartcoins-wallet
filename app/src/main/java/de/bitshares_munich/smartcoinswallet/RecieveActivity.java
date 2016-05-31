@@ -1,8 +1,10 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,10 +64,18 @@ public class RecieveActivity extends BaseActivity {
     String account_id = "";
     String orderId = "";
 
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recieve_activity);
+        verifyStoragePermissions(this);
         ButterKnife.bind(this);
 
         setBackButton(true);
@@ -75,6 +86,7 @@ public class RecieveActivity extends BaseActivity {
         showDialog("", "Loading...");
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
+
 
 
         if (intent.hasExtra(getString(R.string.to))) {
@@ -105,7 +117,10 @@ public class RecieveActivity extends BaseActivity {
 
         }
 
-        HashMap hm = new HashMap();
+
+
+
+    HashMap hm = new HashMap();
         hm.put("account_name", to);
         hm.put("memo", "Order: " + orderId);
         hm.put("amount", price);
@@ -115,6 +130,19 @@ public class RecieveActivity extends BaseActivity {
         getQrHashKey(this, hm);
     }
 
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
     @OnClick(R.id.backbutton)
     void onBackButtonPressed() {
         super.onBackPressed();
