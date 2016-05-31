@@ -223,6 +223,7 @@
                 android:orientation="vertical"
             >
                 <CheckBox
+                    android:visibility="gone"
                     android:id="@+id/check_for_updates"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -232,6 +233,7 @@
                     android:text="@string/check_for_updates"
                 />
                 <CheckBox
+                    android:visibility="gone"
                     android:id="@+id/automatically_install"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

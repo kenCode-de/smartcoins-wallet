@@ -143,7 +143,7 @@ public class SettingActivity extends BaseActivity {
 
     public void onClickBackbtn(View v) {
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
-        startActivity(intent);
+        //startActivity(intent);
     }
 
     Boolean isCHecked(View v) {

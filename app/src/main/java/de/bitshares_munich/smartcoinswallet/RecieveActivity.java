@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.TransactionSmartCoin;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import retrofit2.Call;
@@ -54,6 +56,15 @@ public class RecieveActivity extends BaseActivity {
 
     @Bind(R.id.qrimage)
     ImageView qrimage;
+
+    @Bind(R.id.tvBlockNumberHead_rcv_screen_activity)
+    TextView tvBlockNumberHead;
+
+    @Bind(R.id.tvAppVersion_rcv_screen_activity)
+    TextView tvAppVersion;
+
+    @Bind(R.id.ivSocketConnected_rcv_screen_activity)
+    ImageView ivSocketConnected;
 
     ProgressDialog progressDialog;
 
@@ -75,7 +86,7 @@ public class RecieveActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recieve_activity);
-        verifyStoragePermissions(this);
+
         ButterKnife.bind(this);
 
         setBackButton(true);
@@ -128,6 +139,9 @@ public class RecieveActivity extends BaseActivity {
         hm.put("symbol", currency);
         hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId);
         getQrHashKey(this, hm);
+
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        updateBlockNumberHead();
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -150,6 +164,7 @@ public class RecieveActivity extends BaseActivity {
 
     @OnClick(R.id.sharebtn)
     public void TellaFriend() {
+        verifyStoragePermissions(this);
         qrimage.buildDrawingCache();
         Bitmap bitmap = qrimage.getDrawingCache();
         File mFile = savebitmap(bitmap);
@@ -162,7 +177,7 @@ public class RecieveActivity extends BaseActivity {
             sharingIntent.setData(uri);
             sharingIntent.setType("image/png");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(sharingIntent, "Hello Sir"));
+            startActivity(Intent.createChooser(sharingIntent, "Share QR Code"));
         } catch (Exception e) {
 
         }
@@ -314,6 +329,61 @@ public class RecieveActivity extends BaseActivity {
             }
         });
     }
+
+
+    /// Updating Block Number and status
+    private String prevBlockNumber = "";
+    private int counterBlockCheck = 0;
+
+    private Boolean isBlockUpdated()
+    {
+        if ( Application.blockHead != prevBlockNumber )
+        {
+            prevBlockNumber = Application.blockHead;
+            counterBlockCheck = 0;
+            return true;
+        }
+        else if ( counterBlockCheck++ >= 30 )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateBlockNumberHead() {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
+                        boolean paused = Application.webSocketG.isPaused();
+                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                        tvBlockNumberHead.setText(Application.blockHead);
+                    }
+                    else
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Application.webSocketG.close();
+                        Application.webSocketConnection();
+                    }
+                }
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(updateTask, 2000);
+    }
+
+    @OnClick(R.id.OnClickSettings_rcv_screen_activity)
+    void OnClickSettings(){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+    }
+    ///////
 
 
 }

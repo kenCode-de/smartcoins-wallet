@@ -47,12 +47,14 @@ public class TabActivity extends BaseActivity {
         setContentView(R.layout.activity_tab);
         ButterKnife.bind(this);
 
-        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         toolbar.setNavigationIcon(R.mipmap.btslogo);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
     }
 
