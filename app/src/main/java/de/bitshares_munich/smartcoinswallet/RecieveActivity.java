@@ -66,6 +66,11 @@ public class RecieveActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recieve_activity);
         ButterKnife.bind(this);
+
+        setBackButton(true);
+
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+
         progressDialog = new ProgressDialog(this);
         showDialog("", "Loading...");
         orderId = UUID.randomUUID().toString();

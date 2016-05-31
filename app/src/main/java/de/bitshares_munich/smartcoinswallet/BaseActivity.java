@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void setBackButton(Boolean isBackButton) {
+    public void setBackButton(Boolean isBackButton) {
         if (isBackButton) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

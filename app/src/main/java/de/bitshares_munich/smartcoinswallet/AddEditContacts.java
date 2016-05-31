@@ -70,6 +70,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_contacts);
         ButterKnife.bind(this);
+
+        setBackButton(true);
+
         context = this;
         tinyDB = new TinyDB(context);
         application.registerCallback(this);

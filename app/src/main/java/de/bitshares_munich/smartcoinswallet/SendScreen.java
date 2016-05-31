@@ -135,6 +135,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.send_screen);
+
+        setBackButton(true);
+
         context = getApplicationContext();
         ButterKnife.bind(this);
         application.registerExchangeRateCallback(this);

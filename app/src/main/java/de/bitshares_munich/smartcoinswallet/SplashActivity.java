@@ -16,14 +16,25 @@ import de.bitshares_munich.utils.TinyDB;
 public class SplashActivity extends Activity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 1000;
-    TinyDB tinyDB;
+    private static int SPLASH_TIME_OUT = 500;
+    //TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        tinyDB = new TinyDB(getApplicationContext());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkWhereToGo();
+            }
+        }, SPLASH_TIME_OUT);
+    }
+
+    private void checkWhereToGo ()
+    {
+        TinyDB tinyDB = new TinyDB(getApplicationContext());
 
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (arrayList.size() > 0) {
@@ -31,10 +42,10 @@ public class SplashActivity extends Activity {
         } else {
             moveToAccountScreen();
         }
-
     }
 
     private void moveToMainScreen() {
+        /*
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -42,24 +53,31 @@ public class SplashActivity extends Activity {
 
                 Intent i = new Intent(SplashActivity.this, TabActivity.class);
                 startActivity(i);
-
                 finish();
             }
         }, SPLASH_TIME_OUT);
+        */
+        Intent i = new Intent(SplashActivity.this, TabActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void moveToAccountScreen() {
-        new Handler().postDelayed(new Runnable() {
 
+        /*
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 Intent i = new Intent(SplashActivity.this, AccountActivity.class);
                 startActivity(i);
-
                 finish();
             }
         }, SPLASH_TIME_OUT);
+        */
+
+        Intent i = new Intent(SplashActivity.this, AccountActivity.class);
+        startActivity(i);
+        finish();
     }
 
 
