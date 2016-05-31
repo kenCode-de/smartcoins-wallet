@@ -116,6 +116,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/whiteSpaceAfterBalances"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:orientation="vertical"
+            android:background="@color/whiteColor">
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/transactionsExportHeader"
             android:layout_width="match_parent"

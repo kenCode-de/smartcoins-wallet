@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -133,6 +135,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
 
+    @Bind(R.id.tvBlockNumberHead_send_screen_activity)
+    TextView tvBlockNumberHead;
+
+    @Bind(R.id.tvAppVersion_send_screen_activity)
+    TextView tvAppVersion;
+
+    @Bind(R.id.ivSocketConnected_send_screen_activity)
+    ImageView ivSocketConnected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +173,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
                 }
             }
         }
+
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        updateBlockNumberHead();
     }
 
     void init() {
@@ -499,7 +513,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
 
             int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
             String loyalOrBackupAssets = "";
-            if (id == 200) {
+            if (id == 200 && backupAssets != null && backupAssets.id != null) {
                 loyalOrBackupAssets = backupAssets.id;
             } else if (id == 100) {
                 loyalOrBackupAssets = loyaltyAsset.id;
@@ -680,4 +694,59 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, totalAmount.toString(), selectedAccountAsset.symbol));
         tvTotalStatus.setVisibility(View.VISIBLE);
     }
+
+
+    /// Updating Block Number and status
+    private String prevBlockNumber = "";
+    private int counterBlockCheck = 0;
+
+    private Boolean isBlockUpdated()
+    {
+        if ( Application.blockHead != prevBlockNumber )
+        {
+            prevBlockNumber = Application.blockHead;
+            counterBlockCheck = 0;
+            return true;
+        }
+        else if ( counterBlockCheck++ >= 30 )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateBlockNumberHead() {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
+                        boolean paused = Application.webSocketG.isPaused();
+                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                        tvBlockNumberHead.setText(Application.blockHead);
+                    }
+                    else
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Application.webSocketG.close();
+                        Application.webSocketConnection();
+                    }
+                }
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(updateTask, 2000);
+    }
+
+    @OnClick(R.id.OnClickSettings_send_screen_activity)
+    void OnClickSettings(){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+    }
+    ///////
 }

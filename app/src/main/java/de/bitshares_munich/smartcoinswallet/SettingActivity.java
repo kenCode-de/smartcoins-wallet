@@ -9,6 +9,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +33,7 @@ import butterknife.OnItemSelected;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
@@ -69,6 +72,15 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.ivLifeTime)
     ImageView ivLifeTime;
 
+    @Bind(R.id.tvBlockNumberHead_content_settings)
+    TextView tvBlockNumberHead;
+
+    @Bind(R.id.tvAppVersion_content_settings)
+    TextView tvAppVersion;
+
+    @Bind(R.id.ivSocketConnected_content_settings)
+    ImageView ivSocketConnected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +91,8 @@ public class SettingActivity extends BaseActivity {
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
-
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        updateBlockNumberHead();
     }
 
     public void init() {
@@ -130,7 +143,7 @@ public class SettingActivity extends BaseActivity {
 
     public void onClickBackbtn(View v) {
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
-        startActivity(intent);
+        //startActivity(intent);
     }
 
     Boolean isCHecked(View v) {
@@ -413,5 +426,53 @@ public class SettingActivity extends BaseActivity {
         dialog.show();
     }
 
+
+    // Blocks Updation
+    private String prevBlockNumber = "";
+    private int counterBlockCheck = 0;
+
+    private Boolean isBlockUpdated()
+    {
+        if ( Application.blockHead != prevBlockNumber )
+        {
+            prevBlockNumber = Application.blockHead;
+            counterBlockCheck = 0;
+            return true;
+        }
+        else if ( counterBlockCheck++ >= 30 )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateBlockNumberHead() {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
+                        boolean paused = Application.webSocketG.isPaused();
+                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                        tvBlockNumberHead.setText(Application.blockHead);
+                    }
+                    else
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Application.webSocketG.close();
+                        Application.webSocketConnection();
+                    }
+                }
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(updateTask, 2000);
+    }
+    /////////////////
 
 }

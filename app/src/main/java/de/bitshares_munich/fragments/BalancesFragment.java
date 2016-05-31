@@ -96,6 +96,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     LinearLayout llBalances;
     int number_of_transactions_loaded;
 
+    @Bind(R.id.whiteSpaceAfterBalances)
+    LinearLayout whiteSpaceAfterBalances;
+
     private SortableTableView<TransactionDetails> tableView;
     static List<TransactionDetails> myTransactions;
 
@@ -250,6 +253,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         isLifeTime(accountId,"15");
         progressBar1.setVisibility(View.VISIBLE);
+        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+
         new AssestsActivty(getContext(), to, this);
         number_of_transactions_loaded = 0;
         progressBar.setVisibility(View.VISIBLE);
@@ -361,6 +366,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     }
                 }
                 progressBar1.setVisibility(View.INVISIBLE);
+                whiteSpaceAfterBalances.setVisibility(View.GONE);
             }
         });
     }
