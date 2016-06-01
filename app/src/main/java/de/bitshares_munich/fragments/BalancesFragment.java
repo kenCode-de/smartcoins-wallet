@@ -7,9 +7,17 @@ import android.app.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.utils.L;
 
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -110,6 +119,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.account_name)
     TextView tv_account_name;
 
+    @Bind(R.id.recievebtn)
+    ImageView recievebtn;
+
+
+    @Bind(R.id.sendbtn)
+    ImageView sendbtn;
 
     public BalancesFragment() {
         // Required empty public constructor
@@ -129,6 +144,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
@@ -219,6 +235,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
+
+       recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -580,6 +600,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             }
         }
     }
+
 }
 
 

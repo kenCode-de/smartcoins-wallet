@@ -178,6 +178,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        loadWebView(webviewFrom ,34 , Helper.md5(""));
+        webviewFrom.setVisibility(View.VISIBLE);
         updateBlockNumberHead();
     }
 

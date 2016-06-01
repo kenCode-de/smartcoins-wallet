@@ -7,33 +7,19 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
         android:weightSum="4">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:layout_marginLeft="16dp"
+            android:layout_weight="0.8"
             android:layout_gravity="center"
             android:textSize="17dp"
+            android:lines="1"
+            android:ellipsize="end"
             android:textColor="@color/green"
-            android:text=""/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:textColor="@color/green"
-            android:text=""/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:textColor="@color/green"
-            android:text=""/>
+            android:text="SOLVER"/>
 
         <TextView
             android:layout_width="0dp"
@@ -42,7 +28,26 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text=""/>
+            android:text="4309853409570349"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:layout_gravity="center"
+            android:textSize="17dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/green"
+            android:text="SOLVEROL"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:layout_gravity="center"
+            android:textSize="17dp"
+            android:textColor="@color/green"
+            android:text="4309853409570349"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
