@@ -39,7 +39,7 @@ public class ShareContact extends BaseActivity {
             sharingIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.share_subject));
             sharingIntent.setType("text/plain");
-            startActivity(Intent.createChooser(sharingIntent, "Hello Sir"));
+            startActivity(Intent.createChooser(sharingIntent,getString(R.string.share_heading)));
         } catch (Exception e) {
         }
     }

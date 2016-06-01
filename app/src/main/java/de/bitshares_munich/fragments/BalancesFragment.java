@@ -124,8 +124,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
 
-        tableViewparent.setVisibility(View.GONE);
-        load_more_values.setVisibility(View.GONE);
+        recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
+
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
@@ -148,6 +150,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             }
         };
         handler.postDelayed(updateTask, 2000);
+
+        loadBasic();
+
+
 //        tableViewparent.setVisibility(View.GONE);
 //        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 //        if (accountDetails.size() == 1) {
@@ -210,56 +216,58 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public void onResume() {
         super.onResume();
         // Inflate the layout for this fragment
-        scrollViewBalances.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
-
+        scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
-       recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        //recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        //sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
         qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
-
-        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-        tableViewparent.setVisibility(View.GONE);
-        load_more_values.setVisibility(View.GONE);
+        if(checkIfAccountNameChange()){loadBasic();}
+//        tableViewparent.setVisibility(View.GONE);
+//        load_more_values.setVisibility(View.GONE);
         //for(int i=0;i<3;i++){
        // final View rootView = layoutInflater.inflate(R.layout.fragment_balances, null, false);
 
-        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (accountDetails.size() == 1) {
-            accountDetails.get(0).isSelected = true;
-            to = accountDetails.get(0).account_name;
-            accountId = accountDetails.get(0).account_id;
-            wifkey = accountDetails.get(0).wif_key;
-        } else {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    accountDetailsId = i;
-                    to = accountDetails.get(i).account_name;
-                    accountId = accountDetails.get(i).account_id;
-                    wifkey = accountDetails.get(i).wif_key;
-                    break;
-                }
-            }
-        }
-        myTransactions = new ArrayList<>();
-        updateSortTableView(tableView, myTransactions);
+//        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+//        if (accountDetails.size() == 1) {
+//            accountDetails.get(0).isSelected = true;
+//            to = accountDetails.get(0).account_name;
+//            accountId = accountDetails.get(0).account_id;
+//            wifkey = accountDetails.get(0).wif_key;
+//        } else {
+//            for (int i = 0; i < accountDetails.size(); i++) {
+//                if (accountDetails.get(i).isSelected) {
+//                    accountDetailsId = i;
+//                    to = accountDetails.get(i).account_name;
+//                    accountId = accountDetails.get(i).account_id;
+//                    wifkey = accountDetails.get(i).wif_key;
+//                    break;
+//                }
+//            }
+//        }
+//        Application.monitorAccountId = accountId;
+//        tv_account_name.setText(to);
+//        isLifeTime(accountId,"15");
+//        get_full_accounts(accountId,"17");
 
-        llBalances.removeAllViews();
 
-        tableView.addDataClickListener(new tableViewClickListener(getContext()));
-
-        isLifeTime(accountId,"15");
-        progressBar1.setVisibility(View.VISIBLE);
-        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
-
-        new AssestsActivty(getContext(), to, this);
-        number_of_transactions_loaded = 0;
-        progressBar.setVisibility(View.VISIBLE);
-        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
-        number_of_transactions_loaded = number_of_transactions_loaded + 25;
-        tv_account_name.setText(to);
+//        myTransactions = new ArrayList<>();
+//        updateSortTableView(tableView, myTransactions);
+//
+//        llBalances.removeAllViews();
+//
+//        tableView.addDataClickListener(new tableViewClickListener(getContext()));
+//
+//        progressBar1.setVisibility(View.VISIBLE);
+//        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+//
+//        new AssestsActivty(getContext(), to, this);
+//        number_of_transactions_loaded = 0;
+//        progressBar.setVisibility(View.VISIBLE);
+//        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+//        number_of_transactions_loaded = number_of_transactions_loaded + 25;
 
         //LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -296,6 +304,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
+        SupportMethods.testing("Assets","Assets views 1","Asset Activity");
 
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
@@ -310,24 +319,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
             accountAssets.add(accountAsset);
         }
+
+        SupportMethods.testing("Assets","Assets views 2","Asset Activity");
+
 //       if(accountDetails.size()==1) {
 //            accountDetails.get(0).isSelected = true;
 //            accountDetails.get(0).AccountAssets = accountAssets;
 //       } else {
+        try{
         for (int i = 0; i < accountDetails.size(); i++) {
             if (accountDetails.get(i).isSelected) {
                 accountDetails.get(i).AccountAssets = accountAssets;
                 break;
             }
+        }}catch (Exception w){
+            SupportMethods.testing("Assets",w,"Asset Activity");
+
         }
+        SupportMethods.testing("Assets","Assets views 3","Asset Activity");
+
 //       }
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+
+        SupportMethods.testing("Assets","Assets views 4","Asset Activity");
+
         BalanceAssetsUpdate(sym, pre, am);
     }
 
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
+                SupportMethods.testing("Assets","Assets views ","Asset Activity");
+
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 llBalances.removeAllViews();
                 for (int i = 0; i < sym.size(); i += 2) {
@@ -465,10 +488,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     load_more_values.setVisibility(View.VISIBLE);
                     load_more_values.setEnabled(true);
                 }
-                tableViewparent.setVisibility(View.VISIBLE);
                 myTransactions.addAll(transactionDetails);
                 tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                 progressBar.setVisibility(View.GONE);
+                tableViewparent.setVisibility(View.VISIBLE);
+                scrollViewBalances.fullScroll(View.FOCUS_UP);
+                scrollViewBalances.pageScroll(View.FOCUS_UP);
             }
         });
     }
@@ -504,6 +529,33 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             handler.postDelayed(updateTask, 1000);
         }catch (Exception e){
             
+        }
+    }
+    void get_full_accounts(final String name_id, final String id) {
+        try {
+            final int db_id = Helper.fetchIntSharePref(getContext(), getContext().getString(R.string.sharePref_database));
+            //    {"id":4,"method":"call","params":[2,"get_full_accounts",[["1.2.101520"],true]]}
+
+            final Handler handler = new Handler();
+
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_full_accounts\",[[\""+name_id+"\"],true]]}";
+                        SupportMethods.testing("get_full_accounts", getDetails, "getDetails");
+                        Application.webSocketG.send(getDetails);
+                    } else {
+                        get_full_accounts(name_id, id);
+
+                    }
+                }
+            };
+
+            handler.postDelayed(updateTask, 1000);
+        }catch (Exception e){
+            SupportMethods.testing("get_full_accounts", e, "exception");
+
         }
     }
     @Override
@@ -580,6 +632,81 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
     }
 
+    @Override
+    public void loadAll(){
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+        loadViews();
+            }
+        });
+    }
+
+    void loadViews(){
+        tableViewparent.setVisibility(View.GONE);
+        load_more_values.setVisibility(View.GONE);
+
+        myTransactions = new ArrayList<>();
+        updateSortTableView(tableView, myTransactions);
+
+        llBalances.removeAllViews();
+
+        tableView.addDataClickListener(new tableViewClickListener(getContext()));
+
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar1.setVisibility(View.VISIBLE);
+        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+
+        new AssestsActivty(getContext(), to, this);
+        number_of_transactions_loaded = 0;
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+        number_of_transactions_loaded = number_of_transactions_loaded + 25;
+//        Handler ha = new Handler();
+//        ha.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                loadViews();
+//            }}, 30000);
+    }
+    void loadBasic(){
+
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        if (accountDetails.size() == 1) {
+            accountDetails.get(0).isSelected = true;
+            to = accountDetails.get(0).account_name;
+            accountId = accountDetails.get(0).account_id;
+            wifkey = accountDetails.get(0).wif_key;
+        } else {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    accountDetailsId = i;
+                    to = accountDetails.get(i).account_name;
+                    accountId = accountDetails.get(i).account_id;
+                    wifkey = accountDetails.get(i).wif_key;
+                    break;
+                }
+            }
+        }
+        Application.monitorAccountId = accountId;
+        tv_account_name.setText(to);
+        isLifeTime(accountId,"15");
+        get_full_accounts(accountId,"17");
+        loadViews();
+    }
+    Boolean checkIfAccountNameChange(){
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        String checkAccountName="";
+        if (accountDetails.size() == 1) {
+            checkAccountName = accountDetails.get(0).account_name;
+        } else {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    checkAccountName= accountDetails.get(i).account_name;
+                    break;
+                }
+            }
+        }
+        return !checkAccountName.equals(to);
+    }
 }
 
 
