@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.utils.SupportMethods;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
@@ -35,6 +36,8 @@ public class AssestsActivty  implements BalancesDelegate {
         ammount = new ArrayList<>();
         balancesLoad = new BalancesLoad(context,this);
         assetDelegate = instance;
+        SupportMethods.testing("Assets","Assets loading starts","Asset Activity");
+
         balancesLoad.get_json_account_balances(account_name,"999");
     }
 
@@ -169,6 +172,7 @@ public class AssestsActivty  implements BalancesDelegate {
         return  pairs.get(key);
     }
     void AddinAssets() {
+        SupportMethods.testing("Assets","Assets loading complete","Asset Activity");
         assetDelegate.isUpdate(ids,symbols,precisons,ammount);
     }
 }
