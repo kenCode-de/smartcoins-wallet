@@ -212,8 +212,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         updateAmountStatus();
     }
 
+    Boolean runningSpinerForFirstTime = true;
     @OnItemSelected(R.id.spinnerFrom) void onItemSelected(int position) {
-        populateAssetsSpinner();
+        if ( !runningSpinerForFirstTime )
+        {
+            populateAssetsSpinner();
+        }
+        else
+        {
+            this.runningSpinerForFirstTime = false;
+        }
+
     }
 
     @OnItemSelected(R.id.spAssets)
