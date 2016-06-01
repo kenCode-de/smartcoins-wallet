@@ -32,6 +32,7 @@ import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountObject;
 import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.IExchangeRate;
+import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.Interfaces.ITransactionObject;
 import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -52,6 +53,7 @@ public class Application extends android.app.Application {
     static ITransactionObject iTransactionObject;
     static IAccountObject iAccountObject;
     static IAssetObject iAssetObject;
+    static IRelativeHistory iRelativeHistory;
     public static String blockHead="";
     private static Activity currentActivity;
 
@@ -70,7 +72,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         ButterKnife.setDebug(true);
         context = getApplicationContext();
-        showDialogPin();
+        //showDialogPin();
         blockHead="";
         webSocketConnection();
     }
@@ -95,6 +97,9 @@ public class Application extends android.app.Application {
     }
     public void registerAssetObjectCallback(IAssetObject callbackClass) {
         iAssetObject = callbackClass;
+    }
+    public void registerRelativeHistoryCallback(IRelativeHistory callbackClass) {
+        iRelativeHistory = callbackClass;
     }
 
     public static void webSocketConnection() {
@@ -233,6 +238,11 @@ public class Application extends android.app.Application {
                                     iAssetDelegate.getLifetime(s,id);
                                 }
                             }
+                            else if (id == 16) {
+                                if (iRelativeHistory != null) {
+                                    iRelativeHistory.relativeHistoryCallback(jsonObject);
+                                }
+                            }
                         } catch (JSONException e) {
 
                         }
@@ -262,6 +272,7 @@ public class Application extends android.app.Application {
         return blockHead = "block# "+json.substring(start, end);
     }
 
+    /*
     private void showDialogPin() {
         if (Helper.containKeySharePref(context, context.getString(R.string.txt_pin))) {
             final Dialog dialog = new Dialog(context, R.style.stylishDialog);
@@ -287,5 +298,6 @@ public class Application extends android.app.Application {
             //dialog.show();
         }
     }
+    */
 
 }

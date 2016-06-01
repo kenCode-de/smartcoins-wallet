@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
+import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransferResponse;
@@ -49,7 +51,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory {
     Context context;
     Application application = new Application();
     TinyDB tinyDB;
@@ -63,7 +65,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate;
     boolean alwaysDonate = false;
-    String backupAsset;
+    String backupAsset,receiverID,callbackURL;
 
 
     @Bind(R.id.FirstChild)
@@ -155,6 +157,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         ButterKnife.bind(this);
         application.registerExchangeRateCallback(this);
         application.registerCallback(this);
+        application.registerRelativeHistoryCallback(this);
 
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -211,9 +214,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         updateAmountStatus();
     }
 
-    @OnItemSelected(R.id.spinnerFrom)
-    void onItemSelected(int position) {
-        populateAssetsSpinner();
+    Boolean runningSpinerForFirstTime = true;
+    @OnItemSelected(R.id.spinnerFrom) void onItemSelected(int position) {
+        if ( !runningSpinerForFirstTime )
+        {
+            populateAssetsSpinner();
+        }
+        else
+        {
+            this.runningSpinerForFirstTime = false;
+        }
 
     }
 
@@ -378,7 +388,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
             llBackupAsset.setVisibility(View.VISIBLE);
             tvBackupAsset.setText(backupAsset);
             getBackupAsset();
-            getExchangeRate(200);
+            //getExchangeRate(200);
         }
     }
 
@@ -423,6 +433,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
     void onScanResult(String result) throws JSONException {
         JSONObject resJson = new JSONObject(result);
         resJson = new JSONObject(resJson.get("json").toString());
+        callbackURL = resJson.get("callback").toString();
+        if (callbackURL.substring(callbackURL.length() - 1) != "/"){
+            callbackURL = callbackURL + "/";
+        }
         etReceiverAccount.setText(resJson.get("to").toString());
         validReceiver = true;
         spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
@@ -512,17 +526,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
 
         //id 200 for exchange rate
         if (application.webSocketG.isOpen()) {
-
-            int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-            String loyalOrBackupAssets = "";
-            if (id == 200 && backupAssets != null && backupAssets.id != null) {
-                loyalOrBackupAssets = backupAssets.id;
-            } else if (id == 100) {
-                loyalOrBackupAssets = loyaltyAsset.id;
-            }
-
-
-            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_identifier + ",\"get_limit_orders\",[\"" + selectedAccountAsset.id + "\",\"" + loyalOrBackupAssets + "\",1]]}";
+            int db_identifier = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
+            String params = "{\"id\":7,\"method\":\"call\",\"params\":["+db_identifier+",\"get_limit_orders\",[\""+selectedAccountAsset.id+"\",\""+loyaltyAsset.id+"\",1]]}";
             application.webSocketG.send(params);
         }
     }
@@ -531,6 +536,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
         } else if (!validReceiver) {
+            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
             Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!validAmount) {
@@ -572,6 +580,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
                     TransferResponse resp = response.body();
                     if (resp.status.equals("success")) {
                         if (!isFinishing()) {
+                            if (callbackURL != null) {
+                                getTrxBlock();
+                            }
                             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                             startActivity(intent);
                             finish();
@@ -647,6 +658,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
                 if (temp.equals(etReceiverAccount.getText().toString())) {
                     found = true;
                     validReceiver = true;
+                    receiverID = jsonArray.getJSONArray(i).getString(1);
                 }
             }
             if (!found) {
@@ -697,6 +709,55 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount 
         tvTotalStatus.setVisibility(View.VISIBLE);
     }
 
+    public void getTrxBlock(){
+        if (application.webSocketG.isOpen()) {
+            String selectedAccountId = "";
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            for (int i=0; i<accountDetails.size(); i++){
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)){
+                    selectedAccountId = accountDetail.account_id;
+                }
+            }
+            int historyIdentifier = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
+            String params = "{\"id\":16,\"method\":\"call\",\"params\":["+historyIdentifier+",\"get_relative_account_history\",[\""+selectedAccountId+"\",0,10,0]]}";
+            application.webSocketG.send(params);
+        }
+    }
+
+    @Override
+    public void relativeHistoryCallback(JSONObject msg) {
+        try {
+            JSONArray jsonArray = (JSONArray) msg.get("result");
+            JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+            JSONArray opArray = (JSONArray) jsonObject.get("op");
+            JSONObject operation = (JSONObject) opArray.get(1);
+            if (operation.get("to").toString().equals(receiverID)){
+                ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                IWebService service = sg.getService(IWebService.class);
+                final Call<Void> postingService = service.sendCallback(callbackURL,jsonObject.get("block_num").toString(),jsonObject.get("trx_in_block").toString());
+                postingService.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Response<Void> response) {
+                        if (response.isSuccess()) {
+
+                        } else {
+//                            Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+//                if (progressDialog.isShowing())
+//                    progressDialog.dismiss();
+                    }
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /// Updating Block Number and status
     private String prevBlockNumber = "";
