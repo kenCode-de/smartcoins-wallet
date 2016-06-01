@@ -178,6 +178,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        loadWebView(webviewFrom ,34 , Helper.md5(""));
+        webviewFrom.setVisibility(View.VISIBLE);
         updateBlockNumberHead();
     }
 
@@ -534,6 +536,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
         } else if (!validReceiver) {
+            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
             Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!validAmount) {

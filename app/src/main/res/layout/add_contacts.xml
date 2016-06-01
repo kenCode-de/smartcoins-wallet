@@ -46,19 +46,26 @@
         android:orientation="horizontal"
         android:weightSum="3"
         >
-        <WebView
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight=".5"
-            android:layout_height="50sp"
+            android:background="@drawable/rounded_corners"
+            android:layout_height="50sp">
+        <WebView
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
             android:id="@+id/web"
-            android:background="@drawable/edittext_bg"
             />
+        </RelativeLayout>
         <EditText
+            android:layout_marginLeft="5dp"
             android:layout_width="0dp"
             android:layout_weight="2.5"
             android:layout_height="50sp"
             android:id="@+id/Accountname"
-            android:background="@drawable/edittext_bg"
+            android:background="@drawable/rounded_corners"
             /></LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -90,7 +97,7 @@
     android:id="@+id/Contactname"
     android:maxLength="50"
     android:lines="1"
-            android:background="@drawable/edittext_bg"
+            android:background="@drawable/rounded_corners"
     />
     </LinearLayout>
         <TextView
@@ -112,7 +119,7 @@
         android:id="@+id/note"
         android:gravity="left|top"
         android:hint=""
-        android:background="@drawable/edittext_bg"
+        android:background="@drawable/rounded_corners"
         android:lines="3"
         android:maxLength="100"
         android:textSize="20sp"
@@ -135,7 +142,7 @@
                 android:layout_weight="1"
                 android:id="@+id/CancelContact"
                 android:textColor="#FFFFFF"
-                android:background="#FF4081"
+                android:background="@color/colorAccent"
                 />
             <Button
         android:layout_width="0dp"
