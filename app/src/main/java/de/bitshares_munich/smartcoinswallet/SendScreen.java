@@ -263,6 +263,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (validateSend()) {
             progressDialog = new ProgressDialog(this);
             showDialog("", "Transferring Funds...");
+//            if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
+//                tradeAsset();
+//            } else
             if (Double.parseDouble(etAmount.getText().toString()) != 0) {
                 String mainAmount = String.format("%.4f", Double.parseDouble(etAmount.getText().toString()));
                 String mainAsset = spAssets.getSelectedItem().toString();
@@ -434,7 +437,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         JSONObject resJson = new JSONObject(result);
         resJson = new JSONObject(resJson.get("json").toString());
         callbackURL = resJson.get("callback").toString();
-        if (callbackURL.substring(callbackURL.length() - 1) != "/"){
+        if (!callbackURL.substring(callbackURL.length() - 1).equals("/")){
             callbackURL = callbackURL + "/";
         }
         etReceiverAccount.setText(resJson.get("to").toString());
@@ -455,7 +458,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         etAmount.setText(totalAmount.toString());
         etAmount.setEnabled(false);
 //        selectBTSAmount.setText(hash.get("currency"));
-        String loyaltypoints = resJson.get("ruia").toString();
+        String loyaltypoints = null;
+        if (resJson.has("ruia")) {
+            loyaltypoints = resJson.get("ruia").toString();
+        }
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         if (loyaltypoints != null) {
             for (int i = 0; i < accountDetails.size(); i++) {
@@ -760,6 +766,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void tradeAsset() {
+
     }
 
     /// Updating Block Number and status
