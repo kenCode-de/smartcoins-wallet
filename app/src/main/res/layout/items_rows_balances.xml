@@ -19,7 +19,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textColor="@color/green"
-            android:text="SOLVER"/>
+            android:text=""/>
 
         <TextView
             android:layout_width="0dp"
@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="4309853409570349"/>
+            android:text=""/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/green"
-            android:text="SOLVEROL"/>
+            android:text=""/>
 
         <TextView
             android:layout_width="0dp"
@@ -47,7 +47,7 @@
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text="4309853409570349"/>
+            android:text=""/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
