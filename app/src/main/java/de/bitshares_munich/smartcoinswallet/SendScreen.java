@@ -432,6 +432,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         JSONObject resJson = new JSONObject(result);
         resJson = new JSONObject(resJson.get("json").toString());
         callbackURL = resJson.get("callback").toString();
+        if (callbackURL.substring(callbackURL.length() - 1) != "/"){
+            callbackURL = callbackURL + "/";
+        }
         etReceiverAccount.setText(resJson.get("to").toString());
         validReceiver = true;
         spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
