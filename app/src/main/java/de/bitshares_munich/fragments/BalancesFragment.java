@@ -215,8 +215,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
-       recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        //recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        //sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
         qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
 

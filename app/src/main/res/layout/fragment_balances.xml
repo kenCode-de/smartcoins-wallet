@@ -32,12 +32,28 @@
                 android:layout_weight="1.1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:elevation="10dp"
+                    android:background="@drawable/rcvcircle">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:id="@+id/recievebtn"
+                        android:visibility="visible"
+                        android:src="@mipmap/icon_receive"/>
+
+                </LinearLayout>
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:id="@+id/recievebtn"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:src="@mipmap/icon_receive"/>
                 <TextView
                     android:layout_width="100dp"
@@ -47,6 +63,8 @@
                     android:text="@string/receive_uppercase"/>
             </LinearLayout>
 
+
+
             <ImageView
                 android:id="@+id/qrCamera"
                 android:layout_width="0dp"
@@ -55,15 +73,15 @@
                 android:visibility="invisible"
                 android:layout_gravity="center"
                 android:src="@mipmap/icon_camera"/>
+
             <View android:layout_width="0dp"
                   android:layout_height="1dp"
                   android:layout_gravity="center"
                   android:layout_weight="0.3"
                   android:background="#dc473a"
-                android:visibility="invisible"
+                  android:visibility="invisible"
                   android:layout_marginLeft="-14dp"
-                android:id="@+id/backLine"
-            ></View>
+                android:id="@+id/backLine"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -71,12 +89,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-31dp"
                 android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/sendbtn"
+                <LinearLayout
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:src="@mipmap/icon_send"/>
+                    android:elevation="10dp"
+                    android:background="@drawable/sendcircle">
+                    <ImageView
+                        android:id="@+id/sendbtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/icon_send"/>
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
