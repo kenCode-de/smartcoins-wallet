@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +56,11 @@ public class Application extends android.app.Application {
     static IRelativeHistory iRelativeHistory;
     public static String blockHead="";
     private static Activity currentActivity;
+
     public static String monitorAccountId;
+
+    private static Handler warningHandler = new Handler();
+
 
     public static void setCurrentActivity(Activity _activity)
     {
@@ -102,10 +107,24 @@ public class Application extends android.app.Application {
         iRelativeHistory = callbackClass;
     }
 
+    private static void showWarningMessage(final String myEx)
+    {
+        if (getCurrentActivity() != null) {
+            Log.d("exception websocket", "inside again");
+            getCurrentActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(context, "Your system does not supports new SSL ciphering. Error : " + myEx, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
     public static void webSocketConnection() {
         iAccount = iAccount;
         final AsyncHttpGet get = new AsyncHttpGet(context.getString(R.string.url_bitshares_openledger));
         get.setTimeout(1*60*60*1000);//000000);
+
+
 
         //System.setProperty("https.protocols", "TLSv1");
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
@@ -118,16 +137,17 @@ public class Application extends android.app.Application {
                     final Exception myEx = ex;
                     Log.d("exception websocket",myEx.toString());
                     try {
-                        if (ex.getMessage().contains("handshake_failure")) {
+                        final String exMessage = ex.getMessage();
+                        if ( exMessage!=null && !exMessage.isEmpty() && exMessage.contains("handshake_failure")) {
                             Log.d("exception3 websocket", "inside");
-                            if (currentActivity != null) {
-                                Log.d("exception websocket", "inside again");
-                                currentActivity.runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        Toast.makeText(context, "Your system does not supports new SSL ciphering. Error : " + myEx.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }
+
+                            Runnable updateTask = new Runnable() {
+                                @Override
+                                public void run() {
+                                    showWarningMessage(exMessage);
+                                }
+                            };
+                            warningHandler.postDelayed(updateTask, 1000);
                             //webSocketConnection();
                             Log.d("exception websocket", "getting out");
                         } else {
