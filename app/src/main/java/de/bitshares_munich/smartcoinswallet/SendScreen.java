@@ -527,6 +527,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         } else if (!validReceiver) {
             Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
+        } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
+            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+            return false;
         } else if (!validAmount) {
             Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
