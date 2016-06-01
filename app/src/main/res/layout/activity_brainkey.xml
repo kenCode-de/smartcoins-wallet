@@ -68,7 +68,7 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:text="vaguity narine townlet rockaby taurian beadily cyan unbear adactyl dimble agamian upburst fasting amaltas dossal nexus"
+        android:text=""
         android:gravity="top"
 />
 
