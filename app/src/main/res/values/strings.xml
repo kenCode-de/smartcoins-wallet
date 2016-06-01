@@ -161,7 +161,7 @@
     <string name="account_name_already_exist">Account Name %s already exist</string>
     <string name="account_name_not_exist">Account Name %s does not exist</string>
     <string name="account_name_validate">Account name is valid</string>
-    <string name="login_api">{\"id\":2,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
+    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
     </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
     </string>
@@ -177,6 +177,9 @@
     <string name="subscribe_callback">
         {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
     </string>
+    <!--<string name="subscribe_callback_full_account">-->
+        <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
+    <!--</string>-->
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
     </string>
