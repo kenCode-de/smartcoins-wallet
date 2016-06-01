@@ -33,6 +33,7 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,7 +81,7 @@ public class TransactionActivity implements BalancesDelegate {
         try{
         wifkey = Crypt.getInstance().decrypt_string(wif_key);}
         catch (Exception e){
-            testing("namak",e,"wifkey");
+         //   testing("namak",e,"wifkey");
         };
         timestamp = new HashMap<>();
         if(account_id!=null)
@@ -116,8 +117,8 @@ public class TransactionActivity implements BalancesDelegate {
         }
         if(id==9){
             if(id_in_work<id_total_size) {
-                String result = returnParse(s,"result");
-                String time = returnParse(result,"timestamp");
+                String result = SupportMethods.ParseJsonObject(s,"result");
+                String time = SupportMethods.ParseJsonObject(result,"timestamp");
                 timestamp.put(Integer.toString(id_in_work),time);
                 if(id_in_work==(id_total_size-1)){
                     names_in_work=0;
@@ -130,9 +131,10 @@ public class TransactionActivity implements BalancesDelegate {
         }
         if(id==10) {
             if (names_in_work < names_total_size) {
-                String result = returnParse(s,"result");
-                String nameObject = returnArrayObj(result,0);
-                String name = returnParse(nameObject,"name");
+                String result = SupportMethods.ParseJsonObject(s,"result");
+               // String nameObject = returnArrayObj(result,0);
+                String nameObject = SupportMethods.ParseObjectFromJsonArray(result,0);
+                String name = SupportMethods.ParseJsonObject(nameObject,"name");
                 Names_from_Api.put(ofNames.get(names_in_work),name);
                 if(names_in_work==(names_total_size-1)){
                     assets_id_in_work=0;
@@ -145,16 +147,17 @@ public class TransactionActivity implements BalancesDelegate {
         }
         if(id==11) {
             if (assets_id_in_work < assets_id_total_size) {
-               String result = returnParse(s,"result");
-                String assetObject = returnArrayObj(result,0);
-                String symbol = returnParse(assetObject,"symbol");
-                String precision = returnParse(assetObject,"precision");
+               String result = SupportMethods.ParseJsonObject(s,"result");
+//                String assetObject = returnArrayObj(result,0);
+                String assetObject = SupportMethods.ParseObjectFromJsonArray(result,0);
+                String symbol = SupportMethods.ParseJsonObject(assetObject,"symbol");
+                String precision = SupportMethods.ParseJsonObject(assetObject,"precision");
                 HashMap<String,String> de = new HashMap<>();
                 de.put("symbol",symbol);
                 de.put("precision",precision);
                 Symbols_Precisions.put(asset_ids.get(assets_id_in_work),de);
                 if(assets_id_in_work==(assets_id_total_size-1)){
-                    testing("namak","","testing");
+                //    testing("namak","","testing");
 
                     HashMap<String,String> def = new HashMap<>();
                     memo_in_work = 0;
@@ -169,26 +172,29 @@ public class TransactionActivity implements BalancesDelegate {
         }
     }
     void onFirstCall(String s) {
-        String result = returnParse(s, "result");
-        int totalarrays = TotalArraysOfObj(result);
+        String result = SupportMethods.ParseJsonObject(s, "result");
+//        int totalarrays = TotalArraysOfObj(result);
+        int totalarrays = SupportMethods.TotalArraysOfObj(result);
         if(totalarrays!=-1) {
             for (int i = 0; i < totalarrays; i++) {
-                eRecipts.put(Integer.toString(i),returnArrayObj(result,i));
+//                eRecipts.put(Integer.toString(i),returnArrayObj(result,i));
+                eRecipts.put(Integer.toString(i),SupportMethods.ParseObjectFromJsonArray(result,i));
             }
         }
-        testing("special",eRecipts,"eRecipts");
-        HashMap<String, ArrayList<String>> arrayofOP = returnParseArray(result, "op");
-        HashMap<String, ArrayList<String>> arrayofblock_num = returnParseArray(result, "block_num");
+       // testing("special",eRecipts,"eRecipts");
+        HashMap<String, ArrayList<String>> arrayofOP = SupportMethods.ParseJsonArray(result, "op");
+        HashMap<String, ArrayList<String>> arrayofblock_num = SupportMethods.ParseJsonArray(result, "block_num");
         blocks = arrayofblock_num.get("block_num");
         number_of_transactions_in_queue = arrayofOP.get("op").size();
         for (int i = 0; i < arrayofOP.get("op").size(); i++) {
-            String breakArray = returnArrayObj(arrayofOP.get("op").get(i), 1);
+//            String breakArray = returnArrayObj(arrayofOP.get("op").get(i), 1);
+            String breakArray = SupportMethods.ParseObjectFromJsonArray(arrayofOP.get("op").get(i), 1);
             HashMap<String, String> mapof_All = new HashMap<>();
-            String parseOfamount = returnParse(breakArray, "amount");
-            String from = returnParse(breakArray, "from");
-            String to = returnParse(breakArray, "to");
-            String amount = returnParse(parseOfamount, "amount");
-            String asset_id = returnParse(parseOfamount, "asset_id");
+            String parseOfamount = SupportMethods.ParseJsonObject(breakArray, "amount");
+            String from = SupportMethods.ParseJsonObject(breakArray, "from");
+            String to = SupportMethods.ParseJsonObject(breakArray, "to");
+            String amount = SupportMethods.ParseJsonObject(parseOfamount, "amount");
+            String asset_id = SupportMethods.ParseJsonObject(parseOfamount, "asset_id");
             mapof_All.put("amount", amount);
             mapof_All.put("asset_id", asset_id);
             mapof_All.put("from", from);
@@ -197,7 +203,7 @@ public class TransactionActivity implements BalancesDelegate {
             ofNames.add(to);
             asset_ids.add(asset_id);
             if (breakArray.contains("memo")) {
-                String memojson = returnParse(breakArray, "memo");
+                String memojson = SupportMethods.ParseJsonObject(breakArray, "memo");
                 HashMap<String,String> de = new HashMap<>();
                 de.put("memo",memojson);
                 de.put("memo_id",Integer.toString(i));
@@ -221,7 +227,7 @@ public class TransactionActivity implements BalancesDelegate {
 
         memo_total_size = memos.size();
 
-        testing("namak",memo_in_work,"memo_total_size");
+      //  testing("namak",memo_in_work,"memo_total_size");
 //        if(arrayof_Amount_AssetId.size()==blocks.size())
 //        id_total_size = arrayof_Amount_AssetId.size();
 //        else id_total_size = Math.min(arrayof_Amount_AssetId.size(),blocks.size());
@@ -299,7 +305,7 @@ public class TransactionActivity implements BalancesDelegate {
                     DecodeMemo resp = response.body();
                     if (resp.status.equals("success")){
                         //tvMemo.setText(resp.msg);
-                        testing("namak",resp.msg,"msg");
+                     //   testing("namak",resp.msg,"msg");
                         if(memo_in_work<memo_total_size) {
                             decodememos.put(key, resp.msg);
                             if(memo_in_work==(memo_total_size-1)){
@@ -334,7 +340,7 @@ public class TransactionActivity implements BalancesDelegate {
 
             @Override
             public void onFailure(Throwable t) {
-                testing("bijli",t,"past_break");
+          //      testing("bijli",t,"past_break");
             }
         });
     }
@@ -386,6 +392,8 @@ public class TransactionActivity implements BalancesDelegate {
         }catch (Exception e){}
         return -1;
     }
+
+
     void get_Time(String block_num,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
       //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
@@ -440,7 +448,7 @@ public class TransactionActivity implements BalancesDelegate {
                 String assetid = mapof_All.get("asset_id");
                 HashMap<String, String> sym_pre = Symbols_Precisions.get(assetid);
                 String amount = mapof_All.get("amount");
-                String amount_pre = returnFromPower(sym_pre.get("precision"), amount);
+                String amount_pre = SupportMethods.ConvertValueintoPrecision(sym_pre.get("precision"), amount);
                 String symbol = sym_pre.get("symbol");
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Date formatted = null;
@@ -448,7 +456,7 @@ public class TransactionActivity implements BalancesDelegate {
                 TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt,context);
                 transactionDetails.add(object);
             }catch(Exception e){
-                testing("error" , e , "Try,Catch");
+             //   testing("error" , e , "Try,Catch");
             }
         }
         assetDelegate.TransactionUpdate(transactionDetails,number_of_transactions_in_queue);

@@ -64,7 +64,6 @@ public class AssestsActivty  implements BalancesDelegate {
                 String n = (String) it.next();
                 if(n.equals("amount")){
                   ammount.add(j.getString(n));
-                    Log.i("chama","212");
                 }
                 if(n.equals("asset_id")){
                     array.add(j.getString(n));
@@ -96,7 +95,6 @@ public class AssestsActivty  implements BalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id){
-        Log.i("uncle",s);
         String convert;
         try {
             if (id == 999) {
@@ -112,7 +110,6 @@ public class AssestsActivty  implements BalancesDelegate {
         if(id==99) {
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
-                Log.i("uncle","actiooi");
                 ids = returnRootValues(result,"id");
                 precisons = returnRootValues(result, "precision");
                 symbols = returnRootValues(result, "symbol");
