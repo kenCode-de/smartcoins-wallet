@@ -77,8 +77,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         tinyDB = new TinyDB(context);
         application.registerCallback(this);
         contactsDelegate = ContactsFragment.contactsDelegate;
-        loadWebView(50, Helper.md5(""));
+        loadWebView(39, Helper.md5(""));
         SaveContact.setEnabled(false);
+        SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
         if(res!=null) {
@@ -132,7 +133,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         finish();
     }
     private void loadWebView(int size, String encryptText) {
-        String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
+        String htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = web.getSettings();
         webSettings.setJavaScriptEnabled(true);
         web.loadData(htmlShareAccountName, "text/html", "UTF-8");
@@ -140,7 +141,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
         if (Accountname.getText().length() > 0) {
-            loadWebView(50, Helper.md5(Accountname.getText().toString()));
+            loadWebView(39, Helper.md5(Accountname.getText().toString()));
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
@@ -175,13 +176,15 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             warning.setText("");
             //warning.setVisibility(View.GONE);
             if (Accountname.getText().length() > 2) {
-                if (Application.webSocketG.isOpen()) {
+                if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
                     String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                     Application.webSocketG.send(socketText);
 
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+                SaveContact.setEnabled(false);
+                SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }
         }
     }
@@ -203,6 +206,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                     @Override
                     public void run() {
                         SaveContact.setEnabled(true);
+                        SaveContact.setBackgroundColor(getResources().getColor(R.color.pinkColor));
                         warning.setText(R.string.account_name_validate);
                         warning.setVisibility(View.VISIBLE);   }
                 });
@@ -214,6 +218,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                         validReceiver = false;
                         String acName = getString(R.string.account_name_not_exist);
                         String format = String.format(acName, Accountname.getText().toString());
+                        SaveContact.setEnabled(false);
+                        SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
                         warning.setText(format);
                         warning.setVisibility(View.VISIBLE);
                     }

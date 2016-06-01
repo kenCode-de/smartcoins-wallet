@@ -37,6 +37,7 @@
                     android:layout_height="100dp"
                     android:id="@+id/recievebtn"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:src="@mipmap/icon_receive"/>
                 <TextView
                     android:layout_width="100dp"
