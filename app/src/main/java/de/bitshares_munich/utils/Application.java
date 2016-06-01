@@ -55,6 +55,7 @@ public class Application extends android.app.Application {
     static IRelativeHistory iRelativeHistory;
     public static String blockHead="";
     private static Activity currentActivity;
+    public static String monitorAccountId;
 
     public static void setCurrentActivity(Activity _activity)
     {
@@ -247,8 +248,11 @@ public class Application extends android.app.Application {
 
                                     if (id == 7) {
                                         headBlockNumber(values.toString());
-                                        if ( values.toString().contains("1.2.98834") )
+                                        if ( monitorAccountId!=null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId) )
                                         {
+                                            if (iAssetDelegate != null) {
+                                                iAssetDelegate.loadAll();
+                                            }
                                             Log.d("Notice Update",values.toString());
                                         }
                                         //headBlockNumber(s);

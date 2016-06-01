@@ -153,6 +153,7 @@
     <string name="share_text">I just found this awesome Smartcoins Wallet that allows you to send and receive Smartcoins. Check it out! Cheers</string>
     <string name="share_info">Invite one or more of your friends to try out the Smartcoins Wallet! Email addresses are not saved or collected by anyone so their privacy is assured.</string>
     <string name="share_subject">Awesome Smartcoins Wallet</string>
+    <string name="share_heading">Share with a friend</string>
     <string name="share_btn_text">OPEN EMAIL APPLICATION</string>
     <string name="action_settings">Settings</string>
     <string name="txt_validating_account">Validating account...</string>

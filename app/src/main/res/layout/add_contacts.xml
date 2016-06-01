@@ -64,6 +64,7 @@
             android:layout_width="0dp"
             android:layout_weight="2.5"
             android:layout_height="50sp"
+            android:padding="5dp"
             android:id="@+id/Accountname"
             android:background="@drawable/rounded_corners"
             /></LinearLayout>
@@ -94,6 +95,7 @@
     android:layout_weight="2"
     android:layout_height="50sp"
             android:minWidth="200sp"
+            android:padding="5dp"
     android:id="@+id/Contactname"
     android:maxLength="50"
     android:lines="1"
@@ -119,6 +121,7 @@
         android:id="@+id/note"
         android:gravity="left|top"
         android:hint=""
+        android:padding="5dp"
         android:background="@drawable/rounded_corners"
         android:lines="3"
         android:maxLength="100"
