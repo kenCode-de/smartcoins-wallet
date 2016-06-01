@@ -44,7 +44,6 @@ import de.bitshares_munich.smartcoinswallet.SendScreen;
 public class Application extends android.app.Application {
 
     public static WebSocket webSocketG;
-    public static int socketCounter;
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
@@ -160,95 +159,111 @@ public class Application extends android.app.Application {
     }
 
     public static void sendInitialSocket(final Context context) {
-        socketCounter = 0;
 
         if (Application.webSocketG.isOpen()) {
 
             Application.webSocketG.send(context.getString(R.string.login_api));
             Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
                 public void onStringAvailable(String s) {
-                    if (s.contains("true")) {
-                        Application.webSocketG.send(context.getString(R.string.database_indentifier));
-                        Application.webSocketG.send(context.getString(R.string.network_broadcast_identifier));
-                        Application.webSocketG.send(context.getString(R.string.history_identifier));
 
-                        Application.webSocketG.send(context.getString(R.string.subscribe_callback));
-                        socketCounter = 1;
-                    } else if (socketCounter == 1) {
-                        try {
-                            //System.out.println("I got a string: " + s);
-                            JSONObject jsonObject = new JSONObject(s);
-                            int id = 0;
-                            if (jsonObject.has("id")) {
-                                id = jsonObject.getInt("id");
-                            }
-                            if (id == 2) {
+                    try {
+                        //System.out.println("I got a string: " + s);
+                        JSONObject jsonObject = new JSONObject(s);
+
+                        if (jsonObject.has("id")) {
+                            int id = jsonObject.getInt("id");
+
+                            if (id == 1) {
+                                if (s.contains("true")) {
+                                    Application.webSocketG.send(context.getString(R.string.database_indentifier));
+                                } else {
+                                    Application.webSocketG.send(context.getString(R.string.login_api));
+                                }
+                            } else if (id == 2) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_database), jsonObject.getInt("result"));
+                                Application.webSocketG.send(context.getString(R.string.network_broadcast_identifier));
                             } else if (id == 3) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
+                                Application.webSocketG.send(context.getString(R.string.history_identifier));
                             } else if (id == 4) {
-                                Helper.storeIntSharePref(context,
-                                        context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
-                            } else if (s.contains(context.getString(R.string.head_block_number))) {
-                                headBlockNumber(s);
+                                Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
+                                Application.webSocketG.send(context.getString(R.string.subscribe_callback));
+                                //Application.webSocketG.send(context.getString(R.string.subscribe_callback_full_account));
                             } else if (id == 6) {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
                                 }
-                            } else if (id == 100 || id==200) {
+                            } else if (id == 100 || id == 200) {
                                 JSONArray jsonArray = (JSONArray) jsonObject.get("result");
                                 JSONObject obj = new JSONObject();
                                 if (jsonArray.length() != 0) {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
                                 iExchangeRate.callback_exchange_rate(obj);
-                            }else if (id == 8) {
+                            } else if (id == 8) {
                                 if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s,id);
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
-                            }else if (id == 12) {
+                            } else if (id == 12) {
                                 if (iTransactionObject != null) {
                                     iTransactionObject.checkTransactionObject(jsonObject);
                                 }
-                            }else if (id == 13) {
+                            } else if (id == 13) {
                                 if (iAccountObject != null) {
                                     iAccountObject.accountObjectCallback(jsonObject);
                                 }
-                            }else if (id == 14) {
+                            } else if (id == 14) {
                                 if (iAssetObject != null) {
                                     iAssetObject.assetObjectCallback(jsonObject);
                                 }
-                            }
-                            else if (id == 9) {
+                            } else if (id == 9) {
                                 if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s,id);
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
                             } else if (id == 10) {
                                 if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s,id);
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
-                            }
-                            else if (id == 11) {
+                            } else if (id == 11) {
                                 if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s,id);
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
-                            }
-                            else if (id == 15) {
+                            } else if (id == 15) {
                                 if (iAssetDelegate != null) {
-                                    iAssetDelegate.getLifetime(s,id);
+                                    iAssetDelegate.getLifetime(s, id);
                                 }
-                            }
-                            else if (id == 16) {
+                            } else if (id == 16) {
                                 if (iRelativeHistory != null) {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }
+                            } else if (id == 17) {
+                                Log.d("account_update", jsonObject.toString());
                             }
-                        } catch (JSONException e) {
+                        } else if (jsonObject.has("method")) {
+                            if (jsonObject.getString("method").equals("notice")) {
+                                if (jsonObject.has("params")) {
+                                    int id = jsonObject.getJSONArray("params").getInt(0);
+                                    JSONArray values = jsonObject.getJSONArray("params").getJSONArray(1);
 
+                                    if (id == 7) {
+                                        headBlockNumber(values.toString());
+                                        if ( values.toString().contains("1.2.98834") )
+                                        {
+                                            Log.d("Notice Update",values.toString());
+                                        }
+                                        //headBlockNumber(s);
+                                    } else {
+                                        Log.d("other notice", values.toString());
+                                    }
+
+                                }
+                            }
                         }
 
-                    }
 
+                    } catch (JSONException e) {
+
+                    }
                 }
             });
 
