@@ -577,10 +577,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 if (response.isSuccess()) {
                     TransferResponse resp = response.body();
                     if (resp.status.equals("success")) {
+                        if (callbackURL != null) {
+                            getTrxBlock();
+                        }
                         if (!isFinishing()) {
-                            if (callbackURL != null) {
-                                getTrxBlock();
-                            }
                             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                             startActivity(intent);
                             finish();
