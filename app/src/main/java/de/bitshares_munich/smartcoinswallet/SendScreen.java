@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -146,6 +147,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,9 +179,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
 
+
+
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
-        loadWebView(webviewFrom ,34 , Helper.md5(""));
-        webviewFrom.setVisibility(View.VISIBLE);
+        //loadWebView(webviewFrom ,34 , accountDetails.);
+        //webviewFrom.setVisibility(View.VISIBLE);
+        loadWebView(webviewTo ,34 , Helper.md5(""));
         updateBlockNumberHead();
     }
 
@@ -201,12 +206,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         if (etReceiverAccount.getText().length() > 0) {
-            loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
             myAccountNameValidationTimer.start();
         }
+
+        loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
     }
 
     @OnTextChanged(R.id.etAmount)
@@ -224,6 +230,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         {
             this.runningSpinerForFirstTime = false;
         }
+
+        loadWebView(webviewFrom,34, Helper.md5(spinnerFrom.getSelectedItem().toString()));
 
     }
 
@@ -383,31 +391,43 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setBackUpAsset() {
-        backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
-        if (backupAsset != null && backupAsset.isEmpty()) {
+        try {
+            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
+            if (backupAsset != null && backupAsset.isEmpty()) {
         /*    if (backupAsset.isEmpty()) {
                 backupAsset = "BTS";
             }*/
-            llBackupAsset.setVisibility(View.VISIBLE);
-            tvBackupAsset.setText(backupAsset);
-            getBackupAsset();
-            //getExchangeRate(200);
+                llBackupAsset.setVisibility(View.VISIBLE);
+                tvBackupAsset.setText(backupAsset);
+                getBackupAsset();
+                //getExchangeRate(200);
+            }
+        }
+        catch (Exception e)
+        {
+            Log.d("setBackUpAsset",e.getMessage());
         }
     }
 
     private void getBackupAsset() {
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                    AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                    if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
-                        backupAssets = accountDetail.AccountAssets.get(j);
-                        break;
+        try {
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                        if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
+                            backupAssets = accountDetail.AccountAssets.get(j);
+                            break;
+                        }
                     }
                 }
             }
+        }
+        catch (Exception e)
+        {
+            Log.d("getBackupAsset",e.getMessage());
         }
     }
 
@@ -506,18 +526,39 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void populateAssetsSpinner() {
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        List<String> spinnerArray = new ArrayList<String>();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                    selectedAccountAsset = accountDetail.AccountAssets.get(j);
-                    spinnerArray.add(selectedAccountAsset.symbol);
+        try {
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            List<String> spinnerArray = new ArrayList<String>();
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                        selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                        spinnerArray.add(selectedAccountAsset.symbol);
+                    }
                 }
             }
+            createSpinner(spinnerArray, spAssets);
         }
-        createSpinner(spinnerArray, spAssets);
+        catch(Exception e)
+        {
+
+            try {
+                Handler rePopulateAssetsSpinner = new Handler();
+                Runnable updateTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        selectedAccountAsset = new AccountAssets();
+                        populateAssetsSpinner();
+                    }
+                };
+                rePopulateAssetsSpinner.postDelayed(updateTask, 1000);
+            }
+            catch (Exception ex)
+            {
+                Log.d("Spinner Handler",ex.getMessage());
+            }
+        }
     }
 
     void setSpinner() {
@@ -589,8 +630,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                             getTrxBlock();
                         }
                         if (!isFinishing()) {
-                            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                            //startActivity(intent);
                             finish();
                         }
                     } else {

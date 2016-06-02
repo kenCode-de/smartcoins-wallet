@@ -299,16 +299,26 @@ public class Application extends android.app.Application {
 
     private static String headBlockNumber(String json) {
 
-        int start = json.lastIndexOf(context.getString(R.string.head_block_number));
-        int length = 19;
-        start = start + length;
-        int end = start;
-        for (; end < json.length(); end++) {
-            if (json.substring(end, end + 1).equals(",")) {
-                break;
+        String result = "";
+        if ( json.contains(context.getString(R.string.head_block_number)) )
+        {
+            int start = json.lastIndexOf(context.getString(R.string.head_block_number));
+            int length = 19;
+            start = start + length;
+            int end = start;
+            for (; end < json.length(); end++) {
+                if (json.substring(end, end + 1).equals(",")) {
+                    break;
+                }
             }
+            result = "block# "+json.substring(start, end);
         }
-        return blockHead = "block# "+json.substring(start, end);
+        else
+        {
+            result = Application.blockHead;
+        }
+
+        return blockHead = result;
     }
 
     /*
