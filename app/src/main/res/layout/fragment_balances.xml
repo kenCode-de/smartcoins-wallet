@@ -36,9 +36,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:elevation="10dp"
-                    android:background="@drawable/rcvcircle">
+                    android:gravity="center">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -92,9 +90,7 @@
                 <LinearLayout
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:elevation="10dp"
-                    android:background="@drawable/sendcircle">
+                    android:layout_gravity="center">
                     <ImageView
                         android:id="@+id/sendbtn"
                         android:layout_width="match_parent"

@@ -74,10 +74,11 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         application.registerAccountObjectCallback(this);
         application.registerAssetObjectCallback(this);
         String block = getIntent().getStringExtra("block");
+        String trx = getIntent().getStringExtra("trx");
         receiver_id = getIntent().getStringExtra("receiver_id");
         sender_id = getIntent().getStringExtra("sender_id");
         getAccountObject();
-        getTransactionObject(block);
+        getTransactionObject(block,trx);
 
 
 
@@ -89,9 +90,9 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     }
     @OnClick(R.id.btnOk)
     void onOkPressed(){
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //startActivity(intent);
         finish();
     }
     public void getAccountObject() {
@@ -101,10 +102,10 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
             Application.webSocketG.send(params);
         }
     }
-    public void getTransactionObject(String block) {
+    public void getTransactionObject(String block, String trx) {
         if (Application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
-            String params = "{\"id\":12,\"method\":\"call\",\"params\":["+db_identifier+",\"get_transaction\",[\""+block+"\",0]]}";
+            String params = "{\"id\":12,\"method\":\"call\",\"params\":["+db_identifier+",\"get_transaction\",[\""+block+"\","+trx+"]]}";
             Application.webSocketG.send(params);
         }
     }
