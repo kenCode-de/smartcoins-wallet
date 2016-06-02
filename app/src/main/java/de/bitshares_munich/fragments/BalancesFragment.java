@@ -305,7 +305,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
         SupportMethods.testing("Assets","Assets views 1","Asset Activity");
-        ArrayList<AccountDetails> accountDetail = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
         for (int i = 0; i < ids.size(); i++) {
@@ -316,33 +315,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             accountAsset.symbol = sym.get(i);
             accountAsset.ammount = am.get(i);
 
-            SupportMethods.testing("Assets",accountAsset.id,"accountAsset.id");
+            // Log.i("uncle","aay1"+am.get(i));
 
             accountAssets.add(accountAsset);
         }
 
         SupportMethods.testing("Assets","Assets views 2","Asset Activity");
 
-       if(accountDetail.size()==1) {
-           accountDetail.get(0).isSelected = true;
-           accountDetail.get(0).AccountAssets = accountAssets;
-       } else {
-           try {
-               for (int i = 0; i < accountDetail.size(); i++) {
-                   if (accountDetail.get(i).isSelected) {
-                       accountDetail.get(i).AccountAssets = accountAssets;
-                       break;
-                   }
-               }
-           } catch (Exception w) {
-               SupportMethods.testing("Assets", w, "Asset Activity");
+//       if(accountDetails.size()==1) {
+//            accountDetails.get(0).isSelected = true;
+//            accountDetails.get(0).AccountAssets = accountAssets;
+//       } else {
+        try{
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                accountDetails.get(i).AccountAssets = accountAssets;
+                break;
+            }
+        }}catch (Exception w){
+            SupportMethods.testing("Assets",w,"Asset Activity");
 
-           }
-       }
+        }
         SupportMethods.testing("Assets","Assets views 3","Asset Activity");
 
 //       }
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetail);
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
 
         SupportMethods.testing("Assets","Assets views 4","Asset Activity");
 
