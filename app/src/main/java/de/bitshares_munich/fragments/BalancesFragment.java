@@ -489,9 +489,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                 progressBar.setVisibility(View.GONE);
                 tableViewparent.setVisibility(View.VISIBLE);
-                scrollViewBalances.fullScroll(View.FOCUS_UP);
-                scrollViewBalances.pageScroll(View.FOCUS_UP);
-            }
+
+//                        Handler ha = new Handler();
+//                        ha.postDelayed(new Runnable() {
+//                         @Override
+//                            public void run() {
+//                             scrollViewBalances.fullScroll(View.FOCUS_UP);
+//                             scrollViewBalances.pageScroll(View.FOCUS_UP);
+//                               }}, 30000);
+                      }
         });
     }
 
@@ -580,7 +586,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
             }
         }catch (Exception e){
-            SupportMethods.testing("getLifetime",getContext().getString(R.string.life_time_validation_date),"s");
+            SupportMethods.testing("getLifetime",e,"Exception");
 
         }
 
