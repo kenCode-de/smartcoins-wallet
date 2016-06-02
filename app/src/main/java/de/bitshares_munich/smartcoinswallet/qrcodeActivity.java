@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.*;
+import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.utils.SupportMethods;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -182,6 +183,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
 
     private void finishWithResult(String parseddata) {
         Bundle conData = new Bundle();
+        SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent();
         intent.putExtras(conData);
@@ -190,6 +192,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
     }
     private void StartWithfinishWithResult(String parseddata) {
         Bundle conData = new Bundle();
+        SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent(qrcodeActivity.this, SendScreen.class);
         intent.putExtras(conData);
@@ -211,6 +214,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
                 try {
                     byte[] bytes = timeline;
                     String s = new String(bytes);
+                    saveMerchantEmail(s);
                     Log.i("euro", s);
                     if (id==0) {
                         finishWithResult(s);
@@ -236,6 +240,21 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
             }
         });
 
+    }
+    public void saveMerchantEmail(String string){
+        String json = SupportMethods.ParseJsonObject(string,"json");
+        String accountName = SupportMethods.ParseJsonObject(json,"to");
+        String note = SupportMethods.ParseJsonObject(json,"note");
+        if(!note.equals("")) {
+            String email = note.replace("merchant_email:\"", "");
+            if(email.length()>0) {
+                email = email.substring(0, email.length() - 1);
+                if(SupportMethods.isEmailValid(email)) {
+                    MerchantEmail merchantEmail = new MerchantEmail(getApplicationContext());
+                    merchantEmail.saveMerchantEmail(accountName, email);
+                }
+            }
+        }
     }
 
 }
