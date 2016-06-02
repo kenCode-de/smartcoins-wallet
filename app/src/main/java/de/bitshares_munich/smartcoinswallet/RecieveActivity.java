@@ -305,7 +305,7 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("trx",transactions[0].trx);
                         intent.putExtra("receiver_id",transactions[0].account_id);
                         intent.putExtra("sender_id",transactions[0].sender_id);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     } else {
