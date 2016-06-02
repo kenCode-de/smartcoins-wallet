@@ -41,7 +41,6 @@ public class RequestActivity extends BaseActivity {
         }
         if (intent.hasExtra(getString(R.string.account_id))) {
             account_id = intent.getStringExtra(getString(R.string.account_id));
-
         }
     }
 
@@ -52,6 +51,12 @@ public class RequestActivity extends BaseActivity {
 
     @OnClick(R.id.tvCancel)
     void cancel() {
+        Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+        //intent.putExtra(getString(R.string.price), "");
+        intent.putExtra(getString(R.string.currency), popwin.getText().toString());
+        intent.putExtra(getString(R.string.to), to);
+        intent.putExtra(getString(R.string.account_id), account_id);
+        startActivity(intent);
         finish();
     }
 
@@ -74,6 +79,7 @@ public class RequestActivity extends BaseActivity {
             intent.putExtra(getString(R.string.to), to);
             intent.putExtra(getString(R.string.account_id), account_id);
             startActivity(intent);
+            finish();
         }
     }
 

@@ -93,19 +93,9 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     }
     @Override
     public void OnUpdate(String s,int id){
-//        contactslist.destroyDrawingCache();
-//        contactslist.setVisibility(ListView.INVISIBLE);
-//        contactslist.setVisibility(ListView.VISIBLE);
-//        adapter.clear();
-      adapter.loadmore();
-//        adapter = new ListViewActivity(getActivity());
-//        adapter.clear();
-//// Add data to collection..
-//        collection.add();
-//// Refresh your listview..
-//        listview.getAdapter().notifyDataSetChanged();
+        adapter.loadmore();
         adapter = new ListViewActivity(getActivity());
-      contactslist.setAdapter(adapter);
+        contactslist.setAdapter(adapter);
     }
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
@@ -123,8 +113,6 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         super.setUserVisibleHint(visible);
         if (visible){
             addcontact.setVisibility(View.INVISIBLE);
-//            sharecontact.setVisibility(View.INVISIBLE);
-
             final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.animation);
             animationRigthtoLeft.setInterpolator(new AccelerateDecelerateInterpolator());
             animationRigthtoLeft.setDuration(333);
@@ -134,12 +122,6 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
                     addcontact.setVisibility(View.VISIBLE);
                 }
             }, 333);
-//            sharecontact.postDelayed(new Runnable() {
-//                public void run() {
-//                    sharecontact.startAnimation(animationRigthtoLeft);
-//                    sharecontact.setVisibility(View.VISIBLE);
-//                }
-//            }, 333);
         }
     }
 }

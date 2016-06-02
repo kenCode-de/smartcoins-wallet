@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -76,6 +77,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         context = this;
         tinyDB = new TinyDB(context);
         application.registerCallback(this);
+       this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         contactsDelegate = ContactsFragment.contactsDelegate;
         loadWebView(39, Helper.md5(""));
         SaveContact.setEnabled(false);
@@ -86,7 +89,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             if (res.containsKey("activity")) {
                 if(res.getInt("activity")==99999){
                     add = true;
-                    SaveContact.setText("Add");
+                    SaveContact.setText(R.string.add_contact);
                 }
             }else if(res.containsKey("id")) {
 
@@ -103,7 +106,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 Contactname.setText(contactname);
                 Accountname.setText(accountid);
                 Note.setText(note);
-                SaveContact.setText("Edit");
+                SaveContact.setText(R.string.edit_contact);
             }
 
            // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
@@ -140,6 +143,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     }
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
+        loadWebView(39, Helper.md5(Accountname.getText().toString()));
         if (Accountname.getText().length() > 0) {
             loadWebView(39, Helper.md5(Accountname.getText().toString()));
             myLowerCaseTimer.cancel();
@@ -183,6 +187,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+                loadWebView(39, Helper.md5(Accountname.getText().toString()));
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }

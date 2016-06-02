@@ -369,6 +369,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/etBackupAsset"
                         android:gravity="center"
+                        android:inputType="numberDecimal"
                         android:textAlignment="textEnd"
                         android:layout_marginRight="100sp"
                         />
@@ -383,6 +384,14 @@
                         android:id="@+id/tvBackupAsset"
                         />
                 </RelativeLayout>
+                <TextView
+                    android:text=""
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:gravity="right"
+                    android:id="@+id/tvBackupAssetBalanceValidate"
+                />
             </LinearLayout>
             <TextView
                 android:visibility="gone"
@@ -478,14 +487,7 @@
                     />
             </LinearLayout>
         </RelativeLayout>
-        <TextView
-            android:text=""
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:gravity="right"
-            android:id="@+id/tvBackupAssetBalanceValidate"
-        />
+
     </LinearLayout>
 
 

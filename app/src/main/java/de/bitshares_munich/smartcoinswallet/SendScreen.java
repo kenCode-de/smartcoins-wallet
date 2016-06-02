@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +65,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate;
     boolean alwaysDonate = false;
-    String backupAsset,receiverID,callbackURL;
+    String backupAsset, receiverID, callbackURL;
 
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
@@ -140,6 +140,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,9 +172,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
 
+
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
-        loadWebView(webviewFrom ,34 , Helper.md5(""));
-        webviewFrom.setVisibility(View.VISIBLE);
+        //loadWebView(webviewFrom ,34 , accountDetails.);
+        //webviewFrom.setVisibility(View.VISIBLE);
+        loadWebView(webviewTo, 34, Helper.md5(""));
         updateBlockNumberHead();
     }
 
@@ -195,12 +198,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         if (etReceiverAccount.getText().length() > 0) {
-            loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
             myAccountNameValidationTimer.start();
         }
+
+        loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
     }
 
     @OnTextChanged(R.id.etAmount)
@@ -209,15 +213,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     Boolean runningSpinerForFirstTime = true;
-    @OnItemSelected(R.id.spinnerFrom) void onItemSelected(int position) {
-        if ( !runningSpinerForFirstTime )
-        {
+
+    @OnItemSelected(R.id.spinnerFrom)
+    void onItemSelected(int position) {
+        if (!runningSpinerForFirstTime) {
             populateAssetsSpinner();
-        }
-        else
-        {
+        } else {
             this.runningSpinerForFirstTime = false;
         }
+
+        loadWebView(webviewFrom, 34, Helper.md5(spinnerFrom.getSelectedItem().toString()));
 
     }
 
@@ -420,31 +425,39 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setBackUpAsset() {
-        backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
-        if (backupAsset != null && !backupAsset.isEmpty()) {
-        /*    if (backupAsset.isEmpty()) {
+        try {
+            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
+
+            if (backupAsset.isEmpty()) {
                 backupAsset = "BTS";
-            }*/
+            }
             llBackupAsset.setVisibility(View.VISIBLE);
             tvBackupAsset.setText(backupAsset);
             getBackupAsset();
-            //getExchangeRate(200);
+            getExchangeRate(200);
+
+        } catch (Exception e) {
+            Log.d("setBackUpAsset", e.getMessage());
         }
     }
 
     private void getBackupAsset() {
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                    AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                    if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
-                        backupAssets = accountDetail.AccountAssets.get(j);
-                        break;
+        try {
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                        if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
+                            backupAssets = accountDetail.AccountAssets.get(j);
+                            break;
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            Log.d("getBackupAsset", e.getMessage());
         }
     }
 
@@ -474,7 +487,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         JSONObject resJson = new JSONObject(result);
         resJson = new JSONObject(resJson.get("json").toString());
         callbackURL = resJson.get("callback").toString();
-        if (!callbackURL.substring(callbackURL.length() - 1).equals("/")){
+        if (!callbackURL.substring(callbackURL.length() - 1).equals("/")) {
             callbackURL = callbackURL + "/";
         }
         etReceiverAccount.setText(resJson.get("to").toString());
@@ -545,20 +558,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void populateAssetsSpinner() {
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        List<String> spinnerArray = new ArrayList<String>();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                    selectedAccountAsset = accountDetail.AccountAssets.get(j);
-                    spinnerArray.add(selectedAccountAsset.symbol);
+        try {
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            List<String> spinnerArray = new ArrayList<String>();
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                        selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                        spinnerArray.add(selectedAccountAsset.symbol);
+                    }
                 }
             }
+            createSpinner(spinnerArray, spAssets);
+        } catch (Exception e) {
         }
-        createSpinner(spinnerArray, spAssets);
-
-
     }
 
     void setSpinner() {
@@ -654,8 +668,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                             getTrxBlock();
                         }
                         if (!isFinishing()) {
-                            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                            //startActivity(intent);
                             finish();
                         }
                     } else {
@@ -813,23 +827,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
                     backupAssets.symbol, totalAmount.toString(), selectedAccountAsset.symbol));
         }
-
-
         tvTotalStatus.setVisibility(View.VISIBLE);
     }
 
-    public void getTrxBlock(){
+    public void getTrxBlock() {
         if (application.webSocketG.isOpen()) {
             String selectedAccountId = "";
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            for (int i=0; i<accountDetails.size(); i++){
+            for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)){
+                if (accountDetail.account_name.equals(selectedAccount)) {
                     selectedAccountId = accountDetail.account_id;
                 }
             }
-            int historyIdentifier = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
-            String params = "{\"id\":16,\"method\":\"call\",\"params\":["+historyIdentifier+",\"get_relative_account_history\",[\""+selectedAccountId+"\",0,10,0]]}";
+            int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+            String params = "{\"id\":16,\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
             application.webSocketG.send(params);
         }
     }
@@ -838,7 +850,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void relativeHistoryCallback(JSONObject msg) {
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
-            for (int i=0; i<2; i++) {
+            for (int i = 0; i < 2; i++) {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
                 JSONArray opArray = (JSONArray) jsonObject.get("op");
                 JSONObject operation = (JSONObject) opArray.get(1);
@@ -866,7 +878,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     break;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -879,16 +891,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private String prevBlockNumber = "";
     private int counterBlockCheck = 0;
 
-    private Boolean isBlockUpdated()
-    {
-        if ( Application.blockHead != prevBlockNumber )
-        {
+    private Boolean isBlockUpdated() {
+        if (Application.blockHead != prevBlockNumber) {
             prevBlockNumber = Application.blockHead;
             counterBlockCheck = 0;
             return true;
-        }
-        else if ( counterBlockCheck++ >= 30 )
-        {
+        } else if (counterBlockCheck++ >= 30) {
             return false;
         }
 
@@ -901,16 +909,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null)
-                {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
-                    {
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated())) {
                         boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
-                    }
-                    else
-                    {
+                    } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
@@ -923,7 +927,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @OnClick(R.id.OnClickSettings_send_screen_activity)
-    void OnClickSettings(){
+    void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }

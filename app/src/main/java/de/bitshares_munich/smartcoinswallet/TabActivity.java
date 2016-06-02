@@ -92,7 +92,7 @@ public class TabActivity extends BaseActivity {
             counterBlockCheck = 0;
             return true;
         }
-        else if ( counterBlockCheck++ >= 30 )
+        else if ( counterBlockCheck++ >= 3 )
         {
             return false;
         }
@@ -121,10 +121,14 @@ public class TabActivity extends BaseActivity {
                         Application.webSocketConnection();
                     }
                 }
-                handler.postDelayed(this, 2000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 5000);
     }
 
     @OnClick(R.id.OnClickSettings_TabActivity)
