@@ -808,7 +808,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             selectedAmount = "0";
         }
 
-        if (loyaltyAsset != null && backupAssets != null) {
+        if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
             if (count == 1) {
                 Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) / exchangeRate);
                 Double totalAmountBackupAssets = (Double.parseDouble(backupAssetAmount) / backAssetRate);
@@ -824,10 +824,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         , String.format("%.4f", total), selectedAccountAsset.symbol));
             }
             count++;
-        } else if (loyaltyAsset != null) {
+        } else if (loyaltyAsset != null && exchangeRate != null) {
             Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) / exchangeRate);
             tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, totalAmount.toString(), selectedAccountAsset.symbol));
-        } else if (backupAssets != null) {
+        } else if (backupAssets != null && backAssetRate != null) {
             Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) / backAssetRate);
             tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
                     selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
