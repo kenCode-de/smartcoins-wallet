@@ -246,26 +246,28 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_margin"
+                    android:weightSum="4"
+                    android:orientation="horizontal"
                     android:background="@drawable/edittext_background_layer"
                     >
                     <EditText
-                        android:layout_alignParentRight="true"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@null"
                         android:singleLine="true"
                         android:maxLines="1"
                         android:id="@+id/etAmount"
-                        android:gravity="center"
+                        android:gravity="center|right"
+                        android:paddingRight="5dp"
+                        android:layout_marginRight="10dp"
                         android:inputType="numberDecimal"
-                        android:textAlignment="textEnd"
-                        android:layout_weight="1"
+                        android:text=""
+                        android:layout_weight="3"
                         />
                     <Spinner
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:layout_toRightOf="@+id/etAmount"
+                        android:layout_weight="1"
                         android:id="@+id/spAssets"
                         >
                     </Spinner>
@@ -301,31 +303,37 @@
                     android:layout_height="@dimen/layout_margin"
                     android:background="@drawable/edittext_background_layer"
                     >
-                    <EditText
-                        android:layout_alignParentRight="true"
+                    <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin"
+                        android:weightSum="4"
+                        android:orientation="horizontal"
+                        android:background="@drawable/edittext_background_layer"
+                        >
+                    <EditText
+                        android:layout_width="0dp"
                         android:background="@null"
                         android:singleLine="true"
+                        android:layout_weight="3"
                         android:maxLines="1"
                         android:text=""
                         android:layout_height="match_parent"
                         android:id="@+id/etLoyalty"
                         android:inputType="numberDecimal"
-                        android:gravity="center"
-                        android:textAlignment="textEnd"
-                        android:layout_marginRight="100sp"
+                        android:gravity="center|right"
+                        android:paddingRight="5dp"
+                        android:layout_marginRight="10dp"
                         />
                     <TextView
-                        android:layout_alignParentRight="true"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:text=""
                         android:gravity="center"
                         android:textSize="17sp"
-                        android:layout_marginRight="7sp"
                         android:id="@+id/tvLoyalty"
                         />
-
+</LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
             <TextView
@@ -359,30 +367,37 @@
                     android:layout_height="@dimen/layout_margin"
                     android:background="@drawable/edittext_background_layer"
                     >
-                    <EditText
-                        android:layout_alignParentRight="true"
+                    <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin"
+                        android:weightSum="4"
+                        android:orientation="horizontal"
+                        android:background="@drawable/edittext_background_layer"
+                        >
+                    <EditText
+                        android:layout_width="0dp"
                         android:background="@null"
                         android:singleLine="true"
                         android:maxLines="1"
+                        android:layout_weight="3"
                         android:text=""
                         android:layout_height="match_parent"
                         android:id="@+id/etBackupAsset"
-                        android:gravity="center"
                         android:inputType="numberDecimal"
-                        android:textAlignment="textEnd"
-                        android:layout_marginRight="100sp"
+                        android:gravity="center|right"
+                        android:paddingRight="5dp"
+                        android:layout_marginRight="10dp"
                         />
                     <TextView
-                        android:layout_alignParentRight="true"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="match_parent"
                         android:text="BTS"
                         android:gravity="center"
                         android:textSize="17sp"
-                        android:layout_marginRight="7sp"
                         android:id="@+id/tvBackupAsset"
                         />
+                    </LinearLayout>
                 </RelativeLayout>
                 <TextView
                     android:text=""
@@ -442,6 +457,7 @@
                         android:id="@+id/etMemo"
                         android:gravity="left"
                         android:textSize="15sp"
+
                         />
                 </RelativeLayout>
             </LinearLayout>
@@ -461,30 +477,34 @@
                 android:orientation="horizontal"
                 android:clickable="true"
                 android:id="@+id/btnSend"
+                android:weightSum="4"
                 android:layout_below="@id/cbAlwaysDonate"
                 >
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="SEND"
                     android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_weight="1"
+                    android:gravity="center|right"
+                    android:layout_weight="2"
                     android:textColor="#fff"
                     android:textSize="17sp"
+                    android:paddingRight="10dp"
                     />
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/sendicon"
-                    android:gravity="center"
+                    android:src="@mipmap/icon_send"
+                    android:gravity="left|center"
                     android:layout_weight="1"
                     />
-                <TextView
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:gravity="left|center"
                     android:layout_weight="1"
                     />
+
             </LinearLayout>
         </RelativeLayout>
 
