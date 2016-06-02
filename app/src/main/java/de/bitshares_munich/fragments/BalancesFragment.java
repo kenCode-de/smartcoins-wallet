@@ -54,7 +54,7 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
  */
 public class BalancesFragment extends Fragment implements AssetDelegate {
     Application application = new Application();
-    ArrayList<AccountDetails> accountDetails;
+    //private static ArrayList<AccountDetails> accountDetails;
     int accountDetailsId;
     String accountId = "";
 
@@ -304,6 +304,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         SupportMethods.testing("Assets","Assets views 1","Asset Activity");
 
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
@@ -566,6 +567,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
     @Override
     public void getLifetime(String s,int id){
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         String result = SupportMethods.ParseJsonObject(s,"result");
         String nameObject = SupportMethods.ParseObjectFromJsonArray(result,0);
         String expiration = SupportMethods.ParseJsonObject(nameObject,"membership_expiration_date");
@@ -576,7 +578,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             Date date2 = dateFormat.parse("1969-12-31T23:59:59");
             if (date2.after(date1)) {
                 SupportMethods.testing("getLifetime","true","s");
-                accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                //accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                 if(accountDetails.size()>accountDetailsId) accountDetails.get(accountDetailsId).isLifeTime = true;
                 else if(accountDetails.size() == 1) {
                     accountDetails.get(0).isLifeTime = true;
@@ -674,13 +676,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //            }}, 30000);
     }
     void loadBasic(){
-
-        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
+            accountDetailsId = 0;
             accountDetails.get(0).isSelected = true;
             to = accountDetails.get(0).account_name;
             accountId = accountDetails.get(0).account_id;
             wifkey = accountDetails.get(0).wif_key;
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         } else {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
@@ -696,9 +700,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tv_account_name.setText(to);
         isLifeTime(accountId,"15");
         get_full_accounts(accountId,"17");
+
         loadViews();
     }
     Boolean checkIfAccountNameChange(){
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         String checkAccountName="";
         if (accountDetails.size() == 1) {

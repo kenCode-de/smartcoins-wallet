@@ -285,6 +285,7 @@ public class RecieveActivity extends BaseActivity {
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
         startActivity(intent);
+        finish();
     }
 
     public void callIPNSmartCoins(final Activity activity) {
@@ -303,6 +304,7 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("sender_id",transactions[0].sender_id);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
                     } else {
                         if (!isFinishing()) {
                             Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
