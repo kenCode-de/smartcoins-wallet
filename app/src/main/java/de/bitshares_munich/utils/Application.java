@@ -220,7 +220,7 @@ public class Application extends android.app.Application {
                                 if (jsonArray.length() != 0) {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
-                                iExchangeRate.callback_exchange_rate(obj);
+                                iExchangeRate.callback_exchange_rate(obj,id);
                             } else if (id == 8) {
                                 if (iBalancesDelegate != null) {
                                     iBalancesDelegate.OnUpdate(s, id);
