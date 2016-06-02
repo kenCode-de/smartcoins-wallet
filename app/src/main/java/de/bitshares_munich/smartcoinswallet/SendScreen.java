@@ -627,7 +627,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     TransferResponse resp = response.body();
                     if (resp.status.equals("success")) {
                         if (callbackURL != null) {
-                            getTrxBlock();
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getTrxBlock();
+                                }
+                            }, 5000);
                         }
                         if (!isFinishing()) {
                             //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
@@ -776,32 +782,36 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void relativeHistoryCallback(JSONObject msg) {
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
+            boolean found = false;
             for (int i=0; i<2; i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                JSONArray opArray = (JSONArray) jsonObject.get("op");
-                JSONObject operation = (JSONObject) opArray.get(1);
-                if (operation.get("to").toString().equals(receiverID)) {
-                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
-                    IWebService service = sg.getService(IWebService.class);
-                    final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
-                    postingService.enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Response<Void> response) {
-                            if (response.isSuccess()) {
+                if (!found) {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    JSONArray opArray = (JSONArray) jsonObject.get("op");
+                    JSONObject operation = (JSONObject) opArray.get(1);
+                    if (operation.get("to").toString().equals(receiverID)) {
+                        found = true;
+                        ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                        IWebService service = sg.getService(IWebService.class);
+                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+                        postingService.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Response<Void> response) {
+                                if (response.isSuccess()) {
 
-                            } else {
+                                } else {
 //                            Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
 
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
+                            @Override
+                            public void onFailure(Throwable t) {
 //                if (progressDialog.isShowing())
 //                    progressDialog.dismiss();
-                        }
-                    });
-                    break;
+                            }
+                        });
+                        break;
+                    }
                 }
             }
         }catch (Exception e){
