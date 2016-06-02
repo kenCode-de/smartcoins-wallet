@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/24/16.
@@ -196,5 +198,18 @@ public class SupportMethods {
 
         // return out final image
         return bmOut;
+    }
+    public static boolean isEmailValid(String emailAddress) {
+        boolean isValid = false;
+
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        CharSequence inputStr = new String(emailAddress);
+
+        Pattern pattern = Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
     }
 }

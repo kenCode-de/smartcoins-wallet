@@ -138,6 +138,7 @@ public class RecieveActivity extends BaseActivity {
         hm.put("fee", 0);
         hm.put("symbol", currency);
         hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId + "/");
+//        hm.put("note","merchant_email:\"abc@live.com\"");
         getQrHashKey(this, hm);
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
@@ -231,6 +232,7 @@ public class RecieveActivity extends BaseActivity {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.qr_hash_url));
         IWebService service = sg.getService(IWebService.class);
+//        final Call<QrHash> postingService = service.getQrHashWithNote(hashMap);
         final Call<QrHash> postingService = service.getQrHash(hashMap);
         postingService.enqueue(new Callback<QrHash>() {
             @Override
@@ -303,7 +305,7 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("trx",transactions[0].trx);
                         intent.putExtra("receiver_id",transactions[0].account_id);
                         intent.putExtra("sender_id",transactions[0].sender_id);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     } else {

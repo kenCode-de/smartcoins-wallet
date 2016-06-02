@@ -27,6 +27,10 @@ public interface IWebService {
     @POST("/get_qr_hash/")
     Call<QrHash> getQrHash(@Body Map<String, String> params);
 
+    @Headers({"Content-Type: application/json"})
+    @POST("/get_qr_hash_w_note/")
+    Call<QrHash> getQrHashWithNote(@Body Map<String, String> params);
+
     @GET("/get_transactions/{accountId}/{orderId}")
     Call<TransactionSmartCoin[]> getTransactionSmartCoin(@Path("accountId") String accountId, @Path("orderId") String orderId);
 
