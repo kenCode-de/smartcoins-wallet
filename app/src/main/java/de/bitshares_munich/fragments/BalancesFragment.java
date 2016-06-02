@@ -220,8 +220,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
-        if(checkIfAccountNameChange()){loadBasic();}
+        //recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        //sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
+        if(checkIfAccountNameChange()){loadBasic();}
 //        tableViewparent.setVisibility(View.GONE);
 //        load_more_values.setVisibility(View.GONE);
         //for(int i=0;i<3;i++){
