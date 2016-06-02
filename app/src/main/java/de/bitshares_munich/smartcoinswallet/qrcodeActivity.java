@@ -60,6 +60,9 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
     public void onCreate(Bundle state) {
         super.onCreate(state);
         verifyCameraPermissions(this);
+
+        setBackButton(true);
+
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
         SupportMethods.testing("qrcode",id,"od");

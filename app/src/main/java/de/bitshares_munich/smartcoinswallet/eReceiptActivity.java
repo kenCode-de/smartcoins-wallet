@@ -63,7 +63,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceiptActivity extends Activity implements BalancesDelegate {
+public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     Context context;
     Application application = new Application();
 
@@ -119,21 +119,30 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_e_receipt);
         ButterKnife.bind(this);
+
         context = getApplicationContext();
         application.registerBalancesDelegate(this);
+
         Intent intent = getIntent();
         String eReciept = intent.getStringExtra(getResources().getString(R.string.e_receipt));
         memoMsg = intent.getStringExtra("Memo");
         date = intent.getStringExtra("Date");
         to = intent.getStringExtra("To");
         from = intent.getStringExtra("From");
-        if(intent.getBooleanExtra("Sent",false)){
+
+        if(intent.getBooleanExtra("Sent",false))
+        {
             email = get_email(to);
-        }else email = get_email(from);
-//        email = "fawaz_ahmed@live.com";
+        }
+        else
+            email = get_email(from);
+
         init(eReciept);
+
+        setBackButton(true);
     }
 
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -142,6 +151,7 @@ public class eReceiptActivity extends Activity implements BalancesDelegate {
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @Override
     public void OnUpdate(String s,int id) {

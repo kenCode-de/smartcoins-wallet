@@ -6,6 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import butterknife.Bind;
@@ -27,6 +31,11 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     ListView contactslist;
     ListViewActivity adapter;
 
+    @Bind(R.id.sharecontact)
+    ImageView sharecontact;
+
+    @Bind(R.id.addcontact)
+    ImageView addcontact;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -51,6 +60,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
         contactsDelegate=this;
+
 
         adapter = new ListViewActivity(getActivity());
         contactslist.setAdapter(adapter);
@@ -101,5 +111,35 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     public void ShareContact() {
         Intent intent = new Intent(getActivity(), ShareContact.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+    @Override
+    public void setUserVisibleHint(boolean visible){
+        super.setUserVisibleHint(visible);
+        if (visible){
+            addcontact.setVisibility(View.INVISIBLE);
+//            sharecontact.setVisibility(View.INVISIBLE);
+
+            final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.animation);
+            animationRigthtoLeft.setInterpolator(new AccelerateDecelerateInterpolator());
+            animationRigthtoLeft.setDuration(333);
+            addcontact.postDelayed(new Runnable() {
+                public void run() {
+                    addcontact.startAnimation(animationRigthtoLeft);
+                    addcontact.setVisibility(View.VISIBLE);
+                }
+            }, 333);
+//            sharecontact.postDelayed(new Runnable() {
+//                public void run() {
+//                    sharecontact.startAnimation(animationRigthtoLeft);
+//                    sharecontact.setVisibility(View.VISIBLE);
+//                }
+//            }, 333);
+        }
     }
 }

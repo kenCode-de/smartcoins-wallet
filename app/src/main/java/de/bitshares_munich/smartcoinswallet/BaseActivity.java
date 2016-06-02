@@ -20,7 +20,7 @@ import de.bitshares_munich.utils.Helper;
  */
 public class BaseActivity extends AppCompatActivity {
 
-    public static final long DISCONNECT_TIMEOUT = 10000*3*60;
+    public static final long DISCONNECT_TIMEOUT = (3*60*1000);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void setBackButton(Boolean isBackButton) {
+    public void setBackButton(Boolean isBackButton) {
         if (isBackButton) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

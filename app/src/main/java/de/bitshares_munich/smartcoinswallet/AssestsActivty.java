@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.utils.SupportMethods;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
@@ -35,6 +36,8 @@ public class AssestsActivty  implements BalancesDelegate {
         ammount = new ArrayList<>();
         balancesLoad = new BalancesLoad(context,this);
         assetDelegate = instance;
+        SupportMethods.testing("Assets","Assets loading starts","Asset Activity");
+
         balancesLoad.get_json_account_balances(account_name,"999");
     }
 
@@ -64,7 +67,6 @@ public class AssestsActivty  implements BalancesDelegate {
                 String n = (String) it.next();
                 if(n.equals("amount")){
                   ammount.add(j.getString(n));
-                    Log.i("chama","212");
                 }
                 if(n.equals("asset_id")){
                     array.add(j.getString(n));
@@ -96,7 +98,6 @@ public class AssestsActivty  implements BalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id){
-        Log.i("uncle",s);
         String convert;
         try {
             if (id == 999) {
@@ -112,7 +113,6 @@ public class AssestsActivty  implements BalancesDelegate {
         if(id==99) {
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
-                Log.i("uncle","actiooi");
                 ids = returnRootValues(result,"id");
                 precisons = returnRootValues(result, "precision");
                 symbols = returnRootValues(result, "symbol");
@@ -172,6 +172,7 @@ public class AssestsActivty  implements BalancesDelegate {
         return  pairs.get(key);
     }
     void AddinAssets() {
+        SupportMethods.testing("Assets","Assets loading complete","Asset Activity");
         assetDelegate.isUpdate(ids,symbols,precisons,ammount);
     }
 }

@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
@@ -34,6 +38,15 @@ public class BrainkeyActivity extends BaseActivity {
     @Bind(R.id.etBrainKey)
     EditText etBrainKey;
 
+    @Bind(R.id.tvBlockNumberHead_brain_key_activity)
+    TextView tvBlockNumberHead;
+
+    @Bind(R.id.tvAppVersion_brain_key_activity)
+    TextView tvAppVersion;
+
+    @Bind(R.id.ivSocketConnected_brain_key_activity)
+    ImageView ivSocketConnected;
+
     ProgressDialog progressDialog;
     TinyDB tinyDB;
 
@@ -45,6 +58,9 @@ public class BrainkeyActivity extends BaseActivity {
         setBackButton(true);
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
+
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        updateBlockNumberHead();
     }
 
     @OnClick(R.id.btnCancel)
@@ -140,6 +156,54 @@ public class BrainkeyActivity extends BaseActivity {
         }
 
     }
+
+
+    // Blocks Updation
+    private String prevBlockNumber = "";
+    private int counterBlockCheck = 0;
+
+    private Boolean isBlockUpdated()
+    {
+        if ( Application.blockHead != prevBlockNumber )
+        {
+            prevBlockNumber = Application.blockHead;
+            counterBlockCheck = 0;
+            return true;
+        }
+        else if ( counterBlockCheck++ >= 30 )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void updateBlockNumberHead() {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                        tvBlockNumberHead.setText(Application.blockHead);
+                    }
+                    else
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Application.webSocketG.close();
+                        Application.webSocketConnection();
+                    }
+                }
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(updateTask, 2000);
+    }
+    /////////////////
 
 
 }

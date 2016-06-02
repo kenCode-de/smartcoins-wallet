@@ -29,6 +29,9 @@ public class RequestActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_screen);
         ButterKnife.bind(this);
+
+        setBackButton(true);
+
         Intent intent = getIntent();
 
 
