@@ -253,7 +253,7 @@ public class Application extends android.app.Application {
                                 if (iAssetDelegate != null) {
                                     iAssetDelegate.getLifetime(s, id);
                                 }
-                            } else if (id == 16) {
+                            } else if (id == 160 || id == 161) {
                                 if (iRelativeHistory != null) {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }

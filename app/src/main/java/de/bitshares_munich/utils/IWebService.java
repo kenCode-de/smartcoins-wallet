@@ -5,6 +5,7 @@ import java.util.Map;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.DecodeMemo;
 import de.bitshares_munich.models.QrHash;
+import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.models.TransferResponse;
 import retrofit2.Call;
@@ -44,5 +45,9 @@ public interface IWebService {
 
     @GET
     Call<Void> sendCallback(@Url String urlSubString, @Query("block") String block, @Query("trx") String trx);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<TradeResponse> getTradeResponse(@Body Map<String, String> params);
 
 }
