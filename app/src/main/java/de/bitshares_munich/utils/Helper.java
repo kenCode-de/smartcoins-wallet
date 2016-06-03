@@ -372,4 +372,13 @@ public class Helper {
         }
     }
 
+    public static String padString(String str){
+        if (str == null || str.isEmpty()){
+            return "0";
+        }else if (str.equals(".")){
+            return "0.";
+        }
+        return str;
+    }
+
 }
