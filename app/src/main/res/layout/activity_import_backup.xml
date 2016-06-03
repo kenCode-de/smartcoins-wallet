@@ -8,12 +8,12 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 android:orientation="vertical"
-                tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
+                >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Import Backup"
+        android:text="@string/import_backup"
         android:textSize="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="3dp"
@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose Backup"
+        android:text="@string/choose_backup"
         android:layout_marginLeft="3dp"
         android:layout_marginTop="30dp"/>
     <LinearLayout
@@ -35,12 +35,12 @@
             android:layout_height="30dp"
             android:textAllCaps="false"
             android:background="@drawable/edittext_bg"
-            android:text="Choose File"/>
+            android:text="@string/choose_file"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
-            android:text="No file chosen"/>
+            android:text="@string/no_file_chosen"/>
     </LinearLayout>
 
 </LinearLayout>

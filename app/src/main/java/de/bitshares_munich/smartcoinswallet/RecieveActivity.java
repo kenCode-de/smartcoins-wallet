@@ -94,7 +94,7 @@ public class RecieveActivity extends BaseActivity {
         //getActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressDialog = new ProgressDialog(this);
-        showDialog("", "Loading...");
+        showDialog("", this.getString(R.string.loading));
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
@@ -102,7 +102,8 @@ public class RecieveActivity extends BaseActivity {
 
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
-            tvUsername.setText("Pay to: " + to);
+            String concate = this.getString(R.string.pay_to) + to;
+            tvUsername.setText(concate);
 
         }
         if (intent.hasExtra(getString(R.string.account_id))) {
@@ -124,7 +125,8 @@ public class RecieveActivity extends BaseActivity {
         if (price.isEmpty()) {
             notfound.setText(getString(R.string.no_amount_requested));
         } else {
-            notfound.setText("Amount: " + price + " " + currency + " requested");
+            String concate = this.getString(R.string.amount) + ": " +  price + " " + currency + " " + this.getString(R.string.requested);
+            notfound.setText(concate);
 
         }
 
@@ -178,7 +180,7 @@ public class RecieveActivity extends BaseActivity {
             sharingIntent.setData(uri);
             sharingIntent.setType("image/png");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(sharingIntent, "Share QR Code"));
+            startActivity(Intent.createChooser(sharingIntent, this.getString(R.string.share_qr_code)));
         } catch (Exception e) {
 
         }

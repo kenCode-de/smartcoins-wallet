@@ -187,7 +187,7 @@ public class SupportMethods {
         Bitmap bmAlpha = src.extractAlpha(ptBlur, offsetXY);
         // create a color paint
         Paint ptAlphaColor = new Paint();
-        ptAlphaColor.setColor(Color.BLACK);
+        ptAlphaColor.setColor(Color.GRAY);
         // paint color for captured alpha region (bitmap)
         canvas.drawBitmap(bmAlpha, offsetXY[0], offsetXY[1], ptAlphaColor);
         // free memory

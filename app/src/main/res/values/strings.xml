@@ -13,6 +13,18 @@
     <string name="options">options</string>
     <string name="account_create_register_or_import">ACCOUNT CREATE/REGISTER OR IMPORT</string>
     <string name="txt_account_name">Account Name</string>
+    <string name="time_stamp">Time stamp</string>
+    <string name="email_pdf">Email PDF</string>
+
+    <string name="import_brainkey">Import from BrainKey</string>
+    <string name="import_backup">Import Backup</string>
+    <string name="choose_backup">Choose Backup</string>
+    <string name="choose_file">Choose File</string>
+    <string name="no_file_chosen">No file chosen</string>
+
+    <string name="account_label">Choose File</string>
+    <string name="loading_msg">Please wait until Balances are loading</string>
+
     <string name="txt_6_digits_pin">6-digits PIN</string>
     <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
     <string name="create">CREATE</string>
@@ -152,6 +164,7 @@
     <string name="share_heading">Share with a friend</string>
     <string name="share_btn_text">OPEN EMAIL APPLICATION</string>
     <string name="action_settings">Settings</string>
+
     <string name="txt_validating_account">Validating account...</string>
     <string name="validating_account">Validating Account...</string>
     <string name="account_name_should_be_longer">Account name should be longer</string>
@@ -159,6 +172,7 @@
     <string name="account_name_not_exist">Account Name %s does not exist</string>
     <string name="add_contact">Add</string>
     <string name="edit_contact">Edit</string>
+    <string name="empty_list">Contact list is Empty</string>
 
     <string name="account_name_validate">Account name is valid</string>
     <string name="head_block_number">head_block_number</string>
@@ -181,6 +195,39 @@
     <string name="no_amount_requested">No amount requested</string>
 
     <string name="to">to</string>
+    <string name="from">from</string>
+    <string name="memo">memo</string>
+    <string name="to_capital">To</string>
+    <string name="from_capital">From</string>
+    <string name="memo_capital">Memo</string>
+    <string name="empty_file_created">Empty File Created</string>
+    <string name="date">Date</string>
+    <string name="all">All</string>
+    <string name="to_from">To/From</string>
+    <string name="amount">Amount</string>
+    <string name="pdf_generated_msg">PDF generated and saved : </string>
+    <string name="pdf_generated_msg_error">Unable to generate pdf. Please retry. Error : </string>
+    <string name="raw_transactions">Raw Transaction : </string>
+    <string name="extensions">Extensions</string>
+    <string name="op_in_trx">op_in_trx</string>
+    <string name="virtual_op">virtual_op</string>
+    <string name="operation_results">operation_results</string>
+    <string name="sent_rcv">Sent/Received</string>
+    <string name="details">Details</string>
+    <string name="share_qr_code">Share QR Code</string>
+    <string name="done">Done</string>
+
+    <string name="id_s">id</string>
+    <string name="time">time</string>
+    <string name="operations">operations</string>
+    <string name="trx_in_block">trx_in_block</string>
+    <string name="symbol">symbol</string>
+    <string name="fee">fee</string>
+    <string name="loading">Loading...</string>
+    <string name="pay_to">Pay to : </string>
+
+    <string name="requested">requested</string>
+
     <string name="account_id">accountId</string>
     <string name="account_name">account_name</string>
 

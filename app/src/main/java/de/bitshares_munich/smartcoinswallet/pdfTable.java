@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -90,7 +91,7 @@ public class pdfTable {
             FileWriter writer = new FileWriter(gpxfile);
             writer.flush();
             writer.close();
-            Toast.makeText(myContext, "Empty File Created @ " + path, Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,10 +113,10 @@ public class pdfTable {
 
             PdfPTable table = new PdfPTable(4); // 3 columns.
 
-            PdfPCell cell1 = new PdfPCell(new Paragraph("Date"));
-            PdfPCell cell2 = new PdfPCell(new Paragraph("Sent/Received"));
-            PdfPCell cell3 = new PdfPCell(new Paragraph("Details"));
-            PdfPCell cell4 = new PdfPCell(new Paragraph("Amount"));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(myContext.getString(R.string.date)));
+            PdfPCell cell2 = new PdfPCell(new Paragraph(myContext.getString(R.string.sent_rcv)));
+            PdfPCell cell3 = new PdfPCell(new Paragraph(myContext.getString(R.string.details)));
+            PdfPCell cell4 = new PdfPCell(new Paragraph(myContext.getString(R.string.amount)));
 
             table.addCell(cell1);
             table.addCell(cell2);
@@ -160,7 +161,13 @@ public class pdfTable {
                     //return;
                 }
 
-                String detailsText = String.format("To: %s\nFrom: %s\nMemo: %s",td.getDetailsTo(),td.getDetailsFrom(),td.getDetailsMemo());
+                String from = myContext.getString(R.string.from_capital);
+                String to = myContext.getString(R.string.to_capital);
+                String memo = myContext.getString(R.string.memo_capital);
+
+
+                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s",td.getDetailsTo(),td.getDetailsFrom(),td.getDetailsMemo());
+
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);
 
@@ -181,11 +188,10 @@ public class pdfTable {
 
             document.add(table);
             document.close();
-            Toast.makeText(myContext, "PDF generated and saved @ " + filePath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_SHORT).show();
         }
         catch(Exception e){
-            Log.d("pdfException",e.getMessage());
-            Toast.makeText(myContext, "Unable to generate pdf. Please retry. Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
 
         }
     }
@@ -205,7 +211,6 @@ public class pdfTable {
             if(imageView!=null) {
                 try {
                     PdfPTable table1 = new PdfPTable(1); // 2 columns.
-                    PdfPCell cell1 = new PdfPCell(new Paragraph("Raw Transaction : "));
                     imageView.buildDrawingCache();
                     Bitmap bitmap = imageView.getDrawingCache();
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -224,35 +229,39 @@ public class pdfTable {
                 }
             }
             PdfPTable table = new PdfPTable(1); // 2 columns.
-            PdfPCell cell1 = new PdfPCell(new Paragraph("Raw Transaction : "));
+            PdfPCell cell1 = new PdfPCell(new Paragraph(myContext.getString(R.string.raw_transactions)));
             table.addCell(cell1);
             table.completeRow();
 
             document.add(table);
 
-            document.add(addforCell("id",map.get("id")));
-            document.add(addforCell("time",map.get("time")));
-            document.add(addforCell("trx_in_block",map.get("trx_in_block")));
-            document.add(addforCell("operations","----"));
-            String detailsFee = String.format("amount: %s\nsymbol: %s",map.get("amountFee"),map.get("symbolFee"));
-            document.add(addforCell("fee",detailsFee));
-            document.add(addforCell("from",map.get("from")));
-            document.add(addforCell("to",map.get("to")));
-            String detailsAmount = String.format("amount: %s\nsymbol: %s",map.get("amountAmount"),map.get("symbolAmount"));
-            document.add(addforCell("amount",detailsAmount));
-            document.add(addforCell("memo",map.get("memo")));
-            document.add(addforCell("extensions",map.get("extensions")));
-            document.add(addforCell("op_in_trx",map.get("op_in_trx")));
-            document.add(addforCell("virtual_op",map.get("virtual_op")));
-            document.add(addforCell("operation_results",map.get("operation_results")));
+            String amount = myContext.getString(R.string.amount);
+            String symbol = myContext.getString(R.string.symbol);
+
+
+            document.add(addforCell(myContext.getString(R.string.id_s),map.get("id")));
+            document.add(addforCell(myContext.getString(R.string.time),map.get("time")));
+            document.add(addforCell(myContext.getString(R.string.trx_in_block),map.get("trx_in_block")));
+            document.add(addforCell(myContext.getString(R.string.operations),"----"));
+            String detailsFee = String.format(""+amount+": %s\n"+symbol+"symbol: %s",map.get("amountFee"),map.get("symbolFee"));
+            document.add(addforCell(myContext.getString(R.string.fee),detailsFee));
+            document.add(addforCell(myContext.getString(R.string.from_capital),map.get("from")));
+            document.add(addforCell(myContext.getString(R.string.to_capital),map.get("to")));
+            String detailsAmount = String.format(""+amount+": %s\n"+symbol+"symbol: %s",map.get("amountAmount"),map.get("symbolAmount"));
+            document.add(addforCell(myContext.getString(R.string.amount),detailsAmount));
+            document.add(addforCell(myContext.getString(R.string.memo_capital),map.get("memo")));
+            document.add(addforCell(myContext.getString(R.string.extensions),map.get("extensions")));
+            document.add(addforCell(myContext.getString(R.string.op_in_trx),map.get("op_in_trx")));
+            document.add(addforCell(myContext.getString(R.string.virtual_op),map.get("virtual_op")));
+            document.add(addforCell(myContext.getString(R.string.operation_results),map.get("operation_results")));
 
 
             document.close();
 
             Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, "receiver_email_address");
-            email.putExtra(Intent.EXTRA_SUBJECT, "subject");
-            email.putExtra(Intent.EXTRA_TEXT, "email body");
+            email.putExtra(Intent.EXTRA_EMAIL, "---");
+            email.putExtra(Intent.EXTRA_SUBJECT, "---");
+            email.putExtra(Intent.EXTRA_TEXT, "---");
             Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");
@@ -260,8 +269,7 @@ public class pdfTable {
             myContext.startActivity(email);
         }
         catch(Exception e){
-            Log.d("pdfException",e.getMessage());
-            Toast.makeText(myContext, "Unable to generate pdf. Please retry. Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
 
         }
     }

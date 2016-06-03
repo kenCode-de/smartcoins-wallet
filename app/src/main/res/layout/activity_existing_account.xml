@@ -7,13 +7,12 @@
               android:paddingBottom="@dimen/activity_vertical_margin"
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
+              android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Import from BrainKey"
+        android:text="@string/import_brainkey"
         android:textColor="@color/colorPrimaryDark"
         android:layout_marginTop="50dp"
         android:id="@+id/tvImportBrainKey"
@@ -21,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Import Backup"
+        android:text="@string/import_backup"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="17dp"
         android:id="@+id/tvBackup"

@@ -1042,5 +1042,19 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
+    @OnClick(R.id.contactActivity)
+    void OnClickContactBtn(View view){
+            List<String> contactlist = new ArrayList<String>();
+
+            ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+            for (int i = 0; i < contacts.size(); i++) {
+                contactlist.add(contacts.get(i).GetAccount()+"::"+Integer.toString(i));
+            }
+
+        if(!contactlist.isEmpty()){
+        popUpwindow p = new popUpwindow(this, etReceiverAccount ,contactlist );
+        p.show(view);}
+        else Toast.makeText(context,R.string.empty_list,Toast.LENGTH_LONG).show();
+    }
     ///////
 }

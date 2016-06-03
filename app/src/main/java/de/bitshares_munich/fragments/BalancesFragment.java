@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -66,6 +67,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     //private static ArrayList<AccountDetails> accountDetails;
     int accountDetailsId;
     String accountId = "";
+
+    Boolean isLoading = false;
 
     Handler handler = new Handler();
     String to ="";
@@ -229,8 +232,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
-        recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+        recievebtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+        sendbtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
         qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
         if(checkIfAccountNameChange()){loadBasic();}
@@ -292,23 +295,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @OnClick(R.id.sendbtn)
     public void GoToSendActivity() {
+        if(isLoading){
         Intent intent = new Intent(getActivity(), SendScreen.class);
-        startActivity(intent);
+        startActivity(intent);}
+        else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.qrCamera)
     public void QrCodeActivity() {
+        if(isLoading){
         Intent intent = new Intent(getContext(), qrcodeActivity.class);
         intent.putExtra("id", 1);
-        startActivity(intent);
+        startActivity(intent);}
+        else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.exportButton)
     public void onExportButton() {
+        if(isLoading){
         TableDataAdapter myAdapter = tableView.getDataAdapter();
         List<TransactionDetails> det = myAdapter.getData();
         pdfTable myTable = new pdfTable(getContext(), getActivity(), "Transactions-scwall");
-        myTable.createTable(det);
+        myTable.createTable(det);}
+        else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -399,6 +408,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
                 progressBar1.setVisibility(View.INVISIBLE);
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
+                isLoading = true;
             }
         });
     }
@@ -414,7 +424,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     public void updateSortTableView(SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions) {
-        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), "Date", "All", "To/From", "Amount");
+        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all),getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         tableView.setHeaderAdapter(simpleTableHeaderAdapter);
 
@@ -502,7 +512,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                 progressBar.setVisibility(View.GONE);
                 tableViewparent.setVisibility(View.VISIBLE);
-
 //                        Handler ha = new Handler();
 //                        ha.postDelayed(new Runnable() {
 //                         @Override
@@ -685,7 +694,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //            }}, 30000);
     }
     void loadBasic(){
-
+        isLoading = false;
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         //accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 

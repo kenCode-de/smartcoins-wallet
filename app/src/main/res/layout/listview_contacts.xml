@@ -74,7 +74,7 @@
                 android:layout_height="match_parent"
                 android:text="Note:"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="left|center"
                 android:textSize="15sp"
                 />
             <TextView
@@ -83,7 +83,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/note_txt"
                 android:text="\t"
-                android:gravity="center_vertical" android:textSize="15sp"
+                android:gravity="left|center"
+                android:textSize="15sp"
                 />
         </LinearLayout>
     </LinearLayout>
