@@ -27,7 +27,7 @@
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="mismatch_pin">mismatch pin</string>
-    <string name="sharePref_account_name">account_name</string>
+
     <string name="txt_pin">pin</string>
     <string name="txt_brain_key">Brainkey</string>
     <string name="txt_brain_key_info">This Brainkey is not compatible with BTS 1.0 \n (Use a backup file instead)</string>
@@ -40,13 +40,9 @@
     <string name="receive_uppercase">RECEIVE</string>
     <string name="send_UpperCase">SEND</string>
     <string name="transactions">Transactions</string>
-    <string name="sharePref_database">database</string>
-    <string name="sharePref_network_broadcast">network_broadcast</string>
-    <string name="sharePref_history">history</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="backup_asset">Backup Asset</string>
     <string name="taxable_country">Taxable Country</string>
-    <string name="preferred_lang">Preferred Language</string>
     <string name="date_time">Display Dates and Times as</string>
     <string name="check_for_updates">Check for updates on startup</string>
     <string name="automatically_install">Automatically install major version</string>
@@ -165,6 +161,85 @@
     <string name="edit_contact">Edit</string>
 
     <string name="account_name_validate">Account name is valid</string>
+    <string name="head_block_number">head_block_number</string>
+    <string name="beta">""</string>
+    <string name="txt_no_internet_connection">No internet connection</string>
+
+    <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
+    </string>
+    <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
+    <string name="importing_your_wallet">Importing your wallet...</string>
+
+    <string name="str_trading_pair_not_exist">Trading pair does not exist</string>
+
+
+    <string name="unable_to_create_qr_code">Unable to generate Qr code</string>
+    <string name="price">price</string>
+    <string name="currency">currency</string>
+    <string name="please_enter_amount">Please enter amount</string>
+    <string name="amount_should_be_greater_than_zero">Amount should be greater than zero</string>
+    <string name="no_amount_requested">No amount requested</string>
+
+    <string name="to">to</string>
+    <string name="account_id">accountId</string>
+    <string name="account_name">account_name</string>
+
+    <string name="failed_transaction">Failed Transaction</string>
+
+
+    <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
+    <string name="str_balance_available">%1$s %2$s available</string>
+    <string name="str_invalid_amount">Please enter valid amount</string>
+    <string name="str_invalid_receiver">Please enter valid To account</string>
+    <string name="str_transaction_failed">Transaction Failed</string>
+
+    <string name="select_timezone">Select TimeZone</string>
+
+    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
+
+    <string name="e_receipt">e_receipt</string>
+
+    <string name="old_pin">Old 6-digits PIN</string>
+    <string name="pin_created_successfully">PIN created successfully</string>
+    <string name="edit_pin">Edit PIN</string>
+    <string name="txt_edit">SAVE</string>
+    <string name="create_pin">Create PIN</string>
+    <string name="pin_changed_successfully">PIN changed successfully</string>
+    <string name="incorrect_old_pin">Incorrect old PIN</string>
+
+    <string name="date_time_zone">dateTimeZone</string>
+    <string name="copy">Copy</string>
+
+    <string name="pin_verification">UNLOCKED</string>
+
+    // Screen Names
+    <string name="send_screen_name">Send</string>
+    <string name="rcv_screen_name">Receive</string>
+    <string name="request_amount_screen_name">Amount</string>
+    <string name="payment_rcvd_screen_name">Thankyou</string>
+    <string name="e_receipt_activity_name">e-Receipt</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="qr_code_activity_name">Scan QR</string>
+    <string name="share_account_activity_name">Share with friends</string>
+    <string name="add_contact_activity_name">Add Contact</string>
+    <string name="str_trade_not_available">Trade Not Available</string>
+
+    <string name="sharePref_database">database</string>
+    <string name="sharePref_network_broadcast">network_broadcast</string>
+    <string name="sharePref_history">history</string>
+    <string name="sharePref_account_name">account_name</string>
+    <string name="preferred_lang">Preferred Language</string>
+    <string name="pref_account_from_brainkey">account_from_brainkey</string>
+    <string name="pref_wallet_accounts">wallet_accounts</string>
+    <string name="pref_country">country</string>
+    <string name="pref_timezone">timezone</string>
+    <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_account_name">account_name</string>
+    <string name="pref_language">language</string>
+    <string name="pref_backup_symbol">backup_symbol</string>
+    <string name="pref_always_donate">always_donate</string>
+    <string name="pref_fade_currency">fade_currency</string>
+
     <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
     </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
@@ -182,80 +257,15 @@
         {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
     </string>
     <!--<string name="subscribe_callback_full_account">-->
-        <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
+    <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
     <!--</string>-->
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
     </string>
-    <string name="head_block_number">head_block_number</string>
-    <string name="beta">""</string>
-    <string name="txt_no_internet_connection">No internet connection</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
-    <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
-    </string>
-    <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
-    <string name="importing_your_wallet">Importing your wallet...</string>
-    <string name="pref_account_from_brainkey">account_from_brainkey</string>
-    <string name="str_trading_pair_not_exist">Trading pair does not exist</string>
-    <string name="pref_wallet_accounts">wallet_accounts</string>
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
-    <string name="unable_to_create_qr_code">Unable to generate Qr code</string>
-    <string name="price">price</string>
-    <string name="currency">currency</string>
-    <string name="please_enter_amount">Please enter amount</string>
-    <string name="amount_should_be_greater_than_zero">Amount should be greater than zero</string>
-    <string name="no_amount_requested">No amount requested</string>
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
-    <string name="to">to</string>
-    <string name="account_id">accountId</string>
-    <string name="account_name">account_name</string>
-
-    <string name="failed_transaction">Failed Transaction</string>
     <string name="node_server_url">http://188.166.147.110:8000</string>
-
-    <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
-    <string name="str_balance_available">%1$s %2$s available</string>
-    <string name="str_invalid_amount">Please enter valid amount</string>
-    <string name="str_invalid_receiver">Please enter valid To account</string>
-    <string name="str_transaction_failed">Transaction Failed</string>
-
-    <string name="select_timezone">Select TimeZone</string>
-
-    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
-
-    <string name="e_receipt">e_receipt</string>
-
-
-    <string name="pref_country">country</string>
-    <string name="pref_timezone">timezone</string>
-    <string name="pref_backup_asset">backup_asset</string>
-    <string name="pref_account_name">account_name</string>
-    <string name="pref_language">language</string>
-    <string name="old_pin">Old 6-digits PIN</string>
-    <string name="pin_created_successfully">PIN created successfully</string>
-    <string name="edit_pin">Edit PIN</string>
-    <string name="txt_edit">SAVE</string>
-    <string name="create_pin">Create PIN</string>
-    <string name="pin_changed_successfully">PIN changed successfully</string>
-    <string name="incorrect_old_pin">Incorrect old PIN</string>
-    <string name="pref_backup_symbol">backup_symbol</string>
-    <string name="date_time_zone">dateTimeZone</string>
-    <string name="copy">Copy</string>
-    <string name="pref_always_donate">always_donate</string>
-    <string name="pref_fade_currency">fade_currency</string>
-    <string name="pin_verification">UNLOCKED</string>
-
-    // Screen Names
-    <string name="send_screen_name">Send</string>
-    <string name="rcv_screen_name">Receive</string>
-    <string name="request_amount_screen_name">Amount</string>
-    <string name="payment_rcvd_screen_name">Thankyou</string>
-    <string name="e_receipt_activity_name">e-Receipt</string>
-    <string name="settings_activity_name">Settings</string>
-    <string name="qr_code_activity_name">Scan QR</string>
-    <string name="share_account_activity_name">Share with friends</string>
-    <string name="add_contact_activity_name">Add Contact</string>
-    <string name="str_trade_not_available">Trade Not Available</string>
 
 </resources>
