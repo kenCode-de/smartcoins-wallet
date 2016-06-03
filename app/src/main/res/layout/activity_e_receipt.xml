@@ -58,7 +58,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email PDF"
+            android:text="@string/email_pdf"
             android:id="@+id/buttonSend"
             android:layout_alignParentRight="true"
             />
@@ -88,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="id"
+            android:text="@string/id_s"
             android:textColor="@color/black"
             android:gravity="left|center"
             />
@@ -116,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="time stamp"
+            android:text="@string/time_stamp"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -145,7 +145,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="trx_in_block"
+            android:text="@string/trx_in_block"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -173,7 +173,7 @@
         android:layout_height="@dimen/layout_margin"
         android:gravity="left|center"
         android:textColor="@color/black"
-        android:text="operations"
+        android:text="@string/operations"
         android:id="@+id/tv_op_heading"
         />
     <LinearLayout
@@ -200,7 +200,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="op_in_trx"
+            android:text="@string/op_in_trx"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -228,7 +228,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="virtual_op"
+            android:text="@string/virtual_op"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -255,7 +255,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="operation_results"
+            android:text="@string/operation_results"
             android:gravity="left|center"
             android:textColor="@color/black"
             />

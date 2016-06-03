@@ -18,11 +18,14 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:background="@color/whiteColor"
             android:layout_height="match_parent">
             <LinearLayout
                 android:id="@+id/l1"
@@ -31,11 +34,14 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@color/whiteColor"
+                android:elevation="5dp"
                 android:weightSum="4">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
+                    android:paddingLeft="10dp"
                     android:text="@string/backup_asset"
                     android:textSize="13sp"/>
                 <LinearLayout
@@ -64,9 +70,11 @@
                 android:layout_below="@+id/l1"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:background="@color/whiteColor"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:weightSum="4">
-                <TextView
+                <TextView                     android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
@@ -99,8 +107,11 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@color/whiteColor"
+                android:elevation="5dp"
                 android:weightSum="4">
                 <TextView
+                    android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
@@ -132,9 +143,12 @@
                 android:layout_below="@+id/l3"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
+                android:background="@color/whiteColor"
+                android:elevation="5dp"
                 android:orientation="vertical"
                 android:weightSum="4">
                 <TextView
+                    android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
@@ -167,8 +181,11 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:background="@color/whiteColor"
+                android:elevation="5dp"
                 android:weightSum="4">
                 <TextView
+                    android:paddingLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2.5"
@@ -206,10 +223,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/l41"
                 android:layout_marginTop="10dp"
-                android:background="#70882E"
                 android:text="@string/register_new_account"
-                android:textColor="#fff"
                 android:textSize="20sp"
+                android:textStyle="normal"
+                android:textColor="@drawable/btn_txt"
+                android:background="@drawable/button_border"
             />
 
 
@@ -220,6 +238,8 @@
                 android:layout_below="@+id/register_new_account"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
+                android:elevation="5dp"
+                android:background="@color/whiteColor"
             >
                 <CheckBox
                     android:visibility="gone"
@@ -304,8 +324,10 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:background="@color/whiteColor"
                         android:onClick="onClickBackbtn"
                         android:src="@drawable/backup_ic"
+                        android:id="@+id/backup_ic"
                     />
                     <TextView
                         android:layout_width="wrap_content"
@@ -324,14 +346,17 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:weightSum="2"
+
                 >
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1"
+                        android:background="@color/whiteColor"
                         android:onClick="onClickBackupBrainkeybtn"
                         android:src="@drawable/brainkey_ic"
+                        android:id="@+id/brainkey_ic"
                     />
                     <TextView
                         android:layout_width="wrap_content"
@@ -349,6 +374,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:weightSum="2"
+
                 >
                     <ImageView
                         android:layout_width="wrap_content"
@@ -357,6 +383,8 @@
                         android:layout_weight="1"
                         android:onClick="onClickSecurePinbtn"
                         android:src="@drawable/pin_ic"
+                        android:id="@+id/pin_ic"
+                        android:background="@color/whiteColor"
                     />
                     <TextView
                         android:layout_width="wrap_content"

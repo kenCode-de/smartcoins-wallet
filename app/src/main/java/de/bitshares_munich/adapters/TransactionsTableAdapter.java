@@ -22,9 +22,10 @@ import de.codecrafters.tableview.TableDataAdapter;
  * Created by developer on 5/20/16.
  */
 public class TransactionsTableAdapter extends TableDataAdapter<TransactionDetails> {
-
-    public TransactionsTableAdapter(Context context, List<TransactionDetails> data) {
-        super(context, data);
+Context context;
+    public TransactionsTableAdapter(Context _context, List<TransactionDetails> data) {
+        super(_context, data);
+        context = _context;
     }
 
     @Override
@@ -89,11 +90,14 @@ public class TransactionsTableAdapter extends TableDataAdapter<TransactionDetail
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
         TextView textView = (TextView) v.findViewById(R.id.transactiondetailsto);
-        textView.setText("To: " + transactiondetails.getDetailsTo());
+        String tString = context.getText(R.string.to_capital) + ":" + transactiondetails.getDetailsTo();
+        textView.setText(tString);
+        tString = context.getText(R.string.from_capital) + ":" + transactiondetails.getDetailsFrom();
         TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
-        textView1.setText("From: " + transactiondetails.getDetailsFrom());
+        textView1.setText(tString);
+        tString = context.getText(R.string.memo_capital) + ":" + transactiondetails.getDetailsMemo();
         TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
-        textView2.setText("Memo: " + transactiondetails.getDetailsMemo());
+        textView2.setText(tString);
         return v;
     }
 

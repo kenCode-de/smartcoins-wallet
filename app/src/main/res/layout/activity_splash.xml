@@ -23,7 +23,7 @@
             android:textSize="30dp"
             android:padding="10dp"
             android:background="@color/colorPrimary"
-            android:text="Smartcoins Wallet"/>
+            android:text="@string/app_name"/>
         </LinearLayout>
 
 

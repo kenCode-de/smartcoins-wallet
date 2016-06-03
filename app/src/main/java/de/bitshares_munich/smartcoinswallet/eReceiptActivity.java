@@ -156,14 +156,12 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     @Override
     public void OnUpdate(String s,int id) {
         if(id==9){
-            SupportMethods.testing("qanon", s, "eReciept");
             String result = SupportMethods.ParseJsonObject(s,"result");
             String time = SupportMethods.ParseJsonObject(result,"timestamp");
             assets_id_in_work=0;
             get_asset(Assetid.get(assets_id_in_work),"11");
         }
         if(id==11) {
-            SupportMethods.testing("qanon", "3", "eReciept");
             if (assets_id_in_work < assets_id_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                 String assetObject = SupportMethods.ParseObjectFromJsonArray(result,0);
