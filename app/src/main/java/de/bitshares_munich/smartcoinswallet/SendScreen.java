@@ -37,6 +37,8 @@ import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.MerchantEmail;
+import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
@@ -44,6 +46,7 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -163,12 +166,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Bundle res = intent.getExtras();
         if (res != null) {
             if (res.containsKey("sResult") && res.containsKey("id")) {
-                try {
-                    if (res.getInt("id") == 5) {
-                        onScanResult(res.getString("sResult"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (res.getInt("id") == 5) {
+                    getJsonFromHash(res.getString("sResult"));
                 }
             }
         }
@@ -184,16 +183,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void init() {
         setCheckboxAvailabilty();
         setSpinner();
-    }
-
-    void screenTwo() {
-        llLoyalty.setVisibility(View.GONE);
-        tvLoyaltyStatus.setVisibility(View.GONE);
-        // tvTotalStatus.setVisibility(View.GONE);
-    }
-
-    void screenThree() {
-        llMemo.setVisibility(View.GONE);
     }
 
     @OnTextChanged(R.id.etReceiverAccount)
@@ -502,72 +491,71 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             case 90:
                 if (resultCode == RESULT_OK) {
                     Bundle res = data.getExtras();
-                    try {
-                        onScanResult(res.getString("sResult"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    getJsonFromHash(res.getString("sResult"));
                 }
                 break;
         }
     }
 
-    void onScanResult(String result) throws JSONException {
-        JSONObject resJson = new JSONObject(result);
-        resJson = new JSONObject(resJson.get("json").toString());
-        callbackURL = resJson.get("callback").toString();
-        if (!callbackURL.substring(callbackURL.length() - 1).equals("/")) {
-            callbackURL = callbackURL + "/";
-        }
-        etReceiverAccount.setText(resJson.get("to").toString());
-        validReceiver = true;
-        spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
-        spAssets.setClickable(false);
-        if (resJson.get("memo") != null) {
-            llMemo.setVisibility(View.GONE);
-            etMemo.setText(resJson.get("memo").toString());
-        } else llMemo.setVisibility(View.VISIBLE);
-        JSONArray lineItems = new JSONArray(resJson.get("line_items").toString());
-        Double totalAmount = 0.0;
-        for (int i = 0; i < lineItems.length(); i++) {
-            JSONObject lineItem = (JSONObject) lineItems.get(i);
-            totalAmount += (Double.parseDouble(lineItem.get("quantity").toString()) * Double.parseDouble(lineItem.get("price").toString()));
-        }
-        requiredAmount = totalAmount;
-        etAmount.setText(totalAmount.toString());
-        etAmount.setEnabled(false);
-        spAssets.setEnabled(false);
+    void onScanResult(String result) {
+        try {
+            JSONObject resJson = new JSONObject(result);
+            callbackURL = resJson.get("callback").toString();
+            if (!callbackURL.substring(callbackURL.length() - 1).equals("/")) {
+                callbackURL = callbackURL + "/";
+            }
+            etReceiverAccount.setText(resJson.get("to").toString());
+            validReceiver = true;
+            spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
+            spAssets.setClickable(false);
+            if (resJson.get("memo") != null) {
+                llMemo.setVisibility(View.GONE);
+                etMemo.setText(resJson.get("memo").toString());
+            } else llMemo.setVisibility(View.VISIBLE);
+            JSONArray lineItems = new JSONArray(resJson.get("line_items").toString());
+            Double totalAmount = 0.0;
+            for (int i = 0; i < lineItems.length(); i++) {
+                JSONObject lineItem = (JSONObject) lineItems.get(i);
+                totalAmount += (Double.parseDouble(lineItem.get("quantity").toString()) * Double.parseDouble(lineItem.get("price").toString()));
+            }
+            requiredAmount = totalAmount;
+            etAmount.setText(totalAmount.toString());
+            etAmount.setEnabled(false);
+            spAssets.setEnabled(false);
 
 //        selectBTSAmount.setText(hash.get("currency"));
-        String loyaltypoints = null;
-        if (resJson.has("ruia")) {
-            loyaltypoints = resJson.get("ruia").toString();
-        }
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        if (loyaltypoints != null) {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                        if (tempAccountAsset.id.equals(loyaltypoints)) {
-                            loyaltyAsset = accountDetail.AccountAssets.get(j);
-                            break;
+            String loyaltypoints = null;
+            if (resJson.has("ruia")) {
+                loyaltypoints = resJson.get("ruia").toString();
+            }
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            if (loyaltypoints != null) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    AccountDetails accountDetail = accountDetails.get(i);
+                    if (accountDetail.account_name.equals(selectedAccount)) {
+                        for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                            AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                            if (tempAccountAsset.id.equals(loyaltypoints)) {
+                                loyaltyAsset = accountDetail.AccountAssets.get(j);
+                                break;
+                            }
                         }
                     }
                 }
+                if (loyaltyAsset != null) {
+                    getExchangeRate(100);
+                    Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
+                    tvLoyalty.setText(loyaltyAsset.symbol);
+                    tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+                    llLoyalty.setVisibility(View.VISIBLE);
+                    tvLoyaltyStatus.setVisibility(View.VISIBLE);
+                }
+            } else {
+                llLoyalty.setVisibility(View.GONE);
+                tvLoyaltyStatus.setVisibility(View.GONE);
             }
-            if (loyaltyAsset != null) {
-                getExchangeRate(100);
-                Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
-                tvLoyalty.setText(loyaltyAsset.symbol);
-                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
-                llLoyalty.setVisibility(View.VISIBLE);
-                tvLoyaltyStatus.setVisibility(View.VISIBLE);
-            }
-        } else {
-            llLoyalty.setVisibility(View.GONE);
-            tvLoyaltyStatus.setVisibility(View.GONE);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -996,6 +984,50 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getJsonFromHash(String hash) {
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.hash_server_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<QrJson> postingService = service.getJson(hash);
+        postingService.enqueue(new Callback<QrJson>() {
+            @Override
+            public void onResponse(Response<QrJson> response) {
+                if (response.isSuccess()) {
+                    QrJson resp = response.body();
+                    if (resp.status.equals("success")) {
+                        saveMerchantEmail(resp.json);
+                        onScanResult(resp.json);
+                    } else {
+                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                hideDialog();
+                Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void saveMerchantEmail(String string){
+        String json = SupportMethods.ParseJsonObject(string,"json");
+        String accountName = SupportMethods.ParseJsonObject(json,"to");
+        String note = SupportMethods.ParseJsonObject(json,"note");
+        if(!note.equals("")) {
+            String email = note.replace("merchant_email:\"", "");
+            if(email.length()>0) {
+                email = email.substring(0, email.length() - 1);
+                if(SupportMethods.isEmailValid(email)) {
+                    MerchantEmail merchantEmail = new MerchantEmail(getApplicationContext());
+                    merchantEmail.saveMerchantEmail(accountName, email);
+                }
+            }
+        }
     }
 
     /// Updating Block Number and status
