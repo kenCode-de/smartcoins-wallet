@@ -50,10 +50,10 @@
                     android:text=""
                     android:gravity="center|right"
                     android:layout_weight="1.2"
-                    android:textSize="25sp"
+                    android:textSize="40dp"
                     android:textColor="#000"
                     android:maxLines="1"
-                    android:maxLength="20"
+                    android:maxLength="10"
                     android:id="@+id/txtScreen"
                     />
 
