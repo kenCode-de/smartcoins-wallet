@@ -51,7 +51,16 @@ public class popUpwindow {
         popupWindow = popupWindow();
 //add
     }
+    popUpwindow(Context c,TextView textview,List<String> optionsList) {
+        context = c;
+        textView = textview;
+        popUpContents = new String[optionsList.size()];
 
+        optionsList.toArray(popUpContents);
+
+        popupWindow = popupWindow();
+//add
+    }
     public PopupWindow popupWindow() {
 
         // initialize a pop up window type

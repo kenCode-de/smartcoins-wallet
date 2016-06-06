@@ -155,7 +155,7 @@ public class TabActivity extends BaseActivity {
                     if (etPin.getText().toString().equals(savedPIN)) {
                         dialog.cancel();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -181,6 +181,7 @@
                                 android:layout_centerInParent="true"
                                 />
                         </RelativeLayout>
+
                             <EditText
                                 android:layout_marginLeft="5sp"
                                 android:layout_marginRight="5sp"
@@ -191,14 +192,22 @@
                                 android:layout_height="match_parent"
                                 android:id="@+id/etReceiverAccount"
                                 android:layout_toRightOf="@+id/rl_webviewTo"
+                                android:layout_toLeftOf="@+id/contactActivity"
+
                                 />
-                            <!--<ImageView-->
-                            <!--android:layout_alignParentRight="true"-->
-                            <!--android:id="@+id/imageviewTo"-->
-                            <!--android:layout_width="20sp"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:src="@drawable/spinnericon"-->
-                            <!--/>-->
+                            <RelativeLayout
+                                android:layout_alignParentRight="true"
+                                android:layout_width="50sp"
+                                android:id="@+id/contactActivity"
+                                android:orientation="horizontal"
+                                android:layout_height="match_parent">
+                            <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/share_group"
+                                android:layout_centerInParent="true"
+                            />
+                            </RelativeLayout>
                         </RelativeLayout>
                         <ImageButton
                             android:layout_width="match_parent"

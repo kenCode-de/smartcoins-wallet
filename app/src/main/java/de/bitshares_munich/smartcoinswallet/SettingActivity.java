@@ -8,9 +8,13 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Explode;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,6 +40,7 @@ import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 public class SettingActivity extends BaseActivity {
@@ -78,16 +83,29 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.tvAppVersion_content_settings)
     TextView tvAppVersion;
 
+    @Bind(R.id.backup_ic)
+    ImageView backup_ic;
+
+    @Bind(R.id.brainkey_ic)
+    ImageView brainkey_ic;
+
+    @Bind(R.id.pin_ic)
+    ImageView pin_ic;
+
     @Bind(R.id.ivSocketConnected_content_settings)
     ImageView ivSocketConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         setContentView(R.layout.activity_setting);
         setBackButton(true);
+
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
+
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
@@ -100,6 +118,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void onCheck(View v) {
+        designMethod();
         switch (v.getId()) {
             case R.id.check_for_updates:
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, check_for_updates, true);
@@ -131,22 +150,23 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void onClickBackupBrainkeybtn(View v) {
+        designMethod();
         showDialogCopyBrainKey();
     }
 
     public void onClickSecurePinbtn(View v) {
-
+        designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
         startActivity(intent);
         //showDialogPinRequest();
     }
 
-    public void onClickBackbtn(View v) {
+    public void onClickBackbtn(View v) {designMethod();
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
         //startActivity(intent);
     }
 
-    Boolean isCHecked(View v) {
+    Boolean isCHecked(View v) {designMethod();
         CheckBox checkBox = (CheckBox) v;
         if (checkBox.isChecked()) {
             return true;
@@ -340,6 +360,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spAccounts)
     void onItemSelectedAccount(int position) {
+        designMethod();
         if (position >= 0) {
             for (int i = 0; i < accountDetails.size(); i++) {
 
@@ -362,12 +383,13 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spCountry)
     void onItemSelectedCountry(int position) {
+        designMethod();
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
         Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_country), position);
     }
 
     @OnItemSelected(R.id.spTimeZones)
-    void onItemSelectedTimeZone(int position) {
+    void onItemSelectedTimeZone(int position) {designMethod();
         if (position > 0) {
 
             String temp[] = spTimeZones.getSelectedItem().toString().split(" ");
@@ -377,7 +399,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnItemSelected(R.id.spBackupAsset)
-    void onItemSelectedBackupAsset(int position) {
+    void onItemSelectedBackupAsset(int position) {designMethod();
         if (position >= 0) {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
@@ -386,7 +408,7 @@ public class SettingActivity extends BaseActivity {
 
     @OnItemSelected(R.id.spLanguage)
     void onItemSelectedLanguage(int position) {
-
+        designMethod();
         LangCode langSelection = (LangCode) spLanguage.getSelectedItem();
         Helper.setLocale(langSelection.code, getResources());
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
@@ -476,4 +498,8 @@ public class SettingActivity extends BaseActivity {
     }
     /////////////////
 
+    void designMethod(){
+        if(android.os.Build.VERSION.SDK_INT>21)
+        getWindow().setExitTransition(new Explode());
+    }
 }
