@@ -89,97 +89,14 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
 
     @Override
     public void handleResult(Result rawResult) {
-        // Do something with the result here
- //       final StringBuilder sResult = new StringBuilder();
         mScannerView.stopCamera();
-        workingQrcode(rawResult.toString());
-//        String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        client.addHeader("Content-Type","application/json");
-//            client.get(toGet, null , new AsyncHttpResponseHandler(){
-//                @Override
-//            public void onStart() {
-//                Log.i("euro", "start");
-//            }
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
-//                try {
-//                    byte[] bytes = timeline;
-//                    String s = new String(bytes);
-//                    sResult.append(s);
-//                    Log.i("euro", s);
-//                }catch (Exception j){
-//                    Log.i("euro", j+"");
-//                }
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-//                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-//                Log.i("euro", "failed");
-//            }
-//            @Override
-//            public void onRetry(int retryNo) {
-//                // called when request is retried
-//                Log.i("euro", "retry");
-//
-//            }
-//        });
-//        parseStringtoJson(sResult.toString());
-//        finishWithResult();
-    }
-
-    HashMap<String,String> parseStringtoJson(String myJson){
-        try {
-            HashMap<String,String> parsedData = new HashMap<>();
-            String getOne = returnParse(myJson,"json");
-            parsedData.put("to",returnParse(getOne,"to"));
-            parsedData.put("to_label",returnParse(getOne,"to_label"));
-            parsedData.put("currency",returnParse(getOne,"currency"));
-            parsedData.put("memo",returnParse(getOne,"memo"));
-            parsedData.put("ruia",returnParse(getOne,"ruia"));
-            parsedData.put("note",returnParse(getOne,"note"));
-            parsedData.put("callback",returnParse(getOne,"callback"));
-
-            String line_items = returnParse(getOne,"line_items");
-            JSONArray jsonRootObject = new JSONArray(line_items);
-
-            for(int i=0;i<jsonRootObject.length();i++) {
-                String jArray = jsonRootObject.get(i).toString();
-                parsedData.put("label"+i, returnParse(jArray, "label"));
-                parsedData.put("quantity"+i, returnParse(jArray, "quantity"));
-                parsedData.put("price"+i, returnParse(jArray, "price"));
-            }
-
-
-            return parsedData;
-
-
+//        workingQrcode(rawResult.toString());
+        if (id==0) {
+            finishWithResult(rawResult.toString());
+        }else if(id==1){
+            StartWithfinishWithResult(rawResult.toString());
         }
-        catch (JSONException j){
-            Log.i("kopi","error: " + j +"");
-
-        }
-        return null;
     }
-    String returnParse(String Json , String req) throws JSONException{
-        if(Json.contains(req))
-        {
-            JSONObject myJson = new JSONObject(Json);
-            String requiredObj = myJson.getString(req);
-
-            //String trimmedString = requiredObj.substring(1, requiredObj.length() - 1);
-
-            if (requiredObj.startsWith("\""))
-            {
-                requiredObj = requiredObj.substring(1, requiredObj.length() - 1);
-            }
-
-            String cleanedResult = requiredObj.replace("\\","");
-            return  cleanedResult;
-        }
-        else return "null";
-    }
-
 
     private void finishWithResult(String parseddata) {
         Bundle conData = new Bundle();
@@ -200,79 +117,4 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         startActivity(intent);
         finish();
     }
-    void workingQrcode(String rawResult){
-        String toGet = "http://188.166.147.110:9002/get_json_for_hash?hash="+rawResult;
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("Content-Type","application/json");
-        client.get(toGet, null , new AsyncHttpResponseHandler(){
-            @Override
-            public void onStart() {
-                Log.i("euro", "start");
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
-                try {
-                    byte[] bytes = timeline;
-                    String s = new String(bytes);
-                    saveMerchantEmail(s);
-                    Log.i("euro", s);
-                    if (id==0) {
-                        finishWithResult(s);
-                    }else if(id==1){
-                        StartWithfinishWithResult(s);
-                    }
-
-                    ;
-                }catch (Exception j){
-                    Log.i("euro", j+"");
-                }
-            }
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                Log.i("euro", "failed");
-            }
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-                Log.i("euro", "retry");
-
-            }
-        });
-
-    }
-    public void saveMerchantEmail(String string){
-        String json = SupportMethods.ParseJsonObject(string,"json");
-        String accountName = SupportMethods.ParseJsonObject(json,"to");
-        String note = SupportMethods.ParseJsonObject(json,"note");
-        if(!note.equals("")) {
-            String email = note.replace("merchant_email:\"", "");
-            if(email.length()>0) {
-                email = email.substring(0, email.length() - 1);
-                if(SupportMethods.isEmailValid(email)) {
-                    MerchantEmail merchantEmail = new MerchantEmail(getApplicationContext());
-                    merchantEmail.saveMerchantEmail(accountName, email);
-                }
-            }
-        }
-    }
-
 }
-    //called in another activity by this code
-
-//    Intent intent = new Intent(getApplicationContext(), qrcodeActivity.class);
-//    startActivityForResult(intent,90);
-//
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        switch(requestCode) {
-//            case 90:
-//                if (resultCode == RESULT_OK) {
-//                    Bundle res = data.getExtras();
-//                    String result1 = res.getString("sFormat");
-//                    String result2 = res.getString("sResult");
-//                    Log.d("falcon", "sFormat:"+result1);
-//                    Log.d("falcon", "sResult:"+result2);
-//                }
-//                break;
-//        }
-//    }

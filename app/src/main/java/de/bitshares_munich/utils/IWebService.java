@@ -5,6 +5,7 @@ import java.util.Map;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.DecodeMemo;
 import de.bitshares_munich.models.QrHash;
+import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.models.TransferResponse;
@@ -50,4 +51,6 @@ public interface IWebService {
     @POST("/")
     Call<TradeResponse> getTradeResponse(@Body Map<String, String> params);
 
+    @GET("/get_json_for_hash/")
+    Call<QrJson> getJson(@Query("hash") String hash);
 }
