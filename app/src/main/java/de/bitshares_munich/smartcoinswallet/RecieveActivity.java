@@ -102,7 +102,7 @@ public class RecieveActivity extends BaseActivity {
 
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
-            String concate = this.getString(R.string.pay_to) + to;
+            String concate = this.getString(R.string.pay_to) + " : " + to;
             tvUsername.setText(concate);
 
         }
