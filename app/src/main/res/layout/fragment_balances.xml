@@ -21,7 +21,7 @@
             android:textStyle="bold"
             android:textSize="21dp"
             android:id="@+id/account_name"
-            android:text="Yasir-mobile"/>
+            android:text=""/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Export"
+                android:text="@string/export"
                 android:textColor="@color/whiteColor"
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
@@ -212,7 +212,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:id="@+id/load_more_values"
-                android:text="show more"
+                android:text="@string/show_more"
                 android:layout_gravity="bottom"
             />
         </LinearLayout>

@@ -32,14 +32,27 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="30sp">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="30sp"
-            android:text="Account : "
+            android:text="@string/account"
             android:gravity="left|center"
             android:textSize="20sp"
             android:textColor="#000000"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30sp"
+            android:text=" :"
+            android:gravity="left|center"
+            android:textSize="20sp"
+            android:textColor="#000000"
+            />
+        </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60sp"
@@ -81,15 +94,27 @@
         android:orientation="vertical"
         android:weightSum="3"
         >
-        <TextView
-            android:textColor="#000000"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_weight="1"
+            android:layout_height="30sp">
+        <TextView
+            android:textColor="#000000"
+            android:layout_width="wrap_content"
             android:layout_height="30sp"
-            android:text="Friendly Name : "
+            android:text="@string/friendly_name"
             android:gravity="left|center"
             android:textSize="20sp"
             />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30sp"
+                android:text=" :"
+                android:gravity="left|center"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                />
+        </LinearLayout>
         <EditText
     android:layout_width="wrap_content"
     android:layout_weight="2"
@@ -107,14 +132,26 @@
             android:layout_height="wrap_content"
             android:paddingBottom="2dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30sp">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="30sp"
-        android:text="Notes : "
+        android:text="@string/notes"
         android:gravity="left|center"
         android:textSize="20sp"
         android:textColor="#000000"
         />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30sp"
+                android:text=" :"
+                android:gravity="left|center"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                />
+        </LinearLayout>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -141,7 +178,7 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_weight="1"
                 android:id="@+id/CancelContact"
                 android:textColor="#FFFFFF"
@@ -150,7 +187,7 @@
             <Button
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Save"
+        android:text="@string/save"
                 android:layout_weight="1"
                 android:id="@+id/SaveContact"
                 android:background="#FF4081"

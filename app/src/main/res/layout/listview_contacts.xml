@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Yasir Ibrahim"
+            android:text=""
             android:id="@+id/username"
             android:layout_weight="1"
             android:textSize="20sp"
@@ -45,14 +45,25 @@
             android:layout_weight="1"
             android:weightSum="4"
             >
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="Account:"
-                android:layout_weight="1.5"
-                android:gravity="center_vertical"
+                android:layout_weight="1.5">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/account"
+                android:gravity="left|center"
                 android:textSize="15sp"
                 />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=":"
+                    android:gravity="left|center"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
             <TextView
                 android:id="@+id/accountname"
                 android:layout_weight="2.5"
@@ -69,14 +80,25 @@
             android:layout_weight="1"
             android:weightSum="4"
             >
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="Note:"
-                android:layout_weight="1"
+                android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/note"
                 android:gravity="left|center"
                 android:textSize="15sp"
                 />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=":"
+                    android:gravity="left|center"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
             <TextView
                 android:layout_weight="3"
                 android:layout_width="0dp"
