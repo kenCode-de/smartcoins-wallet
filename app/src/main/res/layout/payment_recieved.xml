@@ -87,7 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Payment Received"
+                android:text="@string/payment_received"
                 android:gravity="center"
                 android:textSize="25sp"
                 android:textColor="#000"
@@ -114,7 +114,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="From"
+                        android:text="@string/from_capital"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:textSize="20sp"
@@ -146,7 +146,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="To"
+                        android:text="@string/to_capital"
                         android:layout_weight="1"
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
@@ -177,7 +177,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="Amount"
+                        android:text="@string/amount"
                         android:layout_weight="1"
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
@@ -208,7 +208,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="Memo"
+                        android:text="@string/memo_capital"
                         android:layout_weight="1"
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
@@ -240,7 +240,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:text="Fee"
+                        android:text="@string/fee_capital"
                         android:layout_weight="1"
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
@@ -270,7 +270,7 @@
             android:layout_alignParentBottom="true"
             android:background="#70882E"
             android:gravity="center"
-            android:text="OK"
+            android:text="@string/ok"
             android:textColor="#fff"
             />
 

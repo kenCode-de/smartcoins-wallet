@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="fee"
+            android:text="@string/fee_capital"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="amount"
+                android:text="@string/amount"
                 android:gravity="left|center"
                 android:textColor="@color/black"
                 />
@@ -62,7 +62,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="symbol"
+                    android:text="@string/symbol_capital"
                     android:gravity="left|center"
                     android:textColor="@color/black"
                     />
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="from"
+            android:text="@string/from_capital"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -114,7 +114,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="to"
+            android:text="@string/to_capital"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -139,7 +139,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="amount"
+            android:text="@string/amount"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -159,7 +159,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="amount"
+                    android:text="@string/amount"
                     android:gravity="left|center"
                     android:textColor="@color/black"
                     />
@@ -181,7 +181,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="symbol"
+                    android:text="@string/symbol_capital"
                     android:gravity="left|center"
                     android:textColor="@color/black"
                     />
@@ -208,7 +208,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="memo"
+            android:text="@string/memo_capital"
             android:gravity="left|center"
             android:textColor="@color/black"
             />
@@ -229,7 +229,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="message"
+                    android:text="@string/message"
                     android:gravity="left|center"
                     android:textColor="@color/black"
                     />
@@ -255,7 +255,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="extensions"
+            android:text="@string/extensions"
             android:gravity="left|center"
             android:textColor="@color/black"
             />

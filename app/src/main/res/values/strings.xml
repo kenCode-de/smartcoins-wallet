@@ -5,6 +5,7 @@
     <string name="receive">recieve</string>
     <string name="camera">camera</string>
     <string name="send">send</string>
+    <string name="send_capital">Send</string>
     <string name="receiveText">recieveText</string>
     <string name="cameraText">cameraText</string>
     <string name="sendText">sendText</string>
@@ -15,6 +16,11 @@
     <string name="txt_account_name">Account Name</string>
     <string name="time_stamp">Time stamp</string>
     <string name="email_pdf">Email PDF</string>
+    <string name="account">Account</string>
+    <string name="friendly_name">Friendly Name</string>
+    <string name="notes">Notes</string>
+    <string name="note">Note</string>
+    <string name="payment_received">Payment Received</string>
 
     <string name="import_brainkey">Import from BrainKey</string>
     <string name="import_backup">Import Backup</string>
@@ -45,6 +51,9 @@
     <string name="txt_brain_key_info">This Brainkey is not compatible with BTS 1.0 \n (Use a backup file instead)</string>
     <string name="create_wallet">CREATE WALLET</string>
     <string name="cancel">CANCEL</string>
+    <string name="save">SAVE</string>
+    <string name="next">NEXT</string>
+
     <string name="please_enter_brainkey">Please enter brainkey</string>
     <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
     <string name="balances">Balances</string>
@@ -68,6 +77,11 @@
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
     <string name="secure_pin">EDIT PIN</string>
+    <string name="export">Export</string>
+    <string name="show_more">Show more</string>
+
+    <string name="small_text">Some times in your application, if you wanted to ask the user about taking a decision between yes or no in response of any particular action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.action taken by the user, by remaining in the same activity and without changing the screen, you can use Alert Dialog.
+</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -205,6 +219,8 @@
     <string name="all">All</string>
     <string name="to_from">To/From</string>
     <string name="amount">Amount</string>
+    <string name="message">Message</string>
+
     <string name="pdf_generated_msg">PDF generated and saved : </string>
     <string name="pdf_generated_msg_error">Unable to generate pdf. Please retry. Error : </string>
     <string name="raw_transactions">Raw Transaction : </string>
@@ -222,7 +238,12 @@
     <string name="operations">operations</string>
     <string name="trx_in_block">trx_in_block</string>
     <string name="symbol">symbol</string>
+    <string name="symbol_capital">Symbol</string>
+
     <string name="fee">fee</string>
+    <string name="fee_capital">Fee</string>
+    <string name="ok">OK</string>
+
     <string name="loading">Loading...</string>
     <string name="pay_to">Pay to : </string>
 

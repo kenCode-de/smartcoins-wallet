@@ -245,13 +245,24 @@
                 android:layout_below="@+id/SecChild"
                 android:id="@+id/ThirdChild"
                 >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Amount: "
+                    android:text="@string/amount"
                     android:textSize="15sp"
                     android:textColor="#00060A"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="15sp"
+                    android:textColor="#00060A"
+                    />
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_margin"
@@ -446,13 +457,24 @@
                 android:layout_below="@+id/tvTotalStatus"
                 android:id="@+id/llMemo"
                 >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Memo: "
+                    android:text="@string/memo_capital"
                     android:textSize="15sp"
                     android:textColor="#00060A"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="15sp"
+                    android:textColor="#00060A"
+                    />
+                </LinearLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_margin"
@@ -492,26 +514,26 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="SEND"
+                    android:text="@string/send_capital"
                     android:textStyle="bold"
                     android:gravity="center|right"
                     android:layout_weight="2"
                     android:textColor="#fff"
                     android:textSize="17sp"
-                    android:paddingRight="10dp"
+                    android:paddingRight="5dp"
                     />
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:src="@mipmap/icon_send"
                     android:gravity="left|center"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     />
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:gravity="left|center"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     />
 
             </LinearLayout>
