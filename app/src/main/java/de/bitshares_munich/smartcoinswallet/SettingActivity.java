@@ -210,8 +210,7 @@ public class SettingActivity extends BaseActivity {
         }
 
         ArrayList<LangCode> langArray = new ArrayList<>();
-        ArrayList<String> getLangCode =
-                null;
+        ArrayList<String> getLangCode = null;
         getLangCode = Helper.getLanguages();
         for (int i = 0; i < getLangCode.size(); i++) {
 
@@ -234,6 +233,7 @@ public class SettingActivity extends BaseActivity {
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+        Helper.setLocale(langCode, getResources());
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
@@ -243,6 +243,7 @@ public class SettingActivity extends BaseActivity {
             }
         } else {
             spLanguage.setSelection(13);
+            Helper.setLocale("de", getResources());
         }
 
 
@@ -387,7 +388,7 @@ public class SettingActivity extends BaseActivity {
     void onItemSelectedLanguage(int position) {
 
         LangCode langSelection = (LangCode) spLanguage.getSelectedItem();
-        // Helper.setLocale(langSelection.code, getResources());
+        Helper.setLocale(langSelection.code, getResources());
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
 
     }

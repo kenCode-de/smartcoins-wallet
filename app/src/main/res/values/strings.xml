@@ -267,5 +267,6 @@
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
     <string name="node_server_url">http://188.166.147.110:8000</string>
+    <string name="please_enter_valid_amount">Please enter valid amount</string>
 
 </resources>
