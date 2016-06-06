@@ -12,8 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,6 +63,9 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     @Bind(R.id.tvMemo)
     TextView tvMemo;
 
+    Locale locale;
+    String language;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +73,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         ButterKnife.bind(this);
 
         setBackButton(true);
-
+        language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+        locale = new Locale(language);
         playSound();
         application.registerTransactionObject(this);
         application.registerAccountObjectCallback(this);
@@ -219,7 +225,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
                             if (resultObj.get("id").equals(amountObj.get("asset_id").toString())){
                                 Double amount = Double.parseDouble(amountObj.get("amount").toString());
                                 amount = amount / Math.pow(10, Integer.parseInt(resultObj.get("precision").toString()));
-                                tvMainAmount.setText(String.format("%.4f",amount));
+
+                                tvMainAmount.setText(Helper.setLocaleNumberFormat(locale, amount));
                                 tvMainAsset.setText(resultObj.get("symbol").toString());
                                 tvAmount.setText(String.format("%.4f",amount)+resultObj.get("symbol").toString());
                             }

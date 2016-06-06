@@ -58,7 +58,7 @@
             android:text="nnnn"
             android:gravity="center_vertical|right"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:textSize="40dp"
             android:textColor="#000"
             />
 

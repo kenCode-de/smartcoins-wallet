@@ -1,28 +1,50 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.utils.Helper;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
-public class RequestActivity extends BaseActivity {
-    @Bind(R.id.editTextView)
-    TextView editTextView;
+
+public class RequestActivity extends BaseActivity implements View.OnClickListener {
 
     @Bind(R.id.popwin1)
     TextView popwin;
 
     String to = "";
     String account_id = "";
+
+    Locale locale;
+    NumberFormat format;
+    String language;
+    @Bind(R.id.btnOne) Button btnOne;
+    @Bind(R.id.btnTwo) Button btnTwo;
+    @Bind(R.id.btnThree) Button btnThree;
+    @Bind(R.id.btnFour) Button btnFour;
+    @Bind(R.id.btnFive) Button btnFive;
+    @Bind(R.id.btnSix) Button btnSix;
+    @Bind(R.id.btnSeven) Button btnSeven;
+    @Bind(R.id.btnEight) Button btnEight;
+    @Bind(R.id.btnNine) Button btnNine;
+    @Bind(R.id.btnZero) Button btnZero;
+    @Bind(R.id.btnDot) Button btnDot;
+    @Bind(R.id.btnDoubleZero) Button btnDoubleZero;
+    @Bind(R.id.txtScreen) TextView txtScreen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +53,10 @@ public class RequestActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setBackButton(true);
+        language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+        locale = new Locale(language);
+        format = NumberFormat.getInstance(locale);
+        fieldsReference();
 
         Intent intent = getIntent();
 
@@ -62,92 +88,35 @@ public class RequestActivity extends BaseActivity {
 
     @OnClick(R.id.tvNext)
     void next() {
-        String inputNumb = editTextView.getText().toString();
-        Double value = 0.0;
-        if (!inputNumb.isEmpty())
-            value = Double.valueOf(inputNumb);
-
-        if (inputNumb.isEmpty()) {
-            Toast.makeText(getApplicationContext(), getString(R.string.please_enter_amount), Toast.LENGTH_SHORT).show();
-        } else if (value <= 0) {
-            Toast.makeText(getApplicationContext(), R.string.amount_should_be_greater_than_zero, Toast.LENGTH_SHORT).show();
-        } else {
-
-            Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
-            intent.putExtra(getString(R.string.price), editTextView.getText().toString());
-            intent.putExtra(getString(R.string.currency), popwin.getText().toString());
-            intent.putExtra(getString(R.string.to), to);
-            intent.putExtra(getString(R.string.account_id), account_id);
-            startActivity(intent);
-            finish();
+        try {
+            Number number = format.parse(removeSpecialCharacters());
+            if (number.doubleValue() > 0) {
+                String amount = number.toString();
+                Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+                intent.putExtra(getString(R.string.currency), popwin.getText().toString());
+                intent.putExtra(getString(R.string.to), to);
+                intent.putExtra(getString(R.string.price), amount);
+                intent.putExtra(getString(R.string.account_id), account_id);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.please_enter_valid_amount, Toast.LENGTH_SHORT).show();
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
     }
 
-    public void digitClick(View v) {
-        String number = "";
-        switch (v.getId()) {
-            case R.id.one:
-                number = "1";
-                break;
-            case R.id.two:
-                number = "2";
-                break;
-            case R.id.three:
-                number = "3";
-                break;
-            case R.id.four:
-                number = "4";
-                break;
-            case R.id.five:
-                number = "5";
-                break;
-            case R.id.six:
-                number = "6";
-                break;
-            case R.id.seven:
-                number = "7";
-                break;
-            case R.id.eight:
-                number = "8";
-                break;
-            case R.id.nine:
-                number = "9";
-                break;
-            case R.id.zero:
-                number = "0";
-                break;
-            case R.id.doublezero:
-                number = "00";
-                break;
-            case R.id.dot:
-                if (!editTextView.getText().toString().contains("."))
-                    number = ".";
-                break;
-        }
-        addNumber(number);
-    }
-
-    void addNumber(String number) {
-//        TextView addnum1 = (TextView)findViewById(R.id.addnum1);
-        String addnumG = editTextView.getText().toString();
-        if (addnumG.equals("000")) {
-            addnumG = "";
-        }
-        addnumG = addnumG + number;
-        editTextView.setText(addnumG);
-    }
 
     public void backbtn(View v) {
 
-        String addnumG = editTextView.getText().toString();
-        if (!addnumG.equals("000")) {
-
-            if (addnumG.length() > 0) {
-                addnumG = method(addnumG);
-            }
-
-            editTextView.setText(addnumG);
+        String str = txtScreen.getText().toString();
+        if (str.length() > 0) {
+            str = str.substring(0, str.length() - 1);
+            txtScreen.setText(str);
         }
+        forwardEnabling();
     }
 
     public String method(String str) {
@@ -162,6 +131,82 @@ public class RequestActivity extends BaseActivity {
 
     public void showpop(View v) {
         popupwindow(v, popwin);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Button button = (Button) v;
+        String currentkey = button.getText().toString();
+        String dot = btnDot.getText().toString();
+        if (currentkey.equals(dot)) {
+            txtScreen.append(currentkey);
+        } else if (currentkey.equals(btnZero.getText().toString())) {
+            txtScreen.append(currentkey);
+        } else if (currentkey.equals(btnDoubleZero.getText().toString())) {
+            txtScreen.append(currentkey);
+        } else {
+
+            txtScreen.append(currentkey);
+            try {
+                Number number = format.parse(removeSpecialCharacters());
+                txtScreen.setText(Helper.setLocaleNumberFormat(locale, number));
+            } catch (ParseException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+
+    private void fieldsReference() {
+
+        btnOne.setOnClickListener(this);
+        btnTwo.setOnClickListener(this);
+        btnThree.setOnClickListener(this);
+        btnFour.setOnClickListener(this);
+        btnFive.setOnClickListener(this);
+        btnSix.setOnClickListener(this);
+        btnSeven.setOnClickListener(this);
+        btnEight.setOnClickListener(this);
+        btnNine.setOnClickListener(this);
+        btnZero.setOnClickListener(this);
+        btnDoubleZero.setOnClickListener(this);
+        btnDot.setOnClickListener(this);
+        keypadNumbersLocalization();
+
+    }
+
+    private void keypadNumbersLocalization() {
+
+        btnOne.setText(Helper.setLocaleNumberFormat(locale, 1));
+        btnTwo.setText(Helper.setLocaleNumberFormat(locale, 2));
+        btnThree.setText(Helper.setLocaleNumberFormat(locale, 3));
+        btnFour.setText(Helper.setLocaleNumberFormat(locale, 4));
+        btnFive.setText(Helper.setLocaleNumberFormat(locale, 5));
+        btnSix.setText(Helper.setLocaleNumberFormat(locale, 6));
+        btnSeven.setText(Helper.setLocaleNumberFormat(locale, 7));
+        btnEight.setText(Helper.setLocaleNumberFormat(locale, 8));
+        btnNine.setText(Helper.setLocaleNumberFormat(locale, 9));
+        btnZero.setText(Helper.setLocaleNumberFormat(locale, 0));
+        btnDot.setText(String.valueOf(Helper.setDecimalSeparator(locale)));
+        btnDoubleZero.setText(Helper.setLocaleNumberFormat(locale, 0) + "" + Helper.setLocaleNumberFormat(locale, 0));
+    }
+
+    private String removeSpecialCharacters() {
+        //Farsi and arabic
+        String inputNumber = txtScreen.getText().toString();
+        String dot = btnDot.getText().toString();
+        inputNumber = inputNumber.replace("٬", "");
+        inputNumber = inputNumber.replace(String.valueOf((char) 160), "");
+        if (dot.equals(",")) {
+            inputNumber = inputNumber.replace(".", "");
+        } else if (dot.equals(".")) {
+            inputNumber = inputNumber.replace(",", "");
+        }
+        return inputNumber;
+    }
+
+    private void forwardEnabling() {
+
     }
 
 }

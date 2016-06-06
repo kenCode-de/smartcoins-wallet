@@ -260,7 +260,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             updateTotalStatus();
         } else {
             if (exchangeRate != null) {
-                Double remainingAmount = requiredAmount - (loyaltyAmount / exchangeRate);
+                String backupAssetAmount = etBackupAsset.getText().toString();
+
+                if (backupAssetAmount.equals("")) {
+                    backupAssetAmount = "0";
+                }
+                Double remainingAmount = requiredAmount - (loyaltyAmount * exchangeRate) - Double.valueOf(backupAssetAmount);
                 etAmount.setText(remainingAmount.toString());
                 updateTotalStatus();
             } else {
@@ -286,7 +291,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String remainingBalance = String.format("%.4f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
-        updateTotalStatus();
+        if (backAssetRate != null) {
+            String loyaltyAmount = etLoyalty.getText().toString();
+            if (loyaltyAmount.equals("")) {
+                loyaltyAmount = "0";
+            }
+            Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
+            etAmount.setText(remainingAmount.toString());
+            updateTotalStatus();
+        } else {
+            getExchangeRate(200);
+        }
     }
 
 
@@ -808,20 +823,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void updateTotalStatus() {
 
-        String selectedAmount = etAmount.getText().toString();
-        String loyaltyAmount = etLoyalty.getText().toString();
-        String backupAssetAmount = etBackupAsset.getText().toString();
-
-        if (loyaltyAmount.equals("")) {
-            loyaltyAmount = "0";
-        }
-        if (backupAssetAmount.equals("")) {
-            backupAssetAmount = "0";
-        }
-        if (selectedAmount.equals("")) {
-            selectedAmount = "0";
-        }
-
+        String selectedAmount = Helper.padString(etAmount.getText().toString());
+        String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
+        String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
         if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
             if (count == 1) {
                 Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
