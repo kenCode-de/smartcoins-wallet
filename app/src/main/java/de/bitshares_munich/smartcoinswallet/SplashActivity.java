@@ -2,12 +2,16 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -23,6 +27,8 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

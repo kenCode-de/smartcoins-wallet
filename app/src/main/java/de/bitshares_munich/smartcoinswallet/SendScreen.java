@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -263,7 +264,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
     }
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        // refresh your views here
+        super.onConfigurationChanged(newConfig);
+    }
     @OnTextChanged(R.id.etBackupAsset)
     void onBackupAssetChanged(CharSequence text) {
         count = 1;

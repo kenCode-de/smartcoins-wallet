@@ -2,6 +2,7 @@ package de.bitshares_munich.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,6 +94,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.qrCamera)
     ImageView qrCamera;
 
+    @Bind(R.id.tvBalances)
+    TextView tvBalances;
+
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
     int number_of_transactions_loaded;
@@ -142,6 +147,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
+
+
 
         // replace myTransactions with actual data
 
@@ -406,7 +413,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                     }
                 }
-                progressBar1.setVisibility(View.INVISIBLE);
+                progressBar1.setVisibility(View.GONE);
+//                tvBalances.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
                 isLoading = true;
             }

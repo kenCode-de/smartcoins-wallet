@@ -1,6 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.SupportMethods;
 
 /**
@@ -27,6 +29,8 @@ public class AssestsActivty  implements BalancesDelegate {
     ArrayList<String> ammount;
     Context context;
     AssetDelegate assetDelegate;
+    Application application = new Application();
+
 
     public AssestsActivty(Context c,String account_name , AssetDelegate instance){
         context = c;
@@ -34,9 +38,58 @@ public class AssestsActivty  implements BalancesDelegate {
         precisons = new ArrayList<>();
         symbols = new ArrayList<>();
         ammount = new ArrayList<>();
-        balancesLoad = new BalancesLoad(context,this);
+     //   application.registerBalancesDelegate(this);
+
+          balancesLoad = new BalancesLoad(context,this);
         assetDelegate = instance;
-        balancesLoad.get_json_account_balances(account_name,"999");
+
+       balancesLoad.get_json_account_balances(account_name,"999");
+//        try{
+//        if(account_name!=null)
+//        get_json_account_balances(account_name,"999");
+//        else SupportMethods.testing("assests","null","account_name");}
+//        catch (Exception e){
+//
+//        }
+
+    }
+
+
+    void get_json_account_balances(final String account_name,final String id) {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
+                {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
+        Application.webSocketG.send(getDetails);
+                }
+                else {
+                    get_json_account_balances(account_name,"999");
+
+                }
+            }
+        };
+
+        handler.postDelayed(updateTask, 1000);
+    }
+
+    void get_asset(String asset, String id) {
+        String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+        Application.webSocketG.send(getDetails);
+    }
+    void get_asset(ArrayList<String> asset, String id) {
+        //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0 ;i<asset.size();i++){
+            stringBuilder.append(asset.get(i));
+            if((i+1)<asset.size())
+                stringBuilder.append("\",\"");
+        }
+        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+stringBuilder.toString()+"\"]]}";
+        Application.webSocketG.send(getDetails);
     }
 
     HashMap<String, String> jsonToMap(String t) throws JSONException {
@@ -96,6 +149,8 @@ public class AssestsActivty  implements BalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id){
+        SupportMethods.testing("assests",s,"ids");
+
         String convert;
         try {
             if (id == 999) {
@@ -170,6 +225,11 @@ public class AssestsActivty  implements BalancesDelegate {
         return  pairs.get(key);
     }
     void AddinAssets() {
+        SupportMethods.testing("assests",ids,"ids");
+        SupportMethods.testing("assests",symbols,"ids");
+        SupportMethods.testing("assests",precisons,"ids");
+        SupportMethods.testing("assests",ammount,"ids");
+
         assetDelegate.isUpdate(ids,symbols,precisons,ammount);
     }
 }

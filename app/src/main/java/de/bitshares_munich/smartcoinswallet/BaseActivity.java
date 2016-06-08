@@ -1,19 +1,27 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 
 /**
  * Created by qasim on 5/9/16.
@@ -26,6 +34,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+//                SupportMethods.setLocale(getApplicationContext(),language);
+        if(!language.equals(""))
+        Helper.setLocale(language,getResources());
     }
 
     public void setBackButton(Boolean isBackButton) {
@@ -81,5 +93,16 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         stopDisconnectTimer();
     }
+    protected void setToolbarAndNavigationBar(String heading, Boolean navigationBar) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//
+//        toolbar_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+//        // wb = (WebView) findViewById(R.id.wb);
+//        toolbar_title.setText(heading);
+//        //toolbar_title.setText(heading);
+//        //toolbar.setTitle(heading);
+//        //toolbar.setTitleTextColor(Color.WHITE);
+//        setSupportActionBar(toolbar);
 
+    }
 }

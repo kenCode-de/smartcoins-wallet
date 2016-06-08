@@ -8,6 +8,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -91,6 +92,8 @@ public class SettingActivity extends BaseActivity {
 
     @Bind(R.id.pin_ic)
     ImageView pin_ic;
+
+    Boolean inittLocale = false;
 
     @Bind(R.id.ivSocketConnected_content_settings)
     ImageView ivSocketConnected;
@@ -251,6 +254,7 @@ public class SettingActivity extends BaseActivity {
 
         ArrayAdapter<LangCode> adapterLanguage = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
         adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         Helper.setLocale(langCode, getResources());
@@ -409,9 +413,29 @@ public class SettingActivity extends BaseActivity {
     @OnItemSelected(R.id.spLanguage)
     void onItemSelectedLanguage(int position) {
         designMethod();
+
         LangCode langSelection = (LangCode) spLanguage.getSelectedItem();
         Helper.setLocale(langSelection.code, getResources());
+
+//        SupportMethods.setLocale(getApplicationContext(),langSelection.code);
+
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
+
+        if(inittLocale) {
+            Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+        inittLocale = true;
+//}
+//        Locale locale = new Locale(langSelection.code);
+//        Locale.setDefault(locale);
+//        Configuration config = new Configuration();
+//        config.locale = locale;
+//        getBaseContext().getResources().updateConfiguration(config,
+//                getBaseContext().getResources().getDisplayMetrics());
+
 
     }
 

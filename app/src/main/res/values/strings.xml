@@ -50,7 +50,7 @@
     <string name="balances">Balances</string>
     <string name="contacts">Contacts</string>
     <string name="receive_uppercase">RECEIVE</string>
-    <string name="send_UpperCase">SEND</string>
+    <string name="send_uppercase">SEND</string>
     <string name="transactions">Transactions</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="backup_asset">Backup Asset</string>

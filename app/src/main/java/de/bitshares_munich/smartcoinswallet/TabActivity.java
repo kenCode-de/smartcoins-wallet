@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,6 +28,7 @@ import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 
 public class TabActivity extends BaseActivity {
 
@@ -51,8 +55,11 @@ public class TabActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_tab);
         ButterKnife.bind(this);
+
+
 
 
         setSupportActionBar(toolbar);

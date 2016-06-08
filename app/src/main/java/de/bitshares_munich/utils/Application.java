@@ -247,7 +247,17 @@ public class Application extends android.app.Application {
                                 }
                             } else if (id == 11) {
                                 if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s, id);
+                                iBalancesDelegate.OnUpdate(s, id);
+                                }
+                            }else if (id == 99) {
+                                if (iBalancesDelegate != null) {
+                                    SupportMethods.testing("assests",99,"account_name");
+                                iBalancesDelegate.OnUpdate(s, id);
+                                }
+                            }else if (id == 999) {
+                                if (iBalancesDelegate != null) {
+                                    SupportMethods.testing("assests",999,"account_name");
+                            iBalancesDelegate.OnUpdate(s, id);
                                 }
                             } else if (id == 15) {
                                 if (iAssetDelegate != null) {

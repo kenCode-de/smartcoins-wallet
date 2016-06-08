@@ -2,6 +2,7 @@ package de.bitshares_munich.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
@@ -24,8 +25,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.bitshares_munich.smartcoinswallet.R;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/24/16.
@@ -211,5 +215,13 @@ public class SupportMethods {
             isValid = true;
         }
         return isValid;
+    }
+    public static void setLocale(Context base ,String language){
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        base.getResources().updateConfiguration(config,
+                base.getResources().getDisplayMetrics());
     }
 }
