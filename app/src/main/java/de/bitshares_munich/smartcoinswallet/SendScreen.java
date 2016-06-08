@@ -290,8 +290,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (loyaltyAmount.equals("")) {
                 loyaltyAmount = "0";
             }
-            Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
-            etAmount.setText(remainingAmount.toString());
+            if (requiredAmount != null) {
+                Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
+                etAmount.setText(remainingAmount.toString());
+            }
             updateTotalStatus();
         } else {
             getExchangeRate(200);
@@ -608,7 +610,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void getExchangeRate(int id) {
         //id 200 for exchange rate
         selectedAccountAsset();
-        if (backupAssets != null) {
+        if (backupAssets != null && id == 200) {
             if (selectedAccountAsset.id.equals(backupAssets.id)) {
                 backAssetRate = 1.0;
                 runOnUiThread(new Runnable() {
