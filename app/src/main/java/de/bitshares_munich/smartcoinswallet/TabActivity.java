@@ -64,9 +64,11 @@ public class TabActivity extends BaseActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+
         toolbar.setNavigationIcon(R.mipmap.btslogo);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+        setTitle(getResources().getString(R.string.app_name));
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();

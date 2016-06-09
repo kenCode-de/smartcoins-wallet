@@ -122,6 +122,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
         context = getApplicationContext();
         application.registerBalancesDelegate(this);
+        setTitle(getResources().getString(R.string.e_receipt_activity_name));
 
         Intent intent = getIntent();
         String eReciept = intent.getStringExtra(getResources().getString(R.string.e_receipt));

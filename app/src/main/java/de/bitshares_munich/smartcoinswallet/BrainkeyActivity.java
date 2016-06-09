@@ -56,6 +56,8 @@ public class BrainkeyActivity extends BaseActivity {
         setContentView(R.layout.activity_brainkey);
         ButterKnife.bind(this);
         setBackButton(true);
+        setTitle(getResources().getString(R.string.app_name));
+
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
 

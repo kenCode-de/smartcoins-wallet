@@ -73,6 +73,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         ButterKnife.bind(this);
 
         setBackButton(true);
+        setTitle(getResources().getString(R.string.add_contact_activity_name));
 
         context = this;
         tinyDB = new TinyDB(context);

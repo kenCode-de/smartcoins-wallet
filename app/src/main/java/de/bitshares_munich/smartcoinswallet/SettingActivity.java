@@ -105,6 +105,7 @@ public class SettingActivity extends BaseActivity {
 
         setContentView(R.layout.activity_setting);
         setBackButton(true);
+        setTitle(getResources().getString(R.string.settings_activity_name));
 
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);

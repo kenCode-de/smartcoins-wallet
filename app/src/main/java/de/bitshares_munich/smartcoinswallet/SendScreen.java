@@ -153,6 +153,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         setBackButton(true);
 
+        setTitle(getResources().getString(R.string.send_screen_name));
+
         context = getApplicationContext();
         ButterKnife.bind(this);
         application.registerExchangeRateCallback(this);

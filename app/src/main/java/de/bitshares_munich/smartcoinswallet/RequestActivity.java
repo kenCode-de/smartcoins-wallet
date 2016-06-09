@@ -53,6 +53,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
         ButterKnife.bind(this);
 
         setBackButton(true);
+        setTitle(getResources().getString(R.string.request_amount_screen_name));
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         locale = new Locale(language);
         format = NumberFormat.getInstance(locale);

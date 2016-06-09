@@ -9,6 +9,7 @@ public class ImportBackupActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_backup);
+        setTitle(getResources().getString(R.string.app_name));
 
     }
 }

@@ -92,6 +92,7 @@ public class RecieveActivity extends BaseActivity {
         setBackButton(true);
 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle(getResources().getString(R.string.rcv_screen_name));
 
         progressDialog = new ProgressDialog(this);
         showDialog("", this.getString(R.string.loading));

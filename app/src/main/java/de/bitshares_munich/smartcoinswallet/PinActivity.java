@@ -39,6 +39,7 @@ public class PinActivity extends BaseActivity {
         setContentView(R.layout.activity_create_pin);
         ButterKnife.bind(this);
         setBackButton(true);
+        setTitle(getResources().getString(R.string.app_name));
 
         boolean pin = Helper.containKeySharePref(getApplicationContext(), getString(R.string.txt_pin));
         if (pin) {

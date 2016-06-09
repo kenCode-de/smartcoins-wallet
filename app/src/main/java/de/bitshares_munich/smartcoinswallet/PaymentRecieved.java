@@ -73,6 +73,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         ButterKnife.bind(this);
 
         setBackButton(true);
+        setTitle(getResources().getString(R.string.payment_rcvd_screen_name));
+
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         locale = new Locale(language);
         playSound();

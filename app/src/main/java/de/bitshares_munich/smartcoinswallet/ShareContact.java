@@ -20,6 +20,8 @@ public class ShareContact extends BaseActivity {
         ButterKnife.bind(this);
 
         setBackButton(true);
+        setTitle(getResources().getString(R.string.share_account_activity_name));
+
     }
 
 

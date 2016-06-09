@@ -63,6 +63,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         verifyCameraPermissions(this);
 
         setBackButton(true);
+        setTitle(getResources().getString(R.string.qr_code_activity_name));
 
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);

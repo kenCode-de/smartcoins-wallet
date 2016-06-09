@@ -64,6 +64,7 @@ public class AccountActivity extends BaseActivity implements IAccount {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
+        setTitle(getResources().getString(R.string.app_name));
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         validationAccountName();
         gson = new Gson();
