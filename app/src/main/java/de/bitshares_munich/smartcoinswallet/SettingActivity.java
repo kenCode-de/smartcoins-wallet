@@ -101,6 +101,9 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //this.invalidateOptionsMenu();
+
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 
         setContentView(R.layout.activity_setting);
@@ -423,7 +426,12 @@ public class SettingActivity extends BaseActivity {
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
 
         if(inittLocale) {
+
             Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+
+            //this.supportInvalidateOptionsMenu();
+            //this.invalidateOptionsMenu();
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

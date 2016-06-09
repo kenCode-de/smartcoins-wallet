@@ -29,6 +29,8 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
 
+        //supportInvalidateOptionsMenu();
+        //this.invalidateOptionsMenu();
 
         new Handler().postDelayed(new Runnable() {
             @Override
