@@ -261,7 +261,7 @@ public class SettingActivity extends BaseActivity {
         inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-        Helper.setLocale(langCode, getResources());
+      //  Helper.setLocale(langCode, getResources());
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);

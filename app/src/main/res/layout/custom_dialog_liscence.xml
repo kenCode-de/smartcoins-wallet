@@ -9,13 +9,15 @@
     <ScrollView
         android:id="@+id/ScrollView"
         android:layout_height="250dp"
-        android:layout_width="wrap_content">
-    <TextView
-        android:id="@+id/dialog_txt_info"
-        android:layout_width="match_parent"
-        android:text="@string/small_text"
-        android:layout_height="wrap_content"
-        android:padding="10dp"/>
+        android:layout_width="match_parent">
+
+        <WebView
+            android:id="@+id/webviewLisense"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            >
+        </WebView>
 </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +32,7 @@
             android:background="@color/pink"
             android:textColor="@color/white"
             android:textSize="13dp"
-            android:text="@string/cancel_and_exit"/>
+            android:text="Cancel and Exit"/>
 
         <Button
             android:id="@+id/dialog_btn_agree"
@@ -40,6 +42,6 @@
             android:background="@color/green"
             android:textColor="@color/white"
             android:textSize="13dp"
-            android:text="@string/i_agree"/>
+            android:text="I Agree"/>
     </LinearLayout>
 </RelativeLayout>

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -140,6 +141,10 @@ public class AccountActivity extends BaseActivity implements IAccount {
         dialog.setTitle(R.string.agreement);
         dialog.setContentView(R.layout.custom_dialog_liscence);
         Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
+        WebView webView = (WebView) dialog.findViewById(R.id.webviewLisense);
+        String html = getString(R.string.lisence_html);
+        webView.loadData(html, "text/html", "UTF-8");
+
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

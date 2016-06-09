@@ -78,8 +78,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         context = this;
         tinyDB = new TinyDB(context);
         application.registerCallback(this);
-       this.getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         contactsDelegate = ContactsFragment.contactsDelegate;
         loadWebView(39, Helper.md5(""));
         SaveContact.setEnabled(false);

@@ -38,6 +38,13 @@ public class BaseActivity extends AppCompatActivity {
 //                SupportMethods.setLocale(getApplicationContext(),language);
         if(!language.equals(""))
         Helper.setLocale(language,getResources());
+        else {
+            language = Locale.getDefault().getLanguage();
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language) , language);
+            Helper.setLocale(language,getResources());
+        }
+
+
     }
 
     public void setBackButton(Boolean isBackButton) {

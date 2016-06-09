@@ -141,9 +141,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
 
-        recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
-        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
+//        recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+//        sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+//        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
@@ -239,9 +239,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
-        recievebtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        sendbtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
-        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
+//        recievebtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
+//        sendbtn.setImageBitmap(SupportMethods.highlightImage(15,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
+//        qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
 
         if(checkIfAccountNameChange()){loadBasic();}
 //        tableViewparent.setVisibility(View.GONE);
