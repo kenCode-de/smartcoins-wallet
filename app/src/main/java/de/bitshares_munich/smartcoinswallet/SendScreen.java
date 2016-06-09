@@ -31,6 +31,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
@@ -67,6 +68,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     AccountAssets backupAssets;
     boolean validReceiver = false;
     boolean validAmount = false;
+    boolean sendBtnPressed = false;
+
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     boolean alwaysDonate = false;
@@ -191,13 +194,26 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         if (etReceiverAccount.getText().length() > 0) {
+//            myLowerCaseTimer.cancel();
+//            myAccountNameValidationTimer.cancel();
+//            myLowerCaseTimer.start();
+//            myAccountNameValidationTimer.start();
+        }
+        tvErrorRecieverAccount.setVisibility(View.GONE);
+
+        loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
+    }
+
+    @OnFocusChange(R.id.etReceiverAccount)
+    public void onFocusChange(boolean hasFocus) {
+        if (!hasFocus) {
+            tvErrorRecieverAccount.setText("");
+            tvErrorRecieverAccount.setVisibility(View.VISIBLE);
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
             myAccountNameValidationTimer.start();
         }
-
-        loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
     }
 
     @OnTextChanged(R.id.etAmount)
@@ -305,17 +321,50 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.btnSend)
     public void setBtnSend(View view) {
+        sendBtnPressed = true;
+        if(validReceiver)
+            validatingComplete();
+        else {
+            tvErrorRecieverAccount.setText("");
+            tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+            myLowerCaseTimer.cancel();
+            myAccountNameValidationTimer.cancel();
+            myLowerCaseTimer.start();
+            myAccountNameValidationTimer.start();
+        }
+    }
+
+    void validatingComplete(){
         if (validateSend()) {
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
                 showDialog("", "Trading Funds...");
                 tradeAsset();
-            } else{
+            } else {
                 sendFunds(false);
             }
-
         }
     }
+
+//    void timer(){
+//        final Handler handler = new Handler();
+//
+//        final Runnable updateTask = new Runnable() {
+//            @Override
+//            public void run() {
+//                if ( validReceiver )
+//                {
+//                    validatingComplete();
+//                }
+//                else {
+//                    timer();
+//                }
+//            }
+//        };
+//
+//        handler.postDelayed(updateTask, 1000);
+//    }
+
     public void sendFunds(boolean isTrade){
         showDialog("", "Transferring Funds...");
         if (isTrade){
@@ -646,9 +695,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
-        } else if (!validReceiver) {
-            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
-            return false;
+//        } else if (!validReceiver) {
+//            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+//            return false;
         } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
             Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
@@ -779,6 +828,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     found = true;
                     validReceiver = true;
                     receiverID = jsonArray.getJSONArray(i).getString(1);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                    if(sendBtnPressed){
+                        sendBtnPressed=false;
+                        validatingComplete();
+                    }
+                        }
+                    });
                 }
             }
             if (!found) {

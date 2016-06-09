@@ -1,6 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -48,7 +51,7 @@ public class ListViewActivity extends BaseAdapter {
         }
 
 
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
             // TODO Auto-generated method stub
             ViewHolder holder;
             if (convertView == null) {
@@ -78,9 +81,8 @@ public class ListViewActivity extends BaseAdapter {
                        // Integer index = (Integer) v.getTag();
 //                        listContact.remove(index.intValue());
 //                        removeFromlist(index);
-                        listContact.remove(position);
-                        removeFromlist(position);
-                        notifyDataSetChanged();
+                        showDialog(position);
+
                     }
                 });
                 convertView.setTag(holder);
@@ -156,4 +158,33 @@ public class ListViewActivity extends BaseAdapter {
         listContact.clear();
     }
 
+    public void showDialog(final int position){
+                final Dialog dialog = new Dialog(context);
+                //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
+//                dialog.setTitle(R.string.pin_verification);
+                dialog.setContentView(R.layout.alert_delete_dialog);
+                Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+                Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+
+                btnDone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listContact.remove(position);
+                        removeFromlist(position);
+                        notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                      public void onClick(View v) {
+                            dialog.cancel();
+                         }
+                   });
+//                dialog.setCancelable(false);
+
+                dialog.show();
+
+
+    }
     }

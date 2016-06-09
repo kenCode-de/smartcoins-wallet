@@ -8,8 +8,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
+    android:orientation="vertical">
 
 
     <TextView
@@ -79,7 +78,7 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:text=""
+        android:text="vaguity narine townlet rockaby taurian beadily cyan unbear adactyl dimble agamian upburst fasting amaltas dossal nexus"
         android:gravity="top" />
 
     <TextView
