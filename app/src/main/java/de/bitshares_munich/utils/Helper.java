@@ -378,7 +378,7 @@ public class Helper {
         }else if (str.equals(".")){
             return "0.";
         }
-        return str;
+        return String.format("%.4f",Double.parseDouble(str));
     }
 
 }

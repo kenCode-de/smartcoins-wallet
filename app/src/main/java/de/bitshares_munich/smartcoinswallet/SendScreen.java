@@ -841,12 +841,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             count++;
         } else if (loyaltyAsset != null && exchangeRate != null) {
             Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
-            tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, totalAmount.toString(), selectedAccountAsset.symbol));
+            tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format("%.4f",totalAmount), selectedAccountAsset.symbol));
         } else if (backupAssets != null && backAssetRate != null) {
             Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
             tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
                     selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
-                    backupAssets.symbol, totalAmount.toString(), selectedAccountAsset.symbol));
+                    backupAssets.symbol, String.format("%.4f",totalAmount), selectedAccountAsset.symbol));
         }
         tvTotalStatus.setVisibility(View.VISIBLE);
     }
