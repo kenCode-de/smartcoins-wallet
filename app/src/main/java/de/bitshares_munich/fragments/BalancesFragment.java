@@ -294,26 +294,76 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @OnClick(R.id.recievebtn)
     public void GoToRecieveActivity() {
-        Intent intent = new Intent(getActivity(), RecieveActivity.class);
+        final Intent intent = new Intent(getActivity(), RecieveActivity.class);
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), accountId);
-        startActivity(intent);
+        Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
+        coinAnimation.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+        });
+        recievebtn.startAnimation(coinAnimation);
     }
 
     @OnClick(R.id.sendbtn)
     public void GoToSendActivity() {
         if(isLoading){
-        Intent intent = new Intent(getActivity(), SendScreen.class);
-        startActivity(intent);}
+            final Intent intent = new Intent(getActivity(), SendScreen.class);
+            Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
+            coinAnimation.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+            });
+            sendbtn.startAnimation(coinAnimation);
+        }
         else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.qrCamera)
     public void QrCodeActivity() {
         if(isLoading){
-        Intent intent = new Intent(getContext(), qrcodeActivity.class);
-        intent.putExtra("id", 1);
-        startActivity(intent);}
+            final Intent intent = new Intent(getContext(), qrcodeActivity.class);
+            intent.putExtra("id", 1);
+            Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
+            coinAnimation.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+            });
+            qrCamera.startAnimation(coinAnimation);
+        }
         else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
