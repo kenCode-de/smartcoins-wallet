@@ -208,7 +208,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void onFocusChange(boolean hasFocus) {
         if (!hasFocus) {
             tvErrorRecieverAccount.setText("");
-            tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+          //  tvErrorRecieverAccount.setVisibility(View.VISIBLE);
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
@@ -562,8 +562,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (!callbackURL.substring(callbackURL.length() - 1).equals("/")) {
                 callbackURL = callbackURL + "/";
             }
+          //  Toast.makeText(context,"Callback identified",Toast.LENGTH_LONG).show();
             etReceiverAccount.setText(resJson.get("to").toString());
-            validReceiver = true;
+            //validReceiver = true;
             spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
             spAssets.setClickable(false);
             if (resJson.get("memo") != null) {
@@ -832,11 +833,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         @Override
                         public void run() {
                     if(sendBtnPressed){
-                        sendBtnPressed=false;
                         validatingComplete();
                     }
                         }
                     });
+                    sendBtnPressed=false;
                 }
             }
             if (!found) {
@@ -844,6 +845,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     @Override
                     public void run() {
                         validReceiver = false;
+                        sendBtnPressed=false;
                         String acName = getString(R.string.account_name_not_exist);
                         String format = String.format(acName, etReceiverAccount.getText().toString());
                         tvErrorRecieverAccount.setText(format);
@@ -852,7 +854,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 });
             }
         } catch (Exception e) {
-
+            sendBtnPressed=false;
         }
     }
 
