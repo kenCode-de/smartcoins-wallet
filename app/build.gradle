@@ -1,4 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 android {
     compileSdkVersion 23
@@ -38,4 +43,7 @@ dependencies {
     compile 'de.codecrafters.tableview:tableview:2.0.1'
     compile 'com.itextpdf:itextpdf:5.5.9'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
+        transitive = true;
+    }
 }

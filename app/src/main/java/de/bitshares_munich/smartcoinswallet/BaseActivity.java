@@ -23,6 +23,9 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 /**
  * Created by qasim on 5/9/16.
  */
@@ -33,6 +36,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics());
 
         String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
 //                SupportMethods.setLocale(getApplicationContext(),language);
