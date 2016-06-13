@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Zdieľaj s priateľmi</string>
 <string name="add_contact_activity_name">Pridať kontakt</string>
 <string name="str_trade_not_available">Obchodné Nie je k dispozícii</string>
+    <string name="preferred_lang">uprednostňovaný jazyk</string>
 </resources>

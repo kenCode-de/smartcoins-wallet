@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Berbagi dengan teman</string>
 <string name="add_contact_activity_name">Tambah kontak</string>
 <string name="str_trade_not_available">Perdagangan Tidak Tersedia</string>
+    <string name="preferred_lang">Bahasa Preferred</string>
 </resources>

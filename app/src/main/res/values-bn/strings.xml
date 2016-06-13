@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">বন্ধুদের সাথে ভাগাভাগি করা</string>
 <string name="add_contact_activity_name">পরিচিতি যোগ করুন</string>
 <string name="str_trade_not_available">ট্রেড উপলব্ধ নয়</string>
+    <string name="preferred_lang">পছন্দের ভাষা</string>
 </resources>

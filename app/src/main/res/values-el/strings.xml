@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Μοιράσου με φίλους</string>
 <string name="add_contact_activity_name">Προσθέστε επαφή</string>
 <string name="str_trade_not_available">Εμπόριο Μη Διαθέσιμο</string>
+    <string name="preferred_lang">προτιμώμενη γλώσσα</string>
 </resources>

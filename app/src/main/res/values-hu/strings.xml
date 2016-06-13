@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Oszd meg a barátaiddal</string>
 <string name="add_contact_activity_name">Kapcsolat hozzáadása</string>
 <string name="str_trade_not_available">Trade nem elérhető</string>
+    <string name="preferred_lang">Előnyben részesített nyelv</string>
 </resources>

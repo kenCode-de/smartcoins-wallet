@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Сподели с приятели</string>
 <string name="add_contact_activity_name">Добави контакт</string>
 <string name="str_trade_not_available">Търговия Не е наличен</string>
+    <string name="preferred_lang">предпочитан език</string>
 </resources>

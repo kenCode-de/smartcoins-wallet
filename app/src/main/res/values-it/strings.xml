@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Condividere con gli amici</string>
 <string name="add_contact_activity_name">Aggiungi contatto</string>
 <string name="str_trade_not_available">Commerciale Non disponibile</string>
+    <string name="preferred_lang">Lingua preferita</string>
 </resources>

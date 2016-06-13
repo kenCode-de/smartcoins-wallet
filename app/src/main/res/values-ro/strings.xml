@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Impartasiti cu prietenii</string>
 <string name="add_contact_activity_name">Adaugă contact</string>
 <string name="str_trade_not_available">Comert Nu este disponibil</string>
+    <string name="preferred_lang">Limba preferată</string>
 </resources>

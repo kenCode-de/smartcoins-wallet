@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">दोस्तों के साथ बांटें</string>
 <string name="add_contact_activity_name">संपर्क जोड़ें</string>
 <string name="str_trade_not_available">ट्रेड उपलब्ध नहीं</string>
+    <string name="preferred_lang">पसंदीदा भाषा</string>
 </resources>

@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Arkadaşlarınla ​​paylaş</string>
 <string name="add_contact_activity_name">Kişi ekle</string>
 <string name="str_trade_not_available">Mevcut Değil Ticaret</string>
+    <string name="preferred_lang">tercih edilen dil</string>
 </resources>

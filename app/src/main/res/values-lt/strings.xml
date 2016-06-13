@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Pasidalink su draugais</string>
 <string name="add_contact_activity_name">Pridėti Susisiekite</string>
 <string name="str_trade_not_available">Prekyba ne Turimas</string>
+    <string name="preferred_lang">Pageidautina kalba</string>
 </resources>

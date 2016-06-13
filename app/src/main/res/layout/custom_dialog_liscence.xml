@@ -21,10 +21,15 @@
 </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_below="@id/ScrollView">
 
         <Button
+            android:stateListAnimator="@animator/my_animated_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:id="@+id/dialog_btn_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -32,9 +37,14 @@
             android:background="@color/pink"
             android:textColor="@color/white"
             android:textSize="13dp"
-            android:text="Cancel and Exit"/>
+            android:text="DISAGREE"/>
 
         <Button
+            android:stateListAnimator="@animator/my_animated_button"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:id="@+id/dialog_btn_agree"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -42,6 +52,6 @@
             android:background="@color/green"
             android:textColor="@color/white"
             android:textSize="13dp"
-            android:text="I Agree"/>
+            android:text="AGREE"/>
     </LinearLayout>
 </RelativeLayout>

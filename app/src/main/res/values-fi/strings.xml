@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Jaa ystävien kanssa</string>
 <string name="add_contact_activity_name">Lisää yhteystieto</string>
 <string name="str_trade_not_available">Trade Ei saatavilla</string>
+    <string name="preferred_lang">ensisijainen kieli</string>
 </resources>

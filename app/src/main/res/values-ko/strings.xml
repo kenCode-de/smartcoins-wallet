@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">친구와 공유</string>
 <string name="add_contact_activity_name">연락처 추가</string>
 <string name="str_trade_not_available">사용할 수 없음 무역</string>
+    <string name="preferred_lang">선호하는 언어</string>s
 </resources>

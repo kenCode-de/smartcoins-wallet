@@ -143,4 +143,5 @@
 <string name="share_account_activity_name">友人たちと分ける</string>
 <string name="add_contact_activity_name">連絡先の追加</string>
 <string name="str_trade_not_available">トレード不可</string>
+    <string name="preferred_lang">言語の選択</string>
 </resources>

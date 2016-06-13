@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">شارك مع الاصدقاء</string>
 <string name="add_contact_activity_name">إضافة جهة اتصال</string>
 <string name="str_trade_not_available">التجارة غير متوفر</string>
+    <string name="preferred_lang">اللغة المفضلة</string>
 </resources>

@@ -143,5 +143,5 @@
 <string name="share_account_activity_name">Կիսվել ընկերների հետ</string>
 <string name="add_contact_activity_name">Ավելացնել Կապ</string>
 <string name="str_trade_not_available">Առեւտրի Ոչ Հասանելի</string>
-
+    <string name="preferred_lang">նախընտրելի Language</string>
 </resources>

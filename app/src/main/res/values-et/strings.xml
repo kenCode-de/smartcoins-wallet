@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Jaga sõpradega</string>
 <string name="add_contact_activity_name">Lisa Kontakt</string>
 <string name="str_trade_not_available">Kaubandus Pole saadaval</string>
+    <string name="preferred_lang">eelistatud keel</string>
 </resources>

@@ -143,5 +143,5 @@
 <string name="share_account_activity_name">Podijeli sa prijateljima</string>
 <string name="add_contact_activity_name">Dodaj kontakt</string>
 <string name="str_trade_not_available">Trade Nije na raspolaganju</string>
-
+    <string name="preferred_lang">Preferirani jezik</string>
 </resources>

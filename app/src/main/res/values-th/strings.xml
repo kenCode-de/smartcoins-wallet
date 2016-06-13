@@ -143,4 +143,5 @@
 <string name="share_account_activity_name">แชร์กับเพื่อน</string>
 <string name="add_contact_activity_name">เพิ่มผู้ติดต่อ</string>
 <string name="str_trade_not_available">การค้าไม่สามารถใช้งาน</string>
+    <string name="preferred_lang">ภาษาที่ต้องการ</string>
 </resources>

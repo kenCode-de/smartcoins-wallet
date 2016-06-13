@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Del med venner</string>
 <string name="add_contact_activity_name">Legg til kontakt</string>
 <string name="str_trade_not_available">Handels Ikke tilgjengelig</string>
+    <string name="preferred_lang">Foretrukket Språk</string>
 </resources>

@@ -143,4 +143,5 @@
 <string name="share_account_activity_name">Ndaje me miqte</string>
 <string name="add_contact_activity_name">Shto Kontakt</string>
 <string name="str_trade_not_available">Trade Not Available</string>
-  </resources>
+    <string name="preferred_lang">Gjuha e preferuar</string>
+</resources>

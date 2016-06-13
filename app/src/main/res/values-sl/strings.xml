@@ -142,4 +142,5 @@
 <string name="share_account_activity_name">Deli s prijatelji</string>
 <string name="add_contact_activity_name">Dodaj stik</string>
 <string name="str_trade_not_available">Trgovina ni na voljo</string>
+    <string name="preferred_lang">Želeni jezik</string>
 </resources>
