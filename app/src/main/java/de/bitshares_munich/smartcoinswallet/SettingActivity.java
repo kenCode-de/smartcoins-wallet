@@ -302,6 +302,7 @@ public class SettingActivity extends BaseActivity {
         // AccountsName
 
         ArrayList<String> arrayAccountName = new ArrayList<>();
+
         if (accountDetails.size() > 1) {
             spAccounts.setVisibility(View.VISIBLE);
             tvAccounts.setVisibility(View.GONE);
@@ -314,6 +315,7 @@ public class SettingActivity extends BaseActivity {
             tvAccounts.setText(accountDetails.get(i).account_name);
         }
 
+        Collections.sort(arrayAccountName);
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
@@ -333,6 +335,7 @@ public class SettingActivity extends BaseActivity {
             for (int j = 0; j < accountAssets.size(); j++) {
                 arrayAccountAssets.add(accountAssets.get(j).symbol);
             }
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
