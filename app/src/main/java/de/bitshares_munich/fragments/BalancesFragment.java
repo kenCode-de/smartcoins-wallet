@@ -1,12 +1,18 @@
 package de.bitshares_munich.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,6 +103,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.tvBalances)
     TextView tvBalances;
 
+    @Bind(R.id.tvUpgradeLtm)
+    TextView tvUpgradeLtm;
+
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
     int number_of_transactions_loaded;
@@ -137,6 +147,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+        tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 
         //recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
         //sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
@@ -227,6 +238,26 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             sendbtn.startAnimation(coinAnimation);
         }
         else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
+    }
+
+    @OnClick(R.id.ivHelp)
+    public void help() {
+        showDialogHelp();
+    }
+
+    @OnClick(R.id.tvUpgradeLtm)
+    public void updateLtm() {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.txt_confirmation));
+        alert.setMessage(getString(R.string.txt_confirmation_msg));
+        alert.setPositiveButton(getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        alert.setNegativeButton(getString(R.string.txt_no), null);
+        alert.show();
     }
 
     @OnClick(R.id.qrCamera)
@@ -702,6 +733,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             }
         }
         return !checkAccountName.equals(to);
+    }
+
+    private void showDialogHelp()
+    {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(getString(R.string.help_title));
+        alert.setMessage(getString(R.string.help_message));
+        alert.setPositiveButton(getString(R.string.got_it),null);
+        alert.show();
     }
 
 }

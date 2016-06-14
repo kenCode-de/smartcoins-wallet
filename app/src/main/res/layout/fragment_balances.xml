@@ -1,36 +1,58 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView android:id="@+id/scrollViewBalances"
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/whiteColor"
             android:fillViewport="true"
-            android:nestedScrollingEnabled="true"
-            android:id="@+id/scrollViewBalances"
-            android:background="@color/whiteColor">
+            android:nestedScrollingEnabled="true">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="3">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="60dp"
+                      android:orientation="horizontal">
+            <TextView
+                android:id="@+id/account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/whiteColor"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:textColor="@color/black"
+                android:textSize="21dp"
+                android:textStyle="bold"/>
+            <ImageView
+                android:id="@+id/ivHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="3dp"
+                android:src="@drawable/icon_help"/>
+            <TextView
+                android:id="@+id/tvUpgradeLtm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@color/whiteColor"
+                android:text="@string/upgrade_to_ltm"
+                android:textColor="#0B0080"
+                android:textSize="15dp"
+            />
 
-        <TextView
-            android:background="@color/whiteColor"
-            android:textColor="@color/black"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textStyle="bold"
-            android:textSize="21dp"
-            android:id="@+id/account_name"
-            android:text=""/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="3">
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1.1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.1"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="100dp"
@@ -38,12 +60,12 @@
                     android:layout_gravity="center"
                     android:gravity="center">
                     <ImageView
+                        android:id="@+id/recievebtn"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:id="@+id/recievebtn"
-                        android:visibility="visible"
-                        android:src="@mipmap/icon_receive"/>
+                        android:src="@mipmap/icon_receive"
+                        android:visibility="visible"/>
 
                 </LinearLayout>
                 <ImageView
@@ -51,8 +73,8 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:visibility="gone"
-                    android:src="@mipmap/icon_receive"/>
+                    android:src="@mipmap/icon_receive"
+                    android:visibility="gone"/>
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
@@ -62,30 +84,29 @@
             </LinearLayout>
 
 
-
             <ImageView
                 android:id="@+id/qrCamera"
                 android:layout_width="0dp"
-                android:layout_weight="0.6"
                 android:layout_height="75dp"
-                android:visibility="invisible"
                 android:layout_gravity="center"
-                android:src="@mipmap/icon_camera"/>
+                android:layout_weight="0.6"
+                android:src="@mipmap/icon_camera"
+                android:visibility="invisible"/>
 
-            <View android:layout_width="0dp"
+            <View android:id="@+id/backLine"
+                  android:layout_width="0dp"
                   android:layout_height="1dp"
                   android:layout_gravity="center"
+                  android:layout_marginLeft="-14dp"
                   android:layout_weight="0.3"
                   android:background="#dc473a"
-                  android:visibility="invisible"
-                  android:layout_marginLeft="-14dp"
-                android:id="@+id/backLine"/>
+                  android:visibility="invisible"/>
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-31dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="100dp"
@@ -110,28 +131,28 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
-            android:weightSum="3"
-            android:background="@color/transactionsHeader">
+            android:background="@color/transactionsHeader"
+            android:weightSum="3">
             <TextView
-                android:textColor="@color/black"
+                android:id="@+id/tvBalances"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:textStyle="bold"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="3"
                 android:gravity="center_vertical"
+                android:text="@string/balances"
+                android:textColor="@color/black"
                 android:textSize="17dp"
-                android:id="@+id/tvBalances"
-                android:text="@string/balances"/>
+                android:textStyle="bold"/>
             <ProgressBar
                 android:id="@+id/progressBar1"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginRight="20dp"
                 android:layout_gravity="center"
-                android:indeterminateDrawable="@drawable/loader_homescreen" >
+                android:layout_marginRight="20dp"
+                android:indeterminateDrawable="@drawable/loader_homescreen">
             </ProgressBar>
         </LinearLayout>
 
@@ -146,8 +167,8 @@
             android:id="@+id/whiteSpaceAfterBalances"
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:orientation="vertical"
-            android:background="@color/whiteColor">
+            android:background="@color/whiteColor"
+            android:orientation="vertical">
         </LinearLayout>
 
         <LinearLayout
@@ -156,66 +177,66 @@
             android:layout_height="40dp"
             android:background="@color/transactionsHeader">
             <TextView
-                android:textColor="@color/black"
-                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_marginLeft="16dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="@string/transactions"
+                android:textColor="@color/black"
                 android:textSize="17dp"
-                android:text="@string/transactions"/>
+                android:textStyle="bold"/>
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:indeterminateDrawable="@drawable/loader_homescreen" >
+                android:indeterminateDrawable="@drawable/loader_homescreen">
             </ProgressBar>
             <Button
                 android:id="@+id/exportButton"
-                android:layout_margin="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@color/colorPrimary"
                 android:text="@string/export"
-                android:textColor="@color/whiteColor"
-                android:background="@color/colorPrimary"/>
+                android:textColor="@color/whiteColor"/>
         </LinearLayout>
 
 
         <LinearLayout
+            android:id="@+id/tableViewparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/tableViewparent"
             android:isScrollContainer="true"
             android:orientation="vertical"
             android:weightSum="2"
         >
             <de.codecrafters.tableview.SortableTableView
-                xmlns:table="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/tableView"
+                xmlns:table="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                table:tableView_columnCount="4"
-                table:tableView_headerElevation="10"
                 android:layout_weight="1.9"
-                table:tableView_headerColor="@color/transactionsHeader"
                 android:background="@color/whiteColor"
                 android:backgroundTint="@color/whiteColor"
-                table:theme="@style/AppTheme"
-                android:scrollbars="vertical"
                 android:nestedScrollingEnabled="true"
+                android:scrollbars="vertical"
+                table:tableView_columnCount="4"
+                table:tableView_headerColor="@color/transactionsHeader"
+                table:tableView_headerElevation="10"
+                table:theme="@style/AppTheme"
             >
             </de.codecrafters.tableview.SortableTableView>
             <Button
-                android:layout_weight="0.1"
+                android:id="@+id/load_more_values"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:id="@+id/load_more_values"
-                android:text="@string/show_more"
                 android:layout_gravity="bottom"
+                android:layout_weight="0.1"
+                android:text="@string/show_more"
             />
         </LinearLayout>
 
