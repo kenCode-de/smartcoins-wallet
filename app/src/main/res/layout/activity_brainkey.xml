@@ -68,7 +68,8 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:gravity="top" />
+        android:gravity="top"
+        android:text="@string/test_brain_key"/>
 
     <TextView
         android:visibility="gone"

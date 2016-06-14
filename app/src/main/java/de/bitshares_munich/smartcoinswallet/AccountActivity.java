@@ -256,8 +256,8 @@ public class AccountActivity extends BaseActivity implements IAccount {
                         @Override
                         public void run() {
                             String acName = getString(R.string.account_name_already_exist);
-                            String format = String.format(acName, temp);
-                            tvErrorAccountName.setText(format);
+                            //String format = String.format(acName, temp);
+                            tvErrorAccountName.setText(acName);
                             tvErrorAccountName.setVisibility(View.VISIBLE);
                         }
                     });
