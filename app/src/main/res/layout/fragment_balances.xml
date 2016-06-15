@@ -14,15 +14,24 @@
         android:weightSum="3">
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="60dp"
+                      android:layout_marginTop="16dp"
+                      android:layout_marginLeft="16dp"
                       android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/ivLifeTime"
+                android:layout_width="wrap_content" android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/fresh_icon"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                />
             <TextView
                 android:id="@+id/account_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/whiteColor"
-                android:paddingLeft="16dp"
-                android:paddingTop="16dp"
                 android:textColor="@color/black"
+                android:gravity="center"
                 android:textSize="21dp"
                 android:textStyle="bold"/>
             <ImageView
@@ -35,8 +44,9 @@
             <TextView
                 android:id="@+id/tvUpgradeLtm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:gravity="center"
                 android:background="@color/whiteColor"
                 android:text="@string/upgrade_to_ltm"
                 android:textColor="#0B0080"
