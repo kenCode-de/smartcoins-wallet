@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+    xmlns:counter="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,14 +22,28 @@
             android:textColor="@color/green"
             android:text=""/>
 
-        <TextView
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1.2"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textSize="17dp"-->
+            <!--android:textColor="@color/green"-->
+            <!--android:text=""/>-->
+        <com.github.premnirmal.textcounter.CounterView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text=""/>
+            counter:autoStart="false"
+            counter:timeInterval="2"
+            counter:prefix=""
+            counter:suffix=""
+            android:text=""
+            counter:type="both"
+            />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -40,14 +55,28 @@
             android:textColor="@color/green"
             android:text=""/>
 
-        <TextView
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1.2"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textSize="17dp"-->
+            <!--android:textColor="@color/green"-->
+            <!--android:text=""/>-->
+        <com.github.premnirmal.textcounter.CounterView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            android:text=""/>
+            counter:autoStart="false"
+            counter:timeInterval="2"
+            counter:prefix=""
+            counter:suffix=""
+            android:text=""
+            counter:type="both"
+            />
     </LinearLayout>
     <View
         android:layout_width="match_parent"

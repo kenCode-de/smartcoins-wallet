@@ -242,13 +242,48 @@
                 android:textColor="@drawable/btn_txt"
                 android:background="@drawable/button_border"
             />
-
+            <Button
+                android:id="@+id/import_new_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/register_new_account"
+                android:layout_marginTop="10dp"
+                android:text="@string/import_new_account"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:textColor="@drawable/btn_txt"
+                android:background="@drawable/button_border"
+                />
+            <Button
+                android:id="@+id/upgrade_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/import_new_account"
+                android:layout_marginTop="10dp"
+                android:text="@string/upgrade_account"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:textColor="@drawable/btn_txt"
+                android:background="@drawable/button_border"
+                />
+            <Button
+                android:id="@+id/remove_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/upgrade_account"
+                android:layout_marginTop="10dp"
+                android:text="@string/remove_account"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:textColor="@drawable/btn_txt"
+                android:background="@drawable/button_border"
+                />
 
             <LinearLayout
                 android:id="@+id/l5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/register_new_account"
+                android:layout_below="@+id/remove_account"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:elevation="5dp"
