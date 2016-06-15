@@ -8,8 +8,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -98,6 +102,9 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.ivSocketConnected_content_settings)
     ImageView ivSocketConnected;
 
+    @Bind(R.id.upgrade_account)
+    Button btnUpgrade;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,12 +119,14 @@ public class SettingActivity extends BaseActivity {
 
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
-
+        btnUpgrade.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
+
+
     }
 
     public void init() {
@@ -310,9 +319,20 @@ public class SettingActivity extends BaseActivity {
             tvAccounts.setVisibility(View.VISIBLE);
             spAccounts.setVisibility(View.GONE);
         }
+
+
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
+            if (accountDetails.get(i).isLifeTime) {
+                ivLifeTime.setVisibility(View.VISIBLE);
+                btnUpgrade.setVisibility(View.GONE);
+
+            } else {
+                ivLifeTime.setVisibility(View.GONE);
+                btnUpgrade.setVisibility(View.VISIBLE);
+
+            }
         }
 
         Collections.sort(arrayAccountName);
@@ -390,8 +410,12 @@ public class SettingActivity extends BaseActivity {
                     brainKey = accountDetails.get(i).brain_key;
                     if (accountDetails.get(i).isLifeTime) {
                         ivLifeTime.setVisibility(View.VISIBLE);
+                        btnUpgrade.setVisibility(View.GONE);
+
                     } else {
                         ivLifeTime.setVisibility(View.GONE);
+                        btnUpgrade.setVisibility(View.VISIBLE);
+
                     }
                 } else {
                     accountDetails.get(i).isSelected = false;
@@ -541,5 +565,98 @@ public class SettingActivity extends BaseActivity {
     void designMethod() {
         if (android.os.Build.VERSION.SDK_INT > 21)
             getWindow().setExitTransition(new Explode());
+    }
+
+
+    @OnClick(R.id.register_new_account)
+    void setRegisterNewAccount(){
+        Intent intent = new Intent(this , AccountActivity.class);
+        startActivity(intent);
+    }
+    @OnClick(R.id.import_new_account)
+    void setImport_new_account(){
+        Intent intent = new Intent(this , BrainkeyActivity.class);
+        startActivity(intent);
+    }
+    @OnClick(R.id.upgrade_account)
+    void setUpgradeNewAccount(){
+//        Intent intent = new Intent(this , ExistingAccountActivity.class);
+//        startActivity(intent);
+    }
+    @OnClick(R.id.remove_account)
+    void setRemoveNewAccount(){
+            showDialog();
+    }
+    public void showDialog(){
+        final Dialog dialog = new Dialog(this);
+        //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
+//                dialog.setTitle(R.string.pin_verification);
+        dialog.setContentView(R.layout.alert_delete_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        TextView textView = (TextView)dialog.findViewById(R.id.alertMsg);
+        btnCancel.setText(R.string.txt_no);
+        btnDone.setText(R.string.txt_yes);
+
+        String alertMsg = getString(R.string.txt_alertmsg);
+        if (accountDetails.size() > 1) {
+              alertMsg = alertMsg +  " : " + spAccounts.getSelectedItem().toString() + " ?";
+        } else {
+            alertMsg =  alertMsg +  " : " + tvAccounts.getText() + " ?";
+        }
+        textView.setText(alertMsg);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAccount();
+                dialog.cancel();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+//                dialog.setCancelable(false);
+
+        dialog.show();
+
+
+    }
+    void deleteAccount(){
+        if (accountDetails.size() > 1) {
+            for (int i = 0; i < accountDetails.size(); i++) {
+
+                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
+                    accountDetails.remove(i);
+                }
+            }
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
+
+            accountDetails.clear();
+
+            accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            init();
+            populateDropDowns();
+
+
+        } else {
+            tvAccounts.setText("");
+            tvAccounts.setVisibility(View.GONE);
+            clearApplicationData(getApplicationContext());
+        }
+    }
+    public void clearApplicationData(Context mContext) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent k = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        k.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(k);
+        finish();
     }
 }

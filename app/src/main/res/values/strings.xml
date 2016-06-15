@@ -259,4 +259,9 @@
     <string name="txt_no">No</string>
     <string name="txt_confirmation">Confirmation</string>
     <string name="txt_confirmation_msg">Are your sure?</string>
+    <string name="import_new_account">IMPORT NEW ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">REMOVE ACCOUNT</string>
+    <string name="txt_alertmsg">Are you sure to delete this account</string>
+
 </resources>

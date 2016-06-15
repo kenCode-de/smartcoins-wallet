@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:id="@+id/alertMsg"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="10dp"
         android:text="Are you sure to delete this contact"
@@ -39,6 +40,7 @@
             android:background="@color/pink"
             android:padding="10dp"
             android:text="@string/cancel"
+            android:stateListAnimator="@animator/my_animated_button"
             android:textColor="@color/white"/>
         <Button
             android:id="@+id/btnDone"
@@ -48,6 +50,7 @@
             android:layout_margin="10dp"
             android:background="@color/green"
             android:padding="10dp"
+            android:stateListAnimator="@animator/my_animated_button"
             android:text="@string/done"
             android:textColor="@color/white"/>
 
