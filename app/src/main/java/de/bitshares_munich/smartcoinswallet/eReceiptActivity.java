@@ -331,7 +331,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     }
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
-        String filename = "Transaction-scwall";
+        String filename = "eReciept-scwall";
 
 
 

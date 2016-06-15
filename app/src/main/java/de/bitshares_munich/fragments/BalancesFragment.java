@@ -44,6 +44,7 @@ import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
@@ -145,10 +146,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
-        // replace myTransactions with actual data
-
         final Handler handler = new Handler();
-
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -165,7 +163,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         };
         handler.postDelayed(updateTask, 2000);
 
+
+
         loadBasic();
+        loadBalancesFromSharedPref();
+        TransactionUpdateOnStartUp();
 
         return rootView;
     }
@@ -265,6 +267,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         else Toast.makeText(getContext(),R.string.loading_msg,Toast.LENGTH_LONG).show();
     }
 
+    public void loadBalancesFromSharedPref ()
+    {
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
+
+                if (accountAsset.size() > 0)
+                {
+                    ArrayList<String> sym = new ArrayList<>();
+                    ArrayList<String> pre = new ArrayList<>();
+                    ArrayList<String> am = new ArrayList<>();
+
+                    for (int j = 0 ; j < accountAsset.size() ; j++)
+                    {
+                        pre.add(j, accountAsset.get(j).precision);
+                        sym.add(j, accountAsset.get(j).symbol);
+                        am.add(j, accountAsset.get(j).ammount);
+                    }
+
+                    BalanceAssetsUpdate(sym, pre, am, true);
+                }
+
+                break;
+            }
+        }
+
+    }
+
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am)
     {
@@ -306,10 +340,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         SupportMethods.testing("Assets","Assets views 4","Asset Activity");
-        BalanceAssetsUpdate(sym, pre, am);
+        BalanceAssetsUpdate(sym, pre, am, false);
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp)
     {
         getActivity().runOnUiThread(new Runnable() {
             public void run()
@@ -367,9 +401,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                         else counter = 1;
                     }
                 }
-                progressBar1.setVisibility(View.GONE);
+
+                if (!onStartUp)
+                {
+                    progressBar1.setVisibility(View.GONE);
+                    isLoading = true;
+                }
+
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
-                isLoading = true;
             }
         });
     }
@@ -459,11 +498,53 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
     }
 
+
+    private void saveTransactions (List<TransactionDetails> transactionDetails)
+    {
+        tinyDB.putTransactions( getActivity(),getContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(transactionDetails) );
+    }
+
+    private List<TransactionDetails> getTransactionsFromSharedPref()
+    {
+        List<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions),TransactionDetails.class);
+
+        for (TransactionDetails td : mySavedList) {
+           td.updateContext(getContext());
+        }
+
+        return mySavedList;
+    }
+
+    public void TransactionUpdateOnStartUp()
+    {
+        final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref();
+
+        if ( localTransactionDetails != null && localTransactionDetails.size() > 0 )
+        {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run()
+                {
+                    tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), localTransactionDetails));
+                    load_more_values.setVisibility(View.VISIBLE);
+                    load_more_values.setEnabled(true);
+                    tableViewparent.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue)
     {
         getActivity().runOnUiThread(new Runnable() {
-            public void run() {
+            public void run()
+            {
+                if (myTransactions.size() == 0)
+                {
+                    saveTransactions(transactionDetails);
+                    myTransactions.clear();
+                }
+
                 if (number_of_transactions_in_queue < 25) {
                     load_more_values.setVisibility(View.GONE);
                 } else {
@@ -651,12 +732,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         number_of_transactions_loaded = number_of_transactions_loaded + 25;
     }
 
-    void loadBasic(){
+    void loadBasic()
+    {
         isLoading = false;
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         //accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-        if (accountDetails.size() == 1) {
+        if (accountDetails.size() == 1)
+        {
             accountDetailsId = 0;
             accountDetails.get(0).isSelected = true;
             to = accountDetails.get(0).account_name;

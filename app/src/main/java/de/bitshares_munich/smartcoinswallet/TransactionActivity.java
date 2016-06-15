@@ -227,68 +227,10 @@ public class TransactionActivity implements BalancesDelegate {
 
         memo_total_size = memos.size();
 
-      //  testing("namak",memo_in_work,"memo_total_size");
-//        if(arrayof_Amount_AssetId.size()==blocks.size())
-//        id_total_size = arrayof_Amount_AssetId.size();
-//        else id_total_size = Math.min(arrayof_Amount_AssetId.size(),blocks.size());
 
         id_in_work = 0;
         get_Time(blocks.get(id_in_work),"9");
     }
-
-//    String get_memo(String memo){
-//        final String memoStr[] = new String[1];
-//        String toGet = "http://188.166.147.110:9003";
-//        // "{"method":"decode_memo","memo":"" + memo + "\",\"wifkey\":\"" + wifikey + "\"}";
-//        testing("namak",memo,"memo");
-//        testing("namak",wifkey,"wifkey");
-//        String toPass =  "{\"method\":\"decode_memo\",\"memo\":\"" + memo + "\",\"wifkey\":\"" + wifkey + "\"}";
-//        testing("namak",toPass,"toPass");
-//        RequestParams params =  new RequestParams();
-//        params.put("method","decode_memo");
-//        params.put("memo",memo);
-//        params.put("wifkey",wifkey);
-//        params.setUseJsonStreamer(true);
-//
-//        AsyncHttpClient client = new AsyncHttpClient();
-//        client.addHeader("Content-Type", "application/json");
-//        client.post(toGet , params , new AsyncHttpResponseHandler() {
-//            @Override
-//            public void onStart() {
-//                Log.i("euro", "start");
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, byte[] timeline) {
-//                try {
-//                    byte[] bytes = timeline;
-//                   // String s = new String(bytes);
-//                    memoStr[0] = new String(bytes);
-//                    testing("namak",bytes,"bytes");
-//
-//                    //   finishWithResult(s);
-////                    onLastCall();
-//                } catch (Exception j) {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-//                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-//                Log.i("euro", "failed");
-//            }
-//
-//            @Override
-//            public void onRetry(int retryNo) {
-//                // called when request is retried
-//                Log.i("euro", "retry");
-//
-//            }
-//        });
-////        testing("namak",memoStr[0],"memoStr[0]");
-//        return memoStr[0];
-//    }c
 
     private void decodeMemo(final String memo, final String key) {
         HashMap hm = new HashMap();
@@ -453,10 +395,11 @@ public class TransactionActivity implements BalancesDelegate {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Date formatted = null;
                 formatted = formatter.parse(Date);
-                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt,context);
+                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt);
+                object.updateContext(context);
                 transactionDetails.add(object);
             }catch(Exception e){
-             //   testing("error" , e , "Try,Catch");
+              testing("error" , e , "Try,Catch");
             }
         }
         assetDelegate.TransactionUpdate(transactionDetails,number_of_transactions_in_queue);

@@ -1,13 +1,17 @@
 
 package de.bitshares_munich.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,12 +20,16 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 
 
@@ -333,6 +341,57 @@ public class TinyDB {
         }
         return objects;
     }
+
+    public void putTransactions(Activity activity,Context context,String key, ArrayList<TransactionDetails> objArray) {
+
+        ArrayList<transactionsJsonSerializable> a = new ArrayList<>();
+        for (TransactionDetails abc : objArray)
+        {
+            transactionsJsonSerializable myObj = new transactionsJsonSerializable();
+
+            myObj.Date = abc.Date;
+            myObj.Sent = abc.Sent; // false : if received
+            myObj.To = abc.To;
+            myObj.From = abc.From;
+            myObj.Memo = abc.Memo;
+            myObj.Amount = abc.Amount;
+            myObj.assetSymbol = abc.assetSymbol;
+            myObj.faitAmount = abc.faitAmount;
+            myObj.faitAssetSymbol = abc.faitAssetSymbol;
+            myObj.eReceipt = abc.eReceipt;
+
+            a.add(myObj);
+        }
+
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<>();
+        for (Object obj : a) {
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+
+    }
+
+    public ArrayList<TransactionDetails> getTransactions(String key, Class<?> mClass) {
+
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<TransactionDetails> objects = new ArrayList<>();
+
+        for (String jObjString : objStrings) {
+            transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
+
+            TransactionDetails myObject = new TransactionDetails(value.Date,value.Sent,value.To,value.From,value.Memo,
+                    value.Amount,value.assetSymbol,value.faitAmount,value.faitAssetSymbol,value.eReceipt);
+
+            objects.add(myObject);
+        }
+
+        return objects;
+    }
+
     public ArrayList<ListViewActivity.ListviewContactItem> getContactObject(String key, Class<?> mClass) {
         Gson gson = new Gson();
 
@@ -520,6 +579,35 @@ public class TinyDB {
         }
         putListString(key, objStrings);
     }
+
+    public static String combinePath(String path1, String path2) {
+        File file1 = new File(path1);
+        File file2 = new File(file1, path2);
+        return file2.getPath();
+    }
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+
 
     public void putHashmapObject(String key, HashMap<String,String> map) {
         checkForNullKey(key);
