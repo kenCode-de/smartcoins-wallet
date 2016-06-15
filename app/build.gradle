@@ -38,7 +38,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:design:23.3.0'
     compile 'com.koushikdutta.async:androidasync:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'

@@ -204,6 +204,18 @@
                         android:src="@drawable/fresh_icon"
                         android:visibility="gone"/>
 
+
+                    <TextView
+                        android:id="@+id/tvAccounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:textColor="#002"
+                        android:layout_marginLeft="12dp"
+                        android:textSize="15dp"
+                        android:visibility="gone"
+                        />
                     <Spinner
                         android:id="@+id/spAccounts"
                         android:layout_width="match_parent"
@@ -212,6 +224,7 @@
                         android:layout_weight="2"
                         android:textColor="#002"
                         android:textSize="15sp"
+                        android:visibility="gone"
                         android:textStyle="bold"
                     />
                 </LinearLayout>

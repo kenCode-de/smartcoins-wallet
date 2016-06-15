@@ -8,9 +8,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Explode;
@@ -41,7 +38,6 @@ import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 public class SettingActivity extends BaseActivity {
@@ -83,6 +79,10 @@ public class SettingActivity extends BaseActivity {
 
     @Bind(R.id.tvAppVersion_content_settings)
     TextView tvAppVersion;
+
+    @Bind(R.id.tvAccounts)
+    TextView tvAccounts;
+
 
     @Bind(R.id.backup_ic)
     ImageView backup_ic;
@@ -168,12 +168,14 @@ public class SettingActivity extends BaseActivity {
         //showDialogPinRequest();
     }
 
-    public void onClickBackbtn(View v) {designMethod();
+    public void onClickBackbtn(View v) {
+        designMethod();
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
         //startActivity(intent);
     }
 
-    Boolean isCHecked(View v) {designMethod();
+    Boolean isCHecked(View v) {
+        designMethod();
         CheckBox checkBox = (CheckBox) v;
         if (checkBox.isChecked()) {
             return true;
@@ -261,7 +263,7 @@ public class SettingActivity extends BaseActivity {
         inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-      //  Helper.setLocale(langCode, getResources());
+        //  Helper.setLocale(langCode, getResources());
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
@@ -300,10 +302,20 @@ public class SettingActivity extends BaseActivity {
         // AccountsName
 
         ArrayList<String> arrayAccountName = new ArrayList<>();
+
+        if (accountDetails.size() > 1) {
+            spAccounts.setVisibility(View.VISIBLE);
+            tvAccounts.setVisibility(View.GONE);
+        } else {
+            tvAccounts.setVisibility(View.VISIBLE);
+            spAccounts.setVisibility(View.GONE);
+        }
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
+            tvAccounts.setText(accountDetails.get(i).account_name);
         }
 
+        Collections.sort(arrayAccountName);
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
@@ -323,6 +335,7 @@ public class SettingActivity extends BaseActivity {
             for (int j = 0; j < accountAssets.size(); j++) {
                 arrayAccountAssets.add(accountAssets.get(j).symbol);
             }
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
@@ -397,7 +410,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnItemSelected(R.id.spTimeZones)
-    void onItemSelectedTimeZone(int position) {designMethod();
+    void onItemSelectedTimeZone(int position) {
+        designMethod();
         if (position > 0) {
 
             String temp[] = spTimeZones.getSelectedItem().toString().split(" ");
@@ -407,7 +421,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnItemSelected(R.id.spBackupAsset)
-    void onItemSelectedBackupAsset(int position) {designMethod();
+    void onItemSelectedBackupAsset(int position) {
+        designMethod();
         if (position >= 0) {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
@@ -425,7 +440,7 @@ public class SettingActivity extends BaseActivity {
 
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
 
-        if(inittLocale) {
+        if (inittLocale) {
 
             Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
 
@@ -487,16 +502,12 @@ public class SettingActivity extends BaseActivity {
     private String prevBlockNumber = "";
     private int counterBlockCheck = 0;
 
-    private Boolean isBlockUpdated()
-    {
-        if ( Application.blockHead != prevBlockNumber )
-        {
+    private Boolean isBlockUpdated() {
+        if (Application.blockHead != prevBlockNumber) {
             prevBlockNumber = Application.blockHead;
             counterBlockCheck = 0;
             return true;
-        }
-        else if ( counterBlockCheck++ >= 30 )
-        {
+        } else if (counterBlockCheck++ >= 30) {
             return false;
         }
 
@@ -509,16 +520,12 @@ public class SettingActivity extends BaseActivity {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null)
-                {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
-                    {
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated())) {
                         boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
-                    }
-                    else
-                    {
+                    } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
@@ -531,8 +538,8 @@ public class SettingActivity extends BaseActivity {
     }
     /////////////////
 
-    void designMethod(){
-        if(android.os.Build.VERSION.SDK_INT>21)
-        getWindow().setExitTransition(new Explode());
+    void designMethod() {
+        if (android.os.Build.VERSION.SDK_INT > 21)
+            getWindow().setExitTransition(new Explode());
     }
 }
