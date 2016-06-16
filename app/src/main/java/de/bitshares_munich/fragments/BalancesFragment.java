@@ -5,13 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -27,10 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.github.premnirmal.textcounter.CounterView;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.nostra13.universalimageloader.utils.L;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -201,7 +196,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
-        if(checkIfAccountNameChange()){loadBasic();}
+        if (checkIfAccountNameChange()) {
+            loadBasic();
+        }
     }
 
     @OnClick(R.id.recievebtn)
@@ -269,7 +266,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
 
                 //Check Balance
-                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);;
+                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                ;
                 try {
                     for (int i = 0; i < accountDetails.size(); i++) {
                         if (accountDetails.get(i).isSelected) {
@@ -292,7 +290,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 }
                 if (balanceValid[0]) {
                     showDialog("", getString(R.string.upgrading));
-                    getAccountUpgradeInfo(getActivity());
+                    getAccountUpgradeInfo(getActivity(), tvAccountName.getText().toString());
                 }
             }
         });
@@ -344,11 +342,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             AccountAssets accountAsset = new AccountAssets();
 
             accountAsset.id = ids.get(i);
-            if(pre.size()>i) accountAsset.precision = pre.get(i);
-            if(sym.size()>i) accountAsset.symbol = sym.get(i);
-            if(am.size()>i) accountAsset.ammount = am.get(i);
+            if (pre.size() > i) accountAsset.precision = pre.get(i);
+            if (sym.size() > i) accountAsset.symbol = sym.get(i);
+            if (am.size() > i) accountAsset.ammount = am.get(i);
 
-            SupportMethods.testing("floatDoubleIssue",Float.parseFloat(returnFromPower(pre.get(i), am.get(i))),"txtamount");
+            SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
 
             // Log.i("uncle","aay1"+am.get(i));
             accountAssets.add(accountAsset);
@@ -368,19 +366,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         SupportMethods.testing("Assets", "Assets views 4", "Asset Activity");
-        BalanceAssetsUpdate(sym, pre, am,false);
+        BalanceAssetsUpdate(sym, pre, am, false);
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp)
-    {
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
-        if(count<=0) BalanceAssetsLoad(sym, pre, am);
-        if(count>0) BalanceAssetsUpdate(sym, pre, am);
+        if (count <= 0) BalanceAssetsLoad(sym, pre, am);
+        if (count > 0) BalanceAssetsUpdate(sym, pre, am);
     }
 
-    public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
-    {
+    public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
@@ -407,14 +403,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             textView.setText(sym.get(l));
                             CounterView textView1 = (CounterView) layout1.getChildAt(1);
                             //inializeCounter(textView1);
-                           // textView1.setText(returnFromPower(pre.get(l), am.get(i)));
-                           // String r = returnFromPower(pre.get(l), am.get(i));
+                            // textView1.setText(returnFromPower(pre.get(l), am.get(i)));
+                            // String r = returnFromPower(pre.get(l), am.get(i));
                             float b = powerInFloat(pre.get(l), am.get(i));
 //                            SupportMethods.testing("floatDoubleIssue",Float.parseFloat(r),"3");
 //                            Float value = Float.parseFloat(r);
-                            setCounter(textView1,0f,0f);
+                            setCounter(textView1, 0f, 0f);
 
-                            setCounter(textView1,b,b);
+                            setCounter(textView1, b, b);
                         }
 
                         if (counter == 2) {
@@ -422,13 +418,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             textView2.setText(sym.get(l));
                             CounterView textView3 = (CounterView) layout1.getChildAt(3);
                             String r = returnFromPower(pre.get(l), am.get(l));
-                           // textView3.setText();
-                            setCounter(textView3,0f,0f);
-                            setCounter(textView3,Float.parseFloat(r),Float.parseFloat(r));
+                            // textView3.setText();
+                            setCounter(textView3, 0f, 0f);
+                            setCounter(textView3, Float.parseFloat(r), Float.parseFloat(r));
                             llBalances.addView(customView);
                         }
-                        if (counter == 1 && i == sym.size() - 1)
-                        {
+                        if (counter == 1 && i == sym.size() - 1) {
                             TextView textView2 = (TextView) layout1.getChildAt(2);
                             textView2.setText("");
                             CounterView textView3 = (CounterView) layout1.getChildAt(3);
@@ -448,14 +443,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
-//    public void setCounter(CounterView counterView,float sValue , float eValue){
+    //    public void setCounter(CounterView counterView,float sValue , float eValue){
 //        if (counterView != null) {
 //            counterView.setStartValue(sValue);
 //            counterView.setEndValue(eValue);
 //            counterView.start();
 //        }
 //    }
-     public void setCounter(CounterView counterView,float sValue , float eValue){
+    public void setCounter(CounterView counterView, float sValue, float eValue) {
         if (counterView != null) {
             counterView.setAutoStart(false);
             counterView.setAutoFormat(false);
@@ -468,8 +463,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             counterView.start();
         }
     }
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
-    {
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -488,37 +483,37 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 //                sym.add("ythol");
 //                sym.add("ythth");
 
-                if(count>0){
-                    int m = 0 ;
-                    for(int i = 0 ; i < count ; i++){
+                if (count > 0) {
+                    int m = 0;
+                    for (int i = 0; i < count; i++) {
                         LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
-                            LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
-                            TextView tvSymOne = (TextView)child.getChildAt(0);
-                            CounterView tvAmOne = (CounterView)child.getChildAt(1);
-                            TextView tvSymtwo = (TextView)child.getChildAt(2);
-                            CounterView tvAmtwo = (CounterView) child.getChildAt(3);
+                        LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
+                        TextView tvSymOne = (TextView) child.getChildAt(0);
+                        CounterView tvAmOne = (CounterView) child.getChildAt(1);
+                        TextView tvSymtwo = (TextView) child.getChildAt(2);
+                        CounterView tvAmtwo = (CounterView) child.getChildAt(3);
 
-                        if(sym.size()>m){
+                        if (sym.size() > m) {
 
                             String symbol = sym.get(m);
                             String amount = "";
-                            if(pre.size()>m && am.size()>m)
-                            amount  = returnFromPower(pre.get(m), am.get(m));
+                            if (pre.size() > m && am.size() > m)
+                                amount = returnFromPower(pre.get(m), am.get(m));
                             String txtSymbol = tvSymOne.getText().toString();
                             String txtAmount = tvAmOne.getText().toString();
 
-                            if(!symbol.equals(txtSymbol))
+                            if (!symbol.equals(txtSymbol))
                                 tvSymOne.setText(symbol);
-                            if(!amount.equals(txtAmount)) {
+                            if (!amount.equals(txtAmount)) {
 
                                 if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
-                                    SupportMethods.testing("float",Float.parseFloat(txtAmount),"txtamount");
-                                    SupportMethods.testing("float", Float.parseFloat(amount),"amount");
+                                    SupportMethods.testing("float", Float.parseFloat(txtAmount), "txtamount");
+                                    SupportMethods.testing("float", Float.parseFloat(amount), "amount");
                                     tvAmOne.setTypeface(null, Typeface.BOLD);
                                     tvAmOne.setTextColor(getResources().getColor(R.color.red));
                                 }
 
-                                if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)){
+                                if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
                                     tvAmOne.setTypeface(null, Typeface.BOLD);
                                     tvAmOne.setTextColor(getResources().getColor(R.color.green));
                                 }
@@ -539,38 +534,37 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                             }
                             m++;
-                        }else{
+                        } else {
                             linearLayout.removeAllViews();
                         }
-                        if(sym.size()>m) {
+                        if (sym.size() > m) {
 
                             String symbol = sym.get(m);
-                            String amount  = "";
-                            if(pre.size()>m && am.size()>m)
-                            amount  = returnFromPower(pre.get(m), am.get(m));
+                            String amount = "";
+                            if (pre.size() > m && am.size() > m)
+                                amount = returnFromPower(pre.get(m), am.get(m));
                             String txtSymbol = tvSymtwo.getText().toString();
                             String txtAmount = tvAmtwo.getText().toString();
 
-                            if(!symbol.equals(txtSymbol))
+                            if (!symbol.equals(txtSymbol))
                                 tvSymtwo.setText(symbol);
 
-                            if(!amount.equals(txtAmount)) {
+                            if (!amount.equals(txtAmount)) {
                                 //tvAmtwo.setText(amount);
                                 tvAmtwo.setVisibility(View.VISIBLE);
 
-                                if(Float.parseFloat(txtAmount)>Float.parseFloat(amount)) {
+                                if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
                                     tvAmtwo.setTextColor(getResources().getColor(R.color.red));
                                     tvAmtwo.setTypeface(null, Typeface.BOLD);
 
                                 }
-                                if(Float.parseFloat(amount)>Float.parseFloat(txtAmount))
-                                {
+                                if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
                                     tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                     tvAmtwo.setTypeface(null, Typeface.BOLD);
 
                                 }
 
-                                    setCounter(tvAmtwo,Float.parseFloat(txtAmount),Float.parseFloat(amount));
+                                setCounter(tvAmtwo, Float.parseFloat(txtAmount), Float.parseFloat(amount));
                                 final CounterView cView = tvAmtwo;
                                 final Handler handler = new Handler();
 
@@ -590,73 +584,63 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             }
 
                             m++;
-                        }else{
-                            if(i == count-1){
-                                if(sym.size()>m)
+                        } else {
+                            if (i == count - 1) {
+                                if (sym.size() > m)
                                     m--;
                             }
                         }
-                        }
+                    }
 
-                    int loop = sym.size()-m;
-                    if(loop>0)
-                    {
-                        for (int i = m; i < sym.size(); i += 2)
-                        {
+                    int loop = sym.size() - m;
+                    if (loop > 0) {
+                        for (int i = m; i < sym.size(); i += 2) {
                             int counter = 1;
                             int op = sym.size();
                             int pr;
 
-                            if ((op - i) > 2)
-                            {
+                            if ((op - i) > 2) {
                                 pr = 2;
-                            }
-                            else
-                            {
+                            } else {
                                 pr = op - i;
                             }
 
                             View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
                             LinearLayout layout = (LinearLayout) customView;
                             LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-                            for (int l = i; l < i + pr; l++)
-                            {
-                                if (counter == 1)
-                                {
+                            for (int l = i; l < i + pr; l++) {
+                                if (counter == 1) {
                                     TextView textView = (TextView) layout1.getChildAt(0);
                                     textView.setText(sym.get(l));
                                     CounterView textView1 = (CounterView) layout1.getChildAt(1);
-                                    if(pre.size()>l && am.size()>i){
+                                    if (pre.size() > l && am.size() > i) {
 //                                        textView1.setText(returnFromPower(pre.get(l), am.get(i)));
-                                    String r = returnFromPower(pre.get(l), am.get(i));
-                                        setCounter(textView1,0f,0f);
-                                    setCounter(textView1,Float.parseFloat(r),Float.parseFloat(r));}
-                                    else textView1.setText("");
+                                        String r = returnFromPower(pre.get(l), am.get(i));
+                                        setCounter(textView1, 0f, 0f);
+                                        setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
+                                    } else textView1.setText("");
                                 }
 
-                                if (counter == 2)
-                                {
+                                if (counter == 2) {
                                     TextView textView2 = (TextView) layout1.getChildAt(2);
                                     textView2.setText(sym.get(l));
                                     CounterView textView3 = (CounterView) layout1.getChildAt(3);
-                                    if(pre.size()>l && am.size()>l){
+                                    if (pre.size() > l && am.size() > l) {
                                         String r = returnFromPower(pre.get(l), am.get(l));
-                                        setCounter(textView3,0f,0f);
-                                    setCounter(textView3,Float.parseFloat(r),Float.parseFloat(r));}
+                                        setCounter(textView3, 0f, 0f);
+                                        setCounter(textView3, Float.parseFloat(r), Float.parseFloat(r));
+                                    }
 
                                     llBalances.addView(customView);
                                 }
 
-                                if (counter == 1 && i == sym.size() - 1)
-                                {
+                                if (counter == 1 && i == sym.size() - 1) {
                                     llBalances.addView(customView);
                                 }
 
-                                if (counter == 1)
-                                {
+                                if (counter == 1) {
                                     counter = 2;
-                                }
-                                else counter = 1;
+                                } else counter = 1;
                             }
                         }
 
@@ -682,16 +666,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
         return Double.toString(value / ok);
     }
+
     float powerInFloat(String i, String str) {
         float ok = 1.0f;
         float pre = Float.parseFloat(i);
-        float value =  Float.parseFloat(str);
-        for (int k = 0; k < pre; k++)
-        {
+        float value = Float.parseFloat(str);
+        for (int k = 0; k < pre; k++) {
             ok = ok * 10;
         }
         return (value / ok);
     }
+
     public void updateSortTableView(SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions) {
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
@@ -939,7 +924,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         myTransactions = new ArrayList<>();
         updateSortTableView(tableView, myTransactions);
 
-       // llBalances.removeAllViews();
+        // llBalances.removeAllViews();
 
         tableView.addDataClickListener(new tableViewClickListener(getContext()));
 
@@ -1031,13 +1016,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     }
 
-    public void getAccountUpgradeInfo(final Activity activity) {
+    public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_upgrade_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");
-        hashMap.put("account", tvAccountName.getText().toString());
+        hashMap.put("account", accountName);
         try {
             hashMap.put("wifkey", Crypt.getInstance().decrypt_string(wifkey));
         } catch (Exception e) {
@@ -1050,7 +1035,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 if (response.isSuccess()) {
                     AccountUpgrade accountDetails = response.body();
                     if (accountDetails.status.equals("success")) {
-                        loadBasic();
+                        updateLifeTimeModel(accountName);
                         hideDialog();
                         Toast.makeText(activity, getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
                     } else {
@@ -1094,6 +1079,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 progressDialog.show();
             }
         }
+    }
+
+    private void updateLifeTimeModel(String accountName) {
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        try {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).account_name.equals(accountName)) {
+                    accountDetails.get(i).isLifeTime = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+        showHideLifeTime(true);
     }
 
 
