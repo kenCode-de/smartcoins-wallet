@@ -120,6 +120,8 @@ public class SettingActivity extends BaseActivity {
     ProgressDialog progressDialog;
     Activity activity;
 
+    String wifKey = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +136,7 @@ public class SettingActivity extends BaseActivity {
 
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
-        activity=this;
+        activity = this;
         progressDialog = new ProgressDialog(this);
         btnUpgrade.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -613,6 +615,7 @@ public class SettingActivity extends BaseActivity {
                 try {
                     for (int i = 0; i < accountDetails.size(); i++) {
                         if (accountDetails.get(i).isSelected) {
+                            wifKey = accountDetails.get(i).wif_key;
                             ArrayList<AccountAssets> arrayListAccountAssets = accountDetails.get(i).AccountAssets;
                             for (int j = 0; j < arrayListAccountAssets.size(); j++) {
                                 AccountAssets accountAssets = arrayListAccountAssets.get(j);
@@ -632,7 +635,7 @@ public class SettingActivity extends BaseActivity {
                 }
                 if (balanceValid[0]) {
                     showDialog("", getString(R.string.upgrading));
-                    getAccountUpgradeInfo(activity);
+                    getAccountUpgradeInfo(activity, spAccounts.getSelectedItem().toString());
                 }
             }
         });
@@ -720,15 +723,15 @@ public class SettingActivity extends BaseActivity {
         finish();
     }
 
-    public void getAccountUpgradeInfo(final Activity activity) {
+    public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_upgrade_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");
-        hashMap.put("account", spAccounts.getSelectedItem().toString());
+        hashMap.put("account", accountName);
         try {
-            hashMap.put("wifkey", Crypt.getInstance().decrypt_string(""));
+            hashMap.put("wifkey", Crypt.getInstance().decrypt_string(wifKey));
         } catch (Exception e) {
         }
 
@@ -739,8 +742,12 @@ public class SettingActivity extends BaseActivity {
                 if (response.isSuccess()) {
                     AccountUpgrade accountDetails = response.body();
                     if (accountDetails.status.equals("success")) {
+                        updateLifeTimeModel(accountName);
                         hideDialog();
                         Toast.makeText(activity, getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     } else {
                         hideDialog();
                         Toast.makeText(activity, getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
@@ -782,5 +789,20 @@ public class SettingActivity extends BaseActivity {
                 progressDialog.show();
             }
         }
+    }
+
+    private void updateLifeTimeModel(String accountName) {
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        try {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).account_name.equals(accountName)) {
+                    accountDetails.get(i).isLifeTime = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
 }
