@@ -121,24 +121,39 @@ public class Application extends android.app.Application {
         iAccount = iAccount;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
         get.setTimeout(5 * 1000);//000000);
-        if (getCurrentActivity() != null) {
-            Log.d("exception websocket", "inside again");
-            getCurrentActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_LONG).show();
-                }
-            });
-        }
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
-                if (!webSocket.isOpen()) {
+                if (webSocket == null) {
                     counter++;
                     if (counter > 3) {
                         counter = 0;
                     }
+                    if (getCurrentActivity() != null) {
+                        Log.d("exception websocket", "inside again");
+                        getCurrentActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                } else if (!webSocket.isOpen()) {
+                    counter++;
+                    if (counter > 3) {
+                        counter = 0;
+                    }
+                    if (getCurrentActivity() != null) {
+                        Log.d("exception websocket", "inside again");
+                        getCurrentActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
+
                 if (ex != null) {
                     Log.d("exception websocket", ex.toString());
                     final Exception myEx = ex;
