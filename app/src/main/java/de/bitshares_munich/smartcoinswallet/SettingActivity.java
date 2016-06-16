@@ -725,7 +725,7 @@ public class SettingActivity extends BaseActivity {
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_upgrade_url));
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");

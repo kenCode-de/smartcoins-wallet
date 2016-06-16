@@ -27,6 +27,9 @@ import android.widget.Toast;
 
 import com.github.premnirmal.textcounter.CounterView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
+import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -355,6 +359,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     accountDetails.get(i).AccountAssets = accountAssets;
+                    getEquivalentComponents(accountAssets);
                     break;
                 }
             }
@@ -367,6 +372,55 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         SupportMethods.testing("Assets", "Assets views 4", "Asset Activity");
         BalanceAssetsUpdate(sym, pre, am, false);
+    }
+
+    private void getEquivalentComponents(ArrayList<AccountAssets> accountAssets) {
+        String faitCurrency = Helper.getFadeCurrency(getContext());
+        if (faitCurrency.isEmpty()){
+            faitCurrency = application.getString(R.string.default_currency);
+        }
+        String values = "";
+        for (int i=0; i<accountAssets.size(); i++){
+            AccountAssets accountAsset = accountAssets.get(i);
+            if (!accountAsset.symbol.equals(faitCurrency)){
+                values += accountAsset.symbol.toString()+":"+faitCurrency+",";
+            }
+        }
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("method", "equivalent_component");
+        hashMap.put("values", values.substring(0, values.length()-1));
+
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+            @Override
+            public void onResponse(Response<EquivalentComponentResponse> response) {
+                if (response.isSuccess()) {
+                    EquivalentComponentResponse resp = response.body();
+                    if (resp.status.equals("success")) {
+                        try {
+                            JSONObject rates = new JSONObject(resp.rates);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+//                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
+                    } else {
+//                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    hideDialog();
+                    Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                hideDialog();
+                Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
@@ -1018,7 +1072,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_upgrade_url));
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");
