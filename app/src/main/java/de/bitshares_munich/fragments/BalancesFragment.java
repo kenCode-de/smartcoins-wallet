@@ -146,7 +146,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     ProgressDialog progressDialog;
 
-
     public BalancesFragment() {
         // Required empty public constructor
     }
@@ -267,6 +266,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         alert.setMessage(getString(R.string.txt_confirmation_msg));
         alert.setPositiveButton(getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
 
                 //Check Balance
                 ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);;
