@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -183,6 +185,8 @@ public class BrainkeyActivity extends BaseActivity {
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -190,20 +194,28 @@ public class BrainkeyActivity extends BaseActivity {
                 {
                     if (Application.webSocketG.isOpen() && (isBlockUpdated()))
                     {
+                        boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     }
                     else
                     {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
                     }
                 }
-                handler.postDelayed(this, 2000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 5000);
     }
     /////////////////
 

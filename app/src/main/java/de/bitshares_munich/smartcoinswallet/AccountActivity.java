@@ -1,5 +1,6 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -271,32 +274,59 @@ public class AccountActivity extends BaseActivity implements IAccount {
         }
     }
 
+    private String prevBlockNumber = "";
+    private int counterBlockCheck = 0;
+
+    private Boolean isBlockUpdated()
+    {
+        if ( Application.blockHead != prevBlockNumber )
+        {
+            prevBlockNumber = Application.blockHead;
+            counterBlockCheck = 0;
+            return true;
+        }
+        else if ( counterBlockCheck++ >= 3 )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
 
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
+                        boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
-
-
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Application.webSocketConnection();
-
+                        ivSocketConnected.clearAnimation();
                     }
-
-
+                    else
+                    {
+                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
+                        Application.webSocketG.close();
+                        Application.webSocketConnection();
+                    }
                 }
-                handler.postDelayed(this, 1000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-
-        handler.postDelayed(updateTask, 1000);
-
+        handler.postDelayed(updateTask, 5000);
     }
 
     /*

@@ -331,9 +331,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     }
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
-        String filename = "eReciept-scwall";
-
-
+        String filename = getResources().getString(R.string.txt_folder_name) + File.separator + "eReciept-scwall";
 
         map.put("id",eReciptmap.get("id"));
         map.put("time",date);

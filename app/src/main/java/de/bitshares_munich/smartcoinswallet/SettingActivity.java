@@ -3,19 +3,19 @@ package de.bitshares_munich.smartcoinswallet;
  * Created by Syed Muhammad Muzzammil on 13/5/16.
  */
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,7 +41,6 @@ import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 public class SettingActivity extends BaseActivity {
@@ -83,6 +82,10 @@ public class SettingActivity extends BaseActivity {
 
     @Bind(R.id.tvAppVersion_content_settings)
     TextView tvAppVersion;
+
+    @Bind(R.id.tvAccounts)
+    TextView tvAccounts;
+
 
     @Bind(R.id.backup_ic)
     ImageView backup_ic;
@@ -144,8 +147,9 @@ public class SettingActivity extends BaseActivity {
                 else Helper.storeBoolianSharePref(this, close_bitshare, false);
                 break;
             case R.id.always_donate:
-                if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
-                else Helper.storeBoolianSharePref(this, always_donate, false);
+                //if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
+                //else Helper.storeBoolianSharePref(this, always_donate, false);
+                Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
@@ -168,12 +172,14 @@ public class SettingActivity extends BaseActivity {
         //showDialogPinRequest();
     }
 
-    public void onClickBackbtn(View v) {designMethod();
+    public void onClickBackbtn(View v) {
+        designMethod();
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
         //startActivity(intent);
     }
 
-    Boolean isCHecked(View v) {designMethod();
+    Boolean isCHecked(View v) {
+        designMethod();
         CheckBox checkBox = (CheckBox) v;
         if (checkBox.isChecked()) {
             return true;
@@ -201,7 +207,8 @@ public class SettingActivity extends BaseActivity {
         }
         if (Helper.fetchBoolianSharePref(this, always_donate)) {
             checkBox = (CheckBox) findViewById(R.id.always_donate);
-            checkBox.setChecked(true);
+            //checkBox.setChecked(true);
+            checkBox.setChecked(false);
         }
         if (Helper.fetchBoolianSharePref(this, hide_donations)) {
             checkBox = (CheckBox) findViewById(R.id.hide_donations);
@@ -261,7 +268,7 @@ public class SettingActivity extends BaseActivity {
         inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-      //  Helper.setLocale(langCode, getResources());
+        //  Helper.setLocale(langCode, getResources());
         if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
@@ -300,10 +307,20 @@ public class SettingActivity extends BaseActivity {
         // AccountsName
 
         ArrayList<String> arrayAccountName = new ArrayList<>();
+
+        if (accountDetails.size() > 1) {
+            spAccounts.setVisibility(View.VISIBLE);
+            tvAccounts.setVisibility(View.GONE);
+        } else {
+            tvAccounts.setVisibility(View.VISIBLE);
+            spAccounts.setVisibility(View.GONE);
+        }
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
+            tvAccounts.setText(accountDetails.get(i).account_name);
         }
 
+        Collections.sort(arrayAccountName);
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
@@ -323,6 +340,7 @@ public class SettingActivity extends BaseActivity {
             for (int j = 0; j < accountAssets.size(); j++) {
                 arrayAccountAssets.add(accountAssets.get(j).symbol);
             }
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
@@ -397,7 +415,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnItemSelected(R.id.spTimeZones)
-    void onItemSelectedTimeZone(int position) {designMethod();
+    void onItemSelectedTimeZone(int position) {
+        designMethod();
         if (position > 0) {
 
             String temp[] = spTimeZones.getSelectedItem().toString().split(" ");
@@ -407,7 +426,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @OnItemSelected(R.id.spBackupAsset)
-    void onItemSelectedBackupAsset(int position) {designMethod();
+    void onItemSelectedBackupAsset(int position) {
+        designMethod();
         if (position >= 0) {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
             Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
@@ -425,7 +445,7 @@ public class SettingActivity extends BaseActivity {
 
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
 
-        if(inittLocale) {
+        if (inittLocale) {
 
             Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
 
@@ -487,16 +507,12 @@ public class SettingActivity extends BaseActivity {
     private String prevBlockNumber = "";
     private int counterBlockCheck = 0;
 
-    private Boolean isBlockUpdated()
-    {
-        if ( Application.blockHead != prevBlockNumber )
-        {
+    private Boolean isBlockUpdated() {
+        if (Application.blockHead != prevBlockNumber) {
             prevBlockNumber = Application.blockHead;
             counterBlockCheck = 0;
             return true;
-        }
-        else if ( counterBlockCheck++ >= 30 )
-        {
+        } else if (counterBlockCheck++ >= 30) {
             return false;
         }
 
@@ -505,6 +521,8 @@ public class SettingActivity extends BaseActivity {
 
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
 
         final Runnable updateTask = new Runnable() {
             @Override
@@ -516,23 +534,30 @@ public class SettingActivity extends BaseActivity {
                         boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     }
                     else
                     {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
                     }
                 }
-                handler.postDelayed(this, 2000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 5000);
     }
     /////////////////
 
-    void designMethod(){
-        if(android.os.Build.VERSION.SDK_INT>21)
-        getWindow().setExitTransition(new Explode());
+    void designMethod() {
+        if (android.os.Build.VERSION.SDK_INT > 21)
+            getWindow().setExitTransition(new Explode());
     }
 }

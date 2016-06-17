@@ -335,10 +335,18 @@ public class TinyDB {
         ArrayList<String> objStrings = getListString(key);
         ArrayList<AccountDetails> objects = new ArrayList<>();
 
-        for (String jObjString : objStrings) {
-            AccountDetails value = (AccountDetails) gson.fromJson(jObjString, mClass);
-            objects.add(value);
+        try {
+            for (String jObjString : objStrings) {
+                AccountDetails value = (AccountDetails) gson.fromJson(jObjString, mClass);
+                objects.add(value);
+            }
         }
+        catch (Exception e)
+        {
+            objects = new ArrayList<>();
+        }
+
+
         return objects;
     }
 
@@ -380,13 +388,20 @@ public class TinyDB {
         ArrayList<String> objStrings = getListString(key);
         ArrayList<TransactionDetails> objects = new ArrayList<>();
 
-        for (String jObjString : objStrings) {
-            transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
+        try {
 
-            TransactionDetails myObject = new TransactionDetails(value.Date,value.Sent,value.To,value.From,value.Memo,
-                    value.Amount,value.assetSymbol,value.faitAmount,value.faitAssetSymbol,value.eReceipt);
+            for (String jObjString : objStrings) {
+                transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
 
-            objects.add(myObject);
+                TransactionDetails myObject = new TransactionDetails(value.Date, value.Sent, value.To, value.From, value.Memo,
+                        value.Amount, value.assetSymbol, value.faitAmount, value.faitAssetSymbol, value.eReceipt);
+
+                objects.add(myObject);
+            }
+        }
+        catch (Exception e)
+        {
+            objects = new ArrayList<>();
         }
 
         return objects;
