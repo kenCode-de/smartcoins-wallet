@@ -344,9 +344,13 @@ public class SettingActivity extends BaseActivity {
         }
 
 
+        int indexAcc = 0;
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
+            if (accountDetails.get(i).isSelected) {
+                indexAcc = i;
+            }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
                 btnUpgrade.setVisibility(View.GONE);
@@ -362,7 +366,7 @@ public class SettingActivity extends BaseActivity {
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
-
+        spAccounts.setSelection(indexAcc);
 
         //Asset
         ArrayList<AccountAssets> accountAssets = null;
@@ -445,6 +449,7 @@ public class SettingActivity extends BaseActivity {
                 }
 
             }
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
         }
     }

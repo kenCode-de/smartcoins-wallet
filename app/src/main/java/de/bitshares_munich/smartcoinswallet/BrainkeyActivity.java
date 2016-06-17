@@ -119,12 +119,13 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        ArrayList<AccountDetails> arrayList = new ArrayList<>();
+                        addWallet(accountDetails);
+                        /*ArrayList<AccountDetails> arrayList = new ArrayList<>();
                         arrayList.add(accountDetails);
                         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), arrayList);
                         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        startActivity(intent);*/
                     }
 
                 } else {
@@ -190,6 +191,32 @@ public class BrainkeyActivity extends BaseActivity {
         handler.postDelayed(updateTask, 1000);
     }
     /////////////////
+
+    void addWallet(AccountDetails accountDetail) {
+        ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails.wif_key = accountDetail.wif_key;
+        accountDetails.account_name = accountDetail.account_name;
+        accountDetails.pub_key = accountDetail.pub_key;
+        accountDetails.brain_key = accountDetail.brain_key;
+        accountDetails.isSelected = true;
+        accountDetails.status = "success";
+        accountDetails.account_id = accountDetail.account_id;
+
+
+        for (int i = 0; i < accountDetailsList.size(); i++) {
+            accountDetailsList.get(i).isSelected = false;
+        }
+
+        accountDetailsList.add(accountDetails);
+
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
+
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 
 
 }

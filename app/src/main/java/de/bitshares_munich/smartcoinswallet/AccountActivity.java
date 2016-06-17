@@ -514,58 +514,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         }
     }
 
-
-    //    public void checkAccount(JSONObject jsonObject) {
-//
-//        try {
-//            JSONArray jsonArray = jsonObject.getJSONArray("result");
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                final String temp = jsonArray.getJSONArray(i).getString(0);
-//                if (temp.equals(etAccountName.getText().toString())) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-////                            if(accountCreated){
-////                                hideDialog();
-////                                Toast.makeText(context,"account created",Toast.LENGTH_LONG).show();
-////                            }
-//                            validAccount=false;
-//                            String acName = getString(R.string.account_name_already_exist);
-//                            String format = String.format(acName.toString(), temp);
-//                            tvErrorAccountName.setText(format);
-//                            tvErrorAccountName.setVisibility(View.VISIBLE);
-//                            checkingValidation = false;
-//                        }
-//                    });
-//
-//                    break;
-//                }
-//                if(validAccount){
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            tvErrorAccountName.setText("Validation in progress");
-//                            tvErrorAccountName.setVisibility(View.VISIBLE);
-//                        }
-//                    });
-//                }
-//            }
-//            if(validAccount){
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        tvErrorAccountName.setText("Validation Complete");
-//                        tvErrorAccountName.setVisibility(View.VISIBLE);
-//                    }
-//                });
-//            }
-//            checkingValidation = false;
-//
-//        } catch (Exception e) {
-//            checkingValidation = false;
-//
-//        }
-//    }
     void addWallet(String account_id) {
         String name = etAccountName.getText().toString();
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
