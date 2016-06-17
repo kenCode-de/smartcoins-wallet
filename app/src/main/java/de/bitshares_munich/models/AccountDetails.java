@@ -20,3 +20,10 @@ public class AccountDetails {
     public String account_name;
 
 }
+//                            String pubKey = Crypt.getInstance().encrypt_string(resp.keys.pub_key);
+//                            String wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
+//                            String brainPrivKey = Crypt.getInstance().encrypt_string(resp.keys.brain_priv_key);
+//                            String accountName = etAccountName.getText().toString();
+// isSelected = true;
+// account_id
+// address

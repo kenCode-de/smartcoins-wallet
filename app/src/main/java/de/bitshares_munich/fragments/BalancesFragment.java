@@ -837,7 +837,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void getLifetime(String s,int id){
+        SupportMethods.testing("getLifetime",s,"s");
+
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        SupportMethods.testing("getAccountID",s,"s");
+
         String result = SupportMethods.ParseJsonObject(s,"result");
         String nameObject = SupportMethods.ParseObjectFromJsonArray(result,0);
         String expiration = SupportMethods.ParseJsonObject(nameObject,"membership_expiration_date");

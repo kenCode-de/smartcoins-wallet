@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.Interfaces.IAccountObject;
 import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.IExchangeRate;
@@ -50,6 +51,7 @@ public class Application extends android.app.Application {
     static IExchangeRate iExchangeRate;
     static BalancesDelegate iBalancesDelegate;
     static AssetDelegate iAssetDelegate;
+    static IAccountID iAccountID;
     static ITransactionObject iTransactionObject;
     static IAccountObject iAccountObject;
     static IAssetObject iAssetObject;
@@ -84,6 +86,9 @@ public class Application extends android.app.Application {
 
     public void registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
+    }
+    public void registerCallbackIAccountID(IAccountID callbackClass) {
+        iAccountID = callbackClass;
     }
     public void registerExchangeRateCallback(IExchangeRate callbackClass) {
         iExchangeRate = callbackClass;
@@ -263,7 +268,13 @@ public class Application extends android.app.Application {
                                 if (iAssetDelegate != null) {
                                     iAssetDelegate.getLifetime(s, id);
                                 }
-                            } else if (id == 160 || id == 161) {
+                            }
+                            else if (id == 151) {
+                                if (iAccountID != null) {
+                                    iAccountID.accountId(s);
+                                }
+                            }
+                            else if (id == 160 || id == 161) {
                                 if (iRelativeHistory != null) {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }

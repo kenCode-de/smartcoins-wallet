@@ -243,6 +243,7 @@
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
     </string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="account_create_url">https://bitshares.openledger.info</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
@@ -263,5 +264,8 @@
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
     <string name="remove_account">REMOVE ACCOUNT</string>
     <string name="txt_alertmsg">Are you sure to delete this account</string>
+    <string name="validation_in_progress">Validation in progress..</string>
+    <string name="last_letter_cannot">last letter cannot be -</string>
+    <string name="account_name_shoud_have">account name shoud have atleast one -</string>
 
 </resources>
