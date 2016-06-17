@@ -151,12 +151,13 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        ArrayList<AccountDetails> arrayList = new ArrayList<>();
+                        addWallet(accountDetails);
+                        /*ArrayList<AccountDetails> arrayList = new ArrayList<>();
                         arrayList.add(accountDetails);
                         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), arrayList);
                         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        startActivity(intent);*/
                     }
 
                 } else {
@@ -193,27 +194,6 @@ public class BrainkeyActivity extends BaseActivity {
 
     }
 
-
-    // Blocks Updation
-    private String prevBlockNumber = "";
-    private int counterBlockCheck = 0;
-
-    private Boolean isBlockUpdated()
-    {
-        if ( Application.blockHead != prevBlockNumber )
-        {
-            prevBlockNumber = Application.blockHead;
-            counterBlockCheck = 0;
-            return true;
-        }
-        else if ( counterBlockCheck++ >= 30 )
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
@@ -222,34 +202,53 @@ public class BrainkeyActivity extends BaseActivity {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null)
-                {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
-                    {
-                        boolean paused = Application.webSocketG.isPaused();
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    }
-                    else
-                    {
+                    } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                         Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
                         ivSocketConnected.startAnimation(myFadeInAnimation);
-                        Application.webSocketG.close();
-                        Application.webSocketConnection();
                     }
+                } else {
+                    ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
-                else
-                {
-                    Application.webSocketConnection();
-                }
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 1000);
             }
         };
-        handler.postDelayed(updateTask, 5000);
+        handler.postDelayed(updateTask, 1000);
     }
     /////////////////
+
+    void addWallet(AccountDetails accountDetail) {
+        ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails.wif_key = accountDetail.wif_key;
+        accountDetails.account_name = accountDetail.account_name;
+        accountDetails.pub_key = accountDetail.pub_key;
+        accountDetails.brain_key = accountDetail.brain_key;
+        accountDetails.isSelected = true;
+        accountDetails.status = "success";
+        accountDetails.account_id = accountDetail.account_id;
+
+
+        for (int i = 0; i < accountDetailsList.size(); i++) {
+            accountDetailsList.get(i).isSelected = false;
+        }
+
+        accountDetailsList.add(accountDetails);
+
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
+
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
 
 
 }

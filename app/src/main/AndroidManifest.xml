@@ -23,6 +23,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/splashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +40,7 @@
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SendScreen"

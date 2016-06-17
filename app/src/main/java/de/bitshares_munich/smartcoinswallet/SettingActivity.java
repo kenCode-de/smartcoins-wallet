@@ -344,9 +344,13 @@ public class SettingActivity extends BaseActivity {
         }
 
 
+        int indexAcc = 0;
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
+            if (accountDetails.get(i).isSelected) {
+                indexAcc = i;
+            }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
                 btnUpgrade.setVisibility(View.GONE);
@@ -362,7 +366,7 @@ public class SettingActivity extends BaseActivity {
         ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
-
+        spAccounts.setSelection(indexAcc);
 
         //Asset
         ArrayList<AccountAssets> accountAssets = null;
@@ -445,6 +449,7 @@ public class SettingActivity extends BaseActivity {
                 }
 
             }
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
         }
     }
@@ -546,21 +551,6 @@ public class SettingActivity extends BaseActivity {
 
 
     // Blocks Updation
-    private String prevBlockNumber = "";
-    private int counterBlockCheck = 0;
-
-    private Boolean isBlockUpdated() {
-        if (Application.blockHead != prevBlockNumber) {
-            prevBlockNumber = Application.blockHead;
-            counterBlockCheck = 0;
-            return true;
-        } else if (counterBlockCheck++ >= 30) {
-            return false;
-        }
-
-        return true;
-    }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
@@ -569,34 +559,26 @@ public class SettingActivity extends BaseActivity {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null)
-                {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
-                    {
-                        boolean paused = Application.webSocketG.isPaused();
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    }
-                    else
-                    {
+                    } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                         Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
                         ivSocketConnected.startAnimation(myFadeInAnimation);
-                        Application.webSocketG.close();
-                        Application.webSocketConnection();
                     }
+                } else {
+                    ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
-                else
-                {
-                    Application.webSocketConnection();
-                }
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 1000);
             }
         };
-        handler.postDelayed(updateTask, 5000);
+        handler.postDelayed(updateTask, 1000);
     }
-    /////////////////
 
     void designMethod() {
         if (android.os.Build.VERSION.SDK_INT > 21)
@@ -605,11 +587,11 @@ public class SettingActivity extends BaseActivity {
 
 
     @OnClick(R.id.register_new_account)
-    void setRegisterNewAccount(){
-        Intent intent = new Intent(this , AccountActivity.class);
-        intent.putExtra("activity_name","setting_screen");
-        intent.putExtra("activity_id",919);
-       startActivity(intent);
+    void setRegisterNewAccount() {
+        Intent intent = new Intent(this, AccountActivity.class);
+        intent.putExtra("activity_name", "setting_screen");
+        intent.putExtra("activity_id", 919);
+        startActivity(intent);
     }
 
     @OnClick(R.id.import_new_account)
