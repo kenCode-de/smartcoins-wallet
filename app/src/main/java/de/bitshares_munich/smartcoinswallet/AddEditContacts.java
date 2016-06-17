@@ -213,7 +213,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                         SaveContact.setEnabled(true);
                         SaveContact.setBackgroundColor(getResources().getColor(R.color.pinkColor));
                         warning.setText(R.string.account_name_validate);
-                        warning.setVisibility(View.VISIBLE);   }
+                        warning.setVisibility(View.VISIBLE);
+                    }
                 });
             }
             if (!found){
@@ -222,7 +223,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                     public void run() {
                         validReceiver = false;
                         String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format(acName, Accountname.getText().toString());
+                        String format = String.format(acName.toString(), Accountname.getText().toString());
                         SaveContact.setEnabled(false);
                         SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
                         warning.setText(format);

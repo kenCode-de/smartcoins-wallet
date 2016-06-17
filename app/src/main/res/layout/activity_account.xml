@@ -46,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:id="@+id/tvPin"
             android:text="@string/txt_6_digits_pin"
             android:textStyle="bold"/>
         <EditText
@@ -62,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:id="@+id/tvPinConfirmation"
             android:text="@string/txt_6_digits_pin_confirm"
             android:textStyle="bold"/>
         <EditText
@@ -132,8 +134,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:src="@drawable/icon_disconnecting"/>
+                android:layout_gravity="center"/>
 
             <ImageView android:layout_width="0dp"
                        android:layout_height="wrap_content"

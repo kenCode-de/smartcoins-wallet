@@ -104,7 +104,7 @@ public class pdfTable {
         Document document = new Document();
 
         try {
-            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.txt_folder_name);
             String filePath = combinePath(extStorage, filename + ".pdf");
             createEmptyFile(filePath);
             PdfWriter.getInstance(document,new FileOutputStream(filePath));

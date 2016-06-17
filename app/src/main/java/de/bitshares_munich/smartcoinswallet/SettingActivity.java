@@ -19,6 +19,8 @@ import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -172,8 +174,9 @@ public class SettingActivity extends BaseActivity {
                 else Helper.storeBoolianSharePref(this, close_bitshare, false);
                 break;
             case R.id.always_donate:
-                if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
-                else Helper.storeBoolianSharePref(this, always_donate, false);
+                //if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
+                //else Helper.storeBoolianSharePref(this, always_donate, false);
+                Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
@@ -231,7 +234,8 @@ public class SettingActivity extends BaseActivity {
         }
         if (Helper.fetchBoolianSharePref(this, always_donate)) {
             checkBox = (CheckBox) findViewById(R.id.always_donate);
-            checkBox.setChecked(true);
+            //checkBox.setChecked(true);
+            checkBox.setChecked(false);
         }
         if (Helper.fetchBoolianSharePref(this, hide_donations)) {
             checkBox = (CheckBox) findViewById(R.id.hide_donations);
@@ -544,6 +548,9 @@ public class SettingActivity extends BaseActivity {
     // Blocks Updation
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -551,12 +558,16 @@ public class SettingActivity extends BaseActivity {
                     if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                     }
-
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -573,7 +584,8 @@ public class SettingActivity extends BaseActivity {
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
         Intent intent = new Intent(this, AccountActivity.class);
-        startActivity(intent);
+        intent.putExtra("activity_name", "setting_screen");
+        intent.putExtra("activity_id", 919);
     }
 
     @OnClick(R.id.import_new_account)
@@ -705,6 +717,7 @@ public class SettingActivity extends BaseActivity {
         startActivity(k);
         finish();
     }
+
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 

@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -184,7 +186,7 @@ public class RecieveActivity extends BaseActivity {
     }
 
     private File savebitmap(Bitmap bmp) {
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() +  File.separator + getResources().getString(R.string.txt_folder_name);
         OutputStream outStream = null;
         File file = new File(extStorageDirectory, "QrImage" + ".png");
         if (file.exists()) {
@@ -340,6 +342,9 @@ public class RecieveActivity extends BaseActivity {
 
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -347,12 +352,16 @@ public class RecieveActivity extends BaseActivity {
                     if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                     }
-
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
                 handler.postDelayed(this, 1000);
             }

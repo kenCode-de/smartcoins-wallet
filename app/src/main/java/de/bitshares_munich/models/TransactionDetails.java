@@ -2,9 +2,11 @@ package de.bitshares_munich.models;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.bitshares_munich.smartcoinswallet.BaseActivity;
 import de.bitshares_munich.utils.Helper;
 
 /**
@@ -21,10 +23,15 @@ public class TransactionDetails {
     public float faitAmount;
     public String faitAssetSymbol;
     public String eReceipt;
-    Context context;
+    private Context context;
+
+    public void updateContext(Context _context)
+    {
+        context = _context;
+    }
 
     public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, float _Amount,
-                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt,Context context)
+                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt)
     {
         this.Date = _date;
         this.Sent = _Sent;
@@ -36,8 +43,6 @@ public class TransactionDetails {
         this.faitAmount = _faitAmount;
         this.faitAssetSymbol = _faitAssetSymbol;
         eReceipt = _eReceipt;
-        this.context=context;
-
     }
 
     public Date getDate()

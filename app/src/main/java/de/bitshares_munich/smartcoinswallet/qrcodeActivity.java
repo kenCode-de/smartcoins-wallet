@@ -2,12 +2,25 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
 
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.ReaderException;
+import com.google.zxing.common.HybridBinarizer;
 import com.loopj.android.http.*;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -18,11 +31,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.*;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.utils.SupportMethods;
+import me.dm7.barcodescanner.core.DisplayUtils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -60,20 +79,24 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        verifyCameraPermissions(this);
 
         setBackButton(true);
         setTitle(getResources().getString(R.string.qr_code_activity_name));
 
+        verifyCameraPermissions(this);
+
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
-        SupportMethods.testing("qrcode",id,"od");
+        //SupportMethods.testing("qrcode",id,"od");
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
+
+        progressDialog = new ProgressDialog(this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
 
     @Override
     public void onResume() {
@@ -88,15 +111,52 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
+    ProgressDialog progressDialog;
+
     @Override
-    public void handleResult(Result rawResult) {
-        mScannerView.stopCamera();
-//        workingQrcode(rawResult.toString());
-        if (id==0) {
-            finishWithResult(rawResult.toString());
-        }else if(id==1){
-            StartWithfinishWithResult(rawResult.toString());
+    public void handleResult(final Result rawResult)
+    {
+        //View myView = new View(getApplicationContext());
+        //myView.setBackgroundColor(getResources().getColor(R.color.whiteColor));
+        //setContentView(myView);
+        showDialog("","");
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                mScannerView.stopCamera();
+                if (id==0)
+                {
+                    finishWithResult(rawResult.toString());
+                }
+                else if(id==1)
+                {
+                    StartWithfinishWithResult(rawResult.toString());
+                }
+            }
+        });
+
+
+    }
+
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
         }
+    }
+
+    private void hideDialog() {
+
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
+        }
+
     }
 
     private void finishWithResult(String parseddata) {

@@ -1,6 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,6 +95,9 @@ public class TabActivity extends BaseActivity {
 
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -99,12 +105,16 @@ public class TabActivity extends BaseActivity {
                     if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                     }
-
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
                 handler.postDelayed(this, 1000);
             }

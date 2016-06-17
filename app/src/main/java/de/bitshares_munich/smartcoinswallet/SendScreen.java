@@ -1,5 +1,6 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ArrayAdapter;
@@ -27,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -259,7 +263,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (loyaltyAmount > loyaltyBalance) {
             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
         } else {
-            String remainingBalance = String.format("%.4f", (loyaltyBalance - loyaltyAmount));
+            String remainingBalance = String.format(Locale.ENGLISH,"%.4f", (loyaltyBalance - loyaltyAmount));
             tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
         }
 
@@ -300,7 +304,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (backupAssetAmount > backupAssetBalance) {
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssets.symbol));
         } else {
-            String remainingBalance = String.format("%.4f", (backupAssetBalance - backupAssetAmount));
+            String remainingBalance = String.format(Locale.ENGLISH,"%.4f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
         if (backAssetRate != null) {
@@ -373,14 +377,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tradeAmount += Double.parseDouble(etAmount.getText().toString());
             }
             String mainAsset = spAssets.getSelectedItem().toString();
-            transferAmount(String.format("%."+selectedAccountAsset.precision.toString()+"f",tradeAmount), mainAsset, etReceiverAccount.getText().toString());
+            transferAmount(String.format(Locale.ENGLISH,"%."+selectedAccountAsset.precision+"f",tradeAmount), mainAsset, etReceiverAccount.getText().toString());
         } else if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
-            String mainAmount = String.format("%.4f", Double.parseDouble(etAmount.getText().toString()));
+            String mainAmount = String.format(Locale.ENGLISH,"%.4f", Double.parseDouble(etAmount.getText().toString()));
             String mainAsset = spAssets.getSelectedItem().toString();
             transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
         }
         if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
-            String loyaltyAmount = String.format("%.4f", Double.parseDouble(etLoyalty.getText().toString()));
+            String loyaltyAmount = String.format(Locale.ENGLISH,"%.4f", Double.parseDouble(etLoyalty.getText().toString()));
             String loyaltyAsset = tvLoyalty.getText().toString();
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
         }
@@ -426,7 +430,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 } else {
                     validAmount = true;
 
-                    remainingBalance = String.format("%.4f", (selectedBalance - enteredAmount));
+                    remainingBalance = String.format(Locale.ENGLISH,"%.4f", (selectedBalance - enteredAmount));
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
 
                 }
@@ -492,12 +496,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setCheckboxAvailabilty() {
-        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+
+        /*if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
             cbAlwaysDonate.setVisibility(View.GONE);
             alwaysDonate = true;
         } else {
             cbAlwaysDonate.setChecked(true);
         }
+        */
+
+        cbAlwaysDonate.setChecked(true);
     }
 
     void setBackUpAsset() {
@@ -847,7 +855,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validReceiver = false;
                         sendBtnPressed=false;
                         String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format(acName, etReceiverAccount.getText().toString());
+                        String format = String.format("%s %s",acName, etReceiverAccount.getText());
                         tvErrorRecieverAccount.setText(format);
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
@@ -880,35 +888,42 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void updateTotalStatus() {
 
-        String selectedAmount = Helper.padString(etAmount.getText().toString());
-        String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
-        String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
-        if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
-            if (count == 1) {
-                Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
-                Double totalAmountBackupAssets = (Double.parseDouble(backupAssetAmount) * backAssetRate);
-                Double amount = requiredAmount - totalAmountBackupAssets - totalAmountLoyalty;
-                String temp = etAmount.getText().toString();
-                if (!temp.equals(String.format("%.4f", amount))) {
-                    etAmount.setText(String.format("%.4f", amount));
+        try {
+
+            String selectedAmount = Helper.padString(etAmount.getText().toString());
+            String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
+            String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
+            if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
+                if (count == 1) {
+                    Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
+                    Double totalAmountBackupAssets = (Double.parseDouble(backupAssetAmount) * backAssetRate);
+                    Double amount = requiredAmount - totalAmountBackupAssets - totalAmountLoyalty;
+                    String temp = etAmount.getText().toString();
+                    if (!temp.equals(String.format(Locale.ENGLISH,"%.4f", amount))) {
+                        etAmount.setText(String.format(Locale.ENGLISH,"%.4f", amount));
+                    }
+                    count = 0;
+                    Double total = amount + totalAmountBackupAssets + totalAmountLoyalty;
+                    tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
+                            String.format(Locale.ENGLISH,"%.4f", amount), selectedAccountAsset.symbol, backupAssetAmount + backupAssets.symbol + " + ", loyaltyAmount + loyaltyAsset.symbol
+                            , String.format(Locale.ENGLISH,"%.4f", total), selectedAccountAsset.symbol));
                 }
-                count = 0;
-                Double total = amount + totalAmountBackupAssets + totalAmountLoyalty;
+                count++;
+            } else if (loyaltyAsset != null && exchangeRate != null) {
+                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
+                tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH,"%.4f", totalAmount), selectedAccountAsset.symbol));
+            } else if (backupAssets != null && backAssetRate != null) {
+                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
                 tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                        String.format("%.4f", amount), selectedAccountAsset.symbol, backupAssetAmount + backupAssets.symbol + " + ", loyaltyAmount + loyaltyAsset.symbol
-                        , String.format("%.4f", total), selectedAccountAsset.symbol));
+                        selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
+                        backupAssets.symbol, String.format(Locale.ENGLISH,"%.4f", totalAmount), selectedAccountAsset.symbol));
             }
-            count++;
-        } else if (loyaltyAsset != null && exchangeRate != null) {
-            Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
-            tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format("%.4f",totalAmount), selectedAccountAsset.symbol));
-        } else if (backupAssets != null && backAssetRate != null) {
-            Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
-            tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                    selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
-                    backupAssets.symbol, String.format("%.4f",totalAmount), selectedAccountAsset.symbol));
+            tvTotalStatus.setVisibility(View.VISIBLE);
         }
-        tvTotalStatus.setVisibility(View.VISIBLE);
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),"Unable to process : " + e.getMessage(),Toast.LENGTH_LONG).show();
+        }
     }
 
     public void getTrxBlock(String id) {
@@ -1021,7 +1036,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("account", spinnerFrom.getSelectedItem().toString());
         hm.put("sell_amount", sellAmount.toString());
         hm.put("sell_symbol", backupAsset);
-        hm.put("buy_amount", String.format("%.4f",buyAmount));
+        hm.put("buy_amount", String.format(Locale.ENGLISH,"%.4f",buyAmount));
         hm.put("buy_symbol", selectedAccountAsset.symbol);
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
@@ -1102,6 +1117,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     /// Updating Block Number and status
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
+
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -1109,12 +1127,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                     }
-
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                    Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                    ivSocketConnected.startAnimation(myFadeInAnimation);
                 }
                 handler.postDelayed(this, 1000);
             }
