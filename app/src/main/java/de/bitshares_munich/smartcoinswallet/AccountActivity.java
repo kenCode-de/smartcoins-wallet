@@ -354,14 +354,17 @@ public class AccountActivity extends BaseActivity implements IAccount,IAccountID
     public void create(Button button) {
         if(checkingValidation){
             Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
-        }else if (etAccountName.getText().toString().length() == 0) {
+        }else
+        if (etAccountName.getText().toString().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
         }else if (etAccountName.getText().toString().length() <= 5 ) {
             Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
         }else if (checkLastIndex()) {
+            tvErrorAccountName.setVisibility(View.VISIBLE);
             tvErrorAccountName.setText(R.string.last_letter_cannot);
         }
         else if (!checkHyphen()) {
+            tvErrorAccountName.setVisibility(View.VISIBLE);
             tvErrorAccountName.setText(R.string.account_name_shoud_have);
         }
         else if(settingScreen) {

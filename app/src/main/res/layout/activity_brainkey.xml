@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/txt_6_digits_pin"
+        android:id="@+id/tvPin"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>
     <EditText
@@ -36,6 +37,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/tvPinConfirmation"
         android:text="@string/txt_6_digits_pin_confirm"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>

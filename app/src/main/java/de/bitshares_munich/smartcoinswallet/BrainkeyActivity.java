@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
@@ -51,6 +52,13 @@ public class BrainkeyActivity extends BaseActivity {
 
     ProgressDialog progressDialog;
     TinyDB tinyDB;
+    Boolean settingScreen = false;
+
+    @Bind(R.id.tvPin)
+    TextView tvPin;
+
+    @Bind(R.id.tvPinConfirmation)
+    TextView tvPinConfirmation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,22 @@ public class BrainkeyActivity extends BaseActivity {
 
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
+
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if(res!=null) {
+            if (res.containsKey("activity_id")) {
+                if (res.getInt("activity_id") == 919) {
+                    settingScreen = true;
+                    etPin.setEnabled(false);
+                    etPinConfirmation.setEnabled(false);
+                    etPin.setText("******");
+                    etPinConfirmation.setText("******");
+                    tvPin.setTextColor(Color.GRAY);
+                    tvPinConfirmation.setTextColor(Color.GRAY);
+                }
+            }
+        }
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
@@ -75,33 +99,41 @@ public class BrainkeyActivity extends BaseActivity {
     @OnClick(R.id.btnWallet)
     public void wallet(Button button) {
 
-        if (etPin.getText().length() < 5) {
-            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-        } else if (etPinConfirmation.getText().length() < 5) {
-            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-        } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-            Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-        } else if (etBrainKey.getText().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
-        } else {
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
-            String temp = etBrainKey.getText().toString();
-            if (temp.contains(" ")) {
-                String arr[] = temp.split(" ");
-                if (arr.length == 16) {
-                    showDialog("", getString(R.string.importing_your_wallet));
-                    get_account_from_brainkey(this);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
-                }
 
+
+        if (etBrainKey.getText().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
+        }else if(settingScreen){
+            load();
+        } else {
+            if (etPin.getText().length() < 5) {
+                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
+            } else if (etPinConfirmation.getText().length() < 5) {
+                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+            } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+            } else {
+                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
+                load();
+            }
+        }
+    }
+
+    void load(){
+        String temp = etBrainKey.getText().toString();
+        if (temp.contains(" ")) {
+            String arr[] = temp.split(" ");
+            if (arr.length == 16) {
+                showDialog("", getString(R.string.importing_your_wallet));
+                get_account_from_brainkey(this);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
             }
 
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
         }
     }
-
     public void get_account_from_brainkey(final Activity activity) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));

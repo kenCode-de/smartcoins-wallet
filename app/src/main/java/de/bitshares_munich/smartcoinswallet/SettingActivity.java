@@ -609,16 +609,14 @@ public class SettingActivity extends BaseActivity {
         Intent intent = new Intent(this , AccountActivity.class);
         intent.putExtra("activity_name","setting_screen");
         intent.putExtra("activity_id",919);
-//=======
-//    void setRegisterNewAccount() {
-//        Intent intent = new Intent(this, AccountActivity.class);
-//>>>>>>> c3d1af2a48bc7e3cc754165a8c98f3397cc8df59
-//        startActivity(intent);
+       startActivity(intent);
     }
 
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(this, BrainkeyActivity.class);
+        intent.putExtra("activity_name","setting_screen");
+        intent.putExtra("activity_id",919);
         startActivity(intent);
     }
 
@@ -717,13 +715,17 @@ public class SettingActivity extends BaseActivity {
                     accountDetails.remove(i);
                 }
             }
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_account_name), spAccounts.getSelectedItem().toString());
+//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_wallet_accounts), accountDetails);
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
 
-            accountDetails.clear();
+            Intent intent = new Intent(this,SettingActivity.class);
+            startActivity(intent);
 
-            accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-            init();
-            populateDropDowns();
+      //      accountDetails.clear();
+
+//            accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+//            init();
+//            populateDropDowns();
 
 
         } else {
