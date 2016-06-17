@@ -136,7 +136,7 @@ public class Application extends android.app.Application {
                     if (getCurrentActivity() != null) {
                         getCurrentActivity().runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Connected to node " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(context, "Connected to node " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

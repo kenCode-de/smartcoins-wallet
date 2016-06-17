@@ -157,6 +157,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     @Bind(R.id.ivLifeTime)
     ImageView ivLifeTime;
 
+    @Bind(R.id.ivMultiAccArrow)
+    ImageView ivMultiAccArrow;
+
     @Bind(R.id.ivHelp)
     ImageView ivHelp;
 
@@ -456,6 +459,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         try
         {
             ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+            if ( accountDetails.size() > 1  )
+            {
+                ivMultiAccArrow.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                ivMultiAccArrow.setVisibility(View.GONE);
+            }
+
 
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
