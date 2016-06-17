@@ -329,6 +329,7 @@
                     android:text="@string/close_bitshare"
                 />
                 <CheckBox
+                    android:visibility="gone"
                     android:id="@+id/always_donate"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -336,6 +337,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:onClick="onCheck"
+                    android:checked="false"
                     android:text="@string/always_donate"
                 />
                 <CheckBox
@@ -489,8 +491,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_disconnecting"/>
+            android:layout_gravity="center"/>
 
         <ImageView android:layout_width="0dp"
             android:layout_height="wrap_content"

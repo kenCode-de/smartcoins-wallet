@@ -5,13 +5,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +37,11 @@ import com.github.premnirmal.textcounter.CounterView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +62,7 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
@@ -61,6 +73,7 @@ import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
@@ -167,34 +180,130 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         ButterKnife.bind(this, rootView);
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
-        //recievebtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_receive)));
-        //sendbtn.setImageBitmap(SupportMethods.highlightImage(20,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_send)));
-        //qrCamera.setImageBitmap(SupportMethods.highlightImage(7,BitmapFactory.decodeResource(getResources(), R.mipmap.icon_camera)));
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
-        final View tableViewparent = rootView.findViewById(R.id.tableViewparent);
 
-        // replace myTransactions with actual data
         final Handler handler = new Handler();
-
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run()
+                    {
+                        setSortableTableViewHeight(rootView, handler,this );
+                    }
+                });
+
+
+            }
+        };
+
+        final Runnable createFolder = new Runnable() {
+            @Override
+            public void run() {
+                createFolder();
+            }
+        };
+
+
+        loadBasic();
+        loadBalancesFromSharedPref();
+        TransactionUpdateOnStartUp();
+
+        handler.postDelayed(updateTask, 2000);
+
+        handler.postDelayed(createFolder, 5000);
+
+        return rootView;
+    }
+
+    private void setSortableTableViewHeight (View rootView, Handler handler, Runnable task)
+    {
+        try
+        {
+            View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
+            int height1 = scrollViewBalances.getHeight();
+
+            if (height1 == 0 )
+            {
+                handler.postDelayed(task,2000);
+                return;
+            }
+
+            Log.d("setSortableHeight", "Scroll Heght : " + Integer.toString(height1));
+            View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
+            int height2 = transactionsExportHeader.getHeight();
+            Log.d("setSortableHeight", "Scroll Header Heght : " + Integer.toString(height2));
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tableView.getLayoutParams();
+            params.height = height1 - height2;
+            Log.d("setSortableHeight", "View Heght : " + Integer.toString(params.height));
+            tableViewparent.setLayoutParams(params);
+            Log.d("setSortableHeight", "View Heght Set");
+        }
+        catch (Exception e)
+        {
+            Log.d("List Height",e.getMessage());
+            handler.postDelayed(task,2000);
+        }
+    }
+
+    private void createFolder ()
+    {
+        PermissionManager manager = new PermissionManager();
+        manager.verifyStoragePermissions(getActivity());
+
+        final File folder = new File(Environment.getExternalStorageDirectory() +  File.separator + getResources().getString(R.string.txt_folder_name));
+
+        boolean success = false;
+
+        if (!folder.exists())
+        {
+            success = folder.mkdir();
+        }
+
+        if (success) {
+            // Do something on success
+            Toast.makeText(getContext(), getResources().getString(R.string.txt_folder_created) + " : " + folder.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        }
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
-                    int height1 = scrollViewBalances.getHeight();
-                    View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
-                    int height2 = transactionsExportHeader.getHeight();
-                    tableViewparent.setMinimumHeight(height1 - (height2));
-                } catch (Exception e) {
+                    File file2 = new File(folder.getAbsolutePath(), "ch_ching.wav");
+
+                    if (!file2.exists())
+                    {
+                        FileOutputStream save = new FileOutputStream(file2);
+
+                        byte[] buffer = null;
+                        InputStream fIn = getResources().openRawResource(R.raw.ch_ching);
+                        int size = 0;
+
+                        try {
+                            size = fIn.available();
+                            buffer = new byte[size];
+                            fIn.read(buffer);
+                            fIn.close();
+                            save.write(buffer);
+                            //save.flush();
+                            //save.close();
+                        } catch (FileNotFoundException e) {
+                            // TODO Auto-generated catch block
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                        }
+
+                        save.flush();
+                        save.close();
+                    }
+                }
+                catch(Exception e)
+                {
 
                 }
             }
-        };
-        handler.postDelayed(updateTask, 2000);
-
-        loadBasic();
-
-        return rootView;
+        });
     }
 
     @Override
@@ -203,6 +312,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
+
 
         if (checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
             loadBasic();
@@ -341,6 +451,41 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
     }
 
+    public void loadBalancesFromSharedPref ()
+    {
+        try
+        {
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
+
+                    if ((accountAsset != null) && (accountAsset.size() > 0)) {
+                        ArrayList<String> sym = new ArrayList<>();
+                        ArrayList<String> pre = new ArrayList<>();
+                        ArrayList<String> am = new ArrayList<>();
+
+                        for (int j = 0; j < accountAsset.size(); j++) {
+                            pre.add(j, accountAsset.get(j).precision);
+                            sym.add(j, accountAsset.get(j).symbol);
+                            am.add(j, accountAsset.get(j).ammount);
+                        }
+
+                        BalanceAssetsUpdate(sym, pre, am, true);
+                    }
+
+                    break;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+
+        }
+
+    }
+
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -374,9 +519,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         SupportMethods.testing("Assets", "Assets views 3", "Asset Activity");
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+        SupportMethods.testing("Assets","Assets views 4","Asset Activity");
+        BalanceAssetsUpdate(sym, pre, am, false);
+    }
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp)
+    {
+        int count = llBalances.getChildCount();
+
+        if(count<=0) BalanceAssetsLoad(sym, pre, am, onStartUp);
+        if(count>0) BalanceAssetsUpdate(sym, pre, am);
+    }
+
+    /*public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am,final Boolean onStartUp)
+    {
         SupportMethods.testing("Assets", "Assets views 4", "Asset Activity");
         BalanceAssetsUpdate(sym, pre, am, false);
     }
+    */
 
     private void getEquivalentComponents(ArrayList<AccountAssets> accountAssets) {
         String faitCurrency = Helper.getFadeCurrency(getContext());
@@ -452,14 +612,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
-        int count = llBalances.getChildCount();
-
-        if (count <= 0) BalanceAssetsLoad(sym, pre, am);
-        if (count > 0) BalanceAssetsUpdate(sym, pre, am);
-    }
-
-    public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am,final Boolean onStartUp)
+    {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
@@ -519,21 +673,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                         } else counter = 1;
                     }
                 }
-                progressBar1.setVisibility(View.GONE);
+
+                if (!onStartUp)
+                {
+                    progressBar1.setVisibility(View.GONE);
+                    isLoading = true;
+                }
+
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
-                isLoading = true;
             }
         });
     }
 
-    //    public void setCounter(CounterView counterView,float sValue , float eValue){
-//        if (counterView != null) {
-//            counterView.setStartValue(sValue);
-//            counterView.setEndValue(eValue);
-//            counterView.start();
-//        }
-//    }
-    public void setCounter(CounterView counterView, float sValue, float eValue) {
+     public void setCounter(CounterView counterView,float sValue , float eValue){
         if (counterView != null) {
             counterView.setAutoStart(false);
             counterView.setAutoFormat(false);
@@ -547,194 +699,215 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    private void rotateRecieveButton ()
+    {
+        ImageView rcvBtn = (ImageView)getActivity().findViewById(R.id.recievebtn);
+        final Animation rotAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotate360);
+        rcvBtn.startAnimation(rotAnim);
+    }
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
+    {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                int count = llBalances.getChildCount();
 
-//                am.add(0,"9858753");
-//                am.add(1,"900009");
-//               // am.add(3,"9");
-//
-//               // am.add(2,"9");
-//                am.add("90");
-//                pre.add("2");
-//                sym.add("KPS");
-//                sym.add("yth");
-//                sym.add("kolth");
-//                sym.add("ythol");
-//                sym.add("ythth");
+                try {
 
-                if (count > 0) {
-                    int m = 0;
-                    for (int i = 0; i < count; i++) {
-                        LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
-                        LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
-                        TextView tvSymOne = (TextView) child.getChildAt(0);
-                        CounterView tvAmOne = (CounterView) child.getChildAt(1);
-                        TextView tvSymtwo = (TextView) child.getChildAt(2);
-                        CounterView tvAmtwo = (CounterView) child.getChildAt(3);
+                    LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    int count = llBalances.getChildCount();
 
-                        if (sym.size() > m) {
+                    if (count > 0) {
+                        int m = 0;
+                        for (int i = 0; i < count; i++) {
+                            LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
+                            LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
+                            TextView tvSymOne = (TextView) child.getChildAt(0);
+                            CounterView tvAmOne = (CounterView) child.getChildAt(1);
+                            TextView tvSymtwo = (TextView) child.getChildAt(2);
+                            CounterView tvAmtwo = (CounterView) child.getChildAt(3);
 
-                            String symbol = sym.get(m);
-                            String amount = "";
-                            if (pre.size() > m && am.size() > m)
-                                amount = returnFromPower(pre.get(m), am.get(m));
-                            String txtSymbol = tvSymOne.getText().toString();
-                            String txtAmount = tvAmOne.getText().toString().split("\\[")[0];
+                            if (sym.size() > m)
+                            {
 
-                            if (!symbol.equals(txtSymbol))
-                                tvSymOne.setText(symbol);
-                            if (!amount.equals(txtAmount)) {
+                                String symbol = sym.get(m);
+                                String amount = "";
+                                if (pre.size() > m && am.size() > m)
+                                    amount = returnFromPower(pre.get(m), am.get(m));
+                                String txtSymbol = tvSymOne.getText().toString();
+                                String txtAmount = tvAmOne.getText().toString().split("\\[")[0];;
 
-                                if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
-                                    SupportMethods.testing("float", Float.parseFloat(txtAmount), "txtamount");
-                                    SupportMethods.testing("float", Float.parseFloat(amount), "amount");
-                                    tvAmOne.setTypeface(null, Typeface.BOLD);
-                                    tvAmOne.setTextColor(getResources().getColor(R.color.red));
-                                }
+                                if (!symbol.equals(txtSymbol))
+                                    tvSymOne.setText(symbol);
+                                if (!amount.equals(txtAmount)) {
 
-                                if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
-                                    tvAmOne.setTypeface(null, Typeface.BOLD);
-                                    tvAmOne.setTextColor(getResources().getColor(R.color.green));
-                                }
-
-                                setCounter(tvAmOne, Float.parseFloat(txtAmount), Float.parseFloat(amount));
-                                final CounterView cView = tvAmOne;
-                                final Handler handler = new Handler();
-
-                                final Runnable updateTask = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        cView.setTypeface(null, Typeface.NORMAL);
-                                        cView.setTextColor(getResources().getColor(R.color.green));
+                                    if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
+                                        SupportMethods.testing("float", Float.parseFloat(txtAmount), "txtamount");
+                                        SupportMethods.testing("float", Float.parseFloat(amount), "amount");
+                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTextColor(getResources().getColor(R.color.red));
                                     }
-                                };
 
-                                handler.postDelayed(updateTask, 4000);
+                                    if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
+                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
+                                        // run animation
+                                        final Runnable rotateTask = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getActivity().runOnUiThread(new Runnable() {
+                                                    public void run()
+                                                    {
+                                                        rotateRecieveButton();
+                                                    }
+                                                });
+                                            }
+                                        };
+
+                                        handler.postDelayed(rotateTask, 200);
+                                    }
+
+
+                                    setCounter(tvAmOne, Float.parseFloat(txtAmount), Float.parseFloat(amount));
+                                    final CounterView cView = tvAmOne;
+                                    final Handler handler = new Handler();
+                                    final Runnable updateTask = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            cView.setTypeface(null, Typeface.NORMAL);
+                                            cView.setTextColor(getResources().getColor(R.color.green));
+                                        }
+                                    };
+                                    handler.postDelayed(updateTask, 4000);
+
+                                }
+                                m++;
                             }
-                            m++;
-                        } else {
-                            linearLayout.removeAllViews();
+                            else
+                            {
+                                linearLayout.removeAllViews();
+                            }
+
+                            if (sym.size() > m)
+                            {
+                                String symbol = sym.get(m);
+                                String amount = "";
+                                if (pre.size() > m && am.size() > m)
+                                    amount = returnFromPower(pre.get(m), am.get(m));
+                                String txtSymbol = tvSymtwo.getText().toString();
+                                String txtAmount = tvAmtwo.getText().toString().split("\\[")[0];;
+
+                                if (!symbol.equals(txtSymbol))
+                                    tvSymtwo.setText(symbol);
+
+                                if (!amount.equals(txtAmount)) {
+                                    tvAmtwo.setVisibility(View.VISIBLE);
+
+                                    if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
+                                        tvAmtwo.setTextColor(getResources().getColor(R.color.red));
+                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+
+                                    }
+                                    if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
+                                        tvAmtwo.setTextColor(getResources().getColor(R.color.green));
+                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+
+
+                                    }
+
+
+                                    setCounter(tvAmtwo, Float.parseFloat(txtAmount), Float.parseFloat(amount));
+                                    final CounterView cView = tvAmtwo;
+                                    final Handler handler = new Handler();
+
+                                    final Runnable updateTask = new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            cView.setTypeface(null, Typeface.NORMAL);
+                                            cView.setTextColor(getResources().getColor(R.color.green));
+                                        }
+                                    };
+
+                                    handler.postDelayed(updateTask, 4000);
+                                }
+                                m++;
+                            }
+                            else
+                            {
+                                if (i == count - 1) {
+                                    if (sym.size() > m)
+                                        m--;
+                                }
+                            }
                         }
-                        if (sym.size() > m) {
 
-                            String symbol = sym.get(m);
-                            String amount = "";
-                            if (pre.size() > m && am.size() > m)
-                                amount = returnFromPower(pre.get(m), am.get(m));
-                            String txtSymbol = tvSymtwo.getText().toString();
-                            String txtAmount = tvAmtwo.getText().toString().split("\\[")[0];
+                        int loop = sym.size() - m;
+                        if (loop > 0) {
+                            for (int i = m; i < sym.size(); i += 2) {
+                                int counter = 1;
+                                int op = sym.size();
+                                int pr;
 
-                            if (!symbol.equals(txtSymbol))
-                                tvSymtwo.setText(symbol);
-
-                            if (!amount.equals(txtAmount)) {
-                                //tvAmtwo.setText(amount);
-                                tvAmtwo.setVisibility(View.VISIBLE);
-
-                                if (Float.parseFloat(txtAmount) > Float.parseFloat(amount)) {
-                                    tvAmtwo.setTextColor(getResources().getColor(R.color.red));
-                                    tvAmtwo.setTypeface(null, Typeface.BOLD);
-
-                                }
-                                if (Float.parseFloat(amount) > Float.parseFloat(txtAmount)) {
-                                    tvAmtwo.setTextColor(getResources().getColor(R.color.green));
-                                    tvAmtwo.setTypeface(null, Typeface.BOLD);
-
+                                if ((op - i) > 2) {
+                                    pr = 2;
+                                } else {
+                                    pr = op - i;
                                 }
 
-                                setCounter(tvAmtwo, Float.parseFloat(txtAmount), Float.parseFloat(amount));
-                                final CounterView cView = tvAmtwo;
-                                final Handler handler = new Handler();
-
-                                final Runnable updateTask = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        cView.setTypeface(null, Typeface.NORMAL);
-                                        cView.setTextColor(getResources().getColor(R.color.green));
+                                View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+                                LinearLayout layout = (LinearLayout) customView;
+                                LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+                                for (int l = i; l < i + pr; l++) {
+                                    if (counter == 1) {
+                                        TextView textView = (TextView) layout1.getChildAt(0);
+                                        textView.setText(sym.get(l));
+                                        CounterView textView1 = (CounterView) layout1.getChildAt(1);
+                                        if (pre.size() > l && am.size() > i) {
+                                            String r = returnFromPower(pre.get(l), am.get(i));
+                                            setCounter(textView1, 0f, 0f);
+                                            setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
+                                        } else textView1.setText("");
                                     }
-                                };
 
-                                handler.postDelayed(updateTask, 4000);
+                                    if (counter == 2) {
+                                        TextView textView2 = (TextView) layout1.getChildAt(2);
+                                        textView2.setText(sym.get(l));
+                                        CounterView textView3 = (CounterView) layout1.getChildAt(3);
+                                        if (pre.size() > l && am.size() > l) {
+                                            String r = returnFromPower(pre.get(l), am.get(l));
+                                            setCounter(textView3, 0f, 0f);
+                                            setCounter(textView3, Float.parseFloat(r), Float.parseFloat(r));
+                                        }
 
-//                                if(txtAmount.equals("")){
-//                                    setCounter(tvAmtwo,Float.parseFloat(amount),Float.parseFloat(amount));
-//                                }
+                                        llBalances.addView(customView);
+                                    }
+
+                                    if (counter == 1 && i == sym.size() - 1) {
+                                        llBalances.addView(customView);
+                                    }
+
+                                    if (counter == 1) {
+                                        counter = 2;
+                                    } else counter = 1;
+                                }
+
                             }
 
-                            m++;
-                        } else {
-                            if (i == count - 1) {
-                                if (sym.size() > m)
-                                    m--;
-                            }
+
                         }
                     }
+                    progressBar1.setVisibility(View.GONE);
+                    whiteSpaceAfterBalances.setVisibility(View.GONE);
+                    isLoading = true;
 
-                    int loop = sym.size() - m;
-                    if (loop > 0) {
-                        for (int i = m; i < sym.size(); i += 2) {
-                            int counter = 1;
-                            int op = sym.size();
-                            int pr;
-
-                            if ((op - i) > 2) {
-                                pr = 2;
-                            } else {
-                                pr = op - i;
-                            }
-
-                            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                            LinearLayout layout = (LinearLayout) customView;
-                            LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-                            for (int l = i; l < i + pr; l++) {
-                                if (counter == 1) {
-                                    TextView textView = (TextView) layout1.getChildAt(0);
-                                    textView.setText(sym.get(l));
-                                    CounterView textView1 = (CounterView) layout1.getChildAt(1);
-                                    if (pre.size() > l && am.size() > i) {
-//                                        textView1.setText(returnFromPower(pre.get(l), am.get(i)));
-                                        String r = returnFromPower(pre.get(l), am.get(i));
-                                        setCounter(textView1, 0f, 0f);
-                                        setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
-                                    } else textView1.setText("");
-                                }
-
-                                if (counter == 2) {
-                                    TextView textView2 = (TextView) layout1.getChildAt(2);
-                                    textView2.setText(sym.get(l));
-                                    CounterView textView3 = (CounterView) layout1.getChildAt(3);
-                                    if (pre.size() > l && am.size() > l) {
-                                        String r = returnFromPower(pre.get(l), am.get(l));
-                                        setCounter(textView3, 0f, 0f);
-                                        setCounter(textView3, Float.parseFloat(r), Float.parseFloat(r));
-                                    }
-
-                                    llBalances.addView(customView);
-                                }
-
-                                if (counter == 1 && i == sym.size() - 1) {
-                                    llBalances.addView(customView);
-                                }
-
-                                if (counter == 1) {
-                                    counter = 2;
-                                } else counter = 1;
-                            }
-                        }
-
-
-                    }
                 }
-                progressBar1.setVisibility(View.GONE);
-                whiteSpaceAfterBalances.setVisibility(View.GONE);
-                isLoading = true;
+                catch (Exception e)
+                {
+                    Log.d("Balances Load",e.getMessage());
 
+                }
             }
+
 
         });
     }
@@ -834,10 +1007,52 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         }
     }
 
+
+    private void saveTransactions (List<TransactionDetails> transactionDetails)
+    {
+        tinyDB.putTransactions( getActivity(),getContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(transactionDetails) );
+    }
+
+    private List<TransactionDetails> getTransactionsFromSharedPref()
+    {
+        List<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions),TransactionDetails.class);
+
+        for (TransactionDetails td : mySavedList) {
+           td.updateContext(getContext());
+        }
+
+        return mySavedList;
+    }
+
+    public void TransactionUpdateOnStartUp()
+    {
+        final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref();
+
+        if ( localTransactionDetails != null && localTransactionDetails.size() > 0 )
+        {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run()
+                {
+                    tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), localTransactionDetails));
+                    load_more_values.setVisibility(View.VISIBLE);
+                    load_more_values.setEnabled(true);
+                    tableViewparent.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
         getActivity().runOnUiThread(new Runnable() {
-            public void run() {
+            public void run()
+            {
+                if (myTransactions.size() == 0)
+                {
+                    saveTransactions(transactionDetails);
+                    //myTransactions.clear();
+                }
+
                 if (number_of_transactions_in_queue < 25) {
                     load_more_values.setVisibility(View.GONE);
                 } else {
@@ -914,11 +1129,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public void getLifetime(String s, int id) {
+    public void getLifetime(String s,int id){
+        SupportMethods.testing("getLifetime",s,"s");
+
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        String result = SupportMethods.ParseJsonObject(s, "result");
-        String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
-        String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
+        SupportMethods.testing("getAccountID",s,"s");
+
+        String result = SupportMethods.ParseJsonObject(s,"result");
+        String nameObject = SupportMethods.ParseObjectFromJsonArray(result,0);
+        String expiration = SupportMethods.ParseJsonObject(nameObject,"membership_expiration_date");
+//    public void getLifetime(String s, int id) {
+//        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+//        String result = SupportMethods.ParseJsonObject(s, "result");
+//        String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
+//        String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
+//>>>>>>> c3d1af2a48bc7e3cc754165a8c98f3397cc8df59
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
@@ -1021,11 +1246,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         number_of_transactions_loaded = number_of_transactions_loaded + 25;
     }
 
-    void loadBasic() {
+    void loadBasic()
+    {
         isLoading = false;
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-        if (accountDetails.size() == 1) {
+        if (accountDetails.size() == 1)
+        {
             accountDetailsId = 0;
             accountDetails.get(0).isSelected = true;
             to = accountDetails.get(0).account_name;

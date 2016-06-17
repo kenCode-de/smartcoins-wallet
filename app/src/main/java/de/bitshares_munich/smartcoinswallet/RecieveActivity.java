@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -187,7 +189,7 @@ public class RecieveActivity extends BaseActivity {
         }
     }
     private File savebitmap(Bitmap bmp) {
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() +  File.separator + getResources().getString(R.string.txt_folder_name);
         OutputStream outStream = null;
         File file = new File(extStorageDirectory, "QrImage" + ".png");
         if (file.exists()) {
@@ -364,6 +366,8 @@ public class RecieveActivity extends BaseActivity {
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
@@ -374,18 +378,25 @@ public class RecieveActivity extends BaseActivity {
                         boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
+                        ivSocketConnected.clearAnimation();
                     }
                     else
                     {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
                     }
                 }
-                handler.postDelayed(this, 2000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 5000);
     }
 
     @OnClick(R.id.OnClickSettings_rcv_screen_activity)

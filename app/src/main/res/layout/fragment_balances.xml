@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="3">
-        <LinearLayout android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
                       android:layout_height="60dp"
                       android:layout_marginTop="16dp"
                       android:layout_marginLeft="16dp"
@@ -35,6 +36,7 @@
                 android:textSize="21dp"
                 android:textStyle="bold"/>
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/ivHelp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -42,6 +44,7 @@
                 android:layout_marginTop="3dp"
                 android:src="@drawable/icon_help"/>
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tvUpgradeLtm"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -55,6 +58,7 @@
 
         </LinearLayout>
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -205,6 +209,7 @@
                 android:indeterminateDrawable="@drawable/loader_homescreen">
             </ProgressBar>
             <Button
+                android:stateListAnimator="@animator/my_animated_button"
                 android:id="@+id/exportButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -241,6 +246,7 @@
             >
             </de.codecrafters.tableview.SortableTableView>
             <Button
+                android:stateListAnimator="@animator/my_animated_button"
                 android:id="@+id/load_more_values"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"

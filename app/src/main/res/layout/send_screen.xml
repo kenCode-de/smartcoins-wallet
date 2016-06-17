@@ -266,28 +266,30 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/layout_margin"
-                    android:weightSum="4"
+                    android:weightSum="1"
                     android:orientation="horizontal"
                     android:background="@drawable/edittext_background_layer"
                     >
                     <EditText
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@null"
                         android:singleLine="true"
                         android:maxLines="1"
                         android:id="@+id/etAmount"
-                        android:gravity="center|right"
+                        android:gravity="center|end"
                         android:paddingRight="5dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:inputType="numberDecimal"
                         android:text=""
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         />
                     <Spinner
-                        android:layout_width="0dp"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_gravity="end"
+                        android:dropDownWidth="wrap_content"
                         android:id="@+id/spAssets"
                         >
                     </Spinner>
@@ -570,8 +572,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:layout_gravity="center"
-            android:src="@drawable/icon_disconnecting"/>
+            android:layout_gravity="center"/>
 
         <ImageView android:layout_width="0dp"
             android:layout_height="wrap_content"
