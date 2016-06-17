@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -100,7 +98,6 @@ public class RecieveActivity extends BaseActivity {
         Intent intent = getIntent();
 
 
-
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
             String concate = this.getString(R.string.pay_to) + " : " + to;
@@ -126,15 +123,13 @@ public class RecieveActivity extends BaseActivity {
         if (price.isEmpty()) {
             notfound.setText(getString(R.string.no_amount_requested));
         } else {
-            String concate = this.getString(R.string.amount) + ": " +  price + " " + currency + " " + this.getString(R.string.requested);
+            String concate = this.getString(R.string.amount) + ": " + price + " " + currency + " " + this.getString(R.string.requested);
             notfound.setText(concate);
 
         }
 
 
-
-
-    HashMap hm = new HashMap();
+        HashMap hm = new HashMap();
         hm.put("account_name", to);
         hm.put("memo", "Order: " + orderId);
         hm.put("amount", price);
@@ -161,6 +156,7 @@ public class RecieveActivity extends BaseActivity {
             );
         }
     }
+
     @OnClick(R.id.backbutton)
     void onBackButtonPressed() {
         super.onBackPressed();
@@ -186,6 +182,7 @@ public class RecieveActivity extends BaseActivity {
 
         }
     }
+
     private File savebitmap(Bitmap bmp) {
         String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
         OutputStream outStream = null;
@@ -206,6 +203,7 @@ public class RecieveActivity extends BaseActivity {
         }
         return file;
     }
+
     Bitmap encodeAsBitmap(String str, String qrColor) throws WriterException {
         BitMatrix result;
         try {
@@ -304,10 +302,10 @@ public class RecieveActivity extends BaseActivity {
                     if (response.body().length > 0) {
                         TransactionSmartCoin[] transactions = response.body();
                         Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
-                        intent.putExtra("block",transactions[0].block);
-                        intent.putExtra("trx",transactions[0].trx);
-                        intent.putExtra("receiver_id",transactions[0].account_id);
-                        intent.putExtra("sender_id",transactions[0].sender_id);
+                        intent.putExtra("block", transactions[0].block);
+                        intent.putExtra("trx", transactions[0].trx);
+                        intent.putExtra("receiver_id", transactions[0].account_id);
+                        intent.putExtra("sender_id", transactions[0].sender_id);
                         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
@@ -340,56 +338,30 @@ public class RecieveActivity extends BaseActivity {
         });
     }
 
-
-    /// Updating Block Number and status
-    private String prevBlockNumber = "";
-    private int counterBlockCheck = 0;
-
-    private Boolean isBlockUpdated()
-    {
-        if ( Application.blockHead != prevBlockNumber )
-        {
-            prevBlockNumber = Application.blockHead;
-            counterBlockCheck = 0;
-            return true;
-        }
-        else if ( counterBlockCheck++ >= 30 )
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
-
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null)
-                {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
-                    {
-                        boolean paused = Application.webSocketG.isPaused();
+                if (Application.webSocketG != null) {
+                    if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
-                    }
-                    else
-                    {
+                    } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Application.webSocketG.close();
-                        Application.webSocketConnection();
                     }
+
+                } else {
+                    ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                 }
-                handler.postDelayed(this, 2000);
+                handler.postDelayed(this, 1000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 1000);
     }
 
     @OnClick(R.id.OnClickSettings_rcv_screen_activity)
-    void OnClickSettings(){
+    void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }

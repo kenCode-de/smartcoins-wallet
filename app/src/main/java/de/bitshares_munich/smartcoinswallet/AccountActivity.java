@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
@@ -58,7 +57,7 @@ public class AccountActivity extends BaseActivity implements IAccount {
     @Bind(R.id.ivSocketConnected)
     ImageView ivSocketConnected;
 
-   // icon_setting
+    // icon_setting
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,11 +284,11 @@ public class AccountActivity extends BaseActivity implements IAccount {
 
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Application.webSocketConnection();
-
+                        // Application.webSocketConnection();
                     }
 
-
+                } else {
+                    ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                 }
                 handler.postDelayed(this, 1000);
             }
@@ -299,11 +298,4 @@ public class AccountActivity extends BaseActivity implements IAccount {
 
     }
 
-    /*
-    @OnClick(R.id.OnClickSettings)
-    void OnClickSettings(){
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-    }
-    */
 }

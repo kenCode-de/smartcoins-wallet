@@ -120,41 +120,30 @@ public class Application extends android.app.Application {
     public static void webSocketConnection() {
         iAccount = iAccount;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(5 * 1000);//000000);
+        get.setTimeout(5*1000);
+
+
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
-            public void onCompleted(Exception ex, WebSocket webSocket) {
-                if (webSocket == null) {
-                    counter++;
-                    if (counter > 3) {
-                        counter = 0;
-                    }
+            public void onCompleted(final Exception ex, WebSocket webSocket) {
+                 if (webSocket != null && webSocket.isOpen() && ex==null) {
                     if (getCurrentActivity() != null) {
-                        Log.d("exception websocket", "inside again");
                         getCurrentActivity().runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Connected to node " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
 
-                } else if (!webSocket.isOpen()) {
-                    counter++;
-                    if (counter > 3) {
-                        counter = 0;
-                    }
-                    if (getCurrentActivity() != null) {
-                        Log.d("exception websocket", "inside again");
-                        getCurrentActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
                 }
 
                 if (ex != null) {
+                    counter++;
+                    if (counter > 3) {
+                        counter = 0;
+                    }
+
                     Log.d("exception websocket", ex.toString());
                     final Exception myEx = ex;
                     Log.d("exception websocket", myEx.toString());
@@ -171,7 +160,7 @@ public class Application extends android.app.Application {
                             };
                             warningHandler.postDelayed(updateTask, 1000);
                             //webSocketConnection();
-                            Log.d("exception websocket", "getting out");
+                            Log.d("exception websocket", "showWarningMessagegetting out");
                         } else {
                             Log.d("exception websocket", "webbb socket");
                             if (webSocket != null) {
@@ -190,13 +179,10 @@ public class Application extends android.app.Application {
                     //ex.printStackTrace();
                     return;
                 }
+
                 webSocket.setClosedCallback(new CompletedCallback() {
                     public void onCompleted(Exception ex) {
-                        counter++;
-                        if (counter > 3) {
-                            counter = 0;
-                        }
-                        // webSocketConnection();
+                         webSocketConnection();
                     }
                 });
 
@@ -205,6 +191,7 @@ public class Application extends android.app.Application {
 
                     }
                 });
+
                 Log.d("exception websocket", "before making application.websocketg");
                 Application.webSocketG = webSocket;
                 Log.d("exception websocket", "sending initial socket");

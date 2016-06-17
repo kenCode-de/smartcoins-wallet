@@ -1100,42 +1100,26 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     /// Updating Block Number and status
-    private String prevBlockNumber = "";
-    private int counterBlockCheck = 0;
-
-    private Boolean isBlockUpdated() {
-        if (Application.blockHead != prevBlockNumber) {
-            prevBlockNumber = Application.blockHead;
-            counterBlockCheck = 0;
-            return true;
-        } else if (counterBlockCheck++ >= 30) {
-            return false;
-        }
-
-        return true;
-    }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
-
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
                 if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated())) {
-                        boolean paused = Application.webSocketG.isPaused();
+                    if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                     } else {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Application.webSocketG.close();
-                        Application.webSocketConnection();
                     }
+
+                } else {
+                    ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                 }
-                handler.postDelayed(this, 2000);
+                handler.postDelayed(this, 1000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 1000);
     }
 
     @OnClick(R.id.OnClickSettings_send_screen_activity)
