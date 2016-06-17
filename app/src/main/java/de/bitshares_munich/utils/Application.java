@@ -1,26 +1,15 @@
 package de.bitshares_munich.utils;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
-import com.koushikdutta.async.http.Multimap;
 import com.koushikdutta.async.http.WebSocket;
-import com.koushikdutta.async.http.server.AsyncHttpServerRequestImpl;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,9 +25,7 @@ import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.Interfaces.ITransactionObject;
-import de.bitshares_munich.smartcoinswallet.BalancesLoad;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.SendScreen;
 
 /**
  * Created by qasim on 5/9/16.
@@ -56,21 +43,26 @@ public class Application extends android.app.Application {
     static IAccountObject iAccountObject;
     static IAssetObject iAssetObject;
     static IRelativeHistory iRelativeHistory;
-    public static String blockHead="";
+    public static String blockHead = "";
     private static Activity currentActivity;
+
+    public static String urlsSocketConnection[] = {"https://bitshares.openledger.info/ws",
+            "https://bitshares.dacplay.org:8089/ws",
+            "https://dele-puppy.com/ws",
+            "https://valen-tin.fr:8090"};
+
+    public static int counter = 0;
 
     public static String monitorAccountId;
 
     private static Handler warningHandler = new Handler();
 
 
-    public static void setCurrentActivity(Activity _activity)
-    {
+    public static void setCurrentActivity(Activity _activity) {
         Application.currentActivity = _activity;
     }
 
-    public static Activity getCurrentActivity()
-    {
+    public static Activity getCurrentActivity() {
         return Application.currentActivity;
     }
 
@@ -80,7 +72,7 @@ public class Application extends android.app.Application {
         ButterKnife.setDebug(true);
         context = getApplicationContext();
         //showDialogPin();
-        blockHead="";
+        blockHead = "";
         webSocketConnection();
     }
 
@@ -90,30 +82,36 @@ public class Application extends android.app.Application {
     public void registerCallbackIAccountID(IAccountID callbackClass) {
         iAccountID = callbackClass;
     }
+
     public void registerExchangeRateCallback(IExchangeRate callbackClass) {
         iExchangeRate = callbackClass;
     }
+
     public void registerBalancesDelegate(BalancesDelegate callbackClass) {
         iBalancesDelegate = callbackClass;
     }
+
     public void registerAssetDelegate(AssetDelegate callbackClass) {
         iAssetDelegate = callbackClass;
     }
+
     public void registerTransactionObject(ITransactionObject callbackClass) {
         iTransactionObject = callbackClass;
     }
+
     public void registerAccountObjectCallback(IAccountObject callbackClass) {
         iAccountObject = callbackClass;
     }
+
     public void registerAssetObjectCallback(IAssetObject callbackClass) {
         iAssetObject = callbackClass;
     }
+
     public void registerRelativeHistoryCallback(IRelativeHistory callbackClass) {
         iRelativeHistory = callbackClass;
     }
 
-    private static void showWarningMessage(final String myEx)
-    {
+    private static void showWarningMessage(final String myEx) {
         if (getCurrentActivity() != null) {
             Log.d("exception websocket", "inside again");
             getCurrentActivity().runOnUiThread(new Runnable() {
@@ -126,24 +124,48 @@ public class Application extends android.app.Application {
 
     public static void webSocketConnection() {
         iAccount = iAccount;
-        final AsyncHttpGet get = new AsyncHttpGet(context.getString(R.string.url_bitshares_openledger));
-        get.setTimeout(1*60*60*1000);//000000);
-
-
-
-        //System.setProperty("https.protocols", "TLSv1");
+        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
+        get.setTimeout(5 * 1000);//000000);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
-
 
             @Override
             public void onCompleted(Exception ex, WebSocket webSocket) {
+                if (webSocket == null) {
+                    counter++;
+                    if (counter > 3) {
+                        counter = 0;
+                    }
+                    if (getCurrentActivity() != null) {
+                        Log.d("exception websocket", "inside again");
+                        getCurrentActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                } else if (!webSocket.isOpen()) {
+                    counter++;
+                    if (counter > 3) {
+                        counter = 0;
+                    }
+                    if (getCurrentActivity() != null) {
+                        Log.d("exception websocket", "inside again");
+                        getCurrentActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Connecting to url " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
                 if (ex != null) {
-                    Log.d("exception websocket",ex.toString());
+                    Log.d("exception websocket", ex.toString());
                     final Exception myEx = ex;
-                    Log.d("exception websocket",myEx.toString());
+                    Log.d("exception websocket", myEx.toString());
                     try {
                         final String exMessage = ex.getMessage();
-                        if ( exMessage!=null && !exMessage.isEmpty() && exMessage.contains("handshake_failure")) {
+                        if (exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure")) {
                             Log.d("exception3 websocket", "inside");
 
                             Runnable updateTask = new Runnable() {
@@ -167,21 +189,37 @@ public class Application extends android.app.Application {
                             }
                             webSocketConnection();
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Log.d("exception websocket", e.getMessage());
                     }
                     //ex.printStackTrace();
                     return;
                 }
-                Log.d("exception websocket","before making application.websocketg");
+                webSocket.setClosedCallback(new CompletedCallback() {
+                    public void onCompleted(Exception ex) {
+                        counter++;
+                        if (counter > 3) {
+                            counter = 0;
+                        }
+                        // webSocketConnection();
+                    }
+                });
+
+                webSocket.setEndCallback(new CompletedCallback() {
+                    public void onCompleted(Exception ex) {
+
+                    }
+                });
+                Log.d("exception websocket", "before making application.websocketg");
                 Application.webSocketG = webSocket;
-                Log.d("exception websocket","sending initial socket");
+                Log.d("exception websocket", "sending initial socket");
                 sendInitialSocket(context);
-                Log.d("exception websocket","completed");
+                Log.d("exception websocket", "completed");
             }
+
+
         });
+
     }
 
     public static void sendInitialSocket(final Context context) {
@@ -225,7 +263,7 @@ public class Application extends android.app.Application {
                                 if (jsonArray.length() != 0) {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
-                                iExchangeRate.callback_exchange_rate(obj,id);
+                                iExchangeRate.callback_exchange_rate(obj, id);
                             } else if (id == 8) {
                                 if (iBalancesDelegate != null) {
                                     iBalancesDelegate.OnUpdate(s, id);
@@ -252,17 +290,17 @@ public class Application extends android.app.Application {
                                 }
                             } else if (id == 11) {
                                 if (iBalancesDelegate != null) {
-                                iBalancesDelegate.OnUpdate(s, id);
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
-                            }else if (id == 99) {
+                            } else if (id == 99) {
                                 if (iBalancesDelegate != null) {
-                                    SupportMethods.testing("assests",99,"account_name");
-                                iBalancesDelegate.OnUpdate(s, id);
+                                    SupportMethods.testing("assests", 99, "account_name");
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
-                            }else if (id == 999) {
+                            } else if (id == 999) {
                                 if (iBalancesDelegate != null) {
-                                    SupportMethods.testing("assests",999,"account_name");
-                            iBalancesDelegate.OnUpdate(s, id);
+                                    SupportMethods.testing("assests", 999, "account_name");
+                                    iBalancesDelegate.OnUpdate(s, id);
                                 }
                             } else if (id == 15) {
                                 if (iAssetDelegate != null) {
@@ -289,12 +327,11 @@ public class Application extends android.app.Application {
 
                                     if (id == 7) {
                                         headBlockNumber(values.toString());
-                                        if ( monitorAccountId!=null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId) )
-                                        {
+                                        if (monitorAccountId != null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId)) {
                                             if (iAssetDelegate != null) {
                                                 iAssetDelegate.loadAll();
                                             }
-                                            Log.d("Notice Update",values.toString());
+                                            Log.d("Notice Update", values.toString());
                                         }
                                         //headBlockNumber(s);
                                     } else {
@@ -313,16 +350,13 @@ public class Application extends android.app.Application {
             });
 
 
-
-
         }
     }
 
     private static String headBlockNumber(String json) {
 
         String result = "";
-        if ( json.contains(context.getString(R.string.head_block_number)) )
-        {
+        if (json.contains(context.getString(R.string.head_block_number))) {
             int start = json.lastIndexOf(context.getString(R.string.head_block_number));
             int length = 19;
             start = start + length;
@@ -332,42 +366,12 @@ public class Application extends android.app.Application {
                     break;
                 }
             }
-            result = "block# "+json.substring(start, end);
-        }
-        else
-        {
+            result = "block# " + json.substring(start, end);
+        } else {
             result = Application.blockHead;
         }
 
         return blockHead = result;
     }
-
-    /*
-    private void showDialogPin() {
-        if (Helper.containKeySharePref(context, context.getString(R.string.txt_pin))) {
-            final Dialog dialog = new Dialog(context, R.style.stylishDialog);
-            dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-            dialog.setTitle(R.string.pin_verification);
-            dialog.setContentView(R.layout.activity_alert_pin_dialog);
-            Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-            final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
-            btnDone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
-                    if (etPin.getText().toString().equals(savedPIN)) {
-                        dialog.cancel();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            dialog.setCancelable(false);
-
-            //dialog.show();
-        }
-    }
-    */
-
 }
+

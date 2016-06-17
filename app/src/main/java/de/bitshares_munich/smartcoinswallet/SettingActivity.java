@@ -3,18 +3,24 @@ package de.bitshares_munich.smartcoinswallet;
  * Created by Syed Muhammad Muzzammil on 13/5/16.
  */
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,11 +29,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -38,11 +45,18 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SettingActivity extends BaseActivity {
 
@@ -105,6 +119,11 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.upgrade_account)
     Button btnUpgrade;
 
+    ProgressDialog progressDialog;
+    Activity activity;
+
+    String wifKey = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +138,8 @@ public class SettingActivity extends BaseActivity {
 
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
+        activity = this;
+        progressDialog = new ProgressDialog(this);
         btnUpgrade.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
@@ -153,8 +174,9 @@ public class SettingActivity extends BaseActivity {
                 else Helper.storeBoolianSharePref(this, close_bitshare, false);
                 break;
             case R.id.always_donate:
-                if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
-                else Helper.storeBoolianSharePref(this, always_donate, false);
+                //if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
+                //else Helper.storeBoolianSharePref(this, always_donate, false);
+                Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
@@ -212,7 +234,8 @@ public class SettingActivity extends BaseActivity {
         }
         if (Helper.fetchBoolianSharePref(this, always_donate)) {
             checkBox = (CheckBox) findViewById(R.id.always_donate);
-            checkBox.setChecked(true);
+            //checkBox.setChecked(true);
+            checkBox.setChecked(false);
         }
         if (Helper.fetchBoolianSharePref(this, hide_donations)) {
             checkBox = (CheckBox) findViewById(R.id.hide_donations);
@@ -541,24 +564,37 @@ public class SettingActivity extends BaseActivity {
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
+        final Activity myActivity = this;
+
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen() && (isBlockUpdated())) {
+                if (Application.webSocketG != null)
+                {
+                    if (Application.webSocketG.isOpen() && (isBlockUpdated()))
+                    {
                         boolean paused = Application.webSocketG.isPaused();
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
-                    } else {
+                        ivSocketConnected.clearAnimation();
+                    }
+                    else
+                    {
                         ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+                        ivSocketConnected.startAnimation(myFadeInAnimation);
                         Application.webSocketG.close();
                         Application.webSocketConnection();
                     }
                 }
-                handler.postDelayed(this, 2000);
+                else
+                {
+                    Application.webSocketConnection();
+                }
+                handler.postDelayed(this, 5000);
             }
         };
-        handler.postDelayed(updateTask, 2000);
+        handler.postDelayed(updateTask, 5000);
     }
     /////////////////
 
@@ -573,38 +609,84 @@ public class SettingActivity extends BaseActivity {
         Intent intent = new Intent(this , AccountActivity.class);
         intent.putExtra("activity_name","setting_screen");
         intent.putExtra("activity_id",919);
-        startActivity(intent);
-    }
-    @OnClick(R.id.import_new_account)
-    void setImport_new_account(){
-        Intent intent = new Intent(this , BrainkeyActivity.class);
-        startActivity(intent);
-    }
-    @OnClick(R.id.upgrade_account)
-    void setUpgradeNewAccount(){
-//        Intent intent = new Intent(this , ExistingAccountActivity.class);
+//=======
+//    void setRegisterNewAccount() {
+//        Intent intent = new Intent(this, AccountActivity.class);
+//>>>>>>> c3d1af2a48bc7e3cc754165a8c98f3397cc8df59
 //        startActivity(intent);
     }
-    @OnClick(R.id.remove_account)
-    void setRemoveNewAccount(){
-            showDialog();
+
+    @OnClick(R.id.import_new_account)
+    void setImport_new_account() {
+        Intent intent = new Intent(this, BrainkeyActivity.class);
+        startActivity(intent);
     }
-    public void showDialog(){
+
+    @OnClick(R.id.upgrade_account)
+    void setUpgradeNewAccount() {
+
+        final boolean[] balanceValid = {true};
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(getString(R.string.txt_confirmation));
+        alert.setMessage(getString(R.string.txt_confirmation_msg));
+        alert.setPositiveButton(getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                //Check Balance
+                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                ;
+                try {
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        if (accountDetails.get(i).isSelected) {
+                            wifKey = accountDetails.get(i).wif_key;
+                            ArrayList<AccountAssets> arrayListAccountAssets = accountDetails.get(i).AccountAssets;
+                            for (int j = 0; j < arrayListAccountAssets.size(); j++) {
+                                AccountAssets accountAssets = arrayListAccountAssets.get(j);
+                                if (accountAssets.symbol.equalsIgnoreCase("BTS")) {
+                                    Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
+                                    if (amount < 18000) {
+                                        balanceValid[0] = false;
+                                        Toast.makeText(getApplicationContext(), getString(R.string.insufficient_amount), Toast.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                } catch (Exception e) {
+                }
+                if (balanceValid[0]) {
+                    showDialog("", getString(R.string.upgrading));
+                    getAccountUpgradeInfo(activity, spAccounts.getSelectedItem().toString());
+                }
+            }
+        });
+        alert.setNegativeButton(getString(R.string.txt_no), null);
+        alert.show();
+    }
+
+    @OnClick(R.id.remove_account)
+    void setRemoveNewAccount() {
+        showDialog();
+    }
+
+    public void showDialog() {
         final Dialog dialog = new Dialog(this);
         //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
 //                dialog.setTitle(R.string.pin_verification);
         dialog.setContentView(R.layout.alert_delete_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        TextView textView = (TextView)dialog.findViewById(R.id.alertMsg);
+        TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
         btnCancel.setText(R.string.txt_no);
         btnDone.setText(R.string.txt_yes);
 
         String alertMsg = getString(R.string.txt_alertmsg);
         if (accountDetails.size() > 1) {
-              alertMsg = alertMsg +  " : " + spAccounts.getSelectedItem().toString() + " ?";
+            alertMsg = alertMsg + " : " + spAccounts.getSelectedItem().toString() + " ?";
         } else {
-            alertMsg =  alertMsg +  " : " + tvAccounts.getText() + " ?";
+            alertMsg = alertMsg + " : " + tvAccounts.getText() + " ?";
         }
         textView.setText(alertMsg);
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -626,7 +708,8 @@ public class SettingActivity extends BaseActivity {
 
 
     }
-    void deleteAccount(){
+
+    void deleteAccount() {
         if (accountDetails.size() > 1) {
             for (int i = 0; i < accountDetails.size(); i++) {
 
@@ -649,6 +732,7 @@ public class SettingActivity extends BaseActivity {
             clearApplicationData(getApplicationContext());
         }
     }
+
     public void clearApplicationData(Context mContext) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = preferences.edit();
@@ -656,10 +740,93 @@ public class SettingActivity extends BaseActivity {
         editor.apply();
 
         Intent k = getBaseContext().getPackageManager()
-                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                .getLaunchIntentForPackage(getBaseContext().getPackageName());
         k.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(k);
         finish();
     }
 
+
+    public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
+
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        IWebService service = sg.getService(IWebService.class);
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("method", "upgrade_account");
+        hashMap.put("account", accountName);
+        try {
+            hashMap.put("wifkey", Crypt.getInstance().decrypt_string(wifKey));
+        } catch (Exception e) {
+        }
+
+        final Call<AccountUpgrade> postingService = service.getAccountUpgrade(hashMap);
+        postingService.enqueue(new Callback<AccountUpgrade>() {
+            @Override
+            public void onResponse(Response<AccountUpgrade> response) {
+                if (response.isSuccess()) {
+                    AccountUpgrade accountDetails = response.body();
+                    if (accountDetails.status.equals("success")) {
+                        updateLifeTimeModel(accountName);
+                        hideDialog();
+                        Toast.makeText(activity, getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        hideDialog();
+                        Toast.makeText(activity, getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    hideDialog();
+                    Toast.makeText(activity, getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                hideDialog();
+                Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void hideDialog() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                }
+            }
+        });
+    }
+
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
+        }
+    }
+
+    private void updateLifeTimeModel(String accountName) {
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        try {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).account_name.equals(accountName)) {
+                    accountDetails.get(i).isLifeTime = true;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+        }
+
+        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+    }
 }

@@ -372,13 +372,27 @@ public class Helper {
         }
     }
 
-    public static String padString(String str){
-        if (str == null || str.isEmpty()){
+    public static String padString(String str)
+    {
+        if (str == null || str.isEmpty())
+        {
             return "0";
-        }else if (str.equals(".")){
+        }
+        else if (str.equals("."))
+        {
             return "0.";
         }
-        return String.format("%.4f",Double.parseDouble(str));
+        else
+        {
+            try
+            {
+                return String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(str));
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
     }
 
 }
