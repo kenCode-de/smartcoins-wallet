@@ -158,6 +158,7 @@
     <string name="str_invalid_receiver">Please enter valid To account</string>
     <string name="str_transaction_failed">Transaction Failed</string>
     <string name="please_enter_valid_amount">Please enter valid amount</string>
+    <string name="insufficient_amount">Insufficient Amount</string>
 
     <string name="select_timezone">Select TimeZone</string>
 
@@ -260,10 +261,16 @@
     <string name="txt_no">No</string>
     <string name="txt_confirmation">Confirmation</string>
     <string name="txt_confirmation_msg">Are your sure?</string>
-
     <string name="txt_folder_name">Smartcoins</string>
-
     <string name="txt_folder_created">Folder Created</string>
 
+    <string name="upgrade_failed">Upgrade failed</string>
+    <string name="upgrade_success">Upgrade successfully</string>
+    <string name="upgrading">Upgrading...</string>
+    <string name="import_new_account">IMPORT NEW ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">REMOVE ACCOUNT</string>
+    <string name="txt_alertmsg">Are you sure to delete this account</string>
+    <string name="default_currency">EUR</string>
 
 </resources>
