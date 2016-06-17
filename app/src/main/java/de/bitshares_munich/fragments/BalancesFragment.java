@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +35,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -88,6 +91,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     String to = "";
 
     String wifkey = "";
+    String finalFaitCurrency;
 
     @Bind(R.id.load_more_values)
     Button load_more_values;
@@ -200,7 +204,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
-        if (checkIfAccountNameChange()) {
+        if (checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
             loadBasic();
         }
     }
@@ -393,6 +397,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+        finalFaitCurrency = faitCurrency;
         postingService.enqueue(new Callback<EquivalentComponentResponse>() {
             @Override
             public void onResponse(Response<EquivalentComponentResponse> response) {
@@ -401,6 +406,30 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     if (resp.status.equals("success")) {
                         try {
                             JSONObject rates = new JSONObject(resp.rates);
+                            Iterator<String> keys = rates.keys();
+                            HashMap hm = new HashMap();
+                            while(keys.hasNext()) {
+                                String key = keys.next();
+                                hm.put(key.split(":")[0],rates.get(key));
+                            }
+                            for (int i=0; i<llBalances.getChildCount(); i++){
+                                LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
+                                LinearLayout llRowInner = (LinearLayout) llRow.getChildAt(0);
+                                for (int j=0; j<llRowInner.getChildCount(); j++){
+                                    TextView tvAsset = (TextView) llRowInner.getChildAt(j);
+                                    TextView tvAmount = (TextView) llRowInner.getChildAt(j+1);
+                                    String asset = tvAsset.getText().toString();
+                                    String amount = tvAmount.getText().toString().split("\\[")[0];
+                                    amount = android.text.Html.fromHtml(amount).toString();
+                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
+                                        Currency currency = Currency.getInstance(finalFaitCurrency);
+                                        Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+                                        tvAmount.setText(amount);
+                                        tvAmount.append(Html.fromHtml("<br><small>["+currency.getSymbol()+String.format("%.4f",eqAmount)+"]</small>"));
+                                    }
+                                    j++;
+                                }
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -554,7 +583,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             if (pre.size() > m && am.size() > m)
                                 amount = returnFromPower(pre.get(m), am.get(m));
                             String txtSymbol = tvSymOne.getText().toString();
-                            String txtAmount = tvAmOne.getText().toString();
+                            String txtAmount = tvAmOne.getText().toString().split("\\[")[0];
 
                             if (!symbol.equals(txtSymbol))
                                 tvSymOne.setText(symbol);
@@ -598,7 +627,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             if (pre.size() > m && am.size() > m)
                                 amount = returnFromPower(pre.get(m), am.get(m));
                             String txtSymbol = tvSymtwo.getText().toString();
-                            String txtAmount = tvAmtwo.getText().toString();
+                            String txtAmount = tvAmtwo.getText().toString().split("\\[")[0];
 
                             if (!symbol.equals(txtSymbol))
                                 tvSymtwo.setText(symbol);
