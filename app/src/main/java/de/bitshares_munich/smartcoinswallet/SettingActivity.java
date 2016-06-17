@@ -586,6 +586,7 @@ public class SettingActivity extends BaseActivity {
         Intent intent = new Intent(this, AccountActivity.class);
         intent.putExtra("activity_name", "setting_screen");
         intent.putExtra("activity_id", 919);
+        startActivity(intent);
     }
 
     @OnClick(R.id.import_new_account)
