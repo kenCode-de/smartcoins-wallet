@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
@@ -73,7 +74,7 @@ public class BrainkeyActivity extends BaseActivity {
 
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
-        if(res!=null) {
+        if (res != null) {
             if (res.containsKey("activity_id")) {
                 if (res.getInt("activity_id") == 919) {
                     settingScreen = true;
@@ -100,10 +101,9 @@ public class BrainkeyActivity extends BaseActivity {
     public void wallet(Button button) {
 
 
-
         if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
-        }else if(settingScreen){
+        } else if (settingScreen) {
             load();
         } else {
             if (etPin.getText().length() < 5) {
@@ -119,13 +119,18 @@ public class BrainkeyActivity extends BaseActivity {
         }
     }
 
-    void load(){
+    void load() {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
             if (arr.length == 16) {
-                showDialog("", getString(R.string.importing_your_wallet));
-                get_account_from_brainkey(this);
+
+                if (checkBrainKeyExist(temp)) {
+                    Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
+                } else {
+                    showDialog("", getString(R.string.importing_your_wallet));
+                    get_account_from_brainkey(this,temp);
+                }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
             }
@@ -134,13 +139,31 @@ public class BrainkeyActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
         }
     }
-    public void get_account_from_brainkey(final Activity activity) {
+
+    private boolean checkBrainKeyExist(String brainKey) {
+        boolean isBrainKey = false;
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+        for (int i = 0; i < accountDetails.size(); i++) {
+            try {
+                if (brainKey.equals(accountDetails.get(i).brain_key)) {
+                    isBrainKey = true;
+                    break;
+                }
+            }
+            catch (Exception e){}
+        }
+        return isBrainKey;
+
+    }
+
+    public void get_account_from_brainkey(final Activity activity,final String brainKey) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "get_account_from_brainkey");
-        hashMap.put("brainkey", etBrainKey.getText().toString());
+        hashMap.put("brainkey", brainKey);
         final Call<AccountDetails> postingService = service.getAccount(hashMap);
         postingService.enqueue(new Callback<AccountDetails>() {
             @Override
@@ -151,13 +174,7 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        addWallet(accountDetails);
-                        /*ArrayList<AccountDetails> arrayList = new ArrayList<>();
-                        arrayList.add(accountDetails);
-                        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), arrayList);
-                        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);*/
+                        addWallet(accountDetails,brainKey);
                     }
 
                 } else {
@@ -224,13 +241,13 @@ public class BrainkeyActivity extends BaseActivity {
     }
     /////////////////
 
-    void addWallet(AccountDetails accountDetail) {
+    void addWallet(AccountDetails accountDetail,String brainKey) {
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
         accountDetails.account_name = accountDetail.account_name;
         accountDetails.pub_key = accountDetail.pub_key;
-        accountDetails.brain_key = accountDetail.brain_key;
+        accountDetails.brain_key = brainKey;
         accountDetails.isSelected = true;
         accountDetails.status = "success";
         accountDetails.account_id = accountDetail.account_id;
