@@ -317,6 +317,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         scrollViewBalances.pageScroll(View.FOCUS_UP);
 
 
+
         if (checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
             loadBasic();
         }
@@ -1296,12 +1297,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     Boolean checkIfAccountNameChange() {
         //ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         String checkAccountName = "";
         if (accountDetails.size() == 1) {
             checkAccountName = accountDetails.get(0).account_name;
+            ivMultiAccArrow.setVisibility(View.GONE);
         } else {
+            ivMultiAccArrow.setVisibility(View.VISIBLE);
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     checkAccountName = accountDetails.get(i).account_name;

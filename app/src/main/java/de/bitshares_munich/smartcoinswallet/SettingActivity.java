@@ -700,14 +700,11 @@ public class SettingActivity extends BaseActivity {
 //            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_wallet_accounts), accountDetails);
             tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
 
-            Intent intent = new Intent(this,SettingActivity.class);
-            startActivity(intent);
-
       //      accountDetails.clear();
 
-//            accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 //            init();
-//            populateDropDowns();
+            populateDropDowns();
 
 
         } else {

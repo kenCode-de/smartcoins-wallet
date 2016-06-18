@@ -268,7 +268,7 @@
     <string name="upgrade_failed">Upgrade failed</string>
     <string name="upgrade_success">Upgrade successfully</string>
     <string name="upgrading">Upgrading...</string>
-    <string name="import_new_account">IMPORT NEW ACCOUNT</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
     <string name="remove_account">REMOVE ACCOUNT</string>
     <string name="txt_alertmsg">Are you sure to delete this account</string>
