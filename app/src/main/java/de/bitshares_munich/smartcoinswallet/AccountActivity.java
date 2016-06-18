@@ -278,7 +278,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
                             pubKey = resp.keys.pub_key;
                             wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-                            brainPrivKey = Crypt.getInstance().encrypt_string(resp.keys.brain_priv_key);
+                            brainPrivKey = resp.keys.brain_priv_key;
                             String accountName = etAccountName.getText().toString();
 
                             registerdKeys(accountName, resp.keys.pub_key);

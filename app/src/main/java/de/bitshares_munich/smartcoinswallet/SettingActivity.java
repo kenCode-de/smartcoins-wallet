@@ -522,7 +522,7 @@ public class SettingActivity extends BaseActivity {
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
-            etBrainKey.setText(Crypt.getInstance().decrypt_string(brainKey));
+            etBrainKey.setText(brainKey);
         } catch (Exception e) {
 
         }
