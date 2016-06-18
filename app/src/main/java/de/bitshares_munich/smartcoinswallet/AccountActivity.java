@@ -211,9 +211,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(getApplicationContext(),SplashActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                finish();
+                System.exit(0);
+//                Intent intent =new Intent(getApplicationContext(),SplashActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
 
             }
         });
@@ -394,7 +396,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 if (validAccount) {
                     if (!checkingValidation) {
                         showDialog("", "");
-
                         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
                         accountCreated = false;
                         generateKeys();

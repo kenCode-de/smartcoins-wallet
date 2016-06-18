@@ -720,6 +720,8 @@ public class SettingActivity extends BaseActivity {
         editor.clear();
         editor.apply();
 
+        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
+
         Intent k = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
         k.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
