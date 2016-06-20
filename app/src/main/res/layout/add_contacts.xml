@@ -167,7 +167,7 @@
                 android:layout_weight="1"
                 android:id="@+id/CancelContact"
                 android:textColor="#FFFFFF"
-                android:background="@color/colorAccent"
+                android:background="@color/red"
                 />
             <Button
         android:layout_width="0dp"
@@ -175,7 +175,7 @@
         android:text="@string/save"
                 android:layout_weight="1"
                 android:id="@+id/SaveContact"
-                android:background="#FF4081"
+                android:background="@color/gray"
                 android:textColor="#FFFFFF"
                 android:layout_marginLeft="10dp"
                 />

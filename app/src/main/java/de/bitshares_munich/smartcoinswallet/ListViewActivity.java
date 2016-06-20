@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -165,8 +166,13 @@ public class ListViewActivity extends BaseAdapter {
                 dialog.setContentView(R.layout.alert_delete_dialog);
                 Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
                 Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+                TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
+        String alertMsg =  context.getString(R.string.delete);
+        String accountName = listContact.get(position).GetAccount();
+            alertMsg = alertMsg + " \"" + accountName + "\" ?";
+        textView.setText(alertMsg);
 
-                btnDone.setOnClickListener(new View.OnClickListener() {
+        btnDone.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         listContact.remove(position);
