@@ -90,9 +90,9 @@ Context context;
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
         TextView textView = (TextView) v.findViewById(R.id.transactiondetailsto);
-        String tString = context.getText(R.string.to_capital) + " : " + transactiondetails.getDetailsTo();
+        String tString = context.getText(R.string.to_capital) + ": " + transactiondetails.getDetailsTo();
         textView.setText(tString);
-        tString = context.getText(R.string.from_capital) + " : " + transactiondetails.getDetailsFrom();
+        tString = context.getText(R.string.from_capital) + ": " + transactiondetails.getDetailsFrom();
         TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
         textView1.setText(tString);
         if(transactiondetails.getDetailsMemo().equals("----")){

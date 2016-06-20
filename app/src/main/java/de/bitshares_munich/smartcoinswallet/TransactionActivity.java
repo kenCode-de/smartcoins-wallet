@@ -366,7 +366,11 @@ public class TransactionActivity implements BalancesDelegate {
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
     }
     void onLastCall(){
+        Boolean isDonate = false;
         List<TransactionDetails> transactionDetails = new ArrayList<>();
+        if(!Helper.containKeySharePref(context, context.getString(R.string.pref_always_donate))){
+            isDonate = Helper.fetchBoolianSharePref(context,context.getString(R.string.pref_always_donate));
+        }
         for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++) {
             try {
                 HashMap<String, String> mapof_All = new HashMap<>();
@@ -387,7 +391,7 @@ public class TransactionActivity implements BalancesDelegate {
                 if (eRecipts.containsKey(Integer.toString(i))) {
                     eRecipt = eRecipts.get(Integer.toString(i));
                 }
-              //  String memo = mapof_All.get("message");
+                //  String memo = mapof_All.get("message");
                 String assetid = mapof_All.get("asset_id");
                 HashMap<String, String> sym_pre = Symbols_Precisions.get(assetid);
                 String amount = mapof_All.get("amount");
@@ -396,22 +400,28 @@ public class TransactionActivity implements BalancesDelegate {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                 Date formatted = null;
                 formatted = formatter.parse(Date);
-                TransactionDetails object = new TransactionDetails(formatted , Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "" ,eRecipt);
-                object.updateContext(context);
-                transactionDetails.add(object);
-            }catch(Exception e){
-              testing("error" , e , "Try,Catch");
+
+                if (isDonate && symbol.equals("BTS") && amount_pre.equals("2") && to.equals("bitshares-munich")) {
+                    testing("found","found", "found,found");
+                } else {
+                    TransactionDetails object = new TransactionDetails(formatted, Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "", eRecipt);
+                    object.updateContext(context);
+                    transactionDetails.add(object);
+                }
+
+            }catch(Exception e) {
+                testing("error", e, "Try,Catch");
             }
         }
         assetDelegate.TransactionUpdate(transactionDetails,number_of_transactions_in_queue);
     }
-    String returnFromPower(String i,String str){
-        Double ok = 1.0;
-        Double pre = Double.valueOf(i);
-        Double value = Double.valueOf(str);
-        for(int k = 0 ; k<pre ; k++ ){
-            ok = ok*10;
-        }
-        return  Double.toString(value/ok);
-    }
+//    String returnFromPower(String i,String str){
+//        Double ok = 1.0;
+//        Double pre = Double.valueOf(i);
+//        Double value = Double.valueOf(str);
+//        for(int k = 0 ; k<pre ; k++ ){
+//            ok = ok*10;
+//        }
+//        return  Double.toString(value/ok);
+//    }
 }

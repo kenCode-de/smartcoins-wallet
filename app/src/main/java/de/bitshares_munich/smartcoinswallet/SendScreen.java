@@ -251,6 +251,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     @OnTextChanged(R.id.etLoyalty)
     void onLoyaltyChanged(CharSequence text) {
 
@@ -503,7 +509,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
             Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
         }
-
+        SupportMethods.testing("oncheck",Helper.fetchBoolianSharePref(this,getString(R.string.pref_always_donate)),"fetch");
         if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
             cbAlwaysDonate.setChecked(true);
             alwaysDonate = true;
@@ -519,13 +525,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
     @OnCheckedChanged(R.id.cbAlwaysDonate)
     public void cbAlwaysDonate(){
-        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
-            alwaysDonate = false;
-        }else {
-            alwaysDonate = true;
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),true);
-        }
+        alwaysDonate = cbAlwaysDonate.isChecked();
+//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+//            alwaysDonate = false;
+//        }else {
+//            alwaysDonate = true;
+            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
+       // }
     }
     void setBackUpAsset() {
         try {
