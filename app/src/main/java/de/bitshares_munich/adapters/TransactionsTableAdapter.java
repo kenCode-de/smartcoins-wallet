@@ -90,14 +90,20 @@ Context context;
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
         TextView textView = (TextView) v.findViewById(R.id.transactiondetailsto);
-        String tString = context.getText(R.string.to_capital) + ":" + transactiondetails.getDetailsTo();
+        String tString = context.getText(R.string.to_capital) + ": " + transactiondetails.getDetailsTo();
         textView.setText(tString);
-        tString = context.getText(R.string.from_capital) + ":" + transactiondetails.getDetailsFrom();
+        tString = context.getText(R.string.from_capital) + ": " + transactiondetails.getDetailsFrom();
         TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
         textView1.setText(tString);
-        tString = context.getText(R.string.memo_capital) + ":" + transactiondetails.getDetailsMemo();
+        if(transactiondetails.getDetailsMemo().equals("----")){
         TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
-        textView2.setText(tString);
+            textView2.setText("");
+            textView2.setVisibility(View.GONE);
+        }else{
+            tString = context.getText(R.string.memo_capital) + " : " + transactiondetails.getDetailsMemo();
+            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            textView2.setText(tString);
+        }
         return v;
     }
 

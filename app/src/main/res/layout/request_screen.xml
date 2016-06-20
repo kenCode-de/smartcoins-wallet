@@ -55,6 +55,7 @@
                     android:maxLines="1"
                     android:maxLength="10"
                     android:id="@+id/txtScreen"
+                    android:layout_marginRight="10dp"
                     />
 
                 <TextView

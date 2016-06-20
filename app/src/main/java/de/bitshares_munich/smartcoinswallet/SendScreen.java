@@ -34,6 +34,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnItemSelected;
@@ -198,10 +199,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         if (etReceiverAccount.getText().length() > 0) {
-//            myLowerCaseTimer.cancel();
-//            myAccountNameValidationTimer.cancel();
-//            myLowerCaseTimer.start();
-//            myAccountNameValidationTimer.start();
+            myLowerCaseTimer.cancel();
+            myAccountNameValidationTimer.cancel();
+            myLowerCaseTimer.start();
+            myAccountNameValidationTimer.start();
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
 
@@ -248,6 +249,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             getExchangeRate(200);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     @OnTextChanged(R.id.etLoyalty)
@@ -388,7 +395,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String loyaltyAsset = tvLoyalty.getText().toString();
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
         }
-        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+//        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+//            transferAmount("2", "BTS", "bitshares-munich");
+//        }
+        if (alwaysDonate) {
             transferAmount("2", "BTS", "bitshares-munich");
         }
     }
@@ -496,18 +506,34 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setCheckboxAvailabilty() {
-
-        /*if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-            cbAlwaysDonate.setVisibility(View.GONE);
+        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
+            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+        }
+        SupportMethods.testing("oncheck",Helper.fetchBoolianSharePref(this,getString(R.string.pref_always_donate)),"fetch");
+        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+            cbAlwaysDonate.setChecked(true);
             alwaysDonate = true;
         } else {
-            cbAlwaysDonate.setChecked(true);
+            cbAlwaysDonate.setChecked(false);
+            alwaysDonate = false;
         }
-        */
 
-        cbAlwaysDonate.setChecked(true);
+
+        cbAlwaysDonate.setVisibility(View.VISIBLE);
+
+        //cbAlwaysDonate.setChecked(true);
     }
-
+    @OnCheckedChanged(R.id.cbAlwaysDonate)
+    public void cbAlwaysDonate(){
+        alwaysDonate = cbAlwaysDonate.isChecked();
+//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+//            alwaysDonate = false;
+//        }else {
+//            alwaysDonate = true;
+            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
+       // }
+    }
     void setBackUpAsset() {
         try {
             backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
@@ -854,8 +880,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     public void run() {
                         validReceiver = false;
                         sendBtnPressed=false;
-                        String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format("%s %s",acName, etReceiverAccount.getText());
+                        // This code works correct, donot edit if it shows red underline
+                        String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
                         tvErrorRecieverAccount.setText(format);
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
