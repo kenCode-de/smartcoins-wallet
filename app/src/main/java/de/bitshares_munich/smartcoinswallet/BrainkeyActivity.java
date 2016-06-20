@@ -16,11 +16,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
@@ -260,6 +262,9 @@ public class BrainkeyActivity extends BaseActivity {
         accountDetailsList.add(accountDetails);
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
+
+        List<TransactionDetails> emptyTransactions = new ArrayList<>();
+        tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
 
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

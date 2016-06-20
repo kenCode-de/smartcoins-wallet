@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +39,7 @@ import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.GenerateKeys;
 import de.bitshares_munich.models.RegisterAccount;
+import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
@@ -542,7 +544,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
 
 
-        Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+        List<TransactionDetails> emptyTransactions = new ArrayList<>();
+        tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
+
+        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

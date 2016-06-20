@@ -75,7 +75,15 @@ public class BaseActivity extends AppCompatActivity {
     private Runnable disconnectCallback = new Runnable() {
         @Override
         public void run() {
-            finishAffinity();
+            String close_bitshare = "close_bitshare";
+            Boolean cb = Helper.fetchBoolianSharePref(getApplicationContext(), close_bitshare);
+            if (cb) {
+                finishAffinity();
+            }
+            else
+            {
+                resetDisconnectTimer();
+            }
         }
     };
 
