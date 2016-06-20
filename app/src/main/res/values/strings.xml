@@ -155,7 +155,7 @@
     <string name="failed_transaction">Failed Transaction</string>
 
 
-    <string name="str_warning_only_available">Warning! only %1$s %2$s is available</string>
+    <string name="str_warning_only_available">Warning! Only %1$s %2$s is available</string>
     <string name="str_balance_available">%1$s %2$s available</string>
     <string name="str_invalid_amount">Please enter valid amount</string>
     <string name="str_invalid_receiver">Please enter valid To account</string>

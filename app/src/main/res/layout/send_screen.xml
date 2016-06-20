@@ -224,7 +224,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:gravity="right"
+                        android:gravity="left"
+                        android:textColor="@android:color/holo_red_dark"
                         android:id="@+id/tvErrorRecieverAccount"
                         />
 
@@ -302,6 +303,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:gravity="right"
+                android:textColor="@android:color/holo_red_dark"
                 android:id="@+id/tvAmountStatus"
                 />
             <LinearLayout
@@ -495,12 +497,13 @@
                 </RelativeLayout>
             </LinearLayout>
             <CheckBox
+                android:layout_marginTop="20dp"
                 android:text="@string/checkbox_donate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/llMemo"
                 android:id="@+id/cbAlwaysDonate"
-                android:layout_marginTop="5sp"
+                android:layout_marginBottom="10dp"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
