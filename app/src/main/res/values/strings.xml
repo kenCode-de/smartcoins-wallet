@@ -185,7 +185,6 @@
     <string name="rcv_screen_name">Receive</string>
     <string name="request_amount_screen_name">Amount</string>
     <string name="payment_rcvd_screen_name">Thankyou</string>
-    <string name="e_receipt_activity_name">e-Receipt</string>
     <string name="settings_activity_name">Settings</string>
     <string name="qr_code_activity_name">Scan QR</string>
     <string name="share_account_activity_name">Share with friends</string>
@@ -279,6 +278,7 @@
     <string name="last_letter_cannot">last letter cannot be -</string>
     <string name="account_name_shoud_have">account name shoud have atleast one -</string>
     <string name="default_currency">EUR</string>
+    <string name="e_receipt_activity_name">eReceipt</string>
 
 
 </resources>
