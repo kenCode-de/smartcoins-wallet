@@ -533,6 +533,7 @@
                     android:src="@mipmap/icon_send"
                     android:gravity="left|center"
                     android:layout_weight="0.5"
+                    android:id="@+id/sendicon"
                     />
                 <ImageView
                     android:layout_width="0dp"

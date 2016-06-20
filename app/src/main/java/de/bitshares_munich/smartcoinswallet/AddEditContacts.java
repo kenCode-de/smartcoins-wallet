@@ -152,6 +152,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
         loadWebView(39, Helper.md5(Accountname.getText().toString()));
+        warning.setText("");
+
         if (Accountname.getText().length() > 0) {
             loadWebView(39, Helper.md5(Accountname.getText().toString()));
             myLowerCaseTimer.cancel();
@@ -249,6 +251,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                             SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                             warning.setText(R.string.account_name_validate);
                             warning.setVisibility(View.VISIBLE);
+                            warning.setTextColor(getColorWrapper(context, R.color.black));
                         }
                     }
                 });
@@ -264,6 +267,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         warning.setText(format);
                         warning.setVisibility(View.VISIBLE);
+                        warning.setTextColor(getColorWrapper(context, R.color.red));
+
                     }
                 });
             }

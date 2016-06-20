@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -140,6 +142,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.btnSend)
     LinearLayout btnSend;
 
+    @Bind(R.id.sendicon)
+    ImageView sendicon;
+
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
     int count = 0;
@@ -189,6 +194,25 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         //webviewFrom.setVisibility(View.VISIBLE);
         loadWebView(webviewTo, 34, Helper.md5(""));
         updateBlockNumberHead();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                if(validateSend() && validReceiver){
+                    btnSend.setEnabled(true);
+                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.redcolor));
+                    sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.mipmap.icon_send));
+
+                }else {
+                    btnSend.setEnabled(false);
+                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.gray));
+                    sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.drawable.sendicon2));
+                }
+                    handler.postDelayed(this, 100);
+            }
+        }, 100);
     }
 
     void init() {
@@ -509,7 +533,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
             Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
         }
-        SupportMethods.testing("oncheck",Helper.fetchBoolianSharePref(this,getString(R.string.pref_always_donate)),"fetch");
         if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
             cbAlwaysDonate.setChecked(true);
             alwaysDonate = true;
@@ -726,7 +749,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
     }
-
+    Boolean checkLastIndex() {
+        String name = etReceiverAccount.getText().toString();
+        String lastWord = String.valueOf(name.charAt(name.length() - 1));
+        return lastWord.equals(".");
+    }
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
@@ -734,10 +761,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
 //            return false;
         } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
-            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!validAmount) {
-            Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (etReceiverAccount.getText().toString().equals(".")) {
+            //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }else if (checkLastIndex()) {
+            //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -1174,6 +1208,20 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
+    }
+    public static int getColorWrapper(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
+        }
+    }
+    public static Drawable getDrawable(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>= API 21
+            return context.getDrawable(id);
+        } else {
+            return context.getResources().getDrawable(id);
+        }
     }
     @OnClick(R.id.contactActivity)
     void OnClickContactBtn(View view){
