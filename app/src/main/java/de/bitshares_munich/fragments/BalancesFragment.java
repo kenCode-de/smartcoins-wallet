@@ -1,6 +1,7 @@
 package de.bitshares_munich.fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.Paint;
 import android.os.AsyncTask;
@@ -380,14 +382,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public void updateLtm() {
 
         final boolean[] balanceValid = {true};
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.txt_confirmation));
-        alert.setMessage(getString(R.string.txt_confirmation_msg));
-        alert.setPositiveButton(getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.alert_delete_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
+        alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), tvAccountName.getText().toString()));
 
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        btnCancel.setBackgroundColor(Color.RED);
+        btnCancel.setText(getString(R.string.txt_no));
+        btnDone.setText(getString(R.string.txt_yes));
 
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 //Check Balance
+                dialog.cancel();
                 ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                 ;
                 try {
@@ -414,10 +424,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     showDialog("", getString(R.string.upgrading));
                     getAccountUpgradeInfo(getActivity(), tvAccountName.getText().toString());
                 }
+
+            }
+
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
             }
         });
-        alert.setNegativeButton(getString(R.string.txt_no), null);
-        alert.show();
+        dialog.show();
     }
 
     @OnClick(R.id.qrCamera)
