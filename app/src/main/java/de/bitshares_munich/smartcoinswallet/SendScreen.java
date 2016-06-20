@@ -199,10 +199,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         if (etReceiverAccount.getText().length() > 0) {
-//            myLowerCaseTimer.cancel();
-//            myAccountNameValidationTimer.cancel();
-//            myLowerCaseTimer.start();
-//            myAccountNameValidationTimer.start();
+            myLowerCaseTimer.cancel();
+            myAccountNameValidationTimer.cancel();
+            myLowerCaseTimer.start();
+            myAccountNameValidationTimer.start();
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
 
@@ -873,8 +873,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     public void run() {
                         validReceiver = false;
                         sendBtnPressed=false;
-                        String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format("%s %s",acName, etReceiverAccount.getText());
+                        // This code works correct, donot edit if it shows red underline
+                        String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
                         tvErrorRecieverAccount.setText(format);
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
