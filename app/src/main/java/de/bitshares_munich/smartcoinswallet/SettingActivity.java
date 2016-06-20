@@ -554,7 +554,6 @@ public class SettingActivity extends BaseActivity {
         dialog.show();
     }
 
-
     // Blocks Updation
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
@@ -590,7 +589,6 @@ public class SettingActivity extends BaseActivity {
             getWindow().setExitTransition(new Explode());
     }
 
-
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
         Intent intent = new Intent(this, AccountActivity.class);
@@ -613,52 +611,63 @@ public class SettingActivity extends BaseActivity {
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_delete_dialog);
-        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-        TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
-        alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), spAccounts.getSelectedItem().toString()));
-
-        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
+        alertMsg.setText(getString(R.string.help_message));
+        final Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         btnCancel.setBackgroundColor(Color.RED);
         btnCancel.setText(getString(R.string.txt_no));
-        btnDone.setText(getString(R.string.txt_yes));
+        btnDone.setText(getString(R.string.next));
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Check Balance
-                dialog.cancel();
-                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                try {
-                    for (int i = 0; i < accountDetails.size(); i++) {
-                        if (accountDetails.get(i).isSelected) {
-                            wifKey = accountDetails.get(i).wif_key;
-                            ArrayList<AccountAssets> arrayListAccountAssets = accountDetails.get(i).AccountAssets;
-                            for (int j = 0; j < arrayListAccountAssets.size(); j++) {
-                                AccountAssets accountAssets = arrayListAccountAssets.get(j);
-                                if (accountAssets.symbol.equalsIgnoreCase("BTS")) {
-                                    Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
-                                    if (amount < 18000) {
-                                        balanceValid[0] = false;
-                                        Toast.makeText(getApplicationContext(), getString(R.string.insufficient_amount), Toast.LENGTH_SHORT).show();
+                if (btnDone.getText().equals(getString(R.string.next))) {
+                    alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), spAccounts.getSelectedItem().toString()));
+                    btnDone.setText(getString(R.string.txt_yes));
+                    btnCancel.setText(getString(R.string.txt_back));
+                } else {
+                    dialog.cancel();
+                    ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    try {
+                        for (int i = 0; i < accountDetails.size(); i++) {
+                            if (accountDetails.get(i).isSelected) {
+                                wifKey = accountDetails.get(i).wif_key;
+                                ArrayList<AccountAssets> arrayListAccountAssets = accountDetails.get(i).AccountAssets;
+                                for (int j = 0; j < arrayListAccountAssets.size(); j++) {
+                                    AccountAssets accountAssets = arrayListAccountAssets.get(j);
+                                    if (accountAssets.symbol.equalsIgnoreCase("BTS")) {
+                                        Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
+                                        if (amount < 18000) {
+                                            balanceValid[0] = false;
+                                            Toast.makeText(getApplicationContext(), getString(R.string.insufficient_amount), Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
-                            }
 
+                            }
                         }
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
-                }
-                if (balanceValid[0]) {
-                    showDialog("", getString(R.string.upgrading));
-                    getAccountUpgradeInfo(activity, spAccounts.getSelectedItem().toString());
+                    if (balanceValid[0]) {
+                        showDialog("", getString(R.string.upgrading));
+                        getAccountUpgradeInfo(activity, spAccounts.getSelectedItem().toString());
+                    }
                 }
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+                if (btnCancel.getText().equals(getString(R.string.txt_back))) {
+                    alertMsg.setText(getString(R.string.help_message));
+                    btnCancel.setText(getString(R.string.txt_no));
+                    btnDone.setText(getString(R.string.next));
+                } else {
+                    dialog.cancel();
+                }
             }
         });
         dialog.show();
@@ -746,7 +755,6 @@ public class SettingActivity extends BaseActivity {
         startActivity(k);
         finish();
     }
-
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
