@@ -188,7 +188,8 @@ public class pdfTable {
 
             document.add(table);
             document.close();
-            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
         }
         catch(Exception e){
             Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();

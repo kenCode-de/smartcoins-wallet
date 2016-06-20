@@ -2,6 +2,8 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -52,6 +54,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @Bind(R.id.SaveContact)
     Button SaveContact;
 
+    @Bind(R.id.CancelContact)
+    Button cancelContact;
+
     @Bind(R.id.note)
     EditText Note;
 
@@ -73,7 +78,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         ButterKnife.bind(this);
 
         setBackButton(true);
-        setTitle(getResources().getString(R.string.add_contact_activity_name));
+
 
         context = this;
         tinyDB = new TinyDB(context);
@@ -82,18 +87,21 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         contactsDelegate = ContactsFragment.contactsDelegate;
         loadWebView(39, Helper.md5(""));
         SaveContact.setEnabled(false);
-        SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
+        SaveContact.setBackgroundColor(getColorWrapper(context,R.color.gray));
+        cancelContact.setBackgroundColor(getColorWrapper(context,R.color.red));
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
         if(res!=null) {
             if (res.containsKey("activity")) {
                 if(res.getInt("activity")==99999){
                     add = true;
+                    setTitle(getResources().getString(R.string.add_contact_activity_name));
                     SaveContact.setText(R.string.add_contact);
                 }
             }else if(res.containsKey("id")) {
 
                 edit = true;
+                setTitle(getResources().getString(R.string.edit_contact_activity_name));
 
                 contact_id = Integer.toString(res.getInt("id"));
 
@@ -150,6 +158,30 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
             myAccountNameValidationTimer.start();
+        }
+    }
+    @OnTextChanged(R.id.Contactname)
+    void onTextChangedName(CharSequence text) {
+        if(edit) {
+            if (Contactname.getText().toString().equals(contactname)) {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                SaveContact.setEnabled(false);
+            } else {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                SaveContact.setEnabled(true);
+            }
+        }
+    }
+    @OnTextChanged(R.id.note)
+    void onTextChangedNote(CharSequence text) {
+        if(edit) {
+            if (Note.getText().toString().equals(note)) {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                SaveContact.setEnabled(false);
+            } else {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                SaveContact.setEnabled(true);
+            }
         }
     }
     @OnClick(R.id.CancelContact)
@@ -210,10 +242,14 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        SaveContact.setEnabled(true);
-                        SaveContact.setBackgroundColor(getResources().getColor(R.color.pinkColor));
-                        warning.setText(R.string.account_name_validate);
-                        warning.setVisibility(View.VISIBLE);
+                        if (Accountname.getText().toString().equals(accountid)) {
+                            SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                        } else {
+                            SaveContact.setEnabled(true);
+                            SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                            warning.setText(R.string.account_name_validate);
+                            warning.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
@@ -225,7 +261,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                         String acName = getString(R.string.account_name_not_exist);
                         String format = String.format(acName.toString(), Accountname.getText().toString());
                         SaveContact.setEnabled(false);
-                        SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         warning.setText(format);
                         warning.setVisibility(View.VISIBLE);
                     }
@@ -233,6 +269,13 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             }
         } catch (Exception e) {
 
+        }
+    }
+    public static int getColorWrapper(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
         }
     }
 }

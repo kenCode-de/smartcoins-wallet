@@ -378,6 +378,7 @@ public class TransactionActivity implements BalancesDelegate {
                 String from = Names_from_Api.get(fromid);
                 String toid = mapof_All.get("to");
                 String to = Names_from_Api.get(toid);
+
                 String memo = "----";
                 String eRecipt = "";
                 if (decodememos.containsKey(Integer.toString(i))) {
