@@ -147,6 +147,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
+
+    @Bind(R.id.tvFrom)
+    TextView tvFrom;
+
     int count = 0;
 
     @Bind(R.id.tvBlockNumberHead_send_screen_activity)
@@ -712,7 +716,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         List<String> spinnerArray = new ArrayList<String>();
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
+            tvFrom.setText(accountDetail.account_name);
             spinnerArray.add(accountDetail.account_name);
+        }
+        if (accountDetails.size() > 1) {
+            spinnerFrom.setVisibility(View.VISIBLE);
+            tvFrom.setVisibility(View.GONE);
+        } else {
+            loadWebView(webviewFrom, 34, Helper.md5(tvFrom.getText().toString()));
+            spinnerFrom.setVisibility(View.GONE);
+            tvFrom.setVisibility(View.VISIBLE);
         }
         createSpinner(spinnerArray, spinnerFrom);
     }
