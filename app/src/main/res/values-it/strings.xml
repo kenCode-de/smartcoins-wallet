@@ -143,4 +143,32 @@
 <string name="add_contact_activity_name">Aggiungi contatto</string>
 <string name="str_trade_not_available">Commerciale Non disponibile</string>
     <string name="preferred_lang">Lingua preferita</string>
+    <string name="got_it">Fatto</string>
+    <string name="upgrade_to_ltm">Aggiornamento a LTM</string>
+    <string formatted="false" name="help_message">Ottenere 80% Cashback sulle tasse! I membri Lifetime (LTM) ottenere l\'80% cashback su ogni tassa di transazione che pagano, e si qualificano per guadagnare reddito di rinvio da parte degli utenti che si registrano con o fanno riferimento alla rete. Un abbonamento vitalizio è ora sotto 20000 BTS!</string>
+    <string name="txt_yes">sì</string>
+    <string name="txt_no">No</string>
+    <string name="txt_confirmation">Conferma</string>
+    <string name="txt_confirmation_msg">Sei sicuro?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">cartella creata</string>
+    <string name="upgrade_failed">Aggiornamento non riuscito</string>
+    <string name="upgrade_success">Aggiornamento con successo</string>
+    <string name="upgrading">Aggiornamento ...</string>
+    <string name="import_new_account">Importa</string>
+    <string name="upgrade_account">CONTO UPGRADE</string>
+    <string name="remove_account">RIMUOVI L\'ACCOUNT</string>
+    <string name="txt_back">Indietro</string>
+    <string name="please_pay">Per favore paga</string>
+    <string name="transfer_funds">il trasferimento di fondi</string>
+    <string name="unable_to_process">Impossibile elaborare</string>
+    <string name="cancel">ANNULLA</string>
+
+    <string name="txt_alertmsg">Sei sicuro di voler eliminare questo account</string>
+    <string name="validation_in_progress">Validazione in corso ..</string>
+    <string name="last_letter_cannot">ultima lettera non può essere -</string>
+    <string name="account_name_shoud_have">Nome conto shoud hanno almeno uno -</string>
+    <string name="default_currency">euro</string>
+    <string name="account_already_exist">Il conto esiste già</string>
+
 </resources>

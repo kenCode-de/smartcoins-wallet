@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">إضافة جهة اتصال</string>
 <string name="str_trade_not_available">التجارة غير متوفر</string>
     <string name="preferred_lang">اللغة المفضلة</string>
+    <string name="got_it">فهمتك</string>
+    <string name="upgrade_to_ltm">الترقية إلى LTM</string>
+    <string formatted="false" name="help_message">احصل على 80٪ استرداد النقود على رسوم! عمر الأعضاء (LTM) الحصول على 80٪ استرداد النقود على كل رسوم المعاملات يدفعون، والتأهل لكسب الدخل الإحالة من المستخدمين يسجلون مع أو الرجوع إلى الشبكة. وعضوية مدى الحياة هي الآن تحت 20000 BTS!</string>
+    <string name="txt_yes">نعم فعلا</string>
+    <string name="txt_no">لا</string>
+    <string name="txt_confirmation">تأكيد</string>
+    <string name="txt_confirmation_msg">هل انت متأكد؟</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">مجلد مكون</string>
+    <string name="upgrade_failed">فشل الترقية</string>
+    <string name="upgrade_success">ترقية بنجاح</string>
+    <string name="upgrading">رفع ...</string>
+    <string name="import_new_account">استيراد حساب</string>
+    <string name="upgrade_account">حدث الحساب</string>
+    <string name="remove_account">ازالة الحساب</string>
+    <string name="txt_alertmsg">هل أنت متأكد من حذف هذا الحساب</string>
+    <string name="validation_in_progress">التحقق من الصحة في التقدم ..</string>
+    <string name="last_letter_cannot">الحرف الأخير لا يمكن أن يكون -</string>
+    <string name="account_name_shoud_have">اسم الحساب، فهذه يكون أتلست واحد -</string>
+    <string name="default_currency">يورو</string>
+    <string name="account_already_exist">حساب موجود بالفعل</string>
+    <string name="txt_back">الى الخلف</string>
+    <string name="please_pay">الرجاء الدفع</string>
+    <string name="transfer_funds">نقل الأموال</string>
+    <string name="unable_to_process">غير قادر على المعالجة</string>
+    <string name="cancel">إلغاء</string>
+
 </resources>

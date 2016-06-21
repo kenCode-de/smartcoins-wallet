@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Legg til kontakt</string>
 <string name="str_trade_not_available">Handels Ikke tilgjengelig</string>
     <string name="preferred_lang">Foretrukket Språk</string>
+    <string name="got_it">Har det</string>
+    <string name="upgrade_to_ltm">Oppgrader til LTM</string>
+    <string formatted="false" name="help_message">Få 80% Cashback på gebyrer! Levetid medlemmer (LTM) får 80% cashback på hver transaksjon avgift de betale, og kvalifisere for å tjene henvisning inntekter fra brukere de registrerer seg eller referere til nettverket. En levetid medlemskap er nå under 20000 BTS!</string>
+    <string name="txt_yes">Ja</string>
+    <string name="txt_no">Nei</string>
+    <string name="txt_confirmation">Bekreftelse</string>
+    <string name="txt_confirmation_msg">Er din sikker?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Folder Laget</string>
+    <string name="upgrade_failed">oppgradering mislyktes</string>
+    <string name="upgrade_success">oppgradering vellykket</string>
+    <string name="upgrading">Oppgradering ...</string>
+    <string name="import_new_account">IMPORT KONTO</string>
+    <string name="upgrade_account">Oppgrader kontoen</string>
+    <string name="remove_account">FJERN KONTO</string>
+    <string name="txt_alertmsg">Er du sikker på at du vil slette denne kontoen</string>
+    <string name="validation_in_progress">Validering pågår ..</string>
+    <string name="last_letter_cannot">siste bokstaven kan ikke være -</string>
+    <string name="account_name_shoud_have">kontonavn shoud har minst én -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Konto allerede eksisterer</string>
+
 </resources>

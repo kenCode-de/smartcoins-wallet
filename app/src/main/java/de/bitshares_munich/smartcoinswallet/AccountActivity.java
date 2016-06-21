@@ -336,7 +336,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 //                            String accountName = etAccountName.getText().toString();
 
                             } catch (Exception e) {
-                                SupportMethods.testing("accountActivity", "2", "past_break");
                                 accountCreated = true;
                                 etAccountName.setText(accountName);
                             }

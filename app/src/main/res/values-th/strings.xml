@@ -144,4 +144,26 @@
 <string name="add_contact_activity_name">เพิ่มผู้ติดต่อ</string>
 <string name="str_trade_not_available">การค้าไม่สามารถใช้งาน</string>
     <string name="preferred_lang">ภาษาที่ต้องการ</string>
+    <string name="got_it">ได้รับมัน</string>
+    <string name="upgrade_to_ltm">อัพเกรดเป็น LTM</string>
+    <string formatted="false" name="help_message">จะได้รับเงินคืน 80% เมื่อค่า! อายุการใช้งานสมาชิก (LTM) ได้รับการคืนเงิน 80% สำหรับค่าธรรมเนียมการทำธุรกรรมทุกที่พวกเขาจ่ายและมีคุณสมบัติที่จะได้รับรายได้อ้างอิงจากผู้ใช้ที่ลงทะเบียนกับพวกเขาหรือดูเครือข่าย สมาชิกตลอดชีวิตขณะนี้อยู่ระหว่าง 20000 บีทีเอส!</string>
+    <string name="txt_yes">ใช่</string>
+    <string name="txt_no">ไม่</string>
+    <string name="txt_confirmation">การยืนยัน</string>
+    <string name="txt_confirmation_msg">แน่ใจหรือไม่ว่าคุณหรือไม่</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">โฟลเดอร์ที่สร้าง</string>
+    <string name="upgrade_failed">อัพเกรดล้มเหลว</string>
+    <string name="upgrade_success">ประสบความสำเร็จในการอัพเกรด</string>
+    <string name="upgrading">อัพเกรด ...</string>
+    <string name="import_new_account">นำเข้าบัญชี</string>
+    <string name="upgrade_account">อัปเกรดบัญชี</string>
+    <string name="remove_account">ปิดบัญชี</string>
+    <string name="txt_alertmsg">คุณแน่ใจว่าจะลบบัญชีนี้</string>
+    <string name="validation_in_progress">การตรวจสอบความคืบหน้าใน ..</string>
+    <string name="last_letter_cannot">จดหมายฉบับสุดท้ายไม่สามารถ -</string>
+    <string name="account_name_shoud_have">ชื่อบัญชี shoud มีอย่างน้อยหนึ่ง -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">บัญชีที่มีอยู่แล้ว</string>
+
 </resources>

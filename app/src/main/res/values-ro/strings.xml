@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Adaugă contact</string>
 <string name="str_trade_not_available">Comert Nu este disponibil</string>
     <string name="preferred_lang">Limba preferată</string>
+    <string name="got_it">Am înţeles</string>
+    <string name="upgrade_to_ltm">Treceți la LTM</string>
+    <string formatted="false" name="help_message">80% primi Cashback privind taxele! Membrii pe parcursul vieții (LTM) obține 80% cashback la fiecare comision de tranzacție plătesc, și se califică pentru a câștiga venituri de sesizare din partea utilizatorilor care le înregistrează cu sau se referă la rețea. O viata de membru este acum sub 20000 BTS!</string>
+    <string name="txt_yes">da</string>
+    <string name="txt_no">Nu</string>
+    <string name="txt_confirmation">Confirmare</string>
+    <string name="txt_confirmation_msg">Esti sigur?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">dosar creat</string>
+    <string name="upgrade_failed">upgrade-nu a reușit</string>
+    <string name="upgrade_success">upgrade-succes</string>
+    <string name="upgrading">Modernizarea ...</string>
+    <string name="import_new_account">IMPORT CONT</string>
+    <string name="upgrade_account">ACTUALIZARE CONT</string>
+    <string name="remove_account">STERGE CONTUL</string>
+    <string name="txt_alertmsg">Sunteți sigur să ștergeți acest cont</string>
+    <string name="validation_in_progress">Validarea în curs de desfășurare ..</string>
+    <string name="last_letter_cannot">ultima literă nu poate fi -</string>
+    <string name="account_name_shoud_have">Numele de cont Shoud au cel puțin un -</string>
+    <string name="default_currency">EURO</string>
+    <string name="account_already_exist">Există deja cont</string>
+
 </resources>

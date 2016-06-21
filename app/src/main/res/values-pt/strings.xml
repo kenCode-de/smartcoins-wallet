@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Adicionar contato</string>
 <string name="str_trade_not_available">Trade Not Available</string>
     <string name="preferred_lang">língua preferida</string>
+    <string name="got_it">Entendi</string>
+    <string name="upgrade_to_ltm">Actualiza para o LTM</string>
+    <string formatted="false" name="help_message">Obter 80% Cashback em Taxas! Membros durante a vida (LTM) obter 80% de desconto em cada taxa de transação que eles pagam, e qualificar-se para ganhar remessa renda dos usuários que se inscreverem com ou se referem à rede. Uma sociedade da vida está agora sob 20000 BTS!</string>
+    <string name="txt_yes">sim</string>
+    <string name="txt_no">Não</string>
+    <string name="txt_confirmation">Confirmação</string>
+    <string name="txt_confirmation_msg">Você tem certeza?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">pasta Criada</string>
+    <string name="upgrade_failed">atualização com falha</string>
+    <string name="upgrade_success">atualizar com êxito</string>
+    <string name="upgrading">Atualizando ...</string>
+    <string name="import_new_account">CONTA DE IMPORTAÇÃO</string>
+    <string name="upgrade_account">CONTA UPGRADE</string>
+    <string name="remove_account">REMOVER CONTA</string>
+    <string name="txt_alertmsg">Tem certeza que deseja apagar esta conta</string>
+    <string name="validation_in_progress">Validação em andamento ..</string>
+    <string name="last_letter_cannot">última carta não pode ser -</string>
+    <string name="account_name_shoud_have">nome da conta deviam ter pelo menos um -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Conta já existente</string>
+
 </resources>

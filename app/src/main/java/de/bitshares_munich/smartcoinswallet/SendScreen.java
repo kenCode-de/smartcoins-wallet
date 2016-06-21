@@ -406,7 +406,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (validateSend()) {
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
-                showDialog("", "Trading Funds...");
+                String transferFunds = this.getString(R.string.transfer_funds) + "...";
+                showDialog("",transferFunds);
                 tradeAsset();
             } else {
                 sendFunds(false);
@@ -434,7 +435,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //    }
 
     public void sendFunds(boolean isTrade){
-        showDialog("", "Transferring Funds...");
+        String transferFunds = this.getString(R.string.transfer_funds) + "...";
+        showDialog("", transferFunds);
         if (isTrade){
             Double tradeAmount = Double.parseDouble(etBackupAsset.getText().toString()) * backAssetRate;
             if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
@@ -1034,7 +1036,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(),"Unable to process : " + e.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.unable_to_process +" : " + e.getMessage(),Toast.LENGTH_LONG).show();
         }
     }
 

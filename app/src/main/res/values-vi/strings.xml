@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Add Contact</string>
 <string name="str_trade_not_available">Triển Không Khả</string>
     <string name="preferred_lang">Ngôn ngữ ưa thích</string>
+    <string name="got_it">Hiểu rồi</string>
+    <string name="upgrade_to_ltm">Nâng cấp lên LTM</string>
+    <string formatted="false" name="help_message">Nhận 80% Cashback về phí! Lifetime thành viên (LTM) nhận được 80% cashback trên mỗi phí giao dịch họ phải trả, và đủ điều kiện để kiếm được thu nhập giới thiệu của người sử dụng khi đăng ký với hoặc tham khảo mạng. Một Thành viên trọn đời tại là dưới 20.000 BTS!</string>
+    <string name="txt_yes">Vâng</string>
+    <string name="txt_no">Không</string>
+    <string name="txt_confirmation">sự xác nhận</string>
+    <string name="txt_confirmation_msg">Chắc chắn bạn?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">thư mục tạo</string>
+    <string name="upgrade_failed">nâng cấp thất bại</string>
+    <string name="upgrade_success">nâng cấp thành công</string>
+    <string name="upgrading">Nâng cấp ...</string>
+    <string name="import_new_account">TÀI KHOẢN NHẬP</string>
+    <string name="upgrade_account">NÂNG CẤP TÀI KHOẢN</string>
+    <string name="remove_account">XOÁ TÀI KHOẢN</string>
+    <string name="txt_alertmsg">Bạn có chắc chắn xóa tài khoản này</string>
+    <string name="validation_in_progress">Validation trong tiến trình ..</string>
+    <string name="last_letter_cannot">lá thư cuối cùng không thể được -</string>
+    <string name="account_name_shoud_have">Tên tài khoản shoud có ít nhất một -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Tài khoản đã tồn tại</string>
+
 </resources>

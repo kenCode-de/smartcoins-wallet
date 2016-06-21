@@ -142,5 +142,32 @@
 <string name="share_account_activity_name">친구와 공유</string>
 <string name="add_contact_activity_name">연락처 추가</string>
 <string name="str_trade_not_available">사용할 수 없음 무역</string>
-    <string name="preferred_lang">선호하는 언어</string>s
+    <string name="preferred_lang">선호하는 언어</string>
+    <string name="got_it">알았다</string>
+    <string name="upgrade_to_ltm">LTM로 업그레이드</string>
+    <string name="txt_back">뒤로</string>
+    <string name="please_pay">지불하십시오</string>
+    <string name="transfer_funds">자금 전송</string>
+    <string name="unable_to_process">처리 할 수​​ 없습니다</string>
+    <string name="cancel">취소하다</string>
+    <string formatted="false" name="help_message">요금에 80 % 캐쉬백을 해! 평생 회원 (LTM)는 그들이 지불하는 모든 거래 수수료 80 % 캐쉬백을 얻고, 그들이에 등록 또는 네트워크를 참조하십시오 사용자의 추천 소득 자격. 평생 회원은 20000 BTS에서 지금입니다!</string>
+    <string name="txt_yes">예</string>
+    <string name="txt_no">아니</string>
+    <string name="txt_confirmation">확인</string>
+    <string name="txt_confirmation_msg">당신 하시겠습니까?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">폴더 생성</string>
+    <string name="upgrade_failed">업그레이드 실패</string>
+    <string name="upgrade_success">성공적으로 업그레이드</string>
+    <string name="upgrading">업그레이드 ...</string>
+    <string name="import_new_account">수입 계정</string>
+    <string name="upgrade_account">UPGRADE 계정</string>
+    <string name="remove_account">계정 삭제</string>
+    <string name="txt_alertmsg">이 계정을 삭제 하시겠습니까</string>
+    <string name="validation_in_progress">진행중인 검증 ..</string>
+    <string name="last_letter_cannot">마지막 편지가 될 수 없습니다 -</string>
+    <string name="account_name_shoud_have">계정 이름이어야 하나를 가지고 갈까요 -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">이미 존재하는 계정</string>
+
 </resources>

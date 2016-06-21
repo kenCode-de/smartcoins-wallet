@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Kontakt hinzufügen</string>
 <string name="str_trade_not_available">Handel nicht verfügbar</string>
     <string name="preferred_lang">Bevorzugte Sprache</string>
+    <string name="got_it">Ich habs</string>
+    <string name="upgrade_to_ltm">Upgrade auf LTM</string>
+    <string name="txt_back">Zurück</string>
+    <string name="please_pay">Bitte zahlen Sie</string>
+    <string name="transfer_funds">Übertragen von Fonds</string>
+    <string name="unable_to_process">Kann nicht verarbeiten</string>
+    <string name="cancel">STORNIEREN</string>
+    <string formatted="false" name="help_message">Holen Sie sich 80% Cashback auf Gebühren! Lebenslange Mitglieder (LTM) erhalten 80% Cashback auf alle Transaktionsgebühr zahlen sie, und qualifizieren Verweisung Einkommen von den Benutzern mit der Registrierung zu verdienen oder mit dem Netzwerk beziehen. Eine lebenslange Mitgliedschaft ist jetzt unter 20000 BTS!</string>
+    <string name="txt_yes">ja</string>
+    <string name="txt_no">Nein</string>
+    <string name="txt_confirmation">Bestätigung</string>
+    <string name="txt_confirmation_msg">Bist du sicher?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Ordner erstellt</string>
+    <string name="upgrade_failed">Aktualisierung fehlgeschlagen</string>
+    <string name="upgrade_success">Rüsten Sie erfolgreich</string>
+    <string name="upgrading">Aktualisieren ...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">KONTO ENTFERNEN</string>
+    <string name="txt_alertmsg">Sind Sie sicher, dass dieses Konto löschen</string>
+    <string name="validation_in_progress">Validierung im Gange ..</string>
+    <string name="last_letter_cannot">letzten Brief kann nicht sein -</string>
+    <string name="account_name_shoud_have">Kontoname shoud atleast eine haben -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Dieser Account existiert bereits</string>
+
 </resources>

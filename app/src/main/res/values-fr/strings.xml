@@ -143,4 +143,32 @@
 <string name="add_contact_activity_name">Ajouter le contact</string>
 <string name="str_trade_not_available">Trade Non disponible</string>
     <string name="preferred_lang">langue préférée</string>
+    <string name="got_it">Je l\'ai</string>
+    <string name="txt_back">Arrière</string>
+    <string name="please_pay">Payez s\'il vous plait</string>
+    <string name="transfer_funds">transfert de fonds</string>
+    <string name="unable_to_process">Impossible de traiter</string>
+    <string name="cancel">ANNULER</string>
+
+    <string name="upgrade_to_ltm">Mise à niveau vers LTM</string>
+    <string formatted="false" name="help_message">Obtenez 80% Cashback sur les frais! Membres à vie (LTM) obtiennent 80% de remise sur tous les frais de transaction qu\'ils paient, et sont admissibles à gagner un revenu de référence des utilisateurs qu\'ils enregistrent avec ou font référence au réseau. Une adhésion à vie est maintenant sous 20000 BTS!</string>
+    <string name="txt_yes">Oui</string>
+    <string name="txt_no">Non</string>
+    <string name="txt_confirmation">Confirmation</string>
+    <string name="txt_confirmation_msg">Etes-vous sûr?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">dossier créé</string>
+    <string name="upgrade_failed">Mise à niveau a échoué</string>
+    <string name="upgrade_success">Mise à niveau avec succès</string>
+    <string name="upgrading">Mise à niveau ...</string>
+    <string name="import_new_account">IMPORT COMPTE</string>
+    <string name="upgrade_account">AMÉLIORER LE COMPTE</string>
+    <string name="remove_account">SUPPRIMER LE COMPTE</string>
+    <string name="txt_alertmsg">Êtes-vous sûr de vouloir supprimer ce compte</string>
+    <string name="validation_in_progress">Validation en cours ..</string>
+    <string name="last_letter_cannot">dernière lettre ne peut pas être -</string>
+    <string name="account_name_shoud_have">nom de compte qui devraient avoir atleast un -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Compte existe déjà</string>
+
 </resources>

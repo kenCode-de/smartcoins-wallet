@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">afegir contacte</string>
 <string name="str_trade_not_available">Comerç no disponible</string>
     <string name="preferred_lang">idioma preferit</string>
+    <string name="got_it">Ho tinc</string>
+    <string name="upgrade_to_ltm">Puja a UDM</string>
+    <string formatted="false" name="help_message">Obtenir 80% de reemborsament de Taxes! Els membres de tota la vida (LTM) reben el 80% de Cashback a cada tarifa de transacció que paguen, i qualificar per obtenir ingressos remissió dels usuaris que es registrin amb o fan referència a la xarxa. Una membre de per vida és ara sota 20000 BTS!</string>
+    <string name="txt_yes">si</string>
+    <string name="txt_no">No</string>
+    <string name="txt_confirmation">confirmació</string>
+    <string name="txt_confirmation_msg">Són la seva assegurança?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">creat carpeta</string>
+    <string name="upgrade_failed">error d\'actualització</string>
+    <string name="upgrade_success">actualitzar correctament</string>
+    <string name="upgrading">Actualitzant ...</string>
+    <string name="import_new_account">COMPTE D\'IMPORTACIÓ</string>
+    <string name="upgrade_account">COMPTE D\'ACTUALITZACIÓ</string>
+    <string name="remove_account">Elimina el compte</string>
+    <string name="txt_alertmsg">¿Segur eliminar aquest compte</string>
+    <string name="validation_in_progress">Validació en curs ..</string>
+    <string name="last_letter_cannot">última carta no pot ser -</string>
+    <string name="account_name_shoud_have">nom de compte shoud té almenys un -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">El compte ja existeix</string>
+    <string name="txt_back">esquena</string>
+    <string name="please_pay">Si us plau, presti</string>
+    <string name="transfer_funds">La transferència de fons</string>
+    <string name="unable_to_process">No es pot processar</string>
+    <string name="cancel">CANCEL · LAR</string>
+
 </resources>

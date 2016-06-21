@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Добавить контакт</string>
 <string name="str_trade_not_available">Торговля Не Доступный</string>
     <string name="preferred_lang">предпочтительный язык</string>
+    <string name="got_it">Понял</string>
+    <string name="upgrade_to_ltm">Обновление до LTM</string>
+    <string formatted="false" name="help_message">Получите 80% прибыли на сборы! Продолжительность жизни членов (LTM) получают 80% бонус на каждый плата за сделку, которую они платят, и право получать доход от направления пользователей, которых они регистрируются или относятся к сети. Пожизненное членство в настоящее время под 20000 БПС!</string>
+    <string name="txt_yes">да</string>
+    <string name="txt_no">Нет</string>
+    <string name="txt_confirmation">подтверждение</string>
+    <string name="txt_confirmation_msg">Ты уверен?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Папка создана</string>
+    <string name="upgrade_failed">Ошибка обновления</string>
+    <string name="upgrade_success">Обновление успешно</string>
+    <string name="upgrading">Обновление ...</string>
+    <string name="import_new_account">ИМПОРТ СЧЕТ</string>
+    <string name="upgrade_account">ОБНОВИТЬ АККАУНТ</string>
+    <string name="remove_account">УДАЛИТЬ УЧЕТНУЮ ЗАПИСЬ</string>
+    <string name="txt_alertmsg">Вы уверены, чтобы удалить эту учетную запись</string>
+    <string name="validation_in_progress">Проверка продолжается ..</string>
+    <string name="last_letter_cannot">Последнее письмо не может быть -</string>
+    <string name="account_name_shoud_have">Имя учетной записи Шоуда имеют по крайней мере один -</string>
+    <string name="default_currency">евро</string>
+    <string name="account_already_exist">Аккаунт уже существует</string>
+
 </resources>

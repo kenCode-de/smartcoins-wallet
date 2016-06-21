@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">اضافه کردن تماس</string>
 <string name="str_trade_not_available">تجارت در دسترس نیست</string>
     <string name="preferred_lang">زبان ترجیحی</string>
+    <string name="got_it">فهمیدم</string>
+    <string name="upgrade_to_ltm">ارتقا به LTM</string>
+    <string name="txt_back">بازگشت</string>
+    <string name="please_pay">لطفا پرداخت کنید</string>
+    <string name="transfer_funds">انتقال وجه</string>
+    <string name="unable_to_process">قادر به پردازش</string>
+    <string name="cancel">لغو</string>
+    <string formatted="false" name="help_message">80 درصد تخفیف نقدی در هزینه! طول عمر کاربران (LTM) 80 درصد تخفیف نقدی در هر هزینه معامله آنها پرداخت، و واجد شرایط برای کسب درآمد ارجاع از کاربران با ثبت نام و یا به شبکه مراجعه کنید. عضویت در طول عمر در حال حاضر تحت 20،000 BTS!</string>
+    <string name="txt_yes">بله</string>
+    <string name="txt_no">خیر</string>
+    <string name="txt_confirmation">تائیدیه</string>
+    <string name="txt_confirmation_msg">مطمئنی؟</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">پوشه ایجاد</string>
+    <string name="upgrade_failed">ارتقا شکست خورده</string>
+    <string name="upgrade_success">ارتقا موفقیت</string>
+    <string name="upgrading">به روز رسانی ...</string>
+    <string name="import_new_account">حساب واردات</string>
+    <string name="upgrade_account">ارتقای حساب کاربری</string>
+    <string name="remove_account">حذف حساب</string>
+    <string name="txt_alertmsg">آیا مطمئنید که این حساب را حذف کنید</string>
+    <string name="validation_in_progress">اعتبار سنجی در حال پیشرفت ..</string>
+    <string name="last_letter_cannot">آخرین نامه نمی تواند -</string>
+    <string name="account_name_shoud_have">نام حساب shoud حداقل یک دارند -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">حساب در حال حاضر وجود</string>
+
 </resources>

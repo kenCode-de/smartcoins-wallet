@@ -143,4 +143,26 @@
 <string name="add_contact_activity_name">Pridať kontakt</string>
 <string name="str_trade_not_available">Obchodné Nie je k dispozícii</string>
     <string name="preferred_lang">uprednostňovaný jazyk</string>
+    <string name="got_it">Mám to</string>
+    <string name="upgrade_to_ltm">Upgrade na LTM</string>
+    <string formatted="false" name="help_message">Získajte 80% Cashback na poplatkoch! Životnosť Členovia (LTM) získať 80% cashback na každom poplatku za transakciu, ktoré musí zaplatiť, a kvalifikovať zarábať postúpenie príjem od užívateľov, ktoré sa zaregistrujú s alebo odkazujú na sieti. Doživotná členstvo je teraz pod 20000 BTS!</string>
+    <string name="txt_yes">áno</string>
+    <string name="txt_no">nie</string>
+    <string name="txt_confirmation">Potvrdenie</string>
+    <string name="txt_confirmation_msg">Sú vaše istý?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">zložky vytvorené</string>
+    <string name="upgrade_failed">upgrade zlyhal</string>
+    <string name="upgrade_success">úspešne vykonať upgrade</string>
+    <string name="upgrading">Aktualizácie ...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">odstrániť účet</string>
+    <string name="txt_alertmsg">Naozaj chcete zmazať tento účet</string>
+    <string name="validation_in_progress">Overenie prebieha ..</string>
+    <string name="last_letter_cannot">Posledné písmeno nemôže byť -</string>
+    <string name="account_name_shoud_have">Názov účtu mela mať aspoň jedno -</string>
+    <string name="default_currency">eur</string>
+    <string name="account_already_exist">Účet už existujú</string>
+
 </resources>

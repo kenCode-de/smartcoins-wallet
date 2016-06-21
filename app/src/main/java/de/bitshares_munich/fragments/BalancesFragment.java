@@ -369,7 +369,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         alertMsg.setText(getString(R.string.help_message));
         final Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         btnCancel.setBackgroundColor(Color.RED);
-        btnCancel.setText(getString(R.string.txt_back));
+        btnCancel.setText(getString(R.string.txt_no));
         btnDone.setText(getString(R.string.next));
 
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -379,7 +379,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 if (btnDone.getText().equals(getString(R.string.next))) {
                     alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), tvAccountName.getText().toString()));
                     btnDone.setText(getString(R.string.txt_yes));
-                    btnCancel.setText(getString(R.string.txt_no));
+                    btnCancel.setText(getString(R.string.txt_back));
                 } else {
                     dialog.cancel();
                     ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -416,7 +416,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+                if (btnCancel.getText().equals(getString(R.string.txt_back))) {
+                    alertMsg.setText(getString(R.string.help_message));
+                    btnCancel.setText(getString(R.string.txt_no));
+                    btnDone.setText(getString(R.string.next));
+                } else {
+                    dialog.cancel();
+                }
             }
         });
         dialog.show();
@@ -1036,25 +1042,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                if (myTransactions.size() == 0) {
-                    saveTransactions(transactionDetails);
-                    //myTransactions.clear();
-                }
+       try {
+           getActivity().runOnUiThread(new Runnable() {
+               public void run() {
+                   if (myTransactions.size() == 0) {
+                       saveTransactions(transactionDetails);
+                       //myTransactions.clear();
+                   }
 
-                if (number_of_transactions_in_queue < 25) {
-                    load_more_values.setVisibility(View.GONE);
-                } else {
-                    load_more_values.setVisibility(View.VISIBLE);
-                    load_more_values.setEnabled(true);
-                }
-                myTransactions.addAll(transactionDetails);
-                tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
-                progressBar.setVisibility(View.GONE);
-                tableViewparent.setVisibility(View.VISIBLE);
-            }
-        });
+                   if (number_of_transactions_in_queue < 25) {
+                       load_more_values.setVisibility(View.GONE);
+                   } else {
+                       load_more_values.setVisibility(View.VISIBLE);
+                       load_more_values.setEnabled(true);
+                   }
+                   myTransactions.addAll(transactionDetails);
+                   tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+                   progressBar.setVisibility(View.GONE);
+                   tableViewparent.setVisibility(View.VISIBLE);
+               }
+           });
+       }catch (Exception e){
+           SupportMethods.testing("TransactionUpdate",e,"try/catch");
+       }
     }
 
     @OnClick(R.id.load_more_values)

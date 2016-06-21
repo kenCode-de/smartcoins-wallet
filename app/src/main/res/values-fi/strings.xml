@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Lisää yhteystieto</string>
 <string name="str_trade_not_available">Trade Ei saatavilla</string>
     <string name="preferred_lang">ensisijainen kieli</string>
+    <string name="got_it">Sain sen</string>
+    <string name="upgrade_to_ltm">Päivitä LTM</string>
+    <string name="txt_back">Takaisin</string>
+    <string name="please_pay">kiinnitä</string>
+    <string name="transfer_funds">siirtämällä varoja</string>
+    <string name="unable_to_process">Pysty käsittelemään</string>
+    <string name="cancel">PERUUTTAA</string>
+    <string formatted="false" name="help_message">Saat 80% Cashback on Palkkiot! Lifetime Members (LTM) saavat 80% cashback joka palvelumaksu he maksavat, ja saada ansaita lähete tuloja käyttäjiltä ne rekisteröidyttävä tai viitata verkkoon. Lifetime Jäsenyys on nyt alle 20000 BTS!</string>
+    <string name="txt_yes">Kyllä</string>
+    <string name="txt_no">Ei</string>
+    <string name="txt_confirmation">Vahvistus</string>
+    <string name="txt_confirmation_msg">Ovatko varma?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">kansio Luotu</string>
+    <string name="upgrade_failed">Päivitys epäonnistui</string>
+    <string name="upgrade_success">Päivitys onnistui</string>
+    <string name="upgrading">Päivitys ...</string>
+    <string name="import_new_account">Tuo tilin</string>
+    <string name="upgrade_account">PÄIVITÄ TILI</string>
+    <string name="remove_account">Poista tili</string>
+    <string name="txt_alertmsg">Haluatko varmasti poistaa tämän tilin</string>
+    <string name="validation_in_progress">Validointi käynnissä ..</string>
+    <string name="last_letter_cannot">viimeinen kirjain voi olla -</string>
+    <string name="account_name_shoud_have">tilin nimi shoud on atleast yksi -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Tili on jo olemassa</string>
+
 </resources>
