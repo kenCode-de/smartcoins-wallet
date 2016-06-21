@@ -452,12 +452,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String loyaltyAsset = tvLoyalty.getText().toString();
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
         }
-//        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-//            transferAmount("2", "BTS", "bitshares-munich");
-//        }
-        if (alwaysDonate) {
+        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
             transferAmount("2", "BTS", "bitshares-munich");
         }
+//        if (alwaysDonate) {
+//            transferAmount("2", "BTS", "bitshares-munich");
+//        }
     }
 
     private void selectedAccountAsset() {
@@ -563,21 +563,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setCheckboxAvailabilty() {
-        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
-        }
-        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-            cbAlwaysDonate.setChecked(true);
-            alwaysDonate = true;
-        } else {
-            cbAlwaysDonate.setChecked(false);
-            alwaysDonate = false;
-        }
+//        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
+//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+//        }
+//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+//            cbAlwaysDonate.setChecked(true);
+//            alwaysDonate = true;
+//        } else {
+//            cbAlwaysDonate.setChecked(false);
+//            alwaysDonate = false;
+//        }
+//
+//
+//        cbAlwaysDonate.setVisibility(View.VISIBLE);
 
+        cbAlwaysDonate.setChecked(true);
+        alwaysDonate = cbAlwaysDonate.isChecked();
 
-        cbAlwaysDonate.setVisibility(View.VISIBLE);
-
-        //cbAlwaysDonate.setChecked(true);
     }
     @OnCheckedChanged(R.id.cbAlwaysDonate)
     public void cbAlwaysDonate(){
@@ -587,7 +589,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            alwaysDonate = false;
 //        }else {
 //            alwaysDonate = true;
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
+         //   Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
        // }
     }
     void setBackUpAsset() {
