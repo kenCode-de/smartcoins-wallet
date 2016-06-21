@@ -2,7 +2,10 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -15,6 +18,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,8 +29,10 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.DecodeMemo;
+import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -55,6 +61,8 @@ public class TransactionActivity implements BalancesDelegate {
     int memo_in_work;
     int memo_total_size;
     int number_of_transactions_in_queue;
+    String finalFaitCurrency;
+
 
 
 
@@ -367,8 +375,8 @@ public class TransactionActivity implements BalancesDelegate {
     }
     void onLastCall(){
         Boolean isDonate = false;
-        List<TransactionDetails> transactionDetails = new ArrayList<>();
-        if(!Helper.containKeySharePref(context, context.getString(R.string.pref_always_donate))){
+        ArrayList<TransactionDetails> transactionDetails = new ArrayList<>();
+        if(Helper.containKeySharePref(context, context.getString(R.string.pref_always_donate))){
             isDonate = Helper.fetchBoolianSharePref(context,context.getString(R.string.pref_always_donate));
         }
         for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++) {
@@ -401,7 +409,7 @@ public class TransactionActivity implements BalancesDelegate {
                 Date formatted = null;
                 formatted = formatter.parse(Date);
 
-                if (isDonate && symbol.equals("BTS") && amount_pre.equals("2") && to.equals("bitshares-munich")) {
+                if (isDonate && symbol.equals("BTS") && amount_pre.equals("2.0") && to.equals("bitshares-munich")) {
                     testing("found","found", "found,found");
                 } else {
                     TransactionDetails object = new TransactionDetails(formatted, Sent, to, from, memo, Float.parseFloat(amount_pre), symbol, 0f, "", eRecipt);
@@ -413,7 +421,7 @@ public class TransactionActivity implements BalancesDelegate {
                 testing("error", e, "Try,Catch");
             }
         }
-        assetDelegate.TransactionUpdate(transactionDetails,number_of_transactions_in_queue);
+        getEquivalentComponents(transactionDetails);
     }
 //    String returnFromPower(String i,String str){
 //        Double ok = 1.0;
@@ -424,4 +432,79 @@ public class TransactionActivity implements BalancesDelegate {
 //        }
 //        return  Double.toString(value/ok);
 //    }
+
+    private void getEquivalentComponents(final ArrayList<TransactionDetails> transactionDetailses) {
+    String faitCurrency = Helper.getFadeCurrency(context);
+    if (faitCurrency.isEmpty()) {
+        faitCurrency = application.getString(R.string.default_currency);
+    }
+    String values = "";
+    for (int i = 0; i < transactionDetailses.size(); i++) {
+        TransactionDetails transactionDetails = transactionDetailses.get(i);
+        if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
+            values += transactionDetails.assetSymbol.toString() + ":" + faitCurrency + ",";
+        }
+    }
+    HashMap<String, String> hashMap = new HashMap<>();
+    hashMap.put("method", "equivalent_component");
+    hashMap.put("values", values.substring(0, values.length() - 1));
+
+    ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+    IWebService service = sg.getService(IWebService.class);
+    final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+        finalFaitCurrency = faitCurrency;
+
+        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+        @Override
+        public void onResponse(Response<EquivalentComponentResponse> response) {
+            if (response.isSuccess()) {
+                EquivalentComponentResponse resp = response.body();
+                if (resp.status.equals("success")) {
+                    try {
+                        JSONObject rates = new JSONObject(resp.rates);
+                        Iterator<String> keys = rates.keys();
+                        HashMap hm = new HashMap();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            hm.put(key.split(":")[0], rates.get(key));
+                        }
+                        try {
+                            for (int i = 0; i < transactionDetailses.size(); i++) {
+                                String asset = transactionDetailses.get(i).getAssetSymbol();
+                                String amount = String.valueOf(transactionDetailses.get(i).getAmount());
+                                if (!amount.isEmpty() && hm.containsKey(asset)) {
+                                    Currency currency = Currency.getInstance(finalFaitCurrency);
+                                    Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+                                    transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
+                                    transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+                                }
+
+                            }
+                        }
+                        catch (Exception e){
+                            
+                        }
+                        assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
+                        ;
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+//                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
+                } else {
+//                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+            Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+        }
+    });
+}
+
 }

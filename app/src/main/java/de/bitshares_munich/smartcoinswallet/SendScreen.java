@@ -73,13 +73,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     AccountAssets loyaltyAsset;
 
     AccountAssets backupAssets;
+
     boolean validReceiver = false;
     boolean validAmount = false;
     boolean sendBtnPressed = false;
+    boolean alwaysDonate = false;
 
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
-    boolean alwaysDonate = false;
+
     String backupAsset, receiverID, callbackURL;
 
     @Bind(R.id.llMemo)
@@ -1272,5 +1274,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         p.show(view);}
         else Toast.makeText(context,R.string.empty_list,Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        init();
+    }
+
     ///////
 }
