@@ -514,7 +514,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             if (sym.size() > i) accountAsset.symbol = sym.get(i);
             if (am.size() > i) accountAsset.ammount = am.get(i);
 
-            SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
+         //   SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
 
             // Log.i("uncle","aay1"+am.get(i));
             accountAssets.add(accountAsset);

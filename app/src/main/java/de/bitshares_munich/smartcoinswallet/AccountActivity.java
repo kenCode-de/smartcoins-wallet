@@ -295,7 +295,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
                     }
                 } else {
-                    Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
 
                 }
             }
