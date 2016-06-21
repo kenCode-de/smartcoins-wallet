@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#fff"
-    android:weightSum="1">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fff"
+              android:orientation="vertical"
+              android:weightSum="1">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60sp"
@@ -15,557 +15,539 @@
         <Button
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:onClick="backbutton"
-            android:background="@drawable/righticon"
             android:layout_gravity="center"
-            />
+            android:background="@drawable/righticon"
+            android:onClick="backbutton"
+        />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logoicon"
             android:layout_gravity="center"
-            />
+            android:src="@drawable/logoicon"
+        />
     </LinearLayout>
-<ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-    <LinearLayout
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+                android:layout_weight="1">
+        <LinearLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-            <LinearLayout
-                android:layout_marginTop="5sp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/FirstChild"
-                >
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
                 <LinearLayout
+                    android:id="@+id/FirstChild"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:weightSum="10"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="From: "
-                        android:textSize="15sp"
-                        android:textColor="#00060A"
-                        />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40sp"
-                        android:orientation="horizontal"
-                        android:weightSum="5"
-                        >
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            >
-                        <RelativeLayout
-                            android:layout_width="40sp"
-                            android:id="@+id/rl_webviewFrom"
-                            android:layout_alignParentLeft="true"
-                            android:background="@drawable/rounded_corners"
-                            android:layout_height="40sp">
-                            <WebView
-                                android:gravity="center"
-                                android:layout_width="34sp"
-                                android:layout_height="34sp"
-                                android:id="@+id/webviewFrom"
-                                android:layout_centerInParent="true"
-                                />
-                        </RelativeLayout>
-
-                            <Spinner
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="5sp"
-                                android:layout_marginRight="5sp"
-                                android:layout_toRightOf="@+id/rl_webviewFrom"
-                                android:id="@+id/spinnerFrom"
-                                android:background="@drawable/edittext_background_layer"
-
-                                >
-                            </Spinner>
-                            <!--<EditText-->
-                            <!--android:layout_marginLeft="5sp"-->
-                            <!--android:layout_marginRight="5sp"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:background="@null"-->
-                            <!--android:singleLine="true"-->
-                            <!--android:maxLines="1"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:id="@+id/editTextFrom"-->
-                            <!--android:layout_toLeftOf="@+id/imageviewFrom"-->
-                            <!--android:layout_toRightOf="@+id/webviewFrom"-->
-                            <!--/>-->
-                            <!--<ImageView-->
-                            <!--android:layout_alignParentRight="true"-->
-                            <!--android:id="@+id/imageviewFrom"-->
-                            <!--android:layout_width="20sp"-->
-                            <!--android:layout_height="match_parent"-->
-                            <!--android:src="@drawable/spinnericon"-->
-                            <!--/>-->
-                        </RelativeLayout>
-                        <Button
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="4"
-                            android:background="@null"
-                            />
-                    </LinearLayout>
-
-
-
-
-
-
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="5sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@+id/FirstChild"
-                android:id="@+id/SecChild"
-                >
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:weightSum="10"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="To: "
-                        android:textSize="15sp"
-                        android:textColor="#00060A"
-                        />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40sp"
-                        android:orientation="horizontal"
-                        android:weightSum="5"
-                        >
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            >
-                        <RelativeLayout
-                            android:layout_width="40sp"
-                            android:id="@+id/rl_webviewTo"
-                            android:layout_alignParentLeft="true"
-                            android:background="@drawable/rounded_corners"
-                            android:layout_height="40sp">
-                            <WebView
-                                android:gravity="center"
-                                android:layout_width="34sp"
-                                android:layout_height="34sp"
-                                android:id="@+id/webviewTo"
-                                android:layout_centerInParent="true"
-                                />
-                        </RelativeLayout>
-
-                            <EditText
-                                android:layout_marginLeft="5sp"
-                                android:layout_marginRight="5sp"
-                                android:layout_width="match_parent"
-                                android:background="@drawable/edittext_background_layer"
-                                android:singleLine="true"
-                                android:maxLines="1"
-                                android:layout_height="match_parent"
-                                android:id="@+id/etReceiverAccount"
-                                android:layout_toRightOf="@+id/rl_webviewTo"
-                                android:layout_toLeftOf="@+id/contactActivity"
-
-                                />
-                            <RelativeLayout
-                                android:layout_alignParentRight="true"
-                                android:layout_width="50sp"
-                                android:id="@+id/contactActivity"
-                                android:orientation="horizontal"
-                                android:layout_height="match_parent">
-                            <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/share_group"
-                                android:layout_centerInParent="true"
-                            />
-                            </RelativeLayout>
-                        </RelativeLayout>
-                        <ImageButton
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="4"
-                            android:src="@drawable/photo_icon"
-                            android:id="@+id/scanning"
-                            android:background="@null"
-                            />
-                    </LinearLayout>
-                    <TextView
-                        android:visibility="gone"
-                        android:text=""
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:gravity="left"
-                        android:textColor="@android:color/holo_red_dark"
-                        android:id="@+id/tvErrorRecieverAccount"
-                        />
-
-
-
-
-
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_marginTop="5sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_below="@+id/SecChild"
-                android:id="@+id/ThirdChild"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/amount"
-                    android:textSize="15sp"
-                    android:textColor="#00060A"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=":"
-                    android:textSize="15sp"
-                    android:textColor="#00060A"
-                    />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_margin"
-                    android:weightSum="1"
+                    android:layout_marginTop="5sp"
                     android:orientation="horizontal"
-                    android:background="@drawable/edittext_background_layer"
-                    >
-                    <EditText
+                >
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:singleLine="true"
-                        android:maxLines="1"
-                        android:id="@+id/etAmount"
-                        android:gravity="center|end"
-                        android:paddingRight="5dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:inputType="numberDecimal"
-                        android:text=""
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:weightSum="10"
+                    >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="From: "
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
                         />
-                    <Spinner
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
-                        android:dropDownWidth="wrap_content"
-                        android:id="@+id/spAssets"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40sp"
+                            android:orientation="horizontal"
+                            android:weightSum="5"
                         >
-                    </Spinner>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                            >
+                                <RelativeLayout
+                                    android:id="@+id/rl_webviewFrom"
+                                    android:layout_width="40sp"
+                                    android:layout_height="40sp"
+                                    android:layout_alignParentLeft="true"
+                                    android:background="@drawable/rounded_corners">
+                                    <WebView
+                                        android:id="@+id/webviewFrom"
+                                        android:layout_width="34sp"
+                                        android:layout_height="34sp"
+                                        android:layout_centerInParent="true"
+                                        android:gravity="center"
+                                    />
+                                </RelativeLayout>
+                                <LinearLayout             android:layout_width="match_parent"
+                                                          android:layout_height="match_parent"
+                                                          android:layout_marginLeft="5sp"
+                                                          android:layout_marginRight="5sp"
+                                                          android:layout_toRightOf="@+id/rl_webviewFrom"
+                                                          android:orientation="vertical">
+
+
+                                    <Spinner
+                                        android:id="@+id/spinnerFrom"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="35dp"
+                                        android:visibility="gone">
+                                    </Spinner>
+                                    <TextView
+                                        android:id="@+id/tvFrom"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="35dp"
+                                        android:visibility="gone"
+                                        android:textColor="@color/black"/>
+                                    <View android:layout_width="wrap_content"
+                                          android:layout_height="2dp"
+                                          android:background="@drawable/edittext_background_layer"></View>
+                                </LinearLayout>
+                            </RelativeLayout>
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="4"
+                                android:background="@null"
+                            />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                 </LinearLayout>
-            </LinearLayout>
-            <TextView
-                android:layout_below="@+id/ThirdChild"
-                android:text=""
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:gravity="right"
-                android:textColor="@android:color/holo_red_dark"
-                android:id="@+id/tvAmountStatus"
-                />
-            <LinearLayout
-                android:layout_marginTop="5sp"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_below="@+id/tvAmountStatus"
-                android:id="@+id/llLoyalty"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Loyalty Points: "
-                    android:textSize="15sp"
-                    android:textColor="#00060A"
-                    />
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/SecChild"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_margin"
-                    android:background="@drawable/edittext_background_layer"
-                    >
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FirstChild"
+                    android:layout_marginTop="5sp"
+                    android:orientation="horizontal"
+                >
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_margin"
-                        android:weightSum="4"
-                        android:orientation="horizontal"
-                        android:background="@drawable/edittext_background_layer"
-                        >
-                    <EditText
-                        android:layout_width="0dp"
-                        android:background="@null"
-                        android:singleLine="true"
-                        android:layout_weight="3"
-                        android:maxLines="1"
-                        android:text=""
-                        android:layout_height="match_parent"
-                        android:id="@+id/etLoyalty"
-                        android:inputType="numberDecimal"
-                        android:gravity="center|right"
-                        android:paddingRight="5dp"
-                        android:layout_marginRight="10dp"
-                        />
-                    <TextView
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:text=""
-                        android:gravity="center"
-                        android:textSize="17sp"
-                        android:id="@+id/tvLoyalty"
-                        />
-</LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
-            <TextView
-                android:layout_below="@+id/llLoyalty"
-                android:visibility="gone"
-                android:text="nn FABLES is available"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:gravity="right"
-                android:id="@+id/tvLoyaltyStatus"
-                />
-            <LinearLayout
-                android:visibility="gone"
-                android:layout_marginTop="5sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_below="@+id/tvLoyaltyStatus"
-                android:id="@+id/llBackupAsset"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Backup Asset: "
-                    android:textSize="15sp"
-                    android:textColor="#00060A"
-                    />
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_margin"
-                    android:background="@drawable/edittext_background_layer"
+                        android:orientation="vertical"
+                        android:weightSum="10"
                     >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/layout_margin"
-                        android:weightSum="4"
-                        android:orientation="horizontal"
-                        android:background="@drawable/edittext_background_layer"
-                        >
-                    <EditText
-                        android:layout_width="0dp"
-                        android:background="@null"
-                        android:singleLine="true"
-                        android:maxLines="1"
-                        android:layout_weight="3"
-                        android:text=""
-                        android:layout_height="match_parent"
-                        android:id="@+id/etBackupAsset"
-                        android:inputType="numberDecimal"
-                        android:gravity="center|right"
-                        android:paddingRight="5dp"
-                        android:layout_marginRight="10dp"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="To: "
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
                         />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:text="BTS"
-                        android:gravity="center"
-                        android:textSize="17sp"
-                        android:id="@+id/tvBackupAsset"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40sp"
+                            android:orientation="horizontal"
+                            android:weightSum="5"
+                        >
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                            >
+                                <RelativeLayout
+                                    android:id="@+id/rl_webviewTo"
+                                    android:layout_width="40sp"
+                                    android:layout_height="40sp"
+                                    android:layout_alignParentLeft="true"
+                                    android:background="@drawable/rounded_corners">
+                                    <WebView
+                                        android:id="@+id/webviewTo"
+                                        android:layout_width="34sp"
+                                        android:layout_height="34sp"
+                                        android:layout_centerInParent="true"
+                                        android:gravity="center"
+                                    />
+                                </RelativeLayout>
+
+                                <EditText
+                                    android:id="@+id/etReceiverAccount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5sp"
+                                    android:layout_marginRight="5sp"
+                                    android:layout_toLeftOf="@+id/contactActivity"
+                                    android:layout_toRightOf="@+id/rl_webviewTo"
+                                    android:background="@drawable/edittext_background_layer"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+
+                                />
+                                <RelativeLayout
+                                    android:id="@+id/contactActivity"
+                                    android:layout_width="50sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentRight="true"
+                                    android:orientation="horizontal">
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_centerInParent="true"
+                                        android:src="@drawable/share_group"
+                                    />
+                                </RelativeLayout>
+                            </RelativeLayout>
+                            <ImageButton
+                                android:id="@+id/scanning"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="4"
+                                android:background="@null"
+                                android:src="@drawable/photo_icon"
+                            />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvErrorRecieverAccount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text=""
+                            android:textColor="@android:color/holo_red_dark"
+                            android:textSize="15sp"
+                            android:visibility="gone"
+                        />
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ThirdChild"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/SecChild"
+                    android:layout_marginTop="5sp"
+                    android:orientation="vertical"
+                >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/amount"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                        />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
                         />
                     </LinearLayout>
-                </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin"
+                        android:background="@drawable/edittext_background_layer"
+                        android:orientation="horizontal"
+                        android:weightSum="1"
+                    >
+                        <EditText
+                            android:id="@+id/etAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="center|end"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingRight="5dp"
+                            android:singleLine="true"
+                            android:text=""
+                        />
+                        <Spinner
+                            android:id="@+id/spAssets"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:dropDownWidth="wrap_content"
+                        >
+                        </Spinner>
+                    </LinearLayout>
+                </LinearLayout>
                 <TextView
-                    android:text=""
+                    android:id="@+id/tvAmountStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15dp"
+                    android:layout_below="@+id/ThirdChild"
                     android:gravity="right"
-                    android:id="@+id/tvBackupAssetBalanceValidate"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="15sp"
                 />
-            </LinearLayout>
-            <TextView
-                android:visibility="gone"
-                android:layout_below="@+id/llBackupAsset"
-                android:text="nn OBITS is available"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:gravity="right"
-                android:id="@+id/StatusThree"
-                />
-            <TextView
-                android:visibility="gone"
-                android:layout_below="@+id/StatusThree"
-                android:text="(nn BTS + n.nn OBITS = nnnn BTS )"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:textColor="#000"
-                android:id="@+id/tvTotalStatus"
-                />
-            <LinearLayout
-                android:layout_marginTop="5sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_below="@+id/tvTotalStatus"
-                android:id="@+id/llMemo"
-                >
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/llLoyalty"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/memo_capital"
-                    android:textSize="15sp"
-                    android:textColor="#00060A"
+                    android:layout_below="@+id/tvAmountStatus"
+                    android:layout_marginTop="5sp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loyalty Points: "
+                        android:textColor="#00060A"
+                        android:textSize="15sp"
                     />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin"
+                        android:background="@drawable/edittext_background_layer"
+                    >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/layout_margin"
+                            android:background="@drawable/edittext_background_layer"
+                            android:orientation="horizontal"
+                            android:weightSum="4"
+                        >
+                            <EditText
+                                android:id="@+id/etLoyalty"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="3"
+                                android:background="@null"
+                                android:gravity="center|right"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:paddingRight="5dp"
+                                android:singleLine="true"
+                                android:text=""
+                            />
+                            <TextView
+                                android:id="@+id/tvLoyalty"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text=""
+                                android:textSize="17sp"
+                            />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvLoyaltyStatus"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=":"
+                    android:layout_below="@+id/llLoyalty"
+                    android:gravity="right"
+                    android:text="nn FABLES is available"
                     android:textSize="15sp"
-                    android:textColor="#00060A"
+                    android:visibility="gone"
+                />
+                <LinearLayout
+                    android:id="@+id/llBackupAsset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvLoyaltyStatus"
+                    android:layout_marginTop="5sp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Backup Asset: "
+                        android:textColor="#00060A"
+                        android:textSize="15sp"
+                    />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/layout_margin"
+                        android:background="@drawable/edittext_background_layer"
+                    >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/layout_margin"
+                            android:background="@drawable/edittext_background_layer"
+                            android:orientation="horizontal"
+                            android:weightSum="4"
+                        >
+                            <EditText
+                                android:id="@+id/etBackupAsset"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="10dp"
+                                android:layout_weight="3"
+                                android:background="@null"
+                                android:gravity="center|right"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:paddingRight="5dp"
+                                android:singleLine="true"
+                                android:text=""
+                            />
+                            <TextView
+                                android:id="@+id/tvBackupAsset"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="BTS"
+                                android:textSize="17sp"
+                            />
+                        </LinearLayout>
+                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvBackupAssetBalanceValidate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text=""
+                        android:textSize="15dp"
                     />
                 </LinearLayout>
-                <RelativeLayout
+                <TextView
+                    android:id="@+id/StatusThree"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/layout_margin"
-                    android:background="@drawable/edittext_background_layer"
-                    >
-                    <EditText
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llBackupAsset"
+                    android:gravity="right"
+                    android:text="nn OBITS is available"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                />
+                <TextView
+                    android:id="@+id/tvTotalStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/StatusThree"
+                    android:gravity="center"
+                    android:text="(nn BTS + n.nn OBITS = nnnn BTS )"
+                    android:textColor="#000"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                />
+                <LinearLayout
+                    android:id="@+id/llMemo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvTotalStatus"
+                    android:layout_marginTop="5sp"
+                    android:orientation="vertical"
+                >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/memo_capital"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                        />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                        />
+                    </LinearLayout>
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:background="@null"
-                        android:text=""
-                        android:layout_height="match_parent"
-                        android:id="@+id/etMemo"
-                        android:gravity="left"
-                        android:textSize="15sp"
+                        android:layout_height="@dimen/layout_margin"
+                        android:background="@drawable/edittext_background_layer"
+                    >
+                        <EditText
+                            android:id="@+id/etMemo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@null"
+                            android:gravity="left"
+                            android:text=""
+                            android:textSize="15sp"
 
                         />
-                </RelativeLayout>
-            </LinearLayout>
-            <CheckBox
-                android:layout_marginTop="20dp"
-                android:text="@string/checkbox_donate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llMemo"
-                android:id="@+id/cbAlwaysDonate"
-                android:layout_marginBottom="10dp"
+                    </RelativeLayout>
+                </LinearLayout>
+                <CheckBox
+                    android:id="@+id/cbAlwaysDonate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llMemo"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/checkbox_donate"
                 />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/layout_margin"
-                android:background="#DD4739"
-                android:layout_marginTop="10sp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:id="@+id/btnSend"
-                android:weightSum="4"
-                android:layout_below="@id/cbAlwaysDonate"
+                <LinearLayout
+                    android:id="@+id/btnSend"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_margin"
+                    android:layout_below="@id/cbAlwaysDonate"
+                    android:layout_marginTop="10sp"
+                    android:background="#DD4739"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:weightSum="4"
                 >
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:text="@string/send_capital"
-                    android:textStyle="bold"
-                    android:gravity="center|right"
-                    android:layout_weight="2"
-                    android:textColor="#fff"
-                    android:textSize="17sp"
-                    android:paddingRight="5dp"
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center|right"
+                        android:paddingRight="5dp"
+                        android:text="@string/send_capital"
+                        android:textColor="#fff"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
                     />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:src="@mipmap/icon_send"
-                    android:gravity="left|center"
-                    android:layout_weight="0.5"
-                    android:id="@+id/sendicon"
+                    <ImageView
+                        android:id="@+id/sendicon"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:gravity="left|center"
+                        android:src="@mipmap/icon_send"
                     />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:gravity="left|center"
-                    android:layout_weight="1.5"
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:gravity="left|center"
                     />
 
-            </LinearLayout>
-        </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="35dp"
+        android:layout_weight="1"
+        android:background="@color/bottomBarColor"
         android:gravity="bottom"
-        android:orientation="horizontal"
-        android:background="@color/bottomBarColor">
+        android:orientation="horizontal">
         <TextView
-            android:text="@string/v_1_0_beta"
             android:id="@+id/tvAppVersion_send_screen_activity"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="@string/v_1_0_beta"/>
 
         <TextView
-            android:layout_width="0dp"
             android:id="@+id/tvBlockNumberHead_send_screen_activity"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
@@ -575,16 +557,16 @@
             android:id="@+id/ivSocketConnected_send_screen_activity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:layout_gravity="center"/>
-
-        <ImageView android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
             android:layout_gravity="center"
-            android:src="@drawable/icon_setting"
-            android:visibility="visible"
-            android:id="@+id/OnClickSettings_send_screen_activity"
-            />
+            android:layout_weight="0.5"/>
+
+        <ImageView android:id="@+id/OnClickSettings_send_screen_activity"
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="0.5"
+                   android:src="@drawable/icon_setting"
+                   android:visibility="visible"
+        />
     </LinearLayout>
 </LinearLayout>
