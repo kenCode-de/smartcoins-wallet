@@ -173,11 +173,25 @@ public class RecieveActivity extends BaseActivity {
         //Drawable loadImage = getDrawable(qrimage);
 //        String str = Helper.saveToInternalStorage(this,((BitmapDrawable) loadImage).getBitmap());
         try {
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+
+            String shareText = "";
+
+            if ( !price.isEmpty() && price != "0" )
+            {
+                shareText = "Please pay " + price + " " + currency + " to " + to;
+            }
+            else
+            {
+                shareText = "Please pay : " + to;
+            }
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             Uri uri = null;
             uri = Uri.fromFile(mFile);
             sharingIntent.setData(uri);
-            sharingIntent.setType("image/png");
+            sharingIntent.setType("*/*");
+            sharingIntent.putExtra(Intent.EXTRA_SUBJECT, shareText);
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, shareText);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(Intent.createChooser(sharingIntent, this.getString(R.string.share_qr_code)));
         } catch (Exception e) {

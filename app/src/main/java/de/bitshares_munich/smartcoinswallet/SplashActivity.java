@@ -65,7 +65,20 @@ public class SplashActivity extends Activity {
             }
         }, SPLASH_TIME_OUT);
         */
+
+        String pin = Helper.fetchStringSharePref(getApplicationContext(),"pin");
+
         Intent i = new Intent(SplashActivity.this, TabActivity.class);
+
+        if ( pin != null && !pin.isEmpty() )
+        {
+            i.putExtra("ask_for_pin",true);
+        }
+        else
+        {
+            i.putExtra("ask_for_pin",false);
+        }
+
         startActivity(i);
         finish();
     }

@@ -230,64 +230,100 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/register_new_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:elevation="5dp"
                 android:layout_below="@+id/l41"
+                android:id="@+id/button_rows"
                 android:layout_marginTop="10dp"
-                android:text="@string/register_new_account"
-                android:textSize="20sp"
-                android:stateListAnimator="@animator/my_animated_button"
-                android:textStyle="normal"
-                android:textColor="@drawable/btn_txt"
-                android:background="@drawable/button_border"
-            />
-            <Button
-                android:id="@+id/import_new_account"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/register_new_account"
-                android:layout_marginTop="10dp"
-                android:text="@string/import_new_account"
-                android:textSize="20sp"
-                android:stateListAnimator="@animator/my_animated_button"
-                android:textStyle="normal"
-                android:textColor="@drawable/btn_txt"
-                android:background="@drawable/button_border"
-                />
-            <Button
-                android:id="@+id/upgrade_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/import_new_account"
-                android:layout_marginTop="10dp"
-                android:text="@string/upgrade_account"
-                android:textSize="20sp"
-                android:stateListAnimator="@animator/my_animated_button"
-                android:textStyle="normal"
-                android:textColor="@drawable/btn_txt"
-                android:background="@drawable/button_border"
-                />
-            <Button
-                android:id="@+id/remove_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/upgrade_account"
-                android:layout_marginTop="10dp"
-                android:stateListAnimator="@animator/my_animated_button"
-                android:text="@string/remove_account"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                android:textColor="@drawable/btn_txt"
-                android:background="@drawable/button_border"
-                />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/whiteColor">
+                <LinearLayout
+                    android:id="@+id/button_first_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    android:background="@color/whiteColor">
+
+                    <Button
+                        android:layout_weight="0.5"
+                        android:layout_marginRight="5dp"
+                        android:id="@+id/register_new_account"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:text="@string/register_new_account"
+                        android:stateListAnimator="@animator/my_animated_button"
+                        android:textStyle="normal"
+                        android:layout_gravity="center"
+                        android:textColor="@drawable/btn_txt"
+                        android:background="@drawable/button_border"
+                        />
+
+                    <Button
+                        android:layout_weight="0.5"
+                        android:id="@+id/import_new_account"
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_height="45dp"
+                        android:text="@string/import_new_account"
+                        android:stateListAnimator="@animator/my_animated_button"
+                        android:textStyle="normal"
+                        android:textColor="@drawable/btn_txt"
+                        android:background="@drawable/button_border"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/button_second_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/button_first_row"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <Button
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.5"
+                        android:id="@+id/upgrade_account"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:text="@string/upgrade_account"
+                        android:stateListAnimator="@animator/my_animated_button"
+                        android:textStyle="normal"
+                        android:textColor="@drawable/btn_txt"
+                        android:background="@drawable/button_border"
+                        />
+
+                    <Button
+                        android:layout_weight="0.5"
+                        android:id="@+id/remove_account"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:stateListAnimator="@animator/my_animated_button"
+                        android:text="@string/remove_account"
+                        android:textStyle="normal"
+                        android:layout_gravity="center"
+                        android:textColor="@drawable/btn_txt"
+                        android:background="@drawable/button_border"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
 
             <LinearLayout
                 android:id="@+id/l5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/remove_account"
+                android:layout_below="@+id/button_rows"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:elevation="5dp"
