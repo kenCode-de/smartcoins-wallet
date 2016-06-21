@@ -288,7 +288,27 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnItemSelected(R.id.spinnerFrom)
     void onItemSelected(int position) {
         if (!runningSpinerForFirstTime) {
-            populateAssetsSpinner();
+            if (requiredAmount == null) {
+                populateAssetsSpinner();
+            }else{
+                updateAmountStatus();
+                if (loyaltyAsset != null) {
+                    String selectedAccount = spinnerFrom.getSelectedItem().toString();
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        AccountDetails accountDetail = accountDetails.get(i);
+                        if (accountDetail.account_name.equals(selectedAccount)) {
+                            for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                                AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                                if (tempAccountAsset.id.equals(loyaltyAsset.id)) {
+                                    loyaltyAsset = accountDetail.AccountAssets.get(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                onLoyaltyChanged(etAmount.getText());
+            }
         } else {
             this.runningSpinerForFirstTime = false;
         }
