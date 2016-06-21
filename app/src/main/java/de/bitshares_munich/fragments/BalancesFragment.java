@@ -555,7 +555,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
             if (!accountAsset.symbol.equals(faitCurrency)) {
-                values += accountAsset.symbol.toString() + ":" + faitCurrency + ",";
+                values += accountAsset.symbol + ":" + faitCurrency + ",";
             }
         }
         HashMap<String, String> hashMap = new HashMap<>();
