@@ -616,7 +616,7 @@ public class SettingActivity extends BaseActivity {
         alertMsg.setText(getString(R.string.help_message));
         final Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         btnCancel.setBackgroundColor(Color.RED);
-        btnCancel.setText(getString(R.string.txt_no));
+        btnCancel.setText(getString(R.string.txt_back));
         btnDone.setText(getString(R.string.next));
 
         btnDone.setOnClickListener(new View.OnClickListener() {
@@ -626,7 +626,7 @@ public class SettingActivity extends BaseActivity {
                 if (btnDone.getText().equals(getString(R.string.next))) {
                     alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), spAccounts.getSelectedItem().toString()));
                     btnDone.setText(getString(R.string.txt_yes));
-                    btnCancel.setText(getString(R.string.txt_back));
+                    btnCancel.setText(getString(R.string.txt_no));
                 } else {
                     dialog.cancel();
                     ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -661,13 +661,7 @@ public class SettingActivity extends BaseActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btnCancel.getText().equals(getString(R.string.txt_back))) {
-                    alertMsg.setText(getString(R.string.help_message));
-                    btnCancel.setText(getString(R.string.txt_no));
-                    btnDone.setText(getString(R.string.next));
-                } else {
-                    dialog.cancel();
-                }
+                dialog.cancel();
             }
         });
         dialog.show();
