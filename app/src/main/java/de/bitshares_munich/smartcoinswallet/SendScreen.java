@@ -222,6 +222,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
+        validReceiver = false;
+        tvErrorRecieverAccount.setText("");
+
         if (etReceiverAccount.getText().length() > 0) {
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
@@ -235,6 +238,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnFocusChange(R.id.etReceiverAccount)
     public void onFocusChange(boolean hasFocus) {
+        validReceiver = false;
+
         if (!hasFocus) {
             tvErrorRecieverAccount.setText("");
           //  tvErrorRecieverAccount.setVisibility(View.VISIBLE);
@@ -244,10 +249,32 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             myAccountNameValidationTimer.start();
         }
     }
-
+//    @OnFocusChange(R.id.etAmount)
+//    public void onFocus() {
+//        if(validateSend() && validReceiver){
+//            btnSend.setEnabled(true);
+//            btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.redcolor));
+//            sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.mipmap.icon_send));
+//
+//        }else {
+//            btnSend.setEnabled(false);
+//            btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.gray));
+//            sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.drawable.sendicon2));
+//        }
+//    }
     @OnTextChanged(R.id.etAmount)
     void onAmountChanged(CharSequence text) {
         updateAmountStatus();
+//        if(validateSend() && validReceiver){
+//            btnSend.setEnabled(true);
+//            btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.redcolor));
+//            sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.mipmap.icon_send));
+//
+//        }else {
+//            btnSend.setEnabled(false);
+//            btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(),R.color.gray));
+//            sendicon.setImageDrawable(getDrawable(getApplicationContext(),R.drawable.sendicon2));
+//        }
     }
 
     Boolean runningSpinerForFirstTime = true;
@@ -750,9 +777,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     }
     Boolean checkLastIndex() {
-        String name = etReceiverAccount.getText().toString();
-        String lastWord = String.valueOf(name.charAt(name.length() - 1));
-        return lastWord.equals(".");
+        String name = etAmount.getText().toString();
+        if(name.length()>
+                0) {
+            String lastWord = String.valueOf(name.charAt(name.length() - 1));
+            return lastWord.equals(".");
+        }
+        return false;
     }
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
@@ -767,10 +798,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
          //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if (etReceiverAccount.getText().toString().equals(".")) {
+        else if (etAmount.getText().toString().equals(".")) {
             //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }else if (checkLastIndex()) {
+            //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if (etAmount.getText().toString().equals("0")) {
             //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }
