@@ -881,7 +881,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                                     }
 
-                                    tvAmOne.setText(String.format(locale, "%.4f", amount_d));
+                                    tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
                                    // setCounter(tvAmtwo, txtAmount_d, amount_d);
                                     final TextView cView = tvAmtwo;
                                     final Handler handler = new Handler();

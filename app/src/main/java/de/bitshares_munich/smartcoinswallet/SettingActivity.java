@@ -141,13 +141,11 @@ public class SettingActivity extends BaseActivity {
         ButterKnife.bind(this);
         activity = this;
         progressDialog = new ProgressDialog(this);
-        btnUpgrade.setVisibility(View.GONE);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
         populateDropDowns();
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
-
 
     }
 
@@ -354,12 +352,13 @@ public class SettingActivity extends BaseActivity {
             }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
-                btnUpgrade.setVisibility(View.GONE);
+                btnUpgrade.setEnabled(false);
+                btnUpgrade.setBackgroundColor(Color.rgb(211, 211, 211));
 
             } else {
                 ivLifeTime.setVisibility(View.GONE);
-                btnUpgrade.setVisibility(View.VISIBLE);
-
+                btnUpgrade.setEnabled(true);
+                btnUpgrade.setBackground(getResources().getDrawable(R.drawable.button_border));
             }
         }
 
@@ -442,11 +441,13 @@ public class SettingActivity extends BaseActivity {
                     brainKey = accountDetails.get(i).brain_key;
                     if (accountDetails.get(i).isLifeTime) {
                         ivLifeTime.setVisibility(View.VISIBLE);
-                        btnUpgrade.setVisibility(View.GONE);
+                        btnUpgrade.setEnabled(false);
+                        btnUpgrade.setBackgroundColor(Color.rgb(211, 211, 211));
 
                     } else {
                         ivLifeTime.setVisibility(View.GONE);
-                        btnUpgrade.setVisibility(View.VISIBLE);
+                        btnUpgrade.setEnabled(true);
+                        btnUpgrade.setBackground(getResources().getDrawable(R.drawable.button_border));
 
                     }
                 } else {
@@ -832,4 +833,5 @@ public class SettingActivity extends BaseActivity {
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
+
 }
