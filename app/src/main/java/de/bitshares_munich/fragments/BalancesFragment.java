@@ -606,41 +606,66 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             }
                             for (int i = 0; i < llBalances.getChildCount(); i++) {
                                 LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
-                                LinearLayout llRowInner = (LinearLayout) llRow.getChildAt(0);
-                                for (int j = 0; j < llRowInner.getChildCount(); j++) {
-                                    TextView tvAsset = (TextView) llRowInner.getChildAt(j);
-                                    TextView tvAmount = (TextView) llRowInner.getChildAt(j + 1);
+
+                                //LinearLayout llRowInner = (LinearLayout) llRow.getChildAt(0);
+                                for (int j = 1; j <= 2; j++)
+                                {
+
+                                    TextView tvAsset;
+                                    TextView tvAmount;
+                                    TextView tvFaitAmount;
+
+                                    if ( j == 1 )
+                                    {
+                                        tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
+                                        tvAmount = (TextView) llRow.findViewById(R.id.amount_child_one);
+                                        tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_one);
+                                    }
+                                    else
+                                    {
+                                        tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_two);
+                                        tvAmount = (TextView) llRow.findViewById(R.id.amount_child_two);
+                                        tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
+                                    }
+
+
                                     String asset = tvAsset.getText().toString();
-                                    String amount = tvAmount.getText().toString().split("\\[")[0];
+                                    String amount = tvAmount.getText().toString();
                                     amount = android.text.Html.fromHtml(amount).toString();
-                                    if (amount.isEmpty()) {
+
+                                    if (amount.isEmpty())
+                                    {
                                         amount = "0.0";
                                     }
 
-                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
+                                    if (!amount.isEmpty() && hm.containsKey(asset))
+                                    {
                                         Currency currency = Currency.getInstance(finalFaitCurrency);
 
                                         try {
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
-                                            tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
-                                            tvAmount.append(Html.fromHtml("<br><small>[" + currency.getSymbol() + String.format(locale, "%.4f", eqAmount) + "]</small>"));
-                                        } catch (Exception e) {
+                                            //tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
+                                            //tvAmount.append(Html.fromHtml("<br><small>[" + currency.getSymbol() + String.format(locale, "%.4f", eqAmount) + "]</small>"));
+                                            tvFaitAmount.setText( String.format(locale, "%s %.4f", currency.getSymbol(), eqAmount));
+                                        } catch (Exception e)
+                                        {
 
                                         }
 
-                                    } else {
-
-                                        try {
+                                    }
+                                    else
+                                    {
+                                        tvFaitAmount.setVisibility(View.GONE);
+                                        /*try {
                                             double d = convertLocalizeStringToDouble(amount);
                                             tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
                                         } catch (Exception e) {
 
                                         }
-
+                                        */
                                     }
 
-                                    j++;
                                 }
                             }
                         } catch (JSONException e) {
@@ -684,41 +709,33 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     }
 
                     View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                    LinearLayout layout = (LinearLayout) customView;
-                    LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+                    //LinearLayout layout = (LinearLayout) customView;
+                    //LinearLayout layout1 = (LinearLayout) layout.findViewById(R.id.symbol_child_one);
                     for (int l = i; l < i + pr; l++) {
                         if (counter == 1) {
-                            TextView textView = (TextView) layout1.getChildAt(0);
+                            TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                             textView.setText(sym.get(l));
-                            TextView textView1 = (TextView) layout1.getChildAt(1);
-                            //inializeCounter(textView1);
-                            // textView1.setText(returnFromPower(pre.get(l), am.get(i)));
-                            // String r = returnFromPower(pre.get(l), am.get(i));
-                            float b = powerInFloat(pre.get(l), am.get(i));
-//                            SupportMethods.testing("floatDoubleIssue",Float.parseFloat(r),"3");
-//                            Float value = Float.parseFloat(r);
-                           // setCounter(textView1, 0f, 0f);
-                           textView1.setText(String.format(locale, "%.4f", b));
+                            TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
-                            //setCounter(textView1, b, b);
+                            float b = powerInFloat(pre.get(l), am.get(i));
+
+                            textView1.setText(String.format(locale, "%.4f", b));
+
                         }
 
                         if (counter == 2) {
-                            TextView textView2 = (TextView) layout1.getChildAt(2);
+                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                             textView2.setText(sym.get(l));
-                            TextView textView3 = (TextView) layout1.getChildAt(3);
+                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             String r = returnFromPower(pre.get(l), am.get(l));
-                            // textView3.setText();
-                            //setCounter(textView3, 0f, 0f);
-                            //setCounter(textView3, Float.parseFloat(r), Float.parseFloat(r));
 
                             textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                             llBalances.addView(customView);
                         }
                         if (counter == 1 && i == sym.size() - 1) {
-                            TextView textView2 = (TextView) layout1.getChildAt(2);
+                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                             textView2.setText("");
-                            TextView textView3 = (TextView) layout1.getChildAt(3);
+                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             textView3.setVisibility(View.GONE);
                             llBalances.addView(customView);
                         }
@@ -772,22 +789,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     if (count > 0) {
                         int m = 0;
                         for (int i = 0; i < count; i++) {
-                            LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
-                            LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
-                            TextView tvSymOne = (TextView) child.getChildAt(0);
-                            TextView tvAmOne = (TextView) child.getChildAt(1);
-                            TextView tvSymtwo = (TextView) child.getChildAt(2);
-                            TextView tvAmtwo = (TextView) child.getChildAt(3);
 
-                            if (sym.size() > m) {
+                            // Get balances row
+                            LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
+
+                            //LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
+                            TextView tvSymOne = (TextView) linearLayout.findViewById(R.id.symbol_child_one);
+                            TextView tvAmOne = (TextView) linearLayout.findViewById(R.id.amount_child_one);
+                            TextView tvSymtwo = (TextView) linearLayout.findViewById(R.id.symbol_child_two);
+                            TextView tvAmtwo = (TextView) linearLayout.findViewById(R.id.amount_child_two);
+
+                            if (sym.size() > m)
+                            {
 
                                 String symbol = sym.get(m);
                                 String amount = "";
-                                if (pre.size() > m && am.size() > m)
-                                    amount = returnFromPower(pre.get(m), am.get(m));
-                                String txtSymbol = tvSymOne.getText().toString();
-                                String txtAmount = tvAmOne.getText().toString().split("\\[")[0];
 
+                                if (pre.size() > m && am.size() > m)
+                                {
+                                    amount = returnFromPower(pre.get(m), am.get(m));
+                                }
+
+                                String txtSymbol = tvSymOne.getText().toString();
+                                String txtAmount = tvAmOne.getText().toString();
 
                                 if (!symbol.equals(txtSymbol))
                                 {
@@ -852,21 +876,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                 linearLayout.removeAllViews();
                             }
 
-                            if (sym.size() > m) {
+                            if (sym.size() > m)
+                            {
                                 String symbol = sym.get(m);
                                 String amount = "";
+
                                 if (pre.size() > m && am.size() > m)
+                                {
                                     amount = returnFromPower(pre.get(m), am.get(m));
+                                }
+
                                 String txtSymbol = tvSymtwo.getText().toString();
-                                String txtAmount = tvAmtwo.getText().toString().split("\\[")[0];
+                                String txtAmount = tvAmtwo.getText().toString();
 
                                 float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                 float amount_d = convertLocalizeStringToFloat(amount);
 
                                 if (!symbol.equals(txtSymbol))
+                                {
                                     tvSymtwo.setText(symbol);
+                                }
 
-                                if (!amount.equals(txtAmount)) {
+                                if (!amount.equals(txtAmount))
+                                {
                                     tvAmtwo.setVisibility(View.VISIBLE);
 
                                     if (txtAmount_d > amount_d) {
@@ -877,8 +909,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     if (amount_d > txtAmount_d) {
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
-
-
                                     }
 
                                     tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
@@ -919,14 +949,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                 }
 
                                 View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                                LinearLayout layout = (LinearLayout) customView;
-                                LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-                                for (int l = i; l < i + pr; l++) {
-                                    if (counter == 1) {
-                                        TextView textView = (TextView) layout1.getChildAt(0);
+                                //LinearLayout layout = (LinearLayout) customView;
+                                //LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
+                                for (int l = i; l < i + pr; l++)
+                                {
+                                    if (counter == 1)
+                                    {
+                                        TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                                         textView.setText(sym.get(l));
-                                        TextView textView1 = (TextView) layout1.getChildAt(1);
-                                        if (pre.size() > l && am.size() > i) {
+                                        TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
+
+                                        if (pre.size() > l && am.size() > i)
+                                        {
                                             String r = returnFromPower(pre.get(l), am.get(i));
                                             textView1.setText(r);
                                            // setCounter(textView1, 0f, 0f);
@@ -935,10 +969,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         } else textView1.setText("");
                                     }
 
-                                    if (counter == 2) {
-                                        TextView textView2 = (TextView) layout1.getChildAt(2);
+                                    if (counter == 2)
+                                    {
+                                        TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                                         textView2.setText(sym.get(l));
-                                        TextView textView3 = (TextView) layout1.getChildAt(3);
+                                        TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                                         if (pre.size() > l && am.size() > l) {
                                             String r = returnFromPower(pre.get(l), am.get(l));
                                             textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));

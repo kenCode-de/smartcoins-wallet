@@ -2,81 +2,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-    xmlns:counter="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical">
+
+
     <LinearLayout
+        android:id="@+id/balances_row"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:paddingLeft="10sp"
-        android:paddingRight="10sp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:weightSum="4">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textColor="@color/green"
-            android:text=""/>
 
-        <TextView
+        <LinearLayout
+            android:layout_marginRight="5dp"
+            android:id="@+id/first_child_balances_row"
+            android:layout_weight="2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:textColor="@color/green"
-            android:text=""/>
-<!--        <com.github.premnirmal.textcounter.CounterView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:textColor="@color/green"
-            counter:autoStart="false"
-            counter:timeInterval="2"
-            counter:prefix=""
-            counter:suffix=""
-            android:text=""
-            counter:type="both"
-            />-->
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="@color/green"
-            android:text=""/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-        <TextView
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/symbol_child_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="17dp"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/green"
+                    android:text="BTS"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/amount_child_one"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="17dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/green"
+                    android:text="0.005"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/fait_child_one"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textColor="@color/green"
+                android:text=""/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginRight="5dp"
+            android:id="@+id/second_child_balances_row"
+            android:layout_weight="2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            android:layout_gravity="center"
-            android:textSize="17dp"
-            android:textColor="@color/green"
-            android:text=""/>
-        <!--<com.github.premnirmal.textcounter.CounterView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1.2"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textSize="17dp"-->
-            <!--android:textColor="@color/green"-->
-            <!--counter:autoStart="false"-->
-            <!--counter:timeInterval="2"-->
-            <!--counter:prefix=""-->
-            <!--counter:suffix=""-->
-            <!--android:text=""-->
-            <!--counter:type="both"-->
-            <!--/>-->
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/symbol_child_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="17dp"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:textColor="@color/green"
+                    android:text="BTS"
+                    android:paddingRight="5dp"
+                    android:paddingEnd="5dp"/>
+
+                <TextView
+                    android:id="@+id/amount_child_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textSize="17dp"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/green"
+                    android:text="0.005"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/fait_child_two"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textColor="@color/green"
+                android:text=""/>
+        </LinearLayout>
+
+
+
     </LinearLayout>
     <View
         android:layout_width="match_parent"
