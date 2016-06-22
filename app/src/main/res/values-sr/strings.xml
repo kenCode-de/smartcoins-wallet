@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">име налога би требао имати барем један -</string>
     <string name="default_currency">ЕУР</string>
     <string name="account_already_exist">Аццоунт већ постоји</string>
+    <string name="txt_back">Назад</string>
+    <string name="please_pay">Молимо вас да обратите</string>
+    <string name="transfer_funds">преноса средстава</string>
+    <string name="unable_to_process">У могућности да обрадимо</string>
+    <string name="cancel">ЦАНЦЕЛ</string>
 
 </resources>

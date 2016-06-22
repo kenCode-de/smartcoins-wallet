@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Numele de cont Shoud au cel puțin un -</string>
     <string name="default_currency">EURO</string>
     <string name="account_already_exist">Există deja cont</string>
+    <string name="txt_back">Înapoi</string>
+    <string name="please_pay">Te rog plateste</string>
+    <string name="transfer_funds">transferul de fonduri</string>
+    <string name="unable_to_process">Imposibilitatea de a procesa</string>
+    <string name="cancel">ANULARE</string>
 
 </resources>

@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">hesap adı en az bir tane var shoud -</string>
     <string name="default_currency">avro</string>
     <string name="account_already_exist">zaten mevcut Hesap</string>
+    <string name="txt_back">Arka</string>
+    <string name="please_pay">Lütfen öde</string>
+    <string name="transfer_funds">Fon aktarma</string>
+    <string name="unable_to_process">işlem yapılamıyor</string>
+    <string name="cancel">İPTAL ETMEK</string>
 
 </resources>

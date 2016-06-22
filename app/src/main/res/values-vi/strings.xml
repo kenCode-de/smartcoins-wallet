@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Tên tài khoản shoud có ít nhất một -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Tài khoản đã tồn tại</string>
+    <string name="txt_back">Trở lại</string>
+    <string name="please_pay">Vui long thanh toan</string>
+    <string name="transfer_funds">chuyển Quỹ</string>
+    <string name="unable_to_process">Không thể xử lý</string>
+    <string name="cancel">CANCEL</string>
 
 </resources>

@@ -164,4 +164,10 @@
 <string name="add_contact_activity_name">Lägg till kontakt</string>
 <string name="str_trade_not_available">Handel Inte tillgänglig</string>
     <string name="preferred_lang">Önskat språk</string>
+    <string name="txt_back">Tillbaka</string>
+    <string name="please_pay">Vänligen betala</string>
+    <string name="transfer_funds">överföring av medel</string>
+    <string name="unable_to_process">Det går inte att bearbeta</string>
+    <string name="cancel">ANNULLERA</string>
+
 </resources>

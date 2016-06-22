@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Ім\'я облікового запису Шоуду мають принаймні один -</string>
     <string name="default_currency">Євро</string>
     <string name="account_already_exist">Рахунок вже існують</string>
+    <string name="txt_back">назад</string>
+    <string name="please_pay">Будь ласка, зверніть</string>
+    <string name="transfer_funds">перерахування коштів</string>
+    <string name="unable_to_process">неможливо обробити</string>
+    <string name="cancel">СКАСУВАННЯ</string>
 
 </resources>

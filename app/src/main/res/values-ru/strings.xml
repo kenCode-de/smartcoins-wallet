@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Имя учетной записи Шоуда имеют по крайней мере один -</string>
     <string name="default_currency">евро</string>
     <string name="account_already_exist">Аккаунт уже существует</string>
+    <string name="txt_back">назад</string>
+    <string name="please_pay">Пожалуйста оплатите</string>
+    <string name="transfer_funds">перечислении средств</string>
+    <string name="unable_to_process">Невозможно обработать</string>
+    <string name="cancel">ОТМЕНА</string>
 
 </resources>

@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">nama akaun shoud mempunyai atleast satu -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Akaun sudah wujud</string>
+    <string name="txt_back">Kembali</string>
+    <string name="please_pay">Sila beri</string>
+    <string name="transfer_funds">memindahkan Dana</string>
+    <string name="unable_to_process">Tidak dapat memproses</string>
+    <string name="cancel">CANCEL</string>
 
 </resources>

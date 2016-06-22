@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Názov účtu mela mať aspoň jedno -</string>
     <string name="default_currency">eur</string>
     <string name="account_already_exist">Účet už existujú</string>
+    <string name="txt_back">späť</string>
+    <string name="please_pay">venujte</string>
+    <string name="transfer_funds">prenos fondy</string>
+    <string name="unable_to_process">nemožno spracovať</string>
+    <string name="cancel">ZRUŠIŤ</string>
 
 </resources>

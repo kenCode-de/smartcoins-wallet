@@ -165,5 +165,10 @@
     <string name="account_name_shoud_have">ชื่อบัญชี shoud มีอย่างน้อยหนึ่ง -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">บัญชีที่มีอยู่แล้ว</string>
+    <string name="txt_back">กลับ</string>
+    <string name="please_pay">กรุณาชำระเงิน</string>
+    <string name="transfer_funds">การโอนเงิน</string>
+    <string name="unable_to_process">ไม่สามารถดำเนินการ</string>
+    <string name="cancel">ยกเลิก</string>
 
 </resources>

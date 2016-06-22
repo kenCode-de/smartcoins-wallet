@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">Nazwa konta Powinni mieć conajmniej jedno -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Konto już istnieje</string>
+    <string name="txt_back">Plecy</string>
+    <string name="please_pay">Proszę zapłacić</string>
+    <string name="transfer_funds">Przekazanie środków</string>
+    <string name="unable_to_process">Nie można przetworzyć</string>
+    <string name="cancel">ANULUJ</string>
 
 </resources>

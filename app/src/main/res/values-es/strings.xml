@@ -164,5 +164,10 @@
     <string name="account_name_shoud_have">nombre de cuenta shoud tiene al menos uno -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">La cuenta ya existe</string>
+    <string name="txt_back">Espalda</string>
+    <string name="please_pay">Por favor pague</string>
+    <string name="transfer_funds">La transferencia de fondos</string>
+    <string name="unable_to_process">No se puede procesar</string>
+    <string name="cancel">CANCELAR</string>
 
 </resources>
