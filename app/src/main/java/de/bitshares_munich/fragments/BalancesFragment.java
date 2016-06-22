@@ -1341,14 +1341,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         return !checkAccountName.equals(to);
     }
 
-    private void showDialogHelp() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(getString(R.string.help_title));
-        alert.setMessage(getString(R.string.help_message));
-        alert.setPositiveButton(getString(R.string.got_it), null);
-        alert.show();
-    }
-
     private void showHideLifeTime(final Boolean show) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -1445,20 +1437,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         showHideLifeTime(true);
-    }
-
-    private String removeSpecialCharacters(String text) {
-        //Farsi and arabic
-        String inputNumber = text;
-        String dot = String.valueOf(Helper.setDecimalSeparator(locale));
-        inputNumber = inputNumber.replace("٬", "");
-        inputNumber = inputNumber.replace(String.valueOf((char) 160), "");
-        if (dot.equals(",")) {
-            inputNumber = inputNumber.replace(".", "");
-        } else if (dot.equals(".")) {
-            inputNumber = inputNumber.replace(",", "");
-        }
-        return inputNumber;
     }
 
     private float convertLocalizeStringToFloat(String text) {
