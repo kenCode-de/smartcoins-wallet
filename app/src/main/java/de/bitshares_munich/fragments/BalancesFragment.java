@@ -1,5 +1,7 @@
 package de.bitshares_munich.fragments;
 
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -563,12 +565,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         if (count > 0) BalanceAssetsUpdate(sym, pre, am);
     }
 
-    /*public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am,final Boolean onStartUp)
-    {
-        SupportMethods.testing("Assets", "Assets views 4", "Asset Activity");
-        BalanceAssetsUpdate(sym, pre, am, false);
-    }
-    */
 
     private void getEquivalentComponents(ArrayList<AccountAssets> accountAssets) {
         String faitCurrency = Helper.getFadeCurrency(getContext());
@@ -777,7 +773,28 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         rcvBtn.startAnimation(rotAnim);
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    private void animateText(final TextView tvCounter, float value)
+    {
+        ValueAnimator animator = new ValueAnimator();
+        animator.setFloatValues(0.1f, value);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animateValue = Float.parseFloat(String.valueOf(animation.getAnimatedValue()));
+                tvCounter.setText(Helper.setLocaleNumberFormat(locale, animateValue));
+            }
+        });
+        animator.setEvaluator(new TypeEvaluator<Float>() {
+            public Float evaluate(float fraction, Float startValue, Float endValue) {
+                return startValue + (endValue - startValue) * fraction;
+            }
+        });
+        animator.setDuration(4000);
+        animator.start();
+    }
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
+    {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
 
@@ -823,17 +840,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                     float amount_d = convertLocalizeStringToFloat(amount);
 
-                                    if (txtAmount_d > amount_d) {
+                                    // Balance is sent
+                                    if (txtAmount_d > amount_d)
+                                    {
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.red));
                                     }
 
-                                    if (amount_d > txtAmount_d) {
+                                    // Balance is rcvd
+                                    if (amount_d > txtAmount_d)
+                                    {
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
+                                        //animateText(tvAmOne,amount_d);
                                         // run animation
                                         final Runnable rotateTask = new Runnable() {
                                             @Override
@@ -857,10 +879,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         handler.postDelayed(rotateTask, 200);
                                     }
 
-                                    tvAmOne.setText(String.format(locale, "%.4f", amount_d));
-                                   // setCounter(tvAmOne, txtAmount_d, amount_d);
+                                    animateText(tvAmOne,amount_d);
+                                    //tvAmOne.setText(String.format(locale, "%.4f", amount_d));
+                                    // setCounter(tvAmOne, txtAmount_d, amount_d);
                                     final TextView cView = tvAmOne;
                                     final Handler handler = new Handler();
+
                                     final Runnable updateTask = new Runnable() {
                                         @Override
                                         public void run() {
@@ -911,7 +935,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
                                     }
 
-                                    tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
+                                    //tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
+                                    animateText(tvAmtwo,amount_d);
                                    // setCounter(tvAmtwo, txtAmount_d, amount_d);
                                     final TextView cView = tvAmtwo;
                                     final Handler handler = new Handler();
@@ -1010,6 +1035,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
 
         });
+
+
+
+        /*
+        // Dummy balance load
+        final Runnable rotateTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                for(int i = 0 ; i < am.size(); i ++)
+                {
+                    String amount = am.get(i);
+                    int amountF = convertLocalizeStringToInt(amount);
+
+                    if ( amountF > 10 )
+                    amountF -= 10;
+
+                    String newAmount =String.format(Locale.ENGLISH,"%d",amountF);
+                    am.set(i,newAmount);
+                }
+                BalanceAssetsUpdate(sym, pre, am);
+            }
+        };
+        handler.postDelayed(rotateTask, 10000);
+        */
     }
 
 
@@ -1531,6 +1581,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 NumberFormat format = NumberFormat.getInstance(locale);
                 Number number = format.parse(text);
                 txtAmount_d = number.doubleValue();
+
+            } catch (Exception e1) {
+
+            }
+        }
+        return txtAmount_d;
+    }
+
+    private int convertLocalizeStringToInt(String text) {
+        int txtAmount_d = 0;
+        try {
+            NumberFormat format = NumberFormat.getInstance(Locale.ENGLISH);
+            Number number = format.parse(text);
+            txtAmount_d = number.intValue();
+        } catch (Exception e) {
+            try {
+                NumberFormat format = NumberFormat.getInstance(locale);
+                Number number = format.parse(text);
+                txtAmount_d = number.intValue();
 
             } catch (Exception e1) {
 
