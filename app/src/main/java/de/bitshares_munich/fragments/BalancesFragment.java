@@ -1,5 +1,6 @@
 package de.bitshares_munich.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -176,14 +177,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
         application.registerAssetDelegate(this);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
@@ -228,8 +231,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         return rootView;
     }
 
-    private void setSortableTableViewHeight(View rootView, Handler handler, Runnable task) {
-        try {
+    private void setSortableTableViewHeight(View rootView, Handler handler, Runnable task)
+    {
+        try
+        {
             View scrollViewBalances = rootView.findViewById(R.id.scrollViewBalances);
             int height1 = scrollViewBalances.getHeight();
 
@@ -247,7 +252,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             Log.d("setSortableHeight", "View Heght : " + Integer.toString(params.height));
             tableViewparent.setLayoutParams(params);
             Log.d("setSortableHeight", "View Heght Set");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Log.d("List Height", e.getMessage());
             handler.postDelayed(task, 2000);
         }
@@ -383,17 +390,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         btnDone.setText(getString(R.string.next));
 
         btnDone.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StringFormatInvalid")
             @Override
             public void onClick(View v) {
                 //Check Balance
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), tvAccountName.getText().toString()));
+                    alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), tvAccountName.getText()));
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_back));
                 } else {
                     dialog.cancel();
                     ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                    ;
+
                     try {
                         for (int i = 0; i < accountDetails.size(); i++) {
                             if (accountDetails.get(i).isSelected) {
@@ -779,12 +787,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 String txtSymbol = tvSymOne.getText().toString();
                                 String txtAmount = tvAmOne.getText().toString().split("\\[")[0];
-                                ;
+
 
                                 if (!symbol.equals(txtSymbol))
+                                {
                                     tvSymOne.setText(symbol);
-                                if (!amount.equals(txtAmount)) {
+                                }
 
+                                if (!amount.equals(txtAmount))
+                                {
                                     float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                     float amount_d = convertLocalizeStringToFloat(amount);
 
@@ -802,12 +813,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         // run animation
                                         final Runnable rotateTask = new Runnable() {
                                             @Override
-                                            public void run() {
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    public void run() {
-                                                        rotateRecieveButton();
-                                                    }
-                                                });
+                                            public void run()
+                                            {
+                                                try
+                                                {
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        public void run() {
+                                                            rotateRecieveButton();
+                                                        }
+                                                    });
+                                                }
+                                                catch (Exception e)
+                                                {
+
+                                                }
                                             }
                                         };
 
@@ -1084,21 +1103,27 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     }
 
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue)
+    {
         try {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    if (myTransactions.size() == 0) {
-                        saveTransactions(transactionDetails);
-                        //myTransactions.clear();
-                    }
 
-                    if (number_of_transactions_in_queue < 25) {
+                    if (number_of_transactions_in_queue == 0)
+                    {
                         load_more_values.setVisibility(View.GONE);
-                    } else {
+                    }
+                    else
+                    {
                         load_more_values.setVisibility(View.VISIBLE);
                         load_more_values.setEnabled(true);
                     }
+
+                    if (myTransactions.size() == 0)
+                    {
+                        saveTransactions(transactionDetails);
+                    }
+
                     myTransactions.addAll(transactionDetails);
                     tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                     progressBar.setVisibility(View.GONE);
@@ -1114,7 +1139,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     public void Load_more_Values() {
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded,25);
         number_of_transactions_loaded = number_of_transactions_loaded + 25;
     }
 
@@ -1285,24 +1310,26 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         new AssestsActivty(getContext(), to, this);
         number_of_transactions_loaded = 0;
-        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded);
-        number_of_transactions_loaded = number_of_transactions_loaded + 25;
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded,5);
+        number_of_transactions_loaded = number_of_transactions_loaded + 5;
     }
 
     void loadBasic() {
         isLoading = false;
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-        if (accountDetails.size() == 1) {
+        if (accountDetails.size() == 1)
+        {
             accountDetailsId = 0;
             accountDetails.get(0).isSelected = true;
             to = accountDetails.get(0).account_name;
             accountId = accountDetails.get(0).account_id;
             wifkey = accountDetails.get(0).wif_key;
             showHideLifeTime(accountDetails.get(0).isLifeTime);
-
             tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        } else {
+        }
+        else
+        {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     accountDetailsId = i;

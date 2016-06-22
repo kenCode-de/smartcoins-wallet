@@ -80,22 +80,33 @@ public class TransactionActivity implements BalancesDelegate {
     HashMap<String,String> Names_from_Api = new HashMap<>();
     HashMap<String,HashMap<String,String>> Symbols_Precisions = new HashMap<>();
     String wifkey;
-    public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key , int number_of_transactions_loaded){
+
+    public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key , int number_of_transactions_loaded, int numberOfTransactionsToLoad)
+    {
         context = c;
         assetDelegate = instance;
         balancesDelegate = this;
         application.registerBalancesDelegate(this);
         accountid = account_id;
-        try{
-        wifkey = Crypt.getInstance().decrypt_string(wif_key);}
-        catch (Exception e){
-         //   testing("namak",e,"wifkey");
-        };
         timestamp = new HashMap<>();
+
+        try
+        {
+            wifkey = Crypt.getInstance().decrypt_string(wif_key);
+        }
+        catch (Exception e)
+        {
+            //testing("namak",e,"wifkey");
+        }
+
         if(account_id!=null)
-        get_relative_account_history(account_id,"8",number_of_transactions_loaded);
+        {
+            get_relative_account_history(account_id, "8", number_of_transactions_loaded,numberOfTransactionsToLoad );
+        }
     }
-    void get_relative_account_history(final String account_id, final String id,final int n) {
+
+    void get_relative_account_history(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad)
+    {
 
         final Handler handler = new Handler();
 
@@ -104,18 +115,18 @@ public class TransactionActivity implements BalancesDelegate {
             public void run() {
                 if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
                 {
-                        int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0,25,"+n+"]]}";
-                        Application.webSocketG.send(getDetails);
+                    int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
+                    Application.webSocketG.send(getDetails);
                 }
-                else {
-                    get_relative_account_history(account_id,id,n);
-
+                else
+                {
+                    get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
                 }
             }
         };
 
-        handler.postDelayed(updateTask, 1000);
+        handler.postDelayed(updateTask, 100);
     }
 
     @Override
@@ -124,11 +135,13 @@ public class TransactionActivity implements BalancesDelegate {
             onFirstCall(s);
         }
         if(id==9){
-            if(id_in_work<id_total_size) {
+            if(id_in_work<id_total_size)
+            {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                 String time = SupportMethods.ParseJsonObject(result,"timestamp");
                 timestamp.put(Integer.toString(id_in_work),time);
-                if(id_in_work==(id_total_size-1)){
+                if(id_in_work==(id_total_size-1))
+                {
                     names_in_work=0;
                     get_names(ofNames.get(names_in_work),"10");
                 }
@@ -169,9 +182,11 @@ public class TransactionActivity implements BalancesDelegate {
 
                     HashMap<String,String> def = new HashMap<>();
                     memo_in_work = 0;
-                    if(memos.size()>0){
-                    def = memos.get(memo_in_work);
-                    decodeMemo(def.get("memo"),def.get("memo_id"));}
+                    if(memos.size()>0)
+                    {
+                        def = memos.get(memo_in_work);
+                        decodeMemo(def.get("memo"),def.get("memo_id"));
+                    }
                     else onLastCall();
                 }
                 assets_id_in_work++;
@@ -179,23 +194,27 @@ public class TransactionActivity implements BalancesDelegate {
             }
         }
     }
+
     void onFirstCall(String s) {
         String result = SupportMethods.ParseJsonObject(s, "result");
-//        int totalarrays = TotalArraysOfObj(result);
         int totalarrays = SupportMethods.TotalArraysOfObj(result);
-        if(totalarrays!=-1) {
-            for (int i = 0; i < totalarrays; i++) {
-//                eRecipts.put(Integer.toString(i),returnArrayObj(result,i));
+
+        if(totalarrays!=-1)
+        {
+            for (int i = 0; i < totalarrays; i++)
+            {
                 eRecipts.put(Integer.toString(i),SupportMethods.ParseObjectFromJsonArray(result,i));
             }
         }
-       // testing("special",eRecipts,"eRecipts");
+
         HashMap<String, ArrayList<String>> arrayofOP = SupportMethods.ParseJsonArray(result, "op");
         HashMap<String, ArrayList<String>> arrayofblock_num = SupportMethods.ParseJsonArray(result, "block_num");
+
         blocks = arrayofblock_num.get("block_num");
         number_of_transactions_in_queue = arrayofOP.get("op").size();
-        for (int i = 0; i < arrayofOP.get("op").size(); i++) {
-//            String breakArray = returnArrayObj(arrayofOP.get("op").get(i), 1);
+
+        for (int i = 0; i < arrayofOP.get("op").size(); i++)
+        {
             String breakArray = SupportMethods.ParseObjectFromJsonArray(arrayofOP.get("op").get(i), 1);
             HashMap<String, String> mapof_All = new HashMap<>();
             String parseOfamount = SupportMethods.ParseJsonObject(breakArray, "amount");
@@ -221,21 +240,14 @@ public class TransactionActivity implements BalancesDelegate {
             arrayof_Amount_AssetId.put(Integer.toString(i), mapof_All);
         }
 
-
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         hashSet.addAll(ofNames);
         ofNames.clear();
         ofNames.addAll(hashSet);
-
         names_total_size = ofNames.size();
-
         assets_id_total_size = asset_ids.size();
-
         id_total_size = blocks.size();
-
         memo_total_size = memos.size();
-
-
         id_in_work = 0;
         get_Time(blocks.get(id_in_work),"9");
     }
@@ -346,13 +358,13 @@ public class TransactionActivity implements BalancesDelegate {
 
     void get_Time(String block_num,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-      //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
+        //{"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
         Application.webSocketG.send(getDetails);
     }
     void get_names(String name_id,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-        //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
+        //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
         Application.webSocketG.send(getDetails);
     }
@@ -373,14 +385,21 @@ public class TransactionActivity implements BalancesDelegate {
         int lineNumber = stackTrace[stackTrace.length - 1].getLineNumber();
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
     }
-    void onLastCall(){
+
+    void onLastCall()
+    {
         Boolean isDonate = false;
         ArrayList<TransactionDetails> transactionDetails = new ArrayList<>();
-        if(Helper.containKeySharePref(context, "hide_donations")){
+
+        if(Helper.containKeySharePref(context, "hide_donations"))
+        {
             isDonate = Helper.fetchBoolianSharePref(context,"hide_donations");
         }
-        for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++) {
-            try {
+
+        for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++)
+        {
+            try
+            {
                 HashMap<String, String> mapof_All = new HashMap<>();
                 mapof_All = arrayof_Amount_AssetId.get(Integer.toString(i));
                 String Date = timestamp.get(Integer.toString(i));
@@ -417,98 +436,102 @@ public class TransactionActivity implements BalancesDelegate {
                     transactionDetails.add(object);
                 }
 
-            }catch(Exception e) {
+            }
+            catch(Exception e) {
                 testing("error", e, "Try,Catch");
             }
         }
         getEquivalentComponents(transactionDetails);
     }
-//    String returnFromPower(String i,String str){
-//        Double ok = 1.0;
-//        Double pre = Double.valueOf(i);
-//        Double value = Double.valueOf(str);
-//        for(int k = 0 ; k<pre ; k++ ){
-//            ok = ok*10;
-//        }
-//        return  Double.toString(value/ok);
-//    }
-    private void getEquivalentComponents(final ArrayList<TransactionDetails> transactionDetailses) {
-    String faitCurrency = Helper.getFadeCurrency(context);
-    if (faitCurrency.isEmpty()) {
-        faitCurrency = context.getString(R.string.default_currency);
-    }
-    String values = "";
-    for (int i = 0; i < transactionDetailses.size(); i++) {
-        TransactionDetails transactionDetails = transactionDetailses.get(i);
-        if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
-            values += transactionDetails.assetSymbol.toString() + ":" + faitCurrency + ",";
-        }
-    }
-    HashMap<String, String> hashMap = new HashMap<>();
-    hashMap.put("method", "equivalent_component");
-    hashMap.put("values", values.substring(0, values.length() - 1));
 
-    ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-    IWebService service = sg.getService(IWebService.class);
-    final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+    private void getEquivalentComponents(final ArrayList<TransactionDetails> transactionDetailses)
+    {
+        String faitCurrency = Helper.getFadeCurrency(context);
+
+        if (faitCurrency.isEmpty())
+        {
+            faitCurrency = context.getString(R.string.default_currency);
+        }
+
+        String values = "";
+        for (int i = 0; i < transactionDetailses.size(); i++) {
+            TransactionDetails transactionDetails = transactionDetailses.get(i);
+            if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
+                values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
+            }
+        }
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("method", "equivalent_component");
+        hashMap.put("values", values.substring(0, values.length() - 1));
+
+        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
         finalFaitCurrency = faitCurrency;
 
         postingService.enqueue(new Callback<EquivalentComponentResponse>() {
-        @Override
-        public void onResponse(Response<EquivalentComponentResponse> response) {
-            if (response.isSuccess()) {
-                EquivalentComponentResponse resp = response.body();
-                if (resp.status.equals("success")) {
-                    try {
-                        JSONObject rates = new JSONObject(resp.rates);
-                        Iterator<String> keys = rates.keys();
-                        HashMap hm = new HashMap();
-                        while (keys.hasNext()) {
-                            String key = keys.next();
-                            hm.put(key.split(":")[0], rates.get(key));
-                        }
+            @Override
+            public void onResponse(Response<EquivalentComponentResponse> response) {
+                if (response.isSuccess()) {
+                    EquivalentComponentResponse resp = response.body();
+                    if (resp.status.equals("success")) {
                         try {
-                            for (int i = 0; i < transactionDetailses.size(); i++) {
-                                String asset = transactionDetailses.get(i).getAssetSymbol();
-                                String amount = String.valueOf(transactionDetailses.get(i).getAmount());
-                                if (!amount.isEmpty() && hm.containsKey(asset)) {
-                                    Currency currency = Currency.getInstance(finalFaitCurrency);
-                                    Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
-                                    transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
-                                    transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
-                                }
-
+                            JSONObject rates = new JSONObject(resp.rates);
+                            Iterator<String> keys = rates.keys();
+                            HashMap hm = new HashMap();
+                            while (keys.hasNext()) {
+                                String key = keys.next();
+                                hm.put(key.split(":")[0], rates.get(key));
                             }
+                            try
+                            {
+                                for (int i = 0; i < transactionDetailses.size(); i++)
+                                {
+                                    String asset = transactionDetailses.get(i).getAssetSymbol();
+                                    String amount = String.valueOf(transactionDetailses.get(i).getAmount());
+
+                                    if (!amount.isEmpty() && hm.containsKey(asset))
+                                    {
+                                        Currency currency = Currency.getInstance(finalFaitCurrency);
+                                        Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+                                        transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
+                                        transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+                                    }
+
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                testing("trasac",e, "found,found");
+                            }
+                            assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
                         }
-                        catch (Exception e){
+                        catch (JSONException e)
+                        {
                             testing("trasac",e, "found,found");
                         }
-                        assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
-
-
-                    } catch (JSONException e) {
-                        testing("trasac",e, "found,found");
-                    }
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
-                } else {
-                    testing("trasac","1", "found,found");
-
+                    }
+                    else
+                    {
+                        testing("trasac","1", "found,found");
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-            } else {
-                testing("trasac","2", "found,found");
-
-                Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                else
+                {
+                    testing("trasac","2", "found,found");
+                    Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                }
             }
-        }
 
-        @Override
-        public void onFailure(Throwable t) {
-            Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-        }
-    });
-}
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+            }
+
+        });
+    }
 
 
 }
