@@ -1447,6 +1447,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         showHideLifeTime(true);
     }
 
+    private String removeSpecialCharacters(String text) {
+        //Farsi and arabic
+        String inputNumber = text;
+        String dot = String.valueOf(Helper.setDecimalSeparator(locale));
+        inputNumber = inputNumber.replace("٬", "");
+        inputNumber = inputNumber.replace(String.valueOf((char) 160), "");
+        if (dot.equals(",")) {
+            inputNumber = inputNumber.replace(".", "");
+        } else if (dot.equals(".")) {
+            inputNumber = inputNumber.replace(",", "");
+        }
+        return inputNumber;
+    }
+
     private float convertLocalizeStringToFloat(String text) {
         float txtAmount_d = 0;
         try {

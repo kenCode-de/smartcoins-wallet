@@ -221,10 +221,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 100);
             }
         }, 100);
-
-        if (Helper.fetchBoolianSharePref(this, "require_pin")) {
-            showDialogPin();
-        }
     }
 
     void init() {
@@ -435,11 +431,19 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (validateSend()) {
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
-                String transferFunds = this.getString(R.string.transfer_funds) + "...";
-                showDialog("", transferFunds);
-                tradeAsset();
+                if (Helper.fetchBoolianSharePref(this, "require_pin")) {
+                    showDialogPin(true);
+                } else {
+                    String transferFunds = this.getString(R.string.transfer_funds) + "...";
+                    showDialog("", transferFunds);
+                    tradeAsset();
+                }
             } else {
-                sendFunds(false);
+                if (Helper.fetchBoolianSharePref(this, "require_pin")) {
+                    showDialogPin(false);
+                } else {
+                    sendFunds(false);
+                }
             }
         }
     }
@@ -464,6 +468,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //    }
 
     public void sendFunds(boolean isTrade) {
+
         String transferFunds = this.getString(R.string.transfer_funds) + "...";
         showDialog("", transferFunds);
         if (isTrade) {
@@ -1331,8 +1336,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         init();
     }
 
-    // Block for pin
-    private void showDialogPin() {
+    private void showDialogPin(final Boolean fundTransfer) {
         if (Helper.containKeySharePref(getApplicationContext(), getApplicationContext().getString(R.string.txt_pin))) {
             final Dialog dialog = new Dialog(SendScreen.this);
             //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
@@ -1347,6 +1351,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
                     if (etPin.getText().toString().equals(savedPIN)) {
                         dialog.cancel();
+                        if (fundTransfer) {
+                            String transferFunds = getString(R.string.transfer_funds) + "...";
+                            showDialog("", transferFunds);
+                            tradeAsset();
+                        } else {
+                            sendFunds(false);
+                        }
+
+
                     } else {
                         // Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
                     }
