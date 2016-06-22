@@ -349,6 +349,7 @@
                     android:layout_below="@+id/llLoyalty"
                     android:gravity="right"
                     android:text="nn FABLES is available"
+                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="15sp"
                     android:visibility="gone"
                 />
@@ -422,6 +423,7 @@
                     android:gravity="right"
                     android:text="nn OBITS is available"
                     android:textSize="15sp"
+                    android:textColor="@android:color/holo_red_dark"
                     android:visibility="gone"
                 />
                 <TextView
