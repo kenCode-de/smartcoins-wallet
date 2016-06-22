@@ -432,7 +432,6 @@ public class TransactionActivity implements BalancesDelegate {
 //        }
 //        return  Double.toString(value/ok);
 //    }
-
     private void getEquivalentComponents(final ArrayList<TransactionDetails> transactionDetailses) {
     String faitCurrency = Helper.getFadeCurrency(context);
     if (faitCurrency.isEmpty()) {
@@ -510,5 +509,6 @@ public class TransactionActivity implements BalancesDelegate {
         }
     });
 }
+
 
 }

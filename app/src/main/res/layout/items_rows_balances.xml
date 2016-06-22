@@ -22,15 +22,15 @@
             android:textColor="@color/green"
             android:text=""/>
 
-        <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1.2"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textSize="17dp"-->
-            <!--android:textColor="@color/green"-->
-            <!--android:text=""/>-->
-        <com.github.premnirmal.textcounter.CounterView
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:layout_gravity="center"
+            android:textSize="17dp"
+            android:textColor="@color/green"
+            android:text=""/>
+<!--        <com.github.premnirmal.textcounter.CounterView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
@@ -43,7 +43,7 @@
             counter:suffix=""
             android:text=""
             counter:type="both"
-            />
+            />-->
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -55,28 +55,28 @@
             android:textColor="@color/green"
             android:text=""/>
 
-        <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1.2"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:textSize="17dp"-->
-            <!--android:textColor="@color/green"-->
-            <!--android:text=""/>-->
-        <com.github.premnirmal.textcounter.CounterView
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:layout_gravity="center"
             android:textSize="17dp"
             android:textColor="@color/green"
-            counter:autoStart="false"
-            counter:timeInterval="2"
-            counter:prefix=""
-            counter:suffix=""
-            android:text=""
-            counter:type="both"
-            />
+            android:text=""/>
+        <!--<com.github.premnirmal.textcounter.CounterView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1.2"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:textSize="17dp"-->
+            <!--android:textColor="@color/green"-->
+            <!--counter:autoStart="false"-->
+            <!--counter:timeInterval="2"-->
+            <!--counter:prefix=""-->
+            <!--counter:suffix=""-->
+            <!--android:text=""-->
+            <!--counter:type="both"-->
+            <!--/>-->
     </LinearLayout>
     <View
         android:layout_width="match_parent"

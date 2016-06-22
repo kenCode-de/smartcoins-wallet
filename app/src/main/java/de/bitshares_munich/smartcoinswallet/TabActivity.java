@@ -140,7 +140,6 @@ public class TabActivity extends BaseActivity {
         startActivity(intent);
     }
 
-
     // Block for pin
     private void showDialogPin() {
         if (Helper.containKeySharePref(getApplicationContext(), getApplicationContext().getString(R.string.txt_pin))) {
