@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@color/pink"
-            android:padding="10dp"
+            android:padding="0dp"
             android:text="@string/cancel"
             android:stateListAnimator="@animator/my_animated_button"
             android:textColor="@color/white"/>
@@ -48,7 +48,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@color/green"
-            android:padding="10dp"
+            android:padding="0dp"
             android:stateListAnimator="@animator/my_animated_button"
             android:text="@string/done"
             android:textColor="@color/white"/>

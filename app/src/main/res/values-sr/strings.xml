@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Додај контакт</string>
 <string name="str_trade_not_available">Трговина није доступна</string>
     <string name="preferred_lang">Језик којем дајете предност</string>
+    <string name="got_it">Разумем</string>
+    <string name="upgrade_to_ltm">Упграде то ЛТМ</string>
+    <string formatted="false" name="help_message">Гет 80% Цасхбацк на таксама! Лифетиме Чланови (ЛТМ) да 80% Цасхбацк на сваком накнаде трансакције плаћају, и квалификује да зараде за упућивање приходе од корисника се региструју са или се односе на мрежу. Доживотна Чланство је сада под 20000 БТС!</string>
+    <string name="txt_yes">да</string>
+    <string name="txt_no">Не</string>
+    <string name="txt_confirmation">потврда</string>
+    <string name="txt_confirmation_msg">Да ли ти сигуран?</string>
+    <string name="txt_folder_name">Смартцоинс</string>
+    <string name="txt_folder_created">direktorijum је направљен</string>
+    <string name="upgrade_failed">Упграде није успела</string>
+    <string name="upgrade_success">успешно Упграде</string>
+    <string name="upgrading">Надоградња ...</string>
+    <string name="import_new_account">Увоз налога</string>
+    <string name="upgrade_account">Надоградња налога</string>
+    <string name="remove_account">УКЛОНЕ НАЛОГ</string>
+    <string name="txt_alertmsg">Да ли сте сигурни да избришете овај налог</string>
+    <string name="validation_in_progress">Валидација у току ..</string>
+    <string name="last_letter_cannot">последње писмо не може бити -</string>
+    <string name="account_name_shoud_have">име налога би требао имати барем један -</string>
+    <string name="default_currency">ЕУР</string>
+    <string name="account_already_exist">Аццоунт већ постоји</string>
+    <string name="txt_back">Назад</string>
+    <string name="please_pay">Молимо вас да обратите</string>
+    <string name="transfer_funds">преноса средстава</string>
+    <string name="unable_to_process">У могућности да обрадимо</string>
+    <string name="cancel">ЦАНЦЕЛ</string>
+
 </resources>

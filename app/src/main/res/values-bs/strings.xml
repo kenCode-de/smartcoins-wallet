@@ -144,4 +144,31 @@
 <string name="add_contact_activity_name">Dodaj kontakt</string>
 <string name="str_trade_not_available">Trade Nije na raspolaganju</string>
     <string name="preferred_lang">Preferirani jezik</string>
+    <string name="got_it">Evo ga</string>
+    <string name="upgrade_to_ltm">Nadogradnja na LTM</string>
+    <string formatted="false" name="help_message">Get 80% Cashback o naknadama! Životno Članovi (LTM) dobiti 80% cashback na svakom naknade transakcije plaćaju, i kvalificirati da zarade upućivanja prihoda od korisnika da se registrujete ili se odnose na mrežu. A Lifetime Članstvo je sada pod 20000 BTS!</string>
+    <string name="txt_yes">da</string>
+    <string name="txt_no">ne</string>
+    <string name="txt_confirmation">potvrda</string>
+    <string name="txt_confirmation_msg">Jesu li ti siguran?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">folder Kreirano</string>
+    <string name="upgrade_failed">Nadogradnja nije</string>
+    <string name="upgrade_success">Nadogradnja uspješno</string>
+    <string name="upgrading">Nadogradnja ...</string>
+    <string name="import_new_account">IMPORT RAČUNA</string>
+    <string name="upgrade_account">UPGRADE RAČUNA</string>
+    <string name="remove_account">Ukloni nalog</string>
+    <string name="txt_alertmsg">Jeste li sigurni da izbrišete ovaj račun</string>
+    <string name="validation_in_progress">Validacija u toku ..</string>
+    <string name="last_letter_cannot">poslednje pismo ne može biti -</string>
+    <string name="account_name_shoud_have">naziv računa Shoud imaju atleast jedan -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Nalog već postoje</string>
+    <string name="txt_back">natrag</string>
+    <string name="please_pay">Molimo vas da plati</string>
+    <string name="transfer_funds">prenosom sredstava</string>
+    <string name="unable_to_process">U nemogućnosti da obradi</string>
+    <string name="cancel">CANCEL</string>
+
 </resources>

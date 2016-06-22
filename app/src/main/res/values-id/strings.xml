@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Tambah kontak</string>
 <string name="str_trade_not_available">Perdagangan Tidak Tersedia</string>
     <string name="preferred_lang">Bahasa Preferred</string>
+    <string name="got_it">Mengerti</string>
+    <string name="upgrade_to_ltm">Upgrade ke LTM</string>
+    <string name="txt_back">Kembali</string>
+    <string name="please_pay">Tolong bayar</string>
+    <string name="transfer_funds">mentransfer Dana</string>
+    <string name="unable_to_process">Tidak dapat memproses</string>
+    <string name="cancel">MEMBATALKAN</string>
+    <string formatted="false" name="help_message">Dapatkan 80% Cashback Provisi! Anggota Lifetime (LTM) mendapatkan 80% cashback pada setiap biaya transaksi mereka membayar, dan memenuhi syarat untuk memperoleh pendapatan referral dari pengguna mereka mendaftar dengan atau merujuk ke jaringan. Sebuah Keanggotaan Lifetime sekarang di bawah 20.000 BTS!</string>
+    <string name="txt_yes">iya nih</string>
+    <string name="txt_no">Tidak</string>
+    <string name="txt_confirmation">Konfirmasi</string>
+    <string name="txt_confirmation_msg">Apa kamu yakin?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">folder Dibuat</string>
+    <string name="upgrade_failed">Upgrade gagal</string>
+    <string name="upgrade_success">meng-upgrade berhasil</string>
+    <string name="upgrading">Perbaikan…</string>
+    <string name="import_new_account">IMPOR ACCOUNT</string>
+    <string name="upgrade_account">ACCOUNT UPGRADE</string>
+    <string name="remove_account">MENGHAPUS AKUN</string>
+    <string name="txt_alertmsg">Apakah Anda yakin akan menghapus akun ini</string>
+    <string name="validation_in_progress">Validasi in progress ..</string>
+    <string name="last_letter_cannot">surat terakhir tidak bisa -</string>
+    <string name="account_name_shoud_have">Nama akun shoud memiliki minimal satu -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Akun telah ada</string>
+
 </resources>

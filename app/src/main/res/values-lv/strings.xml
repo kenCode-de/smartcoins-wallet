@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Pievienot Kontakti</string>
 <string name="str_trade_not_available">Tirdzniecība Nav pieejams</string>
     <string name="preferred_lang">vēlamā valoda</string>
+    <string name="got_it">Sapratu</string>
+    <string name="upgrade_to_ltm">Upgrade uz LTM</string>
+    <string name="txt_back">atpakaļ</string>
+    <string name="please_pay">Vēršam</string>
+    <string name="transfer_funds">pārskaitīt līdzekļus</string>
+    <string name="unable_to_process">Nevar apstrādāt</string>
+    <string name="cancel">CANCEL</string>
+    <string formatted="false" name="help_message">Saņemt 80% Cashback par maksām! Mūža locekļi (LTM) saņem 80% cashback par katru darījumu maksu viņi maksā, un pretendēt nopelnīt nodošanas ienākumus no lietotājiem Reģistrējoties vai attiecas uz tīklu. Lifetime Dalība tagad ir zem 20000 BTS!</string>
+    <string name="txt_yes">Jā</string>
+    <string name="txt_no">Nē</string>
+    <string name="txt_confirmation">apstiprinājums</string>
+    <string name="txt_confirmation_msg">Vai jūsu pārliecināts?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">mape Izveidots</string>
+    <string name="upgrade_failed">Upgrade neizdevās</string>
+    <string name="upgrade_success">Upgrade veiksmīgi</string>
+    <string name="upgrading">Modernizācija ...</string>
+    <string name="import_new_account">IMPORT KONTS</string>
+    <string name="upgrade_account">UPGRADE KONTS</string>
+    <string name="remove_account">NOŅEMT KONTS</string>
+    <string name="txt_alertmsg">Vai tiešām dzēst šo kontu</string>
+    <string name="validation_in_progress">Apstiprināšana notiek ..</string>
+    <string name="last_letter_cannot">pēdējais burts nevar būt -</string>
+    <string name="account_name_shoud_have">konta nosaukums protestu ir atleast viens -</string>
+    <string name="default_currency">eiro</string>
+    <string name="account_already_exist">Konts jau pastāv</string>
+
 </resources>

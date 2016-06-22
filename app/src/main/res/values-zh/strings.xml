@@ -144,4 +144,31 @@
 <string name="add_contact_activity_name">增加联系人</string>
 <string name="str_trade_not_available">交易不可</string>
     <string name="preferred_lang">首选语言</string>
+    <string name="got_it">得到它了</string>
+    <string name="upgrade_to_ltm">升级到LTM</string>
+    <string formatted="false" name="help_message">获得80％的现金返还的费用！终身会员（LTM）获得他们支付每笔交易手续费80％的现金返还，并有资格从他们与注册或指网络用户赚取收入转诊。终身会员目前正在20000 BTS！</string>
+    <string name="txt_yes">是</string>
+    <string name="txt_no">没有</string>
+    <string name="txt_confirmation">确认</string>
+    <string name="txt_confirmation_msg">是你确​​定吗？</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">创建文件夹</string>
+    <string name="upgrade_failed">升级失败</string>
+    <string name="upgrade_success">成功升级</string>
+    <string name="upgrading">升级...</string>
+    <string name="import_new_account">汇入帐户</string>
+    <string name="upgrade_account">升级帐户</string>
+    <string name="remove_account">删除帐户</string>
+    <string name="txt_alertmsg">你确定要删除该帐户</string>
+    <string name="validation_in_progress">验证正在进行中..</string>
+    <string name="last_letter_cannot">最后一个字母不能是 -</string>
+    <string name="account_name_shoud_have">账户名称768,16有用于至少一个 -</string>
+    <string name="default_currency">欧元</string>
+    <string name="account_already_exist">帐户已经存在</string>
+    <string name="txt_back">背部</string>
+    <string name="please_pay">请支付</string>
+    <string name="transfer_funds">转移资金</string>
+    <string name="unable_to_process">无法处理</string>
+    <string name="cancel">取消</string>
+
 </resources>

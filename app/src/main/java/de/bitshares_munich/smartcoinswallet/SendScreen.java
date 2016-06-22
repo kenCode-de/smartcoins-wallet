@@ -288,7 +288,27 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnItemSelected(R.id.spinnerFrom)
     void onItemSelected(int position) {
         if (!runningSpinerForFirstTime) {
-            populateAssetsSpinner();
+            if (requiredAmount == null) {
+                populateAssetsSpinner();
+            }else{
+                updateAmountStatus();
+                if (loyaltyAsset != null) {
+                    String selectedAccount = spinnerFrom.getSelectedItem().toString();
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        AccountDetails accountDetail = accountDetails.get(i);
+                        if (accountDetail.account_name.equals(selectedAccount)) {
+                            for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                                AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                                if (tempAccountAsset.id.equals(loyaltyAsset.id)) {
+                                    loyaltyAsset = accountDetail.AccountAssets.get(j);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                onLoyaltyChanged(etAmount.getText());
+            }
         } else {
             this.runningSpinerForFirstTime = false;
         }
@@ -406,7 +426,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (validateSend()) {
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
-                showDialog("", "Trading Funds...");
+                String transferFunds = this.getString(R.string.transfer_funds) + "...";
+                showDialog("",transferFunds);
                 tradeAsset();
             } else {
                 sendFunds(false);
@@ -434,7 +455,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //    }
 
     public void sendFunds(boolean isTrade){
-        showDialog("", "Transferring Funds...");
+        String transferFunds = this.getString(R.string.transfer_funds) + "...";
+        showDialog("", transferFunds);
         if (isTrade){
             Double tradeAmount = Double.parseDouble(etBackupAsset.getText().toString()) * backAssetRate;
             if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
@@ -452,12 +474,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String loyaltyAsset = tvLoyalty.getText().toString();
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
         }
-//        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-//            transferAmount("2", "BTS", "bitshares-munich");
-//        }
-        if (alwaysDonate) {
+        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
             transferAmount("2", "BTS", "bitshares-munich");
         }
+//        if (alwaysDonate) {
+//            transferAmount("2", "BTS", "bitshares-munich");
+//        }
     }
 
     private void selectedAccountAsset() {
@@ -563,21 +585,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void setCheckboxAvailabilty() {
-        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
-        }
-        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-            cbAlwaysDonate.setChecked(true);
-            alwaysDonate = true;
-        } else {
-            cbAlwaysDonate.setChecked(false);
-            alwaysDonate = false;
-        }
+//        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
+//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+//        }
+//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+//            cbAlwaysDonate.setChecked(true);
+//            alwaysDonate = true;
+//        } else {
+//            cbAlwaysDonate.setChecked(false);
+//            alwaysDonate = false;
+//        }
+//
+//
+//        cbAlwaysDonate.setVisibility(View.VISIBLE);
 
+        cbAlwaysDonate.setChecked(true);
+        alwaysDonate = cbAlwaysDonate.isChecked();
 
-        cbAlwaysDonate.setVisibility(View.VISIBLE);
-
-        //cbAlwaysDonate.setChecked(true);
     }
     @OnCheckedChanged(R.id.cbAlwaysDonate)
     public void cbAlwaysDonate(){
@@ -587,7 +611,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            alwaysDonate = false;
 //        }else {
 //            alwaysDonate = true;
-            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
+         //   Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
        // }
     }
     void setBackUpAsset() {
@@ -1032,7 +1056,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         catch (Exception e)
         {
-            Toast.makeText(getApplicationContext(),"Unable to process : " + e.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.unable_to_process +" : " + e.getMessage(),Toast.LENGTH_LONG).show();
         }
     }
 

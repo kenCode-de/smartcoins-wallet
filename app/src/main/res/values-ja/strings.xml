@@ -144,4 +144,31 @@
 <string name="add_contact_activity_name">連絡先の追加</string>
 <string name="str_trade_not_available">トレード不可</string>
     <string name="preferred_lang">言語の選択</string>
+    <string name="got_it">とった</string>
+    <string name="upgrade_to_ltm">LTMへのアップグレード</string>
+    <string name="txt_back">バック</string>
+    <string name="please_pay">お支払いください</string>
+    <string name="transfer_funds">資金の転送</string>
+    <string name="unable_to_process">処理できません</string>
+    <string name="cancel">キャンセル</string>
+    <string formatted="false" name="help_message">料金の80％キャッシュバックを！生涯メンバー（LTM）は、彼らが支払うすべての取引手数料に80％のキャッシュバックを取得し、彼らはに登録するか、ネットワークを参照し、ユーザーからの紹介の収入を得るために修飾します。生涯会員は20000 BTSの下になりました！</string>
+    <string name="txt_yes">はい</string>
+    <string name="txt_no">いいえ</string>
+    <string name="txt_confirmation">確認</string>
+    <string name="txt_confirmation_msg">本当ですか？</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">フォルダの作成</string>
+    <string name="upgrade_failed">アップグレードに失敗しました</string>
+    <string name="upgrade_success">正常にアップグレード</string>
+    <string name="upgrading">アップグレード...</string>
+    <string name="import_new_account">IMPORT口座</string>
+    <string name="upgrade_account">アカウントをアップグレード</string>
+    <string name="remove_account">アカウントを削除</string>
+    <string name="txt_alertmsg">このアカウントを削除してもよろしいです</string>
+    <string name="validation_in_progress">進行中の検証..</string>
+    <string name="last_letter_cannot">最後の文字にすることはできません -</string>
+    <string name="account_name_shoud_have">アカウント名は、少なくとも1つを持ってshoud -</string>
+    <string name="default_currency">ユーロ</string>
+    <string name="account_already_exist">アカウントがすでに存在しています</string>
+
 </resources>

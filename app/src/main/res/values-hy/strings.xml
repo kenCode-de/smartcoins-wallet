@@ -144,4 +144,31 @@
 <string name="add_contact_activity_name">Ավելացնել Կապ</string>
 <string name="str_trade_not_available">Առեւտրի Ոչ Հասանելի</string>
     <string name="preferred_lang">նախընտրելի Language</string>
+    <string name="got_it">Հասկացա</string>
+    <string name="upgrade_to_ltm">Upgrade է LTM</string>
+    <string formatted="false" name="help_message">Ստացեք 80% Cashback է տուրքի! Կյանքի տեւողության ընթացքում Մասնակիցներ (LTM) ստանալ 80% Cashback է յուրաքանչյուր գործարքի վճար նրանք վճարել, եւ արժանի վաստակում ուղղորդման եկամուտ օգտվողների գրանցվում են կամ վերաբերում են ցանցի. A կյանքի տեւողություն Անդամակցությունը այժմ 20000 BTS!</string>
+    <string name="txt_yes">այո</string>
+    <string name="txt_no">Ոչ</string>
+    <string name="txt_confirmation">հաստատում</string>
+    <string name="txt_confirmation_msg">Արդյոք Ձեր վստահ է.</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Թղթապանակ Ստեղծվել</string>
+    <string name="upgrade_failed">Թարմացնելու ձախողվեց</string>
+    <string name="upgrade_success">Թարմացնելու հաջողությամբ</string>
+    <string name="upgrading">Արդիականացում ...</string>
+    <string name="import_new_account">ՆԵՐՄՈՒԾՈՒՄ ՀԱՇԻՎ</string>
+    <string name="upgrade_account">Upgrade հաշիվ</string>
+    <string name="remove_account">ՀԵՌԱՑՆԵԼ ՀԱՇԻՎ</string>
+    <string name="txt_alertmsg">Համոզված եք, որ ջնջել այդ հաշիվը</string>
+    <string name="validation_in_progress">Վավերացում ընթացքի ..</string>
+    <string name="last_letter_cannot">վերջին նամակը չի կարող լինել, -</string>
+    <string name="account_name_shoud_have">հաշվի անունը shoud ունեն առնվազն մեկ</string>
+    <string name="default_currency">եվրո</string>
+    <string name="account_already_exist">Հաշիվն արդեն գոյություն ունեն</string>
+    <string name="txt_back">Վերադառնալ</string>
+    <string name="please_pay">Խնդրում ենք վճարում,</string>
+    <string name="transfer_funds">փոխանցելը</string>
+    <string name="unable_to_process">Անհնար է մշակել</string>
+    <string name="cancel">ՀՐԱԺԱՐՎԵԼ</string>
+
 </resources>

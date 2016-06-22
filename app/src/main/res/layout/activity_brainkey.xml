@@ -71,7 +71,7 @@
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
         android:gravity="top"
-        android:text="@string/test_brain_key"/>
+        android:text=""/>
 
     <TextView
         android:visibility="gone"

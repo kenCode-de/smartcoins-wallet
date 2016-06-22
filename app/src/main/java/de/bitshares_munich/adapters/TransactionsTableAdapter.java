@@ -12,10 +12,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.utils.Helper;
 import de.codecrafters.tableview.TableDataAdapter;
 
 /**
@@ -112,25 +115,38 @@ Context context;
         LayoutInflater me = getLayoutInflater();
         View  v = me.inflate(R.layout.transactionsendamountview, null);
         int colorText;
+
+        Locale locale;
+        NumberFormat format;
+        String language;
+        language = Helper.fetchStringSharePref(context, context.getString(R.string.pref_language));
+        locale = new Locale(language);
+       // format = NumberFormat.getInstance(locale);
+        Helper.setLocaleNumberFormat(locale, 1);
         if( transactiondetails.getSent() )
         {
             TextView textView = (TextView) v.findViewById(R.id.transactionssendamount);
             textView.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-            textView.setText("- " + transactiondetails.getAmount() + " " + transactiondetails.getAssetSymbol());
-
+            String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
+            textView.setText("- " + amount + " " + transactiondetails.getAssetSymbol());
+            amount = "";
             TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
             textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-            textView2.setText("- " + transactiondetails.getFaitAmount() + " " + transactiondetails.getFaitAssetSymbol());
+            amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
+            textView2.setText("- " + amount + " " + transactiondetails.getFaitAssetSymbol());
         }
         else
         {
             TextView textView = (TextView) v.findViewById(R.id.transactionssendamount);
             textView.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
-            textView.setText("+ " + transactiondetails.getAmount() + " " + transactiondetails.getAssetSymbol());
+            String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
+            textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
+            amount = "";
 
             TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
             textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
-            textView2.setText("+ " + transactiondetails.getFaitAmount() + " " + transactiondetails.getFaitAssetSymbol());
+            amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
+            textView2.setText("+ " + amount + " " + transactiondetails.getFaitAssetSymbol());
         }
         return v;
     }

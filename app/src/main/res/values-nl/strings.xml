@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Contactpersoon toevoegen</string>
 <string name="str_trade_not_available">Trade Niet beschikbaar</string>
     <string name="preferred_lang">Voorkeurstaal</string>
+    <string name="got_it">Begrepen</string>
+    <string name="upgrade_to_ltm">Upgrade naar LTM</string>
+    <string name="txt_back">Terug</string>
+    <string name="please_pay">Betaal alsjeblieft</string>
+    <string name="transfer_funds">de overdracht van middelen</string>
+    <string name="unable_to_process">Niet in staat om te verwerken</string>
+    <string name="cancel">ANNULEER</string>
+    <string formatted="false" name="help_message">Ontvang 80% Cashback op kosten! Lifetime Members (LTM) krijgen 80% cashback op elke transactie kosten die zij betalen, en in aanmerking komen voor verwijzing inkomen te verdienen van gebruikers ze zich inschrijven met of verwijzen naar het netwerk. A Lifetime Lidmaatschap is nu onder 20.000 BTS!</string>
+    <string name="txt_yes">Ja</string>
+    <string name="txt_no">Nee</string>
+    <string name="txt_confirmation">Bevestiging</string>
+    <string name="txt_confirmation_msg">Weet je het zeker?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">folder Gemaakt</string>
+    <string name="upgrade_failed">upgrade is mislukt</string>
+    <string name="upgrade_success">upgrade met succes</string>
+    <string name="upgrading">Upgrading ...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">VERWIJDER ACCOUNT</string>
+    <string name="txt_alertmsg">Weet u zeker dat dit account te verwijderen</string>
+    <string name="validation_in_progress">Validatie in progress ..</string>
+    <string name="last_letter_cannot">laatste brief kan niet worden -</string>
+    <string name="account_name_shoud_have">accountnaam shoud minstens één hebben -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Account bestaat al</string>
+
 </resources>

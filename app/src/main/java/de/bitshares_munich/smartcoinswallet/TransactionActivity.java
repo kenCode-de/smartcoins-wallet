@@ -376,8 +376,8 @@ public class TransactionActivity implements BalancesDelegate {
     void onLastCall(){
         Boolean isDonate = false;
         ArrayList<TransactionDetails> transactionDetails = new ArrayList<>();
-        if(Helper.containKeySharePref(context, context.getString(R.string.pref_always_donate))){
-            isDonate = Helper.fetchBoolianSharePref(context,context.getString(R.string.pref_always_donate));
+        if(Helper.containKeySharePref(context, "hide_donations")){
+            isDonate = Helper.fetchBoolianSharePref(context,"hide_donations");
         }
         for(int i = 0 ; i < arrayof_Amount_AssetId.size() ; i++) {
             try {
@@ -435,7 +435,7 @@ public class TransactionActivity implements BalancesDelegate {
     private void getEquivalentComponents(final ArrayList<TransactionDetails> transactionDetailses) {
     String faitCurrency = Helper.getFadeCurrency(context);
     if (faitCurrency.isEmpty()) {
-        faitCurrency = application.getString(R.string.default_currency);
+        faitCurrency = context.getString(R.string.default_currency);
     }
     String values = "";
     for (int i = 0; i < transactionDetailses.size(); i++) {
@@ -481,20 +481,24 @@ public class TransactionActivity implements BalancesDelegate {
                             }
                         }
                         catch (Exception e){
-                            
+                            testing("trasac",e, "found,found");
                         }
                         assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
-                        ;
+
 
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        testing("trasac",e, "found,found");
                     }
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
                 } else {
+                    testing("trasac","1", "found,found");
+
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
+                testing("trasac","2", "found,found");
+
                 Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
             }
         }

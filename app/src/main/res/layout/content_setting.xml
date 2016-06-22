@@ -232,6 +232,7 @@
 
             <LinearLayout
                 android:elevation="5dp"
+                android:padding="5dp"
                 android:layout_below="@+id/l41"
                 android:id="@+id/button_rows"
                 android:layout_marginTop="10dp"
@@ -277,7 +278,7 @@
 
 
                 <LinearLayout
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:id="@+id/button_second_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

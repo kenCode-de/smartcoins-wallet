@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Lisa Kontakt</string>
 <string name="str_trade_not_available">Kaubandus Pole saadaval</string>
     <string name="preferred_lang">eelistatud keel</string>
+    <string name="got_it">Sain aru</string>
+    <string name="upgrade_to_ltm">Uuenda LTM</string>
+    <string name="txt_back">tagasi</string>
+    <string name="please_pay">Palun maksta</string>
+    <string name="transfer_funds">rahaülekandetoiming</string>
+    <string name="unable_to_process">Ei ole võimalik töödelda</string>
+    <string name="cancel">TÜHISTA</string>
+    <string formatted="false" name="help_message">Saada 80% raha tagasi ühtlustamisameti! Eluaegset liiget (LTM) saada 80% cashback iga tehingu eest nad maksavad, ja saada teenida suunamisest tulu kasutajate need registreerima või suunata võrku. Elu liikmeks on praegu 20000 BTS!</string>
+    <string name="txt_yes">jah</string>
+    <string name="txt_no">ei</string>
+    <string name="txt_confirmation">Kinnitamine</string>
+    <string name="txt_confirmation_msg">Kas teie kindel?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">kausta loomisel</string>
+    <string name="upgrade_failed">Upgrade ebaõnnestus</string>
+    <string name="upgrade_success">Upgrade edukalt</string>
+    <string name="upgrading">Uuendamine ...</string>
+    <string name="import_new_account">impordi konto</string>
+    <string name="upgrade_account">Uuendage konto</string>
+    <string name="remove_account">Eemalda konto</string>
+    <string name="txt_alertmsg">Oled kindel, et selle konto kustutada</string>
+    <string name="validation_in_progress">Valideerimine edu ..</string>
+    <string name="last_letter_cannot">viimane kiri ei saa olla -</string>
+    <string name="account_name_shoud_have">kontonimi vehklema on atleast üks -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Konto on juba olemas</string>
+
 </resources>

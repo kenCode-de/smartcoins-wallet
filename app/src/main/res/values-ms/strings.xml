@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Tambah Kenalan</string>
 <string name="str_trade_not_available">Dagangan Tiada</string>
     <string name="preferred_lang">Bahasa pilihan</string>
+    <string name="got_it">Faham</string>
+    <string name="upgrade_to_ltm">Naik taraf ke LTM</string>
+    <string formatted="false" name="help_message">Dapatkan 80% Cashback mengenai Yuran! Ahli Jangka hayat (LTM) mendapat 80% cashback pada setiap yuran transaksi mereka membayar, dan layak untuk mendapat pendapatan rujukan daripada pengguna mereka mendaftar dengan atau merujuk kepada rangkaian. A Keahlian Sepanjang Hayat kini di bawah 20000 BTS!</string>
+    <string name="txt_yes">Ya</string>
+    <string name="txt_no">Tiada</string>
+    <string name="txt_confirmation">pengesahan</string>
+    <string name="txt_confirmation_msg">Pasti anda?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">folder Dibuat</string>
+    <string name="upgrade_failed">Naik taraf gagal</string>
+    <string name="upgrade_success">Naik taraf berjaya</string>
+    <string name="upgrading">Meningkatkan ...</string>
+    <string name="import_new_account">AKAUN IMPORT</string>
+    <string name="upgrade_account">AKAUN UPGRADE</string>
+    <string name="remove_account">MEMBUANG AKAUN</string>
+    <string name="txt_alertmsg">Adakah anda pasti untuk memadam akaun ini</string>
+    <string name="validation_in_progress">Pengesahan dalam kemajuan ..</string>
+    <string name="last_letter_cannot">surat terakhir tidak boleh -</string>
+    <string name="account_name_shoud_have">nama akaun shoud mempunyai atleast satu -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Akaun sudah wujud</string>
+    <string name="txt_back">Kembali</string>
+    <string name="please_pay">Sila beri</string>
+    <string name="transfer_funds">memindahkan Dana</string>
+    <string name="unable_to_process">Tidak dapat memproses</string>
+    <string name="cancel">CANCEL</string>
+
 </resources>

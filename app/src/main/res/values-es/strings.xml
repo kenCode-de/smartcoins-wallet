@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Agregar contacto</string>
 <string name="str_trade_not_available">Comercio no disponible</string>
     <string name="preferred_lang">Idioma preferido</string>
+    <string name="got_it">Lo tengo</string>
+    <string name="upgrade_to_ltm">Asciende a UDM</string>
+    <string formatted="false" name="help_message">Obtener 80% de reembolso de Tasas! Los miembros de toda la vida (LTM) reciben el 80% de cashback en cada tarifa de transacción que pagan, y calificar para obtener ingresos remisión de los usuarios que se registren con o hacen referencia a la red. Una membresía de por vida es ahora bajo 20000 BTS!</string>
+    <string name="txt_yes">Sí</string>
+    <string name="txt_no">No</string>
+    <string name="txt_confirmation">Confirmación</string>
+    <string name="txt_confirmation_msg">¿Estás seguro?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Creado carpeta</string>
+    <string name="upgrade_failed">error de actualización</string>
+    <string name="upgrade_success">actualizar correctamente</string>
+    <string name="upgrading">Actualizando ...</string>
+    <string name="import_new_account">CUENTA DE IMPORTACIÓN</string>
+    <string name="upgrade_account">MEJORA TU CUENTA</string>
+    <string name="remove_account">ELIMINAR CUENTA</string>
+    <string name="txt_alertmsg">¿Seguro eliminar esta cuenta</string>
+    <string name="validation_in_progress">Validación en curso ..</string>
+    <string name="last_letter_cannot">última carta no puede ser -</string>
+    <string name="account_name_shoud_have">nombre de cuenta shoud tiene al menos uno -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">La cuenta ya existe</string>
+    <string name="txt_back">Espalda</string>
+    <string name="please_pay">Por favor pague</string>
+    <string name="transfer_funds">La transferencia de fondos</string>
+    <string name="unable_to_process">No se puede procesar</string>
+    <string name="cancel">CANCELAR</string>
+
 </resources>

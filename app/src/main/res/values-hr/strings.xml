@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Dodaj kontakt</string>
 <string name="str_trade_not_available">Trgovina nije dostupna</string>
     <string name="preferred_lang">preferirani jezik</string>
+    <string name="got_it">dobio ga</string>
+    <string name="upgrade_to_ltm">Nadogradnja na LTM</string>
+    <string formatted="false" name="help_message">Get 80% Cashback o naknadama! Životni vijek Članovi (LTM) dobiti 80% povrat novca na svaku transakciju naknada se plaća, i kvalificirati zaraditi upućivanje prihod od korisnika da se registriraju sa ili se odnose na mrežu. Doživotno Članstvo je sada u 20.000 BTS!</string>
+    <string name="txt_yes">Da</string>
+    <string name="txt_no">Ne</string>
+    <string name="txt_confirmation">Potvrda</string>
+    <string name="txt_confirmation_msg">Jesu li sigurni?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">mapa je izrađena</string>
+    <string name="upgrade_failed">Nadogradnja nije uspjela</string>
+    <string name="upgrade_success">Nadogradnja uspješno</string>
+    <string name="upgrading">Nadogradnja ...</string>
+    <string name="import_new_account">IMPORT RAČUN</string>
+    <string name="upgrade_account">Nadogradnja računa</string>
+    <string name="remove_account">UKLANJANJE RAČUNA</string>
+    <string name="txt_alertmsg">Jeste li sigurni da želite izbrisati ovaj račun</string>
+    <string name="validation_in_progress">Potvrda u tijeku ..</string>
+    <string name="last_letter_cannot">Posljednje pismo ne može biti -</string>
+    <string name="account_name_shoud_have">naziv računa bi trebao imati najmanje jednog -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Račun već postoji</string>
+    <string name="txt_back">Nazad</string>
+    <string name="please_pay">Molimo obratite</string>
+    <string name="transfer_funds">prijenos sredstava</string>
+    <string name="unable_to_process">Nije moguće obraditi</string>
+    <string name="cancel">OTKAZATI</string>
+
 </resources>

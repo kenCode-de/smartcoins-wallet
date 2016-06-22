@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Dodaj stik</string>
 <string name="str_trade_not_available">Trgovina ni na voljo</string>
     <string name="preferred_lang">Želeni jezik</string>
+    <string name="got_it">Razumem</string>
+    <string name="upgrade_to_ltm">Nadgradnja na LTM</string>
+    <string formatted="false" name="help_message">Get 80% Cashback za takse! Lifetime Člani (LTM) dobili 80% cashback na vsakem transakcijskimi stroški so plačali, in izpolnjujejo pogoje za zaslužiti napotitev dohodek od uporabnikov, da se prijavijo, ali se nanašajo na omrežje. Lifetime Članstvo je sedaj pod 20.000 BTS!</string>
+    <string name="txt_yes">Da</string>
+    <string name="txt_no">no</string>
+    <string name="txt_confirmation">potrditev</string>
+    <string name="txt_confirmation_msg">Ali vaš prepričani?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Mapa Ustvarjeno</string>
+    <string name="upgrade_failed">Nadgradnja ni uspela</string>
+    <string name="upgrade_success">Nadgradnja uspešno</string>
+    <string name="upgrading">Nadgradnja ...</string>
+    <string name="import_new_account">IMPORT RAČUN</string>
+    <string name="upgrade_account">NADGRADNJA RAČUNA</string>
+    <string name="remove_account">ODSTRANI RAČUN</string>
+    <string name="txt_alertmsg">Ali ste prepričani, da želite izbrisati ta račun</string>
+    <string name="validation_in_progress">Potrditev v teku ..</string>
+    <string name="last_letter_cannot">zadnje pismo ne more biti -</string>
+    <string name="account_name_shoud_have">ime računa shoud imajo vsaj eni -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Račun že obstaja</string>
+    <string name="txt_back">Nazaj</string>
+    <string name="please_pay">Prosimo, bodite</string>
+    <string name="transfer_funds">prenos skladov</string>
+    <string name="unable_to_process">Ni mogoče obdelati</string>
+    <string name="cancel">CANCEL</string>
+
 </resources>

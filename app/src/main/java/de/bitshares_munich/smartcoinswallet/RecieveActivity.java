@@ -178,11 +178,11 @@ public class RecieveActivity extends BaseActivity {
 
             if ( !price.isEmpty() && price != "0" )
             {
-                shareText = "Please pay " + price + " " + currency + " to " + to;
+                shareText = this.getString(R.string.please_pay) + " " + price + " " + currency + " " + this.getString(R.string.to) + " " + to;
             }
             else
             {
-                shareText = "Please pay : " + to;
+                shareText =  this.getString(R.string.please_pay) + ": " + to;
             }
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);

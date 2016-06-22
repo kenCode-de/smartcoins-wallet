@@ -524,7 +524,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             if (sym.size() > i) accountAsset.symbol = sym.get(i);
             if (am.size() > i) accountAsset.ammount = am.get(i);
 
-            SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
+            //   SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
 
             // Log.i("uncle","aay1"+am.get(i));
             accountAssets.add(accountAsset);
@@ -571,7 +571,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
             if (!accountAsset.symbol.equals(faitCurrency)) {
-                values += accountAsset.symbol.toString() + ":" + faitCurrency + ",";
+                values += accountAsset.symbol + ":" + faitCurrency + ",";
             }
         }
         HashMap<String, String> hashMap = new HashMap<>();
@@ -1085,25 +1085,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                if (myTransactions.size() == 0) {
-                    saveTransactions(transactionDetails);
-                    //myTransactions.clear();
-                }
+        try {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    if (myTransactions.size() == 0) {
+                        saveTransactions(transactionDetails);
+                        //myTransactions.clear();
+                    }
 
-                if (number_of_transactions_in_queue < 25) {
-                    load_more_values.setVisibility(View.GONE);
-                } else {
-                    load_more_values.setVisibility(View.VISIBLE);
-                    load_more_values.setEnabled(true);
+                    if (number_of_transactions_in_queue < 25) {
+                        load_more_values.setVisibility(View.GONE);
+                    } else {
+                        load_more_values.setVisibility(View.VISIBLE);
+                        load_more_values.setEnabled(true);
+                    }
+                    myTransactions.addAll(transactionDetails);
+                    tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+                    progressBar.setVisibility(View.GONE);
+                    tableViewparent.setVisibility(View.VISIBLE);
                 }
-                myTransactions.addAll(transactionDetails);
-                tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
-                progressBar.setVisibility(View.GONE);
-                tableViewparent.setVisibility(View.VISIBLE);
-            }
-        });
+            });
+        } catch (Exception e) {
+            SupportMethods.testing("TransactionUpdate", e, "try/catch");
+        }
     }
 
     @OnClick(R.id.load_more_values)

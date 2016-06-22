@@ -117,6 +117,27 @@
 <string name="pay_to">Betala till</string>
 <string name="requested">begärda</string>
 <string name="failed_transaction">misslyckades transaktion</string>
+    <string name="got_it">Jag fattar</string>
+    <string name="upgrade_to_ltm">Uppgradera till LTM</string>
+    <string formatted="false" name="help_message">Få 80% Cashback på avgifter! Livstids Medlemmar (LTM) får 80% cashback på varje transaktion avgift de betalar, och kvalificera sig för att tjäna remiss inkomster från användare de registrerar med eller hänvisa till nätverket. En livstid medlemskap är nu under 20000 BTS!</string>
+    <string name="txt_yes">Ja</string>
+    <string name="txt_no">Nej</string>
+    <string name="txt_confirmation">Bekräftelse</string>
+    <string name="txt_confirmation_msg">Är din säker?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">mapp Skapad</string>
+    <string name="upgrade_failed">uppgradera misslyckades</string>
+    <string name="upgrade_success">uppgradera framgångsrikt</string>
+    <string name="upgrading">Uppgradering ...</string>
+    <string name="import_new_account">IMPORT KONTO</string>
+    <string name="upgrade_account">UPPGRADERA KONTO</string>
+    <string name="remove_account">TA BORT KONTO</string>
+    <string name="txt_alertmsg">Är du säker på att ta bort det här kontot</string>
+    <string name="validation_in_progress">Validering pågår ..</string>
+    <string name="last_letter_cannot">sista bokstaven kan inte vara -</string>
+    <string name="account_name_shoud_have">kontonamn shoud har minst en -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Konto redan existerar</string>
 
 <string name="str_invalid_amount">Ange giltigt belopp</string>
 <string name="str_invalid_receiver">Ange giltig att ta hänsyn</string>
@@ -143,4 +164,10 @@
 <string name="add_contact_activity_name">Lägg till kontakt</string>
 <string name="str_trade_not_available">Handel Inte tillgänglig</string>
     <string name="preferred_lang">Önskat språk</string>
+    <string name="txt_back">Tillbaka</string>
+    <string name="please_pay">Vänligen betala</string>
+    <string name="transfer_funds">överföring av medel</string>
+    <string name="unable_to_process">Det går inte att bearbeta</string>
+    <string name="cancel">ANNULLERA</string>
+
 </resources>

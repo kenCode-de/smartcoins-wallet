@@ -295,7 +295,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
                     }
                 } else {
-                    Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -336,7 +336,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 //                            String accountName = etAccountName.getText().toString();
 
                             } catch (Exception e) {
-                                SupportMethods.testing("accountActivity", "2", "past_break");
                                 accountCreated = true;
                                 etAccountName.setText(accountName);
                             }

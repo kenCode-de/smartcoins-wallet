@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">संपर्क जोड़ें</string>
 <string name="str_trade_not_available">ट्रेड उपलब्ध नहीं</string>
     <string name="preferred_lang">पसंदीदा भाषा</string>
+    <string name="got_it">समझ गया</string>
+    <string name="upgrade_to_ltm">LTM पर अपग्रेड</string>
+    <string name="txt_back">वापस</string>
+    <string name="please_pay">भुगतान करें</string>
+    <string name="transfer_funds">धन के हस्तांतरण</string>
+    <string name="unable_to_process">प्रोसेस करने में अक्षम</string>
+    <string name="cancel">रद्द करना</string>
+    <string formatted="false" name="help_message">फीस पर 80% कैशबैक जाओ! लाइफटाइम सदस्य (LTM) हर लेनदेन शुल्क वे भुगतान पर 80% कैशबैक मिलता है, और उपयोगकर्ताओं को वे साथ रजिस्टर या नेटवर्क का उल्लेख करने से रेफरल आय अर्जित करने के योग्य हैं। एक आजीवन सदस्यता 20000 बीटीएस के तहत अब है!</string>
+    <string name="txt_yes">हाँ</string>
+    <string name="txt_no">नहीं</string>
+    <string name="txt_confirmation">पुष्टीकरण</string>
+    <string name="txt_confirmation_msg">अपने हैं?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">फ़ोल्डर बनाया</string>
+    <string name="upgrade_failed">नवीनीकरण विफल</string>
+    <string name="upgrade_success">सफलतापूर्वक नवीनीकरण</string>
+    <string name="upgrading">अपग्रेड हो ...</string>
+    <string name="import_new_account">खाता आयात करें</string>
+    <string name="upgrade_account">खाते का उन्नयन</string>
+    <string name="remove_account">खाता हटाएं</string>
+    <string name="txt_alertmsg">आप इस खाते को नष्ट करने के लिए सुनिश्चित कर रहे हैं</string>
+    <string name="validation_in_progress">प्रगति में मान्यकरण ..</string>
+    <string name="last_letter_cannot">अंतिम पत्र नहीं किया जा सकता है -</string>
+    <string name="account_name_shoud_have">खाते का नाम कम से कम एक है shoud -</string>
+    <string name="default_currency">ईयूआर</string>
+    <string name="account_already_exist">खाता पहले से ही मौजूद है</string>
+
 </resources>

@@ -142,4 +142,31 @@
 <string name="add_contact_activity_name">Přidat kontakt</string>
 <string name="str_trade_not_available">Obchodní Není k dispozici</string>
     <string name="preferred_lang">preferovaný jazyk</string>
+    <string name="got_it">Mám to</string>
+    <string name="upgrade_to_ltm">Upgrade na LTM</string>
+    <string name="txt_back">Zadní</string>
+    <string name="please_pay">Věnujte</string>
+    <string name="transfer_funds">Přenos fondy</string>
+    <string name="unable_to_process">Nelze zpracovat</string>
+    <string name="cancel">ZRUŠIT</string>
+    <string formatted="false" name="help_message">Získejte 80% Cashback na poplatcích! Životnost Členové (LTM) získat 80% cashback na každém poplatku za transakci, které musí zaplatit, a kvalifikovat vydělávat postoupení příjem od uživatelů, které se zaregistrují s nebo odkazují na síti. Doživotní členství je nyní pod 20000 BTS!</string>
+    <string name="txt_yes">Ano</string>
+    <string name="txt_no">Ne</string>
+    <string name="txt_confirmation">Potvrzení</string>
+    <string name="txt_confirmation_msg">Jsou vaše jistý?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">složky vytvořené</string>
+    <string name="upgrade_failed">upgrade selhal</string>
+    <string name="upgrade_success">úspěšně provést upgrade</string>
+    <string name="upgrading">Aktualizace ...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">VYLEPŠIT ÚČET</string>
+    <string name="remove_account">Odebrat účet</string>
+    <string name="txt_alertmsg">Opravdu chcete smazat tento účet</string>
+    <string name="validation_in_progress">Ověření probíhá ..</string>
+    <string name="last_letter_cannot">Poslední písmeno nemůže být -</string>
+    <string name="account_name_shoud_have">Název účtu mela mít aspoň jedno -</string>
+    <string name="default_currency">eur</string>
+    <string name="account_already_exist">Účet již existují</string>
+
 </resources>

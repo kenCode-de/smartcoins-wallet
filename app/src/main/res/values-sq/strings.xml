@@ -137,11 +137,38 @@
 <string name="rcv_screen_name">marr</string>
 <string name="request_amount_screen_name">Sasia</string>
 <string name="payment_rcvd_screen_name">Faleminderit</string>
-<string name="e_receipt_activity_name">e-Receipt</string>
 <string name="settings_activity_name">Cilësimet</string>
 <string name="qr_code_activity_name">Skano QR</string>
 <string name="share_account_activity_name">Ndaje me miqte</string>
 <string name="add_contact_activity_name">Shto Kontakt</string>
 <string name="str_trade_not_available">Trade Not Available</string>
     <string name="preferred_lang">Gjuha e preferuar</string>
+    <string name="got_it">E kuptova</string>
+    <string name="upgrade_to_ltm">Upgrade për të LTM</string>
+    <string formatted="false" name="help_message">Get 80% Cashback në tarifat! Lifetime Anëtarët (LTM) të marrë 80% cashback në çdo tarifë transaksion që ata paguajnë, dhe të kualifikohen për të fituar të ardhura referimit nga përdoruesit që regjistrohen me ose referohen rrjet. Një anëtarësim të jetës tani është nën 20.000 BTS!</string>
+    <string name="txt_yes">po</string>
+    <string name="txt_no">jo</string>
+    <string name="txt_confirmation">Konfirmim</string>
+    <string name="txt_confirmation_msg">Jeni te sigurte qe juaj?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Folder Krijuar</string>
+    <string name="upgrade_failed">Upgrade dështuar</string>
+    <string name="upgrade_success">Upgrade sukses</string>
+    <string name="upgrading">Përmirësimi ...</string>
+    <string name="import_new_account">IMPORT LLOGARI</string>
+    <string name="upgrade_account">LLOGARIA UPGRADE</string>
+    <string name="remove_account">Hiq llogarinë</string>
+    <string name="txt_alertmsg">A jeni i sigurt për të fshirë këtë llogari</string>
+    <string name="validation_in_progress">Validation në progres ..</string>
+    <string name="last_letter_cannot">Letra e fundit nuk mund të jetë -</string>
+    <string name="account_name_shoud_have">Emri i llogarisë shoud kanë atleast one -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Llogaria tashmë ekzistojnë</string>
+    <string name="e_receipt_activity_name">eReceipt</string>
+    <string name="txt_back">prapa</string>
+    <string name="please_pay">ju lutemi të paguani</string>
+    <string name="transfer_funds">Transferimi i fondeve</string>
+    <string name="unable_to_process">Në pamundësi për të përpunuar</string>
+    <string name="cancel">CANCEL</string>
+
 </resources>

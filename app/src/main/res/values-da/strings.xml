@@ -143,4 +143,31 @@
 <string name="add_contact_activity_name">Tilføj kontakt</string>
 <string name="str_trade_not_available">Handel Ikke tilgængelig</string>
     <string name="preferred_lang">foretrukne sprog</string>
+    <string name="got_it">Forstået</string>
+    <string name="upgrade_to_ltm">Opgrader til LTM</string>
+    <string name="txt_back">Tilbage</string>
+    <string name="please_pay">venligst betale</string>
+    <string name="transfer_funds">Overførsel af fonde</string>
+    <string name="unable_to_process">Kan ikke behandle</string>
+    <string name="cancel">OPHÆVE</string>
+    <string formatted="false" name="help_message">Få 80% Cashback på gebyrer! Lifetime medlemmer (LTM) får 80% cashback på hver transaktion gebyr, de betaler, og kvalificere sig til at tjene henvisning indkomst fra brugere, de registrerer med eller henvise til netværket. A Lifetime Medlemskab er nu under 20000 BTS!</string>
+    <string name="txt_yes">Ja</string>
+    <string name="txt_no">Ingen</string>
+    <string name="txt_confirmation">Bekræftelse</string>
+    <string name="txt_confirmation_msg">Er din sikker?</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Folder Oprettet</string>
+    <string name="upgrade_failed">Opgrader mislykkedes</string>
+    <string name="upgrade_success">Opgrader med succes</string>
+    <string name="upgrading">Opgradering ...</string>
+    <string name="import_new_account">IMPORT KONTO</string>
+    <string name="upgrade_account">kontoopgradering</string>
+    <string name="remove_account">Fjern konto</string>
+    <string name="txt_alertmsg">Er du sikker på at slette denne konto</string>
+    <string name="validation_in_progress">Validering er i gang ..</string>
+    <string name="last_letter_cannot">sidste bogstav kan ikke være -</string>
+    <string name="account_name_shoud_have">kontonavn mediefil have mindst én -</string>
+    <string name="default_currency">EUR</string>
+    <string name="account_already_exist">Konto allerede findes</string>
+
 </resources>
