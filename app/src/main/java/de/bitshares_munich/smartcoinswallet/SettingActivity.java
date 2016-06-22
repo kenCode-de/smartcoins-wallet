@@ -834,19 +834,4 @@ public class SettingActivity extends BaseActivity {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
 
-    private void checkLifeTime() {
-        for (int i = 0; i < accountDetails.size(); i++) {
-            if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
-
-                if (accountDetails.get(i).isLifeTime) {
-                    btnUpgrade.setEnabled(true);
-                    btnUpgrade.setBackgroundColor(Color.rgb(211, 211, 211));
-                } else {
-                    btnUpgrade.setEnabled(false);
-                    btnUpgrade.setBackground(getResources().getDrawable(R.drawable.button_border));
-                    ;
-                }
-            }
-        }
-    }
 }
