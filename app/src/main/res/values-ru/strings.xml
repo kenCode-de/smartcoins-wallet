@@ -54,7 +54,7 @@
 <string name="always_donate">Всегда Пожертвуйте 2 БПС к поддержке разработчиков на BitShares Мюнхен (Мюнхен) bitshares</string>
 <string name="hide_donations">Скрыть пожертвования из списка Homescreen Сделки</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Пожертвовать 2 БТС в поддержке разработчиков в Bitshares Мюнхен</string>
+<string name="checkbox_donate_old">Пожертвовать 2 БТС в поддержке разработчиков в Bitshares Мюнхен</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Импортные / аккаунтах</string>
 <string name="register_new_account">Регистрация новой учетной записи</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">поделиться с другом</string>
 <string name="share_btn_text">ОТКРЫТЫЙ ПОЧТЫ ПРИМЕНЕНИЕ</string>
 <string name="action_settings">настройки</string>
+    <string name="checkbox_donate">Пожертвовать 2 БТС в поддержке разработчиков на</string>
 <string name="txt_validating_account">Проверка учетной записи ...</string>
 <string name="validating_account">Проверка учетной записи ...</string>
 <string name="account_name_should_be_longer">Имя учетной записи должно быть больше</string>

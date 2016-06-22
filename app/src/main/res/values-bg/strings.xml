@@ -55,11 +55,12 @@
 <string name="always_donate">Винаги Дарете 2 BTS на разработчиците Подкрепа при BitShares Мюнхен (bitshares Мюнхен)</string>
 <string name="hide_donations">Скриване Дарения от списъка на началния екран Сделки</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Дарете 2 BTS на разработчиците подкрепата при Bitshares Мюнхен</string>
+<string name="checkbox_donate_old">Дарете 2 BTS на разработчиците подкрепата при BitShares Munich</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Внесените / създадени профили</string>
 <string name="register_new_account">РЕГИСТРАЦИЯ на нов акаунт</string>
 <string name="secure_pin">EDIT PIN</string>
+    <string name="checkbox_donate">Дарете 2 BTS за разработчиците поддръжка на</string>
 <string name="export">износ</string>
 <string name="show_more">Покажи повече</string>
 <string name="share_text">Току-що разбрах това страхотно Smartcoins Wallet, която ви позволява да изпращате и получавате Smartcoins. Виж това! Наздраве</string>

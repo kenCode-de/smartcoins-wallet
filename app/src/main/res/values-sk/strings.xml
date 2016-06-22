@@ -54,7 +54,7 @@
 <string name="always_donate">Vždy Darovanie 2 BTS k nosnému vývojárov na BitShares Mníchove (Mníchov) bitshares</string>
 <string name="hide_donations">Skryť dary od zoznamu úvodnej obrazovke Transakcia</string>
 <string name="backup">BACKUP bin</string>
-<string name="checkbox_donate">Darovať 2 BTS k nosnému Vývojári v Mníchove Bitshares</string>
+<string name="checkbox_donate_old">Darovať 2 BTS k nosnému Vývojári v Mníchove Bitshares</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importované / vytvorené účty</string>
 <string name="register_new_account">Registrovať nový účet</string>
@@ -73,6 +73,7 @@
 <string name="account_name_already_exist">Názov účtu% s už existuje</string>
 <string name="account_name_not_exist">Názov účtu% s neexistuje</string>
 <string name="add_contact">pridať</string>
+    <string name="checkbox_donate">Darovať 2 BTS podpory vývojárov na</string>
 <string name="edit_contact">editovať</string>
 <string name="empty_list">Zoznam kontaktov je prázdny</string>
 <string name="account_name_validate">Názov účtu je platný</string>

@@ -54,7 +54,7 @@
 <string name="always_donate">Alati Kingi 2 BTS, et toetada arendajaid on BitShares Münchenis (bitshares Münchenis)</string>
 <string name="hide_donations">Peida annetused homescreen Tehingud nimekirja</string>
 <string name="backup">BACKUP Bin</string>
-<string name="checkbox_donate">Kingi 2 BTS, et toetada arendajaid on Bitshares Munich</string>
+<string name="checkbox_donate_old">Kingi 2 BTS, et toetada arendajaid on Bitshares Munich</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Imporditud / kontod</string>
 <string name="register_new_account">Loo uus konto</string>
@@ -65,6 +65,7 @@
 <string name="share_info">Kutsu ühe või mitme oma sõpradega proovida Smartcoins rahakoti! E-posti aadress ei ole salvestatud või koguda keegi nii nende eraelu puutumatus on tagatud.</string>
 <string name="share_subject">Awesome Smartcoins Rahakott</string>
 <string name="share_heading">sõbraga jagada</string>
+    <string name="checkbox_donate">Kingi 2 BTS toetusele arendajatelt</string>
 <string name="share_btn_text">AVATUD meilirakenduse</string>
 <string name="action_settings">Seaded</string>
 <string name="txt_validating_account">Validating konto ...</string>

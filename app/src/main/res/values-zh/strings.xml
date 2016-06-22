@@ -55,7 +55,8 @@
 <string name="always_donate">始终捐赠2 BTS的支持开发在BitShares慕尼黑（bitshares慕尼黑）</string>
 <string name="hide_donations">隐藏主屏幕交易名单捐赠</string>
 <string name="backup">BACKUP的.bin</string>
-<string name="checkbox_donate">捐赠2 BTS在Bitshares慕尼黑支持开发</string>
+    <string name="checkbox_donate">捐赠2 BTS的支持开发在</string>
+<string name="checkbox_donate_old">捐赠2 BTS在Bitshares慕尼黑支持开发</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">进口/创建账户</string>
 <string name="register_new_account">注册新帐户</string>

@@ -54,7 +54,7 @@
 <string name="always_donate">Faire un don Toujours 2 BTS aux développeurs de soutien au BitShares Munich (bitshares munich)</string>
 <string name="hide_donations">Cacher les dons de la liste des transactions homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Donate 2 BTS aux développeurs de soutien à Bitshares Munich</string>
+<string name="checkbox_donate_old">Donate 2 BTS aux développeurs de soutien à Bitshares Munich</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Imported / comptes créés</string>
 <string name="register_new_account">Créer un nouveau compte</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">partager avec un ami</string>
 <string name="share_btn_text">OUVERT EMAIL DEMANDE</string>
 <string name="action_settings">Paramètres</string>
+    <string name="checkbox_donate">Donate 2 BTS aux développeurs de soutien au</string>
 <string name="txt_validating_account">Validating compte ...</string>
 <string name="validating_account">Validating compte ...</string>
 <string name="account_name_should_be_longer">Nom du compte devrait être plus longue</string>

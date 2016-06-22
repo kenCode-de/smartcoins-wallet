@@ -54,13 +54,14 @@
 <string name="always_donate">תמיד תרום 2 BTS אל מפתחי התמיכה בכתובת BitShares מינכן (מינכן bitshares)</string>
 <string name="hide_donations">סתר תרומות מרשימת עסקות homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">תרום 2 BTS אל מפתחי תמיכה בכתובת Bitshares מינכן</string>
+<string name="checkbox_donate_old">תרום 2 BTS אל מפתחי תמיכה בכתובת Bitshares מינכן</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">חשבונות יבוא / נוצרו</string>
 <string name="register_new_account">להרשם חשבון חדש</string>
 <string name="secure_pin">PIN EDIT</string>
 <string name="export">יְצוּא</string>
 <string name="show_more">להראות יותר</string>
+    <string name="checkbox_donate">תרום 2 BTS אל מפתחי התמיכה בכתובת</string>
 <string name="share_text">אני פשוט מצאתי ארנק Smartcoins מדהים המאפשר לך לשלוח ולקבל Smartcoins. תבדוק את זה! חופשי על הבר</string>
 <string name="share_info">זמן אחד או יותר מהחברים שלך לנסות את ארנק Smartcoins! כתובות דוא"ל אינן נשמרות או שנאספו על ידי מישהו כל כך פרטיותם גם בעתות משבר.</string>
 <string name="share_subject">ארנק Smartcoins מדהים</string>

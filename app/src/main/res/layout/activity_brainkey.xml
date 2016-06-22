@@ -71,8 +71,7 @@
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
         android:gravity="top"
-        android:text=""/>
-
+/>
     <TextView
         android:visibility="gone"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"

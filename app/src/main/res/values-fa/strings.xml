@@ -54,7 +54,7 @@
 <string name="always_donate">همیشه 2 BTS به حمایت از توسعه دهندگان در BitShares مونیخ (bitshares مونیخ) اهدا</string>
 <string name="hide_donations">مخفی کردن کمک های مالی از فهرست معاملات در صفحه اصلی</string>
 <string name="backup">.BIN BACKUP</string>
-<string name="checkbox_donate">اهدای 2 BTS به توسعه دهندگان پشتیبانی در Bitshares مونیخ</string>
+<string name="checkbox_donate_old">اهدای 2 BTS به توسعه دهندگان پشتیبانی در Bitshares مونیخ</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">وارد / اشتراک ایجاد</string>
 <string name="register_new_account">ثبت نام حساب جدید</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">به اشتراک گذاشتن با دوستان</string>
 <string name="share_btn_text">ایمیل نرم افزار باز</string>
 <string name="action_settings">تنظیمات</string>
+    <string name="checkbox_donate">اهدای 2 BTS به حمایت از توسعه دهندگان در</string>
 <string name="txt_validating_account">اعتبار حساب ...</string>
 <string name="validating_account">اعتبار حساب ...</string>
 <string name="account_name_should_be_longer">نام حساب باید بیشتر باشد</string>

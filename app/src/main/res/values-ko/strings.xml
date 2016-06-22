@@ -54,7 +54,7 @@
 <string name="always_donate">항상 BitShares 뮌헨 (bitshares 뮌헨)에서 지원 개발자 2 BTS 기부</string>
 <string name="hide_donations">홈 화면 트랜잭션 목록에서 기부 숨기기</string>
 <string name="backup">BACKUP .BIN</string>
-<string name="checkbox_donate">Bitshares 뮌헨에서 지원 개발자 2 BTS 기부</string>
+<string name="checkbox_donate_old">Bitshares 뮌헨에서 지원 개발자 2 BTS 기부</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">수입 / 만든 계정</string>
 <string name="register_new_account">새로운 계정을 등록</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">친구와 공유</string>
 <string name="share_btn_text">OPEN 전자 메일 응용 프로그램</string>
 <string name="action_settings">설정</string>
+    <string name="checkbox_donate">에서 지원 개발자 2 BTS 기부</string>
 <string name="txt_validating_account">계정을 확인 중 ...</string>
 <string name="validating_account">계정 확인 중 ...</string>
 <string name="account_name_should_be_longer">계정 이름은 이상이어야한다</string>

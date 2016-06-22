@@ -54,11 +54,12 @@
 <string name="always_donate">Luôn góp 2 BTS để các nhà phát triển hỗ trợ tại BitShares Munich (bitshares munich)</string>
 <string name="hide_donations">Hide Tài trợ từ danh sách giao dịch homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Tặng 2 trạm BTS để các nhà phát triển hỗ trợ tại Bitshares Munich</string>
+<string name="checkbox_donate_old">Tặng 2 trạm BTS để các nhà phát triển hỗ trợ tại Bitshares Munich</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Nhập khẩu / Tài khoản tạo</string>
 <string name="register_new_account">ĐĂNG KÝ TÀI KHOẢN MỚI</string>
 <string name="secure_pin">EDIT PIN</string>
+    <string name="checkbox_donate">Tặng 2 trạm BTS để các nhà phát triển hỗ trợ tại</string>
 <string name="export">Xuất khẩu</string>
 <string name="show_more">Cho xem nhiều hơn</string>
 <string name="share_text">Tôi chỉ thấy Wallet này Smartcoins tuyệt vời cho phép bạn gửi và nhận Smartcoins. Kiểm tra nó ra! vô</string>

@@ -54,7 +54,7 @@
 <string name="always_donate">Zawsze Wpłać 2 BTS do pomocy deweloperów przy BitShares Monachium (bitshares Monachium)</string>
 <string name="hide_donations">Ukryj darom liście Transakcje ekranu głównego</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Wpłać 2 BTS do programistów wsparcie na Bitshares Monachium</string>
+<string name="checkbox_donate_old">Wpłać 2 BTS do programistów wsparcie na Bitshares Monachium</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Sprowadzony / Konta Utworzony</string>
 <string name="register_new_account">Zarejestruj konto NEW</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">podziel się z przyjacielem</string>
 <string name="share_btn_text">OPEN EMAIL WNIOSEK</string>
 <string name="action_settings">Ustawienia</string>
+    <string name="checkbox_donate">Wpłać 2 BTS dla deweloperów przy pomocy</string>
 <string name="txt_validating_account">Walidacja konta ...</string>
 <string name="validating_account">Members konto ...</string>
 <string name="account_name_should_be_longer">Nazwa konta powinien być dłuższy</string>

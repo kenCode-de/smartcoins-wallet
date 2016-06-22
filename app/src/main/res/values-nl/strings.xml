@@ -54,7 +54,7 @@
 <string name="always_donate">Doneren altijd 2 BTS naar de Ondersteuning Ontwikkeling bij BitShares München (bitshares München)</string>
 <string name="hide_donations">Verberg Donaties van homescreen Transactions lijst</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Doneren 2 BTS naar de Ondersteuning Ontwikkeling bij Bitshares München</string>
+<string name="checkbox_donate_old">Doneren 2 BTS naar de Ondersteuning Ontwikkeling bij Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Geïmporteerde / aangemaakte accounts</string>
 <string name="register_new_account">Inschrijven nieuwe account</string>
@@ -65,6 +65,7 @@
 <string name="share_info">Nodig een of meer van uw vrienden om te proberen de Smartcoins Wallet! E-mailadressen worden niet opgeslagen of opgehaald door iemand zo hun privacy wordt gewaarborgd.</string>
 <string name="share_subject">Awesome Smartcoins Wallet</string>
 <string name="share_heading">delen met een vriend</string>
+    <string name="checkbox_donate">Doneren 2 BTS naar de Ondersteuning Ontwikkeling bij</string>
 <string name="share_btn_text">OPEN E-mailtoepassing</string>
 <string name="action_settings">instellingen</string>
 <string name="txt_validating_account">Valideren van rekening ...</string>

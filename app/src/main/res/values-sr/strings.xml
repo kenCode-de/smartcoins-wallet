@@ -54,7 +54,8 @@
 <string name="always_donate">Увек Донате 2 БТС подршци програмере на БитСхарес Минхену (битсхарес Минхен)</string>
 <string name="hide_donations">Сакриј донације из листе Хомесцреен Трансацтионс</string>
 <string name="backup">Бацкуп .бин</string>
-<string name="checkbox_donate">Донирајте 2 БТС на програмере подршку на Битсхарес Минхену</string>
+    <string name="checkbox_donate">Донирајте 2 БТС са помоћним програмере у</string>
+<string name="checkbox_donate_old">Донирајте 2 БТС на програмере подршку на Битсхарес Минхену</string>
 <string name="backup_brainkey">Бацкуп БРАИНКЕИ</string>
 <string name="imported_created_accounts">Увезена / Креирано рачуни</string>
 <string name="register_new_account">Регистер нев аццоунт</string>

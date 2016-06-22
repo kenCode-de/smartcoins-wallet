@@ -55,12 +55,13 @@
 <string name="always_donate">সর্বদা BitShares মিউনিখ (bitshares মিউনিখ) এ সাপোর্ট ডেভেলপারগণ 2 বিটিএস সংস্করণ</string>
 <string name="hide_donations">হোমস্ক্রিন লেনদেন- তালিকা থেকে ডোনেশনস লুকান</string>
 <string name="backup">ব্যাকআপ .bin</string>
-<string name="checkbox_donate">2 বিটিএস Donate Bitshares মিউনিখে সাপোর্ট ডেভেলপারগণ</string>
+<string name="checkbox_donate_old">2 বিটিএস Donate Bitshares মিউনিখে সাপোর্ট ডেভেলপারগণ</string>
 <string name="backup_brainkey">ব্যাকআপ BRAINKEY</string>
 <string name="imported_created_accounts">আমদানিকৃত / তৈরি হওয়া অ্যাকাউন্টগুলির</string>
 <string name="register_new_account">REGISTER নতুন অ্যাকাউন্ট</string>
 <string name="secure_pin">EDIT থেকে পিন</string>
 <string name="export">রপ্তানি</string>
+    <string name="checkbox_donate">সাপোর্ট ডেভেলপারগণ 2 বিটিএস সংস্করণ এ</string>
 <string name="show_more">আরও দেখাও</string>
 <string name="share_text">আমি শুধু এই সন্ত্রস্ত Smartcoins ওয়ালেট যে আপনি পাঠাতে এবং Smartcoins গ্রহণ করতে পারবেন অন্তর্ভুক্ত. এটা দেখ! চিয়ার্স</string>
 <string name="share_info">এক বা আপনার বন্ধুর Smartcoins ওয়ালেট চেষ্টা আরো আমন্ত্রণ করুন! ই-মেইল ঠিকানা সংরক্ষণ করা হয় না বা সংগৃহীত কারো দ্বারা যাতে তাদের গোপনীয়তা নিশ্চিত করা হয়.</string>

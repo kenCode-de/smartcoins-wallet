@@ -54,12 +54,13 @@
 <string name="always_donate">Doner altid 2 BTS til Support udviklere på BitShares München (bitshares munich)</string>
 <string name="hide_donations">Skjul Donationer fra homescreen Transaktioner liste</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Donér 2 BTS til Support udviklere på Bitshares München</string>
+<string name="checkbox_donate_old">Donér 2 BTS til Support udviklere på Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importerede / Skabt konti</string>
 <string name="register_new_account">Tilmeld ny konto</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">Eksport</string>
+    <string name="checkbox_donate">Donér 2 BTS til Support udviklere på</string>
 <string name="show_more">Vis mere</string>
 <string name="share_text">Jeg har lige fundet denne awesome Smartcoins Wallet, der gør det muligt at sende og modtage Smartcoins. Tjek det ud! Skål</string>
 <string name="share_info">Inviter en eller flere af dine venner til at afprøve Smartcoins Wallet! E-mail-adresser er ikke gemt eller indsamlet af nogen så deres privatliv er sikret.</string>

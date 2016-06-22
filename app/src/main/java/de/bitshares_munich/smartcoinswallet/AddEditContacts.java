@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
@@ -119,7 +120,46 @@ public class AddEditContacts extends BaseActivity implements IAccount{
 
            // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
         }
-
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Boolean contactNameEnabled = false;
+                Boolean noteEnabled = false;
+                Boolean checkAccountid = false;
+                //Do something after 100ms
+                if(edit && validReceiver){
+                    if (Contactname.getText().toString().equals(contactname)) {
+                        contactNameEnabled = false;
+                    } else {
+                        contactNameEnabled = true;
+                    }
+                    if (Note.getText().toString().equals(note)) {
+                        noteEnabled = false;
+                    } else {
+                        noteEnabled = true;
+                    }
+                    if(contactNameEnabled || noteEnabled){
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                        SaveContact.setEnabled(true);
+                    }
+                    if(!contactNameEnabled && !noteEnabled) {
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                        SaveContact.setEnabled(false);
+                    }
+                }
+                if(add){
+                    if(validReceiver){
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                        SaveContact.setEnabled(true);
+                    }else {
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                        SaveContact.setEnabled(false);
+                    }
+                }
+                handler.postDelayed(this, 100);
+            }
+        }, 100);
     }
     @OnClick(R.id.SaveContact)
     public void AddContatcs(){
@@ -152,7 +192,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
         loadWebView(39, Helper.md5(Accountname.getText().toString()));
-        warning.setText("");
+        warning.setText(getString(R.string.txt_validating_account));
+        warning.setTextColor(getColorWrapper(context, R.color.black));
+
 
         if (Accountname.getText().length() > 0) {
             loadWebView(39, Helper.md5(Accountname.getText().toString()));

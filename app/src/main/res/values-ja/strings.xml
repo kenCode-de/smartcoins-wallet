@@ -55,7 +55,7 @@
 <string name="always_donate">常にBitSharesミュンヘン（bitsharesのミュンヘン）でサポート開発に2 BTSを寄付</string>
 <string name="hide_donations">ホームスクリーンのトランザクションリストから寄付を隠します</string>
 <string name="backup">BACKUPました.bin</string>
-<string name="checkbox_donate">Bitsharesミュンヘンでのサポート開発に2 BTSを寄付</string>
+<string name="checkbox_donate_old">Bitsharesミュンヘンでのサポート開発に2 BTSを寄付</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">インポート/作成されたアカウント</string>
 <string name="register_new_account">新しいアカウントを登録</string>
@@ -66,6 +66,7 @@
 <string name="share_info">Smartcoinsウォレットを試すためにあなたの友人の一人以上を招待！彼らのプライバシーが確保されるので、メールアドレスは、誰もが保存または収集されません。</string>
 <string name="share_subject">恐ろしいSmartcoins財布</string>
 <string name="share_heading">友人と共有</string>
+    <string name="checkbox_donate">でサポート開発に2 BTSを寄付</string>
 <string name="share_btn_text">OPEN電子メールアプリケーション</string>
 <string name="action_settings">設定</string>
 <string name="txt_validating_account">アカウントを確認しています...</string>

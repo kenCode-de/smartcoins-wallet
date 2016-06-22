@@ -89,25 +89,33 @@
                                                           android:layout_height="match_parent"
                                                           android:layout_marginLeft="5sp"
                                                           android:layout_marginRight="5sp"
+                                    android:background="@drawable/edittext_background_layer"
                                                           android:layout_toRightOf="@+id/rl_webviewFrom"
                                                           android:orientation="vertical">
 
 
                                     <Spinner
+                                        android:textColor="#000"
                                         android:id="@+id/spinnerFrom"
                                         android:layout_width="match_parent"
-                                        android:layout_height="35dp"
+                                        android:layout_height="match_parent"
+                                        android:textSize="15sp"
                                         android:visibility="gone">
                                     </Spinner>
                                     <TextView
+                                        android:paddingLeft="10dp"
+                                        android:textColor="#000"
+                                        android:textSize="16sp"
                                         android:id="@+id/tvFrom"
                                         android:layout_width="match_parent"
-                                        android:layout_height="35dp"
+                                        android:layout_height="match_parent"
                                         android:visibility="gone"
-                                        android:textColor="@color/black"/>
-                                    <View android:layout_width="wrap_content"
-                                          android:layout_height="2dp"
-                                          android:background="@drawable/edittext_background_layer"></View>
+                                        android:gravity="left|center"
+                                        />
+                                    <!--<View android:layout_width="wrap_content"-->
+                                          <!--android:layout_height="2dp"-->
+                                          <!--android:background="@drawable/edittext_background_layer">-->
+                                    <!--</View>-->
                                 </LinearLayout>
                             </RelativeLayout>
                             <Button
@@ -180,7 +188,9 @@
                                     android:background="@drawable/edittext_background_layer"
                                     android:maxLines="1"
                                     android:singleLine="true"
-
+                                    android:textSize="16sp"
+                                    android:textColor="#000"
+                                    android:paddingLeft="10dp"
                                 />
                                 <RelativeLayout
                                     android:id="@+id/contactActivity"

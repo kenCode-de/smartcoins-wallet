@@ -54,7 +54,7 @@
 <string name="always_donate">Selalu Donasi 2 BTS ke Pengembang Dukungan di BitShares Munich (bitshares munich)</string>
 <string name="hide_donations">Menyembunyikan Sumbangan dari daftar Transaksi homescreen</string>
 <string name="backup">bin CADANGAN</string>
-<string name="checkbox_donate">Menyumbangkan 2 BTS ke Pengembang Support di Bitshares Munich</string>
+<string name="checkbox_donate_old">Menyumbangkan 2 BTS ke Pengembang Support di Bitshares Munich</string>
 <string name="backup_brainkey">BRAINKEY CADANGAN</string>
 <string name="imported_created_accounts">Diimpor / Akun Dibuat</string>
 <string name="register_new_account">DAFTAR BARU ACCOUNT</string>
@@ -74,6 +74,7 @@
 <string name="account_name_not_exist">Nama Akun% s tidak ada</string>
 <string name="add_contact">Menambahkan</string>
 <string name="edit_contact">mengedit</string>
+    <string name="checkbox_donate">Menyumbangkan 2 BTS ke Pengembang Support di</string>
 <string name="empty_list">daftar kontak Kosong</string>
 <string name="account_name_validate">Nama akun valid</string>
 <string name="txt_no_internet_connection">Tidak ada koneksi internet</string>

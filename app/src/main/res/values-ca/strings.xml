@@ -55,12 +55,13 @@
 <string name="always_donate">Sempre Donate 2 BTS als desenvolupadors de suport a BitShares Munic (bitshares Munic)</string>
 <string name="hide_donations">Les donacions d\'ocultar la llista de Transaccions de pantalla d\'inici</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Donar 2 BTS als desenvolupadors de suport a Bitshares Munic</string>
+<string name="checkbox_donate_old">Donar 2 BTS als desenvolupadors de suport a Bitshares Munic</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Importats / creat els comptes</string>
 <string name="register_new_account">Registrar un nou compte</string>
 <string name="secure_pin">EDITAR PIN</string>
 <string name="export">exportació</string>
+    <string name="checkbox_donate">Donar 2 BTS als desenvolupadors de suport a</string>
 <string name="show_more">Mostra més</string>
 <string name="share_text">Acabo de trobar aquest Moneder impressionant Smartcoins que li permet enviar i rebre Smartcoins. Comprova-ho! ¡Salut</string>
 <string name="share_info">Convidi a un o més dels seus amics per provar el Moneder Smartcoins! Les adreces de correu no es guarden o recollits per qualsevol persona pel que es garanteix la seva privacitat.</string>

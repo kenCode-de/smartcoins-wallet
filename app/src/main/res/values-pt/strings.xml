@@ -54,7 +54,7 @@
 <string name="always_donate">Sempre Doe 2 BTS para os desenvolvedores de Suporte em BitShares Munich (Munique bitshares)</string>
 <string name="hide_donations">Esconder Doações de lista Transações homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Doe 2 BTS para os desenvolvedores de apoio no Bitshares Munique</string>
+<string name="checkbox_donate_old">Doe 2 BTS para os desenvolvedores de apoio no Bitshares Munique</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Importadas / criou contas</string>
 <string name="register_new_account">Registar novos CONTA</string>
@@ -73,6 +73,7 @@
 <string name="account_name_already_exist">Nome da conta% s já existem</string>
 <string name="account_name_not_exist">Nome da conta% s não existe</string>
 <string name="add_contact">Adicionar</string>
+    <string name="checkbox_donate">Doe 2 BTS ao Desenvolvedores Suporte em</string>
 <string name="edit_contact">Editar</string>
 <string name="empty_list">A lista de contatos é vazia</string>
 <string name="account_name_validate">nome da conta é válida</string>

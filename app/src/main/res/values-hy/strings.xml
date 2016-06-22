@@ -55,12 +55,13 @@
 <string name="always_donate">Միշտ Նվիրատվություն 2 BTS աջակցությամբ Կառուցապատողներ ժամը BitShares Մյունխեն (bitshares Մյունխեն)</string>
 <string name="hide_donations">Թաքցնել նվիրատվություններ էկրանը գործառնությունների ցուցակ</string>
 <string name="backup">Backup .bin</string>
-<string name="checkbox_donate">Նվիրատվություն 2 BTS աջակցությամբ մշակողները Bitshares Մյունխենում</string>
+<string name="checkbox_donate_old">Նվիրատվություն 2 BTS աջակցությամբ մշակողները Bitshares Մյունխենում</string>
 <string name="backup_brainkey">Backup BRAINKEY</string>
 <string name="imported_created_accounts">Ներմուծված / Ստեղծված հաշիվներ</string>
 <string name="register_new_account">ԳՐԱՆՑՎԵԼ նոր հաշիվ</string>
 <string name="secure_pin">ԽՄԲԱԳՐԵԼ PIN</string>
 <string name="export">արտահանում</string>
+    <string name="checkbox_donate">Նվիրատվություն 2 BTS է աջակցության Կառուցապատողներ ժամը</string>
 <string name="show_more">Ցույց տալ ավելին</string>
 <string name="share_text">Ես պարզապես գտա այս հաղորդագրությունները Awesome Smartcoins դրամապանակը, որ թույլ է տալիս Ձեզ ուղարկել եւ ստանալ Smartcoins. Ստուգել այն դուրս! Կենացը</string>
 <string name="share_info">Հրավիրեք մեկ կամ ավելի ձեր ընկերների փորձել Smartcoins դրամապանակը! Էլ. Փոստի հասցեները չեն փրկվել կամ հավաքագրվում են դարձնում, որպեսզի դրանց գաղտնիության վստահեցրեց.</string>

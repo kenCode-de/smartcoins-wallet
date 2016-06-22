@@ -55,8 +55,9 @@
 <string name="always_donate">เสมอบริจาค 2 บีทีเอสไปยังนักพัฒนาที่สนับสนุน BitShares มิวนิค (bitshares มิวนิค)</string>
 <string name="hide_donations">ซ่อนบริจาคจากรายการรายการที่หน้าจอหลัก</string>
 <string name="backup">ถังขยะสำรอง</string>
-<string name="checkbox_donate">บริจาค 2 บีทีเอสเพื่อพัฒนาสนับสนุนที่ Bitshares มิวนิค</string>
+<string name="checkbox_donate_old">บริจาค 2 บีทีเอสเพื่อพัฒนาสนับสนุนที่ Bitshares มิวนิค</string>
 <string name="backup_brainkey">BRAINKEY สำรอง</string>
+    <string name="checkbox_donate">บริจาค 2 บีทีเอสไปยังนักพัฒนาที่สนับสนุน</string>
 <string name="imported_created_accounts">นำเข้า / บัญชีที่สร้าง</string>
 <string name="register_new_account">สมัครสมาชิกใหม่</string>
 <string name="secure_pin">PIN แก้ไข</string>
