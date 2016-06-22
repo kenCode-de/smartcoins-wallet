@@ -54,7 +54,7 @@
 <string name="always_donate">Uvijek Donirajte 2 BTS na podlogu za programere na BitShares München (bitshares Munich)</string>
 <string name="hide_donations">Sakrij Donacije iz popisa početnog zaslona prometu</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Donirajte 2 BTS programere podrške na Bitshares Münchenu</string>
+<string name="checkbox_donate_old">Donirajte 2 BTS programere podrške na Bitshares Münchenu</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Uvezeni / otvorene račune</string>
 <string name="register_new_account">Registrirajte novi korisnički račun</string>
@@ -73,6 +73,7 @@
 <string name="account_name_already_exist">Naziv računa:% s već postoji</string>
 <string name="account_name_not_exist">Naziv računa% s ne postoji</string>
 <string name="add_contact">Dodati</string>
+    <string name="checkbox_donate">Donirajte 2 BTS za podršku za programere na</string>
 <string name="edit_contact">Uredi</string>
 <string name="empty_list">Popis kontakata je prazan</string>
 <string name="account_name_validate">Naziv računa vrijedi</string>

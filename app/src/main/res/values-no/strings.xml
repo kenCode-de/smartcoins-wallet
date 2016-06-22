@@ -54,7 +54,7 @@
 <string name="always_donate">Alltid donere 2 BTS til Support Developers på BitShares München (bitshares München)</string>
 <string name="hide_donations">Skjul Bidrag fra homescreen transaksjonslisten</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Donere 2 BTS til støtte Utviklerne hos Bitshares München</string>
+<string name="checkbox_donate_old">Donere 2 BTS til støtte Utviklerne hos Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importerte / opprettet kontoer</string>
 <string name="register_new_account">Registrer ny konto</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">dele med en venn</string>
 <string name="share_btn_text">OPEN e-postprogram</string>
 <string name="action_settings">innstillinger</string>
+    <string name="checkbox_donate">Donere 2 BTS til Support Developers på</string>
 <string name="txt_validating_account">Validere konto ...</string>
 <string name="validating_account">Validere konto ...</string>
 <string name="account_name_should_be_longer">Kontonavn bør være lengre</string>

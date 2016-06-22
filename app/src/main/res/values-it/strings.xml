@@ -54,7 +54,7 @@
 <string name="always_donate">Donate sempre 2 BTS al supporto sviluppatori a BitShares Monaco di Baviera (Monaco di Baviera bitshares)</string>
 <string name="hide_donations">Hide donazioni da lista operazioni homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Donate 2 BTS agli sviluppatori supporto a Bitshares Monaco di Baviera</string>
+<string name="checkbox_donate_old">Donate 2 BTS agli sviluppatori supporto a Bitshares Monaco di Baviera</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Imported / account creati</string>
 <string name="register_new_account">Registra un nuovo account</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">condividere con un amico</string>
 <string name="share_btn_text">Aprire l\'applicazione E-MAIL</string>
 <string name="action_settings">impostazioni</string>
+    <string name="checkbox_donate">Donate 2 BTS per il supporto sviluppatori a</string>
 <string name="txt_validating_account">Convalida conto ...</string>
 <string name="validating_account">Convalida Account ...</string>
 <string name="account_name_should_be_longer">Nome account dovrebbe essere più lungo</string>

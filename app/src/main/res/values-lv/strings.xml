@@ -54,13 +54,14 @@
 <string name="always_donate">Vienmēr Ziedot 2 BTS uz atbalsta Izstrādātāji pie BitShares Minhenē (bitshares Minhenē)</string>
 <string name="hide_donations">Slēpt Ziedojumi no sākuma ekrāna Darījumi saraksta</string>
 <string name="backup">BACKUP bin</string>
-<string name="checkbox_donate">Ziedot 2 BTS uz atbalstu izstrādātājiem Bitshares Minhenē</string>
+<string name="checkbox_donate_old">Ziedot 2 BTS uz atbalstu izstrādātājiem Bitshares Minhenē</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importēto / Izveidots konti</string>
 <string name="register_new_account">Reģistrēt jaunu kontu</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">eksports</string>
 <string name="show_more">Parādīt vairāk</string>
+    <string name="checkbox_donate">Ziedot 2 BTS uz atbalsta izstrādātājiem</string>
 <string name="share_text">Es tikko atklāju šo awesome Smartcoins maku, kas ļauj sūtīt un saņemt Smartcoins. Paskaties! Priekā</string>
 <string name="share_info">Uzaicināt vienu vai vairākus no draugiem izmēģināt Smartcoins maciņš! E-pasta adreses netiek saglabāti vai iekasē ikviens, lai viņu privātumu ir nodrošināta.</string>
 <string name="share_subject">Awesome Smartcoins maciņš</string>

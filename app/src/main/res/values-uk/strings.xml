@@ -54,11 +54,12 @@
 <string name="always_donate">Завжди зробити внесок 2 БПС до підтримки розробників на BitShares Мюнхен (Мюнхен) bitshares</string>
 <string name="hide_donations">Приховати пожертви зі списку Homescreen Угоди</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Пожертвувати 2 БТС в підтримці розробників в Bitshares Мюнхен</string>
+<string name="checkbox_donate_old">Пожертвувати 2 БТС в підтримці розробників в Bitshares Мюнхен</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Імпортні / акаунтах</string>
 <string name="register_new_account">Реєстрація нового облікового запису</string>
 <string name="secure_pin">EDIT PIN</string>
+    <string name="checkbox_donate">Пожертвувати 2 БТС в підтримці розробників на</string>
 <string name="export">експорт</string>
 <string name="show_more">Показати більше</string>
 <string name="share_text">Я тільки що знайшов цей дивовижний Smartcoins Гаманець, який дозволяє відправляти і отримувати Smartcoins. Перевір! ура</string>

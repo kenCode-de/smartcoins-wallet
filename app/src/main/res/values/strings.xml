@@ -62,7 +62,7 @@
     <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
     <string name="backup">BACKUP .bin</string>
-    <string name="checkbox_donate">Donate 2 BTS to the Support Developers at Bitshares Munich</string>
+    <string name="checkbox_donate">Donate 2 BTS to the Support Developers at</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
@@ -288,6 +288,8 @@
     <string name="upgrade_to_ltm">Upgrade to LTM</string>
     <string name="cancel">CANCEL</string>
 
+// new strings
+    <string name="donation">Donation</string>
 
 
 </resources>

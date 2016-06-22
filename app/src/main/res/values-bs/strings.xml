@@ -55,11 +55,12 @@
 <string name="always_donate">Uvijek Donirajte 2 BTS na Developers Support na BitShares München (bitshares Munich)</string>
 <string name="hide_donations">Sakrij Donacije iz liste homescreen transakcija</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Donirati 2 BTS na Developers Support na Bitshares Minhenu</string>
+<string name="checkbox_donate_old">Donirati 2 BTS na Developers Support na Bitshares Minhenu</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Uvezeno / Kreiran računa</string>
 <string name="register_new_account">REGISTRUJTE novi račun</string>
 <string name="secure_pin">EDIT PIN</string>
+    <string name="checkbox_donate">Donirati 2 BTS na Developers Support na</string>
 <string name="export">izvoz</string>
 <string name="show_more">Pokazati više</string>
 <string name="share_text">Našao sam ovaj super Smartcoins novčanik koji vam omogućuje slanje i primanje Smartcoins. Provjeri! Živjeli</string>

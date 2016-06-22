@@ -55,7 +55,7 @@
 <string name="always_donate">Gjithmonë Dhuroni 2 BTS ndaj Zhvilluesit Mbështetje në BitShares Mynihut (Munich) bitshares</string>
 <string name="hide_donations">Fshih Donacionet nga lista e Transaksionet e ekranit bazë</string>
 <string name="backup">.bin bACKUP</string>
-<string name="checkbox_donate">Dhuroni 2 BTS me Zhvilluesit Mbështetje në Bitshares Mynih</string>
+<string name="checkbox_donate_old">Dhuroni 2 BTS me Zhvilluesit Mbështetje në Bitshares Mynih</string>
 <string name="backup_brainkey">BRAINKEY bACKUP</string>
 <string name="imported_created_accounts">Importuara / Llogaritë Krijuar</string>
 <string name="register_new_account">REGJISTROHU NEW ACCOUNT</string>
@@ -170,5 +170,5 @@
     <string name="transfer_funds">Transferimi i fondeve</string>
     <string name="unable_to_process">Në pamundësi për të përpunuar</string>
     <string name="cancel">CANCEL</string>
-
+    <string name="checkbox_donate">Dhuroni 2 BTS me Zhvilluesit Mbështetje në</string>
 </resources>

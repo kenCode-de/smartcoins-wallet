@@ -54,7 +54,7 @@
 <string name="always_donate">Aina Lahjoita 2 BTS Support Kehittäjät BitShares Munich (bitshares Munich)</string>
 <string name="hide_donations">Piilota lahjoitukset aloitusvalikosta Maksutapahtumaluettelossa</string>
 <string name="backup">BACKUP Bin</string>
-<string name="checkbox_donate">Lahjoita 2 BTS Support Kehittäjät Bitshares Munich</string>
+<string name="checkbox_donate_old">Lahjoita 2 BTS Support Kehittäjät Bitshares Munich</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Tuotujen / luodut tilit</string>
 <string name="register_new_account">Rekisteröi uusi tunnus</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">jakaa ystävän kanssa</string>
 <string name="share_btn_text">OPEN Sähköpostisovellus</string>
 <string name="action_settings">Asetukset</string>
+    <string name="checkbox_donate">Lahjoita 2 BTS Support Kehittäjät</string>
 <string name="txt_validating_account">Tarkistetaan tilin ...</string>
 <string name="validating_account">Tarkistetaan tili ...</string>
 <string name="account_name_should_be_longer">Tilin nimi pitäisi olla pidempi</string>

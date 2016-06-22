@@ -54,12 +54,13 @@
 <string name="always_donate">Her zaman BitShares Münih (bitshares munich) adresindeki Destek Geliştiriciler için 2 BTS Bağış</string>
 <string name="hide_donations">ekranı İşlemleri listeden Bağışlar gizle</string>
 <string name="backup">YEDEK Bin</string>
-<string name="checkbox_donate">Bitshares Münih\'teki Destek Geliştiriciler 2 BTS Bağış</string>
+<string name="checkbox_donate_old">Bitshares Münih\'teki Destek Geliştiriciler 2 BTS Bağış</string>
 <string name="backup_brainkey">YEDEK BRAINKEY</string>
 <string name="imported_created_accounts">İthal / düzenlendi Hesaplar</string>
 <string name="register_new_account">YENİ HESAP KAYIT</string>
 <string name="secure_pin">DÜZENLEME PIN</string>
 <string name="export">ihracat</string>
+    <string name="checkbox_donate">adresindeki Destek Geliştiriciler için 2 BTS Bağış</string>
 <string name="show_more">Daha fazla göster</string>
 <string name="share_text">Sadece göndermek ve Smartcoins almanızı sağlar, bu müthiş Smartcoins Cüzdan bulundu. Buna bir bak! Şerefe</string>
 <string name="share_info">Smartcoins Cüzdan denemek için arkadaşlarınızdan birini veya daha fazlasını davet ediyoruz! gizlilik güvence böylece E-posta adresleri herkes tarafından kaydedilen veya tahsil edilmez.</string>

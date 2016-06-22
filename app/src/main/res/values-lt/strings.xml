@@ -54,7 +54,7 @@
 <string name="always_donate">Visada Paaukok 2 BTS Paramos kūrėjams ne BitShares Miunchene (bitshares munich)</string>
 <string name="hide_donations">Slėpti dovanojamų lėšų iš homescreen operacijų sąrašą</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Paaukok 2 BTS prie paramos kūrėjams ne Bitshares Miunchene</string>
+<string name="checkbox_donate_old">Paaukok 2 BTS prie paramos kūrėjams ne Bitshares Miunchene</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importuojamos / Sukūrė sąskaitos</string>
 <string name="register_new_account">Register new account</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">pasidalinti su draugu</string>
 <string name="share_btn_text">ATVIRAS pašto programa</string>
 <string name="action_settings">Nustatymai</string>
+    <string name="checkbox_donate">Paaukok 2 BTS Paramos kūrėjams ne</string>
 <string name="txt_validating_account">Validating sąskaitą ...</string>
 <string name="validating_account">Validating paskyrą ...</string>
 <string name="account_name_should_be_longer">Sąskaitos pavadinimas turėtų būti ilgesnis</string>

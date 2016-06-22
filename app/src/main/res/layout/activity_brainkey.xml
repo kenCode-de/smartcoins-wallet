@@ -71,7 +71,7 @@
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
         android:gravity="top"
-        android:text="menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp"/>
+/>
 
     <TextView
         android:visibility="gone"

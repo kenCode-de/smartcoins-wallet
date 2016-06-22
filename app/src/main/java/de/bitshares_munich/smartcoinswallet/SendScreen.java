@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -185,6 +187,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
+
         init();
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
@@ -203,10 +206,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         loadWebView(webviewTo, 34, Helper.md5(""));
         updateBlockNumberHead();
 
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 //Do something after 100ms
                 if (validateSend() && validReceiver) {
                     btnSend.setEnabled(true);
@@ -224,6 +229,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void init() {
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
         setCheckboxAvailabilty();
         setSpinner();
     }
@@ -615,20 +621,58 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         cbAlwaysDonate.setChecked(true);
         alwaysDonate = cbAlwaysDonate.isChecked();
-
+        etMemo.setText(getString(R.string.donation));
     }
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
-    public void cbAlwaysDonate() {
+    public void cbAlwaysDonate(){
+
         alwaysDonate = cbAlwaysDonate.isChecked();
-//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
-//            alwaysDonate = false;
-//        }else {
-//            alwaysDonate = true;
-        //   Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
-        // }
+        String text = etMemo.getText().toString();
+
+        if(alwaysDonate){
+            if(!text.contains(getString(R.string.donation))){
+                text = getString(R.string.donation) + " " + text;
+            }
+        }else {
+            if(text.contains(getString(R.string.donation))){
+                text = text.replace(getString(R.string.donation),"");
+            }
+        }
+        text=text.replaceAll("\\s+", " ").trim();
+        etMemo.setText(text);
+        etMemo.setSelection(etMemo.getText().length());
+
+
     }
+    @OnFocusChange(R.id.etMemo)
+    public void onFocusChanged(){
+        String text = etMemo.getText().toString();
+        if(alwaysDonate){
+            if(!text.contains(getString(R.string.donation))){
+                text = getString(R.string.donation) + " " + text;
+            }
+        }else {
+            if(text.contains(getString(R.string.donation))){
+                text = text.replace(getString(R.string.donation),"");
+            }
+        }
+        text=text.replaceAll("\\s+", " ").trim();
+        etMemo.setText(text);
+        etMemo.setSelection(etMemo.getText().length());
+    }
+//=======
+//    public void cbAlwaysDonate() {
+//        alwaysDonate = cbAlwaysDonate.isChecked();
+////        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
+////            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
+////            alwaysDonate = false;
+////        }else {
+////            alwaysDonate = true;
+//        //   Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),alwaysDonate);
+//        // }
+//    }
+//>>>>>>> a20b337683a1729f357e22873fdc18bd14b02424
 
     void setBackUpAsset() {
         try {
@@ -756,9 +800,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void populateAccountsSpinner() {
         List<String> spinnerArray = new ArrayList<String>();
+        String accountname="";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
+            if(accountDetail.isSelected)
+                accountname = accountDetail.account_name;
+
             spinnerArray.add(accountDetail.account_name);
         }
         if (accountDetails.size() > 1) {
@@ -770,6 +818,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             tvFrom.setVisibility(View.VISIBLE);
         }
         createSpinner(spinnerArray, spinnerFrom);
+
+        if (accountname.isEmpty()) {
+            spinnerFrom.setSelection(0);
+        } else {
+            spinnerFrom.setSelection(spinnerArray.indexOf(accountname));
+        }
     }
 
     public void populateAssetsSpinner() {
@@ -792,6 +846,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     void setSpinner() {
         populateAccountsSpinner();
+
         populateAssetsSpinner();
         setBackUpAsset();
 
@@ -1333,7 +1388,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Override
     public void onResume() {
         super.onResume();
+        accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         init();
+        populateAccountsSpinner();
     }
 
     private void showDialogPin(final Boolean fundTransfer) {

@@ -54,13 +54,14 @@
 <string name="always_donate">Siempre Donate 2 BTS a los desarrolladores de soporte en BitShares Múnich (bitshares Munich)</string>
 <string name="hide_donations">Las donaciones de ocultar la lista de Transacciones de pantalla de inicio</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Donar 2 BTS a los desarrolladores de apoyo en Bitshares Múnich</string>
+<string name="checkbox_donate_old">Donar 2 BTS a los desarrolladores de apoyo en Bitshares Múnich</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Importados / creado las cuentas</string>
 <string name="register_new_account">Registrar una nueva cuenta</string>
 <string name="secure_pin">EDITAR PIN</string>
 <string name="export">Exportar</string>
 <string name="show_more">Mostrar más</string>
+    <string name="checkbox_donate">Donar 2 BTS a los desarrolladores de soporte en</string>
 <string name="share_text">Acabo de encontrar este Monedero impresionante Smartcoins que le permite enviar y recibir Smartcoins. ¡Echale un vistazo! Aclamaciones</string>
 <string name="share_info">Invite a uno o más de sus amigos para probar el Monedero Smartcoins! Las direcciones de correo no se guardan o recogidos por cualquier persona por lo que se garantiza su privacidad.</string>
 <string name="share_subject">Monedero impresionante Smartcoins</string>

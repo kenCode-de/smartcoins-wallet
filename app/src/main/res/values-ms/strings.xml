@@ -54,7 +54,7 @@
 <string name="always_donate">Sentiasa Donate 2 BTS kepada Pembangun Sokongan di BitShares Munich (bitshares munich)</string>
 <string name="hide_donations">Sembunyi Derma dari senarai Transaksi skrin utama</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Menderma 2 BTS untuk Pemaju Sokongan pada Bitshares Munich</string>
+<string name="checkbox_donate_old">Menderma 2 BTS untuk Pemaju Sokongan pada Bitshares Munich</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Diimport / Akaun Created</string>
 <string name="register_new_account">DAFTAR AKAUN BARU</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">berkongsi dengan kawan</string>
 <string name="share_btn_text">OPEN PERMOHONAN EMAIL</string>
 <string name="action_settings">Tetapan</string>
+    <string name="checkbox_donate">Menderma 2 BTS kepada Pembangun Sokongan di</string>
 <string name="txt_validating_account">Mengesahkan akaun ...</string>
 <string name="validating_account">Mengesahkan Akaun ...</string>
 <string name="account_name_should_be_longer">Nama akaun sepatutnya lebih lama</string>

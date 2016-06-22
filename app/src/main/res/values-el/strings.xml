@@ -54,12 +54,13 @@
 <string name="always_donate">Δώρισε πάντα 2 BTS για τους προγραμματιστές Υποστήριξη σε BitShares Μόναχο (bitshares Μόναχο)</string>
 <string name="hide_donations">Απόκρυψη δωρεές από τη λίστα Συναλλαγές homescreen</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Δωρεά 2 BTS στους προγραμματιστές Υποστήριξη σε Bitshares Μόναχο</string>
+<string name="checkbox_donate_old">Δωρεά 2 BTS στους προγραμματιστές Υποστήριξη σε Bitshares Μόναχο</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Εισαγόμενα / Δημιουργήθηκε Λογαριασμών</string>
 <string name="register_new_account">Δημιουργία νέου λογαριασμού</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">Εξαγωγή</string>
+    <string name="checkbox_donate">Δωρεά 2 BTS για τους προγραμματιστές Υποστήριξη σε</string>
 <string name="show_more">Δείτε περισσότερα</string>
 <string name="share_text">Βρήκα ακριβώς αυτό το φοβερό Πορτοφόλι Smartcoins που σας επιτρέπει να στέλνετε και να λαμβάνετε Smartcoins. Τσέκαρέ το! Εβίβα</string>
 <string name="share_info">Προσκαλέστε έναν ή περισσότερους από τους φίλους σας να δοκιμάσουν το πορτοφόλι Smartcoins! Οι διευθύνσεις ηλεκτρονικού ταχυδρομείου δεν αποθηκεύονται ή συλλέγονται από οποιονδήποτε, έτσι είναι εξασφαλισμένη η ιδιωτική τους ζωή.</string>

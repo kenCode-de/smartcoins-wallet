@@ -54,7 +54,7 @@
 <string name="always_donate">हमेशा BitShares म्यूनिख (bitshares म्यूनिख) पर समर्थन डेवलपर्स के लिए 2 बीटीएस दान</string>
 <string name="hide_donations">होमस्क्रीन लेनदेन सूची से दान छुपाएं</string>
 <string name="backup">बैकअप बिन</string>
-<string name="checkbox_donate">2 बीटीएस दान Bitshares म्यूनिख में समर्थन डेवलपर्स के लिए</string>
+<string name="checkbox_donate_old">2 बीटीएस दान Bitshares म्यूनिख में समर्थन डेवलपर्स के लिए</string>
 <string name="backup_brainkey">बैकअप BRAINKEY</string>
 <string name="imported_created_accounts">आयातित / लेखा बनाया</string>
 <string name="register_new_account">नये खाते को पंजीकृत करें</string>
@@ -66,6 +66,7 @@
 <string name="share_subject">बहुत बढ़िया Smartcoins वॉलेट</string>
 <string name="share_heading">एक दोस्त के साथ साझा</string>
 <string name="share_btn_text">खुली ईमेल आवेदन</string>
+    <string name="checkbox_donate">समर्थन डेवलपर्स के लिए 2 बीटीएस दान पर</string>
 <string name="action_settings">सेटिंग्स</string>
 <string name="txt_validating_account">खाते में मान्य ...</string>
 <string name="validating_account">खाते में मान्य ...</string>

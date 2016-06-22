@@ -54,11 +54,12 @@
 <string name="always_donate">Donera alltid 2 BTS till Support Utvecklar på BitShares München (bitshares München)</string>
 <string name="hide_donations">Göm Donationer från homescreen Transaktioner lista</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Donera 2 BTS till support Utvecklare på Bitshares München</string>
+<string name="checkbox_donate_old">Donera 2 BTS till support Utvecklare på Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importerade / skapats konton</string>
 <string name="register_new_account">Registrera nytt konto</string>
 <string name="secure_pin">EDIT PIN</string>
+    <string name="checkbox_donate">Donera 2 BTS till Support Utvecklar på</string>
 <string name="export">Exportera</string>
 <string name="show_more">Visa mer</string>
 <string name="share_text">Jag hittade bara denna enorma Smartcoins plånbok som tillåter dig att skicka och ta emot Smartcoins. Check it out! Skål</string>

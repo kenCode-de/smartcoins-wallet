@@ -54,7 +54,7 @@
 <string name="always_donate">Doneaza întotdeauna 2 BTS la dezvoltatori Support la adresa BitShares Munchen (bitshares Munchen)</string>
 <string name="hide_donations">Donatii de la a ascunde lista Tranzacții homescreen</string>
 <string name="backup">.bin BACKUP</string>
-<string name="checkbox_donate">Doneaza 2 BTS la dezvoltatori Support la adresa Bitshares Munchen</string>
+<string name="checkbox_donate_old">Doneaza 2 BTS la dezvoltatori Support la adresa Bitshares Munchen</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Importate / conturi create</string>
 <string name="register_new_account">INREGISTRATI CONT NOU</string>
@@ -67,6 +67,7 @@
 <string name="share_heading">partaja cu un prieten</string>
 <string name="share_btn_text">CERERE DE EMAIL DESCHIS</string>
 <string name="action_settings">setările</string>
+    <string name="checkbox_donate">Doneaza 2 BTS la dezvoltatori Support la</string>
 <string name="txt_validating_account">Validând cont ...</string>
 <string name="validating_account">Validând cont ...</string>
 <string name="account_name_should_be_longer">Numele contului trebuie să fie mai lung</string>

@@ -54,12 +54,13 @@
 <string name="always_donate">Vždy Darování 2 BTS k nosnému vývojáře na BitShares Mnichově (Mnichov) bitshares</string>
 <string name="hide_donations">Skrýt dary od seznamu úvodní obrazovce Transakce</string>
 <string name="backup">BACKUP bin</string>
-<string name="checkbox_donate">Darovat 2 BTS k nosnému Vývojáři v Mnichově Bitshares</string>
+<string name="checkbox_donate_old">Darovat 2 BTS k nosnému Vývojáři v Mnichově Bitshares</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importované / vytvořené účty</string>
 <string name="register_new_account">Registrovat nový účet</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">Vývoz</string>
+    <string name="checkbox_donate">Darovat 2 BTS podpory vývojáře na</string>
 <string name="show_more">Zobrazit více</string>
 <string name="share_text">Jen jsem našel tuto strašlivou Smartcoins Wallet, která umožňuje odesílat a přijímat Smartcoins. Koukni na to! Na zdraví</string>
 <string name="share_info">Pozvat jeden nebo více z vašich přátel vyzkoušet Smartcoins Peněženka! E-mailové adresy nejsou uloženy nebo shromáždí nikým tak jejich soukromí je zajištěno.</string>

@@ -54,7 +54,7 @@
 <string name="always_donate">Mindig adomány 2 BTS a Support fejlesztők BitShares München (bitshares München)</string>
 <string name="hide_donations">Elrejtése Adományok kezdőképernyőről tranzakciók listája</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Adományok 2 BTS a Support fejlesztők Bitshares München</string>
+<string name="checkbox_donate_old">Adományok 2 BTS a Support fejlesztők Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importált / létrehozott fiókok</string>
 <string name="register_new_account">Új számla</string>
@@ -64,6 +64,7 @@
 <string name="share_text">Most találtam ezt a fantasztikus Smartcoins Pénztárca, amely lehetővé teszi, hogy küldeni és fogadni Smartcoins. Nézd meg! Egészségére</string>
 <string name="share_info">Kérj meg egy vagy több, a barátok, hogy próbálja ki a Smartcoins Wallet! E-mail címek nem kerülnek mentésre, vagy gyűjtött bárki így a magánélet biztosított.</string>
 <string name="share_subject">Félelmetes Smartcoins Wallet</string>
+    <string name="checkbox_donate">Adományok 2 BTS a Support fejlesztők</string>
 <string name="share_heading">megosztani egy barát</string>
 <string name="share_btn_text">OPEN e-mail alkalmazás</string>
 <string name="action_settings">Beállítások</string>

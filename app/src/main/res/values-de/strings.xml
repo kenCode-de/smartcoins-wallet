@@ -54,13 +54,14 @@
 <string name="always_donate">Spenden Sie immer 2 BTS zur Unterstützung Entwickler bei BitShares München (bitshares München)</string>
 <string name="hide_donations">Ausblenden Spenden aus dem Homescreen Transaktionen Liste</string>
 <string name="backup">BACKUP .bin</string>
-<string name="checkbox_donate">Spenden 2 BTS auf die Unterstützung Entwickler bei Bitshares München</string>
+<string name="checkbox_donate_old">Spenden 2 BTS auf die Unterstützung Entwickler bei Bitshares München</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importierte / Erstellt Accounts</string>
 <string name="register_new_account">Neu registrieren</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">Export</string>
 <string name="show_more">Zeig mehr</string>
+    <string name="checkbox_donate">Spenden 2 BTS zur Unterstützung Entwickler an</string>
 <string name="share_text">Ich habe gerade dieses ehrfürchtige Smartcoins Wallet, die Sie Smartcoins zu senden und zu empfangen. Hör zu! Prost</string>
 <string name="share_info">Laden Sie ein oder mehrere Ihrer Freunde die Smartcoins Wallet ausprobieren! E-Mail-Adressen werden nicht gespeichert oder gesammelt von niemandem so ihre Privatsphäre gewährleistet ist.</string>
 <string name="share_subject">Ehrfürchtig Smartcoins Wallet</string>
