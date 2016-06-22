@@ -1365,7 +1365,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                 }
             });
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
 
             dialog.show();
         }
