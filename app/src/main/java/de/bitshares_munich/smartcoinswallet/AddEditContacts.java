@@ -157,6 +157,11 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                         SaveContact.setEnabled(false);
                     }
                 }
+                if(Accountname.getText().length()==0)
+                {
+                    SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                    SaveContact.setEnabled(false);
+                }
                 handler.postDelayed(this, 100);
             }
         }, 100);
@@ -325,4 +330,5 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             return context.getResources().getColor(id);
         }
     }
+
 }

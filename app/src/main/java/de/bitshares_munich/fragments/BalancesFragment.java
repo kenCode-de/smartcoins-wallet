@@ -322,9 +322,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
+        final String hide_donations_isChanged = "hide_donations_isChanged";
+        Boolean isHideDonationsChanged = false;
+        if(Helper.containKeySharePref(getContext(),hide_donations_isChanged)){
+            if(Helper.fetchBoolianSharePref(getContext(),hide_donations_isChanged)){
+                isHideDonationsChanged = true;
+                Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged , false);
+            }
+        }
 
-
-        if (checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+        if (isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
             loadBasic();
         }
     }
