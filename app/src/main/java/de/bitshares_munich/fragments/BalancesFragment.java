@@ -773,10 +773,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         rcvBtn.startAnimation(rotAnim);
     }
 
-    private void animateText(final TextView tvCounter, float value)
+    private void animateText(final TextView tvCounter, float startValue,float endValue)
     {
         ValueAnimator animator = new ValueAnimator();
-        animator.setFloatValues(0.1f, value);
+        animator.setFloatValues(startValue, endValue);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -789,7 +789,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 return startValue + (endValue - startValue) * fraction;
             }
         });
-        animator.setDuration(4000);
+        animator.setDuration(2000);
         animator.start();
     }
 
@@ -879,7 +879,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         handler.postDelayed(rotateTask, 200);
                                     }
 
-                                    animateText(tvAmOne,amount_d);
+                                    animateText(tvAmOne,convertLocalizeStringToFloat(tvAmOne.getText().toString()),amount_d);
                                     //tvAmOne.setText(String.format(locale, "%.4f", amount_d));
                                     // setCounter(tvAmOne, txtAmount_d, amount_d);
                                     final TextView cView = tvAmOne;
@@ -936,7 +936,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     }
 
                                     //tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
-                                    animateText(tvAmtwo,amount_d);
+                                    animateText(tvAmtwo,convertLocalizeStringToFloat(tvAmtwo.getText().toString()),amount_d);
                                    // setCounter(tvAmtwo, txtAmount_d, amount_d);
                                     final TextView cView = tvAmtwo;
                                     final Handler handler = new Handler();
@@ -1038,9 +1038,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
 
 
-        /*
+
         // Dummy balance load
-        final Runnable rotateTask = new Runnable() {
+        /*final Runnable rotateTask = new Runnable() {
             @Override
             public void run()
             {
@@ -1058,8 +1058,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 BalanceAssetsUpdate(sym, pre, am);
             }
         };
-        handler.postDelayed(rotateTask, 10000);
-        */
+        handler.postDelayed(rotateTask, 10000);*/
+
     }
 
 
