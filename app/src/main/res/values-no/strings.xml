@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Validere konto ...</string>
 <string name="validating_account">Validere konto ...</string>
 <string name="account_name_should_be_longer">Kontonavn bør være lengre</string>
-<string name="account_name_already_exist">Kontonavn% s eksisterer allerede</string>
-<string name="account_name_not_exist">Kontonavn% s finnes ikke</string>
+<string name="account_name_already_exist">Kontonavn %s eksisterer allerede</string>
+<string name="account_name_not_exist">Kontonavn %s finnes ikke</string>
 <string name="add_contact">Legg til</string>
 <string name="edit_contact">Redigere</string>
 <string name="empty_list">Kontaktlisten er tom</string>

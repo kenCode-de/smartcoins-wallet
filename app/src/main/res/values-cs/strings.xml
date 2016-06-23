@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Ověřování účtu ...</string>
 <string name="validating_account">Ověřování účtu ...</string>
 <string name="account_name_should_be_longer">Název účtu by neměl být delší</string>
-<string name="account_name_already_exist">Název účtu% s již existuje</string>
-<string name="account_name_not_exist">Název účtu% s neexistuje</string>
+<string name="account_name_already_exist">Název účtu %s již existuje</string>
+<string name="account_name_not_exist">Název účtu %s neexistuje</string>
 <string name="add_contact">Přidat</string>
 <string name="edit_contact">editovat</string>
 <string name="empty_list">Seznam kontaktů je prázdný</string>

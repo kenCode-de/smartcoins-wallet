@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Members tài khoản ...</string>
 <string name="validating_account">Members tài khoản ...</string>
 <string name="account_name_should_be_longer">Tên tài khoản nên dài</string>
-<string name="account_name_already_exist">Tên tài khoản% s đã tồn tại</string>
-<string name="account_name_not_exist">Tên tài khoản% s không tồn tại</string>
+<string name="account_name_already_exist">Tên tài khoản %s đã tồn tại</string>
+<string name="account_name_not_exist">Tên tài khoản %s không tồn tại</string>
 <string name="add_contact">Thêm vào</string>
 <string name="edit_contact">Chỉnh sửa</string>
 <string name="empty_list">Liên danh sách đang rỗng</string>

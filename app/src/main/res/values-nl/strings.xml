@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Valideren van rekening ...</string>
 <string name="validating_account">Valideren van Account ...</string>
 <string name="account_name_should_be_longer">Account naam moet langer zijn</string>
-<string name="account_name_already_exist">Account Name% s bestaan</string>
-<string name="account_name_not_exist">Account naam% s bestaat niet</string>
+<string name="account_name_already_exist">Account Name %s bestaan</string>
+<string name="account_name_not_exist">Account naam %s bestaat niet</string>
 <string name="add_contact">Toevoegen</string>
 <string name="edit_contact">Bewerk</string>
 <string name="empty_list">Contact lijst is leeg</string>

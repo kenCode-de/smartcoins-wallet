@@ -71,8 +71,8 @@
 <string name="txt_validating_account">驗證帳戶...</string>
 <string name="validating_account">驗證帳戶...</string>
 <string name="account_name_should_be_longer">賬戶名稱應越長</string>
-<string name="account_name_already_exist">賬戶名稱％s已經存在</string>
-<string name="account_name_not_exist">賬戶名稱％s不存在</string>
+<string name="account_name_already_exist">賬戶名稱 ％s 已經存在</string>
+<string name="account_name_not_exist">賬戶名稱 ％s 不存在</string>
 <string name="add_contact">加</string>
 <string name="edit_contact">編輯</string>
 <string name="empty_list">聯繫人列表為空</string>

@@ -70,8 +70,8 @@
 <string name="txt_validating_account">Overovanie účtu ...</string>
 <string name="validating_account">Overovanie účtu ...</string>
 <string name="account_name_should_be_longer">Názov účtu by nemal byť dlhší</string>
-<string name="account_name_already_exist">Názov účtu% s už existuje</string>
-<string name="account_name_not_exist">Názov účtu% s neexistuje</string>
+<string name="account_name_already_exist">Názov účtu %s už existuje</string>
+<string name="account_name_not_exist">Názov účtu %s neexistuje</string>
 <string name="add_contact">pridať</string>
     <string name="checkbox_donate">Darovať 2 BTS podpory vývojárov na</string>
 <string name="edit_contact">editovať</string>

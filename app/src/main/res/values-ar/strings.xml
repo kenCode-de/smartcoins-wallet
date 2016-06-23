@@ -71,8 +71,8 @@
 <string name="txt_validating_account">التحقق من صحة الحساب ...</string>
 <string name="validating_account">التحقق من صحة الحساب ...</string>
 <string name="account_name_should_be_longer">وينبغي أن يكون اسم الحساب يعد</string>
-<string name="account_name_already_exist">اسم الحساب٪ الصورة موجودة بالفعل</string>
-<string name="account_name_not_exist">لا وجود اسم الحساب٪ الصورة</string>
+    <string name="account_name_not_exist"> أسم الحساب %s غير موجود</string>
+    <string name="account_name_already_exist"> أسم الحساب %s موجود مسبقا</string>
 <string name="add_contact">إضافة</string>
 <string name="edit_contact">تحرير</string>
 <string name="empty_list">قائمة الاتصال فارغة</string>

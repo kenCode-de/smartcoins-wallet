@@ -70,8 +70,8 @@
 <string name="txt_validating_account">Validando conta ...</string>
 <string name="validating_account">Validando conta ...</string>
 <string name="account_name_should_be_longer">nome da conta deve ser mais longo</string>
-<string name="account_name_already_exist">Nome da conta% s já existem</string>
-<string name="account_name_not_exist">Nome da conta% s não existe</string>
+<string name="account_name_already_exist">Nome da conta %s já existem</string>
+<string name="account_name_not_exist">Nome da conta %s não existe</string>
 <string name="add_contact">Adicionar</string>
     <string name="checkbox_donate">Doe 2 BTS ao Desenvolvedores Suporte em</string>
 <string name="edit_contact">Editar</string>

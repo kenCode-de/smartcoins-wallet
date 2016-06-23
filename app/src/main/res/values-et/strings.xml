@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Validating konto ...</string>
 <string name="validating_account">Validating konto ...</string>
 <string name="account_name_should_be_longer">Konto nimi peaks olema pikem</string>
-<string name="account_name_already_exist">Konto nimi% s on juba olemas</string>
-<string name="account_name_not_exist">Konto nimi% s ei ole olemas</string>
+<string name="account_name_already_exist">Konto nimi %s on juba olemas</string>
+<string name="account_name_not_exist">Konto nimi %s ei ole olemas</string>
 <string name="add_contact">lisama</string>
 <string name="edit_contact">Edit</string>
 <string name="empty_list">Kontakt nimekiri on tühi</string>

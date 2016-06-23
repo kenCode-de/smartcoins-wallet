@@ -71,8 +71,8 @@
 <string name="txt_validating_account">hesap doğrulanıyor ...</string>
 <string name="validating_account">Hesap doğrulanıyor ...</string>
 <string name="account_name_should_be_longer">Hesap adı uzun olmalıdır</string>
-<string name="account_name_already_exist">Hesap Adı:% s zaten mevcut</string>
-<string name="account_name_not_exist">Hesap Adı:% s yok</string>
+<string name="account_name_already_exist">Hesap Adı: %s zaten mevcut</string>
+<string name="account_name_not_exist">Hesap Adı: %s yok</string>
 <string name="add_contact">Eklemek</string>
 <string name="edit_contact">Düzenleme</string>
 <string name="empty_list">Kişi listesi Boş</string>
