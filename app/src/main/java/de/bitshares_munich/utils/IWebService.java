@@ -10,6 +10,7 @@ import de.bitshares_munich.models.GenerateKeys;
 
 import de.bitshares_munich.models.EquivalentComponentResponse;
 
+import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.RegisterAccount;
@@ -76,4 +77,11 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<EquivalentComponentResponse> getEquivalentComponent(@Body Map<String, String> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<LtmFee> getLtmFee(@Body Map<String, String> params);
+
+
+
 }
