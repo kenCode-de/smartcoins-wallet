@@ -277,7 +277,7 @@
                             android:paddingRight="5dp"
                             android:singleLine="true"
                             android:text=""
-                        />
+                            android:textColor="@color/blackColor" />
                         <Spinner
                             android:id="@+id/spAssets"
                             android:layout_width="100dp"
