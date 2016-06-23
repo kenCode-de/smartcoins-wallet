@@ -70,8 +70,8 @@
 <string name="txt_validating_account">Memvalidasi akun ...</string>
 <string name="validating_account">Memvalidasi Akun ...</string>
 <string name="account_name_should_be_longer">nama akun harus lebih lama</string>
-<string name="account_name_already_exist">Nama Akun% s sudah ada</string>
-<string name="account_name_not_exist">Nama Akun% s tidak ada</string>
+<string name="account_name_already_exist">Nama Akun %s sudah ada</string>
+<string name="account_name_not_exist">Nama Akun %s tidak ada</string>
 <string name="add_contact">Menambahkan</string>
 <string name="edit_contact">mengedit</string>
     <string name="checkbox_donate">Menyumbangkan 2 BTS ke Pengembang Support di</string>

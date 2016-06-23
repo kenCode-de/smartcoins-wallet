@@ -72,8 +72,8 @@
 <string name="txt_validating_account">La validació del compte ...</string>
 <string name="validating_account">La validació del compte ...</string>
 <string name="account_name_should_be_longer">nom del compte ha de ser més llarg</string>
-<string name="account_name_already_exist">Nom del compte% s ja existeix</string>
-<string name="account_name_not_exist">Nom del compte% s no existeix</string>
+<string name="account_name_already_exist">Nom del compte %s ja existeix</string>
+<string name="account_name_not_exist">Nom del compte %s no existeix</string>
 <string name="add_contact">afegir</string>
 <string name="edit_contact">editar</string>
 <string name="empty_list">llista de contactes està buida</string>

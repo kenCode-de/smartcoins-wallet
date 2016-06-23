@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Mengesahkan akaun ...</string>
 <string name="validating_account">Mengesahkan Akaun ...</string>
 <string name="account_name_should_be_longer">Nama akaun sepatutnya lebih lama</string>
-<string name="account_name_already_exist">Akaun Nama% s sudah wujud</string>
-<string name="account_name_not_exist">Akaun Nama% s tidak wujud</string>
+<string name="account_name_already_exist">Akaun Nama %s sudah wujud</string>
+<string name="account_name_not_exist">Akaun Nama %s tidak wujud</string>
 <string name="add_contact">Tambah</string>
 <string name="edit_contact">Edit</string>
 <string name="empty_list">Senarai kenalan adalah kosong</string>

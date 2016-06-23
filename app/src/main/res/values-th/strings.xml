@@ -72,8 +72,8 @@
 <string name="txt_validating_account">การตรวจสอบบัญชี ...</string>
 <string name="validating_account">การตรวจสอบบัญชี ...</string>
 <string name="account_name_should_be_longer">ชื่อบัญชีที่ควรจะเป็นอีกต่อไป</string>
-<string name="account_name_already_exist">ชื่อบัญชี% s อยู่แล้ว</string>
-<string name="account_name_not_exist">ชื่อบัญชี% s ไม่อยู่</string>
+<string name="account_name_already_exist">ชื่อบัญชี %s อยู่แล้ว</string>
+<string name="account_name_not_exist">ชื่อบัญชี  %s ไม่อยู่</string>
 <string name="add_contact">เพิ่ม</string>
 <string name="edit_contact">แก้ไข</string>
 <string name="empty_list">รายชื่อผู้ติดต่อเป็นที่ว่างเปล่า</string>

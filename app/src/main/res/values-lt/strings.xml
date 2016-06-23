@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Validating sąskaitą ...</string>
 <string name="validating_account">Validating paskyrą ...</string>
 <string name="account_name_should_be_longer">Sąskaitos pavadinimas turėtų būti ilgesnis</string>
-<string name="account_name_already_exist">Sąskaitos pavadinimas "% s" jau yra</string>
-<string name="account_name_not_exist">Sąskaitos pavadinimas "% s neegzistuoja</string>
+<string name="account_name_already_exist">Sąskaitos pavadinimas %s jau yra</string>
+<string name="account_name_not_exist">Sąskaitos pavadinimas %s neegzistuoja</string>
 <string name="add_contact">Papildyti</string>
 <string name="edit_contact">Redaguoti</string>
 <string name="empty_list">Kontaktų sąrašas yra tuščias</string>

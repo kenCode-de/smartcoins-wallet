@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Validating számla ...</string>
 <string name="validating_account">Validating fiók ...</string>
 <string name="account_name_should_be_longer">Fióknév hosszabbnak kell lennie</string>
-<string name="account_name_already_exist">Számla neve% s már létezik</string>
-<string name="account_name_not_exist">Számla neve% s nem létezik</string>
+<string name="account_name_already_exist">Számla neve %s már létezik</string>
+<string name="account_name_not_exist">Számla neve %s nem létezik</string>
 <string name="add_contact">hozzáad</string>
 <string name="edit_contact">szerkesztése</string>
 <string name="empty_list">Névjegyzék üres</string>

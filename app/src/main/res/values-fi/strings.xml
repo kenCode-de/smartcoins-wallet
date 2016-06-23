@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Tarkistetaan tilin ...</string>
 <string name="validating_account">Tarkistetaan tili ...</string>
 <string name="account_name_should_be_longer">Tilin nimi pitäisi olla pidempi</string>
-<string name="account_name_already_exist">Tilin nimi% s on jo olemassa</string>
-<string name="account_name_not_exist">Tilin nimi% s ei ole olemassa</string>
+<string name="account_name_already_exist">Tilin nimi %s on jo olemassa</string>
+<string name="account_name_not_exist">Tilin nimi %s ei ole olemassa</string>
 <string name="add_contact">Lisätä</string>
 <string name="edit_contact">Muokata</string>
 <string name="empty_list">Ota lista on tyhjä</string>
