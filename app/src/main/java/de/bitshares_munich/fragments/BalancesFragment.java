@@ -569,7 +569,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     private void getEquivalentComponents(ArrayList<AccountAssets> accountAssets) {
         String faitCurrency = Helper.getFadeCurrency(getContext());
         if (faitCurrency.isEmpty()) {
-            faitCurrency = application.getString(R.string.default_currency);
+            faitCurrency = "EUR";
         }
         String values = "";
         for (int i = 0; i < accountAssets.size(); i++) {
