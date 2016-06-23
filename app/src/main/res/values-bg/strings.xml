@@ -72,8 +72,10 @@
 <string name="txt_validating_account">Валидиране сметка ...</string>
 <string name="validating_account">Валидиране на профила ...</string>
 <string name="account_name_should_be_longer">Титуляр на сметката трябва да бъде по-дълъг</string>
-<string name="account_name_already_exist">Вече съществува профил Наименование% S</string>
-<string name="account_name_not_exist">Account Наименование% и не съществува</string>
+    <string name="account_name_already_exist">Име на акаунта
+        %s вече съществува</string>
+    <string name="account_name_not_exist">Име на акаунта
+        %s не съществува</string>
 <string name="add_contact">Добави</string>
 <string name="edit_contact">редактиране</string>
 <string name="empty_list">Свържи списък е празен</string>

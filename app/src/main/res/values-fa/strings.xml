@@ -71,8 +71,9 @@
 <string name="txt_validating_account">اعتبار حساب ...</string>
 <string name="validating_account">اعتبار حساب ...</string>
 <string name="account_name_should_be_longer">نام حساب باید بیشتر باشد</string>
-<string name="account_name_already_exist">نام حساب٪ s در حال حاضر وجود</string>
-<string name="account_name_not_exist">نام حساب٪ s وجود ندارد</string>
+
+    <string name="account_name_already_exist"> نام حساب %s در حال حاضر وجود</string>
+    <string name="account_name_not_exist">نام حساب %s وجود ندارد</string>
 <string name="add_contact">اضافه کردن</string>
 <string name="edit_contact">ویرایش</string>
 <string name="empty_list">لیست تماس خالی است</string>

@@ -72,8 +72,8 @@
 <string name="txt_validating_account">অ্যাকাউন্ট যাচাই করা হচ্ছে ...</string>
 <string name="validating_account">অ্যাকাউন্ট যাচাই করা হচ্ছে ...</string>
 <string name="account_name_should_be_longer">অ্যাকাউন্ট নাম আর হওয়া উচিত</string>
-<string name="account_name_already_exist">একাউন্ট নাম% s ইতিমধ্যেই বিদ্যমান</string>
-<string name="account_name_not_exist">একাউন্ট নাম% s এর অস্তিত্ব নেই</string>
+<string name="account_name_already_exist">একাউন্ট নাম% %s ইতিমধ্যেই বিদ্যমান</string>
+<string name="account_name_not_exist">একাউন্ট নাম% %s এর অস্তিত্ব নেই</string>
 <string name="add_contact">যোগ</string>
 <string name="edit_contact">সম্পাদন করা</string>
 <string name="empty_list">যোগাযোগ তালিকা খালি</string>

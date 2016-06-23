@@ -72,8 +72,8 @@
 <string name="txt_validating_account">アカウントを確認しています...</string>
 <string name="validating_account">アカウントを確認しています...</string>
 <string name="account_name_should_be_longer">アカウント名は長くしてください</string>
-<string name="account_name_already_exist">アカウント名％sはすでに存在しています</string>
-<string name="account_name_not_exist">アカウント名％sは存在しません。</string>
+<string name="account_name_already_exist">アカウント名 ％s はすでに存在しています</string>
+<string name="account_name_not_exist">アカウント名 ％s は存在しません。</string>
 <string name="add_contact">加えます</string>
 <string name="edit_contact">編集</string>
 <string name="empty_list">連絡先リストは空です</string>

@@ -70,8 +70,8 @@
 <string name="txt_validating_account">Potrjevanje računa ...</string>
 <string name="validating_account">Vrednotenje račun ...</string>
 <string name="account_name_should_be_longer">Ime računa mora biti več</string>
-<string name="account_name_already_exist">Ime računa% s že obstaja</string>
-<string name="account_name_not_exist">Ime računa% s ne obstaja</string>
+<string name="account_name_already_exist">Ime računa %s že obstaja</string>
+<string name="account_name_not_exist">Ime računa %s ne obstaja</string>
 <string name="add_contact">Dodaj</string>
     <string name="checkbox_donate">Donate 2 BTS za podporo razvijalce na</string>
 <string name="edit_contact">Uredi</string>

@@ -72,8 +72,8 @@
 <string name="txt_validating_account">Վավերացման հաշիվը ...</string>
 <string name="validating_account">Վավերացման հաշիվ ...</string>
 <string name="account_name_should_be_longer">Հաշվի անունը պետք է լինի ավելի երկար</string>
-<string name="account_name_already_exist">Հաշվի Անունը% s արդեն գոյություն</string>
-<string name="account_name_not_exist">Հաշվի Անունը% s գոյություն չունի</string>
+<string name="account_name_already_exist">Հաշվի Անունը %s արդեն գոյություն</string>
+<string name="account_name_not_exist">Հաշվի Անունը %s գոյություն չունի</string>
 <string name="add_contact">ավելացնել</string>
 <string name="edit_contact">խմբագրել</string>
 <string name="empty_list">Հետադարձ կապ ցանկը դատարկ է</string>

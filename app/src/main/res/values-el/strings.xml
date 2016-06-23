@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Επικύρωση του λογαριασμού ...</string>
 <string name="validating_account">Επικύρωση λογαριασμού ...</string>
 <string name="account_name_should_be_longer">το όνομα του λογαριασμού θα πρέπει να είναι μεγαλύτερη</string>
-<string name="account_name_already_exist">Όνομα λογαριασμού% s υπάρχει ήδη</string>
-<string name="account_name_not_exist">Όνομα λογαριασμού% s δεν υπάρχει</string>
+<string name="account_name_already_exist">Όνομα λογαριασμού %s υπάρχει ήδη</string>
+<string name="account_name_not_exist">Όνομα λογαριασμού %s δεν υπάρχει</string>
 <string name="add_contact">Προσθέτω</string>
 <string name="edit_contact">Επεξεργασία</string>
 <string name="empty_list">λίστα επαφών είναι κενή</string>

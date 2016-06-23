@@ -71,8 +71,8 @@
 <string name="txt_validating_account">계정을 확인 중 ...</string>
 <string name="validating_account">계정 확인 중 ...</string>
 <string name="account_name_should_be_longer">계정 이름은 이상이어야한다</string>
-<string name="account_name_already_exist">계정 이름 % s에 이미 존재</string>
-<string name="account_name_not_exist">계정 이름 % s이 (가) 존재하지 않습니다</string>
+<string name="account_name_already_exist">계정 이름 %s 에 이미 존재</string>
+<string name="account_name_not_exist">계정 이름 %s 이 (가) 존재하지 않습니다</string>
 <string name="add_contact">더하다</string>
 <string name="edit_contact">편집하다</string>
 <string name="empty_list">연락처 목록이 비어 있습니다</string>

@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Apstiprināšanu kontu ...</string>
 <string name="validating_account">Apstiprināšanu kontu ...</string>
 <string name="account_name_should_be_longer">Konta nosaukums ir garāks</string>
-<string name="account_name_already_exist">Konta nosaukums% s jau eksistē</string>
-<string name="account_name_not_exist">Konta nosaukums% s neeksistē</string>
+<string name="account_name_already_exist">Konta nosaukums %s jau eksistē</string>
+<string name="account_name_not_exist">Konta nosaukums %s neeksistē</string>
 <string name="add_contact">pievienot</string>
 <string name="edit_contact">rediģēt</string>
 <string name="empty_list">Kontaktinformācija saraksts ir tukšs</string>
