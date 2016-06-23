@@ -67,6 +67,7 @@ public class SettingActivity extends BaseActivity {
     final String close_bitshare = "close_bitshare";
     final String always_donate = "always_donate";
     final String hide_donations = "hide_donations";
+    final String hide_donations_isChanged = "hide_donations_isChanged";
     final String date_time = "date_time";
     final String register_new_account = "register_new_account";
     String brainKey = "";
@@ -178,6 +179,7 @@ public class SettingActivity extends BaseActivity {
                 Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
+                Helper.storeBoolianSharePref(this, hide_donations_isChanged , true);
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
                 else Helper.storeBoolianSharePref(this, hide_donations, false);
                 break;

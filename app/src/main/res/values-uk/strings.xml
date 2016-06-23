@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Перевірка облікового запису ...</string>
 <string name="validating_account">Перевірка облікового запису ...</string>
 <string name="account_name_should_be_longer">Ім\'я облікового запису має бути більше</string>
-<string name="account_name_already_exist">Ім\'я облікового запису% s вже існує</string>
-<string name="account_name_not_exist">Ім\'я облікового запису% s не існує</string>
+<string name="account_name_already_exist">Ім\'я облікового запису %s вже існує</string>
+<string name="account_name_not_exist">Ім\'я облікового запису %s не існує</string>
 <string name="add_contact">додавати</string>
 <string name="edit_contact">редагувати</string>
 <string name="empty_list">Список контактів пустий</string>

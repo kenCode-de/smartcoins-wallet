@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Vleresimin llogari ...</string>
 <string name="validating_account">Vleresimin llogari ...</string>
 <string name="account_name_should_be_longer">Emri i llogarisë duhet të jetë më e gjatë</string>
-<string name="account_name_already_exist">Emri i llogarisë% s tashmë ekzistojnë</string>
-<string name="account_name_not_exist">Emri i llogarisë% s nuk ekziston</string>
+<string name="account_name_already_exist">Emri i llogarisë %s tashmë ekzistojnë</string>
+<string name="account_name_not_exist">Emri i llogarisë %s nuk ekziston</string>
 <string name="add_contact">shtoj</string>
 <string name="edit_contact">redaktoj</string>
 <string name="empty_list">lista e kontaktit është bosh</string>

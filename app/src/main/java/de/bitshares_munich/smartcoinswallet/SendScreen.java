@@ -80,6 +80,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     boolean validAmount = false;
     boolean sendBtnPressed = false;
     boolean alwaysDonate = false;
+    boolean validating = false;
+
 
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
@@ -210,6 +212,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             @Override
             public void run() {
 
+                if(!validReceiver && !validating){
+                    if (etReceiverAccount.getText().length() > 0) {
+                        myLowerCaseTimer.cancel();
+                        myAccountNameValidationTimer.cancel();
+                        myLowerCaseTimer.start();
+                        myAccountNameValidationTimer.start();
+                    }
+                }
                 //Do something after 100ms
                 if (validateSend() && validReceiver) {
                     btnSend.setEnabled(true);
@@ -238,6 +248,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         tvErrorRecieverAccount.setText("");
 
         if (etReceiverAccount.getText().length() > 0) {
+            validating = true;
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
@@ -253,6 +264,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         validReceiver = false;
 
         if (!hasFocus) {
+            validating = true;
             tvErrorRecieverAccount.setText("");
             //  tvErrorRecieverAccount.setVisibility(View.VISIBLE);
             myLowerCaseTimer.cancel();
@@ -1049,6 +1061,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         }
                     });
                     sendBtnPressed = false;
+                    validating = false;
                 }
             }
             if (!found) {
@@ -1057,6 +1070,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     public void run() {
                         validReceiver = false;
                         sendBtnPressed = false;
+                        validating = false;
                         // This code works correct, donot edit if it shows red underline
                         String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
                         tvErrorRecieverAccount.setText(format);

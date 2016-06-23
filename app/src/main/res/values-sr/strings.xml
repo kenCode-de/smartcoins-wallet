@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Потврђивање рачуна ...</string>
 <string name="validating_account">Потврђивање налога ...</string>
 <string name="account_name_should_be_longer">Рачун име треба да буде дужи</string>
-<string name="account_name_already_exist">Име налога% с већ постоји</string>
-<string name="account_name_not_exist">Име налога% с не постоји</string>
+<string name="account_name_already_exist">Име налога %s већ постоји</string>
+<string name="account_name_not_exist">Име налога %s не постоји</string>
 <string name="add_contact">додати</string>
 <string name="edit_contact">едит</string>
 <string name="empty_list">Контакт листа је празна</string>

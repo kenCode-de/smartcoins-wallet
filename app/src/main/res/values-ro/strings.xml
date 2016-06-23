@@ -71,8 +71,8 @@
 <string name="txt_validating_account">Validând cont ...</string>
 <string name="validating_account">Validând cont ...</string>
 <string name="account_name_should_be_longer">Numele contului trebuie să fie mai lung</string>
-<string name="account_name_already_exist">Numele contului% s există deja</string>
-<string name="account_name_not_exist">Numele contului% s nu exista</string>
+<string name="account_name_already_exist">Numele contului %s există deja</string>
+<string name="account_name_not_exist">Numele contului %s nu exista</string>
 <string name="add_contact">Adăuga</string>
 <string name="edit_contact">Editați | ×</string>
 <string name="empty_list">Lista de contacte este gol</string>

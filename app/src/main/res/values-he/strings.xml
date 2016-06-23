@@ -71,8 +71,8 @@
 <string name="txt_validating_account">מאמת חשבון ...</string>
 <string name="validating_account">מאמת חשבון ...</string>
 <string name="account_name_should_be_longer">שם חשבון צריך להיות יותר</string>
-<string name="account_name_already_exist">שם% חשבון s כבר קיים</string>
-<string name="account_name_not_exist">ים שם% חשבון אינו קיים</string>
+<string name="account_name_already_exist">שם %s חשבון s כבר קיים</string>
+<string name="account_name_not_exist">ים שם %s חשבון אינו קיים</string>
 <string name="add_contact">לְהוֹסִיף</string>
 <string name="edit_contact">לַעֲרוֹך</string>
 <string name="empty_list">רשימת אנשי קשר ריקה</string>
