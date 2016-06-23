@@ -79,6 +79,7 @@ public class Application extends android.app.Application {
     public void registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
     }
+
     public void registerCallbackIAccountID(IAccountID callbackClass) {
         iAccountID = callbackClass;
     }
@@ -125,23 +126,13 @@ public class Application extends android.app.Application {
     public static void webSocketConnection() {
         iAccount = iAccount;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(5*1000);
+        get.setTimeout(5 * 1000);
 
 
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
             public void onCompleted(final Exception ex, WebSocket webSocket) {
-                 if (webSocket != null && webSocket.isOpen() && ex==null) {
-                    if (getCurrentActivity() != null) {
-                        getCurrentActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                //Toast.makeText(context, "Connected to node " + urlsSocketConnection[counter], Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                }
 
                 if (ex != null) {
                     counter++;
@@ -187,7 +178,7 @@ public class Application extends android.app.Application {
 
                 webSocket.setClosedCallback(new CompletedCallback() {
                     public void onCompleted(Exception ex) {
-                         webSocketConnection();
+                        webSocketConnection();
                     }
                 });
 
@@ -293,13 +284,11 @@ public class Application extends android.app.Application {
                                 if (iAssetDelegate != null) {
                                     iAssetDelegate.getLifetime(s, id);
                                 }
-                            }
-                            else if (id == 151) {
+                            } else if (id == 151) {
                                 if (iAccountID != null) {
                                     iAccountID.accountId(s);
                                 }
-                            }
-                            else if (id == 160 || id == 161) {
+                            } else if (id == 160 || id == 161) {
                                 if (iRelativeHistory != null) {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }
