@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Vui lòng nhập xác nhận pin 6 chữ số</string>
 <string name="mismatch_pin">pin không phù hợp</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Brainkey này không tương thích với BTS 1.0 \ n (Sử dụng một tập tin sao lưu thay)</string>
+<string name="txt_brain_key_info">In này ra, hoặc viết nó xuống. Bất cứ ai có quyền truy cập vào khóa khôi phục của bạn sẽ có quyền truy cập vào các quỹ trong ví này.</string>
 <string name="create_wallet">CREATE VÍ</string>
 <string name="cance">CANCEL</string>
 <string name="save">TIẾT KIỆM</string>

@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">6 অঙ্ক পিন নিশ্চিতকরণ প্রবেশ করুন</string>
 <string name="mismatch_pin">মেলেনি পিন</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">এই Brainkey \ N (একটি ব্যাকআপ ফাইল পরিবর্তে ব্যবহার করুন) বিটিএস 1.0 সঙ্গে সামঞ্জস্যপূর্ণ নয়</string>
+<string name="txt_brain_key_info">এই মুদ্রণ করুন আউট, বা এটা লিখে. আপনার পুনরুদ্ধারের কী অ্যাক্সেস সঙ্গে যে কেউ এই মানিব্যাগ মধ্যে তহবিল অ্যাক্সেস থাকবে.</string>
 <string name="create_wallet">মানিব্যাগ CREATE</string>
 <string name="cance">বাতিল</string>
 <string name="save">সংরক্ষণ করুন</string>

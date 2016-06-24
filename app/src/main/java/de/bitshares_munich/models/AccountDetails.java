@@ -14,6 +14,7 @@ public class AccountDetails {
     public String pub_key;
     public String wif_key;
     public String msg;
+    public String pin;
     public ArrayList<AccountAssets> AccountAssets;
     public Boolean isSelected;
     public Boolean isLifeTime=false;

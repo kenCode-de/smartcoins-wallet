@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">6桁のPIN確認を入力してください</string>
 <string name="mismatch_pin">ミスマッチピン</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">このBrainkeyは、\ nは（代わりにバックアップ・ファイルを使用します）BTS 1.0と互換性がありません</string>
+<string name="txt_brain_key_info">これをプリントアウト、またはそれを書き留め。あなたの回復キーへのアクセス権を持つ誰もがこのウォレット内の資金へのアクセスを必要があります。</string>
 <string name="create_wallet">ウォレットを作成</string>
 <string name="cance">キャンセル</string>
 <string name="save">セーブ</string>

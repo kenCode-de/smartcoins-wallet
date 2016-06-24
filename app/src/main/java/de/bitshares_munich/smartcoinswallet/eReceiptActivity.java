@@ -150,7 +150,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
         init(eReciept);
 
-        setBackButton(true);
+            setBackButton(true);
     }
 
     @Override

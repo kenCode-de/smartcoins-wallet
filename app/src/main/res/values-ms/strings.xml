@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Sila masukkan 6 digit pengesahan pin</string>
 <string name="mismatch_pin">pin tidak sepadan</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Brainkey ini tidak serasi dengan BTS 1.0 \ n (Gunakan fail sandaran sebaliknya)</string>
+<string name="txt_brain_key_info">Cetak keluar, atau menulisnya. Sesiapa yang mempunyai akses kepada kunci pemulihan anda akan mempunyai akses kepada dana dalam wallet ini.</string>
 <string name="create_wallet">CREATE WALLET</string>
 <string name="cance">CANCEL</string>
 <string name="save">JIMAT</string>

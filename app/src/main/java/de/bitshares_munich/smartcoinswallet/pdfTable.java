@@ -104,7 +104,7 @@ public class pdfTable {
         Document document = new Document();
 
         try {
-            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.txt_folder_name);
+            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.folder_name);
             String filePath = combinePath(extStorage, filename + ".pdf");
             createEmptyFile(filePath);
             PdfWriter.getInstance(document,new FileOutputStream(filePath));
@@ -189,6 +189,7 @@ public class pdfTable {
             document.add(table);
             document.close();
 //            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
             Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
         }
         catch(Exception e){

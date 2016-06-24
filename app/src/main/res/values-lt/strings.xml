@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Prašome įvesti 6 skaitmenų PIN patvirtinimą</string>
 <string name="mismatch_pin">neatitikimas kaištis</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Tai Brainkey yra nesuderinamas su BTS 1.0 \ N (vietoj Naudokite atsarginės kopijos failą)</string>
+<string name="txt_brain_key_info">Spausdinti šį baigėsi arba užsirašyti. Kiekvienas su prieiga prie atkūrimo raktą turės prieigą prie lėšų per šią piniginę.</string>
 <string name="create_wallet">Sugalvokite piniginės</string>
 <string name="cance">CANCEL</string>
 <string name="save">SUTAUPYTI</string>

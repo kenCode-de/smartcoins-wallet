@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Bitte geben Sie 6-stelligen PIN-Bestätigung</string>
 <string name="mismatch_pin">Mismatch-Stift</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Diese Brainkey ist nicht kompatibel mit BTS 1.0 \ n (eine Backup-Datei stattdessen verwenden)</string>
+<string name="txt_brain_key_info">Drucken Sie diese aus, oder schreiben Sie es auf. Jeder, der Zugriff auf Ihren Wiederherstellungsschlüssel wird innerhalb dieses Portemonnaie Zugang zu Mitteln haben.</string>
 <string name="create_wallet">CREATE WALLET</string>
 <string name="cance">STORNIEREN</string>
 <string name="save">SPAREN</string>

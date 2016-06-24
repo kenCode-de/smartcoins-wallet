@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Indtast venligst 6-cifret pin bekræftelse</string>
 <string name="mismatch_pin">uoverensstemmelse pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Denne Brainkey er ikke kompatibel med BTS 1.0 \ n (Brug en backup-fil i stedet)</string>
+<string name="txt_brain_key_info">Udskriv dette, eller skrive det ned. Enhver med adgang til din opsving nøgle vil have adgang til midler inden denne tegnebog.</string>
 <string name="create_wallet">CREATE WALLET</string>
 <string name="cance">OPHÆVE</string>
 <string name="save">SPARE</string>

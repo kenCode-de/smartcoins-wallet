@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">Si us plau, introdueixi la confirmació pin 6 dígits</string>
 <string name="mismatch_pin">pin desajust</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Aquest Brainkey no és compatible amb BTS 1.0 \ n (Utilitzar un fitxer de còpia de seguretat al seu lloc)</string>
+<string name="txt_brain_key_info">Imprimiu això, o anoti-ho. Qualsevol persona amb accés a la clau de recuperació tindrà accés als fons dins d\'aquesta cartera.</string>
 <string name="create_wallet">CREAR CARPETA</string>
 <string name="cance">CANCEL · LAR</string>
 <string name="save">GUARDAR</string>

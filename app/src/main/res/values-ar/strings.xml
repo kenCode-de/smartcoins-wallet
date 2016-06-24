@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">الرجاء إدخال 6 أرقام تأكيدا دبوس</string>
 <string name="mismatch_pin">دبوس عدم تطابق</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">هذا Brainkey غير متوافق مع BTS 1.0 \ ن (استخدام ملف النسخة الاحتياطية بدلا من ذلك)</string>
+<string name="txt_brain_key_info">طباعة هذا الخروج، أو الكتابة عليه. أي شخص لديه حق الوصول إلى مفتاح الانتعاش لديك الوصول إلى الأموال داخل هذه المحفظة.</string>
 <string name="create_wallet">CREATE محفظة</string>
 <string name="cance">إلغاء</string>
 <string name="save">حفظ</string>
