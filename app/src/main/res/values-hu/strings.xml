@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Kérjük, írja be 6 jegyű PIN megerősítés</string>
 <string name="mismatch_pin">mismatch pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Ez Brainkey nem kompatibilis BTS 1.0 \ n (Használja biztonsági másolatot helyett)</string>
+<string name="txt_brain_key_info">Nyomtassa ki ezt, vagy írd le. Bárki, aki hozzáfér a helyreállítási kulcs lesz a forrásokhoz való hozzáférés ezen belül pénztárca.</string>
 <string name="create_wallet">mobiltárca</string>
 <string name="cance">MEGSZÜNTETI</string>
 <string name="save">MENTÉS</string>

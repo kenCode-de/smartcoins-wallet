@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">請輸入6位數的PIN確認</string>
 <string name="mismatch_pin">錯配銷</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">這Brainkey不與BTS 1.0兼容\ n（使用備份文件而不是）</string>
+<string name="txt_brain_key_info">打印出來，或把它寫下來。任何人都可以訪問恢復密鑰都會有這個錢包內獲得資金。</string>
 <string name="create_wallet">CREATE錢包</string>
 <string name="cance">取消</string>
 <string name="save">保存</string>

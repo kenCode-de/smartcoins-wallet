@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Vă rugăm să introduceți PIN-ul de confirmare din 6 cifre</string>
 <string name="mismatch_pin">PIN-ul asimetrie</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Acest lucru Brainkey nu este compatibil cu BTS 1.0 \ n (Utilizați un fișier copie de rezervă în schimb)</string>
+<string name="txt_brain_key_info">Imprimati asta, sau scrie-l în jos. Oricine are acces la cheia de recuperare va avea acces la fonduri în acest portofel.</string>
 <string name="create_wallet">CREATE PORTOFEL</string>
 <string name="cance">ANULARE</string>
 <string name="save">SALVAȚI</string>

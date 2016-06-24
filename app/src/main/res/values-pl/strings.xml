@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Proszę wprowadzić 6-cyfrowy potwierdzenie pin</string>
 <string name="mismatch_pin">niedopasowanie pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Ten Brainkey nie jest kompatybilny z BTS 1.0 \ n (Użyj kopii zamiast)</string>
+<string name="txt_brain_key_info">Wydrukuj ten się lub zapisz go. Każdy, kto ma dostęp do swojego klucza odzyskiwania będzie miał dostęp do środków w ramach tego portfela.</string>
 <string name="create_wallet">TWORZENIE portfel</string>
 <string name="cance">ANULUJ</string>
 <string name="save">ZAPISAĆ</string>

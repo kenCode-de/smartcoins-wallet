@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Vul de 6-cijferige pincode bevestiging</string>
 <string name="mismatch_pin">mismatch pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Dit Brainkey is niet compatibel met BTS 1.0 \ n (Gebruik een back-upbestand in plaats daarvan)</string>
+<string name="txt_brain_key_info">Print dit uit, of schrijf het op. Iedereen met toegang tot uw herstel sleutel zal de toegang tot middelen binnen deze portefeuille te hebben.</string>
 <string name="create_wallet">CREATE PORTEFEUILLE</string>
 <string name="cance">ANNULEER</string>
 <string name="save">SAVE</string>

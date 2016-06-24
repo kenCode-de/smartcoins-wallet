@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Unesite 6-znamenkasti potvrdu pin</string>
 <string name="mismatch_pin">neslaganje pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">To Brainkey nije kompatibilan sa BTS 1.0 \ N (umjesto Koristite sigurnosnu kopiju datoteke)</string>
+<string name="txt_brain_key_info">Ispis ovo, ili zapisati. Svatko tko ima pristup ključ za oporavak će imati pristup sredstvima unutar ovog novčanika.</string>
 <string name="create_wallet">CREATE novčanikom</string>
 <string name="cance">OTKAZATI</string>
 <string name="save">UŠTEDJETI</string>

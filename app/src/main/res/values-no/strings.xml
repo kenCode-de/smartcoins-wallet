@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Fyll inn seks-sifret pin bekreftelse</string>
 <string name="mismatch_pin">mismatch pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Dette Brainkey er ikke kompatibel med BTS 1.0 \ n (Bruk en backup-fil i stedet)</string>
+<string name="txt_brain_key_info">Print ut dette, eller skrive det ned. Alle med tilgang til gjenopprettingsnøkkelen vil ha tilgang til midler innenfor denne lommeboka.</string>
 <string name="create_wallet">Opprett lommebok</string>
 <string name="cance">KANSELLERE</string>
 <string name="save">SPARE</string>

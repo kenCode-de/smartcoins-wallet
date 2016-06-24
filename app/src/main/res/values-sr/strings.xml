@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Молимо унесите 6 цифре потврду пин</string>
 <string name="mismatch_pin">неслагање пински</string>
 <string name="txt_brain_key">Браинкеи</string>
-<string name="txt_brain_key_info">Ово Браинкеи није компатибилан са БТС 1.0 \ н (Користите резервну датотеку уместо)</string>
+<string name="txt_brain_key_info">Принт ово, или запишите га. Свако ко има приступ кључа за опоравак ће имати приступ фондовима у оквиру овог новчаника.</string>
 <string name="create_wallet">ЦРЕАТЕ БУМАЖНИК</string>
 <string name="cance">ЦАНЦЕЛ</string>
 <string name="save">САВЕ</string>

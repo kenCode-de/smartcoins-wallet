@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">กรุณากรอกยืนยันขา 6 หลัก</string>
 <string name="mismatch_pin">ขาไม่ตรงกัน</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Brainkey นี้ไม่สามารถใช้ร่วมกับบีทีเอส 1.0 \ n (ใช้ไฟล์สำรองแทน)</string>
+<string name="txt_brain_key_info">พิมพ์ออกหรือเขียนมันลง ทุกคนที่มีการเข้าถึงคีย์การกู้คืนของคุณจะมีการเข้าถึงเงินทุนภายในกระเป๋าสตางค์นี้</string>
 <string name="create_wallet">สร้าง WALLET</string>
 <string name="cance">ยกเลิก</string>
 <string name="save">ประหยัด</string>

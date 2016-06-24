@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">Ju lutemi shkruani 6-shifror konfirmim pin</string>
 <string name="mismatch_pin">pin mospërputhje</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Kjo Brainkey nuk është e përputhshme me BTS 1.0 \ n (Përdor një file backup në vend)</string>
+<string name="txt_brain_key_info">Printo këtë, ose të shkruajnë. Dikush me qasje në kyç tuaj të rimëkëmbjes do të ketë qasje në fonde brenda këtij portofoli.</string>
 <string name="create_wallet">CREATE Wallet</string>
 <string name="cance">CANCEL</string>
 <string name="save">SAVE</string>
