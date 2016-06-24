@@ -15,6 +15,7 @@ import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.RegisterAccount;
 import de.bitshares_munich.models.TradeResponse;
+import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.models.TransferResponse;
 import retrofit2.Call;
@@ -77,6 +78,10 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<EquivalentComponentResponse> getEquivalentComponent(@Body Map<String, String> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<TransactionIdResponse> getTransactionIdComponent(@Body Map<String, String> params);
 
     @Headers({"Content-Type: application/json"})
     @POST("/")

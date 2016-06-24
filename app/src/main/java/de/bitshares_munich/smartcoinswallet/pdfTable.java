@@ -91,7 +91,7 @@ public class pdfTable {
             FileWriter writer = new FileWriter(gpxfile);
             writer.flush();
             writer.close();
-            Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -260,9 +260,9 @@ public class pdfTable {
             document.close();
 
             Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, "---");
-            email.putExtra(Intent.EXTRA_SUBJECT, "---");
-            email.putExtra(Intent.EXTRA_TEXT, "---");
+            //email.putExtra(Intent.EXTRA_EMAIL, "---");
+            //email.putExtra(Intent.EXTRA_SUBJECT, "---");
+            //email.putExtra(Intent.EXTRA_TEXT, "---");
             Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");
