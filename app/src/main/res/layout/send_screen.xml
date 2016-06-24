@@ -462,6 +462,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/memo_capital"
+                            android:layout_marginTop="3dp"
                             android:textColor="#00060A"
                             android:textSize="15sp"
                         />
@@ -469,6 +470,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=":"
+                            android:layout_marginTop="3dp"
                             android:textColor="#00060A"
                             android:textSize="15sp"
                         />
