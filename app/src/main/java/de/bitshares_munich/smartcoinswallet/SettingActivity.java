@@ -644,7 +644,7 @@ public class SettingActivity extends BaseActivity {
                                         Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
                                         if (amount < 18000) {
                                             balanceValid[0] = false;
-                                            Toast.makeText(getApplicationContext(), getString(R.string.insufficient_amount), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), getString(R.string.insufficient_funds), Toast.LENGTH_LONG).show();
                                         }
                                         break;
                                     }

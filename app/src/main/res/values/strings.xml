@@ -290,6 +290,7 @@
 
 // new strings
     <string name="donation">Donation</string>
+    <string name="insufficient_funds">Insufficient Funds</string>
 
 
 </resources>
