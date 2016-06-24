@@ -530,6 +530,9 @@ public class SettingActivity extends BaseActivity {
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
+            if (brainKey.isEmpty()){
+                brainKey = accountDetails.get(0).brain_key;
+            }
             etBrainKey.setText(brainKey);
         } catch (Exception e) {
 

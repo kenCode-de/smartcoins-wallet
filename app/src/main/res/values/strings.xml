@@ -39,7 +39,7 @@
 
     <string name="txt_pin">pin</string>
     <string name="txt_brain_key">Brainkey</string>
-    <string name="txt_brain_key_info">This Brainkey is not compatible with BTS 1.0 \n (Use a backup file instead)</string>
+    <string name="txt_brain_key_info">Print this out, or write it down. Anyone with access to your recovery key will have access to funds within this wallet.</string>
     <string name="create_wallet">CREATE WALLET</string>
     <string name="save">SAVE</string>
     <string name="next">NEXT</string>
