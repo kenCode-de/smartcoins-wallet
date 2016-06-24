@@ -636,7 +636,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         cbAlwaysDonate.setChecked(true);
         alwaysDonate = cbAlwaysDonate.isChecked();
-        etMemo.setText(getString(R.string.donation));
     }
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
@@ -644,16 +643,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         alwaysDonate = cbAlwaysDonate.isChecked();
         String text = etMemo.getText().toString();
-
-        if(alwaysDonate){
-            if(!text.contains(getString(R.string.donation))){
-                text = getString(R.string.donation) + " " + text;
-            }
-        }else {
-            if(text.contains(getString(R.string.donation))){
-                text = text.replace(getString(R.string.donation),"");
-            }
-        }
         text=text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
@@ -663,15 +652,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnFocusChange(R.id.etMemo)
     public void onFocusChanged(){
         String text = etMemo.getText().toString();
-        if(alwaysDonate){
-            if(!text.contains(getString(R.string.donation))){
-                text = getString(R.string.donation) + " " + text;
-            }
-        }else {
-            if(text.contains(getString(R.string.donation))){
-                text = text.replace(getString(R.string.donation),"");
-            }
-        }
         text=text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
@@ -950,6 +930,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
             }
         }
+        String memo = etMemo.getText().toString();
+        if (toAccount.equals("bitshares-munich")){
+            memo = "Donation";
+        }
         HashMap hm = new HashMap();
         hm.put("method", "transfer");
         hm.put("wifkey", privateKey);
@@ -957,9 +941,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("to_account", toAccount);
         hm.put("amount", amount);
         hm.put("asset_symbol", symbol);
-        hm.put("memo", etMemo.getText().toString());
+        hm.put("memo", memo);
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.transfer_server_url));
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<TransferResponse> postingService = service.getTransferResponse(hm);
         postingService.enqueue(new Callback<TransferResponse>() {
