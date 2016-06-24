@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">Моля, въведете 6-цифрена потвърждение щифт</string>
 <string name="mismatch_pin">разминаване щифт</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Това Brainkey не е съвместим с BTS 1.0 \ Н (Използвайте архивен файл вместо)</string>
+<string name="txt_brain_key_info">Печат на, или да го запишете. Всеки, който има достъп до вашия ключ за възстановяване, ще имат достъп до средства в рамките на този портфейл.</string>
 <string name="create_wallet">СЪЗДАВАНЕ НА ПОРТФЕЙЛ</string>
 <string name="cance">ОТКАЗ</string>
 <string name="save">SAVE</string>

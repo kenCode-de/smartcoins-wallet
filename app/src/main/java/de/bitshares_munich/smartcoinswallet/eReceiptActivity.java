@@ -140,19 +140,30 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
         init(eReciept);
 
-        setBackButton(true);
+            setBackButton(true);
     }
 
-    /*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+////        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+////        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+////        startActivity(intent);
+//        finish();
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+////        if (item.getItemId() == android.R.id.home) {
+////            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+////            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+////            startActivity(intent);
+//     //       finish();
+////            return true;
+////        }
+//        onBackPressed();
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void OnUpdate(String s,int id) {
@@ -331,7 +342,8 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     }
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
-        String filename = getResources().getString(R.string.txt_folder_name) + File.separator + "eReceipt-scwall";
+        String filename = getResources().getString(R.string.folder_name) + File.separator + "eReceipt-scwall";
+//        String filename = context.getPackageName() + File.separator + "eReceipt-scwall";
 
         map.put("id",eReciptmap.get("id"));
         map.put("time",date);
@@ -393,7 +405,10 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
             else bmImage.setImageBitmap(result);
         }
     }
-//        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+
+
+    //        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
 //        File pdfDir = new File(extStorage+"/Transaction-scwall");
 //        if (!pdfDir.exists()){
 //            pdfDir.mkdir();

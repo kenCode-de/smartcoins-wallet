@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">6-basamaklı pin onay girin</string>
 <string name="mismatch_pin">uyuşmazlığı pim</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Bu Brainkey \ n (yerine bir yedek dosyasını kullanın) BTS 1.0 ile uyumlu değil</string>
+<string name="txt_brain_key_info">Bu yazdırın, ya da yazmak. Kurtarma anahtarı erişimi olan herkes bu cüzdan içinde fonlara erişimi olacaktır.</string>
 <string name="create_wallet">cüzdan oluşturmak</string>
 <string name="cance">İPTAL</string>
 <string name="save">KAYIT ETMEK</string>

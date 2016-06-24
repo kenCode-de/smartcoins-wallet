@@ -3,6 +3,7 @@ package de.bitshares_munich.utils;
 import android.content.Intent;
 import android.widget.Toast;
 
+import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.eReceiptActivity;
@@ -31,14 +32,18 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
     public void onDataClicked(int rowIndex, TransactionDetails td) {
         //String clickedtdString = td.getDetailsFrom();
         //Toast.makeText(myContext, clickedtdString, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(Application.getCurrentActivity(), eReceiptActivity.class);
-        intent.putExtra( myContext.getResources().getString(R.string.e_receipt),td.eReceipt);
-        intent.putExtra( "Memo",td.Memo);
-        intent.putExtra( "Date",td.getDateString()+" "+td.getTimeString()+" "+td.getTimeZone());
-        intent.putExtra( "To",td.To);
-        intent.putExtra( "From",td.From);
-        intent.putExtra( "Sent",td.Sent);
-
-        Application.getCurrentActivity().startActivity(intent);
+//        Intent intent = new Intent(Application.getCurrentActivity(), eReceiptActivity.class);
+        if(!BalancesFragment.onClicked) {
+            BalancesFragment.onClicked = true;
+            Intent intent = new Intent(myContext, eReceiptActivity.class);
+            intent.putExtra(myContext.getResources().getString(R.string.e_receipt), td.eReceipt);
+            intent.putExtra("Memo", td.Memo);
+            intent.putExtra("Date", td.getDateString() + " " + td.getTimeString() + " " + td.getTimeZone());
+            intent.putExtra("To", td.To);
+            intent.putExtra("From", td.From);
+            intent.putExtra("Sent", td.Sent);
+            myContext.startActivity(intent);
+        }
+//        Application.getCurrentActivity().startActivity(intent);
     }
 }

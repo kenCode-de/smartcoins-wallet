@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">6 자리 핀 확인을 입력하세요</string>
 <string name="mismatch_pin">불일치 핀</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">이 Brainkey은 \ n (대신 백업 파일을 사용하여) BTS 1.0와 호환되지 않습니다</string>
+<string name="txt_brain_key_info">이를 인쇄하거나 적어 둡니다. 복구 키에 액세스 할 수있는 사람이 지갑에서 자금에 액세스 할 수 있습니다.</string>
 <string name="create_wallet">지갑을 CREATE</string>
 <string name="cance">취소하다</string>
 <string name="save">구하다</string>

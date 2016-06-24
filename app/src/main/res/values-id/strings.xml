@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Cukup masukkan 6 digit konfirmasi pin</string>
 <string name="mismatch_pin">pin mismatch</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Brainkey ini tidak kompatibel dengan BTS 1,0 \ n (Gunakan file backup sebagai gantinya)</string>
+<string name="txt_brain_key_info">Cetak ini keluar, atau menuliskannya. Siapapun dengan akses ke kunci pemulihan akan memiliki akses ke dana dalam dompet ini.</string>
 <string name="create_wallet">BUAT DOMPET</string>
 <string name="cance">MEMBATALKAN</string>
 <string name="save">MENYIMPAN</string>

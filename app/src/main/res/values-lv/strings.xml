@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Ievadiet 6-ciparu PIN apstiprinājums</string>
 <string name="mismatch_pin">neatbilstība pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Tas Brainkey nav saderīgs ar BTS 1.0 \ n (izmantojiet backup failu vietā)</string>
+<string name="txt_brain_key_info">Izdrukāt šo out, vai uzrakstiet to uz leju. Ikviens, kam ir piekļuve jūsu atkopšanas atslēgu būs pieejami līdzekļi iekšienē maka.</string>
 <string name="create_wallet">Izveidojiet seifa</string>
 <string name="cance">CANCEL</string>
 <string name="save">SAVE</string>

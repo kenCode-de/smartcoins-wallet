@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">נא להזין את האישור פיני 6 ספרות</string>
 <string name="mismatch_pin">סיכה אי התאמה</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Brainkey זה אינו תואם BTS 1.0 \ n (השתמש קובץ הגיבוי במקום)</string>
+<string name="txt_brain_key_info">להדפיס את זה, או לכתוב את זה. כל מי שיש לו גישה מפתח השחזור שלך תהיה גישה לקרנות בתוך הארנק הזה.</string>
 <string name="create_wallet">CREATE ארנק</string>
 <string name="cance">לְבַטֵל</string>
 <string name="save">לשמור</string>

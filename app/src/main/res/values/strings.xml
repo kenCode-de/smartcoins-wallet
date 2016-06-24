@@ -222,7 +222,7 @@
     <string name="head_block_number">head_block_number</string>
     <string name="e_receipt">e_receipt</string>
 
-
+    <string name="folder_name">SmartcoinsWallet</string>
     <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
     </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
@@ -290,6 +290,8 @@
 
 // new strings
     <string name="donation">Donation</string>
+    <string name="insufficient_funds">Insufficient Funds</string>
+
     <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
         account in it
     </string>
