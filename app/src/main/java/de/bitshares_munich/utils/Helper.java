@@ -296,7 +296,7 @@ public class Helper {
     public static String setLocaleNumberFormat(Locale locale, Number number) {
 
         NumberFormat formatter = NumberFormat.getInstance(locale);
-        formatter.setMaximumFractionDigits(6);
+        formatter.setMaximumFractionDigits(4);
         String localeFormattedNumber = formatter.format(number);
         return localeFormattedNumber;
 
