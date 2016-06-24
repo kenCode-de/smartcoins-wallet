@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -533,7 +534,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void updateAmountStatus() {
-
+        tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
         String selectedAsset = spAssets.getSelectedItem().toString();
         selectedAccountAsset();
         Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
@@ -548,6 +549,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 if (enteredAmount > selectedBalance | enteredAmount < 0) {
                     //etAmount.setText(selectedBalance.toString());
                     validAmount = false;
+                    tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                     tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
                 } else {
                     validAmount = true;

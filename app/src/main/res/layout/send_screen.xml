@@ -295,7 +295,6 @@
                     android:layout_below="@+id/ThirdChild"
                     android:gravity="right"
                     android:text=""
-                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="15sp"
                 />
                 <LinearLayout
