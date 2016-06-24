@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Пожалуйста, введите 6-значный пин-подтверждение</string>
 <string name="mismatch_pin">несоответствие контактный</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Этот Brainkey не совместим с БПС 1.0 \ П (С помощью файла резервной копии, а)</string>
+<string name="txt_brain_key_info">Распечатайте это, или запишите его. Любой человек, имеющий доступ к ключу восстановления будет иметь доступ к денежным средствам в рамках этого кошелька.</string>
 <string name="create_wallet">CREATE БУМАЖНИКА</string>
 <string name="cance">ОТМЕНА</string>
 <string name="save">СПАСТИ</string>

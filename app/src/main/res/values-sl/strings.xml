@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Vnesite 6-mestno potrditev pin</string>
 <string name="mismatch_pin">neusklajenost pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">To Brainkey ni združljiv z BTS 1,0 \ n (namesto uporabite varnostno kopijo)</string>
+<string name="txt_brain_key_info">Natisni to jasno, ali ga zapišite. Vsakdo, ki ima dostop do ključa za oživitev bodo imeli dostop do sredstev v okviru tega denarnico.</string>
 <string name="create_wallet">CREATE denarnica</string>
 <string name="cance">CANCEL</string>
 <string name="save">SAVE</string>

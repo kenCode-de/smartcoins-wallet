@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -246,6 +247,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
+        if (!text.toString().equals(text.toString().trim())){
+            etReceiverAccount.setText(text.toString().trim());
+        }
 
         if (etReceiverAccount.getText().length() > 0) {
             validating = true;
@@ -530,7 +534,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void updateAmountStatus() {
-
+        tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
         String selectedAsset = spAssets.getSelectedItem().toString();
         selectedAccountAsset();
         Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
@@ -545,6 +549,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 if (enteredAmount > selectedBalance | enteredAmount < 0) {
                     //etAmount.setText(selectedBalance.toString());
                     validAmount = false;
+                    tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                     tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
                 } else {
                     validAmount = true;
@@ -631,7 +636,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         cbAlwaysDonate.setChecked(true);
         alwaysDonate = cbAlwaysDonate.isChecked();
-        etMemo.setText(getString(R.string.donation));
     }
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
@@ -639,16 +643,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         alwaysDonate = cbAlwaysDonate.isChecked();
         String text = etMemo.getText().toString();
-
-        if(alwaysDonate){
-            if(!text.contains(getString(R.string.donation))){
-                text = getString(R.string.donation) + " " + text;
-            }
-        }else {
-            if(text.contains(getString(R.string.donation))){
-                text = text.replace(getString(R.string.donation),"");
-            }
-        }
         text=text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
@@ -658,15 +652,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnFocusChange(R.id.etMemo)
     public void onFocusChanged(){
         String text = etMemo.getText().toString();
-        if(alwaysDonate){
-            if(!text.contains(getString(R.string.donation))){
-                text = getString(R.string.donation) + " " + text;
-            }
-        }else {
-            if(text.contains(getString(R.string.donation))){
-                text = text.replace(getString(R.string.donation),"");
-            }
-        }
         text=text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
@@ -945,6 +930,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
             }
         }
+        String memo = etMemo.getText().toString();
+        if (toAccount.equals("bitshares-munich")){
+            memo = "Donation";
+        }
         HashMap hm = new HashMap();
         hm.put("method", "transfer");
         hm.put("wifkey", privateKey);
@@ -952,9 +941,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("to_account", toAccount);
         hm.put("amount", amount);
         hm.put("asset_symbol", symbol);
-        hm.put("memo", etMemo.getText().toString());
+        hm.put("memo", memo);
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.transfer_server_url));
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<TransferResponse> postingService = service.getTransferResponse(hm);
         postingService.enqueue(new Callback<TransferResponse>() {

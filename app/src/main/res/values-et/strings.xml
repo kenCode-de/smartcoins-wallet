@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Palun sisesta 6-kohaline pin kinnituse</string>
 <string name="mismatch_pin">ebakõla pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">See Brainkey ei ühildu BTS 1.0 \ n (Kasuta backup faili asemel)</string>
+<string name="txt_brain_key_info">Trüki välja või seda kirja panna. Igaüks, kellel on juurdepääs taastevõtit saavad juurdepääsu vahendeid selle rahakoti.</string>
 <string name="create_wallet">Loo rahakotile</string>
 <string name="cance">TÜHISTA</string>
 <string name="save">SAVE</string>

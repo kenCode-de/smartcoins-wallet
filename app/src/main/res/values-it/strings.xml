@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Si prega di inserire la conferma pin a 6 cifre</string>
 <string name="mismatch_pin">pin mancata corrispondenza</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Questo Brainkey non è compatibile con BTS 1.0 \ n (Utilizzare un file di backup, invece)</string>
+<string name="txt_brain_key_info">Stampa questo fuori, o scriverlo. Chiunque abbia accesso al vostro chiave di ripristino avrà accesso ai fondi all\'interno di questo portafoglio.</string>
 <string name="create_wallet">CREATE PORTAFOGLIO</string>
 <string name="cance">ANNULLA</string>
 <string name="save">SALVARE</string>

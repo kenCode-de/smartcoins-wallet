@@ -530,6 +530,9 @@ public class SettingActivity extends BaseActivity {
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
+            if (brainKey.isEmpty()){
+                brainKey = accountDetails.get(0).brain_key;
+            }
             etBrainKey.setText(brainKey);
         } catch (Exception e) {
 
@@ -677,6 +680,7 @@ public class SettingActivity extends BaseActivity {
     }
 
     public void showDialog() {
+
         final Dialog dialog = new Dialog(this);
         //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
 //                dialog.setTitle(R.string.pin_verification);
@@ -686,17 +690,19 @@ public class SettingActivity extends BaseActivity {
         TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
         btnCancel.setText(R.string.txt_no);
         btnDone.setText(R.string.txt_yes);
-
         String alertMsg = getString(R.string.txt_alertmsg);
         if (accountDetails.size() > 1) {
             alertMsg = alertMsg + " : " + spAccounts.getSelectedItem().toString() + " ?";
         } else {
-            alertMsg = alertMsg + " : " + tvAccounts.getText() + " ?";
+            alertMsg = getString(R.string.txt_wallet_atleast_one_account);
+            btnDone.setVisibility(View.GONE);
+            btnCancel.setText(getString(R.string.cancel));
         }
         textView.setText(alertMsg);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 deleteAccount();
                 dialog.cancel();
             }
@@ -733,9 +739,9 @@ public class SettingActivity extends BaseActivity {
 
 
         } else {
-            tvAccounts.setText("");
-            tvAccounts.setVisibility(View.GONE);
-            clearApplicationData(getApplicationContext());
+            //tvAccounts.setText("");
+            //tvAccounts.setVisibility(View.GONE);
+            //clearApplicationData(getApplicationContext());
         }
     }
 

@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Παρακαλώ εισάγετε 6-ψήφιο επιβεβαίωση pin</string>
 <string name="mismatch_pin">αναντιστοιχία pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Αυτό Brainkey δεν είναι συμβατή με το BTS 1.0 \ n (Χρησιμοποιήστε ένα αρχείο αντιγράφου ασφαλείας αντί)</string>
+<string name="txt_brain_key_info">Εκτυπώστε αυτό έξω, ή να το γράψετε κάτω. Οποιοσδήποτε με πρόσβαση στο κλειδί ανάκτησης σας θα έχουν πρόσβαση σε κεφάλαια μέσα σε αυτό το πορτοφόλι.</string>
 <string name="create_wallet">ΔΗΜΙΟΥΡΓΙΑ ΠΟΡΤΟΦΟΛΙ</string>
 <string name="cance">ΜΑΤΑΊΩΣΗ</string>
 <string name="save">ΑΠΟΘΗΚΕΎΣΕΤΕ</string>

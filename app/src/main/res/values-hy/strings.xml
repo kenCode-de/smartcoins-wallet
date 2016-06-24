@@ -32,7 +32,7 @@
 <string name="please_enter_6_digit_pin_confirm">Խնդրում ենք մուտք գործել 6-նիշանոց ծածկագիրը հաստատումը</string>
 <string name="mismatch_pin">անհամապատասխանություն փին</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Այս Brainkey չէ համատեղելի BTS 1.0 \ n (Օգտագործեք կրկնօրինակ ֆայլը փոխարեն)</string>
+<string name="txt_brain_key_info">Տպել այս խնդիրը, կամ գրել այն ներքեւ. Յուրաքանչյուրը հետ մուտքի ձեր վերականգնման բանալին կունենաք օգտվել միջոցների շրջանակներում այս դրամապանակից.</string>
 <string name="create_wallet">ՍՏԵՂԾԵԼ դրամապանակը</string>
 <string name="cance">ՀՐԱԺԱՐՎԵԼ</string>
 <string name="save">SAVE</string>
