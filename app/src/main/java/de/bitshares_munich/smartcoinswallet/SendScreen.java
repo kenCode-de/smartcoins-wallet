@@ -246,6 +246,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
+        if (!text.toString().equals(text.toString().trim())){
+            etReceiverAccount.setText(text.toString().trim());
+        }
 
         if (etReceiverAccount.getText().length() > 0) {
             validating = true;
