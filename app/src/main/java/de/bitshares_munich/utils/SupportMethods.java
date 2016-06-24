@@ -92,13 +92,19 @@ public class SupportMethods {
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + obj);
     }
     public static void testing(String msg , Exception e , String nameOfObject){
-        StackTraceElement[] stackTrace = e.getStackTrace();
-        String fullClassName = stackTrace[stackTrace.length - 1].getClassName();
-        String className = fullClassName.substring(fullClassName
-                .lastIndexOf(".") + 1);
-        String methodName = stackTrace[stackTrace.length - 1].getMethodName();
-        int lineNumber = stackTrace[stackTrace.length - 1].getLineNumber();
-        Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
+        try {
+            StackTraceElement[] stackTrace = e.getStackTrace();
+            String fullClassName = stackTrace[stackTrace.length - 1].getClassName();
+            String className = fullClassName.substring(fullClassName
+                    .lastIndexOf(".") + 1);
+            String methodName = stackTrace[stackTrace.length - 1].getMethodName();
+            int lineNumber = stackTrace[stackTrace.length - 1].getLineNumber();
+            Log.i("Saiyed_Testing", "=> Msg : " + msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
+        }
+        catch (Exception ex)
+        {
+
+        }
     }
     public static int CheckJsonFormat(String s){
         try {

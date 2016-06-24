@@ -5,13 +5,4 @@ package de.bitshares_munich.models;
  */
 public class RegisterAccount {
     public String account;
-
-//    public class RAccount {
-//
-//        public Object id;
-//        public String name;
-//        public String active_key;
-//        public String owner_key;
-//
-//    }
 }

@@ -336,14 +336,22 @@ public class TinyDB {
         ArrayList<AccountDetails> objects = new ArrayList<>();
 
         try {
-            for (String jObjString : objStrings) {
-                AccountDetails value = (AccountDetails) gson.fromJson(jObjString, mClass);
-                objects.add(value);
+            for (String jObjString : objStrings)
+            {
+                try
+                {
+                    AccountDetails value = (AccountDetails) gson.fromJson(jObjString, mClass);
+                    objects.add(value);
+                }
+                catch (Exception ex)
+                {
+                    //objects = new ArrayList<>();
+                }
             }
         }
         catch (Exception e)
         {
-            objects = new ArrayList<>();
+            //objects = new ArrayList<>();
         }
 
 

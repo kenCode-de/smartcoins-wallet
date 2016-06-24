@@ -626,8 +626,9 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //Check Balance
+                String ltmAmount=Helper.fetchStringSharePref(getApplicationContext(),"ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText(String.format(getString(R.string.txt_confirmation_msg), spAccounts.getSelectedItem().toString()));
+                    alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_no));
                 } else {
@@ -642,7 +643,7 @@ public class SettingActivity extends BaseActivity {
                                     AccountAssets accountAssets = arrayListAccountAssets.get(j);
                                     if (accountAssets.symbol.equalsIgnoreCase("BTS")) {
                                         Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
-                                        if (amount < 18000) {
+                                        if (amount < Double.parseDouble(ltmAmount)) {
                                             balanceValid[0] = false;
                                             Toast.makeText(getApplicationContext(), getString(R.string.insufficient_funds), Toast.LENGTH_LONG).show();
                                         }
