@@ -47,7 +47,7 @@ subprojects {
                     minSdkVersion 14
                     targetSdkVersion 23
                     versionCode 184
-                    versionName "1.8.4"
+                    versionName "1.0.1"
                 }
             }
         }
