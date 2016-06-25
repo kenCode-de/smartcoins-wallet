@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,16 +32,22 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -47,8 +55,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.models.DecodeMemo;
+import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
@@ -91,8 +101,8 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
     @Bind(R.id.TvId)
     TextView TvId;
 
-    int names_in_work;
-    int names_total_size;
+    //int names_in_work;
+    //int names_total_size;
     int assets_id_in_work;
     int assets_id_total_size;
 
@@ -140,29 +150,20 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
         init(eReciept);
 
-        setBackButton(true);
+            setBackButton(true);
     }
-
-    /*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    */
 
     @Override
     public void OnUpdate(String s,int id) {
-        if(id==9){
-            String result = SupportMethods.ParseJsonObject(s,"result");
-            String time = SupportMethods.ParseJsonObject(result,"timestamp");
+        if(id==9)
+        {
+            //String result = SupportMethods.ParseJsonObject(s,"result");
+            //String time = SupportMethods.ParseJsonObject(result,"timestamp");
             assets_id_in_work=0;
             get_asset(Assetid.get(assets_id_in_work),"11");
         }
-        if(id==11) {
+        else if(id==11)
+        {
             if (assets_id_in_work < assets_id_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                 String assetObject = SupportMethods.ParseObjectFromJsonArray(result,0);
@@ -173,41 +174,89 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                 de.put("precision",precision);
                 SymbolsPrecisions.put(Assetid.get(assets_id_in_work),de);
                 if(assets_id_in_work==(assets_id_total_size-1)){
-                  //  decodeMemo(OPmap.get("memo"));
                          onLastCall();
                 }
                 assets_id_in_work++;
                 if(assets_id_in_work<Assetid.size()) get_asset(Assetid.get(assets_id_in_work),"11");
             }
         }
-
     }
-//    void init(String value){
-//        value = value.substring(1, value.length()-1);           //remove curly brackets
-//        String[] keyValuePairs = value.split(",");              //split the string to creat key-value pairs
-//        Map<String,String> map = new HashMap<>();
-//
-//        for(String pair : keyValuePairs)                        //iterate over the pairs
-//        {
-//            String[] entry = pair.split("=");                   //split the pairs to get key and value
-//            map.put(entry[0], entry[1]);          //add them to the hashmap and trim whitespaces
-//        }
-//
-//        Iterator it = map.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry pair = (Map.Entry)it.next();
-//            SupportMethods.testing("qanon",pair.getKey() + " = " + pair.getValue(),"eReciept");
-//            it.remove(); // avoids a ConcurrentModificationException
-//        }
-//    }[
 
-    void init(String eRecipt) {
 
+    String transactionIdClipped = "";
+    Boolean transactionIdUpdated = false;
+    private void getTransactionId (final String block_num,final String trx_in_block)
+    {
+        final Handler handler = new Handler();
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("method", "get_transaction_id");
+                hashMap.put("block_num", block_num);
+                hashMap.put("trx_in_block", trx_in_block);
+
+                ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+                IWebService service = sg.getService(IWebService.class);
+                final Call<TransactionIdResponse> postingService = service.getTransactionIdComponent(hashMap);
+
+                postingService.enqueue(new Callback<TransactionIdResponse>() {
+
+                    @Override
+                    public void onResponse(Response<TransactionIdResponse> response)
+                    {
+                        if (response.isSuccess())
+                        {
+                            TransactionIdResponse resp = response.body();
+
+                            if (resp.status.equals("success"))
+                            {
+                                try
+                                {
+                                    String trx_id = resp.transaction_id;
+                                    transactionIdClipped = trx_id.substring(0,7);
+                                    transactionIdUpdated = true;
+                                }
+                                catch (Exception e)
+                                {
+                                    //e.printStackTrace();
+                                    //getTransactionId(block_num,trx_in_block);
+                                }
+                            }
+                            else
+                            {
+                                //getTransactionId(block_num,trx_in_block);
+                            }
+
+                        }
+                        else
+                        {
+                            //getTransactionId(block_num,trx_in_block);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        getTransactionId(block_num,trx_in_block);
+                    }
+                });
+            }
+        };
+        handler.postDelayed(updateTask, 100);
+    }
+
+    void init(String eRecipt)
+    {
         eReciptmap.put("id", SupportMethods.ParseJsonObject(eRecipt, "id"));
         eReciptmap.put("op", SupportMethods.ParseJsonObject(eRecipt, "op"));
         eReciptmap.put("result", SupportMethods.ParseJsonObject(eRecipt, "result"));
-        eReciptmap.put("block_num", SupportMethods.ParseJsonObject(eRecipt, "block_num"));
-        eReciptmap.put("trx_in_block", SupportMethods.ParseJsonObject(eRecipt, "trx_in_block"));
+        String block_num = SupportMethods.ParseJsonObject(eRecipt, "block_num");
+        eReciptmap.put("block_num", block_num);
+        String trx_in_block = SupportMethods.ParseJsonObject(eRecipt, "trx_in_block");
+        eReciptmap.put("trx_in_block", trx_in_block);
+        getTransactionId(block_num,trx_in_block);
         eReciptmap.put("op_in_trx", SupportMethods.ParseJsonObject(eRecipt, "op_in_trx"));
         eReciptmap.put("virtual_op", SupportMethods.ParseJsonObject(eRecipt, "virtual_op"));
         String fetch_OP = SupportMethods.ParseObjectFromJsonArray(eReciptmap.get("op"), 1);
@@ -231,10 +280,10 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
         Assetid.add(Freemap.get("asset_id"));
         Assetid.add(Amountmap.get("asset_id"));
         assets_id_total_size = Assetid.size();
-
     }
-    void onLastCall(){
 
+    void onLastCall()
+    {
         this.runOnUiThread(new Runnable() {
             public void run() {
                 String fromAccountName = from;
@@ -263,7 +312,6 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
                 LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-                //for(int i=0;i<3;i++){
                 View customView = layoutInflater.inflate(R.layout.items_erecipt, null, false);
                 LinearLayout linearLayout = (LinearLayout) customView;
                 LinearLayout linearLayoutOne = (LinearLayout) linearLayout.getChildAt(0);
@@ -293,15 +341,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                 LinearLayout LinearLayoutMemo = (LinearLayout) LinearLayoutEight.getChildAt(0);
                 TextView textViewMemo = (TextView) LinearLayoutMemo.getChildAt(1);
                 textViewMemo.setText(memoMsg);
-//                LinearLayoutMemo = (LinearLayout) LinearLayoutEight.getChildAt(1);
-//                textViewMemo = (TextView) LinearLayoutMemo.getChildAt(1);
-//                textViewMemo.setText(Memomap.get("to"));
-//                LinearLayoutMemo = (LinearLayout) LinearLayoutEight.getChildAt(2);
-//                textViewMemo = (TextView) LinearLayoutMemo.getChildAt(1);
-//                textViewMemo.setText(Memomap.get("nonce"));
-//                LinearLayoutMemo = (LinearLayout) LinearLayoutEight.getChildAt(3);
-//                textViewMemo = (TextView) LinearLayoutMemo.getChildAt(1);
-//                textViewMemo.setText(Memomap.get("message"));
+
                 LinearLayout LinearLayoutNine = (LinearLayout) linearLayout.getChildAt(5);
                 TextView textViewExtensions = (TextView) LinearLayoutNine.getChildAt(1);
                 textViewExtensions.setText(OPmap.get("extensions"));
@@ -309,29 +349,38 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                 ll_operations.addView(customView);
             }
             });
-
-        //}
     }
+
     void get_Time(String block_num,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
         //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
         Application.webSocketG.send(getDetails);
     }
+
     void get_names(String name_id,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
         //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
         Application.webSocketG.send(getDetails);
     }
+
     void get_asset(String asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
         Application.webSocketG.send(getDetails);
     }
+
     @OnClick(R.id.buttonSend)
-    public void onSendButton() {
-        String filename = getResources().getString(R.string.txt_folder_name) + File.separator + "eReceipt-scwall";
+    public void onSendButton()
+    {
+        if ( !transactionIdUpdated )
+        {
+            Toast.makeText(context,getResources().getString(R.string.updating_transaction_id),Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String filename = getResources().getString(R.string.txt_folder_name) + File.separator + "eReceipt-" +transactionIdClipped;
 
         map.put("id",eReciptmap.get("id"));
         map.put("time",date);
@@ -352,19 +401,20 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
 
         pdfTable myTable = new pdfTable(context, this, filename);
-        if (imageEmail.getVisibility() == View.VISIBLE) {
+        if (imageEmail.getVisibility() == View.VISIBLE)
+        {
             myTable.createTransactionpdf(map,imageEmail);
-        } else {
+        }
+        else
+        {
             myTable.createTransactionpdf(map,null);
-
         }
     }
+
     String get_email(String accountName){
         MerchantEmail merchantEmail = new MerchantEmail(context);
         return merchantEmail.getMerchantEmail(accountName);
     }
-
-
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
@@ -383,7 +433,6 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
                 SupportMethods.testing("alpha",e.getMessage(),"error");
-
             }
             return mIcon11;
         }
@@ -393,93 +442,4 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
             else bmImage.setImageBitmap(result);
         }
     }
-//        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        File pdfDir = new File(extStorage+"/Transaction-scwall");
-//        if (!pdfDir.exists()){
-//            pdfDir.mkdir();
-//        }
-//        File pdffile = new File(extStorage,"Transaction-scwall.pdf");
-//
-//        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//        ScrollView root = (ScrollView) inflater.inflate
-//                (R.layout.activity_e_receipt, null); //RelativeLayout is root view of my UI(xml) file.
-//        root.setDrawingCacheEnabled(true);
-//        Bitmap screen= getBitmapFromView(this.getWindow().findViewById(R.id.relativelayout));
-//
-//        try {
-//            Document  document = new Document();
-//
-//            PdfWriter.getInstance(document, new FileOutputStream(pdffile));
-//            document.open();
-//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//            screen.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//            byte[] byteArray = stream.toByteArray();
-//            addImage(document,byteArray);
-//            document.close();
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//        }
-//try {
-//    Intent intent = new Intent(Intent.ACTION_VIEW);
-//    Uri uri = Uri.fromFile(pdffile);
-//    intent.setDataAndType(uri, "application/pdf");
-//    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//    startActivity(intent);
-//}catch (Exception e){
-//
-//}
-
-
-//        Intent email = new Intent(Intent.ACTION_SEND);
-//        email.putExtra(Intent.EXTRA_EMAIL, "receiver_email_address");
-//        email.putExtra(Intent.EXTRA_SUBJECT, "subject");
-//        email.putExtra(Intent.EXTRA_TEXT, "email body");
-//        Uri uri = Uri.fromFile(new File(pdfDir,  "pdfFileName"));
-//        email.putExtra(Intent.EXTRA_STREAM, uri);
-//        email.setType("application/pdf");
-//        email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        getActivity().startActivity(email);
- //   }
-  //  public static Bitmap getBitmapFromView(View view) {
-//        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(returnedBitmap);
-//        Drawable bgDrawable =view.getBackground();
-//        if (bgDrawable!=null)
-//            bgDrawable.draw(canvas);
-//        else
-//            canvas.drawColor(Color.WHITE);
-//        view.draw(canvas);
-//        return returnedBitmap;
-//    }
-//  //  private static void addImage(Document document,byte[] byteArray) {
-//        Image image = null;
-//        try
-//        {
-//            image = Image.getInstance(byteArray);
-//        }
-//        catch (BadElementException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        catch (MalformedURLException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        catch (IOException e)
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        // image.scaleAbsolute(150f, 150f);
-//        try
-//        {
-//            document.add(image);
-//        } catch (DocumentException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
 }

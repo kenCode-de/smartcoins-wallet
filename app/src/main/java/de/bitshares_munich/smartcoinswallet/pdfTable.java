@@ -91,7 +91,7 @@ public class pdfTable {
             FileWriter writer = new FileWriter(gpxfile);
             writer.flush();
             writer.close();
-            Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,7 +104,7 @@ public class pdfTable {
         Document document = new Document();
 
         try {
-            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.txt_folder_name);
+            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.folder_name);
             String filePath = combinePath(extStorage, filename + ".pdf");
             createEmptyFile(filePath);
             PdfWriter.getInstance(document,new FileOutputStream(filePath));
@@ -190,6 +190,7 @@ public class pdfTable {
             document.close();
 //            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
             Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
         }
         catch(Exception e){
             Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -260,9 +261,9 @@ public class pdfTable {
             document.close();
 
             Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, "---");
-            email.putExtra(Intent.EXTRA_SUBJECT, "---");
-            email.putExtra(Intent.EXTRA_TEXT, "---");
+            //email.putExtra(Intent.EXTRA_EMAIL, "---");
+            //email.putExtra(Intent.EXTRA_SUBJECT, "---");
+            //email.putExtra(Intent.EXTRA_TEXT, "---");
             Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");

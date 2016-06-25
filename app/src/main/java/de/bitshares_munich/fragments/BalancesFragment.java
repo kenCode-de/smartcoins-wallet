@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -107,7 +108,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     DecimalFormat df = new DecimalFormat("0.0");
 
     Boolean isLoading = false;
-
+    public static Boolean onClicked = false;
     Handler handler = new Handler();
 
     String to = "";
@@ -265,7 +266,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         PermissionManager manager = new PermissionManager();
         manager.verifyStoragePermissions(getActivity());
 
-        final File folder = new File(Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.txt_folder_name));
+        final File folder = new File(Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name));
 
         boolean success = false;
 
@@ -282,13 +283,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             @Override
             public void run() {
                 try {
-                    File file2 = new File(folder.getAbsolutePath(), "ch_ching.wav");
+                    File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
 
                     if (!file2.exists()) {
                         FileOutputStream save = new FileOutputStream(file2);
 
                         byte[] buffer = null;
-                        InputStream fIn = getResources().openRawResource(R.raw.ch_ching);
+                        InputStream fIn = getResources().openRawResource(R.raw.woohoo);
                         int size = 0;
 
                         try {
@@ -321,6 +322,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
+        onClicked = false;
         final String hide_donations_isChanged = "hide_donations_isChanged";
         Boolean isHideDonationsChanged = false;
         if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
@@ -421,7 +423,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         Double amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(accountAssets.precision, accountAssets.ammount));
                                         if (amount < Double.parseDouble(ltmAmount)) {
                                             balanceValid[0] = false;
-                                            Toast.makeText(getActivity(), getString(R.string.insufficient_amount), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), getString(R.string.insufficient_funds), Toast.LENGTH_LONG).show();
                                         }
                                         break;
                                     }
@@ -771,6 +773,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         rcvBtn.startAnimation(rotAnim);
     }
 
+    public void playSound() {
+        try {
+            MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.woohoo);
+            mediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void animateText(final TextView tvCounter, float startValue, float endValue) {
         ValueAnimator animator = new ValueAnimator();
         animator.setFloatValues(startValue, endValue);
@@ -856,6 +867,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                             rotateRecieveButton();
                                                         }
                                                     });
+                                                    playSound();
                                                 } catch (Exception e) {
 
                                                 }
@@ -1262,18 +1274,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         String result = SupportMethods.ParseJsonObject(s, "result");
         String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
         String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
-//    public void getLifetime(String s, int id) {
-//        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-//        String result = SupportMethods.ParseJsonObject(s, "result");
-//        String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
-//        String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
-//>>>>>>> c3d1af2a48bc7e3cc754165a8c98f3397cc8df59
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
             Date date1 = dateFormat.parse(expiration);
             Date date2 = dateFormat.parse("1969-12-31T23:59:59");
-            if (date2.after(date1)) {
+            if (date2.getTime() >= date1.getTime()) {
                 SupportMethods.testing("getLifetime", "true", "s");
                 //accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                 if (accountDetails.size() > accountDetailsId) {
@@ -1389,7 +1394,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     to = accountDetails.get(i).account_name;
                     accountId = accountDetails.get(i).account_id;
                     wifkey = accountDetails.get(i).wif_key;
-                    showHideLifeTime(accountDetails.get(0).isLifeTime);
+                    showHideLifeTime(accountDetails.get(i).isLifeTime);
                     break;
                 }
             }

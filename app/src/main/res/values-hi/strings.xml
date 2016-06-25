@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">6 अंकों का पिन पुष्टि दर्ज करें</string>
 <string name="mismatch_pin">बेमेल पिन</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">इस Brainkey \ n (एक बैकअप फ़ाइल के बजाय का उपयोग करें) बीटीएस 1.0 के साथ संगत नहीं है</string>
+<string name="txt_brain_key_info">इस बाहर प्रिंट, या इसे लिखने के नीचे। अपनी वसूली कुंजी के उपयोग के साथ किसी को भी इस बटुए के भीतर धन का उपयोग करना होगा।</string>
 <string name="create_wallet">बटुआ बनाने के</string>
 <string name="cance">रद्द करना</string>
 <string name="save">बचाना</string>

@@ -295,7 +295,6 @@
                     android:layout_below="@+id/ThirdChild"
                     android:gravity="right"
                     android:text=""
-                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="15sp"
                 />
                 <LinearLayout
@@ -462,6 +461,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/memo_capital"
+                            android:layout_marginTop="3dp"
                             android:textColor="#00060A"
                             android:textSize="15sp"
                         />
@@ -469,6 +469,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=":"
+                            android:layout_marginTop="3dp"
                             android:textColor="#00060A"
                             android:textSize="15sp"
                         />

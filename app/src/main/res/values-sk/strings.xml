@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Prosím, zadajte 6-miestny potvrdenie pin</string>
 <string name="mismatch_pin">nezhoda pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">To Brainkey nie je kompatibilný s BTS 1,0 \ n (Použiť záložný súbor miesto)</string>
+<string name="txt_brain_key_info">Vytlačiť von, alebo si ho poznačte. Každý, kto má prístup k vašej kľúčom pre obnovenie budú mať prístup k finančným prostriedkom v rámci tejto peňaženky.</string>
 <string name="create_wallet">CREATE WALLET</string>
 <string name="cance">ZRUŠIŤ</string>
 <string name="save">SAVE</string>

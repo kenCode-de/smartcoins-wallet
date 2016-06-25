@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -425,8 +426,9 @@ public class TransactionActivity implements BalancesDelegate {
                 String amount_pre = SupportMethods.ConvertValueintoPrecision(sym_pre.get("precision"), amount);
                 String symbol = sym_pre.get("symbol");
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                Date formatted = null;
-                formatted = formatter.parse(Date);
+                formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+                Date formatted = formatter.parse(Date);
+
 
                 if (isDonate && symbol.equals("BTS") && amount_pre.equals("2.0") && to.equals("bitshares-munich")) {
                     testing("found","found", "found,found");

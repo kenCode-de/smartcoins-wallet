@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">لطفا 6 رقمی پین تأیید را وارد کنید</string>
 <string name="mismatch_pin">پین عدم تطابق</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">این Brainkey سازگار با BTS 1.0 ندارد \ n (با استفاده از یک فایل پشتیبان به جای)</string>
+<string name="txt_brain_key_info">چاپ این، و یا ارسال آن پایین. هر کسی با دسترسی به کلید بازیابی خود را برای دسترسی به وجوه در داخل این کیف پول است.</string>
 <string name="create_wallet">ایجاد WALLET</string>
 <string name="cance">لغو</string>
 <string name="save">صرفه جویی</string>

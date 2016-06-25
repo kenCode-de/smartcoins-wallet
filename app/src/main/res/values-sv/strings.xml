@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Ange 6-siffrig PIN bekräftelse</string>
 <string name="mismatch_pin">mismatch stift</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Denna Brainkey är inte kompatibel med BTS 1,0 \ n (Använd en säkerhetskopia i stället)</string>
+<string name="txt_brain_key_info">Skriv ut det här, eller skriva ner det. Vem som helst med tillgång till din återställningsnyckel kommer att ha tillgång till medel inom plånboken.</string>
 <string name="create_wallet">SKAPA PLÅNBOK</string>
 <string name="cance">ANNULLERA</string>
 <string name="save">SPARA</string>

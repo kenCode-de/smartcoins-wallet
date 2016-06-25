@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">S\'il vous plaît entrer confirmation de la broche 6 chiffres</string>
 <string name="mismatch_pin">pin mismatch</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Cette Brainkey est pas compatible avec BTS 1.0 \ n (Utiliser un fichier de sauvegarde à la place)</string>
+<string name="txt_brain_key_info">Imprimer ceci ou écrire. Toute personne ayant accès à votre clé de récupération aura accès à des fonds dans ce portefeuille.</string>
 <string name="create_wallet">CREATE WALLET</string>
 <string name="cance">ANNULER</string>
 <string name="save">ENREGISTRER</string>

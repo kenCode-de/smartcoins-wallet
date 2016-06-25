@@ -31,7 +31,7 @@
 <string name="please_enter_6_digit_pin_confirm">Anna 6-numeroinen PIN vahvistus</string>
 <string name="mismatch_pin">epäsuhta pin</string>
 <string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Tämä Brainkey ei ole yhteensopiva BTS 1.0 \ n (Käytä varmuuskopion sijaan)</string>
+<string name="txt_brain_key_info">Tulosta tätä, tai kirjoita se muistiin. Kuka tahansa, jolla on pääsy palautusavaimen pääsevät varoja tämän lompakon.</string>
 <string name="create_wallet">Luo lompakon</string>
 <string name="cance">PERUUTTAA</string>
 <string name="save">TALLENTAA</string>
