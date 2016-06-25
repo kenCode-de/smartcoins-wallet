@@ -143,6 +143,7 @@ public class SettingActivity extends BaseActivity {
         activity = this;
         progressDialog = new ProgressDialog(this);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pre_ischecked_timezone), false);
         init();
         populateDropDowns();
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
@@ -179,7 +180,7 @@ public class SettingActivity extends BaseActivity {
                 Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
-                Helper.storeBoolianSharePref(this, hide_donations_isChanged , true);
+                Helper.storeBoolianSharePref(this, hide_donations_isChanged, true);
                 if (isCHecked(v)) Helper.storeBoolianSharePref(this, hide_donations, true);
                 else Helper.storeBoolianSharePref(this, hide_donations, false);
                 break;
@@ -476,7 +477,11 @@ public class SettingActivity extends BaseActivity {
 
             String temp[] = spTimeZones.getSelectedItem().toString().split(" ");
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.date_time_zone), temp[0]);
-            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+            if (Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_timezone)) != position) {
+                Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_timezone), position);
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pre_ischecked_timezone), true);
+            }
+
         }
     }
 
@@ -530,7 +535,7 @@ public class SettingActivity extends BaseActivity {
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
-            if (brainKey.isEmpty()){
+            if (brainKey.isEmpty()) {
                 brainKey = accountDetails.get(0).brain_key;
             }
             etBrainKey.setText(brainKey);
@@ -629,7 +634,7 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //Check Balance
-                String ltmAmount=Helper.fetchStringSharePref(getApplicationContext(),"ltmAmount");
+                String ltmAmount = Helper.fetchStringSharePref(getApplicationContext(), "ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
                     alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
                     btnDone.setText(getString(R.string.txt_yes));

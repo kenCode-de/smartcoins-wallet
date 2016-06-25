@@ -169,6 +169,54 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
+    private void startupTasks ()
+    {
+        init();
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if (res != null)
+        {
+            if (res.containsKey("sResult") && res.containsKey("id"))
+            {
+                if (res.getInt("id") == 5) {
+                    getJsonFromHash(res.getString("sResult"));
+                }
+            }
+        }
+
+        loadWebView(webviewTo, 34, Helper.md5(""));
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(!validReceiver && !validating)
+                {
+                    if (etReceiverAccount.getText().length() > 0)
+                    {
+                        myLowerCaseTimer.cancel();
+                        myAccountNameValidationTimer.cancel();
+                        myLowerCaseTimer.start();
+                        myAccountNameValidationTimer.start();
+                    }
+                }
+                //Do something after 100ms
+                if (validateSend() && validReceiver)
+                {
+                    btnSend.setEnabled(true);
+                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
+                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
+
+                } else {
+                    btnSend.setEnabled(false);
+                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.gray));
+                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
+                }
+                handler.postDelayed(this, 100);
+            }
+        }, 100);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,60 +233,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         application.registerCallback(this);
         application.registerRelativeHistoryCallback(this);
 
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+
+        updateBlockNumberHead();
+
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
 
-        init();
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("sResult") && res.containsKey("id")) {
-                if (res.getInt("id") == 5) {
-                    getJsonFromHash(res.getString("sResult"));
-                }
-            }
-        }
+        startupTasks();
 
-
-        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
-        //loadWebView(webviewFrom ,34 , accountDetails.);
-        //webviewFrom.setVisibility(View.VISIBLE);
-        loadWebView(webviewTo, 34, Helper.md5(""));
-        updateBlockNumberHead();
-
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                if(!validReceiver && !validating){
-                    if (etReceiverAccount.getText().length() > 0) {
-                        myLowerCaseTimer.cancel();
-                        myAccountNameValidationTimer.cancel();
-                        myLowerCaseTimer.start();
-                        myAccountNameValidationTimer.start();
-                    }
-                }
-                //Do something after 100ms
-                if (validateSend() && validReceiver) {
-                    btnSend.setEnabled(true);
-                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
-
-                } else {
-                    btnSend.setEnabled(false);
-                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.gray));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
-                }
-                handler.postDelayed(this, 100);
-            }
-        }, 100);
     }
 
     void init() {
-        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
+
         setCheckboxAvailabilty();
         setSpinner();
     }
@@ -309,11 +318,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Boolean runningSpinerForFirstTime = true;
 
     @OnItemSelected(R.id.spinnerFrom)
-    void onItemSelected(int position) {
-        if (!runningSpinerForFirstTime) {
-            if (requiredAmount == null) {
+    void onItemSelected(int position)
+    {
+        if (!runningSpinerForFirstTime)
+        {
+            if (requiredAmount == null)
+            {
                 populateAssetsSpinner();
-            } else {
+            }
+            else
+            {
                 updateAmountStatus();
                 if (loyaltyAsset != null) {
                     String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -332,7 +346,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
                 onLoyaltyChanged(etAmount.getText());
             }
-        } else {
+        }
+        else
+        {
             this.runningSpinerForFirstTime = false;
         }
 
@@ -686,22 +702,30 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void getBackupAsset() {
-        try {
+    private void getBackupAsset()
+    {
+        try
+        {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            for (int i = 0; i < accountDetails.size(); i++) {
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                if (accountDetail.account_name.equals(selectedAccount))
+                {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++)
+                    {
                         AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                        if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
+                        if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase()))
+                        {
                             backupAssets = accountDetail.AccountAssets.get(j);
                             break;
                         }
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Log.d("getBackupAsset", e.getMessage());
         }
     }
@@ -793,10 +817,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         spinner.setAdapter(dataAdapter);
     }
 
-    public void populateAccountsSpinner() {
+    public void populateAccountsSpinner()
+    {
         List<String> spinnerArray = new ArrayList<String>();
         String accountname="";
-        for (int i = 0; i < accountDetails.size(); i++) {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
             if(accountDetail.isSelected)
@@ -804,48 +830,61 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             spinnerArray.add(accountDetail.account_name);
         }
-        if (accountDetails.size() > 1) {
+
+        if (accountDetails.size() > 1)
+        {
             spinnerFrom.setVisibility(View.VISIBLE);
             tvFrom.setVisibility(View.GONE);
-        } else {
+        }
+        else
+        {
             loadWebView(webviewFrom, 34, Helper.md5(tvFrom.getText().toString()));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
         }
+
         createSpinner(spinnerArray, spinnerFrom);
 
-        if (accountname.isEmpty()) {
+        if (accountname.isEmpty())
+        {
             spinnerFrom.setSelection(0);
-        } else {
+        }
+        else
+        {
             spinnerFrom.setSelection(spinnerArray.indexOf(accountname));
         }
     }
 
-    public void populateAssetsSpinner() {
-        try {
+    public void populateAssetsSpinner()
+    {
+        try
+        {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             List<String> spinnerArray = new ArrayList<String>();
-            for (int i = 0; i < accountDetails.size(); i++) {
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                if (accountDetail.account_name.equals(selectedAccount))
+                {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++)
+                    {
                         selectedAccountAsset = accountDetail.AccountAssets.get(j);
                         spinnerArray.add(selectedAccountAsset.symbol);
                     }
                 }
             }
             createSpinner(spinnerArray, spAssets);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
     }
 
-    void setSpinner() {
+    void setSpinner()
+    {
         populateAccountsSpinner();
-
         populateAssetsSpinner();
         setBackUpAsset();
-
-
     }
 
     public void getExchangeRate(int id) {
