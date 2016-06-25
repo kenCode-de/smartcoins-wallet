@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -282,13 +283,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             @Override
             public void run() {
                 try {
-                    File file2 = new File(folder.getAbsolutePath(), "ch_ching.wav");
+                    File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
 
                     if (!file2.exists()) {
                         FileOutputStream save = new FileOutputStream(file2);
 
                         byte[] buffer = null;
-                        InputStream fIn = getResources().openRawResource(R.raw.ch_ching);
+                        InputStream fIn = getResources().openRawResource(R.raw.woohoo);
                         int size = 0;
 
                         try {
@@ -774,6 +775,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         rcvBtn.startAnimation(rotAnim);
     }
 
+    public void playSound() {
+        try {
+            MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.woohoo);
+            mediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void animateText(final TextView tvCounter, float startValue, float endValue) {
         ValueAnimator animator = new ValueAnimator();
         animator.setFloatValues(startValue, endValue);
@@ -859,6 +869,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                             rotateRecieveButton();
                                                         }
                                                     });
+                                                    playSound();
                                                 } catch (Exception e) {
 
                                                 }

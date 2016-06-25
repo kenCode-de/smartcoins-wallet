@@ -297,5 +297,7 @@
     </string>
     <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 
+    <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>
+
 
 </resources>
