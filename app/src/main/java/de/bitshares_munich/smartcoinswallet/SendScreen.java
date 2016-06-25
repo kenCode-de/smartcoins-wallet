@@ -197,6 +197,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
 
+        String basset = etBackupAsset.getText().toString();
+
+        if ( !basset.isEmpty() )
+        {
+            backupAssetCHanged(basset);
+        }
+
+
         loadWebView(webviewTo, 34, Helper.md5(""));
 
 
@@ -458,35 +466,55 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         super.onConfigurationChanged(newConfig);
     }
 
-    @OnTextChanged(R.id.etBackupAsset)
-    void onBackupAssetChanged(CharSequence text) {
+    private void backupAssetCHanged (String text)
+    {
         count = 1;
-        if (text.toString().equals("")) {
+        if (text.toString().equals(""))
+        {
             text = "0";
-        } else if (text.toString().equals(".")) {
+        } else if (text.toString().equals("."))
+        {
             text = "0.";
         }
+
         Double backupAssetAmount = Double.parseDouble(text.toString());
         Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-        if (backupAssetAmount > backupAssetBalance) {
+
+        if (backupAssetAmount > backupAssetBalance)
+        {
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssets.symbol));
-        } else {
+        }
+        else
+        {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
-        if (backAssetRate != null) {
+
+        if (backAssetRate != null)
+        {
             String loyaltyAmount = etLoyalty.getText().toString();
-            if (loyaltyAmount.equals("")) {
+
+            if (loyaltyAmount.equals(""))
+            {
                 loyaltyAmount = "0";
             }
-            if (requiredAmount != null) {
+
+            if (requiredAmount != null)
+            {
                 Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
                 etAmount.setText(remainingAmount.toString());
             }
             updateTotalStatus();
-        } else {
+        }
+        else
+        {
             getExchangeRate(200);
         }
+    }
+
+    @OnTextChanged(R.id.etBackupAsset)
+    void onBackupAssetChanged(CharSequence text) {
+        backupAssetCHanged(text.toString());
     }
 
 
