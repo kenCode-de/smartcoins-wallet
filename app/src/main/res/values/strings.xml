@@ -295,6 +295,7 @@
     <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
         account in it
     </string>
+
     <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 
     <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>

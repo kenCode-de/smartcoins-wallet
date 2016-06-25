@@ -366,7 +366,7 @@ public class SettingActivity extends BaseActivity {
         }
 
         Collections.sort(arrayAccountName);
-        ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
+        ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, R.layout.mytextview, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
         if (accountName.isEmpty()) {
