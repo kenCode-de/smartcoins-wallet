@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">계정 이름이어야 하나를 가지고 갈까요 -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">이미 존재하는 계정</string>
-
+    <string name="updating_transaction_id">업데이트 거래 ID, 기다려주십시오</string>
 </resources>

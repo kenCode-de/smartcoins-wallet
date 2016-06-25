@@ -170,5 +170,5 @@
     <string name="transfer_funds">transferul de fonduri</string>
     <string name="unable_to_process">Imposibilitatea de a procesa</string>
     <string name="cancel">ANULARE</string>
-
+    <string name="updating_transaction_id">Id-ul de actualizare Transaction, Vă rugăm să așteptați</string>
 </resources>

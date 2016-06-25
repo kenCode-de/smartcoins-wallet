@@ -171,5 +171,5 @@
     <string name="transfer_funds">փոխանցելը</string>
     <string name="unable_to_process">Անհնար է մշակել</string>
     <string name="cancel">ՀՐԱԺԱՐՎԵԼ</string>
-
+    <string name="updating_transaction_id">Թարմացվում Գործարքի ID, խնդրում ենք սպասել</string>
 </resources>

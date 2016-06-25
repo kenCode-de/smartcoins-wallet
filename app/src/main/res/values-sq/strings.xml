@@ -171,4 +171,5 @@
     <string name="unable_to_process">Në pamundësi për të përpunuar</string>
     <string name="cancel">CANCEL</string>
     <string name="checkbox_donate">Dhuroni 2 BTS me Zhvilluesit Mbështetje në</string>
+    <string name="updating_transaction_id">Përditësimi Transaction Id, Ju lutem prisni</string>
 </resources>

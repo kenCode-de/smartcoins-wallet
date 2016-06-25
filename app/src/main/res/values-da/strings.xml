@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">kontonavn mediefil have mindst én -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Konto allerede findes</string>
-
+    <string name="updating_transaction_id">Opdatering Transaktion Id, vent venligst</string>
 </resources>

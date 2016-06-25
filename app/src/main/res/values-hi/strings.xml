@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">खाते का नाम कम से कम एक है shoud -</string>
     <string name="default_currency">ईयूआर</string>
     <string name="account_already_exist">खाता पहले से ही मौजूद है</string>
-
+    <string name="updating_transaction_id">अद्यतन कर रहा है ट्रांजेक्शन आईडी, कृपया प्रतीक्षा करें</string>
 </resources>

@@ -170,5 +170,5 @@
     <string name="transfer_funds">La transferència de fons</string>
     <string name="unable_to_process">No es pot processar</string>
     <string name="cancel">CANCEL · LAR</string>
-
+    <string name="updating_transaction_id">Actualització de ID de la transacció, si us plau esperi</string>
 </resources>

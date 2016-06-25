@@ -170,5 +170,5 @@
     <string name="transfer_funds">преноса средстава</string>
     <string name="unable_to_process">У могућности да обрадимо</string>
     <string name="cancel">ЦАНЦЕЛ</string>
-
+    <string name="updating_transaction_id">Ажурирање Трансацтион ИД, Молимо сачекајте</string>
 </resources>

@@ -170,5 +170,5 @@
     <string name="transfer_funds">prenos fondy</string>
     <string name="unable_to_process">nemožno spracovať</string>
     <string name="cancel">ZRUŠIŤ</string>
-
+    <string name="updating_transaction_id">Aktualizácia ID transakcie, Prosím, počkajte</string>
 </resources>

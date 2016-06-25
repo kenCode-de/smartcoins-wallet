@@ -170,5 +170,5 @@
     <string name="transfer_funds">La transferencia de fondos</string>
     <string name="unable_to_process">No se puede procesar</string>
     <string name="cancel">CANCELAR</string>
-
+    <string name="updating_transaction_id">Actualización de ID de la transacción, por favor espere</string>
 </resources>
