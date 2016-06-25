@@ -181,7 +181,33 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
      */
     private GoogleApiClient client;
 
+    private void startupTasks ()
+    {
+        runningSpinerForFirstTime = true;
+        init();
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if (res != null)
+        {
+            if (res.containsKey("sResult") && res.containsKey("id"))
+            {
+                if (res.getInt("id") == 5) {
+                    getJsonFromHash(res.getString("sResult"));
+                }
+            }
+        }
 
+        loadWebView(webviewTo, 34, Helper.md5(""));
+
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+    }
+
+//<<<<<<< HEAD
+//    void init() {
+//        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
+//=======
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,36 +223,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         application.registerCallback(this);
         application.registerRelativeHistoryCallback(this);
 
+        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+
+        updateBlockNumberHead();
+
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-
-        init();
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("sResult") && res.containsKey("id")) {
-                if (res.getInt("id") == 5) {
-                    getJsonFromHash(res.getString("sResult"));
-                }
-            }
-        }
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
 
 
-        tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
-        //loadWebView(webviewFrom ,34 , accountDetails.);
-        //webviewFrom.setVisibility(View.VISIBLE);
-        loadWebView(webviewTo, 34, Helper.md5(""));
-        updateBlockNumberHead();
-
+        startupTasks();
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                if (!validReceiver && !validating) {
-                    if (etReceiverAccount.getText().length() > 0) {
+
+                if(!validReceiver && !validating)
+                {
+                    if (etReceiverAccount.getText().length() > 0)
+                    {
                         myLowerCaseTimer.cancel();
                         myAccountNameValidationTimer.cancel();
                         myLowerCaseTimer.start();
@@ -234,7 +252,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                 }
                 //Do something after 100ms
-                if (validateSend() && validReceiver) {
+                if (validateSend() && validReceiver)
+                {
                     btnSend.setEnabled(true);
                     btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
                     sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
@@ -247,13 +266,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 100);
             }
         }, 100);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+      //  client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     void init() {
-        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
         setCheckboxAvailabilty();
         setSpinner();
     }
@@ -324,12 +342,34 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Boolean runningSpinerForFirstTime = true;
 
     @OnItemSelected(R.id.spinnerFrom)
-    void onItemSelected(int position) {
-        if (!runningSpinerForFirstTime) {
-            if (requiredAmount == null) {
+    void onItemSelected(int position)
+    {
+        if (!runningSpinerForFirstTime)
+        {
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount))
+                {
+                    accountDetail.isSelected = true;
+                }
+                else
+                {
+                    accountDetail.isSelected = false;
+                }
+            }
+
+            startupTasks();
+
+            /*
+            if (requiredAmount == null)
+            {
                 populateAssetsSpinner();
-                updateAmountStatus();
-            } else {
+            }
+            else
+            {
                 updateAmountStatus();
                 if (loyaltyAsset != null) {
                     String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -348,12 +388,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
                 onLoyaltyChanged(etAmount.getText());
             }
-        } else {
+            */
+        }
+        else
+        {
             this.runningSpinerForFirstTime = false;
         }
 
         loadWebView(webviewFrom, 34, Helper.md5(spinnerFrom.getSelectedItem().toString()));
-        //   setSpinner();
     }
 
     @OnItemSelected(R.id.spAssets)
@@ -549,49 +591,56 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
             }
         } catch (Exception e) {
-
+            selectedAccountAsset = null;
         }
     }
 
     public void updateAmountStatus() {
-        tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
-        String selectedAsset = spAssets.getSelectedItem().toString();
-        selectedAccountAsset();
-        Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
-        if (etAmount.getText().length() > 0) {
-            String enteredAmountStr = etAmount.getText().toString();
-            if (enteredAmountStr.equals(".")) {
-                enteredAmountStr = "0.";
-            }
-            Double enteredAmount = Double.parseDouble(enteredAmountStr);
-            if (enteredAmount != 0) {
-                String remainingBalance = "0";
-                if (enteredAmount > selectedBalance | enteredAmount < 0) {
-                    //etAmount.setText(selectedBalance.toString());
-                    validAmount = false;
-                    tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
-                    tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
+        try {
+            tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
+            String selectedAsset;
+            if(spAssets.getChildCount()>0) {
+                selectedAsset = spAssets.getSelectedItem().toString();
+            }else selectedAsset = "";
+            selectedAccountAsset();
+            Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+            if (etAmount.getText().length() > 0) {
+                String enteredAmountStr = etAmount.getText().toString();
+                if (enteredAmountStr.equals(".")) {
+                    enteredAmountStr = "0.";
+                }
+                Double enteredAmount = Double.parseDouble(enteredAmountStr);
+                if (enteredAmount != 0) {
+                    String remainingBalance = "0";
+                    if (enteredAmount > selectedBalance | enteredAmount < 0) {
+                        //etAmount.setText(selectedBalance.toString());
+                        validAmount = false;
+                        tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
+                        tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
+                    } else {
+                        validAmount = true;
+
+                        remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
+                        tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
+
+                    }
+
                 } else {
-                    validAmount = true;
-
-                    remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
-                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
+                    if (!etLoyalty.getText().toString().equals("")) {
+                        validAmount = true;
+                    }
+                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
 
                 }
-
             } else {
-                if (!etLoyalty.getText().toString().equals("")) {
-                    validAmount = true;
-                }
+                validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-
             }
-        } else {
-            validAmount = false;
-            tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+            updateTotalStatus();
         }
-        updateTotalStatus();
+        catch (Exception e){
 
+        }
     }
 
     private void loadWebView(WebView webView, int size, String encryptText) {
@@ -707,22 +756,33 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void getBackupAsset() {
-        try {
+    private void getBackupAsset()
+    {
+        try
+        {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            for (int i = 0; i < accountDetails.size(); i++) {
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                        if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
-                            backupAssets = accountDetail.AccountAssets.get(j);
-                            break;
+                if (accountDetail.account_name.equals(selectedAccount))
+                {
+                    try {
+                        for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                            AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                            if (tempAccountAsset.symbol.toLowerCase().equals(backupAsset.toLowerCase())) {
+                                backupAssets = accountDetail.AccountAssets.get(j);
+                                break;
+                            }
                         }
+                    }
+                    catch (Exception e){
+                        backupAssets = null;
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Log.d("getBackupAsset", e.getMessage());
         }
     }
@@ -816,10 +876,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         spinner.setAdapter(dataAdapter);
     }
 
-    public void populateAccountsSpinner() {
+    public void populateAccountsSpinner()
+    {
         List<String> spinnerArray = new ArrayList<String>();
-        String accountname = "";
-        for (int i = 0; i < accountDetails.size(); i++) {
+
+        String accountname="";
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
             if (accountDetail.isSelected)
@@ -827,48 +890,65 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             spinnerArray.add(accountDetail.account_name);
         }
-        if (accountDetails.size() > 1) {
+
+        if (accountDetails.size() > 1)
+        {
             spinnerFrom.setVisibility(View.VISIBLE);
             tvFrom.setVisibility(View.GONE);
-        } else {
+        }
+        else
+        {
             loadWebView(webviewFrom, 34, Helper.md5(tvFrom.getText().toString()));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
         }
+
         createSpinner(spinnerArray, spinnerFrom);
 
-        if (accountname.isEmpty()) {
+        if (accountname.isEmpty())
+        {
             spinnerFrom.setSelection(0);
-        } else {
+        }
+        else
+        {
             spinnerFrom.setSelection(spinnerArray.indexOf(accountname));
         }
     }
 
-    public void populateAssetsSpinner() {
-        try {
+    public void populateAssetsSpinner()
+    {
+        try
+        {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             List<String> spinnerArray = new ArrayList<String>();
-            for (int i = 0; i < accountDetails.size(); i++) {
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                        selectedAccountAsset = accountDetail.AccountAssets.get(j);
-                        spinnerArray.add(selectedAccountAsset.symbol);
+                if (accountDetail.account_name.equals(selectedAccount))
+                {
+                    try {
+                        for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                            selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                            spinnerArray.add(selectedAccountAsset.symbol);
+                        }
+                    }
+                    catch (Exception r){
+                        selectedAccountAsset = null;
                     }
                 }
             }
             createSpinner(spinnerArray, spAssets);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
         }
     }
 
-    void setSpinner() {
+    void setSpinner()
+    {
         populateAccountsSpinner();
-
         populateAssetsSpinner();
         setBackUpAsset();
-
-
     }
 
     public void getExchangeRate(int id) {
@@ -1460,43 +1540,43 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "SendScreen Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "SendScreen Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        client.connect();
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "SendScreen Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app URL is correct.
+//                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.start(client, viewAction);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//
+//        // ATTENTION: This was auto-generated to implement the App Indexing API.
+//        // See https://g.co/AppIndexing/AndroidStudio for more information.
+//        Action viewAction = Action.newAction(
+//                Action.TYPE_VIEW, // TODO: choose an action type.
+//                "SendScreen Page", // TODO: Define a title for the content shown.
+//                // TODO: If you have web page content that matches this app activity's content,
+//                // make sure this auto-generated web page URL is correct.
+//                // Otherwise, set the URL to null.
+//                Uri.parse("http://host/path"),
+//                // TODO: Make sure this auto-generated app URL is correct.
+//                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
+//        );
+//        AppIndex.AppIndexApi.end(client, viewAction);
+//        client.disconnect();
+//    }
 }
