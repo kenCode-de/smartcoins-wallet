@@ -213,7 +213,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             @Override
             public void run() {
 
-                if(!validReceiver && !validating){
+                if (!validReceiver && !validating) {
                     if (etReceiverAccount.getText().length() > 0) {
                         myLowerCaseTimer.cancel();
                         myAccountNameValidationTimer.cancel();
@@ -238,7 +238,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void init() {
-        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
         setCheckboxAvailabilty();
         setSpinner();
     }
@@ -247,7 +247,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
-        if (!text.toString().equals(text.toString().trim())){
+        if (!text.toString().equals(text.toString().trim())) {
             etReceiverAccount.setText(text.toString().trim());
         }
 
@@ -639,20 +639,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
-    public void cbAlwaysDonate(){
+    public void cbAlwaysDonate() {
 
         alwaysDonate = cbAlwaysDonate.isChecked();
         String text = etMemo.getText().toString();
-        text=text.replaceAll("\\s+", " ").trim();
+        text = text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
 
 
     }
+
     @OnFocusChange(R.id.etMemo)
-    public void onFocusChanged(){
+    public void onFocusChanged() {
         String text = etMemo.getText().toString();
-        text=text.replaceAll("\\s+", " ").trim();
+        text = text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
     }
@@ -795,11 +796,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void populateAccountsSpinner() {
         List<String> spinnerArray = new ArrayList<String>();
-        String accountname="";
+        String accountname = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
-            if(accountDetail.isSelected)
+            if (accountDetail.isSelected)
                 accountname = accountDetail.account_name;
 
             spinnerArray.add(accountDetail.account_name);
@@ -931,7 +932,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
         String memo = etMemo.getText().toString();
-        if (toAccount.equals("bitshares-munich")){
+        if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
         }
         HashMap hm = new HashMap();
@@ -1395,38 +1396,38 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     private void showDialogPin(final Boolean fundTransfer) {
-        if (Helper.containKeySharePref(getApplicationContext(), getApplicationContext().getString(R.string.txt_pin))) {
-            final Dialog dialog = new Dialog(SendScreen.this);
-            //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
-            dialog.setTitle(R.string.pin_verification);
-            dialog.setContentView(R.layout.activity_alert_pin_dialog);
-            Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-            final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
-            btnDone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
-                    if (etPin.getText().toString().equals(savedPIN)) {
-                        dialog.cancel();
-                        if (fundTransfer) {
-                            String transferFunds = getString(R.string.transfer_funds) + "...";
-                            showDialog("", transferFunds);
-                            tradeAsset();
-                        } else {
-                            sendFunds(false);
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        final Dialog dialog = new Dialog(SendScreen.this);
+        //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
+        dialog.setTitle(R.string.pin_verification);
+        dialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            dialog.cancel();
+                            if (fundTransfer) {
+                                String transferFunds = getString(R.string.transfer_funds) + "...";
+                                showDialog("", transferFunds);
+                                tradeAsset();
+                            } else {
+                                sendFunds(false);
+                            }
+                            break;
                         }
-
-
-                    } else {
-                        // Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-            dialog.setCancelable(true);
 
-            dialog.show();
-        }
+            }
+        });
+        dialog.setCancelable(true);
+
+        dialog.show();
     }
+
 
 }
