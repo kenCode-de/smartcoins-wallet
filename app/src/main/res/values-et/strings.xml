@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">kontonimi vehklema on atleast üks -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Konto on juba olemas</string>
-
+    <string name="updating_transaction_id">Uuendamine Tehing Id Palun oodake</string>
 </resources>

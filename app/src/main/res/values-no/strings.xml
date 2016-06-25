@@ -170,5 +170,5 @@
     <string name="transfer_funds">overføring av midler</string>
     <string name="unable_to_process">Kan ikke behandle</string>
     <string name="cancel">KANSELLERE</string>
-
+    <string name="updating_transaction_id">Oppdatering transaksjons-ID, Vent</string>
 </resources>

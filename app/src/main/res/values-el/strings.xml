@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">το όνομα του λογαριασμού shoud έχουν atleast ένα -</string>
     <string name="default_currency">ευρώ</string>
     <string name="account_already_exist">Λογαριασμό που ήδη υπάρχουν</string>
-
+    <string name="updating_transaction_id">Επικαιροποίηση Συναλλαγών Ταυτότητα, παρακαλώ περιμένετε</string>
 </resources>

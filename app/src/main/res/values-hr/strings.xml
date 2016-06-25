@@ -170,5 +170,5 @@
     <string name="transfer_funds">prijenos sredstava</string>
     <string name="unable_to_process">Nije moguće obraditi</string>
     <string name="cancel">OTKAZATI</string>
-
+    <string name="updating_transaction_id">Ažuriranje ID transakcije, pričekajte</string>
 </resources>

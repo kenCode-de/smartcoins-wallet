@@ -171,5 +171,5 @@
     <string name="account_name_shoud_have">Nome conto shoud hanno almeno uno -</string>
     <string name="default_currency">euro</string>
     <string name="account_already_exist">Il conto esiste già</string>
-
+    <string name="updating_transaction_id">Aggiornamento ID transazione, Attendere</string>
 </resources>

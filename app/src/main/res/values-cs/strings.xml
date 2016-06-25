@@ -169,5 +169,5 @@
     <string name="account_name_shoud_have">Název účtu mela mít aspoň jedno -</string>
     <string name="default_currency">eur</string>
     <string name="account_already_exist">Účet již existují</string>
-
+    <string name="updating_transaction_id">Aktualizace ID transakce, Prosím, vyčkejte</string>
 </resources>

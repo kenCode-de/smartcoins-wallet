@@ -170,5 +170,5 @@
     <string name="transfer_funds">перечислении средств</string>
     <string name="unable_to_process">Невозможно обработать</string>
     <string name="cancel">ОТМЕНА</string>
-
+    <string name="updating_transaction_id">Обновление Идентификатор транзакции, Пожалуйста, подождите</string>
 </resources>

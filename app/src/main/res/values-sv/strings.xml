@@ -170,5 +170,5 @@
     <string name="transfer_funds">överföring av medel</string>
     <string name="unable_to_process">Det går inte att bearbeta</string>
     <string name="cancel">ANNULLERA</string>
-
+    <string name="updating_transaction_id">Uppdatering Transaktions Id Vänta</string>
 </resources>

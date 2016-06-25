@@ -170,5 +170,5 @@
     <string name="transfer_funds">Fon aktarma</string>
     <string name="unable_to_process">işlem yapılamıyor</string>
     <string name="cancel">İPTAL ETMEK</string>
-
+    <string name="updating_transaction_id">Güncellenmesi İşlem Kimliği, lütfen bekleyin</string>
 </resources>
