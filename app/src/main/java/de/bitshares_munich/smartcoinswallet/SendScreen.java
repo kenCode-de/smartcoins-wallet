@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -28,10 +29,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,6 +175,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -213,7 +225,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             @Override
             public void run() {
 
-                if(!validReceiver && !validating){
+                if (!validReceiver && !validating) {
                     if (etReceiverAccount.getText().length() > 0) {
                         myLowerCaseTimer.cancel();
                         myAccountNameValidationTimer.cancel();
@@ -235,10 +247,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 100);
             }
         }, 100);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     void init() {
-        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
         setCheckboxAvailabilty();
         setSpinner();
     }
@@ -247,7 +262,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
-        if (!text.toString().equals(text.toString().trim())){
+        if (!text.toString().equals(text.toString().trim())) {
             etReceiverAccount.setText(text.toString().trim());
         }
 
@@ -313,6 +328,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (!runningSpinerForFirstTime) {
             if (requiredAmount == null) {
                 populateAssetsSpinner();
+                updateAmountStatus();
             } else {
                 updateAmountStatus();
                 if (loyaltyAsset != null) {
@@ -337,7 +353,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         loadWebView(webviewFrom, 34, Helper.md5(spinnerFrom.getSelectedItem().toString()));
-
+        //   setSpinner();
     }
 
     @OnItemSelected(R.id.spAssets)
@@ -517,19 +533,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     private void selectedAccountAsset() {
-        String selectedAsset = spAssets.getSelectedItem().toString();
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                    AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
-                    if (tempAccountAsset.symbol.toLowerCase().equals(selectedAsset.toLowerCase())) {
-                        selectedAccountAsset = accountDetail.AccountAssets.get(j);
-                        break;
+        try {
+            String selectedAsset = spAssets.getSelectedItem().toString();
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                        AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
+                        if (tempAccountAsset.symbol.toLowerCase().equals(selectedAsset.toLowerCase())) {
+                            selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                            break;
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+
         }
     }
 
@@ -639,20 +659,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
-    public void cbAlwaysDonate(){
+    public void cbAlwaysDonate() {
 
         alwaysDonate = cbAlwaysDonate.isChecked();
         String text = etMemo.getText().toString();
-        text=text.replaceAll("\\s+", " ").trim();
+        text = text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
 
 
     }
+
     @OnFocusChange(R.id.etMemo)
-    public void onFocusChanged(){
+    public void onFocusChanged() {
         String text = etMemo.getText().toString();
-        text=text.replaceAll("\\s+", " ").trim();
+        text = text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
     }
@@ -747,7 +768,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 totalAmount += (Double.parseDouble(lineItem.get("quantity").toString()) * Double.parseDouble(lineItem.get("price").toString()));
             }
             requiredAmount = totalAmount;
-            etAmount.setText(totalAmount.toString());
+            DecimalFormat df = new DecimalFormat("####.####");
+            df.setRoundingMode(RoundingMode.CEILING);
+            etAmount.setText(df.format(totalAmount));
             etAmount.setEnabled(false);
             spAssets.setEnabled(false);
 
@@ -795,11 +818,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void populateAccountsSpinner() {
         List<String> spinnerArray = new ArrayList<String>();
-        String accountname="";
+        String accountname = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
-            if(accountDetail.isSelected)
+            if (accountDetail.isSelected)
                 accountname = accountDetail.account_name;
 
             spinnerArray.add(accountDetail.account_name);
@@ -892,6 +915,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         return false;
     }
 
+    Boolean checkIfZero() {
+        String amount = etAmount.getText().toString();
+        Double am = Double.parseDouble(amount);
+        if (am <= 0.0)
+            return true;
+        return false;
+    }
+
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
@@ -910,7 +941,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         } else if (checkLastIndex()) {
             //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
-        } else if (etAmount.getText().toString().equals("0")) {
+        } else if (checkIfZero()) {
             //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -931,7 +962,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
         String memo = etMemo.getText().toString();
-        if (toAccount.equals("bitshares-munich")){
+        if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
         }
         HashMap hm = new HashMap();
@@ -1429,4 +1460,43 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "SendScreen Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "SendScreen Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }
