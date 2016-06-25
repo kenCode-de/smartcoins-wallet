@@ -78,8 +78,8 @@ public class TabActivity extends BaseActivity {
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
-        showDialogPin();
-       /* Intent intent = getIntent();
+
+        Intent intent = getIntent();
         Bundle res = intent.getExtras();
         if (res != null) {
             if (res.containsKey("ask_for_pin")) {
@@ -87,7 +87,7 @@ public class TabActivity extends BaseActivity {
                     showDialogPin();
                 }
             }
-        }*/
+        }
 
 
     }
