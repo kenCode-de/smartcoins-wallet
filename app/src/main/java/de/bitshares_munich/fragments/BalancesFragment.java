@@ -330,8 +330,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                 Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
             }
         }
+        Boolean isCheckedTimeZone=false;
+        isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
 
-        if (isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+        if (isCheckedTimeZone || isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
             loadBasic();
         }
     }
