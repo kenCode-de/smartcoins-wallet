@@ -111,22 +111,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
         context = this;
-
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("activity_id")) {
-                if (res.getInt("activity_id") == 919) {
-                    settingScreen = true;
-                    etPin.setEnabled(false);
-                    etPinConfirmation.setEnabled(false);
-                    etPin.setText("******");
-                    etPinConfirmation.setText("******");
-                    tvPin.setTextColor(Color.GRAY);
-                    tvPinConfirmation.setTextColor(Color.GRAY);
-                }
-            }
-        }
         validationAccountName();
         gson = new Gson();
         application = new Application();
@@ -377,16 +361,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         else if (!checkHyphen()) {
             tvErrorAccountName.setVisibility(View.VISIBLE);
             tvErrorAccountName.setText(R.string.account_name_shoud_have);
-        } else if (settingScreen) {
-            if (validAccount) {
-                if (!checkingValidation) {
-                    showDialog("", "");
-                    accountCreated = false;
-                    generateKeys();
+        }
 
-                }
-            }
-        } else {
+        else {
             if (etPin.getText().length() < 5) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             } else if (etPinConfirmation.getText().length() < 5) {
@@ -397,7 +374,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 if (validAccount) {
                     if (!checkingValidation) {
                         showDialog("", "");
-                        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
                         accountCreated = false;
                         generateKeys();
                     }
@@ -525,6 +501,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         String name = etAccountName.getText().toString();
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
+        accountDetails.pinCode=etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
         accountDetails.account_name = name;
         accountDetails.pub_key = pubKey;
@@ -607,14 +584,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         };
         handler.postDelayed(updateTask, 1000);
     }
-
-    /*
-    @OnClick(R.id.OnClickSettings)
-    void OnClickSettings(){
-        Intent intent = new Intent(this, SettingActivity.class);
-        startActivity(intent);
-    }
-    */
 
     @Override
     public void accountId(String string) {
