@@ -6,8 +6,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -26,6 +28,11 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +51,7 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -119,7 +127,77 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         progressDialog = new ProgressDialog(this);
         updateBlockNumberHead();
 
+        final Handler handler = new Handler();
+        final Runnable createFolder = new Runnable() {
+            @Override
+            public void run() {
+                createFolder();
+            }
+        };
+
+        handler.postDelayed(createFolder, 500);
+
     }
+
+
+    private void createFolder() {
+        PermissionManager manager = new PermissionManager();
+        manager.verifyStoragePermissions(this);
+
+        final File folder = new File(Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name));
+
+        boolean success = false;
+
+        if (!folder.exists()) {
+            success = folder.mkdir();
+        }
+
+        if (success) {
+            // Do something on success
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.txt_folder_created) + " : " + folder.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        }
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
+
+                    if (!file2.exists()) {
+                        FileOutputStream save = new FileOutputStream(file2);
+
+                        byte[] buffer = null;
+                        InputStream fIn = getResources().openRawResource(R.raw.woohoo);
+                        int size = 0;
+
+                        try {
+                            size = fIn.available();
+                            buffer = new byte[size];
+                            fIn.read(buffer);
+                            fIn.close();
+                            save.write(buffer);
+                            //save.flush();
+                            //save.close();
+                        } catch (FileNotFoundException e) {
+                            // TODO Auto-generated catch block
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                        }
+
+                        save.flush();
+                        save.close();
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        });
+    }
+
+
+
+
+
 
     CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
         public void onTick(long millisUntilFinished) {
