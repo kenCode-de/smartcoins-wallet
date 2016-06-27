@@ -280,16 +280,15 @@ public class SettingActivity extends BaseActivity {
             if (getLangCode.get(i).equalsIgnoreCase("zh-rTW")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rTW";
-                langCode.lang = "繁體中文";
+                langCode.lang = "Chinese"+ "; " + "zh-TW " +  "(繁體中文)";
                 langArray.add(langCode);
             } else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
-                langCode.lang = locale.getDisplayLanguage(locale);
+                langCode.lang = locale.getDisplayName() + "; " + locale.toString() + " ("+locale.getDisplayLanguage(locale)+")" ;
                 langCode.code = getLangCode.get(i);
                 langArray.add(langCode);
             }
-
         }
 
         ArrayAdapter<LangCode> adapterLanguage = new ArrayAdapter<LangCode>(this, android.R.layout.simple_spinner_item, langArray);
