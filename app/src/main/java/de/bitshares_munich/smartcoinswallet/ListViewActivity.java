@@ -13,12 +13,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -98,7 +96,7 @@ public class ListViewActivity extends BaseAdapter {
             holder.txtname.setText(name);
             holder.txtnote.setText(listContact.get(position).GetNote());
             holder.txtaccount.setText(accountnm);
-            loadWebView(holder.webView , 34, Helper.md5(accountnm));
+            loadWebView(holder.webView , 50, Helper.hash(accountnm, Helper.SHA256));
             return convertView;
         }
 

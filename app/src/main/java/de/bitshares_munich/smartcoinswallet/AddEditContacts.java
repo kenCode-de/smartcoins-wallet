@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -105,7 +103,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         application.registerCallback(this);
 
         contactsDelegate = ContactsFragment.contactsDelegate;
-        loadWebView(39, Helper.md5(""));
+        loadWebView(39, Helper.hash("", Helper.MD5));
         emailHead.setText(context.getString(R.string.email_name)+" :");
         SaveContact.setEnabled(false);
         SaveContact.setBackgroundColor(getColorWrapper(context,R.color.gray));
@@ -225,7 +223,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     }
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
-        loadWebView(39, Helper.md5(Accountname.getText().toString()));
+        loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
         warning.setText(getString(R.string.txt_validating_account));
         warning.setTextColor(getColorWrapper(context, R.color.black));
         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
@@ -233,7 +231,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         validReceiver = false;
 
         if (Accountname.getText().length() > 0) {
-            loadWebView(39, Helper.md5(Accountname.getText().toString()));
+            loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
@@ -324,7 +322,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-                loadWebView(39, Helper.md5(Accountname.getText().toString()));
+                loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }
@@ -414,7 +412,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         }
     }
     void setGravator(String email,ImageView imageEmail){
-        String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.md5(email)+"?s=130&r=pg&d=404";
+        String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
         new DownloadImageTask(imageEmail)
                 .execute(emailGravatarUrl);
     }
