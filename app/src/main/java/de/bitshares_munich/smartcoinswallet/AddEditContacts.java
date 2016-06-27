@@ -103,7 +103,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         application.registerCallback(this);
 
         contactsDelegate = ContactsFragment.contactsDelegate;
-        loadWebView(39, Helper.hash("", Helper.MD5));
+        //loadWebView(39, Helper.hash("", Helper.MD5));
+        loadWebView(39, Helper.hash("", Helper.SHA256));
+
         emailHead.setText(context.getString(R.string.email_name)+" :");
         SaveContact.setEnabled(false);
         SaveContact.setBackgroundColor(getColorWrapper(context,R.color.gray));
@@ -322,7 +324,8 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-                loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
+               // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
+                loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }

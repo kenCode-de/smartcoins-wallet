@@ -201,8 +201,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             backupAssetCHanged(basset);
         }
 
-
-        loadWebView(webviewTo, 34, Helper.hash("", Helper.MD5));
+        loadWebView(webviewTo,39, Helper.hash("", Helper.SHA256));
+        //loadWebView(webviewTo, 34, Helper.hash("", Helper.MD5));
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -297,8 +297,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             myAccountNameValidationTimer.start();
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
-
-        loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
+        loadWebView(webviewTo,34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
+       // loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
     }
 
     @OnFocusChange(R.id.etReceiverAccount)
@@ -400,7 +400,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             this.runningSpinerForFirstTime = false;
         }
 
-        loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
+      //  loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
+        loadWebView(webviewFrom,34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.SHA256));
     }
 
     @OnItemSelected(R.id.spAssets)
@@ -667,13 +668,19 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         }
     }
-
-    private void loadWebView(WebView webView, int size, String encryptText) {
-        String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
+    private void loadWebView(WebView webView,int size, String encryptText) {
+        String htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
+
+   /* private void loadWebView(WebView webView, int size, String encryptText) {
+        String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
+    }*/
 
     CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
         public void onTick(long millisUntilFinished) {
@@ -923,7 +930,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         else
         {
-            loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
+            loadWebView(webviewFrom,34, Helper.hash(tvFrom.getText().toString(), Helper.SHA256));
+           // loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
         }
