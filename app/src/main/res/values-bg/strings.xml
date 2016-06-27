@@ -156,7 +156,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Folder Създаден</string>
     <string name="upgrade_failed">Подобрете провали</string>
-    <string name="upgrade_success">Подобрете успешно</string>
     <string name="upgrading">Надграждане ...</string>
     <string name="import_new_account">ВНОС ACCOUNT</string>
     <string name="upgrade_account">Надстройване на профила</string>
@@ -172,5 +171,12 @@
     <string name="transfer_funds">прехвърляне на средства</string>
     <string name="unable_to_process">Не може да се обработи</string>
     <string name="cancel">ОТКАЗ</string>
+    <string name="donation">дарение</string>
+    <string name="insufficient_funds">Недостатъчни средства</string>
+    <string name="txt_wallet_atleast_one_account">Съжаляваме, но портфейла си, трябва да има поне един профил в нея</string>
     <string name="updating_transaction_id">Актуализиране на транзакциите Id, моля изчакайте</string>
+    <string name="email_name">За да се покаже на снимка за този контакт, въведете Gravatar своята електронна поща тук</string>
+    <string name="upgrade_success">Подобрете успешен!</string>
+    <string name="copied_to_clipboard">В буферната памет</string>
+
 </resources>

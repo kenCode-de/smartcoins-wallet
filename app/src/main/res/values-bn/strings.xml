@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">ফোল্ডার তৈরি</string>
     <string name="upgrade_failed">আপগ্রেড ব্যর্থ</string>
-    <string name="upgrade_success">সফলভাবে আপগ্রেড</string>
     <string name="upgrading">আপগ্রেড হচ্ছে ...</string>
     <string name="import_new_account">আমদানি অ্যাকাউন্ট</string>
     <string name="upgrade_account">আপগ্রেড অ্যাকাউন্ট</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">অর্থ স্থানান্তর</string>
     <string name="unable_to_process">প্রসেস করতে অসমর্থ</string>
     <string name="cancel">বাতিল</string>
+    <string name="donation">দান</string>
+    <string name="insufficient_funds">অপর্যাপ্ত তহবিল</string>
+    <string name="txt_wallet_atleast_one_account">দুঃখিত, কিন্তু আপনার মানিব্যাগ এতে অন্তত 1 অ্যাকাউন্ট উপস্থিত থাকা আবশ্যক</string>
     <string name="updating_transaction_id">আপডেট করা হচ্ছে লেনদেন আইডি, অনুগ্রহ করে অপেক্ষা করুন</string>
+    <string name="email_name">এই যোগাযোগ জন্য একটি ছবির প্রদর্শন করার জন্য, তার Gravatar ই-মেইল এখানে লিখুন</string>
+    <string name="upgrade_success">সফল আপগ্রেড করুন!</string>
+    <string name="copied_to_clipboard">ক্লিপবোর্ডে অনুলিপি</string>
+
 </resources>

@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">cartella creata</string>
     <string name="upgrade_failed">Aggiornamento non riuscito</string>
-    <string name="upgrade_success">Aggiornamento con successo</string>
     <string name="upgrading">Aggiornamento ...</string>
     <string name="import_new_account">Importa</string>
     <string name="upgrade_account">CONTO UPGRADE</string>
@@ -164,12 +163,18 @@
     <string name="transfer_funds">il trasferimento di fondi</string>
     <string name="unable_to_process">Impossibile elaborare</string>
     <string name="cancel">ANNULLA</string>
-
     <string name="txt_alertmsg">Sei sicuro di voler eliminare questo account</string>
     <string name="validation_in_progress">Validazione in corso ..</string>
     <string name="last_letter_cannot">ultima lettera non può essere -</string>
     <string name="account_name_shoud_have">Nome conto shoud hanno almeno uno -</string>
     <string name="default_currency">euro</string>
     <string name="account_already_exist">Il conto esiste già</string>
+    <string name="donation">Donazione</string>
+    <string name="insufficient_funds">Fondi insufficienti</string>
+    <string name="txt_wallet_atleast_one_account">Ci dispiace, ma il portafoglio deve avere almeno 1 conto in esso</string>
     <string name="updating_transaction_id">Aggiornamento ID transazione, Attendere</string>
+    <string name="email_name">Per visualizzare una foto per questo contatto, immettere il relativo e-mail qui Gravatar</string>
+    <string name="upgrade_success">Aggiornamento di successo!</string>
+    <string name="copied_to_clipboard">Copiato negli appunti</string>
+
 </resources>

@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">mappa készítés</string>
     <string name="upgrade_failed">Frissítés sikertelen</string>
-    <string name="upgrade_success">Frissítés sikeresen</string>
     <string name="upgrading">Frissítés ...</string>
     <string name="import_new_account">fiók importálása</string>
     <string name="upgrade_account">FIÓK FRISSÍTÉS</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">fiók nevét kellet atleast egy -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">A regisztráció már létezik</string>
+    <string name="donation">Adomány</string>
+    <string name="insufficient_funds">Fedezethiány</string>
+    <string name="txt_wallet_atleast_one_account">Sajnáljuk, de a pénztárca kell legalább 1 fiókból</string>
     <string name="updating_transaction_id">Frissítése Tranzakcióazonosító, Kérjük, várjon</string>
+    <string name="email_name">Fényképek megjelenítése a névjegy, adja meg a Gravatar e-mailt itt</string>
+    <string name="upgrade_success">Frissítés sikeres!</string>
+    <string name="copied_to_clipboard">Vágólapra másolva</string>
+
 </resources>

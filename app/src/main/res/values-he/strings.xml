@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">יצירת תיקיה</string>
     <string name="upgrade_failed">שדרוג נכשל</string>
-    <string name="upgrade_success">שדרג בהצלחה</string>
     <string name="upgrading">משדרג ...</string>
     <string name="import_new_account">חשבון חשוב</string>
     <string name="upgrade_account">שדרג חשבון</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">שם החשבון shoud יש atleast אחד -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">חשבון כבר קיימות</string>
+    <string name="donation">תרומה</string>
+    <string name="insufficient_funds">אין מספיק כסף</string>
+    <string name="txt_wallet_atleast_one_account">מצטער, אבל הארנק שלך חייב להיות לפחות חשבון 1 בה</string>
     <string name="updating_transaction_id">עדכון עסקת זיהוי, אנא המתן</string>
+    <string name="email_name">כדי להציג תמונה עבור איש קשר זה, הזן דואר אלקטרוני Gravatar שלה כאן</string>
+    <string name="upgrade_success">שדרוג מוצלח!</string>
+    <string name="copied_to_clipboard">הועתק ללוח</string>
+
 </resources>

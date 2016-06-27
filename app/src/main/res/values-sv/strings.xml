@@ -128,7 +128,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">mapp Skapad</string>
     <string name="upgrade_failed">uppgradera misslyckades</string>
-    <string name="upgrade_success">uppgradera framgångsrikt</string>
     <string name="upgrading">Uppgradering ...</string>
     <string name="import_new_account">IMPORT KONTO</string>
     <string name="upgrade_account">UPPGRADERA KONTO</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">överföring av medel</string>
     <string name="unable_to_process">Det går inte att bearbeta</string>
     <string name="cancel">ANNULLERA</string>
+    <string name="donation">Donation</string>
+    <string name="insufficient_funds">Otillräckliga medel</string>
+    <string name="txt_wallet_atleast_one_account">Tyvärr, men din plånbok måste ha åtminstone ett konto i det</string>
     <string name="updating_transaction_id">Uppdatering Transaktions Id Vänta</string>
+    <string name="email_name">För att visa en bild för denna kontakt, ange sin Gravatar e-post här</string>
+    <string name="upgrade_success">Uppgradera lyckades!</string>
+    <string name="copied_to_clipboard">Kopieras till urklipp</string>
+
 </resources>

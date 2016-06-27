@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">फ़ोल्डर बनाया</string>
     <string name="upgrade_failed">नवीनीकरण विफल</string>
-    <string name="upgrade_success">सफलतापूर्वक नवीनीकरण</string>
     <string name="upgrading">अपग्रेड हो ...</string>
     <string name="import_new_account">खाता आयात करें</string>
     <string name="upgrade_account">खाते का उन्नयन</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">खाते का नाम कम से कम एक है shoud -</string>
     <string name="default_currency">ईयूआर</string>
     <string name="account_already_exist">खाता पहले से ही मौजूद है</string>
+    <string name="donation">दान</string>
+    <string name="insufficient_funds">अपर्याप्त कोष</string>
+    <string name="txt_wallet_atleast_one_account">क्षमा करें, लेकिन यह अपने बटुए में कम से कम 1 खाता होना चाहिए</string>
     <string name="updating_transaction_id">अद्यतन कर रहा है ट्रांजेक्शन आईडी, कृपया प्रतीक्षा करें</string>
+    <string name="email_name">इस संपर्क के लिए एक तस्वीर प्रदर्शित करने के लिए, अपने Gravatar ई-मेल यहाँ दर्ज</string>
+    <string name="upgrade_success">सफल उन्नयन!</string>
+    <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
+
 </resources>

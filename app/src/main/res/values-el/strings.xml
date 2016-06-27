@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">φάκελος Δημιουργήθηκε</string>
     <string name="upgrade_failed">Αναβάθμιση απέτυχε</string>
-    <string name="upgrade_success">Αναβάθμιση με επιτυχία</string>
     <string name="upgrading">Επιμόρφωση προσωπικού…</string>
     <string name="import_new_account">εισαγάγετε το λογαριασμό</string>
     <string name="upgrade_account">Αναβαθμίστε το λογαριασμό</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">το όνομα του λογαριασμού shoud έχουν atleast ένα -</string>
     <string name="default_currency">ευρώ</string>
     <string name="account_already_exist">Λογαριασμό που ήδη υπάρχουν</string>
+    <string name="donation">Δωρεά</string>
+    <string name="insufficient_funds">Ανεπαρκείς πόροι</string>
+    <string name="txt_wallet_atleast_one_account">Συγνώμη, αλλά το πορτοφόλι σας πρέπει να έχει τουλάχιστον 1 λογαριασμό σε αυτό</string>
     <string name="updating_transaction_id">Επικαιροποίηση Συναλλαγών Ταυτότητα, παρακαλώ περιμένετε</string>
+    <string name="email_name">Για να εμφανίσετε μια φωτογραφία για αυτή την επαφή, εισάγετε Gravatar e-mail του εδώ</string>
+    <string name="upgrade_success">Επιτυχής αναβάθμιση!</string>
+    <string name="copied_to_clipboard">Αντιγράφονται στο πρόχειρο</string>
+
 </resources>
