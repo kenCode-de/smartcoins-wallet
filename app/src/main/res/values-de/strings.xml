@@ -72,7 +72,7 @@
 <string name="validating_account">Validieren Konto ...</string>
 <string name="account_name_should_be_longer">Kontoname sollte länger</string>
 <string name="account_name_already_exist">Kontoname %s ist bereits vorhanden</string>
-<string name="account_name_not_exist">Kontoname %s existiert nicht</string>
+<string name="account_name_not_exist">Kontoname %s &#160; existiert nicht</string>
 <string name="add_contact">Hinzufügen</string>
 <string name="edit_contact">Bearbeiten</string>
 <string name="empty_list">Kontaktliste ist leer</string>

@@ -1,5 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -32,6 +34,7 @@ public class ListViewActivity extends BaseAdapter {
             tinyDB = new TinyDB(context);
             mInflater = LayoutInflater.from(context);
             listContact = GetlistContact();
+            Collections.sort(listContact, new ContactNameComparator());
         }
         @Override
         public int getCount() {
@@ -95,7 +98,7 @@ public class ListViewActivity extends BaseAdapter {
             holder.txtname.setText(name);
             holder.txtnote.setText(listContact.get(position).GetNote());
             holder.txtaccount.setText(accountnm);
-            loadWebView(holder.webView , 50, Helper.md5(accountnm));
+            loadWebView(holder.webView , 34, Helper.md5(accountnm));
             return convertView;
         }
 
@@ -192,6 +195,13 @@ public class ListViewActivity extends BaseAdapter {
                 dialog.show();
 
 
+    }
+
+    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
+    {
+        public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
+            return left.name.toLowerCase().compareTo(right.name.toLowerCase());
+        }
     }
 
     }
