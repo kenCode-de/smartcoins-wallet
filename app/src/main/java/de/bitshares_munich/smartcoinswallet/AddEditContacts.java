@@ -2,21 +2,27 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,6 +36,7 @@ import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -40,6 +47,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     Boolean edit = false;
     TinyDB tinyDB;
     String contactname = "";
+    String emailtxt = "";
     String accountid = "";
     String note = "";
     Application application = new Application();
@@ -48,6 +56,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
 
     @Bind(R.id.web)
     WebView web;
+
+    @Bind(R.id.imageEmail)
+    ImageView imageEmail;
 
     @Bind(R.id.Contactname)
     EditText Contactname;
@@ -64,11 +75,17 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @Bind(R.id.Accountname)
     EditText Accountname;
 
+    @Bind(R.id.email)
+    EditText etEmail;
+
     Context context;
     String contact_id;
 
     @Bind(R.id.warning)
     TextView warning;
+
+    @Bind(R.id.emailHead)
+    TextView emailHead;
 
     ContactsDelegate contactsDelegate;
 
@@ -87,6 +104,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
 
         contactsDelegate = ContactsFragment.contactsDelegate;
         loadWebView(39, Helper.hash("", Helper.MD5));
+        emailHead.setText(context.getString(R.string.email_name)+" :");
         SaveContact.setEnabled(false);
         SaveContact.setBackgroundColor(getColorWrapper(context,R.color.gray));
         cancelContact.setBackgroundColor(getColorWrapper(context,R.color.red));
@@ -112,10 +130,13 @@ public class AddEditContacts extends BaseActivity implements IAccount{
 
                 if(res.containsKey("note")) note = res.getString("note");
 
+                if(res.containsKey("email")) emailtxt = res.getString("email");
+
                 Contactname.setText(contactname);
                 Accountname.setText(accountid);
                 Note.setText(note);
                 SaveContact.setText(R.string.edit_contact);
+                etEmail.setText(emailtxt);
             }
 
            // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
@@ -146,6 +167,10 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                     if(!contactNameEnabled && !noteEnabled) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         SaveContact.setEnabled(false);
+                    }
+                    if(!Accountname.getText().toString().equals(accountid) && validReceiver){
+                        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                        SaveContact.setEnabled(true);
                     }
                 }
                 if(add){
@@ -201,7 +226,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
         warning.setText(getString(R.string.txt_validating_account));
         warning.setTextColor(getColorWrapper(context, R.color.black));
-
+        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+        SaveContact.setEnabled(false);
+        validReceiver = false;
 
         if (Accountname.getText().length() > 0) {
             loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
@@ -210,6 +237,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             myLowerCaseTimer.start();
             myAccountNameValidationTimer.start();
         }
+
     }
     @OnTextChanged(R.id.Contactname)
     void onTextChangedName(CharSequence text) {
@@ -227,6 +255,30 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     void onTextChangedNote(CharSequence text) {
         if(edit) {
             if (Note.getText().toString().equals(note)) {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+                SaveContact.setEnabled(false);
+            } else {
+                SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
+                SaveContact.setEnabled(true);
+            }
+        }
+    }
+    @OnTextChanged(R.id.email)
+    void onTextChangedEmail(CharSequence text) {
+
+        if(text.length()>0) {
+            imageEmail.setVisibility(View.VISIBLE);
+            web.setVisibility(View.GONE);
+            setGravator(text.toString(), imageEmail);
+        }
+        if(text.length()<=0) {
+            imageEmail.setVisibility(View.GONE);
+            web.setVisibility(View.VISIBLE);
+           // setGravator(text.toString(), imageEmail);
+        }
+
+        if(edit) {
+            if (etEmail.getText().toString().equals(emailtxt)) {
                 SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                 SaveContact.setEnabled(false);
             } else {
@@ -332,6 +384,38 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             return context.getResources().getColor(id);
         }
     }
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+                SupportMethods.testing("alpha",e.getMessage(),"error");
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if(result==null) bmImage.setVisibility(View.GONE);
+            else bmImage.setImageBitmap(result);
+        }
+    }
+    void setGravator(String email,ImageView imageEmail){
+        String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
+        new DownloadImageTask(imageEmail)
+                .execute(emailGravatarUrl);
+    }
 
     public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
     {
@@ -339,5 +423,6 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }
+
 
 }
