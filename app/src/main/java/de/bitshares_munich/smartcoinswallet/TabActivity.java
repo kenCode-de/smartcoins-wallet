@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -29,9 +30,11 @@ import butterknife.OnClick;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.utils.TinyDB;
 
 public class TabActivity extends BaseActivity {
 
@@ -54,6 +57,8 @@ public class TabActivity extends BaseActivity {
     @Bind(R.id.ivSocketConnected_TabActivity)
     ImageView ivSocketConnected;
 
+    TinyDB tinyDB;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +66,7 @@ public class TabActivity extends BaseActivity {
 
         setContentView(R.layout.activity_tab);
         ButterKnife.bind(this);
-
-
-
+        tinyDB = new TinyDB(getApplicationContext());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -79,10 +82,8 @@ public class TabActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
         if (res != null) {
-            if (res.containsKey("ask_for_pin"))
-            {
-                if ( res.getBoolean("ask_for_pin") )
-                {
+            if (res.containsKey("ask_for_pin")) {
+                if (res.getBoolean("ask_for_pin")) {
                     showDialogPin();
                 }
             }
@@ -90,13 +91,6 @@ public class TabActivity extends BaseActivity {
 
 
     }
-
- /*   @Override
-    protected void onResume()
-    {
-        super.onResume();
-        Application.setCurrentActivity(this);
-    }*/
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -135,37 +129,36 @@ public class TabActivity extends BaseActivity {
     }
 
     @OnClick(R.id.OnClickSettings_TabActivity)
-    void OnClickSettings(){
+    void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
 
     // Block for pin
     private void showDialogPin() {
-        if (Helper.containKeySharePref(getApplicationContext(), getApplicationContext().getString(R.string.txt_pin))) {
-            final Dialog dialog = new Dialog(TabActivity.this);
-            //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
-            dialog.setTitle(R.string.pin_verification);
-            dialog.setContentView(R.layout.activity_alert_pin_dialog);
-            Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-            final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
-            btnDone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
-                    if (etPin.getText().toString().equals(savedPIN)) {
-                        dialog.cancel();
-                    } else {
-                       // Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        final Dialog dialog = new Dialog(TabActivity.this);
+        dialog.setTitle(R.string.pin_verification);
+        dialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            dialog.cancel();
+                            break;
+                        }
                     }
                 }
-            });
-            dialog.setCancelable(false);
 
-            dialog.show();
-        }
+            }
+        });
+        dialog.setCancelable(false);
+        dialog.show();
     }
-    //////
 
 }

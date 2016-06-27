@@ -197,6 +197,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }
 
+        String basset = etBackupAsset.getText().toString();
+
+        if ( !basset.isEmpty() )
+        {
+            backupAssetCHanged(basset);
+        }
+
+
         loadWebView(webviewTo, 34, Helper.md5(""));
 
 
@@ -204,7 +212,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
-//<<<<<<< HEAD
+    //<<<<<<< HEAD
 //    void init() {
 //        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
 //=======
@@ -267,7 +275,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }, 100);
 
-      //  client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //  client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
     }
 
@@ -458,35 +466,55 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         super.onConfigurationChanged(newConfig);
     }
 
-    @OnTextChanged(R.id.etBackupAsset)
-    void onBackupAssetChanged(CharSequence text) {
+    private void backupAssetCHanged (String text)
+    {
         count = 1;
-        if (text.toString().equals("")) {
+        if (text.toString().equals(""))
+        {
             text = "0";
-        } else if (text.toString().equals(".")) {
+        } else if (text.toString().equals("."))
+        {
             text = "0.";
         }
+
         Double backupAssetAmount = Double.parseDouble(text.toString());
         Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-        if (backupAssetAmount > backupAssetBalance) {
+
+        if (backupAssetAmount > backupAssetBalance)
+        {
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssets.symbol));
-        } else {
+        }
+        else
+        {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
-        if (backAssetRate != null) {
+
+        if (backAssetRate != null)
+        {
             String loyaltyAmount = etLoyalty.getText().toString();
-            if (loyaltyAmount.equals("")) {
+
+            if (loyaltyAmount.equals(""))
+            {
                 loyaltyAmount = "0";
             }
-            if (requiredAmount != null) {
+
+            if (requiredAmount != null)
+            {
                 Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
                 etAmount.setText(remainingAmount.toString());
             }
             updateTotalStatus();
-        } else {
+        }
+        else
+        {
             getExchangeRate(200);
         }
+    }
+
+    @OnTextChanged(R.id.etBackupAsset)
+    void onBackupAssetChanged(CharSequence text) {
+        backupAssetCHanged(text.toString());
     }
 
 
@@ -1506,38 +1534,37 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     private void showDialogPin(final Boolean fundTransfer) {
-        if (Helper.containKeySharePref(getApplicationContext(), getApplicationContext().getString(R.string.txt_pin))) {
-            final Dialog dialog = new Dialog(SendScreen.this);
-            //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
-            dialog.setTitle(R.string.pin_verification);
-            dialog.setContentView(R.layout.activity_alert_pin_dialog);
-            Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-            final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
-            btnDone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String savedPIN = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.txt_pin));
-                    if (etPin.getText().toString().equals(savedPIN)) {
-                        dialog.cancel();
-                        if (fundTransfer) {
-                            String transferFunds = getString(R.string.transfer_funds) + "...";
-                            showDialog("", transferFunds);
-                            tradeAsset();
-                        } else {
-                            sendFunds(false);
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        final Dialog dialog = new Dialog(SendScreen.this);
+        //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
+        dialog.setTitle(R.string.pin_verification);
+        dialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            dialog.cancel();
+                            if (fundTransfer) {
+                                String transferFunds = getString(R.string.transfer_funds) + "...";
+                                showDialog("", transferFunds);
+                                tradeAsset();
+                            } else {
+                                sendFunds(false);
+                            }
+                            break;
                         }
-
-
-                    } else {
-                        // Toast.makeText(getApplicationContext(), "Wrong PIN", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-            dialog.setCancelable(true);
 
-            dialog.show();
-        }
+            }
+        });
+        dialog.setCancelable(true);
+
+        dialog.show();
     }
 
 //    @Override

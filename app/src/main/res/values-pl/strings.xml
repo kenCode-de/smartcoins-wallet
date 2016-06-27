@@ -170,5 +170,5 @@
     <string name="transfer_funds">Przekazanie środków</string>
     <string name="unable_to_process">Nie można przetworzyć</string>
     <string name="cancel">ANULUJ</string>
-
+    <string name="updating_transaction_id">Aktualizacja Identyfikator transakcji, proszę czekać</string>
 </resources>

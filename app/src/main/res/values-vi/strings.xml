@@ -170,5 +170,5 @@
     <string name="transfer_funds">chuyển Quỹ</string>
     <string name="unable_to_process">Không thể xử lý</string>
     <string name="cancel">CANCEL</string>
-
+    <string name="updating_transaction_id">Đang cập nhật giao dịch Id, Xin vui lòng chờ đợi</string>
 </resources>

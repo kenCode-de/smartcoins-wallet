@@ -170,5 +170,5 @@
     <string name="transfer_funds">prenos skladov</string>
     <string name="unable_to_process">Ni mogoče obdelati</string>
     <string name="cancel">CANCEL</string>
-
+    <string name="updating_transaction_id">Posodabljanje Transaction ID Počakajte</string>
 </resources>

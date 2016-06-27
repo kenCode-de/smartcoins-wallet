@@ -170,5 +170,5 @@
     <string name="transfer_funds">перерахування коштів</string>
     <string name="unable_to_process">неможливо обробити</string>
     <string name="cancel">СКАСУВАННЯ</string>
-
+    <string name="updating_transaction_id">Оновлення Ідентифікатор транзакції, ласка, зачекайте</string>
 </resources>

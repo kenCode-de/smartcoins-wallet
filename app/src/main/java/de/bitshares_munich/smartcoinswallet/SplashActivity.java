@@ -21,7 +21,7 @@ public class SplashActivity extends Activity {
 
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 500;
-    //TinyDB tinyDB;
+    TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,8 @@ public class SplashActivity extends Activity {
         }, SPLASH_TIME_OUT);
     }
 
-    private void checkWhereToGo ()
-    {
-        TinyDB tinyDB = new TinyDB(getApplicationContext());
+    private void checkWhereToGo() {
+        tinyDB = new TinyDB(getApplicationContext());
 
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (arrayList.size() > 0) {
@@ -65,18 +64,20 @@ public class SplashActivity extends Activity {
             }
         }, SPLASH_TIME_OUT);
         */
-
-        String pin = Helper.fetchStringSharePref(getApplicationContext(),"pin");
-
+        String pin = "";
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                pin = accountDetails.get(i).pinCode;
+                break;
+            }
+        }
         Intent i = new Intent(SplashActivity.this, TabActivity.class);
 
-        if ( pin != null && !pin.isEmpty() )
-        {
-            i.putExtra("ask_for_pin",true);
-        }
-        else
-        {
-            i.putExtra("ask_for_pin",false);
+        if (pin != null && !pin.isEmpty()) {
+            i.putExtra("ask_for_pin", true);
+        } else {
+            i.putExtra("ask_for_pin", false);
         }
 
         startActivity(i);

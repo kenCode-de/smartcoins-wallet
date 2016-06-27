@@ -70,9 +70,7 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
-        android:gravity="top"
-    android:text="menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp"
-/>
+        android:gravity="top"/>
 
     <TextView
         android:visibility="gone"

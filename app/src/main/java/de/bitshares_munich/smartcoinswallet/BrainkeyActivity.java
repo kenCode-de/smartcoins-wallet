@@ -73,23 +73,6 @@ public class BrainkeyActivity extends BaseActivity {
 
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
-
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("activity_id")) {
-                if (res.getInt("activity_id") == 919) {
-                    settingScreen = true;
-                    etPin.setEnabled(false);
-                    etPinConfirmation.setEnabled(false);
-                    etPin.setText("******");
-                    etPinConfirmation.setText("******");
-                    tvPin.setTextColor(Color.GRAY);
-                    tvPinConfirmation.setTextColor(Color.GRAY);
-                }
-            }
-        }
-
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
     }
@@ -105,9 +88,7 @@ public class BrainkeyActivity extends BaseActivity {
 
         if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
-        } else if (settingScreen) {
-            load();
-        } else {
+        }  else {
             if (etPin.getText().length() < 5) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             } else if (etPinConfirmation.getText().length() < 5) {
@@ -115,13 +96,12 @@ public class BrainkeyActivity extends BaseActivity {
             } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {
-                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
-                load();
+                load(etPin.getText().toString());
             }
         }
     }
 
-    void load() {
+    void load(String pinCode) {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
@@ -131,7 +111,7 @@ public class BrainkeyActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));
-                    get_account_from_brainkey(this,temp);
+                    get_account_from_brainkey(this,temp,pinCode);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
@@ -159,7 +139,7 @@ public class BrainkeyActivity extends BaseActivity {
 
     }
 
-    public void get_account_from_brainkey(final Activity activity,final String brainKey) {
+    public void get_account_from_brainkey(final Activity activity, final String brainKey, final String pinCode) {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
@@ -176,7 +156,7 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        addWallet(accountDetails,brainKey);
+                        addWallet(accountDetails,brainKey,pinCode);
                     }
 
                 } else {
@@ -243,10 +223,11 @@ public class BrainkeyActivity extends BaseActivity {
     }
     /////////////////
 
-    void addWallet(AccountDetails accountDetail,String brainKey) {
+    void addWallet(AccountDetails accountDetail,String brainKey,String pinCode) {
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
+        accountDetails.pinCode=pinCode;
         accountDetails.account_name = accountDetail.account_name;
         accountDetails.pub_key = accountDetail.pub_key;
         accountDetails.brain_key = brainKey;

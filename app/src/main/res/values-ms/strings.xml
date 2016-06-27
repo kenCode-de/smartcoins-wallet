@@ -170,5 +170,5 @@
     <string name="transfer_funds">memindahkan Dana</string>
     <string name="unable_to_process">Tidak dapat memproses</string>
     <string name="cancel">CANCEL</string>
-
+    <string name="updating_transaction_id">Mengemaskini Transaksi Id, Sila tunggu</string>
 </resources>

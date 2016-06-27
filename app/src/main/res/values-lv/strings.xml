@@ -170,5 +170,5 @@
     <string name="account_name_shoud_have">konta nosaukums protestu ir atleast viens -</string>
     <string name="default_currency">eiro</string>
     <string name="account_already_exist">Konts jau pastāv</string>
-
+    <string name="updating_transaction_id">Atjaunināšana Transaction ID, lūdzu, gaidiet</string>
 </resources>

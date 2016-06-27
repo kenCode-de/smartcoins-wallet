@@ -172,5 +172,5 @@
     <string name="transfer_funds">прехвърляне на средства</string>
     <string name="unable_to_process">Не може да се обработи</string>
     <string name="cancel">ОТКАЗ</string>
-
+    <string name="updating_transaction_id">Актуализиране на транзакциите Id, моля изчакайте</string>
 </resources>

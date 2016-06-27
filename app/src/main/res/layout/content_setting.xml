@@ -213,7 +213,7 @@
                         android:layout_weight="2"
                         android:textColor="#002"
                         android:layout_marginLeft="12dp"
-                        android:textSize="15dp"
+                        android:textSize="17sp"
                         android:visibility="gone"
                         />
                     <Spinner

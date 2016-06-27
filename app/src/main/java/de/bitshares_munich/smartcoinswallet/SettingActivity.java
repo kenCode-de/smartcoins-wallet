@@ -366,7 +366,7 @@ public class SettingActivity extends BaseActivity {
         }
 
         Collections.sort(arrayAccountName);
-        ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountName);
+        ArrayAdapter<String> adapterAccountName = new ArrayAdapter<>(this, R.layout.mytextview, arrayAccountName);
         adapterAccountName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spAccounts.setAdapter(adapterAccountName);
         if (accountName.isEmpty()) {
@@ -554,6 +554,7 @@ public class SettingActivity extends BaseActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingActivity.this, "Copied to Clipboard" , Toast.LENGTH_SHORT).show();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                 clipboard.setPrimaryClip(clip);
