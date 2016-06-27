@@ -336,13 +336,13 @@ public class Helper {
             String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
             TimeZone tz = TimeZone.getTimeZone(dtz);
 
-            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("HHmm");
             destFormat.setTimeZone(tz);
             String result = destFormat.format(date);
             return result;
 
         } else {
-            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("HHmm");
             String result = destFormat.format(date);
             return result;
         }

@@ -554,6 +554,7 @@ public class SettingActivity extends BaseActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SettingActivity.this, "Copied to Clipboard" , Toast.LENGTH_SHORT).show();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                 clipboard.setPrimaryClip(clip);
