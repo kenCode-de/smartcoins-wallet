@@ -7,7 +7,7 @@
         android:pivotY="50%"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:duration="1000"
-        android:repeatCount="1"
+        android:repeatCount="0"
         android:toDegrees="360" />
 
 </set>
