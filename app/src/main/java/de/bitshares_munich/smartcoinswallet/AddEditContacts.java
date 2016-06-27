@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -178,11 +180,13 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             contact.SetAccount(_accountid);
             contact.SetName(_contactname);
             contacts.add(contact);
+            Collections.sort(contacts, new ContactNameComparator());
             tinyDB.putContactsObject("Contacts", contacts);
         }else if (edit){
             if(!_contactname.equals(contactname)) contacts.get(Integer.parseInt(contact_id)).SetName(_contactname);
             if(!_accountid.equals(accountid)) contacts.get(Integer.parseInt(contact_id)).SetAccount(_accountid);
             if(!_note.equals(note)) contacts.get(Integer.parseInt(contact_id)).SaveNote(_note);
+            Collections.sort(contacts, new ContactNameComparator());
             tinyDB.putContactsObject("Contacts", contacts);
         }
         contactsDelegate.OnUpdate("knysys",29);
@@ -328,6 +332,13 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             return context.getColor(id);
         } else {
             return context.getResources().getColor(id);
+        }
+    }
+
+    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
+    {
+        public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
+            return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }
 
