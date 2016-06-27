@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Folder Oprettet</string>
     <string name="upgrade_failed">Opgrader mislykkedes</string>
-    <string name="upgrade_success">Opgrader med succes</string>
     <string name="upgrading">Opgradering ...</string>
     <string name="import_new_account">IMPORT KONTO</string>
     <string name="upgrade_account">kontoopgradering</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">kontonavn mediefil have mindst én -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Konto allerede findes</string>
+    <string name="donation">Donation</string>
+    <string name="insufficient_funds">Ikke nok penge</string>
+    <string name="txt_wallet_atleast_one_account">Beklager, men din tegnebog skal have mindst en konto i det</string>
     <string name="updating_transaction_id">Opdatering Transaktion Id, vent venligst</string>
+    <string name="email_name">For at vise et foto til denne Contact, indtaste sin Gravatar e-mail her</string>
+    <string name="upgrade_success">Opgrader Vellykket!</string>
+    <string name="copied_to_clipboard">Kopieret til udklipsholderen</string>
+
 </resources>

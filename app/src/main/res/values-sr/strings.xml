@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Смартцоинс</string>
     <string name="txt_folder_created">direktorijum је направљен</string>
     <string name="upgrade_failed">Упграде није успела</string>
-    <string name="upgrade_success">успешно Упграде</string>
     <string name="upgrading">Надоградња ...</string>
     <string name="import_new_account">Увоз налога</string>
     <string name="upgrade_account">Надоградња налога</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">преноса средстава</string>
     <string name="unable_to_process">У могућности да обрадимо</string>
     <string name="cancel">ЦАНЦЕЛ</string>
+    <string name="donation">донација</string>
+    <string name="insufficient_funds">Недовољно средстава</string>
+    <string name="txt_wallet_atleast_one_account">Жао ми је, али ваш новчаник мора имати најмање 1 рачун у њој</string>
     <string name="updating_transaction_id">Ажурирање Трансацтион ИД, Молимо сачекајте</string>
+    <string name="email_name">Да бисте приказали слику за овој особи, унесите свој Граватар е-маил овде</string>
+    <string name="upgrade_success">Упграде Успешна!</string>
+    <string name="copied_to_clipboard">Копиран у цлипбоард</string>
+
 </resources>

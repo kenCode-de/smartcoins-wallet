@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">zložky vytvorené</string>
     <string name="upgrade_failed">upgrade zlyhal</string>
-    <string name="upgrade_success">úspešne vykonať upgrade</string>
     <string name="upgrading">Aktualizácie ...</string>
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">prenos fondy</string>
     <string name="unable_to_process">nemožno spracovať</string>
     <string name="cancel">ZRUŠIŤ</string>
+    <string name="donation">dar</string>
+    <string name="insufficient_funds">Nedostatok finančných prostriedkov</string>
+    <string name="txt_wallet_atleast_one_account">Ospravedlňujeme sa, ale vaša peňaženka musí mať aspoň 1 účet v ňom</string>
     <string name="updating_transaction_id">Aktualizácia ID transakcie, Prosím, počkajte</string>
+    <string name="email_name">Ak chcete zobraziť fotografiu pre tento kontakt, zadajte jeho Gravatar e-mail tu</string>
+    <string name="upgrade_success">Upgrade bol úspešný!</string>
+    <string name="copied_to_clipboard">Bol skopírovaný do schránky</string>
+
 </resources>

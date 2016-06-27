@@ -42,6 +42,8 @@ import de.bitshares_munich.smartcoinswallet.R;
  */
 public class Helper {
     Gson gson;
+    public static final String MD5 = "MD5";
+    public static final String SHA256 = "SHA-256";
     public static final ArrayList<String> languages = new ArrayList<>();
     public static Map<String, String> countriesISOMap = new HashMap<String, String>();
 
@@ -98,12 +100,11 @@ public class Helper {
         return languages;
     }
 
-    public static final String md5(final String s) {
-        final String MD5 = "MD5";
+    public static final String hash(final String s, final String algorithm) {
         try {
-            // Create MD5 Hash
+            // Create MD5 or SHA-256 Hash
             MessageDigest digest = MessageDigest
-                    .getInstance(MD5);
+                    .getInstance(algorithm);
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
 
@@ -336,13 +337,13 @@ public class Helper {
             String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
             TimeZone tz = TimeZone.getTimeZone(dtz);
 
-            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("HHmm");
             destFormat.setTimeZone(tz);
             String result = destFormat.format(date);
             return result;
 
         } else {
-            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("HHmm");
             String result = destFormat.format(date);
             return result;
         }

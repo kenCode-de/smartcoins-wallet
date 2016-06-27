@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Папка создана</string>
     <string name="upgrade_failed">Ошибка обновления</string>
-    <string name="upgrade_success">Обновление успешно</string>
     <string name="upgrading">Обновление ...</string>
     <string name="import_new_account">ИМПОРТ СЧЕТ</string>
     <string name="upgrade_account">ОБНОВИТЬ АККАУНТ</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">перечислении средств</string>
     <string name="unable_to_process">Невозможно обработать</string>
     <string name="cancel">ОТМЕНА</string>
+    <string name="donation">дарение</string>
+    <string name="insufficient_funds">Недостаточно средств</string>
+    <string name="txt_wallet_atleast_one_account">Извините, но ваш кошелек должен иметь по крайней мере 1 счет в нем</string>
     <string name="updating_transaction_id">Обновление Идентификатор транзакции, Пожалуйста, подождите</string>
+    <string name="email_name">Чтобы отобразить фотографию для этого контакта, введите его Gravatar электронной почты здесь</string>
+    <string name="upgrade_success">Обновление успешно!</string>
+    <string name="copied_to_clipboard">Скопирован в буфер</string>
+
 </resources>

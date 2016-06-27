@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -29,8 +28,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
@@ -205,7 +202,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
 
-        loadWebView(webviewTo, 34, Helper.md5(""));
+        loadWebView(webviewTo, 34, Helper.hash("", Helper.MD5));
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -301,7 +298,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
 
-        loadWebView(webviewTo, 34, Helper.md5(etReceiverAccount.getText().toString()));
+        loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
     }
 
     @OnFocusChange(R.id.etReceiverAccount)
@@ -403,7 +400,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             this.runningSpinerForFirstTime = false;
         }
 
-        loadWebView(webviewFrom, 34, Helper.md5(spinnerFrom.getSelectedItem().toString()));
+        loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
     }
 
     @OnItemSelected(R.id.spAssets)
@@ -926,7 +923,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         else
         {
-            loadWebView(webviewFrom, 34, Helper.md5(tvFrom.getText().toString()));
+            loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
         }

@@ -153,7 +153,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Folder Krijuar</string>
     <string name="upgrade_failed">Upgrade dështuar</string>
-    <string name="upgrade_success">Upgrade sukses</string>
     <string name="upgrading">Përmirësimi ...</string>
     <string name="import_new_account">IMPORT LLOGARI</string>
     <string name="upgrade_account">LLOGARIA UPGRADE</string>
@@ -171,5 +170,12 @@
     <string name="unable_to_process">Në pamundësi për të përpunuar</string>
     <string name="cancel">CANCEL</string>
     <string name="checkbox_donate">Dhuroni 2 BTS me Zhvilluesit Mbështetje në</string>
+    <string name="donation">dhurim</string>
+    <string name="insufficient_funds">Fonde të pamjaftueshme</string>
+    <string name="txt_wallet_atleast_one_account">Na vjen keq, por portofolin tuaj duhet të ketë të paktën 1 llogari në të</string>
     <string name="updating_transaction_id">Përditësimi Transaction Id, Ju lutem prisni</string>
+    <string name="email_name">Për të shfaqur një fotografi për këtë kontakt, shkruani Gravatar e-mail e tij këtu</string>
+    <string name="upgrade_success">Upgrade suksesshëm!</string>
+    <string name="copied_to_clipboard">Kopjohet në clipboard</string>
+
 </resources>

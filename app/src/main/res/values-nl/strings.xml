@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">folder Gemaakt</string>
     <string name="upgrade_failed">upgrade is mislukt</string>
-    <string name="upgrade_success">upgrade met succes</string>
     <string name="upgrading">Upgrading ...</string>
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">accountnaam shoud minstens één hebben -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Account bestaat al</string>
+    <string name="donation">schenking</string>
+    <string name="insufficient_funds">onvoldoende Funds</string>
+    <string name="txt_wallet_atleast_one_account">Sorry, maar je portemonnee moet minstens 1 account te hebben in deze</string>
     <string name="updating_transaction_id">Het bijwerken van Transaction Id, Even geduld aub</string>
+    <string name="email_name">Als u een foto voor deze contactpersoon weer te geven, voert u het Gravatar e-mail hier</string>
+    <string name="upgrade_success">Upgrade Succesvolle!</string>
+    <string name="copied_to_clipboard">Gekopieerd naar het klembord</string>
+
 </resources>

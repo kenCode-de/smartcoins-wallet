@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">creat carpeta</string>
     <string name="upgrade_failed">error d\'actualització</string>
-    <string name="upgrade_success">actualitzar correctament</string>
     <string name="upgrading">Actualitzant ...</string>
     <string name="import_new_account">COMPTE D\'IMPORTACIÓ</string>
     <string name="upgrade_account">COMPTE D\'ACTUALITZACIÓ</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">La transferència de fons</string>
     <string name="unable_to_process">No es pot processar</string>
     <string name="cancel">CANCEL · LAR</string>
+    <string name="donation">Donació</string>
+    <string name="insufficient_funds">Fons insuficients</string>
+    <string name="txt_wallet_atleast_one_account">Ho sentim, però la seva cartera ha de tenir almenys 1 compta en ella</string>
     <string name="updating_transaction_id">Actualització de ID de la transacció, si us plau esperi</string>
+    <string name="email_name">Per mostrar una foto per aquest contacte, introdueixi la seva adreça de correu Gravatar aquí</string>
+    <string name="upgrade_success">Actualització correcta!</string>
+    <string name="copied_to_clipboard">Copiat al porta-retalls</string>
+
 </resources>

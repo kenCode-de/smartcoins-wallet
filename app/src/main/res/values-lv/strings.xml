@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">mape Izveidots</string>
     <string name="upgrade_failed">Upgrade neizdevās</string>
-    <string name="upgrade_success">Upgrade veiksmīgi</string>
     <string name="upgrading">Modernizācija ...</string>
     <string name="import_new_account">IMPORT KONTS</string>
     <string name="upgrade_account">UPGRADE KONTS</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">konta nosaukums protestu ir atleast viens -</string>
     <string name="default_currency">eiro</string>
     <string name="account_already_exist">Konts jau pastāv</string>
+    <string name="donation">ziedojums</string>
+    <string name="insufficient_funds">Nepietiek līdzekļu</string>
+    <string name="txt_wallet_atleast_one_account">Atvainojiet, bet jūsu maku ir jābūt vismaz 1 kontu tajā</string>
     <string name="updating_transaction_id">Atjaunināšana Transaction ID, lūdzu, gaidiet</string>
+    <string name="email_name">Lai parādītu fotoattēlu šo kontaktadresi, ievadiet savu Gravatar e-pastu šeit</string>
+    <string name="upgrade_success">Upgrade Veiksmīga!</string>
+    <string name="copied_to_clipboard">Kopēts starpliktuvē</string>
+
 </resources>

@@ -160,7 +160,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">フォルダの作成</string>
     <string name="upgrade_failed">アップグレードに失敗しました</string>
-    <string name="upgrade_success">正常にアップグレード</string>
     <string name="upgrading">アップグレード...</string>
     <string name="import_new_account">IMPORT口座</string>
     <string name="upgrade_account">アカウントをアップグレード</string>
@@ -171,5 +170,12 @@
     <string name="account_name_shoud_have">アカウント名は、少なくとも1つを持ってshoud -</string>
     <string name="default_currency">ユーロ</string>
     <string name="account_already_exist">アカウントがすでに存在しています</string>
+    <string name="donation">寄付</string>
+    <string name="insufficient_funds">残高不足</string>
+    <string name="txt_wallet_atleast_one_account">申し訳ありませんが、お財布は、その中に少なくとも1アカウントを持っている必要があります</string>
     <string name="updating_transaction_id">トランザクションIDの更新、しばらくお待ちください</string>
+    <string name="email_name">この連絡先のために写真を表示するには、ここではそのグラバター電子メ​​ールを入力してください</string>
+    <string name="upgrade_success">成功したアップグレード！</string>
+    <string name="copied_to_clipboard">クリップボードにコピーされます</string>
+
 </resources>

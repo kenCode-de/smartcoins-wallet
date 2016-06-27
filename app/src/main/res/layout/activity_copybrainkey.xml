@@ -23,10 +23,10 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:id="@+id/etBrainKey"
         android:layout_width="match_parent"
-        android:inputType="textMultiLine"
+        android:inputType="none"
         android:background="@drawable/edittext_bg"
-        android:layout_height="120dp"
-        android:enabled="false"
+        android:layout_height="200dp"
+        android:textIsSelectable="true"
         android:gravity="top"/>
 
     <TextView

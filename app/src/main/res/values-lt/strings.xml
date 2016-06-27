@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">aplankas Sukurta</string>
     <string name="upgrade_failed">Atnaujinkite nepavyko</string>
-    <string name="upgrade_success">Atnaujinkite sėkmingai</string>
     <string name="upgrading">Atnaujinimas ...</string>
     <string name="import_new_account">IMPORTO SĄSKAITA</string>
     <string name="upgrade_account">UPGRADE SĄSKAITA</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">Sąskaitos pavadinimas shoud turi atleast vienas -</string>
     <string name="default_currency">Euras</string>
     <string name="account_already_exist">Sąskaitos jau egzistuoja</string>
+    <string name="donation">auka</string>
+    <string name="insufficient_funds">nepakankamos lėšos</string>
+    <string name="txt_wallet_atleast_one_account">Atsiprašome, bet jūsų piniginėje turi turėti ne mažiau kaip 1 sąskaitos jame</string>
     <string name="updating_transaction_id">Atnaujinama Sandorio ID Prašome palaukti</string>
+    <string name="email_name">Norėdami peržiūrėti nuotrauką šiam Susisiekite įveskite savo Gravatar elektroninį paštą čia</string>
+    <string name="upgrade_success">Atnaujinkite sėkmingai!</string>
+    <string name="copied_to_clipboard">Nukopijuoti į iškarpinę</string>
+
 </resources>

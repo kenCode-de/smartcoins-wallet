@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">folder Dibuat</string>
     <string name="upgrade_failed">Upgrade gagal</string>
-    <string name="upgrade_success">meng-upgrade berhasil</string>
     <string name="upgrading">Perbaikan…</string>
     <string name="import_new_account">IMPOR ACCOUNT</string>
     <string name="upgrade_account">ACCOUNT UPGRADE</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">Nama akun shoud memiliki minimal satu -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Akun telah ada</string>
+    <string name="donation">Sumbangan</string>
+    <string name="insufficient_funds">Dana tidak mencukupi</string>
+    <string name="txt_wallet_atleast_one_account">Maaf, tapi dompet Anda harus memiliki minimal 1 akun di dalamnya</string>
     <string name="updating_transaction_id">Memperbarui Transaksi Id, Tunggu</string>
+    <string name="email_name">Untuk menampilkan foto untuk kontak ini, masukkan e-mail Gravatar nya di sini</string>
+    <string name="upgrade_success">Upgrade Sukses!</string>
+    <string name="copied_to_clipboard">Disalin ke clipboard</string>
+
 </resources>

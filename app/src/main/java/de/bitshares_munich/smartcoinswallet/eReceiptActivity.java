@@ -1,70 +1,37 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.pdf.PdfWriter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BalancesDelegate;
-import de.bitshares_munich.models.DecodeMemo;
-import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
-import de.codecrafters.tableview.TableDataAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -289,7 +256,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                 String fromAccountName = from;
                 String toAccountName = to;
 
-                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.md5(email)+"?s=130&r=pg&d=404";
+                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
                 new DownloadImageTask(imageEmail)
                         .execute(emailGravatarUrl);
 

@@ -72,7 +72,7 @@
 <string name="validating_account">Validieren Konto ...</string>
 <string name="account_name_should_be_longer">Kontoname sollte länger</string>
 <string name="account_name_already_exist">Kontoname %s ist bereits vorhanden</string>
-<string name="account_name_not_exist">Kontoname %s existiert nicht</string>
+<string name="account_name_not_exist">Kontoname %s &#160; existiert nicht</string>
 <string name="add_contact">Hinzufügen</string>
 <string name="edit_contact">Bearbeiten</string>
 <string name="empty_list">Kontaktliste ist leer</string>
@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Ordner erstellt</string>
     <string name="upgrade_failed">Aktualisierung fehlgeschlagen</string>
-    <string name="upgrade_success">Rüsten Sie erfolgreich</string>
     <string name="upgrading">Aktualisieren ...</string>
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">Kontoname shoud atleast eine haben -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Dieser Account existiert bereits</string>
+    <string name="donation">Spende</string>
+    <string name="insufficient_funds">Unzureichende Fonds</string>
+    <string name="txt_wallet_atleast_one_account">Sorry, aber Ihr Portemonnaie muss mindestens 1 Konto in ihm</string>
     <string name="updating_transaction_id">Aktualisieren von Transaktions-ID, bitte warten</string>
+    <string name="email_name">Um ein Foto für diesen Kontakt anzuzeigen, geben Sie seine Gravatar E-Mail hier</string>
+    <string name="upgrade_success">Rüsten Sie erfolgreich!</string>
+    <string name="copied_to_clipboard">In die Zwischenablage kopiert</string>
+
 </resources>

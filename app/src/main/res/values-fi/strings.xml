@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">kansio Luotu</string>
     <string name="upgrade_failed">Päivitys epäonnistui</string>
-    <string name="upgrade_success">Päivitys onnistui</string>
     <string name="upgrading">Päivitys ...</string>
     <string name="import_new_account">Tuo tilin</string>
     <string name="upgrade_account">PÄIVITÄ TILI</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">tilin nimi shoud on atleast yksi -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Tili on jo olemassa</string>
+    <string name="donation">lahjoitus</string>
+    <string name="insufficient_funds">Riittämättömät varat</string>
+    <string name="txt_wallet_atleast_one_account">Valitettavasti lompakon pitää olla vähintään 1 huomioon se</string>
     <string name="updating_transaction_id">Päivittäminen Tapahtumatunnus, Odota</string>
+    <string name="email_name">Voit näyttää valokuvan tätä yhteyttä, anna sen Gravatar sähköposti täällä</string>
+    <string name="upgrade_success">Päivitys suoritettu!</string>
+    <string name="copied_to_clipboard">Kopioitu leikepöydälle</string>
+
 </resources>
