@@ -85,7 +85,7 @@
     <string name="validating_account">Validating Account...</string>
     <string name="account_name_should_be_longer">Account name should be longer</string>
     <string name="account_name_already_exist">Account Name %s already exist</string>
-    <string name="account_name_not_exist">Account Name %s does not exist</string>
+    <string name="account_name_not_exist">Account Name %s &#160; does not exist</string>
     <string name="account_already_exist">Account already exist</string>
     <string name="add_contact">Add</string>
     <string name="edit_contact">Edit</string>
@@ -252,6 +252,7 @@
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
     <string name="node_server_url">http://188.166.147.110:8000</string>
     <string name="hash_server_url">http://188.166.147.110:9002</string>
+    <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 
     <string name="test_brain_key">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
 
@@ -295,9 +296,9 @@
     <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
         account in it
     </string>
-    <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 
     <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>
 
+    <string name="email_name">To display a photo for this Contact, enter its Gravatar e-mail here</string>
 
 </resources>

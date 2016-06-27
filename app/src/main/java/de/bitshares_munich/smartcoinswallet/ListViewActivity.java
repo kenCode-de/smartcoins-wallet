@@ -95,7 +95,7 @@ public class ListViewActivity extends BaseAdapter {
             holder.txtname.setText(name);
             holder.txtnote.setText(listContact.get(position).GetNote());
             holder.txtaccount.setText(accountnm);
-            loadWebView(holder.webView , 50, Helper.md5(accountnm));
+            loadWebView(holder.webView , 34, Helper.md5(accountnm));
             return convertView;
         }
 
