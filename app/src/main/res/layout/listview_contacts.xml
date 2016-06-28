@@ -8,22 +8,31 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     >
-    <LinearLayout
+    <RelativeLayout
     android:layout_width="0dp"
     android:layout_height="match_parent"
         android:layout_weight="0.5"
 
         >
-
         <WebView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/webViewContacts"
+            android:layout_centerInParent="true"
+
             >
         </WebView>
+        <ImageView
+            android:visibility="gone"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:id="@+id/imageEmail"
 
-    </LinearLayout>
+            />
+    </RelativeLayout>
     <LinearLayout
         android:layout_weight="2.5"
         android:layout_width="0dp"
