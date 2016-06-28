@@ -61,6 +61,7 @@ public class popUpwindow {
         popupWindow = popupWindow();
 //add
     }
+
     public PopupWindow popupWindow() {
 
         // initialize a pop up window type
@@ -143,7 +144,6 @@ public class popUpwindow {
         }
     }
     public void show(View v){
-
         popupWindow.showAsDropDown(v, -5, 0);
     }
 

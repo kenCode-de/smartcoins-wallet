@@ -298,6 +298,7 @@
     <string name="copied_to_clipboard">Copied to Clipboard</string>
 
 // new strings
-
+    <string name="select">"Select</string>
+    <string name="are_you_sure">"Are you sure?</string>
 
 </resources>
