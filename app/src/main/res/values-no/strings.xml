@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Folder Laget</string>
     <string name="upgrade_failed">oppgradering mislyktes</string>
-    <string name="upgrade_success">oppgradering vellykket</string>
     <string name="upgrading">Oppgradering ...</string>
     <string name="import_new_account">IMPORT KONTO</string>
     <string name="upgrade_account">Oppgrader kontoen</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">overføring av midler</string>
     <string name="unable_to_process">Kan ikke behandle</string>
     <string name="cancel">KANSELLERE</string>
+    <string name="donation">Donasjon</string>
+    <string name="insufficient_funds">Utilstrekkelig Funds</string>
+    <string name="txt_wallet_atleast_one_account">Beklager, men lommeboken må ha minst en konto i det</string>
     <string name="updating_transaction_id">Oppdatering transaksjons-ID, Vent</string>
+    <string name="email_name">For å vise et bilde for denne kontakten, skriver du inn Gravatar e-post her</string>
+    <string name="upgrade_success">Oppgradering vellykket!</string>
+    <string name="copied_to_clipboard">Kopiert til utklippstavlen</string>
+
 </resources>

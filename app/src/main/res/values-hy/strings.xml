@@ -155,7 +155,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">Թղթապանակ Ստեղծվել</string>
     <string name="upgrade_failed">Թարմացնելու ձախողվեց</string>
-    <string name="upgrade_success">Թարմացնելու հաջողությամբ</string>
     <string name="upgrading">Արդիականացում ...</string>
     <string name="import_new_account">ՆԵՐՄՈՒԾՈՒՄ ՀԱՇԻՎ</string>
     <string name="upgrade_account">Upgrade հաշիվ</string>
@@ -171,5 +170,12 @@
     <string name="transfer_funds">փոխանցելը</string>
     <string name="unable_to_process">Անհնար է մշակել</string>
     <string name="cancel">ՀՐԱԺԱՐՎԵԼ</string>
+    <string name="donation">նվիրատվություն</string>
+    <string name="insufficient_funds">Անբավարար միջոցներ</string>
+    <string name="txt_wallet_atleast_one_account">Ներեցեք, բայց Ձեր դրամապանակը պետք է ունենան առնվազն 1 հաշիվ դրան</string>
     <string name="updating_transaction_id">Թարմացվում Գործարքի ID, խնդրում ենք սպասել</string>
+    <string name="email_name">Ցուցադրման լուսանկար այս Contact, մտնել իր gravatar e-mail Մականուն</string>
+    <string name="upgrade_success">Թարմացնելու Հաջող!</string>
+    <string name="copied_to_clipboard">Պատճենված է clipboard</string>
+
 </resources>

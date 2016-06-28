@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">mapa je izrađena</string>
     <string name="upgrade_failed">Nadogradnja nije uspjela</string>
-    <string name="upgrade_success">Nadogradnja uspješno</string>
     <string name="upgrading">Nadogradnja ...</string>
     <string name="import_new_account">IMPORT RAČUN</string>
     <string name="upgrade_account">Nadogradnja računa</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">prijenos sredstava</string>
     <string name="unable_to_process">Nije moguće obraditi</string>
     <string name="cancel">OTKAZATI</string>
+    <string name="donation">Donacija</string>
+    <string name="insufficient_funds">Nedostatna sredstva</string>
+    <string name="txt_wallet_atleast_one_account">Žao nam je, ali vaš novčanik mora imati najmanje 1 račun u njoj</string>
     <string name="updating_transaction_id">Ažuriranje ID transakcije, pričekajte</string>
+    <string name="email_name">Za prikaz fotografije za ovaj kontakt, unesite svoje Gravatar e-mail ovdje</string>
+    <string name="upgrade_success">Nadogradnja uspješna!</string>
+    <string name="copied_to_clipboard">Kopiran u međuspremnik</string>
+
 </resources>

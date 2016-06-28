@@ -155,7 +155,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">โฟลเดอร์ที่สร้าง</string>
     <string name="upgrade_failed">อัพเกรดล้มเหลว</string>
-    <string name="upgrade_success">ประสบความสำเร็จในการอัพเกรด</string>
     <string name="upgrading">อัพเกรด ...</string>
     <string name="import_new_account">นำเข้าบัญชี</string>
     <string name="upgrade_account">อัปเกรดบัญชี</string>
@@ -171,5 +170,12 @@
     <string name="transfer_funds">การโอนเงิน</string>
     <string name="unable_to_process">ไม่สามารถดำเนินการ</string>
     <string name="cancel">ยกเลิก</string>
+    <string name="donation">การบริจาค</string>
+    <string name="insufficient_funds">เงินทุนไม่เพียงพอ</string>
+    <string name="txt_wallet_atleast_one_account">ขออภัยกระเป๋าสตางค์ของคุณต้องมีอย่างน้อย 1 บัญชีในนั้น</string>
     <string name="updating_transaction_id">การอัปเดตการทำธุรกรรม Id, กรุณารอสักครู่</string>
+    <string name="email_name">หากต้องการแสดงภาพถ่ายนี้ติดต่อให้ป้อน Gravatar อีเมลของที่นี่</string>
+    <string name="upgrade_success">อัพเกรดประสบความสำเร็จ!</string>
+    <string name="copied_to_clipboard">คัดลอกไปที่คลิปบอร์ด</string>
+
 </resources>

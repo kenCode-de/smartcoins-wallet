@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">kausta loomisel</string>
     <string name="upgrade_failed">Upgrade ebaõnnestus</string>
-    <string name="upgrade_success">Upgrade edukalt</string>
     <string name="upgrading">Uuendamine ...</string>
     <string name="import_new_account">impordi konto</string>
     <string name="upgrade_account">Uuendage konto</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">kontonimi vehklema on atleast üks -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Konto on juba olemas</string>
+    <string name="donation">Annetus</string>
+    <string name="insufficient_funds">ebapiisav kate</string>
+    <string name="txt_wallet_atleast_one_account">Vabandame, kuid teie rahakoti peab olema vähemalt 1 konto see</string>
     <string name="updating_transaction_id">Uuendamine Tehing Id Palun oodake</string>
+    <string name="email_name">Et kuvada foto Kontakti, sisestage oma Gravatar e-mail siia</string>
+    <string name="upgrade_success">Upgrade edukas!</string>
+    <string name="copied_to_clipboard">Kopeeritaks</string>
+
 </resources>

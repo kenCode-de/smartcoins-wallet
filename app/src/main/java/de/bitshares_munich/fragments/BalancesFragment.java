@@ -42,6 +42,7 @@ import com.github.premnirmal.textcounter.CounterView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -688,40 +689,103 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
+    ArrayList<String> symbolsArray;
+    ArrayList<String> precisionsArray;
+    ArrayList<String> amountsArray;
+
+    private void updateBalanceArrays (final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
+    {
+        try
+        {
+            symbolsArray = new ArrayList<>();
+            precisionsArray = new ArrayList<>();
+            amountsArray = new ArrayList<>();
+
+            for( int i = 0 ; i < sym.size() ; i++ )
+            {
+                Integer _amount = Integer.parseInt(am.get(i));
+
+                // remove balances which are zero
+                if ( _amount != 0 )
+                {
+                    amountsArray.add(am.get(i));
+                    precisionsArray.add(pre.get(i));
+                    symbolsArray.add(sym.get(i));
+                }
+            }
+
+            /*symbolsArray = new ArrayList<>();
+            for (String _sym : sym) {
+                symbolsArray.add(_sym);
+            }
+
+            precisionsArray = new ArrayList<>();
+            for (String _precision : pre) {
+                precisionsArray.add(_precision);
+            }
+
+            amountsArray = new ArrayList<>();
+            for (String _amount : am) {
+                amountsArray.add(_amount);
+            }
+            */
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+
     public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
+
+        updateBalanceArrays( sym,pre,am );
+
+        sym.clear();
+        sym.addAll(symbolsArray);
+
+        pre.clear();
+        pre.addAll(precisionsArray);
+
+        am.clear();
+        am.addAll(amountsArray);
+
+
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 llBalances.removeAllViews();
 
-                for (int i = 0; i < sym.size(); i += 2) {
+                for (int i = 0; i < sym.size(); i += 2)
+                {
                     int counter = 1;
                     int op = sym.size();
                     int pr;
 
-                    if ((op - i) > 2) {
+                    if ((op - i) > 2)
+                    {
                         pr = 2;
-                    } else {
+                    }
+                    else
+                    {
                         pr = op - i;
                     }
 
                     View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                    //LinearLayout layout = (LinearLayout) customView;
-                    //LinearLayout layout1 = (LinearLayout) layout.findViewById(R.id.symbol_child_one);
-                    for (int l = i; l < i + pr; l++) {
-                        if (counter == 1) {
+                    for (int l = i; l < i + pr; l++)
+                    {
+                        if (counter == 1)
+                        {
                             TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                             textView.setText(sym.get(l));
                             TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                             float b = powerInFloat(pre.get(l), am.get(i));
-
                             textView1.setText(String.format(locale, "%.4f", b));
-
                         }
 
-                        if (counter == 2) {
+                        if (counter == 2)
+                        {
                             TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                             textView2.setText(sym.get(l));
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
@@ -730,7 +794,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                             llBalances.addView(customView);
                         }
-                        if (counter == 1 && i == sym.size() - 1) {
+
+                        if (counter == 1 && i == sym.size() - 1)
+                        {
                             TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                             textView2.setText("");
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
@@ -738,9 +804,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             llBalances.addView(customView);
                         }
 
-                        if (counter == 1) {
+                        if (counter == 1)
+                        {
                             counter = 2;
-                        } else counter = 1;
+                        }
+                        else counter = 1;
                     }
                 }
 
@@ -807,100 +875,229 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
 
+                try
+                {
+                    // remove zero balances not in previously loaded balances
+                    for( int i = 0 ; i < sym.size() ; i++ )
+                    {
+                        Integer _amount = Integer.parseInt(am.get(i));
+
+                        if ( _amount == 0 )
+                        {
+                            Boolean matchFound = symbolsArray.contains(sym.get(i));
+
+                            if ( !matchFound )
+                            {
+                                sym.remove(i);
+                                am.remove(i);
+                                pre.remove(i);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+
+
                 try {
 
                     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     int count = llBalances.getChildCount();
 
-                    if (count > 0) {
+                    if (count > 0)
+                    {
+                        Boolean animateOnce = true;
                         int m = 0;
-                        for (int i = 0; i < count; i++) {
+                        for (int i = 0; i < count; i++)
+                        {
 
+                            // count == number of row
+                            // m == number of child in the row
                             // Get balances row
                             LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
-
-                            //LinearLayout child = (LinearLayout) linearLayout.getChildAt(0);
                             TextView tvSymOne = (TextView) linearLayout.findViewById(R.id.symbol_child_one);
                             TextView tvAmOne = (TextView) linearLayout.findViewById(R.id.amount_child_one);
+                            TextView tvfaitOne = (TextView) linearLayout.findViewById(R.id.fait_child_one);
+
                             TextView tvSymtwo = (TextView) linearLayout.findViewById(R.id.symbol_child_two);
                             TextView tvAmtwo = (TextView) linearLayout.findViewById(R.id.amount_child_two);
+                            TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_one);
 
-                            if (sym.size() > m) {
+                            // First child updation
+                            if (sym.size() > m)
+                            {
 
                                 String symbol = sym.get(m);
-                                String amount = "";
 
-                                if (pre.size() > m && am.size() > m) {
+                                String amount = "";
+                                if (pre.size() > m && am.size() > m)
+                                {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
 
-                                String txtSymbol = tvSymOne.getText().toString();
-                                String txtAmount = tvAmOne.getText().toString();
+                                String amountInInt = am.get(m);
 
-                                if (!symbol.equals(txtSymbol)) {
+                                String txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
+                                String txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
+
+                                if (!symbol.equals(txtSymbol))
+                                {
                                     tvSymOne.setText(symbol);
                                 }
 
-                                if (!amount.equals(txtAmount)) {
-                                    float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
-                                    float amount_d = convertLocalizeStringToFloat(amount);
+                                if (!amountInInt.equals(txtAmount))
+                                {
+                                    // previous amount
+                                    //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
+                                    Integer txtAmount_d = Integer.parseInt(txtAmount);
+
+                                    // New amount
+                                    //float amount_d = convertLocalizeStringToFloat(amount);
+                                    Integer amount_d = Integer.parseInt(amountInInt);
 
                                     // Balance is sent
-                                    if (txtAmount_d > amount_d) {
+                                    if (txtAmount_d > amount_d)
+                                    {
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.red));
-                                    }
 
+                                        animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
+
+                                        final TextView cView = tvAmOne;
+                                        final TextView aView = tvSymOne;
+                                        final TextView bView = tvfaitOne;
+                                        final Handler handler = new Handler();
+
+                                        final Runnable updateTask = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cView.setTypeface(null, Typeface.NORMAL);
+                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                            }
+                                        };
+                                        handler.postDelayed(updateTask, 4000);
+
+                                        if ( amount_d == 0 )
+                                        {
+                                            final Runnable zeroAmount = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    cView.setText("");
+                                                    aView.setText("");
+                                                    bView.setText("");
+                                                }
+                                            };
+
+                                            handler.postDelayed(zeroAmount, 4200);
+
+                                            final Runnable reloadBalances = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                   BalanceAssetsLoad(sym,pre,am,false);
+                                                }
+                                            };
+
+                                            handler.postDelayed(reloadBalances, 5000);
+                                        }
+
+                                    }
                                     // Balance is rcvd
-                                    if (amount_d > txtAmount_d) {
+                                    else if (amount_d > txtAmount_d)
+                                    {
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
                                         //animateText(tvAmOne,amount_d);
                                         // run animation
-                                        final Runnable rotateTask = new Runnable() {
+
+
+                                        if ( animateOnce )
+                                        {
+                                            final Runnable playSOund = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playSound();
+                                                }
+                                            };
+
+                                            final Runnable rotateTask = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                rotateRecieveButton();
+                                                            }
+                                                        });
+
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                            };
+
+                                            handler.postDelayed(playSOund, 100);
+                                            handler.postDelayed(rotateTask, 200);
+
+                                            animateOnce = false;
+                                        }
+
+                                        animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
+
+                                        final TextView cView = tvAmOne;
+                                        final TextView aView = tvSymOne;
+                                        final TextView bView = tvfaitOne;
+                                        final Handler handler = new Handler();
+
+                                        final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                try {
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        public void run() {
-                                                            rotateRecieveButton();
-                                                        }
-                                                    });
-                                                    playSound();
-                                                } catch (Exception e) {
-
-                                                }
+                                                cView.setTypeface(null, Typeface.NORMAL);
+                                                cView.setTextColor(getResources().getColor(R.color.green));
                                             }
                                         };
+                                        handler.postDelayed(updateTask, 4000);
 
-                                        handler.postDelayed(rotateTask, 200);
-                                    }
+                                        if ( amount_d == 0 )
+                                        {
+                                            final Runnable zeroAmount = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    cView.setText("");
+                                                    aView.setText("");
+                                                    bView.setText("");
+                                                }
+                                            };
 
-                                    animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), amount_d);
-                                    //tvAmOne.setText(String.format(locale, "%.4f", amount_d));
-                                    // setCounter(tvAmOne, txtAmount_d, amount_d);
-                                    final TextView cView = tvAmOne;
-                                    final Handler handler = new Handler();
+                                            handler.postDelayed(zeroAmount, 4200);
 
-                                    final Runnable updateTask = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cView.setTypeface(null, Typeface.NORMAL);
-                                            cView.setTextColor(getResources().getColor(R.color.green));
+                                            final Runnable reloadBalances = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    BalanceAssetsLoad(sym,pre,am,false);
+                                                }
+                                            };
+
+                                            handler.postDelayed(reloadBalances, 5000);
                                         }
-                                    };
-                                    handler.postDelayed(updateTask, 4000);
 
+
+                                    }
                                 }
                                 m++;
-                            } else {
+                            }
+                            else
+                            {
                                 linearLayout.removeAllViews();
                             }
 
-                            if (sym.size() > m) {
+                            // Second child updation
+                            if (sym.size() > m)
+                            {
                                 String symbol = sym.get(m);
                                 String amount = "";
 
@@ -908,86 +1105,175 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
 
-                                String txtSymbol = tvSymtwo.getText().toString();
-                                String txtAmount = tvAmtwo.getText().toString();
+                                String amountInInt = am.get(m);
 
-                                float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
-                                float amount_d = convertLocalizeStringToFloat(amount);
+                                String txtSymbol = symbolsArray.get(m);// tvSymtwo.getText().toString();
+                                String txtAmount = amountsArray.get(m);// tvAmtwo.getText().toString();
 
-                                if (!symbol.equals(txtSymbol)) {
+                                //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
+                                Integer txtAmount_d = Integer.parseInt(txtAmount);
+
+                                //float amount_d = convertLocalizeStringToFloat(amount);
+                                Integer amount_d = Integer.parseInt(amountInInt);
+
+                                if (!symbol.equals(txtSymbol))
+                                {
                                     tvSymtwo.setText(symbol);
                                 }
 
-                                if (!amount.equals(txtAmount)) {
+                                if (!amountInInt.equals(txtAmount))
+                                {
                                     tvAmtwo.setVisibility(View.VISIBLE);
 
-                                    if (txtAmount_d > amount_d) {
+                                    if (txtAmount_d > amount_d)
+                                    {
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
 
+                                        animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
+
+                                        final TextView cView = tvAmtwo;
+                                        final TextView aView = tvSymtwo;
+                                        final TextView bView = tvFaitTwo;
+
+                                        final Handler handler = new Handler();
+
+                                        final Runnable updateTask = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cView.setTypeface(null, Typeface.NORMAL);
+                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                            }
+                                        };
+
+                                        handler.postDelayed(updateTask, 4000);
+
+                                        if ( amount_d == 0 )
+                                        {
+                                            final Runnable zeroAmount = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    cView.setText("");
+                                                    aView.setText("");
+                                                    bView.setText("");
+                                                }
+                                            };
+
+                                            handler.postDelayed(zeroAmount, 4200);
+
+                                            final Runnable reloadBalances = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    BalanceAssetsLoad(sym,pre,am,false);
+                                                }
+                                            };
+
+                                            handler.postDelayed(reloadBalances, 5000);
+                                        }
+
                                     }
-                                    if (amount_d > txtAmount_d) {
+                                    else if (amount_d > txtAmount_d)
+                                    {
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
-                                    }
 
-                                    //tvAmtwo.setText(String.format(locale, "%.4f", amount_d));
-                                    animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), amount_d);
-                                    // setCounter(tvAmtwo, txtAmount_d, amount_d);
-                                    final TextView cView = tvAmtwo;
-                                    final Handler handler = new Handler();
+                                        animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
 
-                                    final Runnable updateTask = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            cView.setTypeface(null, Typeface.NORMAL);
-                                            cView.setTextColor(getResources().getColor(R.color.green));
+                                        final TextView cView = tvAmtwo;
+                                        final TextView aView = tvSymtwo;
+                                        final TextView bView = tvFaitTwo;
+
+                                        final Handler handler = new Handler();
+
+                                        final Runnable updateTask = new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cView.setTypeface(null, Typeface.NORMAL);
+                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                            }
+                                        };
+
+                                        handler.postDelayed(updateTask, 4000);
+
+                                        if ( amount_d == 0 )
+                                        {
+                                            final Runnable zeroAmount = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    cView.setText("");
+                                                    aView.setText("");
+                                                    bView.setText("");
+                                                }
+                                            };
+
+                                            handler.postDelayed(zeroAmount, 4200);
+
+                                            final Runnable reloadBalances = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    BalanceAssetsLoad(sym,pre,am,false);
+                                                }
+                                            };
+
+                                            handler.postDelayed(reloadBalances, 5000);
                                         }
-                                    };
-
-                                    handler.postDelayed(updateTask, 4000);
+                                    }
                                 }
                                 m++;
-                            } else {
-                                if (i == count - 1) {
+                            }
+                            else
+                            {
+                                if (i == count - 1)
+                                {
                                     if (sym.size() > m)
                                         m--;
                                 }
                             }
                         }
 
+
+                        // Insert/remove balance objects if updated
                         int loop = sym.size() - m;
-                        if (loop > 0) {
-                            for (int i = m; i < sym.size(); i += 2) {
+                        if (loop > 0)
+                        {
+                            for (int i = m; i < sym.size(); i += 2)
+                            {
                                 int counter = 1;
                                 int op = sym.size();
                                 int pr;
 
-                                if ((op - i) > 2) {
+                                if ( (op - i) > 2 )
+                                {
                                     pr = 2;
-                                } else {
+                                }
+                                else
+                                {
                                     pr = op - i;
                                 }
 
                                 View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                                //LinearLayout layout = (LinearLayout) customView;
-                                //LinearLayout layout1 = (LinearLayout) layout.getChildAt(0);
-                                for (int l = i; l < i + pr; l++) {
-                                    if (counter == 1) {
+
+                                for (int l = i; l < i + pr; l++)
+                                {
+                                    if (counter == 1)
+                                    {
                                         TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                                         textView.setText(sym.get(l));
                                         TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
-                                        if (pre.size() > l && am.size() > i) {
+                                        if (pre.size() > l && am.size() > i)
+                                        {
                                             String r = returnFromPower(pre.get(l), am.get(i));
                                             textView1.setText(r);
                                             // setCounter(textView1, 0f, 0f);
                                             textView1.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                                             //setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
-                                        } else textView1.setText("");
+                                        }
+                                        else textView1.setText("");
                                     }
 
-                                    if (counter == 2) {
+                                    if (counter == 2)
+                                    {
                                         TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                                         textView2.setText(sym.get(l));
                                         TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
@@ -1019,36 +1305,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     whiteSpaceAfterBalances.setVisibility(View.GONE);
                     isLoading = true;
 
-                } catch (Exception e) {
-                    Log.d("Balances Load", e.getMessage());
-
                 }
+                catch (Exception e)
+                {
+                    Log.d("Balances Load", e.getMessage());
+                }
+
+                updateBalanceArrays( sym,pre,am );
             }
 
 
         });
 
 
-        // Dummy balance load
-        /*final Runnable rotateTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                for(int i = 0 ; i < am.size(); i ++)
-                {
-                    String amount = am.get(i);
-                    int amountF = convertLocalizeStringToInt(amount);
 
-                    if ( amountF > 10 )
-                    amountF -= 10;
-
-                    String newAmount =String.format(Locale.ENGLISH,"%d",amountF);
-                    am.set(i,newAmount);
-                }
-                BalanceAssetsUpdate(sym, pre, am);
-            }
-        };
-        handler.postDelayed(rotateTask, 10000);*/
 
     }
 

@@ -288,18 +288,16 @@
     <string name="unable_to_process">Unable to process</string>
     <string name="upgrade_to_ltm">Upgrade to LTM</string>
     <string name="cancel">CANCEL</string>
-
-// new strings
     <string name="donation">Donation</string>
     <string name="insufficient_funds">Insufficient Funds</string>
-
     <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
         account in it
     </string>
-
-
     <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>
-
     <string name="email_name">To display a photo for this Contact, enter its Gravatar e-mail here</string>
+    <string name="copied_to_clipboard">Copied to Clipboard</string>
+
+// new strings
+
 
 </resources>

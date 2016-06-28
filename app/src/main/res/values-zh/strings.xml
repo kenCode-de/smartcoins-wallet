@@ -155,7 +155,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">创建文件夹</string>
     <string name="upgrade_failed">升级失败</string>
-    <string name="upgrade_success">成功升级</string>
     <string name="upgrading">升级...</string>
     <string name="import_new_account">汇入帐户</string>
     <string name="upgrade_account">升级帐户</string>
@@ -171,5 +170,12 @@
     <string name="transfer_funds">转移资金</string>
     <string name="unable_to_process">无法处理</string>
     <string name="cancel">取消</string>
+    <string name="donation">捐款</string>
+    <string name="insufficient_funds">不充足的资金</string>
+    <string name="txt_wallet_atleast_one_account">很抱歉，但你的钱包必须在其中至少有1个账户</string>
     <string name="updating_transaction_id">更新事务ID，请稍候</string>
+    <string name="email_name">要显示此联系人的照片，在此输入的Gravatar电子邮件</string>
+    <string name="upgrade_success">升级成功！</string>
+    <string name="copied_to_clipboard">复制到剪贴板</string>
+
 </resources>

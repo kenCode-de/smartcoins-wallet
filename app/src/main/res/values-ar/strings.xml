@@ -153,7 +153,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">مجلد مكون</string>
     <string name="upgrade_failed">فشل الترقية</string>
-    <string name="upgrade_success">ترقية بنجاح</string>
     <string name="upgrading">رفع ...</string>
     <string name="import_new_account">استيراد حساب</string>
     <string name="upgrade_account">حدث الحساب</string>
@@ -169,5 +168,12 @@
     <string name="transfer_funds">نقل الأموال</string>
     <string name="unable_to_process">غير قادر على المعالجة</string>
     <string name="cancel">إلغاء</string>
+    <string name="donation">هبة</string>
+    <string name="insufficient_funds">أموال غير كافية</string>
+    <string name="txt_wallet_atleast_one_account">آسف، ولكن يجب أن يكون محفظتك حساب لا يقل عن 1 في ذلك</string>
     <string name="updating_transaction_id">تحديث عملية معرف، الرجاء الانتظار</string>
+    <string name="email_name">لعرض الصورة لهذا الاتصال، أدخل البريد الإلكتروني غرفتر لها هنا</string>
+    <string name="upgrade_success">ترقية ناجحة!</string>
+    <string name="copied_to_clipboard">نسخ إلى الحافظة</string>
+
 </resources>

@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">utworzonym folderze</string>
     <string name="upgrade_failed">Aktualizacja nie powiodła się</string>
-    <string name="upgrade_success">Upgrade z powodzeniem</string>
     <string name="upgrading">Modernizacja ...</string>
     <string name="import_new_account">RACHUNEK IMPORT</string>
     <string name="upgrade_account">ULEPSZ KONTO</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">Przekazanie środków</string>
     <string name="unable_to_process">Nie można przetworzyć</string>
     <string name="cancel">ANULUJ</string>
+    <string name="donation">Darowizna</string>
+    <string name="insufficient_funds">Niewystarczające środki</string>
+    <string name="txt_wallet_atleast_one_account">Przepraszamy, ale twój portfel musi mieć co najmniej 1 konto w nim</string>
     <string name="updating_transaction_id">Aktualizacja Identyfikator transakcji, proszę czekać</string>
+    <string name="email_name">Aby wyświetlić zdjęcie dla tego kontaktu, wpisz swój adres e-mail Gravatar tutaj</string>
+    <string name="upgrade_success">Upgrade Sukces!</string>
+    <string name="copied_to_clipboard">Skopiowany do schowka</string>
+
 </resources>

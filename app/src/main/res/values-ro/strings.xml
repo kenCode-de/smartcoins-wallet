@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">dosar creat</string>
     <string name="upgrade_failed">upgrade-nu a reușit</string>
-    <string name="upgrade_success">upgrade-succes</string>
     <string name="upgrading">Modernizarea ...</string>
     <string name="import_new_account">IMPORT CONT</string>
     <string name="upgrade_account">ACTUALIZARE CONT</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">transferul de fonduri</string>
     <string name="unable_to_process">Imposibilitatea de a procesa</string>
     <string name="cancel">ANULARE</string>
+    <string name="donation">Donare</string>
+    <string name="insufficient_funds">Fonduri insuficiente</string>
+    <string name="txt_wallet_atleast_one_account">Ne pare rau, dar portofelul trebuie să aibă cel puțin 1 cont în ea</string>
     <string name="updating_transaction_id">Id-ul de actualizare Transaction, Vă rugăm să așteptați</string>
+    <string name="email_name">Pentru a afișa o fotografie pentru acest contact, introduceți sale Gravatar de e-mail aici</string>
+    <string name="upgrade_success">Upgrade-succes!</string>
+    <string name="copied_to_clipboard">Copiata în clipboard</string>
+
 </resources>

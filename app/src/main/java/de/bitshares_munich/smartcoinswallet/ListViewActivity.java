@@ -27,7 +27,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -126,7 +125,7 @@ public class ListViewActivity extends BaseAdapter {
                 holder.txtaccount.setText(accountnm);
 
 //            if(!webViewHashMap.containsKey(accountnm)) {
-                loadWebView(holder.webView, 34, Helper.md5(accountnm));
+                loadWebView(holder.webView , 50, Helper.hash(accountnm, Helper.SHA256));
 //                webViewHashMap.put(accountnm,holder.webView);
 //            }else {
 //                holder.webView = webViewHashMap.get(accountnm);
@@ -313,7 +312,7 @@ public class ListViewActivity extends BaseAdapter {
         }
     }
     void setGravator(String email,ImageView imageView,String accountName){
-            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.md5(email) + "?s=130&r=pg&d=404";
+            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
             new DownloadImageTask(imageView,accountName)
                     .execute(emailGravatarUrl);
 

@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">folder Dibuat</string>
     <string name="upgrade_failed">Naik taraf gagal</string>
-    <string name="upgrade_success">Naik taraf berjaya</string>
     <string name="upgrading">Meningkatkan ...</string>
     <string name="import_new_account">AKAUN IMPORT</string>
     <string name="upgrade_account">AKAUN UPGRADE</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">memindahkan Dana</string>
     <string name="unable_to_process">Tidak dapat memproses</string>
     <string name="cancel">CANCEL</string>
+    <string name="donation">derma</string>
+    <string name="insufficient_funds">Kekurangan dana</string>
+    <string name="txt_wallet_atleast_one_account">Maaf, tetapi dompet anda mesti mempunyai sekurang-kurangnya 1 akaun di dalamnya</string>
     <string name="updating_transaction_id">Mengemaskini Transaksi Id, Sila tunggu</string>
+    <string name="email_name">Untuk memaparkan gambar untuk kenalan ini, masukkan e-mel Gravatar di sini</string>
+    <string name="upgrade_success">Naik taraf yang berjaya!</string>
+    <string name="copied_to_clipboard">Disalin ke clipboard</string>
+
 </resources>

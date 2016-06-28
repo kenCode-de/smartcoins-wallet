@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">thư mục tạo</string>
     <string name="upgrade_failed">nâng cấp thất bại</string>
-    <string name="upgrade_success">nâng cấp thành công</string>
     <string name="upgrading">Nâng cấp ...</string>
     <string name="import_new_account">TÀI KHOẢN NHẬP</string>
     <string name="upgrade_account">NÂNG CẤP TÀI KHOẢN</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">chuyển Quỹ</string>
     <string name="unable_to_process">Không thể xử lý</string>
     <string name="cancel">CANCEL</string>
+    <string name="donation">Quyên góp</string>
+    <string name="insufficient_funds">Quỹ không đủ</string>
+    <string name="txt_wallet_atleast_one_account">Xin lỗi, nhưng ví của bạn phải có tài khoản ít nhất 1 trong nó</string>
     <string name="updating_transaction_id">Đang cập nhật giao dịch Id, Xin vui lòng chờ đợi</string>
+    <string name="email_name">Để hiển thị một hình ảnh cho liên lạc này, nhập Gravatar của e-mail ở đây</string>
+    <string name="upgrade_success">Nâng cấp thành công!</string>
+    <string name="copied_to_clipboard">Sao chép vào clipboard</string>
+
 </resources>

@@ -42,6 +42,8 @@ import de.bitshares_munich.smartcoinswallet.R;
  */
 public class Helper {
     Gson gson;
+    public static final String MD5 = "MD5";
+    public static final String SHA256 = "SHA-256";
     public static final ArrayList<String> languages = new ArrayList<>();
     public static Map<String, String> countriesISOMap = new HashMap<String, String>();
 
@@ -98,12 +100,11 @@ public class Helper {
         return languages;
     }
 
-    public static final String md5(final String s) {
-        final String MD5 = "MD5";
+    public static final String hash(final String s, final String algorithm) {
         try {
-            // Create MD5 Hash
+            // Create MD5 or SHA-256 Hash
             MessageDigest digest = MessageDigest
-                    .getInstance(MD5);
+                    .getInstance(algorithm);
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
 

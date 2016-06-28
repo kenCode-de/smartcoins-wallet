@@ -159,7 +159,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">폴더 생성</string>
     <string name="upgrade_failed">업그레이드 실패</string>
-    <string name="upgrade_success">성공적으로 업그레이드</string>
     <string name="upgrading">업그레이드 ...</string>
     <string name="import_new_account">수입 계정</string>
     <string name="upgrade_account">UPGRADE 계정</string>
@@ -170,5 +169,12 @@
     <string name="account_name_shoud_have">계정 이름이어야 하나를 가지고 갈까요 -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">이미 존재하는 계정</string>
+    <string name="donation">기부</string>
+    <string name="insufficient_funds">부족 자금</string>
+    <string name="txt_wallet_atleast_one_account">미안하지만, 당신의 지갑은 적어도 1 계정이 있어야합니다</string>
     <string name="updating_transaction_id">업데이트 거래 ID, 기다려주십시오</string>
+    <string name="email_name">이 연락처에 대한 사진을 표시하려면, 여기의 Gravatar에 전자 메일을 입력</string>
+    <string name="upgrade_success">성공적인 업그레이드!</string>
+    <string name="copied_to_clipboard">클립 보드에 복사</string>
+
 </resources>

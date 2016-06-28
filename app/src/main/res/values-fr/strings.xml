@@ -160,7 +160,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">dossier créé</string>
     <string name="upgrade_failed">Mise à niveau a échoué</string>
-    <string name="upgrade_success">Mise à niveau avec succès</string>
     <string name="upgrading">Mise à niveau ...</string>
     <string name="import_new_account">IMPORT COMPTE</string>
     <string name="upgrade_account">AMÉLIORER LE COMPTE</string>
@@ -171,5 +170,12 @@
     <string name="account_name_shoud_have">nom de compte qui devraient avoir atleast un -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Compte existe déjà</string>
+    <string name="donation">Don</string>
+    <string name="insufficient_funds">Fonds insuffisants</string>
+    <string name="txt_wallet_atleast_one_account">Désolé, mais votre portefeuille doit avoir au moins 1 compte dans ce</string>
     <string name="updating_transaction_id">Mise à jour de Transaction Id, S\'il vous plaît attendre</string>
+    <string name="email_name">Pour afficher une photo pour ce contact, entrez son Gravatar e-mail ici</string>
+    <string name="upgrade_success">Mise à niveau réussie!</string>
+    <string name="copied_to_clipboard">Copié dans le presse-papier</string>
+
 </resources>

@@ -20,8 +20,8 @@ import de.bitshares_munich.utils.TinyDB;
 public class SplashActivity extends Activity {
 
     // Splash screen timer
-    private static int SPLASH_TIME_OUT = 500;
-    TinyDB tinyDB;
+    private int SPLASH_TIME_OUT = 500;
+    //TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +41,17 @@ public class SplashActivity extends Activity {
     }
 
     private void checkWhereToGo() {
-        tinyDB = new TinyDB(getApplicationContext());
+        TinyDB tinyDB = new TinyDB(getApplicationContext());
 
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (arrayList.size() > 0) {
-            moveToMainScreen();
+            moveToMainScreen(tinyDB);
         } else {
             moveToAccountScreen();
         }
     }
 
-    private void moveToMainScreen() {
+    private void moveToMainScreen(TinyDB tinyDB) {
         /*
         new Handler().postDelayed(new Runnable() {
 

@@ -160,7 +160,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">پوشه ایجاد</string>
     <string name="upgrade_failed">ارتقا شکست خورده</string>
-    <string name="upgrade_success">ارتقا موفقیت</string>
     <string name="upgrading">به روز رسانی ...</string>
     <string name="import_new_account">حساب واردات</string>
     <string name="upgrade_account">ارتقای حساب کاربری</string>
@@ -171,5 +170,12 @@
     <string name="account_name_shoud_have">نام حساب shoud حداقل یک دارند -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">حساب در حال حاضر وجود</string>
+    <string name="donation">اهداء</string>
+    <string name="insufficient_funds">بودجه ناکافی</string>
+    <string name="txt_wallet_atleast_one_account">با عرض پوزش، اما کیف پول خود را باید حداقل 1 حساب در آن</string>
     <string name="updating_transaction_id">به روز رسانی معامله ها، لطفا صبر کنید</string>
+    <string name="email_name">برای نمایش یک عکس برای این تماس، از Gravatar ایمیل خود را اینجا وارد کنید</string>
+    <string name="upgrade_success">ارتقا موفق!</string>
+    <string name="copied_to_clipboard">کپی به کلیپ بورد</string>
+
 </resources>

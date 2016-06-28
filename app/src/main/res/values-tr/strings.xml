@@ -154,7 +154,6 @@
     <string name="txt_folder_name">Smartcoins</string>
     <string name="txt_folder_created">klasör düzenlendi</string>
     <string name="upgrade_failed">yükseltme başarısız</string>
-    <string name="upgrade_success">başarıyla yükseltme</string>
     <string name="upgrading">Yükseltme ...</string>
     <string name="import_new_account">İTHALAT HESABI</string>
     <string name="upgrade_account">HESABINIZI YÜKSELTİN</string>
@@ -170,5 +169,12 @@
     <string name="transfer_funds">Fon aktarma</string>
     <string name="unable_to_process">işlem yapılamıyor</string>
     <string name="cancel">İPTAL ETMEK</string>
+    <string name="donation">Bağış</string>
+    <string name="insufficient_funds">Yetersiz bakiye</string>
+    <string name="txt_wallet_atleast_one_account">Üzgünüz, ama cüzdan içinde en az 1 hesabınız olması gerekir</string>
     <string name="updating_transaction_id">Güncellenmesi İşlem Kimliği, lütfen bekleyin</string>
+    <string name="email_name">Bu iletişim için bir fotoğraf görüntülemek için, burada kendi Gravatar e-posta adresinizi girin</string>
+    <string name="upgrade_success">Başarılı yükseltin!</string>
+    <string name="copied_to_clipboard">panoya kopyalandı</string>
+
 </resources>
