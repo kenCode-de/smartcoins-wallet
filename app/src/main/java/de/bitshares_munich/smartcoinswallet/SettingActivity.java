@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
  * Created by Syed Muhammad Muzzammil on 13/5/16.
  */
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -14,10 +15,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -32,6 +35,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -49,6 +55,7 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
@@ -245,6 +252,7 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("NewApi")
     private void populateDropDowns() {
 
         ArrayList<String> countries = Helper.getCountriesArray();
@@ -432,6 +440,7 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+    @SuppressLint("NewApi")
     @OnItemSelected(R.id.spAccounts)
     void onItemSelectedAccount(int position) {
         designMethod();
@@ -846,6 +855,23 @@ public class SettingActivity extends BaseActivity {
         }
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+    }
+
+    public int unsignedToBytes(byte b) {
+        return b & 0xFF;
+    }
+
+    @OnClick(R.id.backup_ic)
+    public void onClickBackupDotBin()
+    {
+        /*
+        String filename = "bts_default_yasir-mobile.bin";
+        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + getResources().getString(R.string.folder_name);
+        String filePath = extStorage + File.separator + filename;
+
+        String bytes = new BinHelper().getBytesFromBinFile(filePath);
+        Log.d("Bytes",bytes);
+        */
     }
 
 }
