@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -29,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,9 +50,10 @@ public class ListViewActivity extends BaseAdapter {
         ArrayList<ListviewContactItem> listContact;
         HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
     HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
-    HashMap<String,WebView> webViewHashMap = new HashMap<String,WebView>();
 
+    int pos = 0;
     Context context;
+
 
         private LayoutInflater mInflater;
         TinyDB tinyDB;
@@ -59,8 +62,6 @@ public class ListViewActivity extends BaseAdapter {
             tinyDB = new TinyDB(context);
             mInflater = LayoutInflater.from(context);
             listContact = GetlistContact();
-
-            Collections.sort(listContact, new ContactNameComparator());
         }
         @Override
         public int getCount() {
@@ -82,23 +83,44 @@ public class ListViewActivity extends BaseAdapter {
 
 
         public View getView(final int position, View convertView, final ViewGroup parent) {
-            // TODO Auto-generated method stub
-            ViewHolder holder;
-            if (convertView == null) {
+            if (convertView == null)
                 convertView = mInflater.inflate(R.layout.listview_contacts, null);
-                holder = new ViewHolder();
-                holder.txtname = (TextView) convertView.findViewById(R.id.username);
-                holder.txtaccount = (TextView) convertView.findViewById(R.id.accountname);
-                holder.txtnote = (TextView) convertView.findViewById(R.id.note_txt);
-                holder.webView = (WebView) convertView.findViewById(R.id.webViewContacts);
-                holder.email = (ImageView) convertView.findViewById(R.id.imageEmail);
-                holder.edit = (ImageButton) convertView.findViewById(R.id.editcontact);
-                holder.delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
-                holder.delete.setTag(position);
-                holder.edit.setTag(position);
-                holder.edit.setOnClickListener(new View.OnClickListener() {
+
+            TextView username = (TextView) convertView.findViewById(R.id.username);
+            TextView txtaccount = (TextView) convertView.findViewById(R.id.accountname);
+            ImageButton delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
+            TextView txtnote = (TextView) convertView.findViewById(R.id.note_txt);
+            WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
+            ImageView email = (ImageView) convertView.findViewById(R.id.imageEmail);
+            ImageButton edit = (ImageButton) convertView.findViewById(R.id.editcontact);
+
+            String accountnm = listContact.get(position).GetAccount();
+            txtaccount.setText(accountnm);
+
+            String name = listContact.get(position).GetName();
+            username.setText(name);
+
+            txtnote.setText(listContact.get(position).GetNote());
+
+            loadWebView(webView , 50, Helper.hash(accountnm, Helper.SHA256));
+
+            if (listContact.get(position).GetEmail() != null) {
+                setGravator(listContact.get(position).GetEmail(), email, accountnm);
+            }
+
+
+            delete.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        Integer index = (Integer) v.getTag();
+
+                        showDialog(position);
+
+                    }
+                });
+
+
+                edit.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        int index = position;
                         Intent intent = new Intent(context, AddEditContacts.class);
                         intent.putExtra("id", index);
                         intent.putExtra("name", listContact.get(index).GetName());
@@ -106,43 +128,79 @@ public class ListViewActivity extends BaseAdapter {
                         intent.putExtra("note", listContact.get(index).GetNote());
                         intent.putExtra("email", listContact.get(index).GetEmail());
                         context.startActivity(intent);
-                    }
-                });
-                holder.delete.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        // Integer index = (Integer) v.getTag();
-//                        listContact.remove(index.intValue());
-//                        removeFromlist(index);
-                        showDialog(position);
 
                     }
                 });
-                convertView.setTag(holder);
-                String name = listContact.get(position).GetName();
-                String accountnm = listContact.get(position).GetAccount();
-                holder.txtname.setText(name);
-                holder.txtnote.setText(listContact.get(position).GetNote());
-                holder.txtaccount.setText(accountnm);
 
-//            if(!webViewHashMap.containsKey(accountnm)) {
-                loadWebView(holder.webView , 50, Helper.hash(accountnm, Helper.SHA256));
-//                webViewHashMap.put(accountnm,holder.webView);
-//            }else {
-//                holder.webView = webViewHashMap.get(accountnm);
+//            if (convertView == null) {
+//                convertView = mInflater.inflate(R.layout.listview_contacts, null);
+//                ViewHolder holder= new ViewHolder();
+//                holder.txtname = (TextView) convertView.findViewById(R.id.username);
+//                holder.txtaccount = (TextView) convertView.findViewById(R.id.accountname);
+//                holder.txtnote = (TextView) convertView.findViewById(R.id.note_txt);
+//                holder.webView = (WebView) convertView.findViewById(R.id.webViewContacts);
+//                holder.email = (ImageView) convertView.findViewById(R.id.imageEmail);
+//                holder.edit = (ImageButton) convertView.findViewById(R.id.editcontact);
+//                holder.delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
+//                holder.delete.setTag(pos);
+//                holder.edit.setTag(pos);
+//
+//
+//                holder.edit.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View v) {
+//                        View parentRow = (View) v.getParent();
+//
+//
+//                        Integer index = (Integer) v.getTag();
+//                        Intent intent = new Intent(context, AddEditContacts.class);
+//                        intent.putExtra("id", index);
+//                        intent.putExtra("name", listContact.get(index).GetName());
+//                        intent.putExtra("account", listContact.get(index).GetAccount());
+//                        intent.putExtra("note", listContact.get(index).GetNote());
+//                        intent.putExtra("email", listContact.get(index).GetEmail());
+//                        context.startActivity(intent);
+//
+//                    }
+//                });
+//
+//                holder.delete.setOnClickListener(new View.OnClickListener() {
+//                    public void onClick(View v) {
+//
+//                        int index = position;
+//                        showDialog(index);
+//
+//                    }
+//                });
+//
+//
+//
+//                convertView.setTag(holder);
+//                pos++;
 //            }
-
-
-                if (images.containsKey(accountnm)) {
-                    holder.email.setImageBitmap(images.get(accountnm));
-                    holder.email.setVisibility(View.VISIBLE);
-                } else {
-                    if (!notEmail.containsKey(accountnm)) {
-                        if (listContact.get(position).GetEmail() != null) {
-                            setGravator(listContact.get(position).GetEmail(), holder.email, accountnm);
-                        }
-                    }
-                }
-            }
+//            ViewHolder holder = (ViewHolder) convertView.getTag();
+//
+//            String name = listContact.get(position).GetName();
+//                String accountnm = listContact.get(position).GetAccount();
+//                holder.txtname.setText(name);
+//                holder.txtnote.setText(listContact.get(position).GetNote());
+//                holder.txtaccount.setText(accountnm);
+//
+//                loadWebView(holder.webView , 50, Helper.hash(accountnm, Helper.SHA256));
+//
+//
+//
+//                if (images.containsKey(accountnm)) {
+//                    email.setImageBitmap(images.get(accountnm));
+//                    email.setVisibility(View.VISIBLE);
+//                } else {
+//                    if (!notEmail.containsKey(accountnm)) {
+//                        if (listContact.get(position).GetEmail() != null) {
+//                            setGravator(listContact.get(position).GetEmail(), email, accountnm);
+//                        }
+//                    }
+//                }
+//
+//
 
             return convertView;
         }
@@ -166,6 +224,7 @@ public class ListViewActivity extends BaseAdapter {
                 contact.SaveEmail(contacts.get(i).email);
                 contactlist.add(contact);
             }
+        Collections.sort(contactlist, new ContactNameComparator());
 
         return contactlist;
     }
@@ -230,6 +289,7 @@ public class ListViewActivity extends BaseAdapter {
         tinyDB.putContactsObject("Contacts", contacts);
     }
     public void loadmore(){
+        pos=0;
         listContact.clear();
     }
 
