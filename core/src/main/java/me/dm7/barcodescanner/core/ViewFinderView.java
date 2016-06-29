@@ -22,20 +22,20 @@ public class ViewFinderView extends View implements IViewFinder {
     private static final int LANDSCAPE_MAX_FRAME_WIDTH = (int) (1920 * LANDSCAPE_WIDTH_RATIO); // = 5/8 * 1920
     private static final int LANDSCAPE_MAX_FRAME_HEIGHT = (int) (1080 * LANDSCAPE_HEIGHT_RATIO); // = 5/8 * 1080
 
-    private static final float PORTRAIT_WIDTH_RATIO = 7f/8;
-    private static final float PORTRAIT_HEIGHT_RATIO = 3f/8;
+    private static final float PORTRAIT_WIDTH_RATIO =  24f/25;
+    private static final float PORTRAIT_HEIGHT_RATIO = 6f/8;
     private static final int PORTRAIT_MAX_FRAME_WIDTH = (int) (1080 * PORTRAIT_WIDTH_RATIO); // = 7/8 * 1080
     private static final int PORTRAIT_MAX_FRAME_HEIGHT = (int) (1920 * PORTRAIT_HEIGHT_RATIO); // = 3/8 * 1920
 
     private static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
     private int scannerAlpha;
     private static final int POINT_SIZE = 10;
-    private static final long ANIMATION_DELAY = 20l;    //80l
+    private static final long ANIMATION_DELAY = 80l;
 
-    private final int mDefaultLaserColor =  getResources().getColor(R.color.viewfinder_laser);
+    private final int mDefaultLaserColor = getResources().getColor(R.color.viewfinder_laser);
     private final int mDefaultMaskColor = getResources().getColor(R.color.viewfinder_mask);
     private final int mDefaultBorderColor = getResources().getColor(R.color.viewfinder_border);
-    private final int mDefaultBorderStrokeWidth =  12 ; //getResources().getInteger(R.integer.viewfinder_border_width);
+    private final int mDefaultBorderStrokeWidth = getResources().getInteger(R.integer.viewfinder_border_width);
     private final int mDefaultBorderLineLength = getResources().getInteger(R.integer.viewfinder_border_length);
 
     protected Paint mLaserPaint;
@@ -108,32 +108,28 @@ public class ViewFinderView extends View implements IViewFinder {
         drawLaser(canvas);
     }
 
-    int scannerHeight = 410;
-    int extendedBottom = 0;
-
     public void drawViewFinderMask(Canvas canvas) {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
-        canvas.drawRect(0, 0, width, mFramingRect.top - scannerHeight, mFinderMaskPaint);
-        canvas.drawRect(0, mFramingRect.top- scannerHeight, mFramingRect.left, mFramingRect.bottom + scannerHeight + extendedBottom, mFinderMaskPaint);
-        canvas.drawRect(mFramingRect.right + 1, mFramingRect.top- scannerHeight, width, mFramingRect.bottom + scannerHeight + extendedBottom, mFinderMaskPaint);
-        canvas.drawRect(0, mFramingRect.bottom + scannerHeight + extendedBottom, width, height, mFinderMaskPaint);
+        canvas.drawRect(0, 0, width, mFramingRect.top, mFinderMaskPaint);
+        canvas.drawRect(0, mFramingRect.top, mFramingRect.left, mFramingRect.bottom + 1, mFinderMaskPaint);
+        canvas.drawRect(mFramingRect.right + 1, mFramingRect.top, width, mFramingRect.bottom + 1, mFinderMaskPaint);
+        canvas.drawRect(0, mFramingRect.bottom + 1, width, height, mFinderMaskPaint);
     }
 
     public void drawViewFinderBorder(Canvas canvas) {
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1, mFramingRect.top - 1 + mBorderLineLength, mBorderPaint);
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.top - 1, mFramingRect.left - 1 + mBorderLineLength, mFramingRect.top - 1, mBorderPaint);
 
-        canvas.drawLine(mFramingRect.left + 0, mFramingRect.top - scannerHeight, mFramingRect.left + 0, mFramingRect.top - scannerHeight + mBorderLineLength, mBorderPaint);
-        canvas.drawLine(mFramingRect.left + 0, mFramingRect.top - scannerHeight, mFramingRect.left + 0 + mBorderLineLength, mFramingRect.top - scannerHeight, mBorderPaint);
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1, mFramingRect.bottom + 1 - mBorderLineLength, mBorderPaint);
+        canvas.drawLine(mFramingRect.left - 1, mFramingRect.bottom + 1, mFramingRect.left - 1 + mBorderLineLength, mFramingRect.bottom + 1, mBorderPaint);
 
-        canvas.drawLine(mFramingRect.left - 0, mFramingRect.bottom + scannerHeight + extendedBottom, mFramingRect.left - 0, mFramingRect.bottom + scannerHeight + extendedBottom- mBorderLineLength, mBorderPaint);
-        canvas.drawLine(mFramingRect.left - 0, mFramingRect.bottom + scannerHeight + extendedBottom, mFramingRect.left - 0 + mBorderLineLength, mFramingRect.bottom + scannerHeight + extendedBottom, mBorderPaint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1, mFramingRect.top - 1 + mBorderLineLength, mBorderPaint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.top - 1, mFramingRect.right + 1 - mBorderLineLength, mFramingRect.top - 1, mBorderPaint);
 
-        canvas.drawLine(mFramingRect.right + 0, mFramingRect.top - scannerHeight, mFramingRect.right + 0, mFramingRect.top - scannerHeight + mBorderLineLength, mBorderPaint);
-        canvas.drawLine(mFramingRect.right + 0, mFramingRect.top - scannerHeight, mFramingRect.right + 0 - mBorderLineLength, mFramingRect.top - scannerHeight, mBorderPaint);
-
-        canvas.drawLine(mFramingRect.right + 0, mFramingRect.bottom + scannerHeight + extendedBottom, mFramingRect.right + 0, mFramingRect.bottom + scannerHeight + extendedBottom- mBorderLineLength, mBorderPaint);
-        canvas.drawLine(mFramingRect.right + 0, mFramingRect.bottom + scannerHeight + extendedBottom, mFramingRect.right + 0 - mBorderLineLength, mFramingRect.bottom + scannerHeight + extendedBottom, mBorderPaint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1, mFramingRect.bottom + 1 - mBorderLineLength, mBorderPaint);
+        canvas.drawLine(mFramingRect.right + 1, mFramingRect.bottom + 1, mFramingRect.right + 1 - mBorderLineLength, mFramingRect.bottom + 1, mBorderPaint);
     }
 
     public void drawLaser(Canvas canvas) {
