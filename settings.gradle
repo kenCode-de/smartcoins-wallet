@@ -1,1 +1,1 @@
-include ':app', ':zxing', ':core'
+include ':app', ':zxing', ':core', ':aFileDialog'

@@ -97,6 +97,9 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     @Bind(R.id.emailHead)
     TextView emailHead;
 
+    @Bind(R.id.tvWarningEmail)
+    TextView tvWarningEmail;
+
     ContactsDelegate contactsDelegate;
 
     @Override
@@ -238,6 +241,23 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         contactsDelegate.OnUpdate("knysys",29);
         finish();
     }
+
+    Boolean checkIfAlreadyAdded(){
+        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        String _accountid = Accountname.getText().toString();
+
+        for (int i = 0; i < contacts.size(); i++) {
+
+            if(contacts.get(i).account.equals(_accountid)){
+                return true;
+            }
+
+        }
+
+
+        return false;
+    }
+
     private void loadWebView(int size, String encryptText) {
         String htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = web.getSettings();
@@ -251,6 +271,11 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         warning.setTextColor(getColorWrapper(context, R.color.black));
         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
         SaveContact.setEnabled(false);
+
+        if (!text.toString().equals(text.toString().trim())) {
+            Accountname.setText(text.toString().trim());
+        }
+
 
         if (Accountname.getText().length() > 0) {
 
@@ -293,13 +318,20 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     }
     void setOnEmail(){
         if(etEmail.getText().toString().length()>0) {
-            imageEmail.setVisibility(View.VISIBLE);
-            web.setVisibility(View.GONE);
-            setGravator(etEmail.getText().toString(), imageEmail);
+            if(SupportMethods.isEmailValid(etEmail.getText().toString())) {
+                imageEmail.setVisibility(View.VISIBLE);
+                web.setVisibility(View.GONE);
+                tvWarningEmail.setText("");
+                setGravator(etEmail.getText().toString(), imageEmail);
+            }else {
+                tvWarningEmail.setText("Invalid Email");
+                tvWarningEmail.setTextColor(getColorWrapper(context, R.color.red));
+            }
         }
         if(etEmail.getText().toString().length()<=0) {
             imageEmail.setVisibility(View.GONE);
             web.setVisibility(View.VISIBLE);
+            tvWarningEmail.setText("");
             // setGravator(text.toString(), imageEmail);
         }
 
@@ -314,9 +346,14 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         }
     }
     @OnFocusChange(R.id.email)
-    void onTextChangedEmail(boolean hasFocus) {
-
+    void onTextFocusChangedEmail(boolean hasFocus) {
         setOnEmail();
+    }
+    @OnTextChanged(R.id.email)
+    void onTextChangedEmail() {
+        if (!etEmail.toString().equals(etEmail.toString().trim())) {
+            etEmail.setText(etEmail.toString().trim());
+        }
     }
     @OnClick(R.id.CancelContact)
     public void Cancel(){
@@ -343,14 +380,20 @@ public class AddEditContacts extends BaseActivity implements IAccount{
     };
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-            warning.setText("");
+           // warning.setText("");
             //warning.setVisibility(View.GONE);
             if (Accountname.getText().length() > 2) {
-                if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
-                    String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                    Application.webSocketG.send(socketText);
+                if(!checkIfAlreadyAdded()) {
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                        String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                        Application.webSocketG.send(socketText);
 
+                    }
+                }else {
+                    warning.setText(Accountname.getText().toString()+"is already added");
+                    warning.setTextColor(getColorWrapper(context, R.color.red));
                 }
+
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
                // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
