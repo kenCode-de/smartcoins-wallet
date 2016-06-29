@@ -215,9 +215,9 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 if (colorId == R.color.green) {
                     SaveContact.setEnabled(true);
                 }
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 2000);
             }
-        }, 100);
+        }, 2000);
     }
 
     @OnClick(R.id.SaveContact)
