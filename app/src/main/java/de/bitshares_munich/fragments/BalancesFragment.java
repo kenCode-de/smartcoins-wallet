@@ -649,7 +649,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
                                             //tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
                                             //tvAmount.append(Html.fromHtml("<br><small>[" + currency.getSymbol() + String.format(locale, "%.4f", eqAmount) + "]</small>"));
-                                            tvFaitAmount.setText(String.format(locale, "%s %.4f", currency.getSymbol(), eqAmount));
+                                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
                                         } catch (Exception e) {
 
                                         }
