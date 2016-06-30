@@ -66,6 +66,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
+import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -75,6 +76,7 @@ import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
+import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
@@ -101,7 +103,7 @@ import retrofit2.Response;
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate {
+public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     Application application = new Application();
     int accountDetailsId;
@@ -176,6 +178,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
     Locale locale;
     NumberFormat format;
     String language;
+
+    public static ISound iSound;
     // String ltmAmount="17611.7";
 
     public BalancesFragment() {
@@ -187,8 +191,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
         application.registerAssetDelegate(this);
-
+        iSound=this;
         updateEquivalentAmount = new Handler();
+
     }
 
     @Override
@@ -1248,12 +1253,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                                         // run animation
                                         if (animateOnce) {
-                                            final Runnable playSOund = new Runnable() {
+                                            getActivity().startService(new Intent(getActivity(), MediaService.class));
+                                           /* final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     playSound();
                                                 }
-                                            };
+                                            };*/
 
                                             final Runnable rotateTask = new Runnable() {
                                                 @Override
@@ -1271,7 +1277,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            animateNsoundHandler.postDelayed(playSOund, 100);
+                                           // animateNsoundHandler.postDelayed(playSOund, 100);
                                             animateNsoundHandler.postDelayed(rotateTask, 200);
 
                                             animateOnce = false;
@@ -1636,6 +1642,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",(float)l,"OBITS",(float)3.33,"USD"));
         }
         */
+    }
+
+    @Override
+    public void soundFinish() {
+        getActivity().stopService(new Intent(getActivity(), MediaService.class));
     }
 
     private static class TransactionsDateComparator implements Comparator<TransactionDetails>
