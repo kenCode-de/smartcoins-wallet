@@ -110,7 +110,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     Boolean isLoading = false;
     public static Boolean onClicked = false;
-    Handler handler = new Handler();
+    Handler myHandler = new Handler();
 
     String to = "";
 
@@ -1089,6 +1089,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
+    Handler animateNsoundHandler = new Handler();
+
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
     {
         final Runnable reloadBalances = new Runnable() {
@@ -1191,7 +1193,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         final TextView cView = tvAmOne;
                                         final TextView aView = tvSymOne;
                                         final TextView bView = tvfaitOne;
-                                        final Handler handler = new Handler();
+                                        //final Handler handler = new Handler();
 
                                         final Runnable updateTask = new Runnable() {
                                             @Override
@@ -1200,7 +1202,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 cView.setTextColor(getResources().getColor(R.color.green));
                                             }
                                         };
-                                        handler.postDelayed(updateTask, 4000);
+                                        animateNsoundHandler.postDelayed(updateTask, 4000);
 
                                         if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
@@ -1212,8 +1214,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            handler.postDelayed(zeroAmount, 4200);
-                                            handler.postDelayed(reloadBalances, 5000);
+                                            animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                                            animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
                                     }
                                     // Balance is rcvd
@@ -1249,8 +1251,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            handler.postDelayed(playSOund, 100);
-                                            handler.postDelayed(rotateTask, 200);
+                                            animateNsoundHandler.postDelayed(playSOund, 100);
+                                            animateNsoundHandler.postDelayed(rotateTask, 200);
 
                                             animateOnce = false;
                                         }
@@ -1260,7 +1262,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         final TextView cView = tvAmOne;
                                         final TextView aView = tvSymOne;
                                         final TextView bView = tvfaitOne;
-                                        final Handler handler = new Handler();
+                                        //final Handler handler = new Handler();
 
                                         final Runnable updateTask = new Runnable() {
                                             @Override
@@ -1269,7 +1271,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 cView.setTextColor(getResources().getColor(R.color.green));
                                             }
                                         };
-                                        handler.postDelayed(updateTask, 4000);
+                                        animateNsoundHandler.postDelayed(updateTask, 4000);
 
                                         if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
@@ -1281,8 +1283,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            handler.postDelayed(zeroAmount, 4200);
-                                            handler.postDelayed(reloadBalances, 5000);
+                                            animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                                            animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
 
 
@@ -1330,7 +1332,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         final TextView aView = tvSymtwo;
                                         final TextView bView = tvFaitTwo;
 
-                                        final Handler handler = new Handler();
+                                        //final Handler handler = new Handler();
 
                                         final Runnable updateTask = new Runnable() {
                                             @Override
@@ -1340,7 +1342,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             }
                                         };
 
-                                        handler.postDelayed(updateTask, 4000);
+                                        animateNsoundHandler.postDelayed(updateTask, 4000);
 
                                         if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
@@ -1352,8 +1354,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            handler.postDelayed(zeroAmount, 4200);
-                                            handler.postDelayed(reloadBalances, 5000);
+                                            animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                                            animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
 
                                     } else if (amount_d > txtAmount_d) {
@@ -1366,7 +1368,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         final TextView aView = tvSymtwo;
                                         final TextView bView = tvFaitTwo;
 
-                                        final Handler handler = new Handler();
+                                        //final Handler handler = new Handler();
 
                                         final Runnable updateTask = new Runnable() {
                                             @Override
@@ -1376,7 +1378,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             }
                                         };
 
-                                        handler.postDelayed(updateTask, 4000);
+                                        animateNsoundHandler.postDelayed(updateTask, 4000);
 
                                         if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
@@ -1388,8 +1390,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                                 }
                                             };
 
-                                            handler.postDelayed(zeroAmount, 4200);
-                                            handler.postDelayed(reloadBalances, 5000);
+                                            animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                                            animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
                                     }
                                 }
@@ -1760,12 +1762,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             if (qrCamera != null && backLine != null) {
                 startAnimation();
             } else {
-                handler.postDelayed(new Runnable() {
+                myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (qrCamera != null && backLine != null) {
                             startAnimation();
-                        } else handler.postDelayed(this, 333);
+                        } else myHandler.postDelayed(this, 333);
                     }
                 }, 333);
             }
