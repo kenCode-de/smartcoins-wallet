@@ -1,5 +1,8 @@
 package de.bitshares_munich.utils;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
@@ -33,6 +36,10 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<AccountDetails> getAccount(@Body Map<String, String> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<AccountDetails> getAccountFromBin(@Body HashMap<String, Object> params);
 
     @Headers({"Content-Type: application/json"})
     @POST("/get_qr_hash/")

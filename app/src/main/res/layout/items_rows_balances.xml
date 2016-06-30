@@ -42,7 +42,7 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:textColor="@color/green"
-                    android:text="BTS"
+                    android:text=""
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
@@ -55,7 +55,7 @@
                     android:textSize="17dp"
                     android:paddingLeft="5dp"
                     android:textColor="@color/green"
-                    android:text="0.005"/>
+                    android:text=""/>
             </LinearLayout>
 
             <TextView
@@ -98,7 +98,7 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:textColor="@color/green"
-                    android:text="BTS"
+                    android:text=""
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
@@ -111,7 +111,7 @@
                     android:textSize="17dp"
                     android:paddingLeft="5dp"
                     android:textColor="@color/green"
-                    android:text="0.005"/>
+                    android:text=""/>
             </LinearLayout>
 
             <TextView

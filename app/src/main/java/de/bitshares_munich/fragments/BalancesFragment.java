@@ -187,6 +187,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
         application.registerAssetDelegate(this);
+
+        updateEquivalentAmount = new Handler();
     }
 
     @Override
@@ -507,7 +509,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
 
             for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
+                if (accountDetails.get(i).isSelected)
+                {
                     ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
 
                     if ((accountAsset != null) && (accountAsset.size() > 0)) {
@@ -533,6 +536,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
     }
 
+    Handler updateEquivalentAmount;
+
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -546,8 +551,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             if (sym.size() > i) accountAsset.symbol = sym.get(i);
             if (am.size() > i) accountAsset.ammount = am.get(i);
 
-            //   SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
-
+            // SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
             // Log.i("uncle","aay1"+am.get(i));
             accountAssets.add(accountAsset);
         }
@@ -575,14 +579,43 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
         if (count <= 0) BalanceAssetsLoad(sym, pre, am, onStartUp);
         if (count > 0) BalanceAssetsUpdate(sym, pre, am);
+
+        /*
+        Handler zeroBalanceHandler = new Handler();
+
+        Runnable zeroKardo = new Runnable() {
+            @Override
+            public void run() {
+
+                am.set(0,"0");
+
+                BalanceAssetsUpdate(sym, pre, am, false);
+            }
+        };
+
+        zeroBalanceHandler.postDelayed(zeroKardo,10000);
+        */
+
     }
 
 
-    private void getEquivalentComponents(ArrayList<AccountAssets> accountAssets) {
+    private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
+    {
+
+        final Runnable getEquivalentCompRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getEquivalentComponents(accountAssets);
+            }
+        };
+
         String faitCurrency = Helper.getFadeCurrency(getContext());
-        if (faitCurrency.isEmpty()) {
+
+        if (faitCurrency.isEmpty())
+        {
             faitCurrency = "EUR";
         }
+
         String values = "";
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
@@ -600,91 +633,106 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         finalFaitCurrency = faitCurrency;
         postingService.enqueue(new Callback<EquivalentComponentResponse>() {
             @Override
-            public void onResponse(Response<EquivalentComponentResponse> response) {
-                if (response.isSuccess()) {
+            public void onResponse(Response<EquivalentComponentResponse> response)
+            {
+                if (response.isSuccess())
+                {
                     EquivalentComponentResponse resp = response.body();
-                    if (resp.status.equals("success")) {
-                        try {
+                    if (resp.status.equals("success"))
+                    {
+                        try
+                        {
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
                             HashMap hm = new HashMap();
-                            while (keys.hasNext()) {
+
+                            while (keys.hasNext())
+                            {
                                 String key = keys.next();
                                 hm.put(key.split(":")[0], rates.get(key));
                             }
-                            for (int i = 0; i < llBalances.getChildCount(); i++) {
+
+                            for (int i = 0; i < llBalances.getChildCount(); i++)
+                            {
                                 LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
 
-                                //LinearLayout llRowInner = (LinearLayout) llRow.getChildAt(0);
                                 for (int j = 1; j <= 2; j++) {
 
                                     TextView tvAsset;
                                     TextView tvAmount;
                                     TextView tvFaitAmount;
 
-                                    if (j == 1) {
+                                    if (j == 1)
+                                    {
                                         tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
                                         tvAmount = (TextView) llRow.findViewById(R.id.amount_child_one);
                                         tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_one);
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_two);
                                         tvAmount = (TextView) llRow.findViewById(R.id.amount_child_two);
                                         tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
                                     }
 
-
                                     String asset = tvAsset.getText().toString();
                                     String amount = tvAmount.getText().toString();
                                     amount = android.text.Html.fromHtml(amount).toString();
 
-                                    if (amount.isEmpty()) {
+                                    if (amount.isEmpty())
+                                    {
                                         amount = "0.0";
                                     }
 
-                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
+                                    if (!amount.isEmpty() && hm.containsKey(asset))
+                                    {
                                         Currency currency = Currency.getInstance(finalFaitCurrency);
 
-                                        try {
+                                        try
+                                        {
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
-                                            //tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
-                                            //tvAmount.append(Html.fromHtml("<br><small>[" + currency.getSymbol() + String.format(locale, "%.4f", eqAmount) + "]</small>"));
-                                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
-                                        } catch (Exception e) {
+                                            tvFaitAmount.setText(String.format(locale, "%s %.4f", currency.getSymbol(), eqAmount));
+                                        }
+                                        catch (Exception e)
+                                        {
 
                                         }
-
-                                    } else {
-                                        tvFaitAmount.setVisibility(View.GONE);
-                                        /*try {
-                                            double d = convertLocalizeStringToDouble(amount);
-                                            tvAmount.setText(Helper.setLocaleNumberFormat(locale, d));
-                                        } catch (Exception e) {
-
-                                        }
-                                        */
                                     }
-
+                                    else
+                                    {
+                                        tvFaitAmount.setVisibility(View.GONE);
+                                    }
                                 }
                             }
-                        } catch (JSONException e) {
+                        }
+                        catch (JSONException e)
+                        {
+                            //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                             e.printStackTrace();
                         }
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
-                    } else {
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                     }
-
-                } else {
+                    /*
+                    else
+                    {
+                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    }
+                    */
+                }
+                else
+                {
                     hideDialog();
                     Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 hideDialog();
-                Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
             }
         });
     }
@@ -713,22 +761,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     symbolsArray.add(sym.get(i));
                 }
             }
-
-            /*symbolsArray = new ArrayList<>();
-            for (String _sym : sym) {
-                symbolsArray.add(_sym);
-            }
-
-            precisionsArray = new ArrayList<>();
-            for (String _precision : pre) {
-                precisionsArray.add(_precision);
-            }
-
-            amountsArray = new ArrayList<>();
-            for (String _amount : am) {
-                amountsArray.add(_amount);
-            }
-            */
         }
         catch (Exception e)
         {
@@ -750,8 +782,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         am.addAll(amountsArray);
 
 
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
+        getActivity().runOnUiThread(new Runnable()
+        {
+            public void run()
+            {
                 SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 llBalances.removeAllViews();
@@ -812,9 +846,27 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                     }
                 }
 
-                if (!onStartUp) {
+                if (!onStartUp)
+                {
                     progressBar1.setVisibility(View.GONE);
                     isLoading = true;
+                }
+                else
+                {
+                    try
+                    {
+                        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                        for (int i = 0; i < accountDetails.size(); i++)
+                        {
+                            if (accountDetails.get(i).isSelected)
+                            {
+                                getEquivalentComponents(accountDetails.get(i).AccountAssets);
+                                break;
+                            }
+                        }
+                    } catch (Exception w) {
+                        SupportMethods.testing("Assets", w, "Asset Activity");
+                    }
                 }
 
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
@@ -871,7 +923,181 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         animator.start();
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    public void removeZeroedBalanceViews ()
+    {
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                try {
+
+                    for (int i = 0; i < llBalances.getChildCount(); i++)
+                    {
+
+                        View row = llBalances.getChildAt(i);
+
+                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
+                        TextView tvAmOne = (TextView) row.findViewById(R.id.amount_child_one);
+                        TextView tvfaitOne = (TextView) row.findViewById(R.id.fait_child_one);
+
+                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
+                        TextView tvAmtwo = (TextView) row.findViewById(R.id.amount_child_two);
+                        TextView tvFaitTwo = (TextView) row.findViewById(R.id.fait_child_two);
+
+                        // If first balance in row is zeroed then update it
+                        if (tvSymOne.getText().toString().equals("")) {
+                            // shift balances from next child here
+                            String symbol = "";
+                            String amount = "";
+                            String fait = "";
+
+                            // Get next non-zero balance
+                            if (tvSymtwo.getText().toString().isEmpty()) {
+                                // if second balance in row is also empty then get next non-zero balance
+                                for (int j = i+1; j < llBalances.getChildCount(); j++)
+                                {
+                                    View nextrow = llBalances.getChildAt(j);
+
+                                    TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
+                                    TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
+                                    TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
+
+                                    if (!tvSymOnenextrow.getText().toString().isEmpty()) {
+                                        symbol = tvSymOnenextrow.getText().toString();
+                                        amount = tvAmOnenextrow.getText().toString();
+                                        fait = tvfaitOnenextrow.getText().toString();
+                                        tvSymOnenextrow.setText("");
+                                        tvAmOnenextrow.setText("");
+                                        tvfaitOnenextrow.setText("");
+                                        break;
+                                    }
+
+                                    TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
+                                    TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
+                                    TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
+
+                                    if (!tvSymtwonextrow.getText().toString().isEmpty()) {
+                                        symbol = tvSymtwonextrow.getText().toString();
+                                        amount = tvAmtwonextrow.getText().toString();
+                                        fait = tvFaitTwonextrow.getText().toString();
+                                        tvSymtwonextrow.setText("");
+                                        tvAmtwonextrow.setText("");
+                                        tvFaitTwonextrow.setText("");
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // if second balance is row is non-empty then move it to first balance
+                                symbol = tvSymtwo.getText().toString();
+                                amount = tvAmtwo.getText().toString();
+                                fait = tvFaitTwo.getText().toString();
+                                tvSymtwo.setText("");
+                                tvAmtwo.setText("");
+                                tvFaitTwo.setText("");
+                            }
+
+                            // update first balance amount
+                            tvSymOne.setText(symbol);
+                            tvAmOne.setText(amount);
+                            tvfaitOne.setText(fait);
+
+                            if (fait.isEmpty())
+                            {
+                                tvfaitOne.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                tvfaitOne.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        if (tvSymtwo.getText().toString().isEmpty()) {
+                            String symbol = "";
+                            String amount = "";
+                            String fait = "";
+
+                            // Get next non-zero balance
+                            for (int j = i+1; j < llBalances.getChildCount(); j++) {
+                                View nextrow = llBalances.getChildAt(j);
+
+                                TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
+                                TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
+                                TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
+
+                                if (!tvSymOnenextrow.getText().toString().isEmpty()) {
+                                    symbol = tvSymOnenextrow.getText().toString();
+                                    amount = tvAmOnenextrow.getText().toString();
+                                    fait = tvfaitOnenextrow.getText().toString();
+                                    tvSymOnenextrow.setText("");
+                                    tvAmOnenextrow.setText("");
+                                    tvfaitOnenextrow.setText("");
+                                    break;
+                                }
+
+                                TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
+                                TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
+                                TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
+
+                                if (!tvSymtwonextrow.getText().toString().isEmpty()) {
+                                    symbol = tvSymtwonextrow.getText().toString();
+                                    amount = tvAmtwonextrow.getText().toString();
+                                    fait = tvFaitTwonextrow.getText().toString();
+                                    tvSymtwonextrow.setText("");
+                                    tvAmtwonextrow.setText("");
+                                    tvFaitTwonextrow.setText("");
+                                    break;
+                                }
+                            }
+
+                            tvSymtwo.setText(symbol);
+                            tvAmtwo.setText(amount);
+                            tvFaitTwo.setText(fait);
+
+                            if (fait.isEmpty())
+                            {
+                                tvFaitTwo.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                tvFaitTwo.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+
+                    }
+
+                    // remove empty rows
+                    for (int i = 0; i < llBalances.getChildCount(); i++) {
+                        View row = llBalances.getChildAt(i);
+
+                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
+                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
+
+                        if (tvSymOne.getText().toString().isEmpty() && tvSymtwo.getText().toString().isEmpty()) {
+                            llBalances.removeView(row);
+                        }
+                    }
+
+                    if (llBalances.getChildCount() == 0) {
+                        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+                    }
+                }
+                catch (Exception e)
+                {}
+            }
+        });
+    }
+
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
+    {
+        final Runnable reloadBalances = new Runnable() {
+            @Override
+            public void run() {
+                removeZeroedBalanceViews();
+            }
+        };
+
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
 
@@ -923,7 +1149,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                             TextView tvSymtwo = (TextView) linearLayout.findViewById(R.id.symbol_child_two);
                             TextView tvAmtwo = (TextView) linearLayout.findViewById(R.id.amount_child_two);
-                            TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_one);
+                            TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_two);
 
                             // First child updation
                             if (sym.size() > m)
@@ -993,17 +1219,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             };
 
                                             handler.postDelayed(zeroAmount, 4200);
-
-                                            final Runnable reloadBalances = new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                   BalanceAssetsLoad(sym,pre,am,false);
-                                                }
-                                            };
-
                                             handler.postDelayed(reloadBalances, 5000);
                                         }
-
                                     }
                                     // Balance is rcvd
                                     else if (amount_d > txtAmount_d)
@@ -1074,14 +1291,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             };
 
                                             handler.postDelayed(zeroAmount, 4200);
-
-                                            final Runnable reloadBalances = new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    BalanceAssetsLoad(sym,pre,am,false);
-                                                }
-                                            };
-
                                             handler.postDelayed(reloadBalances, 5000);
                                         }
 
@@ -1160,14 +1369,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             };
 
                                             handler.postDelayed(zeroAmount, 4200);
-
-                                            final Runnable reloadBalances = new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    BalanceAssetsLoad(sym,pre,am,false);
-                                                }
-                                            };
-
                                             handler.postDelayed(reloadBalances, 5000);
                                         }
 
@@ -1207,14 +1408,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             };
 
                                             handler.postDelayed(zeroAmount, 4200);
-
-                                            final Runnable reloadBalances = new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    BalanceAssetsLoad(sym,pre,am,false);
-                                                }
-                                            };
-
                                             handler.postDelayed(reloadBalances, 5000);
                                         }
                                     }
@@ -1313,15 +1506,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                 updateBalanceArrays( sym,pre,am );
             }
-
-
         });
-
-
-
-
     }
-
 
     String returnFromPower(String i, String str) {
         Double ok = 1.0;
@@ -1381,24 +1567,26 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
             myTransactions.add(new TransactionDetails(myDate,true,"yasir-ibrahim","yasir-mobile","#scwal",(float)l,"OBITS",(float)3.33,"USD"));
         }
         */
-
     }
 
-    private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
+    private static class TransactionsDateComparator implements Comparator<TransactionDetails>
+    {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
             return one.getDate().compareTo(two.getDate());
         }
     }
 
-    private static class TransactionsSendRecieveComparator implements Comparator<TransactionDetails> {
+    private static class TransactionsSendRecieveComparator implements Comparator<TransactionDetails>
+    {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
             return one.getSent().compareTo(two.getSent());
         }
     }
 
-    private static int compareFloats(float change1, float change2) {
+    private static int compareFloats(float change1, float change2)
+    {
         if (change1 < change2) {
             return -1;
         } else if (change1 == change2) {

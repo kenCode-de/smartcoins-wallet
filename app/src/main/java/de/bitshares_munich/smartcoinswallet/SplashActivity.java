@@ -20,7 +20,7 @@ import de.bitshares_munich.utils.TinyDB;
 public class SplashActivity extends Activity {
 
     // Splash screen timer
-    private int SPLASH_TIME_OUT = 500;
+    //private int SPLASH_TIME_OUT = 1000;
     //TinyDB tinyDB;
 
     @Override
@@ -37,7 +37,7 @@ public class SplashActivity extends Activity {
             public void run() {
                 checkWhereToGo();
             }
-        }, SPLASH_TIME_OUT);
+        }, 1000);
     }
 
     private void checkWhereToGo() {

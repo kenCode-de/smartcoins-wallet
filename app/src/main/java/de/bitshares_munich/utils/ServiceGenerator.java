@@ -35,7 +35,7 @@ public class ServiceGenerator{
         Services.put(klass, thing);
     }
 
-    public static <T> T getService(Class<T> serviceClass) {
+    public <T> T getService(Class<T> serviceClass) {
 
         T service = serviceClass.cast(Services.get(serviceClass));
         if (service == null) {

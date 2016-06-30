@@ -286,19 +286,23 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             Accountname.setText(text.toString().trim());
         }
 
+        if(!Accountname.getText().toString().equals(accountid)) {
+            if (Accountname.getText().length() > 0) {
 
-        if (Accountname.getText().length() > 0) {
+                validReceiver = false;
 
-            validReceiver = false;
+                // loadWebView(39, Helper.md5(Accountname.getText().toString()));
 
-            // loadWebView(39, Helper.md5(Accountname.getText().toString()));
+                loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
 
-            loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
 
-            myLowerCaseTimer.cancel();
-            myAccountNameValidationTimer.cancel();
-            myLowerCaseTimer.start();
-            myAccountNameValidationTimer.start();
+                myLowerCaseTimer.cancel();
+                myAccountNameValidationTimer.cancel();
+                myLowerCaseTimer.start();
+                myAccountNameValidationTimer.start();
+            }
+        }else{
+            warning.setText("");
         }
 
     }
@@ -366,8 +370,16 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     @OnTextChanged(R.id.email)
     void onTextChangedEmail() {
-        if (!etEmail.toString().equals(etEmail.toString().trim())) {
-            etEmail.setText(etEmail.toString().trim());
+        String sEmail =  etEmail.getText().toString();
+
+        boolean hasSpecial   =  !sEmail.equals(sEmail.toLowerCase());
+
+        if(hasSpecial) {
+            etEmail.setText("");
+            etEmail.append(sEmail.toLowerCase());
+        }
+        if (!etEmail.getText().toString().equals(etEmail.getText().toString().trim())) {
+            etEmail.setText(etEmail.getText().toString().trim());
         }
     }
 
@@ -407,8 +419,10 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                         Application.webSocketG.send(socketText);
 
                     }
-                } else {
+                }else {
+
                     warning.setText(Accountname.getText().toString() + " is already added");
+
                     warning.setTextColor(getColorWrapper(context, R.color.red));
                 }
 
@@ -416,6 +430,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
                 // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
                 loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
+                warning.setText("");
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }

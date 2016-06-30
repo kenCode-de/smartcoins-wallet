@@ -14,7 +14,7 @@
     <string name="payment_received">Payment Received</string>
 
     <string name="import_brainkey">Import from BrainKey</string>
-    <string name="import_backup">Import Backup</string>
+    <string name="import_backup">Import Backup from .bin file</string>
     <string name="choose_backup">Choose Backup</string>
     <string name="choose_file">Choose File</string>
     <string name="no_file_chosen">No file chosen</string>
@@ -300,5 +300,7 @@
 // new strings
     <string name="select">"Select</string>
     <string name="are_you_sure">"Are you sure?</string>
+    <string name="unable_to_import_account_from_bin_file">"Unable to import account from bin file"</string>
+    <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
 
 </resources>

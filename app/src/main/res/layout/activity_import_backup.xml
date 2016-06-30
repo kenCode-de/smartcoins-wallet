@@ -95,7 +95,7 @@
             android:layout_margin="10dp"
             android:padding="10dp"
             android:layout_gravity="center"
-            android:id="@+id/btnWallet"
+            android:id="@+id/btnWalletBin"
             android:text="@string/create_wallet"/>
 
     </LinearLayout>
