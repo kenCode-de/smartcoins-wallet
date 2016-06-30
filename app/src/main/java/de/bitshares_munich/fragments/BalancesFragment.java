@@ -1131,13 +1131,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     int count = llBalances.getChildCount();
+                    int m = 0;
 
-                    if (count > 0)
-                    {
+                    try {
+
                         Boolean animateOnce = true;
-                        int m = 0;
-                        for (int i = 0; i < count; i++)
-                        {
+
+                        for (int i = 0; i < count; i++) {
 
                             // count == number of row
                             // m == number of child in the row
@@ -1152,14 +1152,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_two);
 
                             // First child updation
-                            if (sym.size() > m)
-                            {
+                            if (sym.size() > m) {
 
                                 String symbol = sym.get(m);
 
                                 String amount = "";
-                                if (pre.size() > m && am.size() > m)
-                                {
+                                if (pre.size() > m && am.size() > m) {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
 
@@ -1168,13 +1166,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                 String txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
                                 String txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
 
-                                if (!symbol.equals(txtSymbol))
-                                {
+                                if (!symbol.equals(txtSymbol)) {
                                     tvSymOne.setText(symbol);
                                 }
 
-                                if (!amountInInt.equals(txtAmount))
-                                {
+                                if (!amountInInt.equals(txtAmount)) {
                                     // previous amount
                                     //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                     Integer txtAmount_d = Integer.parseInt(txtAmount);
@@ -1184,8 +1180,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     Integer amount_d = Integer.parseInt(amountInInt);
 
                                     // Balance is sent
-                                    if (txtAmount_d > amount_d)
-                                    {
+                                    if (txtAmount_d > amount_d) {
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
@@ -1207,8 +1202,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         };
                                         handler.postDelayed(updateTask, 4000);
 
-                                        if ( amount_d == 0 )
-                                        {
+                                        if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1223,8 +1217,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         }
                                     }
                                     // Balance is rcvd
-                                    else if (amount_d > txtAmount_d)
-                                    {
+                                    else if (amount_d > txtAmount_d) {
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
@@ -1232,8 +1225,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         // run animation
 
 
-                                        if ( animateOnce )
-                                        {
+                                        if (animateOnce) {
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1279,8 +1271,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         };
                                         handler.postDelayed(updateTask, 4000);
 
-                                        if ( amount_d == 0 )
-                                        {
+                                        if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1298,15 +1289,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     }
                                 }
                                 m++;
-                            }
-                            else
-                            {
+                            } else {
                                 linearLayout.removeAllViews();
                             }
 
                             // Second child updation
-                            if (sym.size() > m)
-                            {
+                            if (sym.size() > m) {
                                 String symbol = sym.get(m);
                                 String amount = "";
 
@@ -1325,17 +1313,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                 //float amount_d = convertLocalizeStringToFloat(amount);
                                 Integer amount_d = Integer.parseInt(amountInInt);
 
-                                if (!symbol.equals(txtSymbol))
-                                {
+                                if (!symbol.equals(txtSymbol)) {
                                     tvSymtwo.setText(symbol);
                                 }
 
-                                if (!amountInInt.equals(txtAmount))
-                                {
+                                if (!amountInInt.equals(txtAmount)) {
                                     tvAmtwo.setVisibility(View.VISIBLE);
 
-                                    if (txtAmount_d > amount_d)
-                                    {
+                                    if (txtAmount_d > amount_d) {
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
 
@@ -1357,8 +1342,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                                         handler.postDelayed(updateTask, 4000);
 
-                                        if ( amount_d == 0 )
-                                        {
+                                        if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1372,9 +1356,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             handler.postDelayed(reloadBalances, 5000);
                                         }
 
-                                    }
-                                    else if (amount_d > txtAmount_d)
-                                    {
+                                    } else if (amount_d > txtAmount_d) {
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
 
@@ -1396,8 +1378,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                                         handler.postDelayed(updateTask, 4000);
 
-                                        if ( amount_d == 0 )
-                                        {
+                                        if (amount_d == 0) {
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1413,60 +1394,46 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     }
                                 }
                                 m++;
-                            }
-                            else
-                            {
-                                if (i == count - 1)
-                                {
+                            } else {
+                                if (i == count - 1) {
                                     if (sym.size() > m)
                                         m--;
                                 }
                             }
                         }
 
-
                         // Insert/remove balance objects if updated
                         int loop = sym.size() - m;
-                        if (loop > 0)
-                        {
-                            for (int i = m; i < sym.size(); i += 2)
-                            {
+                        if (loop > 0) {
+                            for (int i = m; i < sym.size(); i += 2) {
                                 int counter = 1;
                                 int op = sym.size();
                                 int pr;
 
-                                if ( (op - i) > 2 )
-                                {
+                                if ((op - i) > 2) {
                                     pr = 2;
-                                }
-                                else
-                                {
+                                } else {
                                     pr = op - i;
                                 }
 
                                 View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
 
-                                for (int l = i; l < i + pr; l++)
-                                {
-                                    if (counter == 1)
-                                    {
+                                for (int l = i; l < i + pr; l++) {
+                                    if (counter == 1) {
                                         TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                                         textView.setText(sym.get(l));
                                         TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
-                                        if (pre.size() > l && am.size() > i)
-                                        {
+                                        if (pre.size() > l && am.size() > i) {
                                             String r = returnFromPower(pre.get(l), am.get(i));
                                             textView1.setText(r);
                                             // setCounter(textView1, 0f, 0f);
                                             textView1.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                                             //setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
-                                        }
-                                        else textView1.setText("");
+                                        } else textView1.setText("");
                                     }
 
-                                    if (counter == 2)
-                                    {
+                                    if (counter == 2) {
                                         TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                                         textView2.setText(sym.get(l));
                                         TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
@@ -1488,21 +1455,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                         counter = 2;
                                     } else counter = 1;
                                 }
-
                             }
-
-
                         }
+                    } catch (Exception e) {
+                        Log.d("Balances Update", e.getMessage());
                     }
-                    progressBar1.setVisibility(View.GONE);
-                    whiteSpaceAfterBalances.setVisibility(View.GONE);
-                    isLoading = true;
 
                 }
                 catch (Exception e)
                 {
                     Log.d("Balances Load", e.getMessage());
                 }
+
+                progressBar1.setVisibility(View.GONE);
+                whiteSpaceAfterBalances.setVisibility(View.GONE);
+                isLoading = true;
 
                 updateBalanceArrays( sym,pre,am );
             }
@@ -1814,6 +1781,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         });
     }
 
+    AssestsActivty myAssetsActivity;
+
     void loadViews() {
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
@@ -1829,7 +1798,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
         progressBar1.setVisibility(View.VISIBLE);
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        new AssestsActivty(getContext(), to, this);
+        myAssetsActivity = new AssestsActivty(getContext(), to, this,application);
+        myAssetsActivity.registerDelegate();
+        myAssetsActivity.loadBalances(to);
         number_of_transactions_loaded = 0;
         new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
         number_of_transactions_loaded = number_of_transactions_loaded + 5;

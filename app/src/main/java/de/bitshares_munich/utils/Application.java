@@ -17,11 +17,11 @@ import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.BalancesDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.Interfaces.IAccountObject;
 import de.bitshares_munich.Interfaces.IAssetObject;
+import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.Interfaces.ITransactionObject;
@@ -36,7 +36,9 @@ public class Application extends android.app.Application {
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
-    static BalancesDelegate iBalancesDelegate;
+    static IBalancesDelegate iBalancesDelegate_transactionActivity;
+    static IBalancesDelegate iBalancesDelegate_ereceiptActivity;
+    static IBalancesDelegate iBalancesDelegate_assetsActivity;
     static AssetDelegate iAssetDelegate;
     static IAccountID iAccountID;
     static ITransactionObject iTransactionObject;
@@ -88,8 +90,22 @@ public class Application extends android.app.Application {
         iExchangeRate = callbackClass;
     }
 
-    public void registerBalancesDelegate(BalancesDelegate callbackClass) {
+    /*
+    public void registerBalancesDelegate(IBalancesDelegate callbackClass) {
         iBalancesDelegate = callbackClass;
+    }
+    */
+
+    public void registerBalancesDelegateTransaction(IBalancesDelegate callbackClass) {
+        iBalancesDelegate_transactionActivity = callbackClass;
+    }
+
+    public void registerBalancesDelegateEReceipt(IBalancesDelegate callbackClass) {
+        iBalancesDelegate_ereceiptActivity = callbackClass;
+    }
+
+    public void registerBalancesDelegateAssets(IBalancesDelegate callbackClass) {
+        iBalancesDelegate_assetsActivity = callbackClass;
     }
 
     public void registerAssetDelegate(AssetDelegate callbackClass) {
@@ -125,10 +141,11 @@ public class Application extends android.app.Application {
 
     public static void webSocketConnection() {
         iAccount = iAccount;
+        isReady = false;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
         get.setTimeout(5 * 1000);
 
-
+        Log.d("Connecting to node", urlsSocketConnection[counter]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
@@ -200,6 +217,8 @@ public class Application extends android.app.Application {
 
     }
 
+    public static Boolean isReady = false;
+
     public static void sendInitialSocket(final Context context) {
 
         if (Application.webSocketG.isOpen()) {
@@ -231,6 +250,7 @@ public class Application extends android.app.Application {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
                                 Application.webSocketG.send(context.getString(R.string.subscribe_callback));
                                 //Application.webSocketG.send(context.getString(R.string.subscribe_callback_full_account));
+                                isReady = true;
                             } else if (id == 6) {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
@@ -243,8 +263,8 @@ public class Application extends android.app.Application {
                                 }
                                 iExchangeRate.callback_exchange_rate(obj, id);
                             } else if (id == 8) {
-                                if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s, id);
+                                if (iBalancesDelegate_transactionActivity != null) {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 12) {
                                 if (iTransactionObject != null) {
@@ -258,27 +278,29 @@ public class Application extends android.app.Application {
                                 if (iAssetObject != null) {
                                     iAssetObject.assetObjectCallback(jsonObject);
                                 }
-                            } else if (id == 9) {
-                                if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s, id);
+                            } else if (id == 9)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null) {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 10) {
-                                if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s, id);
+                                if (iBalancesDelegate_transactionActivity != null) {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
-                            } else if (id == 11) {
-                                if (iBalancesDelegate != null) {
-                                    iBalancesDelegate.OnUpdate(s, id);
+                            } else if (id == 11)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null) {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 99) {
-                                if (iBalancesDelegate != null) {
+                                if (iBalancesDelegate_assetsActivity != null) {
                                     SupportMethods.testing("assests", 99, "account_name");
-                                    iBalancesDelegate.OnUpdate(s, id);
+                                    iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 999) {
-                                if (iBalancesDelegate != null) {
+                                if (iBalancesDelegate_assetsActivity != null) {
                                     SupportMethods.testing("assests", 999, "account_name");
-                                    iBalancesDelegate.OnUpdate(s, id);
+                                    iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 15) {
                                 if (iAssetDelegate != null) {
@@ -294,6 +316,16 @@ public class Application extends android.app.Application {
                                 }
                             } else if (id == 17) {
                                 Log.d("account_update", jsonObject.toString());
+                            }
+                            else if (id == 18) {
+                                if (iBalancesDelegate_ereceiptActivity != null) {
+                                    iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 19) {
+                                if (iBalancesDelegate_ereceiptActivity != null) {
+                                    iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
+                                }
                             }
                         } else if (jsonObject.has("method")) {
                             if (jsonObject.getString("method").equals("notice")) {

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 
@@ -27,9 +27,9 @@ public class BalancesLoad{
     Context context;
     WebSocket socket;
     String getDetails="";
-    BalancesDelegate balancesDelegate;
+    IBalancesDelegate balancesDelegate;
 
-    public BalancesLoad(Context c,BalancesDelegate callbackClass){
+    public BalancesLoad(Context c,IBalancesDelegate callbackClass){
         context = c;
         balancesDelegate = callbackClass;
         ButterKnife.setDebug(true);
