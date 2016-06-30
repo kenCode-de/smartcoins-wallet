@@ -10,9 +10,17 @@
 <string name="friendly_name">Nama mesra</string>
 <string name="notes">Nota</string>
 <string name="note">Nota</string>
-<string name="payment_received">Bayaran yang diterima</string>
+    <string name="unable_to_import_account_from_bin_file">Tidak dapat mengimport akaun dari fail bin</string>
+    <string name="importing_keys_from_bin_file">Mengimport Keys dari fail Bin</string>
+    <string name="import_backup">Import Backup dari fail .bin</string>
+    <string name="is_already_added">telah ditambah</string>
+    <string name="in_valid_email">Email tidak sah</string>
+    <string name="select">pilih</string>
+    <string name="are_you_sure">Adakah anda pasti?</string>
+
+    <string name="payment_received">Bayaran yang diterima</string>
 <string name="import_brainkey">Import dari BrainKey</string>
-<string name="import_backup">import Backup</string>
+<string name="import_backup_old">import Backup</string>
 <string name="choose_backup">pilih Backup</string>
 <string name="choose_file">Pilih fail</string>
 <string name="no_file_chosen">Tiada fail dipilih</string>

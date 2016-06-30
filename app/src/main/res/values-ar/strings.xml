@@ -13,7 +13,7 @@
 <string name="note">ملاحظة</string>
 <string name="payment_received">تلقى الدفع</string>
 <string name="import_brainkey">الاستيراد من BrainKey</string>
-<string name="import_backup">استيراد النسخ الاحتياطي</string>
+<string name="import_backup_old">استيراد النسخ الاحتياطي</string>
 <string name="choose_backup">اختيار النسخ الاحتياطي</string>
 <string name="choose_file">اختر ملف</string>
 <string name="no_file_chosen">لم تقم باختيار ملف</string>
@@ -154,6 +154,10 @@
     <string name="txt_folder_created">مجلد مكون</string>
     <string name="upgrade_failed">فشل الترقية</string>
     <string name="upgrading">رفع ...</string>
+    <string name="is_already_added">وأضفت</string>
+    <string name="in_valid_email">بريد إلكتروني خاطئ</string>
+    <string name="select">اختار</string>
+    <string name="are_you_sure">هل أنت واثق؟</string>
     <string name="import_new_account">استيراد حساب</string>
     <string name="upgrade_account">حدث الحساب</string>
     <string name="remove_account">ازالة الحساب</string>
@@ -175,5 +179,8 @@
     <string name="email_name">لعرض الصورة لهذا الاتصال، أدخل البريد الإلكتروني غرفتر لها هنا</string>
     <string name="upgrade_success">ترقية ناجحة!</string>
     <string name="copied_to_clipboard">نسخ إلى الحافظة</string>
+    <string name="unable_to_import_account_from_bin_file">غير قادر على استيراد حساب من ملف بن ل</string>
+    <string name="importing_keys_from_bin_file">استيراد مفاتيح من ملف بن</string>
+    <string name="import_backup">استيراد النسخ الاحتياطي من ملف بالملحق .bin</string>
 
 </resources>

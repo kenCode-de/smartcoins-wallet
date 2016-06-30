@@ -13,7 +13,7 @@
 <string name="note">Забележка</string>
 <string name="payment_received">Получено плащане</string>
 <string name="import_brainkey">Внос от BrainKey</string>
-<string name="import_backup">внос Backup</string>
+<string name="import_backup_old">внос Backup</string>
 <string name="choose_backup">Изберете Backup</string>
 <string name="choose_file">Изберете файл</string>
 <string name="no_file_chosen">Няма избран файл</string>
@@ -24,7 +24,15 @@
 <string name="create">CREATE</string>
 <string name="existing_account">Съществуващ профил</string>
 <string name="agreement">съглашение</string>
-<string name="cancel_and_exit">Отказ и Exit</string>
+    <string name="unable_to_import_account_from_bin_file">Не може да се внасят сметка от бин файл</string>
+    <string name="importing_keys_from_bin_file">Внос Keys от бин файл</string>
+    <string name="import_backup">Внос Backup от .bin файл</string>
+    <string name="is_already_added">вече е добавен</string>
+    <string name="in_valid_email">Грешен имейл</string>
+    <string name="select">Изберете</string>
+    <string name="are_you_sure">Сигурен ли си?</string>
+
+    <string name="cancel_and_exit">Отказ и Exit</string>
 <string name="i_agree">Съгласен съм</string>
 <string name="kindly_create_account">Моля да създадете акаунт</string>
 <string name="please_enter_old_6_digit_pin">Моля, въведете стария 6-цифрен ПИН</string>

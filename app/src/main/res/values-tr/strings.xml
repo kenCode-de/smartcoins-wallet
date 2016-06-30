@@ -12,10 +12,18 @@
 <string name="note">Not</string>
 <string name="payment_received">Ödeme alındı</string>
 <string name="import_brainkey">BrainKey İthalat</string>
-<string name="import_backup">İthalat Yedekleme</string>
+<string name="import_backup_old">İthalat Yedekleme</string>
 <string name="choose_backup">Yedekleme seçin</string>
 <string name="choose_file">Dosya seçin</string>
-<string name="no_file_chosen">Dosya seçili değil</string>
+    <string name="unable_to_import_account_from_bin_file">bin dosyadan hesabı almak için açılamıyor</string>
+    <string name="importing_keys_from_bin_file">Bin dosyasından Keys İthalat</string>
+    <string name="import_backup">.bin dosyasından İthalat Yedekleme</string>
+    <string name="is_already_added">zaten eklenir</string>
+    <string name="in_valid_email">Geçersiz e posta</string>
+    <string name="select">seçmek</string>
+    <string name="are_you_sure">Emin misiniz?</string>
+
+    <string name="no_file_chosen">Dosya seçili değil</string>
 <string name="account_label">Dosya seçin</string>
 <string name="loading_msg">Dengeler yüklerken kadar bekleyin</string>
 <string name="txt_6_digits_pin">6-basamaklı bir PIN</string>

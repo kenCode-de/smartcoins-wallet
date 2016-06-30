@@ -12,7 +12,7 @@
 <string name="note">Примітка</string>
 <string name="payment_received">Отриманої компенсації</string>
 <string name="import_brainkey">Імпорт з BrainKey</string>
-<string name="import_backup">Імпорт резервного копіювання</string>
+<string name="import_backup_old">Імпорт резервного копіювання</string>
 <string name="choose_backup">Виберіть Резервне копіювання</string>
 <string name="choose_file">Виберіть файл</string>
 <string name="no_file_chosen">Немає запису обраний</string>
@@ -21,7 +21,15 @@
 <string name="txt_6_digits_pin">6 цифр номера PIN</string>
 <string name="txt_6_digits_pin_confirm">PIN-код підтвердження 6-цифри</string>
 <string name="create">CREATE</string>
-<string name="existing_account">існуючий акаунт</string>
+    <string name="unable_to_import_account_from_bin_file">Неможливо імпортувати обліковий запис з файлу бен</string>
+    <string name="importing_keys_from_bin_file">Імпорт ключів з файлу Bin</string>
+    <string name="import_backup">Імпорт резервних копій файлів з .bin файлу</string>
+    <string name="is_already_added">вже доданий</string>
+    <string name="in_valid_email">Неправильна адреса електронної пошти</string>
+    <string name="select">вибрати</string>
+    <string name="are_you_sure">Ти впевнений?</string>
+
+    <string name="existing_account">існуючий акаунт</string>
 <string name="agreement">Угода</string>
 <string name="cancel_and_exit">Скасування і вихід</string>
 <string name="i_agree">Я згоден</string>

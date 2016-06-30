@@ -13,7 +13,7 @@
 <string name="note">Նշում</string>
 <string name="payment_received">վճարման ստացել</string>
 <string name="import_brainkey">Ներմուծել BrainKey</string>
-<string name="import_backup">Ներմուծում Backup</string>
+<string name="import_backup_old">Ներմուծում Backup</string>
 <string name="choose_backup">Ընտրեք Backup</string>
 <string name="choose_file">Ընտրել ֆայլը</string>
 <string name="no_file_chosen">Ոչ մի ֆայլ է ընտրել</string>
@@ -24,7 +24,16 @@
 <string name="create">ՍՏԵՂԾԵԼ</string>
 <string name="existing_account">գոյություն ունեցող հաշիվ</string>
 <string name="agreement">համաձայնագիր</string>
-<string name="cancel_and_exit">Չեղյալ եւ Exit</string>
+    <string name="unable_to_import_account_from_bin_file">Անհնար է ներմուծել հաշիվը բեն ֆայլ</string>
+    <string name="importing_keys_from_bin_file">Importing բանալիներ է Բեն ֆայլ</string>
+    <string name="import_backup">Ներմուծել Backup ից .bin ֆայլ</string>
+    <string name="is_already_added">արդեն ավելացրել է</string>
+    <string name="in_valid_email">Անվավեր էլփոստի</string>
+    <string name="select">ընտրել</string>
+    <string name="are_you_sure">Համոզված ես?</string>
+
+
+    <string name="cancel_and_exit">Չեղյալ եւ Exit</string>
 <string name="i_agree">Համաձայն եմ</string>
 <string name="kindly_create_account">Kindly Ստեղծել հաշիվ</string>
 <string name="please_enter_old_6_digit_pin">Խնդրում ենք մուտք գործել հին 6-նիշանոց ծածկագիրը</string>

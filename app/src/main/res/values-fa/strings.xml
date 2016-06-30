@@ -12,10 +12,18 @@
 <string name="note">توجه داشته باشید</string>
 <string name="payment_received">حقوق دریافتی</string>
 <string name="import_brainkey">واردات از BrainKey</string>
-<string name="import_backup">واردات پشتیبان</string>
+<string name="import_backup_old">واردات پشتیبان</string>
 <string name="choose_backup">انتخاب پشتیبان گیری</string>
 <string name="choose_file">انتخاب فایل</string>
-<string name="no_file_chosen">هیچ فایلی انتخاب نشده است</string>
+    <string name="unable_to_import_account_from_bin_file">وارد کردن حساب از فایل بن</string>
+    <string name="importing_keys_from_bin_file">واردات کلید از فایل بن</string>
+    <string name="import_backup">پشتیبان گیری از فایل .BIN</string>
+    <string name="is_already_added">در حال حاضر به اضافه</string>
+    <string name="in_valid_email">ایمیل نامعتبر</string>
+    <string name="select">انتخاب کنید</string>
+    <string name="are_you_sure">شما مطمئن هستید؟</string>
+
+    <string name="no_file_chosen">هیچ فایلی انتخاب نشده است</string>
 <string name="account_label">انتخاب فایل</string>
 <string name="loading_msg">لطفا صبر کنید تا تعادل در حال بارگذاری</string>
 <string name="txt_6_digits_pin">پین 6 رقم</string>

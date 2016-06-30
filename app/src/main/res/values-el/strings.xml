@@ -12,7 +12,7 @@
 <string name="note">Σημείωση</string>
 <string name="payment_received">Η πληρωμή ελήφθη</string>
 <string name="import_brainkey">Εισαγωγή από BrainKey</string>
-<string name="import_backup">εισαγωγής αντιγράφων ασφαλείας</string>
+<string name="import_backup_old">εισαγωγής αντιγράφων ασφαλείας</string>
 <string name="choose_backup">Επιλέξτε Δημιουργία αντιγράφων ασφαλείας</string>
 <string name="choose_file">Επιλέξτε το αρχείο</string>
 <string name="no_file_chosen">Δεν υπάρχει αρχείο έχει επιλεγεί</string>
@@ -21,7 +21,15 @@
 <string name="txt_6_digits_pin">PIN 6-ψηφία</string>
 <string name="txt_6_digits_pin_confirm">Επιβεβαιώστε το PIN 6-ψηφία</string>
 <string name="create">ΔΗΜΙΟΥΡΓΏ</string>
-<string name="existing_account">υπάρχοντα λογαριασμό</string>
+    <string name="unable_to_import_account_from_bin_file">Δεν είναι δυνατή η εισαγωγή του λογαριασμού από το αρχείο bin</string>
+    <string name="importing_keys_from_bin_file">Εισαγωγή κλειδιά από το αρχείο Bin</string>
+    <string name="import_backup">Εισαγωγής αντιγράφων ασφαλείας από .bin αρχείο</string>
+    <string name="is_already_added">έχει ήδη προστεθεί</string>
+    <string name="in_valid_email">Άκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου</string>
+    <string name="select">Επιλέγω</string>
+    <string name="are_you_sure">Είσαι σίγουρος?</string>
+
+    <string name="existing_account">υπάρχοντα λογαριασμό</string>
 <string name="agreement">Συμφωνία</string>
 <string name="cancel_and_exit">Ακύρωση και Έξοδος</string>
 <string name="i_agree">Συμφωνώ</string>

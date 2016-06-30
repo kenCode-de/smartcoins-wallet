@@ -12,7 +12,7 @@
 <string name="note">Nota</string>
 <string name="payment_received">Pago recibido</string>
 <string name="import_brainkey">Importar de BrainKey</string>
-<string name="import_backup">importación de copia de seguridad</string>
+<string name="import_backup_old">importación de copia de seguridad</string>
 <string name="choose_backup">Seleccione Copia de seguridad</string>
 <string name="choose_file">Elija el archivo</string>
 <string name="no_file_chosen">Ningún archivo elegido</string>
@@ -23,7 +23,15 @@
 <string name="create">CREAR</string>
 <string name="existing_account">Cuenta existente</string>
 <string name="agreement">Acuerdo</string>
-<string name="cancel_and_exit">Cancelar y Salir</string>
+    <string name="unable_to_import_account_from_bin_file">No se puede importar la cuenta del archivo del compartimiento</string>
+    <string name="importing_keys_from_bin_file">La importación de claves de archivo Bin</string>
+    <string name="import_backup">Importación de copia de seguridad del archivo .bin</string>
+    <string name="is_already_added">ya se ha añadido</string>
+    <string name="in_valid_email">Email inválido</string>
+    <string name="select">Seleccionar</string>
+    <string name="are_you_sure">¿Estás seguro?</string>
+
+    <string name="cancel_and_exit">Cancelar y Salir</string>
 <string name="i_agree">Estoy de acuerdo</string>
 <string name="kindly_create_account">Amablemente Entrar</string>
 <string name="please_enter_old_6_digit_pin">Por favor, introduzca pasador de edad de 6 dígitos</string>
