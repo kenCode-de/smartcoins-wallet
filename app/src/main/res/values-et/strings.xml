@@ -12,10 +12,18 @@
 <string name="note">Märge</string>
 <string name="payment_received">makse vastu</string>
 <string name="import_brainkey">Import BrainKey</string>
-<string name="import_backup">Import Backup</string>
+<string name="import_backup_old">Import Backup</string>
 <string name="choose_backup">Vali Backup</string>
 <string name="choose_file">Vali Fail</string>
-<string name="no_file_chosen">Faili pole valitud</string>
+    <string name="unable_to_import_account_from_bin_file">Ei suutnud oma konto bin faili</string>
+    <string name="importing_keys_from_bin_file">Importimine võtmed Bin faili</string>
+    <string name="import_backup">Import Backup alates Bin faili</string>
+    <string name="is_already_added">on juba lisatud</string>
+    <string name="in_valid_email">Vale Post</string>
+    <string name="select">valima</string>
+    <string name="are_you_sure">Oled sa kindel?</string>
+
+    <string name="no_file_chosen">Faili pole valitud</string>
 <string name="account_label">Vali Fail</string>
 <string name="loading_msg">Palun oodake, kuni Kaalud laadimisel</string>
 <string name="txt_6_digits_pin">6-kohaline PIN</string>

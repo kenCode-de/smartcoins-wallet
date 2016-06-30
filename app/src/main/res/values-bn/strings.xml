@@ -13,7 +13,7 @@
 <string name="note">বিঃদ্রঃ</string>
 <string name="payment_received">পেমেন্ট পেয়েছি</string>
 <string name="import_brainkey">BrainKey থেকে আমদানি</string>
-<string name="import_backup">আমদানি ব্যাকআপ</string>
+<string name="import_backup_old">আমদানি ব্যাকআপ</string>
 <string name="choose_backup">ব্যাকআপ নির্বাচন করুন</string>
 <string name="choose_file">ফাইল পছন্দ কর</string>
 <string name="no_file_chosen">কোনো ফাইল পছন্দ করা হইনি</string>
@@ -176,5 +176,12 @@
     <string name="email_name">এই যোগাযোগ জন্য একটি ছবির প্রদর্শন করার জন্য, তার Gravatar ই-মেইল এখানে লিখুন</string>
     <string name="upgrade_success">সফল আপগ্রেড করুন!</string>
     <string name="copied_to_clipboard">ক্লিপবোর্ডে অনুলিপি</string>
+    <string name="unable_to_import_account_from_bin_file">বিন ফাইল থেকে একাউন্ট আমদানি করতে অক্ষম</string>
+    <string name="importing_keys_from_bin_file">বিন ফাইল থেকে কী-সমুহ আমদানি হচ্ছে</string>
+    <string name="import_backup">.bin ফাইল থেকে আমদানি ব্যাকআপ</string>
+    <string name="is_already_added">ইতিমধ্যে যোগ করা হয়</string>
+    <string name="in_valid_email">অবৈধ ইমেল</string>
+    <string name="select">নির্বাচন করা</string>
+    <string name="are_you_sure">তুমি কি নিশ্চিত?</string>
 
 </resources>

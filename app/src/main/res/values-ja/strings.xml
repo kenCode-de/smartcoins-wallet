@@ -13,7 +13,7 @@
 <string name="note">注意</string>
 <string name="payment_received">お支払い頂いた</string>
 <string name="import_brainkey">BrainKeyからインポート</string>
-<string name="import_backup">インポートバックアップ</string>
+<string name="import_backup_old">インポートバックアップ</string>
 <string name="choose_backup">バックアップを選択します。</string>
 <string name="choose_file">ファイルを選ぶ</string>
 <string name="no_file_chosen">いいえファイルが選択されません</string>
@@ -24,7 +24,15 @@
 <string name="create">CREATE</string>
 <string name="existing_account">既存のアカウント</string>
 <string name="agreement">契約</string>
-<string name="cancel_and_exit">キャンセルして終了</string>
+    <string name="unable_to_import_account_from_bin_file">binファイルからアカウントをインポートすることができません。</string>
+    <string name="importing_keys_from_bin_file">ビンファイルからキーをインポートします</string>
+    <string name="import_backup">.binのファイルからインポートバックアップ</string>
+    <string name="is_already_added">すでに追加されています</string>
+    <string name="in_valid_email">無効なメール</string>
+    <string name="select">選択します</string>
+    <string name="are_you_sure">本気ですか？</string>
+
+    <string name="cancel_and_exit">キャンセルして終了</string>
 <string name="i_agree">同意する</string>
 <string name="kindly_create_account">親切にアカウントを作成します</string>
 <string name="please_enter_old_6_digit_pin">生後6桁のPINを入力してください。</string>

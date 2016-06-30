@@ -12,7 +12,7 @@
 <string name="note">jegyzet</string>
 <string name="payment_received">Beérkezett fizetés</string>
 <string name="import_brainkey">Importálás BrainKey</string>
-<string name="import_backup">import Backup</string>
+<string name="import_backup_old">import Backup</string>
 <string name="choose_backup">a biztonsági másolat</string>
 <string name="choose_file">Válassz fájlt</string>
 <string name="no_file_chosen">Nincs kiválasztva fájl</string>
@@ -25,7 +25,15 @@
 <string name="agreement">Megegyezés</string>
 <string name="cancel_and_exit">Mégsem és Kilépés</string>
 <string name="i_agree">Egyetértek</string>
-<string name="kindly_create_account">Kedves fiók létrehozása</string>
+    <string name="unable_to_import_account_from_bin_file">Nem sikerült importálni fiókot bin fájlt</string>
+    <string name="importing_keys_from_bin_file">Importálása Keys Bin fájl</string>
+    <string name="import_backup">Import Backup .bin fájlt</string>
+    <string name="is_already_added">már hozzá van adva</string>
+    <string name="in_valid_email">Érvénytelen e-mail</string>
+    <string name="select">választ</string>
+    <string name="are_you_sure">biztos vagy ebben?</string>
+
+    <string name="kindly_create_account">Kedves fiók létrehozása</string>
 <string name="please_enter_old_6_digit_pin">Kérjük, adja meg a régi 6-jegyű pin</string>
 <string name="please_enter_6_digit_pin">Kérjük, írja be 6 jegyű pin</string>
 <string name="please_enter_6_digit_pin_confirm">Kérjük, írja be 6 jegyű PIN megerősítés</string>

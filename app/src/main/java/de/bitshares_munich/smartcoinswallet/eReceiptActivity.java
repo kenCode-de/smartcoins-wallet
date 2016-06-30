@@ -24,7 +24,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.utils.Application;
@@ -40,7 +40,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
+public class eReceiptActivity extends BaseActivity implements IBalancesDelegate {
     Context context;
     Application application = new Application();
 
@@ -98,7 +98,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
         ButterKnife.bind(this);
 
         context = getApplicationContext();
-        application.registerBalancesDelegate(this);
+        application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
 
         Intent intent = getIntent();
@@ -122,14 +122,14 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id) {
-        if(id==9)
+        if(id==18)
         {
             //String result = SupportMethods.ParseJsonObject(s,"result");
             //String time = SupportMethods.ParseJsonObject(result,"timestamp");
             assets_id_in_work=0;
-            get_asset(Assetid.get(assets_id_in_work),"11");
+            get_asset(Assetid.get(assets_id_in_work),"19");
         }
-        else if(id==11)
+        else if(id==19)
         {
             if (assets_id_in_work < assets_id_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
@@ -144,7 +144,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
                          onLastCall();
                 }
                 assets_id_in_work++;
-                if(assets_id_in_work<Assetid.size()) get_asset(Assetid.get(assets_id_in_work),"11");
+                if(assets_id_in_work<Assetid.size()) get_asset(Assetid.get(assets_id_in_work),"19");
             }
         }
     }
@@ -242,7 +242,7 @@ public class eReceiptActivity extends BaseActivity implements BalancesDelegate {
         Memomap.put("nonce", SupportMethods.ParseJsonObject(OPmap.get("memo"), "nonce"));
         Memomap.put("message", SupportMethods.ParseJsonObject(OPmap.get("memo"), "message"));
 
-        get_Time(eReciptmap.get("block_num"),"9");
+        get_Time(eReciptmap.get("block_num"),"18");
 
         Assetid.add(Freemap.get("asset_id"));
         Assetid.add(Amountmap.get("asset_id"));

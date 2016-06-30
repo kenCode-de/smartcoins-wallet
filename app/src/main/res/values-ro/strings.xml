@@ -12,7 +12,7 @@
 <string name="note">Notă</string>
 <string name="payment_received">Plata primita</string>
 <string name="import_brainkey">Import din BrainKey</string>
-<string name="import_backup">import de backup</string>
+<string name="import_backup_old">import de backup</string>
 <string name="choose_backup">alege Backup</string>
 <string name="choose_file">Alege fișierul</string>
 <string name="no_file_chosen">Niciun fișier ales</string>
@@ -24,8 +24,15 @@
 <string name="existing_account">cont existent</string>
 <string name="agreement">Acord</string>
 <string name="cancel_and_exit">Anulare și Ieșire</string>
-<string name="i_agree">Sunt de acord</string>
-<string name="kindly_create_account">Kindly Creare cont</string>
+<string name="i_agree">Sunt de acord</string><string name="unable_to_import_account_from_bin_file">Nu se poate importa contul de fișier bin</string>
+    <string name="importing_keys_from_bin_file">Se importă chei din fișierul Bin</string>
+    <string name="import_backup">Import de rezervă din fișierul .bin</string>
+    <string name="is_already_added">este deja adăugată</string>
+    <string name="in_valid_email">E-mail invalid</string>
+    <string name="select">Selectați</string>
+    <string name="are_you_sure">Esti sigur?</string>
+
+    <string name="kindly_create_account">Kindly Creare cont</string>
 <string name="please_enter_old_6_digit_pin">Vă rugăm să introduceți vechiul cod PIN format din 6 cifre</string>
 <string name="please_enter_6_digit_pin">Vă rugăm să introduceți 6 cifre pini</string>
 <string name="please_enter_6_digit_pin_confirm">Vă rugăm să introduceți PIN-ul de confirmare din 6 cifre</string>

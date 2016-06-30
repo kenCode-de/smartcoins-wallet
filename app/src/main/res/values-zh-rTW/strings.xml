@@ -10,9 +10,17 @@
 <string name="friendly_name">好記的名稱</string>
 <string name="notes">筆記</string>
 <string name="note">注意</string>
-<string name="payment_received">已收到付款</string>
+    <string name="unable_to_import_account_from_bin_file">無法從bin文件導入帳戶</string>
+    <string name="importing_keys_from_bin_file">從.bin文件導入密鑰</string>
+    <string name="import_backup">從.bin文件導入備份</string>
+    <string name="is_already_added">已添加</string>
+    <string name="in_valid_email">不合規電郵</string>
+    <string name="select">選擇</string>
+    <string name="are_you_sure">你確定？</string>
+
+    <string name="payment_received">已收到付款</string>
 <string name="import_brainkey">從BrainKey導入</string>
-<string name="import_backup">導入備份</string>
+<string name="import_backup_old">導入備份</string>
 <string name="choose_backup">選擇備份</string>
 <string name="choose_file">選擇文件</string>
 <string name="no_file_chosen">沒有選中任何文件</string>

@@ -29,7 +29,7 @@ import java.util.TimeZone;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.DecodeMemo;
@@ -49,7 +49,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/20/16.
  */
-public class TransactionActivity implements BalancesDelegate {
+public class TransactionActivity implements IBalancesDelegate {
     Context context;
     AssetDelegate assetDelegate;
     Application application = new Application();
@@ -74,7 +74,7 @@ public class TransactionActivity implements BalancesDelegate {
     HashMap<String,String> decodememos = new HashMap<>();;
     HashMap<String,String> eRecipts = new HashMap<>();;
 
-    BalancesDelegate balancesDelegate;
+    IBalancesDelegate balancesDelegate;
     String accountid;
     List<String> ofNames = new ArrayList<>();
     List<String> asset_ids = new ArrayList<>();
@@ -87,7 +87,7 @@ public class TransactionActivity implements BalancesDelegate {
         context = c;
         assetDelegate = instance;
         balancesDelegate = this;
-        application.registerBalancesDelegate(this);
+        application.registerBalancesDelegateTransaction(this);
         accountid = account_id;
         timestamp = new HashMap<>();
 

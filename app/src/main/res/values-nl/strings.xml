@@ -12,10 +12,18 @@
 <string name="note">Notitie</string>
 <string name="payment_received">Betaling ontvangen</string>
 <string name="import_brainkey">Importeren uit BrainKey</string>
-<string name="import_backup">import Backup</string>
+<string name="import_backup_old">import Backup</string>
 <string name="choose_backup">Kies Backup</string>
 <string name="choose_file">Kies bestand</string>
-<string name="no_file_chosen">Geen bestand gekozen</string>
+    <string name="unable_to_import_account_from_bin_file">Kan account importeren uit bin file</string>
+    <string name="importing_keys_from_bin_file">Importeren Sleutels van Bin bestand</string>
+    <string name="import_backup">Import Backup van BIN-bestand</string>
+    <string name="is_already_added">is al toegevoegd</string>
+    <string name="in_valid_email">Ongeldig e-mail</string>
+    <string name="select">kiezen</string>
+    <string name="are_you_sure">Weet je het zeker?</string>
+
+    <string name="no_file_chosen">Geen bestand gekozen</string>
 <string name="account_label">Kies bestand</string>
 <string name="loading_msg">Wacht tot Tegoeden worden geladen</string>
 <string name="txt_6_digits_pin">6-cijfers PIN</string>

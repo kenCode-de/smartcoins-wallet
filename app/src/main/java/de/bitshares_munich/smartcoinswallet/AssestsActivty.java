@@ -14,61 +14,65 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.BalancesDelegate;
+import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.SupportMethods;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
  */
-public class AssestsActivty  implements BalancesDelegate {
-    BalancesLoad balancesLoad;
+public class AssestsActivty  implements IBalancesDelegate {
+    //BalancesLoad balancesLoad;
     ArrayList<String> ids;
     ArrayList<String> precisons;
     ArrayList<String> symbols;
     ArrayList<String> ammount;
     Context context;
     AssetDelegate assetDelegate;
-    Application application = new Application();
+    Application application;
 
-
-    public AssestsActivty(Context c,String account_name , AssetDelegate instance){
+    public AssestsActivty(Context c,String account_name , AssetDelegate instance, Application app){
         context = c;
+        application = app;
         ids = new ArrayList<>();
         precisons = new ArrayList<>();
         symbols = new ArrayList<>();
         ammount = new ArrayList<>();
-     //   application.registerBalancesDelegate(this);
-
-          balancesLoad = new BalancesLoad(context,this);
         assetDelegate = instance;
 
-       balancesLoad.get_json_account_balances(account_name,"999");
-//        try{
-//        if(account_name!=null)
-//        get_json_account_balances(account_name,"999");
-//        else SupportMethods.testing("assests","null","account_name");}
-//        catch (Exception e){
-//
-//        }
+        /*
+        balancesLoad = new BalancesLoad(context,this);
+        assetDelegate = instance;
+        balancesLoad.get_json_account_balances(account_name,"999");
+        */
+    }
 
+    public void registerDelegate ()
+    {
+        application.registerBalancesDelegateAssets(this);
+    }
+
+    public void loadBalances(String account_name)
+    {
+        get_json_account_balances(account_name,"999");
     }
 
 
-    void get_json_account_balances(final String account_name,final String id) {
+    void get_json_account_balances(final String account_name,final String id)
+    {
         final Handler handler = new Handler();
 
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
+                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && Application.isReady )
                 {
-        String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
-        Application.webSocketG.send(getDetails);
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
+                    Application.webSocketG.send(getDetails);
                 }
-                else {
+                else
+                {
                     get_json_account_balances(account_name,"999");
-
                 }
             }
         };
@@ -135,34 +139,41 @@ public class AssestsActivty  implements BalancesDelegate {
             if (json instanceof JSONObject){
                 pair = jsonToMap(s);
                 if(pair.containsKey("asset_id"))
-                    balancesLoad.get_asset(pair.get("asset_id"),"99");
+                    get_asset(pair.get("asset_id"),"99");
             }
             else if(json instanceof JSONArray){
                 pairs = jsonArrayToMap(s);
                 if(pairs.containsKey("asset_id"))
-                    balancesLoad.get_asset(pairs.get("asset_id"),"99");
+                    get_asset(pairs.get("asset_id"),"99");
             }
         }catch (Exception e){
 
         }
     }
 
+
     @Override
     public void OnUpdate(String s,int id){
         SupportMethods.testing("assests",s,"ids");
 
         String convert;
-        try {
-            if (id == 999) {
+        try
+        {
+            if (id == 999)
+            {
                 JSONObject jsonObject = new JSONObject(s);
-                if (jsonObject.has("result")) {
+                if (jsonObject.has("result"))
+                {
                     convert = jsonObject.getString("result");
                     getJson(convert);
                 }
             }
-        }catch (Exception e){
-
         }
+        catch (Exception e)
+        {
+            Log.d("Parse balances",e.getMessage());
+        }
+
         if(id==99) {
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
@@ -171,10 +182,9 @@ public class AssestsActivty  implements BalancesDelegate {
                 symbols = returnRootValues(result, "symbol");
                 AddinAssets();
             }
-
         }
-
     }
+
     String returnParse(String Json , String req){
         try {
             if(Json.contains(req)){

@@ -12,10 +12,18 @@
 <string name="note">pastaba</string>
 <string name="payment_received">Apmokėjimas gautas</string>
 <string name="import_brainkey">Importas iš BrainKey</string>
-<string name="import_backup">importas Atsarginė</string>
+<string name="import_backup_old">importas Atsarginė</string>
 <string name="choose_backup">Pasirinkite Backup</string>
 <string name="choose_file">Pasirinkti failą</string>
-<string name="no_file_chosen">pasirinkta Nėra failų</string>
+    <string name="unable_to_import_account_from_bin_file">Nepavyko importuoti sąskaitą iš bin failo</string>
+    <string name="importing_keys_from_bin_file">Importuoti raktus Bin failą</string>
+    <string name="import_backup">Importas Atsarginė iš .bin failą</string>
+    <string name="is_already_added">jau pridėta</string>
+    <string name="in_valid_email">Neteisingas el. pašto adresas</string>
+    <string name="select">pasirinkti</string>
+    <string name="are_you_sure">Ar tu tuo tikras?</string>
+
+    <string name="no_file_chosen">pasirinkta Nėra failų</string>
 <string name="account_label">Pasirinkti failą</string>
 <string name="loading_msg">Prašome palaukti, kol likučiai dedate</string>
 <string name="txt_6_digits_pin">6-skaitmenų PIN kodą</string>
