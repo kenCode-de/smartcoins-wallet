@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -156,6 +157,18 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
+                        /*
+                        Crypt cr = new Crypt();
+                        try {
+                            String unenWif = cr.decrypt_string(accountDetails.wif_key);
+                            String unenBrn = cr.decrypt_string(accountDetails.brain_key);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.d("decrypt",e.getMessage());
+                        }
+                        */
+
                         addWallet(accountDetails,brainKey,pinCode);
                     }
 
