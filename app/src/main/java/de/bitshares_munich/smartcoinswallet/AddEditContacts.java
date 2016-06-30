@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/25/16.
  */
-public class AddEditContacts extends BaseActivity implements IAccount{
+public class AddEditContacts extends BaseActivity implements IAccount {
     Boolean add = false;
     Boolean edit = false;
     TinyDB tinyDB;
@@ -119,33 +120,33 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         //loadWebView(39, Helper.hash("", Helper.MD5));
         loadWebView(39, Helper.hash("", Helper.SHA256));
 
-        emailHead.setText(context.getString(R.string.email_name)+" :");
+        emailHead.setText(context.getString(R.string.email_name) + " :");
         SaveContact.setEnabled(false);
-        SaveContact.setBackgroundColor(getColorWrapper(context,R.color.gray));
-        cancelContact.setBackgroundColor(getColorWrapper(context,R.color.red));
+        SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
+        cancelContact.setBackgroundColor(getColorWrapper(context, R.color.red));
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
-        if(res!=null) {
+        if (res != null) {
             if (res.containsKey("activity")) {
-                if(res.getInt("activity")==99999){
+                if (res.getInt("activity") == 99999) {
                     add = true;
                     setTitle(getResources().getString(R.string.add_contact_activity_name));
                     SaveContact.setText(R.string.add_contact);
                 }
-            }else if(res.containsKey("id")) {
+            } else if (res.containsKey("id")) {
 
                 edit = true;
                 setTitle(getResources().getString(R.string.edit_contact_activity_name));
 
                 contact_id = Integer.toString(res.getInt("id"));
 
-                if(res.containsKey("name")) contactname = res.getString("name");
+                if (res.containsKey("name")) contactname = res.getString("name");
 
-                if(res.containsKey("account")) accountid = res.getString("account");
+                if (res.containsKey("account")) accountid = res.getString("account");
 
-                if(res.containsKey("note")) note = res.getString("note");
+                if (res.containsKey("note")) note = res.getString("note");
 
-                if(res.containsKey("email")) emailtxt = res.getString("email");
+                if (res.containsKey("email")) emailtxt = res.getString("email");
 
                 Contactname.setText(contactname);
                 Accountname.setText(accountid);
@@ -155,7 +156,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 setOnEmail();
             }
 
-           // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
+            // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
         }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -166,7 +167,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                 Boolean emailEnabled = false;
                 Boolean checkAccountid = false;
                 //Do something after 100ms
-                if(edit && validReceiver){
+                if (edit && validReceiver) {
                     if (Contactname.getText().toString().equals(contactname)) {
                         contactNameEnabled = false;
                     } else {
@@ -182,47 +183,52 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                     } else {
                         emailEnabled = true;
                     }
-                    if(contactNameEnabled || noteEnabled || emailEnabled){
+                    if (contactNameEnabled || noteEnabled || emailEnabled) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                         SaveContact.setEnabled(true);
                     }
-                    if(!contactNameEnabled && !noteEnabled && !emailEnabled) {
+                    if (!contactNameEnabled && !noteEnabled && !emailEnabled) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         SaveContact.setEnabled(false);
                     }
-                    if(!Accountname.getText().toString().equals(accountid) && validReceiver){
+                    if (!Accountname.getText().toString().equals(accountid) && validReceiver) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                         SaveContact.setEnabled(true);
                     }
                 }
-                if(add){
-                    if(validReceiver){
+                if (add) {
+                    if (validReceiver) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                         SaveContact.setEnabled(true);
-                    }else {
+                    } else {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         SaveContact.setEnabled(false);
                     }
                 }
-                if(Accountname.getText().length()==0)
-                {
+                if (Accountname.getText().length() == 0) {
                     SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                     SaveContact.setEnabled(false);
                 }
 
-                handler.postDelayed(this, 100);
+                ColorDrawable buttonColor = (ColorDrawable) SaveContact.getBackground();
+                int colorId = buttonColor.getColor();
+                if (colorId == R.color.green) {
+                    SaveContact.setEnabled(true);
+                }
+                handler.postDelayed(this, 2000);
             }
-        }, 100);
+        }, 2000);
     }
+
     @OnClick(R.id.SaveContact)
-    public void AddContatcs(){
+    public void AddContatcs() {
         ListViewActivity.ListviewContactItem contact = new ListViewActivity.ListviewContactItem();
         ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         String _contactname = Contactname.getText().toString();
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();
         String _email = etEmail.getText().toString();
-        if(add){
+        if (add) {
             contact.SaveNote(_note);
             contact.SetName(_contactname);
             contact.SetAccount(_accountid);
@@ -230,25 +236,28 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             contacts.add(contact);
             Collections.sort(contacts, new ContactNameComparator());
             tinyDB.putContactsObject("Contacts", contacts);
-        }else if (edit){
-            if(!_contactname.equals(contactname)) contacts.get(Integer.parseInt(contact_id)).SetName(_contactname);
-            if(!_accountid.equals(accountid)) contacts.get(Integer.parseInt(contact_id)).SetAccount(_accountid);
-            if(!_note.equals(note)) contacts.get(Integer.parseInt(contact_id)).SaveNote(_note);
-            if(!_email.equals(emailtxt)) contacts.get(Integer.parseInt(contact_id)).SaveEmail(_email);
+        } else if (edit) {
+            if (!_contactname.equals(contactname))
+                contacts.get(Integer.parseInt(contact_id)).SetName(_contactname);
+            if (!_accountid.equals(accountid))
+                contacts.get(Integer.parseInt(contact_id)).SetAccount(_accountid);
+            if (!_note.equals(note)) contacts.get(Integer.parseInt(contact_id)).SaveNote(_note);
+            if (!_email.equals(emailtxt))
+                contacts.get(Integer.parseInt(contact_id)).SaveEmail(_email);
             Collections.sort(contacts, new ContactNameComparator());
             tinyDB.putContactsObject("Contacts", contacts);
         }
-        contactsDelegate.OnUpdate("knysys",29);
+        contactsDelegate.OnUpdate("knysys", 29);
         finish();
     }
 
-    Boolean checkIfAlreadyAdded(){
+    Boolean checkIfAlreadyAdded() {
         ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         String _accountid = Accountname.getText().toString();
 
         for (int i = 0; i < contacts.size(); i++) {
 
-            if(contacts.get(i).account.equals(_accountid)){
+            if (contacts.get(i).account.equals(_accountid)) {
                 return true;
             }
 
@@ -264,6 +273,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
         webSettings.setJavaScriptEnabled(true);
         web.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
+
     @OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
         loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
@@ -276,25 +286,30 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             Accountname.setText(text.toString().trim());
         }
 
+        if(!Accountname.getText().toString().equals(accountid)) {
+            if (Accountname.getText().length() > 0) {
 
-        if (Accountname.getText().length() > 0) {
+                validReceiver = false;
 
-            validReceiver = false;
+                // loadWebView(39, Helper.md5(Accountname.getText().toString()));
 
-           // loadWebView(39, Helper.md5(Accountname.getText().toString()));
+                loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
 
-            loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
 
-            myLowerCaseTimer.cancel();
-            myAccountNameValidationTimer.cancel();
-            myLowerCaseTimer.start();
-            myAccountNameValidationTimer.start();
+                myLowerCaseTimer.cancel();
+                myAccountNameValidationTimer.cancel();
+                myLowerCaseTimer.start();
+                myAccountNameValidationTimer.start();
+            }
+        }else{
+            warning.setText("");
         }
 
     }
+
     @OnTextChanged(R.id.Contactname)
     void onTextChangedName(CharSequence text) {
-        if(edit) {
+        if (edit) {
             if (Contactname.getText().toString().equals(contactname)) {
                 SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                 SaveContact.setEnabled(false);
@@ -304,9 +319,10 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             }
         }
     }
+
     @OnTextChanged(R.id.note)
     void onTextChangedNote(CharSequence text) {
-        if(edit) {
+        if (edit) {
             if (Note.getText().toString().equals(note)) {
                 SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                 SaveContact.setEnabled(false);
@@ -316,26 +332,27 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             }
         }
     }
-    void setOnEmail(){
-        if(etEmail.getText().toString().length()>0) {
-            if(SupportMethods.isEmailValid(etEmail.getText().toString())) {
+
+    void setOnEmail() {
+        if (etEmail.getText().toString().length() > 0) {
+            if (SupportMethods.isEmailValid(etEmail.getText().toString())) {
                 imageEmail.setVisibility(View.VISIBLE);
                 web.setVisibility(View.GONE);
                 tvWarningEmail.setText("");
                 setGravator(etEmail.getText().toString(), imageEmail);
-            }else {
+            } else {
                 tvWarningEmail.setText("Invalid Email");
                 tvWarningEmail.setTextColor(getColorWrapper(context, R.color.red));
             }
         }
-        if(etEmail.getText().toString().length()<=0) {
+        if (etEmail.getText().toString().length() <= 0) {
             imageEmail.setVisibility(View.GONE);
             web.setVisibility(View.VISIBLE);
             tvWarningEmail.setText("");
             // setGravator(text.toString(), imageEmail);
         }
 
-        if(edit) {
+        if (edit) {
             if (etEmail.getText().toString().equals(emailtxt)) {
                 SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                 SaveContact.setEnabled(false);
@@ -345,20 +362,32 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             }
         }
     }
+
     @OnFocusChange(R.id.email)
     void onTextFocusChangedEmail(boolean hasFocus) {
         setOnEmail();
     }
+
     @OnTextChanged(R.id.email)
     void onTextChangedEmail() {
-        if (!etEmail.toString().equals(etEmail.toString().trim())) {
-            etEmail.setText(etEmail.toString().trim());
+        String sEmail =  etEmail.getText().toString();
+
+        boolean hasSpecial   =  !sEmail.equals(sEmail.toLowerCase());
+
+        if(hasSpecial) {
+            etEmail.setText("");
+            etEmail.append(sEmail.toLowerCase());
+        }
+        if (!etEmail.getText().toString().equals(etEmail.getText().toString().trim())) {
+            etEmail.setText(etEmail.getText().toString().trim());
         }
     }
+
     @OnClick(R.id.CancelContact)
-    public void Cancel(){
+    public void Cancel() {
         finish();
     }
+
     CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
         public void onTick(long millisUntilFinished) {
         }
@@ -370,7 +399,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             }
         }
     };
-    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(1000, 1000) {
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 1000) {
         public void onTick(long millisUntilFinished) {
         }
 
@@ -378,31 +407,36 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             createBitShareAN(false);
         }
     };
+
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-           // warning.setText("");
+            // warning.setText("");
             //warning.setVisibility(View.GONE);
             if (Accountname.getText().length() > 2) {
-                if(!checkIfAlreadyAdded()) {
+                if (!checkIfAlreadyAdded()) {
                     if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
                         String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                         Application.webSocketG.send(socketText);
 
                     }
                 }else {
-                    warning.setText(Accountname.getText().toString()+"is already added");
+
+                    warning.setText(Accountname.getText().toString() + " is already added");
+
                     warning.setTextColor(getColorWrapper(context, R.color.red));
                 }
 
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-               // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
+                // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
                 loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
+                warning.setText("");
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
             }
         }
     }
+
     @Override
     public void checkAccount(JSONObject jsonObject) {
 
@@ -433,7 +467,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
                     }
                 });
             }
-            if (!found){
+            if (!found) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -453,6 +487,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
 
         }
     }
+
     public static int getColorWrapper(Context context, int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return context.getColor(id);
@@ -460,6 +495,7 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             return context.getResources().getColor(id);
         }
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -477,34 +513,34 @@ public class AddEditContacts extends BaseActivity implements IAccount{
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha",e.getMessage(),"error");
+                SupportMethods.testing("alpha", e.getMessage(), "error");
             }
             return mIcon11;
         }
 
         protected void onPostExecute(Bitmap result) {
-            if(result==null) {
+            if (result == null) {
                 bmImage.setVisibility(View.GONE);
                 web.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 Bitmap corner = getRoundedCornerBitmap(result);
                 bmImage.setImageBitmap(corner);
             }
         }
     }
-    void setGravator(String email,ImageView imageEmail){
-        String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
+
+    void setGravator(String email, ImageView imageEmail) {
+        String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
         new DownloadImageTask(imageEmail)
                 .execute(emailGravatarUrl);
     }
 
-    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
-    {
+    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem> {
         public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
             return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }
+
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
