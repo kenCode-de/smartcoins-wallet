@@ -13,7 +13,7 @@
 <string name="note">Nota</string>
 <string name="payment_received">Pagament rebut</string>
 <string name="import_brainkey">Importa de BrainKey</string>
-<string name="import_backup">importació de còpia de seguretat</string>
+<string name="import_backup_old">importació de còpia de seguretat</string>
 <string name="choose_backup">Seleccioneu Còpia de seguretat</string>
 <string name="choose_file">Trieu l\'arxiu</string>
 <string name="no_file_chosen">Cap arxiu triat</string>
@@ -26,7 +26,15 @@
 <string name="agreement">acord</string>
 <string name="cancel_and_exit">Cancel·lar i Sortir</string>
 <string name="i_agree">Estic dacord</string>
-<string name="kindly_create_account">amablement Entrada</string>
+    <string name="unable_to_import_account_from_bin_file">No es pot importar el compte de l\'arxiu del compartiment</string>
+    <string name="importing_keys_from_bin_file">La importació de claus d\'arxiu Bin</string>
+    <string name="import_backup">Importació de còpia de seguretat del fitxer .bin</string>
+    <string name="is_already_added">ja s\'ha afegit</string>
+    <string name="in_valid_email">Email invàlid</string>
+    <string name="select">seleccionar</string>
+    <string name="are_you_sure">Estàs segur?</string>
+
+    <string name="kindly_create_account">amablement Entrada</string>
 <string name="please_enter_old_6_digit_pin">Si us plau, introdueixi passador d\'edat de 6 dígits</string>
 <string name="please_enter_6_digit_pin">Si us plau, introdueixi 6 dígits pin</string>
 <string name="please_enter_6_digit_pin_confirm">Si us plau, introdueixi la confirmació pin 6 dígits</string>

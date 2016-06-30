@@ -13,7 +13,7 @@
 <string name="note">Bilješka</string>
 <string name="payment_received">zaprimljene uplate</string>
 <string name="import_brainkey">Uvoz iz BrainKey</string>
-<string name="import_backup">uvoz Backup</string>
+<string name="import_backup_old">uvoz Backup</string>
 <string name="choose_backup">Odaberite Backup</string>
 <string name="choose_file">Odabrati datoteku</string>
 <string name="no_file_chosen">izabran No file</string>
@@ -26,7 +26,14 @@
 <string name="agreement">sporazum</string>
 <string name="cancel_and_exit">Odustani i Exit</string>
 <string name="i_agree">Slažem se</string>
-<string name="kindly_create_account">Molimo stvoriti račun</string>
+    <string name="unable_to_import_account_from_bin_file">U nemogućnosti da uvoz račun od bin datoteke</string>
+    <string name="importing_keys_from_bin_file">Uvoz Keys iz Bin datoteku</string>
+    <string name="import_backup">Uvoz Backup iz .bin file</string>
+    <string name="is_already_added">već je dodao</string>
+    <string name="in_valid_email">Nevažeći email</string>
+    <string name="select">izabrati</string>
+    <string name="are_you_sure">Jesi li siguran?</string>
+    <string name="kindly_create_account">Molimo stvoriti račun</string>
 <string name="please_enter_old_6_digit_pin">Molimo unesite 6 cifara pin</string>
 <string name="please_enter_6_digit_pin">Molimo unesite 6 cifara pin</string>
 <string name="please_enter_6_digit_pin_confirm">Molimo vas da unesete potvrde pin 6 cifara</string>

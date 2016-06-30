@@ -12,10 +12,18 @@
 <string name="note">Remarque</string>
 <string name="payment_received">Paiement reçu</string>
 <string name="import_brainkey">Importer à partir de BrainKey</string>
-<string name="import_backup">importation de sauvegarde</string>
+<string name="import_backup_old">importation de sauvegarde</string>
 <string name="choose_backup">Choisissez sauvegarde</string>
 <string name="choose_file">Choisissez fichier</string>
-<string name="no_file_chosen">Aucun fichier choisi</string>
+    <string name="unable_to_import_account_from_bin_file">Impossible d\'importer compte à partir du fichier bin</string>
+    <string name="importing_keys_from_bin_file">Importation de clés à partir du fichier Bin</string>
+    <string name="import_backup">Importation de sauvegarde à partir du fichier .bin</string>
+    <string name="is_already_added">est déjà ajouté</string>
+    <string name="in_valid_email">Email invalide</string>
+    <string name="select">Sélectionner</string>
+    <string name="are_you_sure">Êtes-vous sûr?</string>
+
+    <string name="no_file_chosen">Aucun fichier choisi</string>
 <string name="account_label">Choisissez fichier</string>
 <string name="loading_msg">S\'il vous plaît attendre jusqu\'à ce que les soldes chargent</string>
 <string name="txt_6_digits_pin">PIN 6 chiffres</string>

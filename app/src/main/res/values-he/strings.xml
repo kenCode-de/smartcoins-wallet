@@ -12,13 +12,21 @@
 <string name="note">הערה</string>
 <string name="payment_received">תשלום התקבל</string>
 <string name="import_brainkey">ייבוא ​​מ- BrainKey</string>
-<string name="import_backup">גיבוי יבוא</string>
+<string name="import_backup_old">גיבוי יבוא</string>
 <string name="choose_backup">בחר גיבוי</string>
 <string name="choose_file">בחר קובץ</string>
 <string name="no_file_chosen">לא נבחר קובץ</string>
 <string name="account_label">בחר קובץ</string>
 <string name="loading_msg">אנא המתן עד יתרות טוענות</string>
-<string name="txt_6_digits_pin">PIN 6 ספרות</string>
+    <string name="is_already_added">כבר נוסף</string>
+    <string name="in_valid_email">אימייל שגוי</string>
+    <string name="select">בחר</string>
+    <string name="are_you_sure">האם אתה בטוח?</string>
+    <string name="unable_to_import_account_from_bin_file">לא ניתן לייבא את חשבון מקובץ bin</string>
+    <string name="importing_keys_from_bin_file">יבוא מפתחות מקובץ הסל</string>
+    <string name="import_backup">גיבוי יבוא מקובץ? Bin</string>
+
+    <string name="txt_6_digits_pin">PIN 6 ספרות</string>
 <string name="txt_6_digits_pin_confirm">אשר PIN 6 ספרות</string>
 <string name="create">לִיצוֹר</string>
 <string name="existing_account">חשבון קיים</string>

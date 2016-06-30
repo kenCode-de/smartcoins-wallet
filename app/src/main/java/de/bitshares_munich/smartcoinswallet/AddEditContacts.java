@@ -341,7 +341,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 tvWarningEmail.setText("");
                 setGravator(etEmail.getText().toString(), imageEmail);
             } else {
-                tvWarningEmail.setText("Invalid Email");
+                tvWarningEmail.setText(getString(R.string.in_valid_email));
                 tvWarningEmail.setTextColor(getColorWrapper(context, R.color.red));
             }
         }
@@ -421,7 +421,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                     }
                 }else {
 
-                    warning.setText(Accountname.getText().toString() + " is already added");
+                    warning.setText(Accountname.getText().toString() + " " +getString(R.string.is_already_added));
 
                     warning.setTextColor(getColorWrapper(context, R.color.red));
                 }

@@ -12,10 +12,18 @@
 <string name="note">Huomautus</string>
 <string name="payment_received">Maksu vastaanotettu</string>
 <string name="import_brainkey">Tuo BrainKey</string>
-<string name="import_backup">Tuo varmuuskopiointi</string>
+<string name="import_backup_old">Tuo varmuuskopiointi</string>
 <string name="choose_backup">Valitse Backup</string>
 <string name="choose_file">Valitse tiedosto</string>
-<string name="no_file_chosen">Ei tiedostoa valittuna</string>
+    <string name="unable_to_import_account_from_bin_file">Ei voi tuoda tilin bin file</string>
+    <string name="importing_keys_from_bin_file">Tuodaan Keys Bin tiedosto</string>
+    <string name="import_backup">Tuo Varmuuskopiointi Bin tiedosto</string>
+    <string name="is_already_added">on jo lisätty</string>
+    <string name="in_valid_email">Virheellinen sähköpostiosoite</string>
+    <string name="select">valita</string>
+    <string name="are_you_sure">Oletko varma?</string>
+
+    <string name="no_file_chosen">Ei tiedostoa valittuna</string>
 <string name="account_label">Valitse tiedosto</string>
 <string name="loading_msg">Odota kunnes Talletukset ladataan</string>
 <string name="txt_6_digits_pin">6-numerot PIN</string>

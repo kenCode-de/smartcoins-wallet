@@ -7,12 +7,22 @@
 <string name="time_stamp">časovni žig</string>
 <string name="email_pdf">Email PDF</string>
 <string name="account">račun</string>
-<string name="friendly_name">prijazno Ime</string>
+    <string name="unable_to_import_account_from_bin_file">Mogoče uvoziti račun od bin datoteke</string>
+    <string name="importing_keys_from_bin_file">Uvažanje Tipke iz Bin datoteke</string>
+    <string name="import_backup">Uvoz Backup iz .bin datoteke</string>
+    <string name="is_already_added">je že dodan</string>
+    <string name="in_valid_email">Neveljaven e-naslov</string>
+    <string name="select">Izberite</string>
+    <string name="are_you_sure">Ali si prepričan?</string>
+
+
+
+    <string name="friendly_name">prijazno Ime</string>
 <string name="notes">Opombe</string>
 <string name="note">Opomba</string>
 <string name="payment_received">Plačilo sprejeto</string>
 <string name="import_brainkey">Uvoz iz BrainKey</string>
-<string name="import_backup">Uvoz Backup</string>
+<string name="import_backup_old">Uvoz Backup</string>
 <string name="choose_backup">Izberite varnostno kopiranje</string>
 <string name="choose_file">Izberite datoteko</string>
 <string name="no_file_chosen">Nobena datoteka ni izbrana</string>
