@@ -50,6 +50,8 @@ public class ListViewActivity extends BaseAdapter {
         ArrayList<ListviewContactItem> listContact;
         HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
     HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
+    ImageLoader imageLoader = ImageLoader.getInstance();
+
 
     int pos = 0;
     Context context;
@@ -62,6 +64,9 @@ public class ListViewActivity extends BaseAdapter {
             tinyDB = new TinyDB(context);
             mInflater = LayoutInflater.from(context);
             listContact = GetlistContact();
+            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+
+
         }
         @Override
         public int getCount() {
@@ -86,13 +91,17 @@ public class ListViewActivity extends BaseAdapter {
             if (convertView == null)
                 convertView = mInflater.inflate(R.layout.listview_contacts, null);
 
+            if (imageLoader == null) {
+                imageLoader = ImageLoader.getInstance();
+                imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+            }
+
+
             TextView username = (TextView) convertView.findViewById(R.id.username);
             TextView txtaccount = (TextView) convertView.findViewById(R.id.accountname);
             ImageButton delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
             TextView txtnote = (TextView) convertView.findViewById(R.id.note_txt);
-            WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
-            ImageView email = (ImageView) convertView.findViewById(R.id.imageEmail);
-            ImageButton edit = (ImageButton) convertView.findViewById(R.id.editcontact);
+            ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
 
             String accountnm = listContact.get(position).GetAccount();
             txtaccount.setText(accountnm);
@@ -102,11 +111,29 @@ public class ListViewActivity extends BaseAdapter {
 
             txtnote.setText(listContact.get(position).GetNote());
 
-            loadWebView(webView , 50, Helper.hash(accountnm, Helper.SHA256));
+            final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
+            loadWebView(webView , 40, Helper.hash(accountnm, Helper.SHA256));
 
-            if (listContact.get(position).GetEmail() != null) {
-                setGravator(listContact.get(position).GetEmail(), email, accountnm);
-            }
+
+            final ImageView ivEmail = (ImageView) convertView.findViewById(R.id.imageEmail);
+            ivEmail.setImageBitmap(null);
+
+            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(listContact.get(position).GetEmail(), Helper.MD5) + "?s=130&r=pg&d=404";
+            imageLoader.loadImage(emailGravatarUrl, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingStarted(String imageUri, View view) {
+                    if (!listContact.get(position).GetEmail().isEmpty()) {
+                        webView.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    Bitmap corner = getRoundedCornerBitmap(loadedImage);
+                    ivEmail.setImageBitmap(corner);
+                    ivEmail.setVisibility(View.VISIBLE);
+
+                }
+            });
 
 
             delete.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +145,7 @@ public class ListViewActivity extends BaseAdapter {
                 });
 
 
-                edit.setOnClickListener(new View.OnClickListener() {
+            ibEdit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         int index = position;
                         Intent intent = new Intent(context, AddEditContacts.class);
@@ -132,83 +159,9 @@ public class ListViewActivity extends BaseAdapter {
                     }
                 });
 
-//            if (convertView == null) {
-//                convertView = mInflater.inflate(R.layout.listview_contacts, null);
-//                ViewHolder holder= new ViewHolder();
-//                holder.txtname = (TextView) convertView.findViewById(R.id.username);
-//                holder.txtaccount = (TextView) convertView.findViewById(R.id.accountname);
-//                holder.txtnote = (TextView) convertView.findViewById(R.id.note_txt);
-//                holder.webView = (WebView) convertView.findViewById(R.id.webViewContacts);
-//                holder.email = (ImageView) convertView.findViewById(R.id.imageEmail);
-//                holder.edit = (ImageButton) convertView.findViewById(R.id.editcontact);
-//                holder.delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
-//                holder.delete.setTag(pos);
-//                holder.edit.setTag(pos);
-//
-//
-//                holder.edit.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View v) {
-//                        View parentRow = (View) v.getParent();
-//
-//
-//                        Integer index = (Integer) v.getTag();
-//                        Intent intent = new Intent(context, AddEditContacts.class);
-//                        intent.putExtra("id", index);
-//                        intent.putExtra("name", listContact.get(index).GetName());
-//                        intent.putExtra("account", listContact.get(index).GetAccount());
-//                        intent.putExtra("note", listContact.get(index).GetNote());
-//                        intent.putExtra("email", listContact.get(index).GetEmail());
-//                        context.startActivity(intent);
-//
-//                    }
-//                });
-//
-//                holder.delete.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View v) {
-//
-//                        int index = position;
-//                        showDialog(index);
-//
-//                    }
-//                });
-//
-//
-//
-//                convertView.setTag(holder);
-//                pos++;
-//            }
-//            ViewHolder holder = (ViewHolder) convertView.getTag();
-//
-//            String name = listContact.get(position).GetName();
-//                String accountnm = listContact.get(position).GetAccount();
-//                holder.txtname.setText(name);
-//                holder.txtnote.setText(listContact.get(position).GetNote());
-//                holder.txtaccount.setText(accountnm);
-//
-//                loadWebView(holder.webView , 50, Helper.hash(accountnm, Helper.SHA256));
-//
-//
-//
-//                if (images.containsKey(accountnm)) {
-//                    email.setImageBitmap(images.get(accountnm));
-//                    email.setVisibility(View.VISIBLE);
-//                } else {
-//                    if (!notEmail.containsKey(accountnm)) {
-//                        if (listContact.get(position).GetEmail() != null) {
-//                            setGravator(listContact.get(position).GetEmail(), email, accountnm);
-//                        }
-//                    }
-//                }
-//
-//
-
             return convertView;
         }
 
-        static class ViewHolder {
-            TextView txtname, txtaccount ,txtnote;
-            WebView webView; ImageButton edit;ImageButton delete ; ImageView email;
-        }
 
     private ArrayList<ListviewContactItem> GetlistContact(){
         ArrayList<ListviewContactItem> contactlist = new ArrayList<ListviewContactItem>();
@@ -228,16 +181,7 @@ public class ListViewActivity extends BaseAdapter {
 
         return contactlist;
     }
-//    private ArrayList<ListviewContactItem> GetImages(){
-//        ArrayList<ListviewImages> contactlist = new ArrayList<ListviewImages>();
-//        ListviewImages contact = new ListviewImages();
-//
-//        for(int i = 0 ; i < listContact.size() ; i++){
-//            setGravator(listContact.get(position).GetEmail(), holder.email, holder.webView, accountnm);
-//        }
-//
-//        return contactlist;
-//    }
+
     public static class ListviewContactItem{
         String name;
         String email;
@@ -398,20 +342,6 @@ public class ListViewActivity extends BaseAdapter {
 
         return output;
     }
-//    void setGravator(String email,final ImageView imageEmail,final String accountName){
-//
-//        if(!images.containsKey(accountName)) {
-//            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.md5(email) + "?s=130&r=pg&d=404";
-//            ImageLoader imageLoader;
-//            imageLoader = ImageLoader.getInstance();
-//            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-//            Drawable d = new BitmapDrawable(context.getResources(),imageLoader.loadImageSync(emailGravatarUrl));
-//            images.put(accountName, d);
-//            imageEmail.setImageDrawable(d);
-//            imageEmail.setVisibility(View.VISIBLE);
-//        }else{
-//        }
-//
-//    }
+
 
 }
