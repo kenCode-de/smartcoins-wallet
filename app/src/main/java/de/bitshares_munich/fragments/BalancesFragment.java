@@ -1137,9 +1137,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                     try {
 
+                        Log.d("Balances Update", "Start");
                         Boolean animateOnce = true;
 
-                        for (int i = 0; i < count; i++) {
+                        for (int i = 0; i < count; i++)
+                        {
 
                             // count == number of row
                             // m == number of child in the row
@@ -1154,19 +1156,32 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                             TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_two);
 
                             // First child updation
-                            if (sym.size() > m) {
+                            if (sym.size() > m)
+                            {
+
+                                Log.d("Balances Update", "sym size 1 : " + Integer.toString(m));
 
                                 String symbol = sym.get(m);
+
+                                Log.d("Balances Update", "symbol : " + symbol);
 
                                 String amount = "";
                                 if (pre.size() > m && am.size() > m) {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
 
+                                Log.d("Balances Update", "amount : " + symbol);
+
                                 String amountInInt = am.get(m);
+
+                                Log.d("Balances Update", "amount in int : " + amountInInt);
 
                                 String txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
                                 String txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
+
+                                Log.d("Balances Update", "old symbol : " + txtSymbol);
+
+                                Log.d("Balances Update", "old amount : " + txtAmount);
 
                                 if (!symbol.equals(txtSymbol)) {
                                     tvSymOne.setText(symbol);
@@ -1183,6 +1198,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
 
                                     // Balance is sent
                                     if (txtAmount_d > amount_d) {
+
+                                        Log.d("Balances Update", "Balance sent");
+
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
@@ -1217,16 +1235,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             animateNsoundHandler.postDelayed(zeroAmount, 4200);
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
+
+                                        Log.d("Balances Update", "Animation initiated");
                                     }
                                     // Balance is rcvd
                                     else if (amount_d > txtAmount_d) {
+
+                                        Log.d("Balances Update", "Balance received");
+
                                         tvAmOne.setTypeface(null, Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
-                                        //animateText(tvAmOne,amount_d);
                                         // run animation
-
-
                                         if (animateOnce) {
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
@@ -1255,9 +1275,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             animateNsoundHandler.postDelayed(rotateTask, 200);
 
                                             animateOnce = false;
+
+                                            Log.d("Balances Update", "Animation initiated");
                                         }
 
                                         animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
+
+                                        Log.d("Balances Update", "Text Animated");
 
                                         final TextView cView = tvAmOne;
                                         final TextView aView = tvSymOne;
@@ -1286,28 +1310,43 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             animateNsoundHandler.postDelayed(zeroAmount, 4200);
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
-
-
+                                        Log.d("Balances Update", "Rcv done");
                                     }
                                 }
                                 m++;
-                            } else {
+                                Log.d("Balances Update", "m++");
+                            }
+                            else
+                            {
+                                Log.d("Balances Update", "linearLayout.removeAllViews");
                                 linearLayout.removeAllViews();
                             }
 
                             // Second child updation
-                            if (sym.size() > m) {
+                            if (sym.size() > m)
+                            {
+                                Log.d("Balances Update", "sym size 2 : " + Integer.toString(m));
+
                                 String symbol = sym.get(m);
                                 String amount = "";
+
+                                Log.d("Balances Update", "symbol : " + symbol);
 
                                 if (pre.size() > m && am.size() > m) {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
 
+                                Log.d("Balances Update", "amount : " + amount);
+
                                 String amountInInt = am.get(m);
+
+                                Log.d("Balances Update", "amount in int : " + amountInInt);
 
                                 String txtSymbol = symbolsArray.get(m);// tvSymtwo.getText().toString();
                                 String txtAmount = amountsArray.get(m);// tvAmtwo.getText().toString();
+
+                                Log.d("Balances Update", "old symbol : " + txtSymbol);
+                                Log.d("Balances Update", "old amount : " + txtAmount);
 
                                 //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                 Integer txtAmount_d = Integer.parseInt(txtAmount);
@@ -1319,20 +1358,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                     tvSymtwo.setText(symbol);
                                 }
 
-                                if (!amountInInt.equals(txtAmount)) {
+                                if (!amountInInt.equals(txtAmount))
+                                {
                                     tvAmtwo.setVisibility(View.VISIBLE);
 
-                                    if (txtAmount_d > amount_d) {
+                                    // balance is sent
+                                    if (txtAmount_d > amount_d)
+                                    {
+                                        Log.d("Balances Update", "Balance sent");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
 
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
+                                        Log.d("Balances Update", "Text animated");
 
                                         final TextView cView = tvAmtwo;
                                         final TextView aView = tvSymtwo;
                                         final TextView bView = tvFaitTwo;
-
-                                        //final Handler handler = new Handler();
 
                                         final Runnable updateTask = new Runnable() {
                                             @Override
@@ -1358,11 +1400,51 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
 
-                                    } else if (amount_d > txtAmount_d) {
+                                        Log.d("Balances Update","Animation done");
+
+                                    }
+                                    // Balance is recieved
+                                    else if (amount_d > txtAmount_d)
+                                    {
+                                        Log.d("Balances Update","Balance is received");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(null, Typeface.BOLD);
 
+                                        // run animation
+                                        if (animateOnce) {
+                                            final Runnable playSOund = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playSound();
+                                                }
+                                            };
+
+                                            final Runnable rotateTask = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                rotateRecieveButton();
+                                                            }
+                                                        });
+
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                            };
+
+                                            animateNsoundHandler.postDelayed(playSOund, 100);
+                                            animateNsoundHandler.postDelayed(rotateTask, 200);
+
+                                            animateOnce = false;
+
+                                            Log.d("Balances Update", "Animation initiated");
+                                        }
+
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
+                                        Log.d("Balances Update","Text animated");
 
                                         final TextView cView = tvAmtwo;
                                         final TextView aView = tvSymtwo;
@@ -1393,28 +1475,45 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                             animateNsoundHandler.postDelayed(zeroAmount, 4200);
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
+                                        Log.d("Balances Update","rcv done");
                                     }
                                 }
                                 m++;
-                            } else {
-                                if (i == count - 1) {
-                                    if (sym.size() > m)
-                                        m--;
+                                Log.d("Balances Update","m updated");
+                            }
+                            else
+                            {
+                                Log.d("Balances Update","else when sym > m");
+                                // i == number of row
+                                if (i == count - 1) // if its the last row
+                                {
+                                    if (sym.size() > m) // if number of balances is more than traversed
+                                        m--;            // then minus 1 from m
                                 }
                             }
                         }
 
                         // Insert/remove balance objects if updated
-                        int loop = sym.size() - m;
-                        if (loop > 0) {
-                            for (int i = m; i < sym.size(); i += 2) {
+                        Log.d("Balances Update","Insert or remove balance objects if needed");
+
+                        int loop = sym.size() - m; // number of extra balances to be loaded
+
+                        if (loop > 0)
+                        {
+                            Log.d("Balances Update","Yes updation required");
+
+                            for (int i = m; i < sym.size(); i += 2)
+                            {
                                 int counter = 1;
-                                int op = sym.size();
+                                int op = sym.size(); // total number of balances
                                 int pr;
 
-                                if ((op - i) > 2) {
+                                if ((op - i) > 2)
+                                {
                                     pr = 2;
-                                } else {
+                                }
+                                else
+                                {
                                     pr = op - i;
                                 }
 
@@ -1459,10 +1558,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate {
                                 }
                             }
                         }
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         Log.d("Balances Update", e.getMessage());
                     }
-
                 }
                 catch (Exception e)
                 {
