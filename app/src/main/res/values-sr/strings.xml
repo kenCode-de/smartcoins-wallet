@@ -48,6 +48,8 @@
 <string name="please_enter_brainkey">Молимо унесите браинкеи</string>
 <string name="please_enter_correct_brainkey">Молимо Вас да унесете исправну браинкеи</string>
 <string name="balances">ваге</string>
+    <string name="please_make_sure_your_pin">Уверите се да игла није исправан</string>
+    <string name="please_make_sure_your_pin_file">Уверите се да је пин је изабран исправан или тачан ПИН фајл</string>
 <string name="contacts">kontakti</string>
 <string name="receive_uppercase">РЕЦЕИВЕ</string>
 <string name="send_uppercase">СЕНД</string>

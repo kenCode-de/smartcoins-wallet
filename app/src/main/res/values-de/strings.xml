@@ -24,7 +24,8 @@
     <string name="in_valid_email">Ungültige E-Mail</string>
     <string name="select">Wählen</string>
     <string name="are_you_sure">Bist du sicher?</string>
-
+    <string name="please_make_sure_your_pin">Bitte stellen Sie sicher, dass Ihr Stift ist richtig</string>
+    <string name="please_make_sure_your_pin_file">Bitte stellen Sie sicher, dass Ihr Stift richtig oder richtige PIN-Datei ausgewählt ist</string>
     <string name="loading_msg">Bitte warten Sie, bis Guthaben geladen werden</string>
 <string name="txt_6_digits_pin">6-stellige PIN</string>
 <string name="txt_6_digits_pin_confirm">6-stellige PIN bestätigen</string>

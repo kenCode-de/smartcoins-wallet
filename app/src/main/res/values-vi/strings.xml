@@ -28,7 +28,8 @@
     <string name="in_valid_email">Email không hợp lệ</string>
     <string name="select">Lựa chọn</string>
     <string name="are_you_sure">Bạn có chắc không?</string>
-
+    <string name="please_make_sure_your_pin">Add Contact</string>
+    <string name="please_make_sure_your_pin_file">Hãy chắc chắn rằng pin của bạn là chính xác hoặc tệp chính xác pin được chọn</string>
     <string name="existing_account">Tài khoản hiện có</string>
 <string name="agreement">đồng ý</string>
 <string name="cancel_and_exit">Hủy bỏ và Exit</string>

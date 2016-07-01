@@ -25,7 +25,8 @@
     <string name="unable_to_import_account_from_bin_file">לא ניתן לייבא את חשבון מקובץ bin</string>
     <string name="importing_keys_from_bin_file">יבוא מפתחות מקובץ הסל</string>
     <string name="import_backup">גיבוי יבוא מקובץ? Bin</string>
-
+    <string name="please_make_sure_your_pin">אנא ודא הפינים שלך נכון</string>
+    <string name="please_make_sure_your_pin_file">אנא ודא הפינים שלך קובץ סיכה נכון או נכון נבחר</string>
     <string name="txt_6_digits_pin">PIN 6 ספרות</string>
 <string name="txt_6_digits_pin_confirm">אשר PIN 6 ספרות</string>
 <string name="create">לִיצוֹר</string>

@@ -10,6 +10,8 @@
 <string name="account">հաշիվ</string>
 <string name="friendly_name">Friendly Անունը</string>
 <string name="notes">Notes</string>
+    <string name="please_make_sure_your_pin">Խնդրում ենք համոզվեք, որ Ձեր PIN է ճիշտ</string>
+    <string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ կամ ճիշտ փին ֆայլ է ընտրվել</string>
 <string name="note">Նշում</string>
 <string name="payment_received">վճարման ստացել</string>
 <string name="import_brainkey">Ներմուծել BrainKey</string>

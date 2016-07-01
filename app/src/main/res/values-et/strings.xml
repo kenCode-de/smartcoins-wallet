@@ -22,7 +22,8 @@
     <string name="in_valid_email">Vale Post</string>
     <string name="select">valima</string>
     <string name="are_you_sure">Oled sa kindel?</string>
-
+    <string name="please_make_sure_your_pin">Palun veenduge, et Teie pin on õige</string>
+    <string name="please_make_sure_your_pin_file">Palun veenduge, et Teie pin on õige või õige PIN-fail on valitud</string>
     <string name="no_file_chosen">Faili pole valitud</string>
 <string name="account_label">Vali Fail</string>
 <string name="loading_msg">Palun oodake, kuni Kaalud laadimisel</string>

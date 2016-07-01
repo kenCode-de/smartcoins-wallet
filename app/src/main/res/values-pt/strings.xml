@@ -30,7 +30,8 @@
     <string name="in_valid_email">E-mail inválido</string>
     <string name="select">selecionar</string>
     <string name="are_you_sure">Você tem certeza?</string>
-
+    <string name="please_make_sure_your_pin">Verifique se o seu PIN estiver correcto</string>
+    <string name="please_make_sure_your_pin_file">Verifique se o seu pino é arquivo de pin correto ou correto está selecionado</string>
     <string name="cancel_and_exit">Cancelar e sair</string>
 <string name="i_agree">Eu concordo</string>
 <string name="kindly_create_account">Por favor, criar uma conta</string>

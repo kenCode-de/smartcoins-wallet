@@ -24,7 +24,8 @@
     <string name="select">vybrať</string>
     <string name="are_you_sure">Si si istý?</string>
 
-
+    <string name="please_make_sure_your_pin">Prosím, uistite sa, že pin je správny</string>
+    <string name="please_make_sure_your_pin_file">Prosím, uistite sa, že pin je správny alebo správny súbor pin je vybraná</string>
 
     <string name="loading_msg">Počkajte, kým Váhy sú načítanie</string>
 <string name="txt_6_digits_pin">6-číslica PIN</string>

@@ -24,7 +24,8 @@
     <string name="in_valid_email">อีเมลไม่ถูกต้อง</string>
     <string name="select">เลือก</string>
     <string name="are_you_sure">คุณแน่ใจไหม?</string>
-
+    <string name="please_make_sure_your_pin">กรุณาตรวจสอบให้แน่ใจว่าขาของคุณถูกต้อง</string>
+    <string name="please_make_sure_your_pin_file">กรุณาตรวจสอบให้แน่ใจว่าขาของคุณถูกต้องหรือแก้ไขไฟล์ขาถูกเลือก</string>
     <string name="account_label">เลือกไฟล์</string>
 <string name="loading_msg">โปรดรอจนกว่ายอดคงเหลือโหลด</string>
 <string name="txt_6_digits_pin">PIN 6 หลัก</string>

@@ -22,7 +22,8 @@
     <string name="in_valid_email">Ongeldig e-mail</string>
     <string name="select">kiezen</string>
     <string name="are_you_sure">Weet je het zeker?</string>
-
+    <string name="please_make_sure_your_pin">Zorg ervoor dat uw pincode correct is</string>
+    <string name="please_make_sure_your_pin_file">Zorg ervoor dat uw pincode correct is of juist pin bestand is geselecteerd</string>
     <string name="no_file_chosen">Geen bestand gekozen</string>
 <string name="account_label">Kies bestand</string>
 <string name="loading_msg">Wacht tot Tegoeden worden geladen</string>

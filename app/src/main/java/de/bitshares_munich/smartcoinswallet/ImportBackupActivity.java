@@ -65,9 +65,6 @@ public class ImportBackupActivity extends BaseActivity {
     @Bind(R.id.etPinBin)
     EditText etPinBin;
 
-    @Bind(R.id.btnWalletBin)
-    Button btnWalletBin;
-
     ArrayList<Integer> bytes;
 
     Activity myActivity;
@@ -78,6 +75,7 @@ public class ImportBackupActivity extends BaseActivity {
         setContentView(R.layout.activity_import_backup);
         setTitle(getResources().getString(R.string.app_name));
         ButterKnife.bind(this);
+        setBackButton(true);
         myActivity = this;
         progressDialog = new ProgressDialog(this);
     }
@@ -113,7 +111,6 @@ public class ImportBackupActivity extends BaseActivity {
             }
         }
     }
-
 
     FileChooserDialog dialog;
 
@@ -311,7 +308,7 @@ public class ImportBackupActivity extends BaseActivity {
                 public void onFailure(Throwable t) {
                     hideDialog();
                     Log.d("bin","fail");
-                    Toast.makeText(myActivity, myActivity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_pin), Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -319,9 +316,15 @@ public class ImportBackupActivity extends BaseActivity {
         {
             hideDialog();
             Log.d("bin",e.getMessage());
-            Toast.makeText(myActivity, myActivity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_pin_file), Toast.LENGTH_LONG).show();
         }
 
     }
+
+    @OnClick(R.id.btnCancelBin)
+    public void OnCancel(Button button){
+        this.finish();
+    }
+
 
 }

@@ -15,6 +15,8 @@
 <string name="import_brainkey">الاستيراد من BrainKey</string>
 <string name="import_backup_old">استيراد النسخ الاحتياطي</string>
 <string name="choose_backup">اختيار النسخ الاحتياطي</string>
+    <string name="please_make_sure_your_pin">يرجى التأكد من رقم التعريف الشخصي الخاص بك هو الصحيح</string>
+    <string name="please_make_sure_your_pin_file">يرجى التأكد من رقم التعريف الشخصي الخاص بك هو تحديد الصحيح أو الصحيح ملف دبوس</string>
 <string name="choose_file">اختر ملف</string>
 <string name="no_file_chosen">لم تقم باختيار ملف</string>
 <string name="account_label">اختر ملف</string>

@@ -10,6 +10,8 @@
 <string name="friendly_name">Friendly Name</string>
 <string name="notes">Piezīmes</string>
 <string name="note">Piezīme</string>
+    <string name="please_make_sure_your_pin">Lūdzu, pārliecinieties, ka jūsu pin ir pareiza</string>
+    <string name="please_make_sure_your_pin_file">Lūdzu, pārliecinieties, ka jūsu pin ir pareizs vai pareiza pin fails ir izvēlēts</string>
 <string name="payment_received">Maksājums saņemts</string>
 <string name="import_brainkey">Imports no BrainKey</string>
 <string name="import_backup_old">Import Backup</string>

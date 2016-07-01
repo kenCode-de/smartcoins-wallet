@@ -21,7 +21,8 @@
     <string name="in_valid_email">Ogiltig email</string>
     <string name="select">Välja</string>
     <string name="are_you_sure">Är du säker?</string>
-
+    <string name="please_make_sure_your_pin">Se till att din PIN-kod är korrekt</string>
+    <string name="please_make_sure_your_pin_file">Se till att din PIN-kod är korrekt eller korrekt pin-fil är vald</string>
     <string name="choose_file">Välj FIL</string>
 <string name="no_file_chosen">Ingen fil vald</string>
 <string name="account_label">Välj FIL</string>

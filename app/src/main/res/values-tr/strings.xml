@@ -22,7 +22,8 @@
     <string name="in_valid_email">Geçersiz e posta</string>
     <string name="select">seçmek</string>
     <string name="are_you_sure">Emin misiniz?</string>
-
+    <string name="please_make_sure_your_pin">emin olun sizin pin doğru Lütfen</string>
+    <string name="please_make_sure_your_pin_file">Doğru veya doğru pin dosyası seçili olduğundan emin pin olduğunu olun</string>
     <string name="no_file_chosen">Dosya seçili değil</string>
 <string name="account_label">Dosya seçin</string>
 <string name="loading_msg">Dengeler yüklerken kadar bekleyin</string>

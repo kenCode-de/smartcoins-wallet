@@ -11,6 +11,8 @@
 <string name="friendly_name">nom descriptiu</string>
 <string name="notes">notes</string>
 <string name="note">Nota</string>
+    <string name="please_make_sure_your_pin">Si us plau assegureu-vos que el seu PIN és correcte</string>
+    <string name="please_make_sure_your_pin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer PIN correcte o correctes</string>
 <string name="payment_received">Pagament rebut</string>
 <string name="import_brainkey">Importa de BrainKey</string>
 <string name="import_backup_old">importació de còpia de seguretat</string>

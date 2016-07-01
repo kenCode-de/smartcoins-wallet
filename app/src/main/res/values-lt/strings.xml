@@ -22,7 +22,8 @@
     <string name="in_valid_email">Neteisingas el. pašto adresas</string>
     <string name="select">pasirinkti</string>
     <string name="are_you_sure">Ar tu tuo tikras?</string>
-
+    <string name="please_make_sure_your_pin">Prašome įsitikinkite, kad jūsų PIN yra teisinga</string>
+    <string name="please_make_sure_your_pin_file">Prašome įsitikinkite, kad jūsų PIN teisingas, ar teisingą PIN failas yra pasirinktas</string>
     <string name="no_file_chosen">pasirinkta Nėra failų</string>
 <string name="account_label">Pasirinkti failą</string>
 <string name="loading_msg">Prašome palaukti, kol likučiai dedate</string>

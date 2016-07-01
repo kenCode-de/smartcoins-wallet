@@ -21,6 +21,8 @@
     <string name="in_valid_email">Neplatný email</string>
     <string name="select">Vybrat</string>
     <string name="are_you_sure">Jsi si jistá?</string>
+    <string name="please_make_sure_your_pin">Prosím, ujistěte se, že pin je správný</string>
+    <string name="please_make_sure_your_pin_file">Prosím, ujistěte se, že pin je správný nebo správný soubor pin je vybrána</string>
     <string name="choose_file">Vyberte soubor</string>
 <string name="no_file_chosen">Není zvolený žádný soubor</string>
 <string name="account_label">Vyberte soubor</string>

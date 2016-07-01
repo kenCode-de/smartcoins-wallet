@@ -22,7 +22,8 @@
     <string name="in_valid_email">Email invalide</string>
     <string name="select">Sélectionner</string>
     <string name="are_you_sure">Êtes-vous sûr?</string>
-
+    <string name="please_make_sure_your_pin">faire S\'il vous plaît que votre cheville est correcte</string>
+    <string name="please_make_sure_your_pin_file">S\'il vous plaît assurez-vous que votre NIP est fichier correct ou de corriger la broche est sélectionné</string>
     <string name="no_file_chosen">Aucun fichier choisi</string>
 <string name="account_label">Choisissez fichier</string>
 <string name="loading_msg">S\'il vous plaît attendre jusqu\'à ce que les soldes chargent</string>

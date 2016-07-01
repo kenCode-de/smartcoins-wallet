@@ -8,6 +8,8 @@
 <string name="time_stamp">টাইম স্ট্যাম্প</string>
 <string name="email_pdf">ইমেল পিডিএফ</string>
 <string name="account">হিসাব</string>
+    <string name="please_make_sure_your_pin">দয়া করে নিশ্চিত করুন আপনার পিন সঠিক</string>
+    <string name="please_make_sure_your_pin_file">নিশ্চিত করুন যে আপনার পিন হয় সঠিক অথবা সঠিক পিন ফাইল নির্বাচন করা হয় দয়া করে</string>
 <string name="friendly_name">বন্ধুত্বপূর্ণ নাম</string>
 <string name="notes">নোট</string>
 <string name="note">বিঃদ্রঃ</string>
