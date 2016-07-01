@@ -28,7 +28,8 @@
     <string name="in_valid_email">Неверный адрес электронной почты</string>
     <string name="select">Выбрать</string>
     <string name="are_you_sure">Ты уверен?</string>
-
+    <string name="please_make_sure_your_pin">Пожалуйста, убедитесь, что ваш контактный правильно</string>
+    <string name="please_make_sure_your_pin_file">Пожалуйста, убедитесь, что ваш контакт выбран правильный или правильный файл контактный</string>
     <string name="existing_account">Существующий аккаунт</string>
 <string name="agreement">соглашение</string>
 <string name="cancel_and_exit">Отмена и выход</string>

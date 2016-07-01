@@ -22,7 +22,9 @@
     <string name="in_valid_email">ایمیل نامعتبر</string>
     <string name="select">انتخاب کنید</string>
     <string name="are_you_sure">شما مطمئن هستید؟</string>
+    <string name="please_make_sure_your_pin">لطفا مطمئن شوید که پین ​​شما صحیح است</string>
 
+    <string name="please_make_sure_your_pin_file">لطفا مطمئن شوید که PIN خود را صحیح یا صحیح فایل پین انتخاب شده است</string>
     <string name="no_file_chosen">هیچ فایلی انتخاب نشده است</string>
 <string name="account_label">انتخاب فایل</string>
 <string name="loading_msg">لطفا صبر کنید تا تعادل در حال بارگذاری</string>

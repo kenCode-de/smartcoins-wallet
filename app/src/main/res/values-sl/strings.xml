@@ -15,7 +15,8 @@
     <string name="select">Izberite</string>
     <string name="are_you_sure">Ali si prepričan?</string>
 
-
+    <string name="please_make_sure_your_pin">Prepričajte se, da vaš pin je pravilna</string>
+    <string name="please_make_sure_your_pin_file">Prepričajte se, da vaš pin je pravilna ali pravilen pin datoteka je izbrana</string>
 
     <string name="friendly_name">prijazno Ime</string>
 <string name="notes">Opombe</string>

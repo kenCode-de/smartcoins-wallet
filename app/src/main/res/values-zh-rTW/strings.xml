@@ -17,7 +17,8 @@
     <string name="in_valid_email">不合規電郵</string>
     <string name="select">選擇</string>
     <string name="are_you_sure">你確定？</string>
-
+    <string name="please_make_sure_your_pin">請確保你的腳是正確的</string>
+    <string name="please_make_sure_your_pin_file">請確保您的密碼是否正確，或正確的PIN文件被選中</string>
     <string name="payment_received">已收到付款</string>
 <string name="import_brainkey">從BrainKey導入</string>
 <string name="import_backup_old">導入備份</string>

@@ -17,7 +17,8 @@
     <string name="in_valid_email">不合规电邮</string>
     <string name="select">选择</string>
     <string name="are_you_sure">你确定？</string>
-
+    <string name="please_make_sure_your_pin">请确保你的脚是正确的</string>
+    <string name="please_make_sure_your_pin_file">请确保您的密码是否正确，或正确的PIN文件被选中</string>
     <string name="note">注意</string>
 <string name="payment_received">已收到付款</string>
 <string name="import_brainkey">从BrainKey导入</string>

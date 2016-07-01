@@ -24,6 +24,8 @@
 <string name="create">CREATE</string>
 <string name="existing_account">既存のアカウント</string>
 <string name="agreement">契約</string>
+    <string name="please_make_sure_your_pin">あなたのピンが正しいことを確認してください</string>
+    <string name="please_make_sure_your_pin_file">あなたのピンが正しいか、正しいピンのファイルが選択されていることを確認してください</string>
     <string name="unable_to_import_account_from_bin_file">binファイルからアカウントをインポートすることができません。</string>
     <string name="importing_keys_from_bin_file">ビンファイルからキーをインポートします</string>
     <string name="import_backup">.binのファイルからインポートバックアップ</string>

@@ -30,7 +30,8 @@
     <string name="select">चुनते हैं</string>
     <string name="are_you_sure">क्या आपको यकीन है?</string>
 
-
+    <string name="please_make_sure_your_pin">कृपया सुनिश्चित करें कि आपकी पिन सही है</string>
+    <string name="please_make_sure_your_pin_file">सुनिश्चित करें कि आपके पिन है सही या सही पिन फ़ाइल चयनित है कृपया</string>
     <string name="agreement">समझौता</string>
 <string name="cancel_and_exit">रद्द करें और बाहर निकलें</string>
 <string name="i_agree">मैं सहमत हूँ</string>

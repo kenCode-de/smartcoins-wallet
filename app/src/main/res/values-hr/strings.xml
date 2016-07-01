@@ -21,6 +21,8 @@
 <string name="txt_6_digits_pin">PIN 6 znamenki</string>
 <string name="txt_6_digits_pin_confirm">6 znamenki PIN potvrđuju</string>
 <string name="create">STVORITI</string>
+    <string name="please_make_sure_your_pin">Molimo provjerite je li igla je ispravan</string>
+    <string name="please_make_sure_your_pin_file">Molimo provjerite je li igla je ispravan ili ispraviti pin datoteke je odabran</string>
 <string name="existing_account">postojeći račun</string>
 <string name="agreement">Sporazum</string>
 <string name="cancel_and_exit">Otkazivanje i Izlaz</string>

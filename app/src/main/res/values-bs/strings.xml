@@ -15,6 +15,8 @@
 <string name="import_brainkey">Uvoz iz BrainKey</string>
 <string name="import_backup_old">uvoz Backup</string>
 <string name="choose_backup">Odaberite Backup</string>
+    <string name="please_make_sure_your_pin">Molimo vas da provjerite je li vaš PIN je ispravan</string>
+    <string name="please_make_sure_your_pin_file">Molimo provjerite PIN je odabran ispravan ili ispravan PIN datoteku</string>
 <string name="choose_file">Odabrati datoteku</string>
 <string name="no_file_chosen">izabran No file</string>
 <string name="account_label">Odabrati datoteku</string>

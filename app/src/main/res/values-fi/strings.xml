@@ -22,7 +22,8 @@
     <string name="in_valid_email">Virheellinen sähköpostiosoite</string>
     <string name="select">valita</string>
     <string name="are_you_sure">Oletko varma?</string>
-
+    <string name="please_make_sure_your_pin">Varmista, että tappi on oikein</string>
+    <string name="please_make_sure_your_pin_file">Varmista, että tappi on oikein tai oikea PIN-tiedosto on valittu</string>
     <string name="no_file_chosen">Ei tiedostoa valittuna</string>
 <string name="account_label">Valitse tiedosto</string>
 <string name="loading_msg">Odota kunnes Talletukset ladataan</string>

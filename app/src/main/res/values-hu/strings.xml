@@ -25,6 +25,8 @@
 <string name="agreement">Megegyezés</string>
 <string name="cancel_and_exit">Mégsem és Kilépés</string>
 <string name="i_agree">Egyetértek</string>
+    <string name="please_make_sure_your_pin">Kérjük, ellenőrizze, hogy a csap helyes</string>
+    <string name="please_make_sure_your_pin_file">Kérjük, ellenőrizze, hogy a csap a helyes vagy a helyes pin fájl kiválasztva</string>
     <string name="unable_to_import_account_from_bin_file">Nem sikerült importálni fiókot bin fájlt</string>
     <string name="importing_keys_from_bin_file">Importálása Keys Bin fájl</string>
     <string name="import_backup">Import Backup .bin fájlt</string>

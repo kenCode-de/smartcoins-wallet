@@ -31,7 +31,8 @@
     <string name="in_valid_email">E-mail invalid</string>
     <string name="select">Selectați</string>
     <string name="are_you_sure">Esti sigur?</string>
-
+    <string name="please_make_sure_your_pin">Asigurați-vă că PIN-ul dvs. este corectă</string>
+    <string name="please_make_sure_your_pin_file">Asigurați-vă că PIN-ul este corect de fișier sau PIN-ul este selectat corect</string>
     <string name="kindly_create_account">Kindly Creare cont</string>
 <string name="please_enter_old_6_digit_pin">Vă rugăm să introduceți vechiul cod PIN format din 6 cifre</string>
 <string name="please_enter_6_digit_pin">Vă rugăm să introduceți 6 cifre pini</string>

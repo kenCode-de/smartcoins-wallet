@@ -24,7 +24,8 @@
     <string name="in_valid_email">Ugyldig email</string>
     <string name="select">Vælge</string>
     <string name="are_you_sure">Er du sikker?</string>
-
+    <string name="please_make_sure_your_pin">Sørg din pin er korrekt</string>
+    <string name="please_make_sure_your_pin_file">Sørg din pin er rigtig eller korrekt pin-fil er valgt</string>
     <string name="loading_msg">Vent Balances lægger</string>
 <string name="txt_6_digits_pin">PIN 6-cifre</string>
 <string name="txt_6_digits_pin_confirm">6-cifre PIN confirm</string>

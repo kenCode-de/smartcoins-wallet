@@ -28,7 +28,8 @@
     <string name="in_valid_email">E-mail non valido</string>
     <string name="select">Selezionare</string>
     <string name="are_you_sure">Sei sicuro?</string>
-
+    <string name="please_make_sure_your_pin">Si prega di assicurarsi che il PIN è corretto</string>
+    <string name="please_make_sure_your_pin_file">Si prega di assicurarsi che il perno sia file di pin corretto o corretto sia selezionato</string>
     <string name="existing_account">Account esistente</string>
 <string name="agreement">Accordo</string>
 <string name="cancel_and_exit">Annulla e Exit</string>

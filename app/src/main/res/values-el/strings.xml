@@ -15,6 +15,8 @@
 <string name="import_backup_old">εισαγωγής αντιγράφων ασφαλείας</string>
 <string name="choose_backup">Επιλέξτε Δημιουργία αντιγράφων ασφαλείας</string>
 <string name="choose_file">Επιλέξτε το αρχείο</string>
+    <string name="please_make_sure_your_pin">Παρακαλώ βεβαιωθείτε ότι το PIN σας είναι σωστή</string>
+    <string name="please_make_sure_your_pin_file">Παρακαλώ βεβαιωθείτε ότι το PIN σας έχει επιλεγεί σωστή ή σωστό αρχείο pin</string>
 <string name="no_file_chosen">Δεν υπάρχει αρχείο έχει επιλεγεί</string>
 <string name="account_label">Επιλέξτε το αρχείο</string>
 <string name="loading_msg">Παρακαλώ περιμένετε μέχρι να τοποθετείτε Υπόλοιπα</string>

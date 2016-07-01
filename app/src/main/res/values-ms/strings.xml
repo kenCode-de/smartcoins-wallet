@@ -17,7 +17,8 @@
     <string name="in_valid_email">Email tidak sah</string>
     <string name="select">pilih</string>
     <string name="are_you_sure">Adakah anda pasti?</string>
-
+    <string name="please_make_sure_your_pin">Sila pastikan pin anda adalah betul</string>
+    <string name="please_make_sure_your_pin_file">Sila pastikan pin anda adalah betul atau betul fail pin dipilih</string>
     <string name="payment_received">Bayaran yang diterima</string>
 <string name="import_brainkey">Import dari BrainKey</string>
 <string name="import_backup_old">import Backup</string>

@@ -10,6 +10,8 @@
 <string name="friendly_name">별칭</string>
 <string name="notes">노트</string>
 <string name="note">노트</string>
+    <string name="please_make_sure_your_pin">있는지 확인하여 핀은 정확하세요</string>
+    <string name="please_make_sure_your_pin_file">정확한 또는 정확한 핀 파일이 선택되어 있는지 당신의 핀이되어 있는지 확인하십시오</string>
 <string name="payment_received">지불 수신</string>
 <string name="import_brainkey">BrainKey에서 가져 오기</string>
 <string name="import_backup_old">가져 오기 백업</string>
