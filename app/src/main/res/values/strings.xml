@@ -297,7 +297,6 @@
     <string name="email_name">To display a photo for this Contact, enter its Gravatar e-mail here</string>
     <string name="copied_to_clipboard">Copied to Clipboard</string>
 
-// new strings
     <string name="select">"Select</string>
     <string name="are_you_sure">"Are you sure?</string>
     <string name="is_already_added">is already added</string>
@@ -305,5 +304,10 @@
     <string name="unable_to_import_account_from_bin_file">"Unable to import account from bin file"</string>
     <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
     <string name="import_backup">Import Backup from .bin file</string>
+
+    // new strings
+    <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
+    <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
+
 
 </resources>
