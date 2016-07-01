@@ -251,6 +251,24 @@ public class Application extends android.app.Application {
                                 Application.webSocketG.send(context.getString(R.string.subscribe_callback));
                                 //Application.webSocketG.send(context.getString(R.string.subscribe_callback_full_account));
                                 isReady = true;
+
+                                /*
+                                Handler testHandler = new Handler();
+
+                                Runnable testRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (iAssetDelegate != null)
+                                        {
+                                            iAssetDelegate.loadAll();
+                                        }
+                                    }
+                                };
+
+                                testHandler.postDelayed(testRunnable,2000);
+                                */
+
+
                             } else if (id == 6) {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
@@ -333,16 +351,21 @@ public class Application extends android.app.Application {
                                     int id = jsonObject.getJSONArray("params").getInt(0);
                                     JSONArray values = jsonObject.getJSONArray("params").getJSONArray(1);
 
-                                    if (id == 7) {
+                                    if (id == 7)
+                                    {
                                         headBlockNumber(values.toString());
-                                        if (monitorAccountId != null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId)) {
-                                            if (iAssetDelegate != null) {
+
+                                        if (monitorAccountId != null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId))
+                                        {
+                                            if (iAssetDelegate != null)
+                                            {
                                                 iAssetDelegate.loadAll();
                                             }
                                             Log.d("Notice Update", values.toString());
                                         }
                                         //headBlockNumber(s);
-                                    } else {
+                                    }
+                                    else {
                                         Log.d("other notice", values.toString());
                                     }
 

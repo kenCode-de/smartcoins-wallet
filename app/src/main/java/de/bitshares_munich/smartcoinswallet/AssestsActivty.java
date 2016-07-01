@@ -57,18 +57,48 @@ public class AssestsActivty  implements IBalancesDelegate {
         get_json_account_balances(account_name,"999");
     }
 
+    final Handler handler = new Handler();
 
+    Boolean sentCallForBalances = false;
     void get_json_account_balances(final String account_name,final String id)
     {
-        final Handler handler = new Handler();
+        Log.d("Assets Activity", "Sending call for assets");
+
+        final Runnable updateTask2 = new Runnable() {
+            @Override
+            public void run() {
+                if ( sentCallForBalances ) // if balances are not returned in one second
+                {
+                    sentCallForBalances = false;
+
+                    // if websocket is connected
+                    if ( Application.webSocketG != null && Application.webSocketG.isOpen() )
+                    {
+                        Application.webSocketG.close();
+                        get_json_account_balances(account_name, id);
+                    }
+                    // if websocket was disconnected
+                    else
+                    {
+                        get_json_account_balances(account_name, id);
+                    }
+                }
+            }
+        };
+
 
         final Runnable updateTask = new Runnable() {
             @Override
-            public void run() {
+            public void run()
+            {
                 if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && Application.isReady )
                 {
                     String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
                     Application.webSocketG.send(getDetails);
+                    sentCallForBalances = true;
+                    handler.removeCallbacks(updateTask2);
+                    handler.postDelayed(updateTask2, 2000);
+                    Log.d("Assets Activity", "Sent call for assets");
                 }
                 else
                 {
@@ -77,6 +107,7 @@ public class AssestsActivty  implements IBalancesDelegate {
             }
         };
 
+        handler.removeCallbacks(updateTask);
         handler.postDelayed(updateTask, 1000);
     }
 
@@ -155,12 +186,21 @@ public class AssestsActivty  implements IBalancesDelegate {
     @Override
     public void OnUpdate(String s,int id){
         SupportMethods.testing("assests",s,"ids");
+        Log.d("Assets Activity", "Call received");
 
         String convert;
         try
         {
             if (id == 999)
             {
+                sentCallForBalances = false;
+
+                ids = new ArrayList<>();
+                precisons = new ArrayList<>();
+                symbols = new ArrayList<>();
+                ammount = new ArrayList<>();
+
+                Log.d("Assets Activity", "Balances received");
                 JSONObject jsonObject = new JSONObject(s);
                 if (jsonObject.has("result"))
                 {
@@ -171,10 +211,12 @@ public class AssestsActivty  implements IBalancesDelegate {
         }
         catch (Exception e)
         {
-            Log.d("Parse balances",e.getMessage());
+            Log.d("Assets Activity",e.getMessage());
         }
 
-        if(id==99) {
+        if(id==99)
+        {
+            Log.d("Assets Activity", "Assets received");
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {
                 ids = returnRootValues(result,"id");
@@ -239,6 +281,8 @@ public class AssestsActivty  implements IBalancesDelegate {
         SupportMethods.testing("assests",symbols,"ids");
         SupportMethods.testing("assests",precisons,"ids");
         SupportMethods.testing("assests",ammount,"ids");
+
+        Log.d("Assets Activity", "Updating Assets..............");
 
         assetDelegate.isUpdate(ids,symbols,precisons,ammount);
     }

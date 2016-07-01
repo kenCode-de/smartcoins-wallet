@@ -231,7 +231,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         };
 
 
-        loadBasic();
+        loadBasic(false);
         loadBalancesFromSharedPref();
         TransactionUpdateOnStartUp();
 
@@ -343,7 +343,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
 
         if (isCheckedTimeZone || isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
-            loadBasic();
+            loadBasic(true);
         }
     }
 
@@ -680,6 +680,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
                                     }
 
+                                    if (tvAsset == null || tvAmount == null || tvFaitAmount == null)
+                                    {
+                                        updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                                        return;
+                                    }
                                     String asset = tvAsset.getText().toString();
                                     String amount = tvAmount.getText().toString();
                                     amount = android.text.Html.fromHtml(amount).toString();
@@ -1181,20 +1186,32 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 Log.d("Balances Update", "amount in int : " + amountInInt);
 
-                                String txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
-                                String txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
+                                String txtSymbol = "";// tvSymOne.getText().toString();
+                                String txtAmount = "";//tvAmOne.getText().toString();
+
+                                if (symbolsArray.size() > m) {
+                                    txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
+                                    txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
+                                }
 
                                 Log.d("Balances Update", "old symbol : " + txtSymbol);
 
                                 Log.d("Balances Update", "old amount : " + txtAmount);
 
-                                if (!symbol.equals(txtSymbol)) {
+                                if (!symbol.equals(txtSymbol))
+                                {
                                     tvSymOne.setText(symbol);
                                 }
 
                                 if (!amountInInt.equals(txtAmount)) {
                                     // previous amount
                                     //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
+
+                                    if ( txtAmount.isEmpty() )
+                                    {
+                                        txtAmount = "0";
+                                    }
+
                                     Integer txtAmount_d = Integer.parseInt(txtAmount);
 
                                     // New amount
@@ -1348,11 +1365,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 Log.d("Balances Update", "amount in int : " + amountInInt);
 
-                                String txtSymbol = symbolsArray.get(m);// tvSymtwo.getText().toString();
-                                String txtAmount = amountsArray.get(m);// tvAmtwo.getText().toString();
+                                String txtSymbol = "";
+                                String txtAmount = "";
+                                if (symbolsArray.size() > m) {
+                                    txtSymbol = symbolsArray.get(m);// tvSymOne.getText().toString();
+                                    txtAmount = amountsArray.get(m);//tvAmOne.getText().toString();
+                                }
 
                                 Log.d("Balances Update", "old symbol : " + txtSymbol);
                                 Log.d("Balances Update", "old amount : " + txtAmount);
+
+                                if ( txtAmount.isEmpty() )
+                                {
+                                    txtAmount = "0";
+                                }
 
                                 //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
                                 Integer txtAmount_d = Integer.parseInt(txtAmount);
@@ -1491,13 +1517,36 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             {
                                 Log.d("Balances Update","else when sym > m");
                                 // i == number of row
-                                if (i == count - 1) // if its the last row
+                                if (i == (count - 1) ) // if its the last row
                                 {
                                     if (sym.size() > m) // if number of balances is more than traversed
                                         m--;            // then minus 1 from m
                                 }
                             }
                         }
+
+
+                        // Calculate m : number of balances loaded in ui
+                        m = 0;
+                        for ( int i = 0 ; i < llBalances.getChildCount(); i++ )
+                        {
+                            LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
+                            TextView tvSymOne = (TextView) linearLayout.findViewById(R.id.symbol_child_one);
+                            TextView tvSymtwo = (TextView) linearLayout.findViewById(R.id.symbol_child_two);
+
+                            if ( !tvSymOne.getText().toString().isEmpty() )
+                            {
+                                m++;
+                            }
+
+                            if ( !tvSymtwo.getText().toString().isEmpty() )
+                            {
+                                m++;
+                            }
+                        }
+
+
+                        Log.d("Balances Update","Number of balances loaded : " + Integer.toString(m));
 
                         // Insert/remove balance objects if updated
                         Log.d("Balances Update","Insert or remove balance objects if needed");
@@ -1506,45 +1555,51 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                         if (loop > 0)
                         {
-                            Log.d("Balances Update","Yes updation required");
+                            Log.d("Balances Update","Yes updation required : " + Integer.toString(loop));
 
                             for (int i = m; i < sym.size(); i += 2)
                             {
                                 int counter = 1;
-                                int op = sym.size(); // total number of balances
+                                int totalNumberOfBalances = sym.size(); // total number of balances 6
                                 int pr;
 
-                                if ((op - i) > 2)
+                                if ( (totalNumberOfBalances - i) > 2 )
                                 {
                                     pr = 2;
                                 }
                                 else
                                 {
-                                    pr = op - i;
+                                    pr = totalNumberOfBalances - i;
                                 }
 
                                 View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
 
-                                for (int l = i; l < i + pr; l++) {
-                                    if (counter == 1) {
+                                for (int l = i; l < (i + pr); l++)
+                                {
+                                    if (counter == 1)
+                                    {
                                         TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
                                         textView.setText(sym.get(l));
                                         TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
-                                        if (pre.size() > l && am.size() > i) {
+                                        if ( (pre.size() > l) && (am.size() > i) )
+                                        {
                                             String r = returnFromPower(pre.get(l), am.get(i));
                                             textView1.setText(r);
                                             // setCounter(textView1, 0f, 0f);
                                             textView1.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                                             //setCounter(textView1, Float.parseFloat(r), Float.parseFloat(r));
-                                        } else textView1.setText("");
+                                        }
+                                        else textView1.setText("");
                                     }
 
-                                    if (counter == 2) {
+                                    if (counter == 2)
+                                    {
                                         TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                                         textView2.setText(sym.get(l));
                                         TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                                        if (pre.size() > l && am.size() > l) {
+                                        if ( (pre.size() > l) && (am.size() > l) )
+                                        {
                                             String r = returnFromPower(pre.get(l), am.get(l));
                                             textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                                             //setCounter(textView3, 0f, 0f);
@@ -1552,15 +1607,84 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         }
 
                                         llBalances.addView(customView);
+
+                                        // run animation
+                                        if (animateOnce) {
+                                            final Runnable playSOund = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playSound();
+                                                }
+                                            };
+
+                                            final Runnable rotateTask = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                rotateRecieveButton();
+                                                            }
+                                                        });
+
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                            };
+
+                                            animateNsoundHandler.postDelayed(playSOund, 100);
+                                            animateNsoundHandler.postDelayed(rotateTask, 200);
+
+                                            animateOnce = false;
+
+                                            Log.d("Balances Update", "Animation initiated");
+                                        }
                                     }
 
-                                    if (counter == 1 && i == sym.size() - 1) {
+                                    if ( (counter == 1) && ( i == (sym.size() - 1) ) )
+                                    {
                                         llBalances.addView(customView);
+
+                                        // run animation
+                                        if (animateOnce) {
+                                            final Runnable playSOund = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    playSound();
+                                                }
+                                            };
+
+                                            final Runnable rotateTask = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    try {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            public void run() {
+                                                                rotateRecieveButton();
+                                                            }
+                                                        });
+
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                }
+                                            };
+
+                                            animateNsoundHandler.postDelayed(playSOund, 100);
+                                            animateNsoundHandler.postDelayed(rotateTask, 200);
+
+                                            animateOnce = false;
+
+                                            Log.d("Balances Update", "Animation initiated");
+                                        }
                                     }
 
-                                    if (counter == 1) {
+                                    if (counter == 1)
+                                    {
                                         counter = 2;
-                                    } else counter = 1;
+                                    }
+                                    else counter = 1;
                                 }
                             }
                         }
@@ -1761,7 +1885,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             final Runnable updateTask = new Runnable() {
                 @Override
                 public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady) ) {
                         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
                         SupportMethods.testing("getLifetime", getDetails, "getDetails");
                         Application.webSocketG.send(getDetails);
@@ -1788,7 +1912,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             final Runnable updateTask = new Runnable() {
                 @Override
                 public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady) ) {
                         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_full_accounts\",[[\"" + name_id + "\"],true]]}";
                         SupportMethods.testing("get_full_accounts", getDetails, "getDetails");
                         Application.webSocketG.send(getDetails);
@@ -1885,18 +2009,39 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
+    Handler loadOndemand = new Handler();
+
+    private void loadOnDemand(final Activity _activity)
+    {
+        loadOndemand.removeCallbacksAndMessages(null);
+
+        Runnable loadOnDemandRunnable = new Runnable() {
+            @Override
+            public void run() {
+                _activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        loadViews(false);
+                    }
+                });
+            }
+        };
+        loadOndemand.removeCallbacks(loadOnDemandRunnable);
+        loadOndemand.postDelayed(loadOnDemandRunnable,1000);
+    }
+
     @Override
     public void loadAll() {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                loadViews();
-            }
-        });
+        loadOnDemand(getActivity());
+//        getActivity().runOnUiThread(new Runnable() {
+//            public void run() {
+//                loadViews();
+//            }
+//        });
     }
 
     AssestsActivty myAssetsActivity;
 
-    void loadViews() {
+    void loadViews(Boolean onResume) {
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
 
@@ -1908,19 +2053,30 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         tableView.addDataClickListener(new tableViewClickListener(getContext()));
 
         progressBar.setVisibility(View.VISIBLE);
-        progressBar1.setVisibility(View.VISIBLE);
+        //progressBar1.setVisibility(View.VISIBLE);
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        myAssetsActivity = new AssestsActivty(getContext(), to, this,application);
-        myAssetsActivity.registerDelegate();
-        myAssetsActivity.loadBalances(to);
+        if (myAssetsActivity == null) {
+            myAssetsActivity = new AssestsActivty(getContext(), to, this, application);
+            myAssetsActivity.registerDelegate();
+        }
+
+        if ( !onResume) {
+            progressBar1.setVisibility(View.VISIBLE);
+            myAssetsActivity.loadBalances(to);
+        }
         number_of_transactions_loaded = 0;
         new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
         number_of_transactions_loaded = number_of_transactions_loaded + 5;
     }
 
-    void loadBasic() {
-        isLoading = false;
+    void loadBasic(boolean onResume) {
+
+        if ( !onResume )
+        {
+            isLoading = false;
+        }
+
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
         if (accountDetails.size() == 1) {
@@ -1948,7 +2104,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isLifeTime(accountId, "15");
         get_full_accounts(accountId, "17");
 
-        loadViews();
+        loadViews(onResume);
     }
 
     Boolean checkIfAccountNameChange() {
