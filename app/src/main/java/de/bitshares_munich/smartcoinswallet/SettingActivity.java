@@ -619,10 +619,12 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
-        Intent intent = new Intent(this, BrainkeyActivity.class);
-        intent.putExtra("activity_name", "setting_screen");
-        intent.putExtra("activity_id", 919);
+        Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         startActivity(intent);
+//        Intent intent = new Intent(this, BrainkeyActivity.class);
+//        intent.putExtra("activity_name", "setting_screen");
+//        intent.putExtra("activity_id", 919);
+//        startActivity(intent);
     }
 
     @OnClick(R.id.upgrade_account)
