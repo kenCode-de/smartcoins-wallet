@@ -619,10 +619,12 @@ public class SettingActivity extends BaseActivity {
 
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
-        Intent intent = new Intent(this, BrainkeyActivity.class);
-        intent.putExtra("activity_name", "setting_screen");
-        intent.putExtra("activity_id", 919);
+        Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         startActivity(intent);
+//        Intent intent = new Intent(this, BrainkeyActivity.class);
+//        intent.putExtra("activity_name", "setting_screen");
+//        intent.putExtra("activity_id", 919);
+//        startActivity(intent);
     }
 
     @OnClick(R.id.upgrade_account)
@@ -704,9 +706,9 @@ public class SettingActivity extends BaseActivity {
         TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
         btnCancel.setText(R.string.txt_no);
         btnDone.setText(R.string.txt_yes);
-        String alertMsg = getString(R.string.txt_alertmsg);
+        String alertMsg = getString(R.string.txt_alertmsg_fr);
         if (accountDetails.size() > 1) {
-            alertMsg = alertMsg + " : " + spAccounts.getSelectedItem().toString() + " ?";
+            alertMsg = alertMsg + " " + spAccounts.getSelectedItem().toString() + " " + getString(R.string.txt_alertmsg_la);
         } else {
             alertMsg = getString(R.string.txt_wallet_atleast_one_account);
             btnDone.setVisibility(View.GONE);

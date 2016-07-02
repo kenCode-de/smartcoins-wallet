@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,12 +77,14 @@ import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
+import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.TransactionActivity;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
+import de.bitshares_munich.smartcoinswallet.popUpwindow;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -232,7 +235,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         };
 
 
-        loadBasic(false);
+        loadBasic(false,true);
         loadBalancesFromSharedPref();
         TransactionUpdateOnStartUp();
 
@@ -344,9 +347,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
         Boolean isCheckedTimeZone=false;
         isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
+        Boolean accountNameChange = checkIfAccountNameChange();
 
-        if (isCheckedTimeZone || isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
-            loadBasic(true);
+        if(accountNameChange)
+            llBalances.removeAllViews();
+
+        if (isCheckedTimeZone || isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+            loadBasic(true,accountNameChange);
         }
     }
 
@@ -2027,7 +2034,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             public void run() {
                 _activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        loadViews(false);
+                        loadViews(false,true);
                     }
                 });
             }
@@ -2048,7 +2055,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     AssestsActivty myAssetsActivity;
 
-    void loadViews(Boolean onResume) {
+    void loadViews(Boolean onResume,Boolean accountNameChanged) {
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
 
@@ -2068,7 +2075,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myAssetsActivity.registerDelegate();
         }
 
-        if ( !onResume) {
+        if ( !onResume || accountNameChanged) {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
         }
@@ -2077,7 +2084,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         number_of_transactions_loaded = number_of_transactions_loaded + 5;
     }
 
-    void loadBasic(boolean onResume) {
+    void loadBasic(boolean onResume,boolean accountNameChanged) {
 
         if ( !onResume )
         {
@@ -2111,7 +2118,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isLifeTime(accountId, "15");
         get_full_accounts(accountId, "17");
 
-        loadViews(onResume);
+        loadViews(onResume,accountNameChanged);
     }
 
     Boolean checkIfAccountNameChange() {
@@ -2131,6 +2138,54 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             }
         }
         return !checkAccountName.equals(to);
+    }
+
+    @OnClick(R.id.ivMultiAccArrow)
+    public void OnChangedAccount(View view){
+
+        final ArrayList<AccountDetails> accountDetailsList;
+
+        accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+        List<String> accountlist = new ArrayList<String>();
+
+        for (int i = 0; i < accountDetailsList.size(); i++) {
+            accountlist.add(accountDetailsList.get(i).account_name);
+        }
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+
+        builderSingle.setTitle(getString(R.string.imported_created_accounts));
+
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                getContext(), android.R.layout.simple_list_item_1, accountlist);
+
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+
+                        for (int i = 0; i < accountDetailsList.size(); i++) {
+
+                            if (strName.equals(accountDetailsList.get(i).account_name)) {
+                                accountDetailsList.get(i).isSelected = true;
+                            } else {
+                                accountDetailsList.get(i).isSelected = false;
+                            }
+
+                        }
+                        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
+                        Helper.storeStringSharePref(getContext(), getString(R.string.pref_account_name), strName);
+
+                        onResume();
+                        dialog.dismiss();
+                    }
+                });
+        builderSingle.show();
+
     }
 
     private void showHideLifeTime(final Boolean show) {

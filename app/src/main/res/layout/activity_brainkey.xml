@@ -70,6 +70,7 @@
         android:inputType="textMultiLine"
         android:background="@drawable/edittext_bg"
         android:layout_height="120dp"
+android:text="@string/key_brainkey"
         android:gravity="top"/>
 
     <TextView
