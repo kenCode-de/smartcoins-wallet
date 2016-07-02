@@ -234,7 +234,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         };
 
 
-        loadBasic(false);
+        loadBasic(false,true);
         loadBalancesFromSharedPref();
         TransactionUpdateOnStartUp();
 
@@ -344,9 +344,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
         Boolean isCheckedTimeZone=false;
         isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
+        Boolean accountNameChange = checkIfAccountNameChange();
 
-        if (isCheckedTimeZone || isHideDonationsChanged || checkIfAccountNameChange() || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
-            loadBasic(true);
+        if(accountNameChange)
+            llBalances.removeAllViews();
+
+        if (isCheckedTimeZone || isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+            loadBasic(true,accountNameChange);
         }
     }
 
@@ -2023,7 +2027,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             public void run() {
                 _activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        loadViews(false);
+                        loadViews(false,true);
                     }
                 });
             }
@@ -2044,7 +2048,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     AssestsActivty myAssetsActivity;
 
-    void loadViews(Boolean onResume) {
+    void loadViews(Boolean onResume,Boolean accountNameChanged) {
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
 
@@ -2064,7 +2068,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myAssetsActivity.registerDelegate();
         }
 
-        if ( !onResume) {
+        if ( !onResume || accountNameChanged) {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
         }
@@ -2073,7 +2077,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         number_of_transactions_loaded = number_of_transactions_loaded + 5;
     }
 
-    void loadBasic(boolean onResume) {
+    void loadBasic(boolean onResume,boolean accountNameChanged) {
 
         if ( !onResume )
         {
@@ -2107,7 +2111,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isLifeTime(accountId, "15");
         get_full_accounts(accountId, "17");
 
-        loadViews(onResume);
+        loadViews(onResume,accountNameChanged);
     }
 
     Boolean checkIfAccountNameChange() {
