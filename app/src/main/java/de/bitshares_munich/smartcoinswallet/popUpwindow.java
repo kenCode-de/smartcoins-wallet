@@ -28,7 +28,7 @@ public class popUpwindow {
     Context context;
     TextView textView;
 
-    popUpwindow(Context c,TextView textview) {
+    public popUpwindow(Context c,TextView textview) {
         context = c;
         List<String> optionsList = new ArrayList<String>();
         optionsList.add("AUD::1");
@@ -51,7 +51,7 @@ public class popUpwindow {
         popupWindow = popupWindow();
 //add
     }
-    popUpwindow(Context c,TextView textview,List<String> optionsList) {
+    public popUpwindow(Context c,TextView textview,List<String> optionsList) {
         context = c;
         textView = textview;
         popUpContents = new String[optionsList.size()];
