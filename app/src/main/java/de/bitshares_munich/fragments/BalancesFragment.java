@@ -196,6 +196,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -271,57 +272,59 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     private void createFolder() {
-        PermissionManager manager = new PermissionManager();
-        manager.verifyStoragePermissions(getActivity());
+        try {
+            PermissionManager manager = new PermissionManager();
+            manager.verifyStoragePermissions(getActivity());
 
-        final File folder = new File(Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name));
+            final File folder = new File(Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name));
 
-        boolean success = false;
+            boolean success = false;
 
-        if (!folder.exists()) {
-            success = folder.mkdir();
-        }
-
-        if (success) {
-            // Do something on success
-            Toast.makeText(getContext(), getResources().getString(R.string.txt_folder_created) + " : " + folder.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        }
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
-
-                    if (!file2.exists()) {
-                        FileOutputStream save = new FileOutputStream(file2);
-
-                        byte[] buffer = null;
-                        InputStream fIn = getResources().openRawResource(R.raw.woohoo);
-                        int size = 0;
-
-                        try {
-                            size = fIn.available();
-                            buffer = new byte[size];
-                            fIn.read(buffer);
-                            fIn.close();
-                            save.write(buffer);
-                            //save.flush();
-                            //save.close();
-                        } catch (FileNotFoundException e) {
-                            // TODO Auto-generated catch block
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                        }
-
-                        save.flush();
-                        save.close();
-                    }
-                } catch (Exception e) {
-
-                }
+            if (!folder.exists()) {
+                success = folder.mkdir();
             }
-        });
+
+            if (success) {
+                // Do something on success
+                Toast.makeText(getContext(), getResources().getString(R.string.txt_folder_created) + " : " + folder.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            }
+
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
+
+                        if (!file2.exists()) {
+                            FileOutputStream save = new FileOutputStream(file2);
+
+                            byte[] buffer = null;
+                            InputStream fIn = getResources().openRawResource(R.raw.woohoo);
+                            int size = 0;
+
+                            try {
+                                size = fIn.available();
+                                buffer = new byte[size];
+                                fIn.read(buffer);
+                                fIn.close();
+                                save.write(buffer);
+                                //save.flush();
+                                //save.close();
+                            } catch (FileNotFoundException e) {
+                                // TODO Auto-generated catch block
+                            } catch (IOException e) {
+                                // TODO Auto-generated catch block
+                            }
+
+                            save.flush();
+                            save.close();
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+        }catch (Exception e){}
     }
 
     @Override
@@ -1885,14 +1888,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             final Runnable updateTask = new Runnable() {
                 @Override
                 public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady) ) {
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-                        SupportMethods.testing("getLifetime", getDetails, "getDetails");
-                        Application.webSocketG.send(getDetails);
-                    } else {
-                        isLifeTime(name_id, id);
 
+                    try {
+                        if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady)) {
+                            String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+                            SupportMethods.testing("getLifetime", getDetails, "getDetails");
+                            Application.webSocketG.send(getDetails);
+                        } else {
+                            isLifeTime(name_id, id);
+                        }
                     }
+                    catch (Exception e)
+                    {}
                 }
             };
 
