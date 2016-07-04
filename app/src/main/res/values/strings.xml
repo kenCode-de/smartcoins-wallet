@@ -323,5 +323,6 @@
 
     // new strings
     <string name="try_again">Please try again after 5 minutes</string>
+    <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
 
 </resources>

@@ -303,7 +303,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
-            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.warning_msg_same_account, Toast.LENGTH_SHORT).show();
         }
 
         if (etReceiverAccount.getText().length() > 0) {
@@ -1583,7 +1583,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         contactListDialog.setContentView(R.layout.contacts_list_send_screen);
         ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
         listView.setAdapter(adapter);
-        setListViewHeightBasedOnChildren(listView);
+        if(contactlist.size()>5) {
+            setListViewHeightBasedOnChildren(listView);
+        }
         listView.setOnItemClickListener(new DropdownOnItemClickListener());
         contactListDialog.show();
     }
