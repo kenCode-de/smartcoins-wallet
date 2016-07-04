@@ -875,10 +875,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             requiredAmount = totalAmount;
             DecimalFormat df = new DecimalFormat("####.####");
             df.setRoundingMode(RoundingMode.CEILING);
-            etAmount.setText(df.format(totalAmount));
-            etAmount.setEnabled(false);
-            spAssets.setEnabled(false);
-
+            if (totalAmount != 0) {
+                etAmount.setText(df.format(totalAmount));
+                etAmount.setEnabled(false);
+                spAssets.setEnabled(false);
+            }
 //        selectBTSAmount.setText(hash.get("currency"));
             String loyaltypoints = null;
             if (resJson.has("ruia")) {
