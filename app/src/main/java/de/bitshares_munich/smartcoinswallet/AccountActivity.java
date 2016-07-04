@@ -71,6 +71,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Bind(R.id.etPin)
     EditText etPin;
 
+    @Bind(R.id.tvExistingAccount)
+    TextView tvExistingAccount;
+
     Boolean settingScreen = false;
     Boolean validAccount = true;
     Boolean checkingValidation = false;
@@ -136,7 +139,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         };
 
         handler.postDelayed(createFolder, 500);
-
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if (res != null) {
+            if (res.containsKey("activity_id")) {
+                if (res.getInt("activity_id") == 919) {
+                    tvExistingAccount.setVisibility(View.GONE);
+                    setBackButton(true);
+                }
+            }
+        }
     }
 
 

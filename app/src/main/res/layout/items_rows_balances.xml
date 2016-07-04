@@ -36,7 +36,7 @@
                 <TextView
                     android:id="@+id/symbol_child_one"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical"
                     android:textSize="17dp"
                     android:lines="1"
@@ -46,30 +46,36 @@
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
-                <TextView
-                    android:id="@+id/amount_child_one"
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_gravity="left|center_vertical"
-                    android:textSize="17dp"
-                    android:paddingLeft="5dp"
-                    android:textColor="@color/green"
-                    android:text=""/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:id="@+id/amount_child_one"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="17dp"
+                        android:paddingLeft="5dp"
+                        android:textColor="@color/green"
+                        android:text=""/>
+                    <TextView
+                        android:id="@+id/fait_child_one"
+                        android:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:textSize="5pt"
+                        android:paddingLeft="5dp"
+                        android:textColor="@color/green"
+                        android:text=""/>
+                </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:layout_weight="1"
-                android:id="@+id/fait_child_one"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:lines="1"
-                android:ellipsize="end"
-                android:textSize="5pt"
-                android:textColor="@color/green"
-                android:text=""/>
         </LinearLayout>
 
         <LinearLayout
@@ -92,7 +98,7 @@
                 <TextView
                     android:id="@+id/symbol_child_two"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical"
                     android:textSize="17dp"
                     android:lines="1"
@@ -102,30 +108,38 @@
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
+
+              <LinearLayout
+                  android:layout_width="0dp"
+                  android:layout_weight="1"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  >
                 <TextView
                     android:id="@+id/amount_child_two"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_gravity="left|center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:textSize="17dp"
                     android:paddingLeft="5dp"
                     android:textColor="@color/green"
                     android:text=""/>
+                  <TextView
+                      android:id="@+id/fait_child_two"
+                      android:visibility="visible"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:lines="1"
+                      android:ellipsize="end"
+                      android:textSize="5pt"
+                      android:paddingLeft="5dp"
+                      android:textColor="@color/green"
+                      android:text=""/>
+            </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:layout_weight="1"
-                android:id="@+id/fait_child_two"
-                android:visibility="visible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                android:lines="1"
-                android:ellipsize="end"
-                android:textSize="5pt"
-                android:textColor="@color/green"
-                android:text=""/>
+
         </LinearLayout>
 
 

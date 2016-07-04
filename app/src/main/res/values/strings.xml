@@ -305,7 +305,6 @@
     <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
     <string name="import_backup">Import Backup from .bin file</string>
 
-    // new strings
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
@@ -318,5 +317,8 @@
     <string name="saving_bin_file_to">Saving Bin File to</string>
     <string name="bin_file_saved_successfully_to">Bin File saved successfully to</string>
     <string name="unable_to_save_bin_file">Unable to save bin file</string>
+
+    <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
+    <string name="txt_alertmsg_la">account from this wallet?</string>
 
 </resources>
