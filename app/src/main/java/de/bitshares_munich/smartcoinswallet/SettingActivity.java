@@ -81,7 +81,7 @@ public class SettingActivity extends BaseActivity {
     final String hide_donations_isChanged = "hide_donations_isChanged";
     final String date_time = "date_time";
     final String register_new_account = "register_new_account";
-    String brainKey = "";
+    //String brainKey = "";
 
     @Bind(R.id.spCountry)
     Spinner spCountry;
@@ -160,7 +160,7 @@ public class SettingActivity extends BaseActivity {
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
 
-        updateBrainKey();
+        //updateBrainKey();
     }
 
     public void init() {
@@ -443,6 +443,7 @@ public class SettingActivity extends BaseActivity {
         return result;
     }
 
+    /*
     private void updateBrainKey ()
     {
         for (int i = 0; i < accountDetails.size(); i++)
@@ -453,6 +454,7 @@ public class SettingActivity extends BaseActivity {
             }
         }
     }
+    */
 
     private String getPin()
     {
@@ -461,6 +463,19 @@ public class SettingActivity extends BaseActivity {
             if (accountDetails.get(i).isSelected)
             {
                 return accountDetails.get(i).pinCode;
+            }
+        }
+
+        return "";
+    }
+
+    private String getBrainKey()
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).brain_key;
             }
         }
 
@@ -489,7 +504,7 @@ public class SettingActivity extends BaseActivity {
 
                 if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
                     accountDetails.get(i).isSelected = true;
-                    brainKey = accountDetails.get(i).brain_key;
+                    //brainKey = accountDetails.get(i).brain_key;
                     if (accountDetails.get(i).isLifeTime) {
                         ivLifeTime.setVisibility(View.VISIBLE);
                         btnUpgrade.setEnabled(false);
@@ -584,6 +599,7 @@ public class SettingActivity extends BaseActivity {
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try
         {
+            String brainKey = getBrainKey();
             if (brainKey.isEmpty())
             {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
@@ -784,29 +800,44 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    void deleteAccount() {
-        if (accountDetails.size() > 1) {
-            for (int i = 0; i < accountDetails.size(); i++) {
-
-                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
+    void deleteAccount()
+    {
+        if (accountDetails.size() > 1)
+        {
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
+                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name))
+                {
                     accountDetails.remove(i);
+                    break;
                 }
             }
-//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_wallet_accounts), accountDetails);
+
+            for (int i = 0; i < accountDetails.size(); i++)
+            {
+                if ( i == 0 )
+                {
+                    accountDetails.get(i).isSelected = true;
+                }
+                else
+                {
+                    accountDetails.get(i).isSelected = false;
+                }
+            }
+
             tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
 
-            //      accountDetails.clear();
-
             accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-//            init();
             populateDropDowns();
-
-
-        } else {
+        }
+        /*
+        else
+        {
             //tvAccounts.setText("");
             //tvAccounts.setVisibility(View.GONE);
             //clearApplicationData(getApplicationContext());
         }
+        */
     }
 
     public void clearApplicationData(Context mContext) {
@@ -1038,7 +1069,9 @@ public class SettingActivity extends BaseActivity {
     {
         showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
 
-        if (brainKey.isEmpty())
+        final String _brnKey = getBrainKey();
+
+        if (_brnKey.isEmpty())
         {
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
             hideDialog();
@@ -1059,7 +1092,7 @@ public class SettingActivity extends BaseActivity {
                     hideDialog();
                     Toast.makeText(getApplicationContext(),getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
                 }
-                get_bin_bytes_from_brainkey(pinCode,brainKey,_accountName);
+                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
             }
         };
 
