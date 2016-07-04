@@ -243,8 +243,8 @@
     <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
     <!--</string>-->
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
-    <string name="lookup_account_a">{\"method\":\"call\",\"params\":[2,\"lookup_accounts\",[
-    </string>
+    <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
+    <string name="lookup_account_b">,\"lookup_accounts\",[</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="account_create_url">https://bitshares.openledger.info</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>

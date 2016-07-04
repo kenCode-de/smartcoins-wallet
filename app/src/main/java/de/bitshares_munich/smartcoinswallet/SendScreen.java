@@ -222,10 +222,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
-    //<<<<<<< HEAD
-//    void init() {
-//        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
-//=======
+
+    Activity sendScreenActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,6 +233,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setBackButton(true);
 
         setTitle(getResources().getString(R.string.send_screen_name));
+
+        sendScreenActivity = this;
 
         context = getApplicationContext();
         ButterKnife.bind(this);
@@ -720,38 +721,49 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     };
 
+    Handler reloadToAccountValidation = new Handler();
     public void createBitShareAN(boolean focused) {
-        if (!focused) {
-
-            if (etReceiverAccount.getText().length() > 2) {
+        if (!focused)
+        {
+            if (etReceiverAccount.getText().length() > 2)
+            {
                 tvErrorRecieverAccount.setText("");
                 tvErrorRecieverAccount.setVisibility(View.GONE);
-                if (Application.webSocketG.isOpen()) {
-                    String socketText = getString(R.string.lookup_account_a) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                    Application.webSocketG.send(socketText);
 
+                if ( Application.isReady )
+                {
+                    String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
+                    String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    Application.webSocketG.send(socketText);
                 }
-            } else {
+                else
+                {
+                    Runnable toAccountValidation = new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            sendScreenActivity.runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    createBitShareAN(false);
+                                }
+                            });
+                        }
+                    };
+
+                    reloadToAccountValidation.postDelayed(toAccountValidation,500);
+                }
+            }
+            else
+            {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     void setCheckboxAvailabilty() {
-//        if(!Helper.containKeySharePref(this, getString(R.string.pref_always_donate))){
-//            Helper.storeBoolianSharePref(this,getString(R.string.pref_always_donate),false);
-//        }
-//        if (Helper.fetchBoolianSharePref(this, getString(R.string.pref_always_donate))) {
-//            cbAlwaysDonate.setChecked(true);
-//            alwaysDonate = true;
-//        } else {
-//            cbAlwaysDonate.setChecked(false);
-//            alwaysDonate = false;
-//        }
-//
-//
-//        cbAlwaysDonate.setVisibility(View.VISIBLE);
-
         cbAlwaysDonate.setChecked(true);
         alwaysDonate = cbAlwaysDonate.isChecked();
     }

@@ -415,7 +415,9 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             if (Accountname.getText().length() > 2) {
                 if (!checkIfAlreadyAdded()) {
                     if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
-                        String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                        //String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                        String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
+                        String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                         Application.webSocketG.send(socketText);
 
                     }

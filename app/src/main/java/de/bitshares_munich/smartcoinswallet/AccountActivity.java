@@ -255,7 +255,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 tvErrorAccountName.setVisibility(View.GONE);
                 if (Application.webSocketG.isOpen()) {
                     // int databaseIndent=Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.sharePref_database));
-                    String socketText = getString(R.string.lookup_account_a) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    //String socketText = getString(R.string.lookup_account_a) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
+                    String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
                     Application.webSocketG.send(socketText);
 
                 }
