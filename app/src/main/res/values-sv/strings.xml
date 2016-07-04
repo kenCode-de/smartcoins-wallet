@@ -186,4 +186,17 @@
     <string name="upgrade_success">Uppgradera lyckades!</string>
     <string name="copied_to_clipboard">Kopieras till urklipp</string>
 
+    <string name="unable_to_load_brainkey">Det går inte att läsa in brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Det går inte att skapa bin format för nyckel</string>
+    <string name="creating_backup_file">Skapa Backup File</string>
+    <string name="fetching_key">fetching Key</string>
+    <string name="generating_bin_format">Generering av bin-format</string>
+    <string name="invalid_pin">Ogiltig PIN</string>
+    <string name="saving_bin_file_to">Spara Bin fil till</string>
+    <string name="bin_file_saved_successfully_to">Bin fil sparats till</string>
+    <string name="unable_to_save_bin_file">Det går inte att spara bin-fil</string>
+
+    <string name="txt_alertmsg_fr">Är du säker på att du vill ta bort</string>
+    <string name="txt_alertmsg_la">konto från plånboken?</string>
+
 </resources>

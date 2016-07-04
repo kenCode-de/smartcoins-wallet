@@ -186,4 +186,17 @@
     <string name="upgrade_success">Atnaujinkite sėkmingai!</string>
     <string name="copied_to_clipboard">Nukopijuoti į iškarpinę</string>
 
+    <string name="unable_to_load_brainkey">Nepavyko įkelti brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Nepavyko sukurti bin formato raktą</string>
+    <string name="creating_backup_file">Kurti atsarginę failo</string>
+    <string name="fetching_key">Gaunamas raktas</string>
+    <string name="generating_bin_format">Generatoriniai bin formatu</string>
+    <string name="invalid_pin">Neteisingas PIN kodas</string>
+    <string name="saving_bin_file_to">Taupymo Bin failą</string>
+    <string name="bin_file_saved_successfully_to">Bin failo sėkmingai išsaugotas</string>
+    <string name="unable_to_save_bin_file">Nepavyko įrašyti bin failą</string>
+
+    <string name="txt_alertmsg_fr">Ar tikrai norite pašalinti</string>
+    <string name="txt_alertmsg_la">sąskaitą iš šios piniginė?</string>
+
 </resources>

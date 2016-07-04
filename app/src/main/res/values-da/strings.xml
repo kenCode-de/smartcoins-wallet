@@ -186,4 +186,17 @@
     <string name="upgrade_success">Opgrader Vellykket!</string>
     <string name="copied_to_clipboard">Kopieret til udklipsholderen</string>
 
+    <string name="unable_to_load_brainkey">Kan ikke indlæse brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Kunne ikke generere bin format til nøgle</string>
+    <string name="creating_backup_file">Oprettelse Backup File</string>
+    <string name="fetching_key">Henter Key</string>
+    <string name="generating_bin_format">Generering bin format</string>
+    <string name="invalid_pin">Ugyldig PIN</string>
+    <string name="saving_bin_file_to">Lagring Bin fil til</string>
+    <string name="bin_file_saved_successfully_to">Bin fil gemt til</string>
+    <string name="unable_to_save_bin_file">Kan ikke gemme bin fil</string>
+
+    <string name="txt_alertmsg_fr">Er du sikker på at du vil fjerne</string>
+    <string name="txt_alertmsg_la">konto fra denne tegnebog?</string>
+
 </resources>

@@ -187,4 +187,17 @@
     <string name="upgrade_success">อัพเกรดประสบความสำเร็จ!</string>
     <string name="copied_to_clipboard">คัดลอกไปที่คลิปบอร์ด</string>
 
+    <string name="unable_to_load_brainkey">ไม่สามารถโหลด brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">ไม่สามารถสร้างรูปแบบถังสำหรับคีย์</string>
+    <string name="creating_backup_file">สร้างไฟล์สำรองข้อมูล</string>
+    <string name="fetching_key">การดึงข้อมูลที่สำคัญ</string>
+    <string name="generating_bin_format">การสร้างรูปแบบถัง</string>
+    <string name="invalid_pin">PIN ไม่ถูกต้อง</string>
+    <string name="saving_bin_file_to">ประหยัด Bin ไฟล์เพื่อ</string>
+    <string name="bin_file_saved_successfully_to">Bin ไฟล์ที่บันทึกไว้เรียบร้อยแล้ว</string>
+    <string name="unable_to_save_bin_file">ไม่สามารถบันทึกไฟล์ bin</string>
+
+    <string name="txt_alertmsg_fr">คุณแน่ใจหรือว่าต้องการลบ</string>
+    <string name="txt_alertmsg_la">บัญชีจากกระเป๋าสตางค์นี้หรือไม่?</string>
+
 </resources>

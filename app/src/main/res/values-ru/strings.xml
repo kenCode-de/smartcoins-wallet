@@ -186,4 +186,17 @@
     <string name="upgrade_success">Обновление успешно!</string>
     <string name="copied_to_clipboard">Скопирован в буфер</string>
 
+    <string name="unable_to_load_brainkey">Невозможно загрузить brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Невозможно создать формат бен для ключа</string>
+    <string name="creating_backup_file">Создание файла резервной копии</string>
+    <string name="fetching_key">Fetching Key</string>
+    <string name="generating_bin_format">Создание формата бен</string>
+    <string name="invalid_pin">Неверный PIN-код</string>
+    <string name="saving_bin_file_to">Сохранение файла в Bin</string>
+    <string name="bin_file_saved_successfully_to">Bin Файл успешно сохранен в</string>
+    <string name="unable_to_save_bin_file">Невозможно сохранить файл бен</string>
+
+    <string name="txt_alertmsg_fr">Вы уверены, что хотите удалить</string>
+    <string name="txt_alertmsg_la">счета из этого кошелька?</string>
+
 </resources>

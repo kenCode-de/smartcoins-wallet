@@ -187,4 +187,17 @@
     <string name="upgrade_success">Upgrade Veiksmīga!</string>
     <string name="copied_to_clipboard">Kopēts starpliktuvē</string>
 
+    <string name="unable_to_load_brainkey">Nevar ielādēt brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Nevar radīt bin formātu atslēgu</string>
+    <string name="creating_backup_file">Radīt Backup File</string>
+    <string name="fetching_key">fetching Key</string>
+    <string name="generating_bin_format">Radīt bin formātu</string>
+    <string name="invalid_pin">Nederīga PIN</string>
+    <string name="saving_bin_file_to">Ietaupot Bin failu</string>
+    <string name="bin_file_saved_successfully_to">Bin Fails saglabāts veiksmīgi</string>
+    <string name="unable_to_save_bin_file">Nevar saglabāt bin failu</string>
+
+    <string name="txt_alertmsg_fr">Vai jūs tiešām vēlaties, lai novērstu</string>
+    <string name="txt_alertmsg_la">kontu no maka?</string>
+
 </resources>

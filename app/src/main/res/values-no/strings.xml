@@ -187,4 +187,17 @@
     <string name="upgrade_success">Oppgradering vellykket!</string>
     <string name="copied_to_clipboard">Kopiert til utklippstavlen</string>
 
+    <string name="unable_to_load_brainkey">Kan ikke laste brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Kan ikke generere bin format for nøkkel</string>
+    <string name="creating_backup_file">Opprette Backup File</string>
+    <string name="fetching_key">Henter Key</string>
+    <string name="generating_bin_format">Generering bin format</string>
+    <string name="invalid_pin">Ugyldig PIN</string>
+    <string name="saving_bin_file_to">Lagrer Bin fil til</string>
+    <string name="bin_file_saved_successfully_to">Bin File lagret til</string>
+    <string name="unable_to_save_bin_file">Kan ikke lagre bin fil</string>
+
+    <string name="txt_alertmsg_fr">Er du sikker på at du vil fjerne</string>
+    <string name="txt_alertmsg_la">kontoen fra denne lommeboken?</string>
+
 </resources>

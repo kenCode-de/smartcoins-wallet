@@ -187,4 +187,17 @@
     <string name="upgrade_success">성공적인 업그레이드!</string>
     <string name="copied_to_clipboard">클립 보드에 복사</string>
 
+    <string name="unable_to_load_brainkey">brainkey를로드 할 수 없습니다</string>
+    <string name="unable_to_generate_bin_format_for_key">키 빈 형식을 생성 할 수 없습니다</string>
+    <string name="creating_backup_file">백업 파일 만들기</string>
+    <string name="fetching_key">가져 오기 키</string>
+    <string name="generating_bin_format">빈 포맷을 작성</string>
+    <string name="invalid_pin">잘못된 PIN</string>
+    <string name="saving_bin_file_to">에 빈 파일 저장</string>
+    <string name="bin_file_saved_successfully_to">빈 파일에 성공적으로 저장</string>
+    <string name="unable_to_save_bin_file">bin 파일을 저장할 수 없습니다</string>
+
+    <string name="txt_alertmsg_fr">당신은을 삭제 하시겠습니까</string>
+    <string name="txt_alertmsg_la">이 지갑에서 계정?</string>
+
 </resources>

@@ -186,4 +186,17 @@
     <string name="upgrade_success">Оновлення успішно!</string>
     <string name="copied_to_clipboard">Скопійований в буфер</string>
 
+    <string name="unable_to_load_brainkey">Неможливо завантажити brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Неможливо створити формат бен для ключа</string>
+    <string name="creating_backup_file">Створення файлу резервної копії</string>
+    <string name="fetching_key">Fetching Key</string>
+    <string name="generating_bin_format">Створення формату бен</string>
+    <string name="invalid_pin">Неправильний PIN-код</string>
+    <string name="saving_bin_file_to">Збереження файлу в Bin</string>
+    <string name="bin_file_saved_successfully_to">Bin Файл успішно збережений в</string>
+    <string name="unable_to_save_bin_file">Неможливо зберегти файл бен</string>
+
+    <string name="txt_alertmsg_fr">Ви впевнені, що хочете видалити</string>
+    <string name="txt_alertmsg_la">рахунки з цього гаманця?</string>
+
 </resources>

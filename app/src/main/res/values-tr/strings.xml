@@ -186,4 +186,17 @@
     <string name="upgrade_success">Başarılı yükseltin!</string>
     <string name="copied_to_clipboard">panoya kopyalandı</string>
 
+    <string name="unable_to_load_brainkey">brainkey yüklenemiyor</string>
+    <string name="unable_to_generate_bin_format_for_key">anahtar için bin biçimi oluşturmak açılamıyor</string>
+    <string name="creating_backup_file">Yedekleme dosyası oluşturuluyor</string>
+    <string name="fetching_key">getiriliyor Anahtar</string>
+    <string name="generating_bin_format">Bin biçimi oluşturuluyor</string>
+    <string name="invalid_pin">geçersiz PIN</string>
+    <string name="saving_bin_file_to">Bin dosyayı kaydetme</string>
+    <string name="bin_file_saved_successfully_to">Bin Dosya başarıyla kaydedildi</string>
+    <string name="unable_to_save_bin_file">bin dosyasını kaydedilemiyor</string>
+
+    <string name="txt_alertmsg_fr">Eğer kaldırmak istediğinizden emin misiniz</string>
+    <string name="txt_alertmsg_la">Bu cüzdanından hesap?</string>
+
 </resources>

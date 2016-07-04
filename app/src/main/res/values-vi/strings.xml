@@ -186,4 +186,17 @@
     <string name="upgrade_success">Nâng cấp thành công!</string>
     <string name="copied_to_clipboard">Sao chép vào clipboard</string>
 
+    <string name="unable_to_load_brainkey">Không thể tải brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Không thể tạo ra định dạng bin cho khóa</string>
+    <string name="creating_backup_file">Tạo Backup File</string>
+    <string name="fetching_key">Đang tìm nạp chính</string>
+    <string name="generating_bin_format">Tạo định dạng bin</string>
+    <string name="invalid_pin">PIN không hợp lệ</string>
+    <string name="saving_bin_file_to">Tiết kiệm Bin File để</string>
+    <string name="bin_file_saved_successfully_to">Bin tập tin lưu thành công</string>
+    <string name="unable_to_save_bin_file">Không thể lưu tập tin bin</string>
+
+    <string name="txt_alertmsg_fr">Bạn có chắc chắn bạn muốn loại bỏ</string>
+    <string name="txt_alertmsg_la">tài khoản từ ví này?</string>
+
 </resources>

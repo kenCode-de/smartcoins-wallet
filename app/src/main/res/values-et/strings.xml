@@ -186,4 +186,17 @@
     <string name="upgrade_success">Upgrade edukas!</string>
     <string name="copied_to_clipboard">Kopeeritaks</string>
 
+    <string name="unable_to_load_brainkey">Ei saa laadida brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Ei saa luua bin vormi võti</string>
+    <string name="creating_backup_file">Loomine varukoopiafail</string>
+    <string name="fetching_key">tõmbamine Key</string>
+    <string name="generating_bin_format">Genereerimine bin formaadis</string>
+    <string name="invalid_pin">Vale PIN</string>
+    <string name="saving_bin_file_to">Salvestamine Bin fail</string>
+    <string name="bin_file_saved_successfully_to">Bin salvestatud faili edukalt</string>
+    <string name="unable_to_save_bin_file">Ei saa salvestada bin faili</string>
+
+    <string name="txt_alertmsg_fr">Oled sa kindel, et soovid eemaldada</string>
+    <string name="txt_alertmsg_la">moodustavad selle rahakoti?</string>
+
 </resources>

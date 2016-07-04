@@ -186,4 +186,17 @@
     <string name="upgrade_success">Naik taraf yang berjaya!</string>
     <string name="copied_to_clipboard">Disalin ke clipboard</string>
 
+    <string name="unable_to_load_brainkey">Tidak dapat memuatkan brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Tidak dapat menjana format bin kunci</string>
+    <string name="creating_backup_file">Membuat Backup File</string>
+    <string name="fetching_key">Mengambil Key</string>
+    <string name="generating_bin_format">Menjana format bin</string>
+    <string name="invalid_pin">PIN tidak sah</string>
+    <string name="saving_bin_file_to">Menyimpan Bin Fail untuk</string>
+    <string name="bin_file_saved_successfully_to">Bin fail berjaya disimpan ke</string>
+    <string name="unable_to_save_bin_file">Tidak dapat menyimpan fail bin</string>
+
+    <string name="txt_alertmsg_fr">Adakah anda pasti anda mahu mengeluarkan</string>
+    <string name="txt_alertmsg_la">Akaun dari dompet ini?</string>
+
 </resources>

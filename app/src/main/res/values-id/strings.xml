@@ -185,4 +185,17 @@
     <string name="upgrade_success">Upgrade Sukses!</string>
     <string name="copied_to_clipboard">Disalin ke clipboard</string>
 
+    <string name="unable_to_load_brainkey">Tidak dapat memuat brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Tidak dapat menghasilkan format bin kunci</string>
+    <string name="creating_backup_file">Membuat File Cadangan</string>
+    <string name="fetching_key">Mengambil Key</string>
+    <string name="generating_bin_format">Menghasilkan Format bin</string>
+    <string name="invalid_pin">PIN yang tidak valid</string>
+    <string name="saving_bin_file_to">Menyimpan Bin File untuk</string>
+    <string name="bin_file_saved_successfully_to">Bin file berhasil disimpan ke</string>
+    <string name="unable_to_save_bin_file">Tidak dapat menyimpan file bin</string>
+
+    <string name="txt_alertmsg_fr">Apakah Anda yakin ingin menghapus</string>
+    <string name="txt_alertmsg_la">akun dari dompet ini?</string>
+
 </resources>

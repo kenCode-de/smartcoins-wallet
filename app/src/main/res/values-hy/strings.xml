@@ -189,4 +189,17 @@
     <string name="upgrade_success">Թարմացնելու Հաջող!</string>
     <string name="copied_to_clipboard">Պատճենված է clipboard</string>
 
+    <string name="unable_to_load_brainkey">Անհնար է բեռնել brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Անհնար է առաջացնում բեն ձեւաչափը առանցքային</string>
+    <string name="creating_backup_file">Ստեղծվում կրկնօրինակ ֆայլը</string>
+    <string name="fetching_key">Բերում Key</string>
+    <string name="generating_bin_format">Գեներացնող Բին ձեւաչափը</string>
+    <string name="invalid_pin">Անվավեր PIN</string>
+    <string name="saving_bin_file_to">Saving բեն ֆայլը</string>
+    <string name="bin_file_saved_successfully_to">Բեն Պատկեր փրկել հաջողությամբ</string>
+    <string name="unable_to_save_bin_file">Անհնար է փրկել bin ֆայլը</string>
+
+    <string name="txt_alertmsg_fr">Համոզված եք, որ ցանկանում եք հեռացնել</string>
+    <string name="txt_alertmsg_la">հաշիվ այս դրամապանակից.</string>
+
 </resources>

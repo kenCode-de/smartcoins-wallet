@@ -186,4 +186,17 @@
     <string name="upgrade_success">Atualizar com sucesso!</string>
     <string name="copied_to_clipboard">Copiados para o clipboard</string>
 
+    <string name="unable_to_load_brainkey">Não é possível carregar brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Não foi possível gerar formato bin para a chave</string>
+    <string name="creating_backup_file">Criando arquivo de backup</string>
+    <string name="fetching_key">Buscando Key</string>
+    <string name="generating_bin_format">Gerando formato bin</string>
+    <string name="invalid_pin">PIN inválido</string>
+    <string name="saving_bin_file_to">Salvando arquivo binário para</string>
+    <string name="bin_file_saved_successfully_to">Bin arquivo salvo com sucesso para</string>
+    <string name="unable_to_save_bin_file">Não foi possível salvar arquivo bin</string>
+
+    <string name="txt_alertmsg_fr">Tem certeza de que deseja remover o</string>
+    <string name="txt_alertmsg_la">conta a partir desta carteira?</string>
+
 </resources>

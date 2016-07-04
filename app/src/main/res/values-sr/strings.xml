@@ -188,4 +188,17 @@
     <string name="upgrade_success">Упграде Успешна!</string>
     <string name="copied_to_clipboard">Копиран у цлипбоард</string>
 
+    <string name="unable_to_load_brainkey">Није могуће учитати браинкеи</string>
+    <string name="unable_to_generate_bin_format_for_key">У стању да произведе бин формат за кључ</string>
+    <string name="creating_backup_file">Креирање бацкуп филе</string>
+    <string name="fetching_key">Преузимање ključ</string>
+    <string name="generating_bin_format">Генерисање бин формат</string>
+    <string name="invalid_pin">nevažeći ПИН</string>
+    <string name="saving_bin_file_to">Чување Бин фајл</string>
+    <string name="bin_file_saved_successfully_to">Бин Фајл успешно чувају у</string>
+    <string name="unable_to_save_bin_file">Није могуће сачувати бин фајл</string>
+
+    <string name="txt_alertmsg_fr">Да ли сте сигурни да желите да уклоните</string>
+    <string name="txt_alertmsg_la">налог на овом новцанику?</string>
+
 </resources>
