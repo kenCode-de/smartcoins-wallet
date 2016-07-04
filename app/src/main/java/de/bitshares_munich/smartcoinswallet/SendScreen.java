@@ -1611,6 +1611,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             contactListDialog.dismiss();
             String selectedItemText = ((TextView) v).getText().toString();
             etReceiverAccount.setText(selectedItemText);
+            createBitShareAN(false);
         }
     }
     public static void setListViewHeightBasedOnChildren(ListView listView) {
