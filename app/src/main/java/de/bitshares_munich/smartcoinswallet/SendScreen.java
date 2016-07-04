@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Scroller;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1521,13 +1525,35 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         for (int i = 0; i < contacts.size(); i++) {
-            contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
+            contactlist.add(contacts.get(i).GetAccount());
+          //  contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
         }
 
-        if (!contactlist.isEmpty()) {
-            popUpwindow p = new popUpwindow(this, etReceiverAccount, contactlist);
-            p.show(view);
-        } else Toast.makeText(context, R.string.empty_list, Toast.LENGTH_LONG).show();
+//        if (!contactlist.isEmpty()) {
+//            popUpwindow p = new popUpwindow(this, etReceiverAccount, contactlist);
+//            p.show(view);
+//        } else Toast.makeText(context, R.string.empty_list, Toast.LENGTH_LONG).show();
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
+
+        builderSingle.setTitle(getString(R.string.imported_created_accounts));
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                context, android.R.layout.simple_list_item_1, contactlist);
+
+        builderSingle.setView(android.R.layout.simple_list_item_single_choice);
+
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        etReceiverAccount.setText(strName);
+                        dialog.dismiss();
+                    }
+                });
+        builderSingle.show();
     }
 
     @Override
