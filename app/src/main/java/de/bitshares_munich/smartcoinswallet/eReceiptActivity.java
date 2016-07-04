@@ -347,7 +347,7 @@ public class eReceiptActivity extends BaseActivity implements IBalancesDelegate 
             return;
         }
 
-        String filename = getResources().getString(R.string.txt_folder_name) + File.separator + "eReceipt-" +transactionIdClipped;
+        String filename = getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" +transactionIdClipped;
 
         map.put("id",eReciptmap.get("id"));
         map.put("time",date);
