@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,21 +31,17 @@ public class BinHelper {
     public ArrayList<Integer> getBytesFromBinFile(String filePath) {
         try {
             File file = new File(filePath);
-            byte[] fileData = new byte[(int) file.length()];
+            //byte[] fileData = new byte[(int) file.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(file));
 
             ArrayList<Integer> result = new ArrayList<>();
 
-            for (int i = 0; i < fileData.length; i++) {
+
+            for ( int i = 0 ; i < file.length() ; i++ )
+            {
                 int val = unsignedToBytes(dis.readByte());
-
-                //result += Integer.toString(val) + ",";
-
                 result.add(val);
-
             }
-
-            //result = result.substring(0,(result.length() - 1));
 
             dis.close();
             return result;
@@ -83,9 +81,39 @@ public class BinHelper {
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
         tinyDB.putTransactions(activity, context, context.getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
 
-        //Intent intent = new Intent(context, TabActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //context.startActivity(intent);
-        //context.finish();
     }
+
+    public boolean saveBinFile ( String filePath , List<Integer> content, Activity _activity )
+    {
+        boolean success = false;
+        try
+        {
+            PermissionManager Manager = new PermissionManager();
+            Manager.verifyStoragePermissions(_activity);
+
+            File file = new File(filePath);
+            byte[] fileData = new byte[content.size()];
+
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+
+            for ( int i = 0 ; i < content.size() ; i++ )
+            {
+                fileData[i] = content.get(i).byteValue();
+            }
+
+            bos.write(fileData);
+            bos.flush();
+            bos.close();
+
+            success = true;
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        return success;
+    }
+
+
 }

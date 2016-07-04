@@ -259,13 +259,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 return;
             }
 
-            Log.d("setSortableHeight", "Scroll Heght : " + Integer.toString(height1));
+            Log.d("setSortableHeight", "Scroll Heght : " + Long.toString(height1));
             View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
             int height2 = transactionsExportHeader.getHeight();
-            Log.d("setSortableHeight", "Scroll Header Heght : " + Integer.toString(height2));
+            Log.d("setSortableHeight", "Scroll Header Heght : " + Long.toString(height2));
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tableView.getLayoutParams();
             params.height = height1 - height2;
-            Log.d("setSortableHeight", "View Heght : " + Integer.toString(params.height));
+            Log.d("setSortableHeight", "View Heght : " + Long.toString(params.height));
             tableViewparent.setLayoutParams(params);
             Log.d("setSortableHeight", "View Heght Set");
         } catch (Exception e) {
@@ -771,7 +771,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
             for( int i = 0 ; i < sym.size() ; i++ )
             {
-                Integer _amount = Integer.parseInt(am.get(i));
+                Long _amount = Long.parseLong(am.get(i));
 
                 // remove balances which are zero
                 if ( _amount != 0 )
@@ -1128,7 +1128,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     // remove zero balances not in previously loaded balances
                     for( int i = 0 ; i < sym.size() ; i++ )
                     {
-                        Integer _amount = Integer.parseInt(am.get(i));
+                        Long _amount = Long.parseLong(am.get(i));
 
                         if ( _amount == 0 )
                         {
@@ -1179,7 +1179,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             if (sym.size() > m)
                             {
 
-                                Log.d("Balances Update", "sym size 1 : " + Integer.toString(m));
+                                Log.d("Balances Update", "sym size 1 : " + Long.toString(m));
 
                                 String symbol = sym.get(m);
 
@@ -1222,11 +1222,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         txtAmount = "0";
                                     }
 
-                                    Integer txtAmount_d = Integer.parseInt(txtAmount);
+                                    Long txtAmount_d = Long.parseLong(txtAmount);
 
                                     // New amount
                                     //float amount_d = convertLocalizeStringToFloat(amount);
-                                    Integer amount_d = Integer.parseInt(amountInInt);
+                                    Long amount_d = Long.parseLong(amountInInt);
 
                                     // Balance is sent
                                     if (txtAmount_d > amount_d) {
@@ -1358,7 +1358,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             // Second child updation
                             if (sym.size() > m)
                             {
-                                Log.d("Balances Update", "sym size 2 : " + Integer.toString(m));
+                                Log.d("Balances Update", "sym size 2 : " + Long.toString(m));
 
                                 String symbol = sym.get(m);
                                 String amount = "";
@@ -1391,10 +1391,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 }
 
                                 //float txtAmount_d = convertLocalizeStringToFloat(txtAmount);
-                                Integer txtAmount_d = Integer.parseInt(txtAmount);
+                                Long txtAmount_d = Long.parseLong(txtAmount);
 
                                 //float amount_d = convertLocalizeStringToFloat(amount);
-                                Integer amount_d = Integer.parseInt(amountInInt);
+                                Long amount_d = Long.parseLong(amountInInt);
 
                                 if (!symbol.equals(txtSymbol)) {
                                     tvSymtwo.setText(symbol);
@@ -1556,7 +1556,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         }
 
 
-                        Log.d("Balances Update","Number of balances loaded : " + Integer.toString(m));
+                        Log.d("Balances Update","Number of balances loaded : " + Long.toString(m));
 
                         // Insert/remove balance objects if updated
                         Log.d("Balances Update","Insert or remove balance objects if needed");
@@ -1565,7 +1565,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                         if (loop > 0)
                         {
-                            Log.d("Balances Update","Yes updation required : " + Integer.toString(loop));
+                            Log.d("Balances Update","Yes updation required : " + Long.toString(loop));
 
                             for (int i = m; i < sym.size(); i += 2)
                             {
@@ -2080,8 +2080,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myAssetsActivity.loadBalances(to);
         }
         number_of_transactions_loaded = 0;
-        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
-        number_of_transactions_loaded = number_of_transactions_loaded + 5;
+        new TransactionActivity(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
+        number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
     void loadBasic(boolean onResume,boolean accountNameChanged) {
@@ -2140,9 +2140,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         return !checkAccountName.equals(to);
     }
 
-    @OnClick(R.id.ivMultiAccArrow)
-    public void OnChangedAccount(View view){
-
+    void onChangedAccount(){
         final ArrayList<AccountDetails> accountDetailsList;
 
         accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -2185,7 +2183,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                 });
         builderSingle.show();
+    }
 
+    @OnClick(R.id.ivMultiAccArrow)
+    public void ivOnChangedAccount(View view){
+        onChangedAccount();
+    }
+
+    @OnClick(R.id.account_name)
+    public void tvOnChangedAccount(View view){
+        onChangedAccount();
     }
 
     private void showHideLifeTime(final Boolean show) {
