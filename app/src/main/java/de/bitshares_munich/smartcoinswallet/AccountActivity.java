@@ -365,7 +365,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         }
 
                     } else if (resp.status.equals("failure")) {
-
+                        SupportMethods.testing("accountActivity", resp.toString(), "past_break");
 
                     }
                 } else {
@@ -412,12 +412,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             } catch (Exception e) {
                                 accountCreated = true;
                                 etAccountName.setText(accountName);
+                                SupportMethods.testing("accountActivity", resp.toString(), "past_break");
+
                             }
 
                         }
                     } else {
                         accountCreated = true;
                         etAccountName.setText(accountName);
+                        SupportMethods.testing("accountActivity","failed", "past_break");
+
                     }
                 }
 
@@ -431,29 +435,26 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         }
         SupportMethods.testing("accountActivity", "1", "past");
-//        accountCreated = true;
-//        etAccountName.setText(accountName);
     }
-
 
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
+
+//        if(canAccountCreate()) {
+
         if (checkingValidation) {
             Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
         } else if (etAccountName.getText().toString().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
         } else if (etAccountName.getText().toString().length() <= 5) {
             Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-        }else if (checkLastIndex()) {
+        } else if (checkLastIndex()) {
             tvErrorAccountName.setVisibility(View.VISIBLE);
             tvErrorAccountName.setText(R.string.last_letter_cannot);
-        }
-        else if (!checkHyphen()) {
+        } else if (!checkHyphen()) {
             tvErrorAccountName.setVisibility(View.VISIBLE);
             tvErrorAccountName.setText(R.string.account_name_shoud_have);
-        }
-
-        else {
+        } else {
             if (etPin.getText().length() < 5) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             } else if (etPinConfirmation.getText().length() < 5) {
@@ -470,6 +471,14 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 }
             }
         }
+
+//        }else {
+//                 Toast.makeText(getApplicationContext(), "Wait few mins", Toast.LENGTH_SHORT).show();
+//        }
+
+
+
+
 //        if (etPin.getText().length() < 5) {
 //
 //        }
@@ -560,7 +569,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         checkingValidation = false;
                         if (accountCreated) {
                             get_account_id(etAccountName.getText().toString(), "151");
-                            tvErrorAccountName.setVisibility(View.VISIBLE);
+                            tvErrorAccountName.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -574,6 +583,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             hideDialog();
                             accountCreated = false;
                             //  tvErrorAccountName.setText("account created");
+                            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                             tvErrorAccountName.setVisibility(View.GONE);
                         }
 //                        tvErrorAccountName.setText("Validation Complete");
@@ -613,11 +623,14 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
         tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
 
+  //      Application.accountCreate();
+
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
+
 
     void get_account_id(final String name_id, final String id) {
         try {
