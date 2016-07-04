@@ -302,6 +302,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             etReceiverAccount.setText(text.toString().trim());
         }
 
+        if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
+            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
+        }
+
         if (etReceiverAccount.getText().length() > 0) {
             validating = true;
             myLowerCaseTimer.cancel();
@@ -1057,7 +1061,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
 //            return false;
         } else if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
-            //  Toast.makeText(context, R.string.str_invalid_receiver, Toast.LENGTH_SHORT).show();
             return false;
         } else if (!validAmount) {
             //   Toast.makeText(context, R.string.str_invalid_amount, Toast.LENGTH_SHORT).show();
