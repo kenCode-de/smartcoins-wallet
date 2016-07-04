@@ -17,6 +17,7 @@ import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.RegisterAccount;
+import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.models.TransactionSmartCoin;
@@ -40,6 +41,10 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<AccountDetails> getAccountFromBin(@Body HashMap<String, Object> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<ResponseBinFormat> getBytesFromBrainKey(@Body HashMap<String, String> params);
 
     @Headers({"Content-Type: application/json"})
     @POST("/get_qr_hash/")
