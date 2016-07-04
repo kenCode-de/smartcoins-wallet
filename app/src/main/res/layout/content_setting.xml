@@ -416,7 +416,6 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:background="@color/whiteColor"
-                        android:onClick="onClickBackbtn"
                         android:src="@drawable/backup_ic"
                         android:id="@+id/backup_ic"
                     />
@@ -426,7 +425,6 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:onClick="onClickBackbtn"
                         android:text="@string/backup"
 
                     />

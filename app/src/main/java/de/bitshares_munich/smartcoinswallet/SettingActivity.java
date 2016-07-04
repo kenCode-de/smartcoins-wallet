@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.IntegerRes;
 import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
 import android.util.Log;
@@ -42,7 +43,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +57,7 @@ import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.LangCode;
+import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
@@ -129,7 +133,7 @@ public class SettingActivity extends BaseActivity {
     Button btnUpgrade;
 
     ProgressDialog progressDialog;
-    Activity activity;
+    Activity activitySettings;
 
     String wifKey = "";
 
@@ -147,7 +151,7 @@ public class SettingActivity extends BaseActivity {
 
         tinyDB = new TinyDB(getApplicationContext());
         ButterKnife.bind(this);
-        activity = this;
+        activitySettings = this;
         progressDialog = new ProgressDialog(this);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pre_ischecked_timezone), false);
@@ -156,6 +160,7 @@ public class SettingActivity extends BaseActivity {
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
 
+        updateBrainKey();
     }
 
     public void init() {
@@ -436,8 +441,43 @@ public class SettingActivity extends BaseActivity {
         }
 
         return result;
+    }
 
+    private void updateBrainKey ()
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                brainKey = accountDetails.get(i).brain_key;
+            }
+        }
+    }
 
+    private String getPin()
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).pinCode;
+            }
+        }
+
+        return "";
+    }
+
+    private String getAccountName()
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).account_name;
+            }
+        }
+
+        return "";
     }
 
     @SuppressLint("NewApi")
@@ -542,12 +582,20 @@ public class SettingActivity extends BaseActivity {
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
-        try {
-            if (brainKey.isEmpty()) {
-                brainKey = accountDetails.get(0).brain_key;
+        try
+        {
+            if (brainKey.isEmpty())
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+                return;
+                //brainKey = accountDetails.get(0).brain_key;
             }
-            etBrainKey.setText(brainKey);
-        } catch (Exception e) {
+            else
+            {
+                etBrainKey.setText(brainKey);
+            }
+        }
+        catch (Exception e) {
 
         }
 
@@ -676,7 +724,7 @@ public class SettingActivity extends BaseActivity {
                     }
                     if (balanceValid[0]) {
                         showDialog("", getString(R.string.upgrading));
-                        getAccountUpgradeInfo(activity, spAccounts.getSelectedItem().toString());
+                        getAccountUpgradeInfo(activitySettings, spAccounts.getSelectedItem().toString());
                     }
                 }
             }
@@ -844,6 +892,16 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
+    private void changeDialogMsg(String msg) {
+        if (progressDialog != null)
+        {
+            if (progressDialog.isShowing())
+            {
+                progressDialog.setMessage(msg);
+            }
+        }
+    }
+
     private void updateLifeTimeModel(String accountName) {
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         try {
@@ -859,21 +917,153 @@ public class SettingActivity extends BaseActivity {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
 
-    public int unsignedToBytes(byte b) {
-        return b & 0xFF;
+    Handler createBackUp = new Handler();
+
+    private int convertDOubleToInt(Double value)
+    {
+        String valueString = Double.toString(value);
+
+        for ( int i = 0 ; i < valueString.length() ; i++ )
+        {
+            if ( valueString.charAt(i) == '.' )
+            {
+                valueString = valueString.substring(0,i);
+                break;
+            }
+        }
+
+        int valueInteger = Integer.parseInt(valueString);
+
+        return valueInteger;
+    }
+
+    public void saveBinContentToFile(List<Integer> content, String _accountName)
+    {
+        changeDialogMsg(getResources().getString(R.string.saving_bin_file_to) + " : " + getResources().getString(R.string.folder_name));
+
+        String folder = Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name);
+        String path =  folder + File.separator + _accountName + ".bin";
+
+        boolean success = new BinHelper().saveBinFile(path,content,activitySettings);
+
+        hideDialog();
+
+        if ( success )
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.bin_file_saved_successfully_to) + " : " + path,Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_save_bin_file),Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName)
+    {
+        try
+        {
+            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+            IWebService service = sg.getService(IWebService.class);
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("method", "backup_bin");
+            hashMap.put("password", pin);
+            hashMap.put("brainkey", brnKey);
+
+            Call<ResponseBinFormat> postingService = service.getBytesFromBrainKey(hashMap);
+
+            postingService.enqueue(new Callback<ResponseBinFormat>() {
+                @Override
+                public void onResponse(Response<ResponseBinFormat> response) {
+
+                    if (response.isSuccess())
+                    {
+                        ResponseBinFormat responseContent = response.body();
+                        if (responseContent.status.equals("failure"))
+                        {
+                            Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                        }
+                        else
+                        {
+                            try
+                            {
+                                List<Object> abc = (List<Object>) responseContent.content;
+
+                                List<Integer> resultContent = new ArrayList<>();
+
+                                for (Object in: abc)
+                                {
+                                    int _in = convertDOubleToInt((Double)in);
+                                    resultContent.add(_in);
+                                }
+
+                                saveBinContentToFile(resultContent, _accountName);
+                            }
+                            catch (Exception e)
+                            {
+                                hideDialog();
+                                Toast.makeText(activitySettings, activitySettings.getString(R.string.unable_to_import_account_from_bin_file) + " : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        hideDialog();
+                        Log.d("bin","fail");
+                        Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    hideDialog();
+                    Log.d("bin","fail");
+                    Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            hideDialog();
+            Log.d("bin",e.getMessage());
+            Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.backup_ic)
     public void onClickBackupDotBin()
     {
-        /*
-        String filename = "bts_default_yasir-mobile.bin";
-        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + getResources().getString(R.string.folder_name);
-        String filePath = extStorage + File.separator + filename;
+        showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
 
-        String bytes = new BinHelper().getBytesFromBinFile(filePath);
-        Log.d("Bytes",bytes);
-        */
+        if (brainKey.isEmpty())
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+            hideDialog();
+            return;
+        }
+
+        final String _accountName = getAccountName();
+
+        changeDialogMsg(getResources().getString(R.string.generating_bin_format));
+
+        Runnable getFormat = new Runnable() {
+            @Override
+            public void run()
+            {
+                String pinCode = getPin();
+                if ( pinCode.isEmpty() )
+                {
+                    hideDialog();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
+                }
+                get_bin_bytes_from_brainkey(pinCode,brainKey,_accountName);
+            }
+        };
+
+        createBackUp.postDelayed(getFormat,200);
     }
 
 }
