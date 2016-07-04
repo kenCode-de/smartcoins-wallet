@@ -28,15 +28,14 @@ public class BinHelper {
         return b & 0xFF;
     }
 
-    public ArrayList<Integer> getBytesFromBinFile(String filePath)
-    {
-        try
-        {
+    public ArrayList<Integer> getBytesFromBinFile(String filePath) {
+        try {
             File file = new File(filePath);
             //byte[] fileData = new byte[(int) file.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(file));
 
             ArrayList<Integer> result = new ArrayList<>();
+
 
             for ( int i = 0 ; i < file.length() ; i++ )
             {
@@ -46,9 +45,7 @@ public class BinHelper {
 
             dis.close();
             return result;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -59,7 +56,7 @@ public class BinHelper {
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(context.getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
-        accountDetails.pinCode=pinCode;
+        accountDetails.pinCode = pinCode;
         accountDetails.account_name = accountDetail.account_name;
         accountDetails.pub_key = accountDetail.pub_key;
         accountDetails.brain_key = brainKey;
@@ -69,15 +66,21 @@ public class BinHelper {
 
 
         for (int i = 0; i < accountDetailsList.size(); i++) {
-            accountDetailsList.get(i).isSelected = false;
+            if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {
+                accountDetailsList.remove(i);
+            }
         }
 
+        for (int i = 0; i < accountDetailsList.size(); i++) {
+            accountDetailsList.get(i).isSelected = false;
+        }
         accountDetailsList.add(accountDetails);
 
         tinyDB.putListObject(context.getString(R.string.pref_wallet_accounts), accountDetailsList);
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions( activity, context, context.getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
+        tinyDB.putTransactions(activity, context, context.getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
+
     }
 
     public boolean saveBinFile ( String filePath , List<Integer> content, Activity _activity )

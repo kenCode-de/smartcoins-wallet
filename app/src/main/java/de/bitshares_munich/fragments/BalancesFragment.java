@@ -2140,9 +2140,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         return !checkAccountName.equals(to);
     }
 
-    @OnClick(R.id.ivMultiAccArrow)
-    public void OnChangedAccount(View view){
-
+    void onChangedAccount(){
         final ArrayList<AccountDetails> accountDetailsList;
 
         accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -2185,7 +2183,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                 });
         builderSingle.show();
+    }
 
+    @OnClick(R.id.ivMultiAccArrow)
+    public void ivOnChangedAccount(View view){
+        onChangedAccount();
+    }
+
+    @OnClick(R.id.account_name)
+    public void tvOnChangedAccount(View view){
+        onChangedAccount();
     }
 
     private void showHideLifeTime(final Boolean show) {

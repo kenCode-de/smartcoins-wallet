@@ -89,7 +89,7 @@ public class BrainkeyActivity extends BaseActivity {
 
         if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
-        }  else {
+        } else {
             if (etPin.getText().length() < 5) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             } else if (etPinConfirmation.getText().length() < 5) {
@@ -112,7 +112,7 @@ public class BrainkeyActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));
-                    get_account_from_brainkey(this,temp,pinCode);
+                    get_account_from_brainkey(this, temp, pinCode);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
@@ -133,8 +133,8 @@ public class BrainkeyActivity extends BaseActivity {
                     isBrainKey = true;
                     break;
                 }
+            } catch (Exception e) {
             }
-            catch (Exception e){}
         }
         return isBrainKey;
 
@@ -169,7 +169,7 @@ public class BrainkeyActivity extends BaseActivity {
                         }
                         */
 
-                        addWallet(accountDetails,brainKey,pinCode);
+                        addWallet(accountDetails, brainKey, pinCode);
                     }
 
                 } else {
@@ -236,11 +236,11 @@ public class BrainkeyActivity extends BaseActivity {
     }
     /////////////////
 
-    void addWallet(AccountDetails accountDetail,String brainKey,String pinCode) {
+    void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
-        accountDetails.pinCode=pinCode;
+        accountDetails.pinCode = pinCode;
         accountDetails.account_name = accountDetail.account_name;
         accountDetails.pub_key = accountDetail.pub_key;
         accountDetails.brain_key = brainKey;
@@ -250,6 +250,12 @@ public class BrainkeyActivity extends BaseActivity {
 
 
         for (int i = 0; i < accountDetailsList.size(); i++) {
+
+            if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {
+                accountDetailsList.remove(i);
+            }
+        }
+        for (int i = 0; i < accountDetailsList.size(); i++) {
             accountDetailsList.get(i).isSelected = false;
         }
 
@@ -258,7 +264,7 @@ public class BrainkeyActivity extends BaseActivity {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
+        tinyDB.putTransactions(this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
 
         Intent intent = new Intent(getApplicationContext(), TabActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
