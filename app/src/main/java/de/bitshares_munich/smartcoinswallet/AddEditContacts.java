@@ -228,6 +228,10 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();
         String _email = etEmail.getText().toString();
+        if(!SupportMethods.isEmailValid(_email)){
+            _email = "";
+        }
+
         if (add) {
             contact.SaveNote(_note);
             contact.SetName(_contactname);
