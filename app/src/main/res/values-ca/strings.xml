@@ -187,4 +187,17 @@
     <string name="upgrade_success">Actualització correcta!</string>
     <string name="copied_to_clipboard">Copiat al porta-retalls</string>
 
+    <string name="unable_to_load_brainkey">No es pot carregar brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">No es pot generar el format bin per la clau</string>
+    <string name="creating_backup_file">La creació de còpies de seguretat d\'arxius</string>
+    <string name="fetching_key">obtenint clau</string>
+    <string name="generating_bin_format">La generació de format bin</string>
+    <string name="invalid_pin">PIN no vàlid</string>
+    <string name="saving_bin_file_to">Bin estalvi d\'arxius per</string>
+    <string name="bin_file_saved_successfully_to">Bin arxiu guardat amb èxit per</string>
+    <string name="unable_to_save_bin_file">No es pot desar el fitxer bin</string>
+
+    <string name="txt_alertmsg_fr">Esteu segur que voleu eliminar el</string>
+    <string name="txt_alertmsg_la">donar compte d\'aquesta cartera?</string>
+
 </resources>

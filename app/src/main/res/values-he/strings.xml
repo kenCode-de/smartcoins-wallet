@@ -186,4 +186,17 @@
     <string name="upgrade_success">שדרוג מוצלח!</string>
     <string name="copied_to_clipboard">הועתק ללוח</string>
 
+    <string name="unable_to_load_brainkey">לא ניתן לטעון brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">לא ניתן ליצור בפורמט bin עבור מפתח</string>
+    <string name="creating_backup_file">יצירת קובץ גיבוי</string>
+    <string name="fetching_key">שליפת מפתח</string>
+    <string name="generating_bin_format">יצירת פורמט bin</string>
+    <string name="invalid_pin">מספר זיהוי אישי שגוי</string>
+    <string name="saving_bin_file_to">שמירת סל קובץ</string>
+    <string name="bin_file_saved_successfully_to">סל הקובץ נשמר בהצלחה</string>
+    <string name="unable_to_save_bin_file">אין אפשרות לשמור את קובץ bin</string>
+
+    <string name="txt_alertmsg_fr">האם אתה בטוח שברצונך להסיר את</string>
+    <string name="txt_alertmsg_la">חשבון מארנק זה?</string>
+
 </resources>

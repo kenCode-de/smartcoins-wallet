@@ -186,4 +186,17 @@
     <string name="upgrade_success">Rüsten Sie erfolgreich!</string>
     <string name="copied_to_clipboard">In die Zwischenablage kopiert</string>
 
+    <string name="unable_to_load_brainkey">Unfähig brainkey zu laden</string>
+    <string name="unable_to_generate_bin_format_for_key">Nicht imstande bin Format für Schlüssel zu erzeugen</string>
+    <string name="creating_backup_file">Erstellen von Backup-Datei</string>
+    <string name="fetching_key">Fetching Key</string>
+    <string name="generating_bin_format">Generieren bin Format</string>
+    <string name="invalid_pin">Ungültige PIN</string>
+    <string name="saving_bin_file_to">Speichern Bin Datei zu</string>
+    <string name="bin_file_saved_successfully_to">Bin Datei gespeichert erfolgreich</string>
+    <string name="unable_to_save_bin_file">Nicht imstande bin Datei speichern</string>
+
+    <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie entfernen möchten, die</string>
+    <string name="txt_alertmsg_la">Konto von dieser Geldbörse?</string>
+
 </resources>

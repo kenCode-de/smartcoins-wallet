@@ -186,4 +186,17 @@
     <string name="upgrade_success">Päivitys suoritettu!</string>
     <string name="copied_to_clipboard">Kopioitu leikepöydälle</string>
 
+    <string name="unable_to_load_brainkey">Lataaminen ei onnistu brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Ei voitu luoda bin muodossa keskeisten</string>
+    <string name="creating_backup_file">Luominen Varmuuskopiotiedosto</string>
+    <string name="fetching_key">Haetaan Key</string>
+    <string name="generating_bin_format">Luodaan bin muodossa</string>
+    <string name="invalid_pin">Virheellinen PIN</string>
+    <string name="saving_bin_file_to">Tallentaminen Bin tiedosto</string>
+    <string name="bin_file_saved_successfully_to">Bin tiedosto tallennettu kohteeseen</string>
+    <string name="unable_to_save_bin_file">Ei voitu tallentaa bin tiedosto</string>
+
+    <string name="txt_alertmsg_fr">Oletko varma, että haluat poistaa</string>
+    <string name="txt_alertmsg_la">osuus tästä lompakon?</string>
+
 </resources>

@@ -186,4 +186,17 @@
     <string name="upgrade_success">Upgrade Succesvolle!</string>
     <string name="copied_to_clipboard">Gekopieerd naar het klembord</string>
 
+    <string name="unable_to_load_brainkey">Kan geen brainkey laden</string>
+    <string name="unable_to_generate_bin_format_for_key">Kan geen bin formaat voor sleutel te genereren</string>
+    <string name="creating_backup_file">Het maken van back-upbestand</string>
+    <string name="fetching_key">Ophalen Key</string>
+    <string name="generating_bin_format">Het genereren van bin formaat</string>
+    <string name="invalid_pin">ongeldige PIN</string>
+    <string name="saving_bin_file_to">Opslaan van Bin bestand naar</string>
+    <string name="bin_file_saved_successfully_to">Bin File opgeslagen succes</string>
+    <string name="unable_to_save_bin_file">Kan geen bin bestand op te slaan</string>
+
+    <string name="txt_alertmsg_fr">Weet u zeker dat u het verwijderen</string>
+    <string name="txt_alertmsg_la">rekening van deze portefeuille?</string>
+
 </resources>

@@ -186,4 +186,17 @@
     <string name="upgrade_success">升級成功！</string>
     <string name="copied_to_clipboard">複製到剪貼板</string>
 
+    <string name="unable_to_load_brainkey">無法加載brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">無法生成關鍵斌格式</string>
+    <string name="creating_backup_file">創建備份文件</string>
+    <string name="fetching_key">取鑰匙</string>
+    <string name="generating_bin_format">生成斌格式</string>
+    <string name="invalid_pin">無效的PIN碼</string>
+    <string name="saving_bin_file_to">保存bin文件</string>
+    <string name="bin_file_saved_successfully_to">bin文件成功保存到</string>
+    <string name="unable_to_save_bin_file">無法保存bin文件</string>
+
+    <string name="txt_alertmsg_fr">您確定要刪除</string>
+    <string name="txt_alertmsg_la">從這個錢包帳戶？</string>
+
 </resources>

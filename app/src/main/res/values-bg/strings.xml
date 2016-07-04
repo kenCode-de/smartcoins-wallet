@@ -189,4 +189,17 @@
     <string name="upgrade_success">Подобрете успешен!</string>
     <string name="copied_to_clipboard">В буферната памет</string>
 
+    <string name="unable_to_load_brainkey">Не може да се зареди brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Не може да се генерира бин формат за ключ</string>
+    <string name="creating_backup_file">Създаване на резервно копие на файла</string>
+    <string name="fetching_key">извлича Key</string>
+    <string name="generating_bin_format">Генериране на бин формат</string>
+    <string name="invalid_pin">Невалиден PIN</string>
+    <string name="saving_bin_file_to">Запазване на бин файла да</string>
+    <string name="bin_file_saved_successfully_to">Bin файл, записан успешно да</string>
+    <string name="unable_to_save_bin_file">Не може да се спаси бин файл</string>
+
+    <string name="txt_alertmsg_fr">Сигурни ли сте, че искате да премахнете</string>
+    <string name="txt_alertmsg_la">акаунт от този портфейл?</string>
+
 </resources>

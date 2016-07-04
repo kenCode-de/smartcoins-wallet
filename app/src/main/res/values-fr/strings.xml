@@ -187,4 +187,17 @@
     <string name="upgrade_success">Mise à niveau réussie!</string>
     <string name="copied_to_clipboard">Copié dans le presse-papier</string>
 
+    <string name="unable_to_load_brainkey">Impossible de charger brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Impossible de générer le format bin pour la clé</string>
+    <string name="creating_backup_file">Création de fichier de sauvegarde</string>
+    <string name="fetching_key">Comparaison Key</string>
+    <string name="generating_bin_format">Génération format bin</string>
+    <string name="invalid_pin">PIN non valide</string>
+    <string name="saving_bin_file_to">Enregistrement Bin fichier pour</string>
+    <string name="bin_file_saved_successfully_to">Bin fichier enregistré avec succès</string>
+    <string name="unable_to_save_bin_file">Impossible d\'enregistrer le fichier bin</string>
+
+    <string name="txt_alertmsg_fr">Êtes-vous sûr de vouloir supprimer le</string>
+    <string name="txt_alertmsg_la">compte de ce portefeuille?</string>
+
 </resources>

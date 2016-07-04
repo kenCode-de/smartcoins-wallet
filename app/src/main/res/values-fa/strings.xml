@@ -188,4 +188,17 @@
     <string name="upgrade_success">ارتقا موفق!</string>
     <string name="copied_to_clipboard">کپی به کلیپ بورد</string>
 
+    <string name="unable_to_load_brainkey">قادر به بارگیری brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">قادر به تولید فرمت بن برای کلید</string>
+    <string name="creating_backup_file">ایجاد فایل پشتیبان</string>
+    <string name="fetching_key">واکشی کلیدی</string>
+    <string name="generating_bin_format">تولید فرمت بن</string>
+    <string name="invalid_pin">پین نامعتبر</string>
+    <string name="saving_bin_file_to">صرفه جویی در بن پرونده به</string>
+    <string name="bin_file_saved_successfully_to">بن فایل با موفقیت به نجات</string>
+    <string name="unable_to_save_bin_file">قادر به ذخیره فایل بن</string>
+
+    <string name="txt_alertmsg_fr">آیا مطمئن هستید که می خواهید به حذف</string>
+    <string name="txt_alertmsg_la">از این کیف پول حساب؟</string>
+
 </resources>

@@ -186,4 +186,17 @@
     <string name="select">নির্বাচন করা</string>
     <string name="are_you_sure">তুমি কি নিশ্চিত?</string>
 
+    <string name="unable_to_load_brainkey">brainkey লোড করতে অক্ষম</string>
+    <string name="unable_to_generate_bin_format_for_key">কী জন্য বিন বিন্যাস উৎপন্ন করতে অক্ষম</string>
+    <string name="creating_backup_file">ব্যাকআপ ফাইল তৈরি</string>
+    <string name="fetching_key">আনা হচ্ছে মূল</string>
+    <string name="generating_bin_format">বিন বিন্যাস তৈরি করা হচ্ছে</string>
+    <string name="invalid_pin">অবৈধ PIN</string>
+    <string name="saving_bin_file_to">বিন ফাইল সংরক্ষণের</string>
+    <string name="bin_file_saved_successfully_to">বিন ফাইল সফলভাবে উদ্ধার</string>
+    <string name="unable_to_save_bin_file">বিন ফাইল সংরক্ষণ করা যায়নি</string>
+
+    <string name="txt_alertmsg_fr">আপনি নিশ্চিত ভাবে সরাতে ইচ্ছুক</string>
+    <string name="txt_alertmsg_la">এই মানিব্যাগ থেকে অ্যাকাউন্ট?</string>
+
 </resources>

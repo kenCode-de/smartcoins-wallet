@@ -187,4 +187,17 @@
     <string name="upgrade_success">Upgrade suksesshëm!</string>
     <string name="copied_to_clipboard">Kopjohet në clipboard</string>
 
+    <string name="unable_to_load_brainkey">Në pamundësi për të ngarkuar brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Në pamundësi për të krijuar format bin për çelës</string>
+    <string name="creating_backup_file">Krijimi i dokumentit Backup</string>
+    <string name="fetching_key">ngarkuar Key</string>
+    <string name="generating_bin_format">Gjenerimi formatin bin</string>
+    <string name="invalid_pin">PIN i pavlefshëm</string>
+    <string name="saving_bin_file_to">Ruajtja Bin File</string>
+    <string name="bin_file_saved_successfully_to">Bin dokumentit ruajtur me sukses të</string>
+    <string name="unable_to_save_bin_file">Në pamundësi për të ruajtur file bin</string>
+
+    <string name="txt_alertmsg_fr">Jeni te sigurte qe doni te hiqni</string>
+    <string name="txt_alertmsg_la">llogari nga ky portofol?</string>
+
 </resources>

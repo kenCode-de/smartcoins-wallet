@@ -185,4 +185,17 @@
     <string name="upgrade_success">Upgrade byl úspěšný!</string>
     <string name="copied_to_clipboard">Byl zkopírován do schránky</string>
 
+    <string name="unable_to_load_brainkey">Nelze načíst brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Nelze generovat formátu koš na klíč</string>
+    <string name="creating_backup_file">Vytvoření záložní soubor</string>
+    <string name="fetching_key">Načítání Key</string>
+    <string name="generating_bin_format">Generování formátu bin</string>
+    <string name="invalid_pin">Neplatný PIN</string>
+    <string name="saving_bin_file_to">Ukládání Bin souboru do</string>
+    <string name="bin_file_saved_successfully_to">Bin Soubor byl úspěšně uložen do</string>
+    <string name="unable_to_save_bin_file">Nelze uložit soubor bin</string>
+
+    <string name="txt_alertmsg_fr">Jste si jisti, že chcete odstranit</string>
+    <string name="txt_alertmsg_la">účet z této peněženky?</string>
+
 </resources>

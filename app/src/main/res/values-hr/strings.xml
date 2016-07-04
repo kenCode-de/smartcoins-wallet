@@ -188,4 +188,17 @@
     <string name="upgrade_success">Nadogradnja uspješna!</string>
     <string name="copied_to_clipboard">Kopiran u međuspremnik</string>
 
+    <string name="unable_to_load_brainkey">Nije moguće učitati brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Nije moguće generirati bin format za ključ</string>
+    <string name="creating_backup_file">Stvaranje datoteke sigurnosne kopije</string>
+    <string name="fetching_key">Dohvaćanje ključa</string>
+    <string name="generating_bin_format">Generiranje bin formatu</string>
+    <string name="invalid_pin">Neispravan PIN</string>
+    <string name="saving_bin_file_to">Spremanje Bin datoteku za</string>
+    <string name="bin_file_saved_successfully_to">Bin Datoteka je uspješno spremljen na</string>
+    <string name="unable_to_save_bin_file">Nije moguće spremiti bin datoteku</string>
+
+    <string name="txt_alertmsg_fr">Jeste li sigurni da želite ukloniti</string>
+    <string name="txt_alertmsg_la">račun iz ovog novčanika?</string>
+
 </resources>

@@ -187,4 +187,17 @@
     <string name="upgrade_success">सफल उन्नयन!</string>
     <string name="copied_to_clipboard">क्लिपबोर्ड पर नकल</string>
 
+    <string name="unable_to_load_brainkey">brainkey लोड करने में असमर्थ</string>
+    <string name="unable_to_generate_bin_format_for_key">कुंजी के लिए बिन प्रारूप उत्पन्न करने में असमर्थ</string>
+    <string name="creating_backup_file">बैकअप फ़ाइल बना रहा है</string>
+    <string name="fetching_key">ला रहा है कुंजी</string>
+    <string name="generating_bin_format">बिन प्रारूप सृजन</string>
+    <string name="invalid_pin">अमान्य पिन</string>
+    <string name="saving_bin_file_to">करने के लिए बिन फ़ाइल को सहेजने</string>
+    <string name="bin_file_saved_successfully_to">बिन फ़ाइल को सफलतापूर्वक बचाया</string>
+    <string name="unable_to_save_bin_file">बिन फ़ाइल सहेजने में असमर्थ</string>
+
+    <string name="txt_alertmsg_fr">क्या आप वाकई निकालना चाहते हैं</string>
+    <string name="txt_alertmsg_la">इस बटुए से खाता?</string>
+
 </resources>

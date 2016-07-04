@@ -186,4 +186,17 @@
     <string name="upgrade_success">Aggiornamento di successo!</string>
     <string name="copied_to_clipboard">Copiato negli appunti</string>
 
+    <string name="unable_to_load_brainkey">Impossibile caricare brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Impossibile generare formato bin per la chiave</string>
+    <string name="creating_backup_file">Creazione di file di backup</string>
+    <string name="fetching_key">recupero chiave</string>
+    <string name="generating_bin_format">Generazione formato bin</string>
+    <string name="invalid_pin">PIN non valido</string>
+    <string name="saving_bin_file_to">Salvataggio di file Bin</string>
+    <string name="bin_file_saved_successfully_to">File Bin salvato con successo</string>
+    <string name="unable_to_save_bin_file">Impossibile salvare il file bin</string>
+
+    <string name="txt_alertmsg_fr">Sei sicuro di voler rimuovere il</string>
+    <string name="txt_alertmsg_la">account da questo portafoglio?</string>
+
 </resources>

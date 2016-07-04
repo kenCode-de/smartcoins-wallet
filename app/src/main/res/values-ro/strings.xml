@@ -185,4 +185,17 @@
     <string name="upgrade_success">Upgrade-succes!</string>
     <string name="copied_to_clipboard">Copiata în clipboard</string>
 
+    <string name="unable_to_load_brainkey">Nu se poate încărca brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Nu pot fi generate în format bin pentru chei</string>
+    <string name="creating_backup_file">Crearea unui fișier de backup</string>
+    <string name="fetching_key">cheie încarc</string>
+    <string name="generating_bin_format">Se generează în format bin</string>
+    <string name="invalid_pin">PIN nevalid</string>
+    <string name="saving_bin_file_to">Se salvează Bin fișier</string>
+    <string name="bin_file_saved_successfully_to">Bin Fișierul a fost salvat cu succes</string>
+    <string name="unable_to_save_bin_file">Imposibil de salvat fișierul bin</string>
+
+    <string name="txt_alertmsg_fr">Sunteți sigur că doriți să eliminați</string>
+    <string name="txt_alertmsg_la">cont de acest portofel?</string>
+
 </resources>

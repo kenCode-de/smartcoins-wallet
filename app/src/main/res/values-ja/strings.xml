@@ -188,4 +188,17 @@
     <string name="upgrade_success">成功したアップグレード！</string>
     <string name="copied_to_clipboard">クリップボードにコピーされます</string>
 
+    <string name="unable_to_load_brainkey">brainkeyを読み込むことができません</string>
+    <string name="unable_to_generate_bin_format_for_key">キーのビン形式を生成することができません</string>
+    <string name="creating_backup_file">バックアップファイルを作成します</string>
+    <string name="fetching_key">フェッチキー</string>
+    <string name="generating_bin_format">ビンフォーマットを生成します</string>
+    <string name="invalid_pin">無効なPIN</string>
+    <string name="saving_bin_file_to">にbinファイルを保存します</string>
+    <string name="bin_file_saved_successfully_to">binファイルはに正常に保存され</string>
+    <string name="unable_to_save_bin_file">binファイルを保存することができません。</string>
+
+    <string name="txt_alertmsg_fr">あなたが削除してもよろしいです</string>
+    <string name="txt_alertmsg_la">この財布からアカウント？</string>
+
 </resources>
