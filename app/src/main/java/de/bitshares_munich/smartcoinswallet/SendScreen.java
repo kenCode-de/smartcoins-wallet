@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,17 +17,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Scroller;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,6 +48,8 @@ import org.json.JSONObject;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1519,14 +1528,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
+    Dialog contactListDialog;
+
     @OnClick(R.id.contactActivity)
     void OnClickContactBtn(View view) {
         List<String> contactlist = new ArrayList<String>();
 
         ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
         for (int i = 0; i < contacts.size(); i++) {
-            contactlist.add(contacts.get(i).GetAccount());
-          //  contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
+            contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
         }
 
 //        if (!contactlist.isEmpty()) {
@@ -1534,28 +1544,74 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            p.show(view);
 //        } else Toast.makeText(context, R.string.empty_list, Toast.LENGTH_LONG).show();
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
 
-        builderSingle.setTitle(getString(R.string.imported_created_accounts));
+        Collections.sort(contactlist, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareToIgnoreCase(s2);
+            }
+        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, contactlist) {
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                context, android.R.layout.simple_list_item_1, contactlist);
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
 
-        builderSingle.setView(android.R.layout.simple_list_item_single_choice);
+                // setting the ID and text for every items in the list
+                String item = getItem(position);
+                String[] itemArr = item.split("::");
+                String text = itemArr[0];
+                String id = itemArr[1];
 
-        builderSingle.setAdapter(
-                arrayAdapter,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String strName = arrayAdapter.getItem(which);
-                        etReceiverAccount.setText(strName);
-                        dialog.dismiss();
-                    }
-                });
-        builderSingle.show();
+                // visual settings for the list item
+                TextView listItem = new TextView(context);
+                listItem.setTextColor(Color.GRAY);
+                listItem.setGravity(Gravity.LEFT);
+                listItem.setText(text);
+                listItem.setTag(id);
+                listItem.setTextSize(20);
+                listItem.setPadding(10, 15, 15, 10);
+
+                return listItem;
+            }
+        };
+        contactListDialog = new Dialog(SendScreen.this);
+        contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        contactListDialog.setContentView(R.layout.contacts_list_send_screen);
+        ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
+        listView.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(listView);
+        listView.setOnItemClickListener(new DropdownOnItemClickListener());
+        contactListDialog.show();
     }
+    
+    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+            Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
+            fadeInAnimation.setDuration(10);
+            v.startAnimation(fadeInAnimation);
+            contactListDialog.dismiss();
+            String selectedItemText = ((TextView) v).getText().toString();
+            etReceiverAccount.setText(selectedItemText);
+        }
+    }
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < 5; i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
 
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (5 - 1));
+        listView.setLayoutParams(params);
+    }
     @Override
     public void onResume() {
         super.onResume();
