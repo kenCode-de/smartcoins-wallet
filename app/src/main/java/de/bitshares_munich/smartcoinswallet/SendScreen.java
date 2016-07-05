@@ -64,6 +64,7 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
+import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
@@ -84,7 +85,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory , OnClickListView{
     Context context;
     Application application = new Application();
     TinyDB tinyDB;
@@ -1548,80 +1549,78 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.contactActivity)
     void OnClickContactBtn(View view) {
-        List<String> contactlist = new ArrayList<String>();
+//        List<String> contactlist = new ArrayList<String>();
+//
+//        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+//        for (int i = 0; i < contacts.size(); i++) {
+//            contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
+//        }
+//
+//        Collections.sort(contactlist, new Comparator<String>() {
+//            @Override
+//            public int compare(String s1, String s2) {
+//                return s1.compareToIgnoreCase(s2);
+//            }
+//        });
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, contactlist) {
+//
+//            @Override
+//            public View getView(int position, View convertView, ViewGroup parent) {
+//
+//                // setting the ID and text for every items in the list
+//                String item = getItem(position);
+//                String[] itemArr = item.split("::");
+//                String text = itemArr[0];
+//                String id = itemArr[1];
+//
+//                // visual settings for the list item
+//                TextView listItem = new TextView(context);
+//                listItem.setTextColor(Color.BLACK);
+//                listItem.setGravity(Gravity.START);
+//                listItem.setText(text);
+//                listItem.setTag(id);
+//                listItem.setTextSize(20);
+//                listItem.setPadding(10, 15, 15, 10);
+//
+//                return listItem;
+//            }
+//        };
 
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
-        for (int i = 0; i < contacts.size(); i++) {
-            contactlist.add(contacts.get(i).GetAccount() + "::" + Integer.toString(i));
-        }
-
-//        if (!contactlist.isEmpty()) {
-//            popUpwindow p = new popUpwindow(this, etReceiverAccount, contactlist);
-//            p.show(view);
-//        } else Toast.makeText(context, R.string.empty_list, Toast.LENGTH_LONG).show();
 
 
-        Collections.sort(contactlist, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, contactlist) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-
-                // setting the ID and text for every items in the list
-                String item = getItem(position);
-                String[] itemArr = item.split("::");
-                String text = itemArr[0];
-                String id = itemArr[1];
-
-                // visual settings for the list item
-                TextView listItem = new TextView(context);
-                listItem.setTextColor(Color.BLACK);
-                listItem.setGravity(Gravity.START);
-                listItem.setText(text);
-                listItem.setTag(id);
-                listItem.setTextSize(20);
-                listItem.setPadding(10, 15, 15, 10);
-
-                return listItem;
-            }
-        };
         contactListDialog = new Dialog(SendScreen.this);
         contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         contactListDialog.setContentView(R.layout.contacts_list_send_screen);
         ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
-        listView.setAdapter(adapter);
-        if(contactlist.size()>5) {
-            setListViewHeightBasedOnChildren(listView);
-        }
-        listView.setOnItemClickListener(new DropdownOnItemClickListener());
+        listView.setAdapter(new SendScreenListViewActivity(context,this));
+        int size = listView.getAdapter().getCount();
+        if(size>5) {
+            setListViewHeightBasedOnChildren(listView,5);
+        }else setListViewHeightBasedOnChildren(listView,size);
+  //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
         contactListDialog.show();
     }
     
-    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-            Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
-            fadeInAnimation.setDuration(10);
-            v.startAnimation(fadeInAnimation);
-            contactListDialog.dismiss();
-            String selectedItemText = ((TextView) v).getText().toString();
-            etReceiverAccount.setText(selectedItemText);
-            createBitShareAN(false);
-        }
-    }
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+//    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
+//        @Override
+//        public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+////            Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
+////            fadeInAnimation.setDuration(10);
+////            v.startAnimation(fadeInAnimation);
+//            contactListDialog.dismiss();
+//            TextView selectedItemText = (TextView) v.findViewById(R.id.accountname);
+//            etReceiverAccount.setText(selectedItemText.getText());
+//            createBitShareAN(false);
+//        }
+//    }
+    public static void setListViewHeightBasedOnChildren(ListView listView,int size) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
             return;
         }
         int totalHeight = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < size; i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
@@ -1714,4 +1713,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //        AppIndex.AppIndexApi.end(client, viewAction);
 //        client.disconnect();
 //    }
+
+    @Override
+    public void isClicked(String s){
+        etReceiverAccount.setText(s);
+        if(contactListDialog!=null)
+        contactListDialog.dismiss();
+        createBitShareAN(false);
+    }
 }
