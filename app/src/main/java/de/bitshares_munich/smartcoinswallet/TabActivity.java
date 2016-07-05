@@ -8,9 +8,13 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -74,6 +78,7 @@ public class TabActivity extends BaseActivity {
         toolbar.setNavigationIcon(R.mipmap.btslogo);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
         setTitle(getResources().getString(R.string.app_name));
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
@@ -160,5 +165,12 @@ public class TabActivity extends BaseActivity {
         dialog.setCancelable(false);
         dialog.show();
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            viewPager.setCurrentItem(0);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
