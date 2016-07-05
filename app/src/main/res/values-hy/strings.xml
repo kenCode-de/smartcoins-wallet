@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="license">լիցենզիա</string>
-<string name="app_name">Smartcoins Դրամապանակ</string>
 <string name="send_capital">ուղարկել</string>
 <string name="account_create_register_or_import">Հաշիվ Ստեղծել / գրանցվեք կամ ՆԵՐՄՈՒԾՈՒՄԸ</string>
 <string name="txt_account_name">Հաշվեհամար</string>

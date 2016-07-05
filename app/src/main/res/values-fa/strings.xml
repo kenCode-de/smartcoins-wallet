@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">مجوز</string>
-<string name="app_name">Smartcoins کیف پول</string>
 <string name="send_capital">ارسال</string>
 <string name="account_create_register_or_import">حساب کاربری ایجاد کنید / ثبت نام کنید یا واردات</string>
 <string name="txt_account_name">نام کاربری</string>

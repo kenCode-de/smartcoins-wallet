@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">특허</string>
-<string name="app_name">Smartcoins 지갑</string>
 <string name="send_capital">보내다</string>
 <string name="account_create_register_or_import">계정 등록 / 또는 IMPORT를 CREATE</string>
 <string name="txt_account_name">계정 이름</string>

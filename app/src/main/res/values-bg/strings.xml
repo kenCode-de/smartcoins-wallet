@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="license">Разрешително</string>
-<string name="app_name">Smartcoins Wallet</string>
 <string name="send_capital">изпращам</string>
 <string name="account_create_register_or_import">Създаване на профил регистрирате или ВНОС</string>
 <string name="txt_account_name">Име на акаунта</string>

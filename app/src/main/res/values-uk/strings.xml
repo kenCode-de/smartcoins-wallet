@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">ліцензія</string>
-<string name="app_name">Smartcoins Гаманець</string>
 <string name="send_capital">послати</string>
 <string name="account_create_register_or_import">РАХУНОК CREATE / ЗАРЕЄСТРУЙТЕСЯ АБО ІМПОРТ</string>
 <string name="txt_account_name">Ім\'я облікового запису</string>

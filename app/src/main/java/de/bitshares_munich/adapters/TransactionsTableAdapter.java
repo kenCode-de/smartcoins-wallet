@@ -132,11 +132,50 @@ Context context;
             String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
             textView.setText("- " + amount + " " + transactiondetails.getAssetSymbol());
             amount = "";
-            TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
-            textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-            amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
-            amount = String.format(locale,"%.2f",Double.parseDouble(amount));
-            textView2.setText("- " + amount + " " + transactiondetails.getFaitAssetSymbol());
+
+            if ( transactiondetails.getFaitAmount() == 0 )
+            {
+                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                textView2.setText("");
+            }
+            else
+            {
+                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
+                //amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
+
+                float faitAmount = transactiondetails.getFaitAmount();
+
+                //Double faitAmount = Double.parseDouble(faitFloat);
+
+                if ( faitAmount > 0.009 )
+                {
+                    amount = String.format(locale,"%.2f",faitAmount);
+                }
+                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
+                {
+                    amount = String.format(locale,"%.3f",faitAmount);
+                }
+                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
+                {
+                    amount = String.format(locale,"%.4f",faitAmount);
+                }
+                else
+                {
+                    amount = String.format(locale,"%.5f",faitAmount);
+                }
+
+                String displayFaitAmount = "";
+                if ( Helper.isRTL(locale) )
+                {
+                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
+                }
+                else
+                {
+                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
+                }
+                textView2.setText("- " + displayFaitAmount);
+            }
         }
         else
         {
@@ -146,11 +185,50 @@ Context context;
             textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
             amount = "";
 
-            TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
-            textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
-            amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
-            amount = String.format(locale,"%.2f",Double.parseDouble(amount));
-            textView2.setText("+ " + amount + " " + transactiondetails.getFaitAssetSymbol());
+            if ( transactiondetails.getFaitAmount() == 0 )
+            {
+                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                textView2.setText("");
+            }
+            else
+            {
+                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
+                //amount = Helper.setLocaleNumberFormat(locale, transactiondetails.getFaitAmount());
+
+                float faitAmount = transactiondetails.getFaitAmount();
+
+                //Double faitAmount = Double.parseDouble(faitFloat);
+
+                if ( faitAmount > 0.009 )
+                {
+                    amount = String.format(locale,"%.2f",faitAmount);
+                }
+                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
+                {
+                    amount = String.format(locale,"%.3f",faitAmount);
+                }
+                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
+                {
+                    amount = String.format(locale,"%.4f",faitAmount);
+                }
+                else
+                {
+                    amount = String.format(locale,"%.5f",faitAmount);
+                }
+
+                String displayFaitAmount = "";
+                if ( Helper.isRTL(locale) )
+                {
+                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
+                }
+                else
+                {
+                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
+                }
+
+                textView2.setText("+ " + displayFaitAmount);
+            }
         }
         return v;
     }

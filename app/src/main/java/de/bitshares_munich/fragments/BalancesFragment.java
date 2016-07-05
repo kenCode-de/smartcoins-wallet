@@ -712,7 +712,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         {
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
-                                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
+
+                                            if ( Helper.isRTL(locale) )
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
+                                            }
+                                            else
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
+                                            }
+
                                         }
                                         catch (Exception e)
                                         {
