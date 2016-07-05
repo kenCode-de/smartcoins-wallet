@@ -64,9 +64,6 @@ public class TransactionActivity implements IBalancesDelegate {
     int number_of_transactions_in_queue;
     String finalFaitCurrency;
 
-
-
-
     HashMap<String,HashMap<String,String>> arrayof_Amount_AssetId = new HashMap<>();
     ArrayList<String> blocks;
     HashMap<String,String> timestamp;
@@ -97,6 +94,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            wifkey = "";
             //testing("namak",e,"wifkey");
         }
 
@@ -109,12 +107,10 @@ public class TransactionActivity implements IBalancesDelegate {
     void get_relative_account_history(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad)
     {
 
-        final Handler handler = new Handler();
-
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) )
+                if ( Application.isReady )
                 {
                     int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
                     String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
@@ -127,15 +123,18 @@ public class TransactionActivity implements IBalancesDelegate {
             }
         };
 
-        handler.postDelayed(updateTask, 100);
+        reRequest.postDelayed(updateTask, 100);
     }
 
     @Override
-    public void OnUpdate(String s,int id) {
-        if(id==8){
+    public void OnUpdate(String s,int id)
+    {
+        if(id==8)
+        {
             onFirstCall(s);
         }
-        if(id==9){
+        else if(id==9)
+        {
             if(id_in_work<id_total_size)
             {
                 String result = SupportMethods.ParseJsonObject(s,"result");
@@ -151,7 +150,8 @@ public class TransactionActivity implements IBalancesDelegate {
                 get_Time(blocks.get(id_in_work),"9");
             }
         }
-        if(id==10) {
+        else if(id==10)
+        {
             if (names_in_work < names_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                // String nameObject = returnArrayObj(result,0);
@@ -167,10 +167,12 @@ public class TransactionActivity implements IBalancesDelegate {
                 get_names(ofNames.get(names_in_work),"10");
             }
         }
-        if(id==11) {
-            if (assets_id_in_work < assets_id_total_size) {
+        else if(id==11)
+        {
+            if (assets_id_in_work < assets_id_total_size)
+            {
                String result = SupportMethods.ParseJsonObject(s,"result");
-//                String assetObject = returnArrayObj(result,0);
+
                 String assetObject = SupportMethods.ParseObjectFromJsonArray(result,0);
                 String symbol = SupportMethods.ParseJsonObject(assetObject,"symbol");
                 String precision = SupportMethods.ParseJsonObject(assetObject,"precision");
@@ -178,9 +180,9 @@ public class TransactionActivity implements IBalancesDelegate {
                 de.put("symbol",symbol);
                 de.put("precision",precision);
                 Symbols_Precisions.put(asset_ids.get(assets_id_in_work),de);
-                if(assets_id_in_work==(assets_id_total_size-1)){
-                //    testing("namak","","testing");
 
+                if(assets_id_in_work==(assets_id_total_size-1))
+                {
                     HashMap<String,String> def = new HashMap<>();
                     memo_in_work = 0;
                     if(memos.size()>0)
@@ -196,7 +198,8 @@ public class TransactionActivity implements IBalancesDelegate {
         }
     }
 
-    void onFirstCall(String s) {
+    void onFirstCall(String s)
+    {
         String result = SupportMethods.ParseJsonObject(s, "result");
         int totalarrays = SupportMethods.TotalArraysOfObj(result);
 
@@ -230,13 +233,13 @@ public class TransactionActivity implements IBalancesDelegate {
             ofNames.add(from);
             ofNames.add(to);
             asset_ids.add(asset_id);
-            if (breakArray.contains("memo")) {
+            if (breakArray.contains("memo"))
+            {
                 String memojson = SupportMethods.ParseJsonObject(breakArray, "memo");
                 HashMap<String,String> de = new HashMap<>();
                 de.put("memo",memojson);
                 de.put("memo_id",Integer.toString(i));
                 memos.add(de);
-
             }
             arrayof_Amount_AssetId.put(Integer.toString(i), mapof_All);
         }
@@ -253,7 +256,8 @@ public class TransactionActivity implements IBalancesDelegate {
         get_Time(blocks.get(id_in_work),"9");
     }
 
-    private void decodeMemo(final String memo, final String key) {
+    private void decodeMemo(final String memo, final String key)
+    {
         HashMap hm = new HashMap();
         hm.put("method","decode_memo");
         hm.put("wifkey",wifkey);
@@ -308,7 +312,9 @@ public class TransactionActivity implements IBalancesDelegate {
         });
     }
 
-    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req){
+    /*
+    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req)
+    {
         try {
             JSONArray myArray = new JSONArray(Json);
             ArrayList<String> array = new ArrayList<>();
@@ -331,6 +337,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         return null;
     }
+
     String returnParse(String Json , String req){
         try {
             if(Json.contains(req)){
@@ -339,6 +346,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }catch (Exception e){}
         return "";
     }
+
     String returnArrayObj(String Json , int position){
         try {
             JSONArray myArray = new JSONArray(Json);
@@ -348,6 +356,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }catch (Exception e){}
         return "";
     }
+
     int TotalArraysOfObj(String Json){
         try {
             JSONArray myArray = new JSONArray(Json);
@@ -355,25 +364,73 @@ public class TransactionActivity implements IBalancesDelegate {
         }catch (Exception e){}
         return -1;
     }
+    */
 
+    Handler reRequest = new Handler();
 
-    void get_Time(String block_num,String id){
-        int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-        //{"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
-        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-        Application.webSocketG.send(getDetails);
+    void get_Time(final String block_num,final String id)
+    {
+        Runnable getTimeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if ( Application.isReady )
+                {
+                    int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+                    //{"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
+                    Application.webSocketG.send(getDetails);
+                }
+                else
+                {
+                    get_Time(block_num, id);
+                }
+            }
+        };
+
+        reRequest.postDelayed(getTimeRunnable,100);
     }
-    void get_names(String name_id,String id){
-        int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-        //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        Application.webSocketG.send(getDetails);
+
+    void get_names(final String name_id, final String id)
+    {
+        Runnable getNamesRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if ( Application.isReady )
+                {
+                    int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
+                    //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+                    Application.webSocketG.send(getDetails);
+                }
+                else
+                {
+                    get_names(name_id, id);
+                }
+            }
+        };
+        reRequest.postDelayed(getNamesRunnable,100);
+
     }
-    void get_asset(String asset, String id) {
-        //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
-        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-        Application.webSocketG.send(getDetails);
+
+    void get_asset(final String asset, final String id) {
+        Runnable getAssetRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if ( Application.isReady )
+                {
+                    //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+                    Application.webSocketG.send(getDetails);
+                }
+                else
+                {
+                    get_asset(asset, id);
+                }
+            }
+        };
+        reRequest.postDelayed(getAssetRunnable,100);
     }
+
     void testing(String msg , Object obj , String nameOfObject){
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + obj);
     }
@@ -452,7 +509,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
         if (faitCurrency.isEmpty())
         {
-            faitCurrency = context.getString(R.string.default_currency);
+            faitCurrency = "EUR";
         }
 
         String values = "";
@@ -481,10 +538,13 @@ public class TransactionActivity implements IBalancesDelegate {
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
                             HashMap hm = new HashMap();
-                            while (keys.hasNext()) {
+
+                            while (keys.hasNext())
+                            {
                                 String key = keys.next();
                                 hm.put(key.split(":")[0], rates.get(key));
                             }
+
                             try
                             {
                                 for (int i = 0; i < transactionDetailses.size(); i++)
@@ -499,7 +559,6 @@ public class TransactionActivity implements IBalancesDelegate {
                                         transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
                                         transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
                                     }
-
                                 }
                             }
                             catch (Exception e)

@@ -91,13 +91,13 @@ public class AssestsActivty  implements IBalancesDelegate {
             @Override
             public void run()
             {
-                if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && Application.isReady )
+                if ( Application.isReady )
                 {
                     String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
                     Application.webSocketG.send(getDetails);
                     sentCallForBalances = true;
                     handler.removeCallbacks(updateTask2);
-                    handler.postDelayed(updateTask2, 2000);
+                    handler.postDelayed(updateTask2, 3000);
                     Log.d("Assets Activity", "Sent call for assets");
                 }
                 else
@@ -108,7 +108,7 @@ public class AssestsActivty  implements IBalancesDelegate {
         };
 
         handler.removeCallbacks(updateTask);
-        handler.postDelayed(updateTask, 1000);
+        handler.postDelayed(updateTask, 100);
     }
 
     void get_asset(String asset, String id) {
