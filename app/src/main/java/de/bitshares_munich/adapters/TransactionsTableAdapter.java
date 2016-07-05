@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -133,6 +135,7 @@ Context context;
             TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
             textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
             amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
+            amount = String.format(locale,"%.2f",Double.parseDouble(amount));
             textView2.setText("- " + amount + " " + transactiondetails.getFaitAssetSymbol());
         }
         else
@@ -146,6 +149,7 @@ Context context;
             TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
             textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
             amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
+            amount = String.format(locale,"%.2f",Double.parseDouble(amount));
             textView2.setText("+ " + amount + " " + transactiondetails.getFaitAssetSymbol());
         }
         return v;
