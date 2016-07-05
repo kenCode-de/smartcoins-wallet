@@ -1580,8 +1580,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                 // visual settings for the list item
                 TextView listItem = new TextView(context);
-                listItem.setTextColor(Color.GRAY);
-                listItem.setGravity(Gravity.LEFT);
+                listItem.setTextColor(Color.BLACK);
+                listItem.setGravity(Gravity.START);
                 listItem.setText(text);
                 listItem.setTag(id);
                 listItem.setTextSize(20);
@@ -1631,6 +1631,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         params.height = totalHeight + (listView.getDividerHeight() * (5 - 1));
         listView.setLayoutParams(params);
     }
+
+
     @Override
     public void onResume() {
         super.onResume();
