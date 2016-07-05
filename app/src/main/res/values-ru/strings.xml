@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Лицензия</string>
-<string name="app_name">Smartcoins Кошелек</string>
 <string name="send_capital">послать</string>
 <string name="account_create_register_or_import">СЧЕТ CREATE / ЗАРЕГИСТРИРУЙТЕСЬ ИЛИ ИМПОРТ</string>
 <string name="txt_account_name">Имя пользователя</string>

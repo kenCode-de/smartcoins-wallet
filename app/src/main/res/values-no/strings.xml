@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Tillatelse</string>
-<string name="app_name">Smartcoins lommebok</string>
 <string name="send_capital">Sende</string>
 <string name="account_create_register_or_import">Konto Opprett / register eller IMPORT</string>
 <string name="txt_account_name">Brukernavn</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Licenza</string>
-<string name="app_name">Smartcoins Portafoglio</string>
 <string name="send_capital">Inviare</string>
 <string name="account_create_register_or_import">Account Crea / Registrati o IMPORT</string>
 <string name="txt_account_name">Nome utente</string>

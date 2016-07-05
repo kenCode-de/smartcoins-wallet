@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/contacts"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:padding="10dp"
         android:background="@drawable/edittext_background_layer"
         android:textColor="#000"/>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">licenca</string>
-<string name="app_name">Smartcoins novčanik</string>
 <string name="send_capital">Poslati</string>
 <string name="account_create_register_or_import">Izradi račun / Registracija ili uvoz</string>
 <string name="txt_account_name">Korisničko ime</string>
