@@ -200,7 +200,7 @@ public class RecieveActivity extends BaseActivity {
     }
 
     private File savebitmap(Bitmap bmp) {
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() +  File.separator + getResources().getString(R.string.txt_folder_name);
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() +  File.separator + getResources().getString(R.string.folder_name);
         OutputStream outStream = null;
         File file = new File(extStorageDirectory, "QrImage" + ".png");
         if (file.exists()) {
