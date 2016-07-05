@@ -69,7 +69,7 @@
                         android:layout_gravity="center_vertical"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:textSize="5pt"
+                        android:textSize="6pt"
                         android:paddingLeft="5dp"
                         android:textColor="@color/green"
                         android:text=""/>
@@ -132,7 +132,7 @@
                       android:layout_gravity="center_vertical"
                       android:lines="1"
                       android:ellipsize="end"
-                      android:textSize="5pt"
+                      android:textSize="6pt"
                       android:paddingLeft="5dp"
                       android:textColor="@color/green"
                       android:text=""/>
