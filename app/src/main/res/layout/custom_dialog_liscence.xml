@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_height="250dp"
+        android:layout_width="match_parent">
+
+        <WebView
+            android:id="@+id/webviewLisense"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            >
+        </WebView>
+</ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/ScrollView">
+
+        <Button
+            android:stateListAnimator="@animator/my_animated_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/dialog_btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="@color/pink"
+            android:textColor="@color/white"
+            android:textSize="13dp"
+            android:text="DISAGREE"/>
+
+        <Button
+            android:stateListAnimator="@animator/my_animated_button"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/dialog_btn_agree"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="@color/green"
+            android:textColor="@color/white"
+            android:textSize="13dp"
+            android:text="AGREE"/>
+    </LinearLayout>
+</RelativeLayout>

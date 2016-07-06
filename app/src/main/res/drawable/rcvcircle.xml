@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <solid
+        android:color="@color/whiteColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <corners
+        android:radius="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <padding
+        android:left="0dp"
+        android:top="0dp"
+        android:right="0dp"
+        android:bottom="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <size
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</shape>

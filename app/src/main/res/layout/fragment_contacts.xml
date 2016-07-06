@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#BFE5F5"
+>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/FirstLayout"
+        android:background="#FFFFFF"
+    >
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/add_contact"
+            android:id="@+id/addcontact"
+            android:clickable="true"
+            android:layout_marginRight="5sp"
+            android:layout_toLeftOf="@+id/sharecontact"
+            android:layout_marginBottom="5sp"
+            android:visibility="invisible"
+            android:layout_marginTop="10sp"
+        />
+        <ImageView
+            android:id="@+id/sharecontact"
+            android:layout_marginBottom="5sp"
+            android:layout_marginTop="10sp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_sg"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20sp"
+        />
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/contactslist"
+        android:focusable="true"
+        android:background="#FFFFFF"
+    >
+    </ListView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="@drawable/simple_line"/>
+
+</LinearLayout>

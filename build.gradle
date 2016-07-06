@@ -1,0 +1,118 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://oss.sonatype.org/content/groups/public'
+        }
+    }
+
+    ext {
+        supportLibraryDependency = 'com.android.support:support-v4:23.1.1'
+        isLibrary = false
+    }
+}
+
+
+subprojects {
+    afterEvaluate { Project project ->
+        ext.pluginContainer = project.getPlugins()
+        if(ext.pluginContainer.hasPlugin("com.android.application") || ext.pluginContainer.hasPlugin("com.android.library")) {
+            android {
+                compileSdkVersion 23
+                buildToolsVersion '23.0.2'
+
+                android {
+                    lintOptions {
+                        abortOnError false
+                    }
+                }
+
+                defaultConfig {
+                    minSdkVersion 14
+                    targetSdkVersion 23
+                    versionCode 184
+                    versionName "1.0.1"
+                }
+            }
+        }
+        if(project.isLibrary && rootProject.hasProperty('sonatypeUsername') && rootProject.hasProperty('sonatypePassword')) {
+            configure(project) {
+                apply plugin: 'maven'
+                apply plugin: 'signing'
+
+                signing {
+                    required { has("release") && gradle.taskGraph.hasTask("uploadArchives") }
+                    sign configurations.archives
+                }
+
+                uploadArchives {
+                    repositories.mavenDeployer {
+                        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                        repository(url: sonatypeRepo) {
+                            authentication(userName: sonatypeUsername , password: sonatypePassword)
+                            releases(updatePolicy: 'always')
+                        }
+
+                        snapshotRepository(url: sonatypeSnapshotRepo) {
+                            authentication(userName: sonatypeUsername , password: sonatypePassword)
+                            snapshots(updatePolicy: 'always')
+                        }
+
+                        pom.project {
+                            name project.pomName
+                            version project.version
+                            groupId project.group
+                            packaging project.pomPackaging
+                            artifactId project.pomArtifactId
+                            description project.pomDescription
+                            url 'https://github.com/dm77/barcodescanner'
+
+                            scm {
+                                url 'scm:git@github.com:dm77/barcodescanner.git'
+                                connection 'scm:git@github.com:dm77/barcodescanner.git'
+                                developerConnection 'scm:git@github.com:dm77/barcodescanner.git'
+                            }
+
+                            licenses {
+                                license {
+                                    name 'The Apache Software License, Version 2.0'
+                                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                    distribution 'repo'
+                                }
+                            }
+
+                            developers {
+                                developer {
+                                    id 'dm77'
+                                    name 'Dushyanth Maguluru'
+                                    email 'dushyanth.maguluru@gmail.com'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

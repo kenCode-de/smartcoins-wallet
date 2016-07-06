@@ -1,0 +1,328 @@
+<resources>
+    <string name="app_name">Smartcoins Wallet</string>
+
+    <string name="send_capital">Send</string>
+
+    <string name="account_create_register_or_import">ACCOUNT CREATE/REGISTER OR IMPORT</string>
+    <string name="txt_account_name">Account Name</string>
+    <string name="time_stamp">Time stamp</string>
+    <string name="email_pdf">Email PDF</string>
+    <string name="account">Account</string>
+    <string name="friendly_name">Friendly Name</string>
+    <string name="notes">Notes</string>
+    <string name="note">Note</string>
+    <string name="payment_received">Payment Received</string>
+
+    <string name="import_brainkey">Import from BrainKey</string>
+    <string name="import_backup_old">Import Backup from .bin file</string>
+    <string name="choose_backup">Choose Backup</string>
+    <string name="choose_file">Choose File</string>
+    <string name="no_file_chosen">No file chosen</string>
+
+    <string name="account_label">Choose File</string>
+    <string name="loading_msg">Please wait until Balances are loading</string>
+
+    <string name="txt_6_digits_pin">6-digits PIN</string>
+    <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
+    <string name="create">CREATE</string>
+    <string name="existing_account">Existing Account</string>
+    <string name="v_1_0_beta">v 1.0 beta</string>
+    <string name="block_number">block# -------</string>
+    <string name="agreement">Agreement</string>
+    <string name="cancel_and_exit">Cancel and Exit</string>
+    <string name="i_agree">I Agree</string>
+    <string name="kindly_create_account">Kindly create account</string>
+    <string name="please_enter_old_6_digit_pin">Please enter old 6-digit pin</string>
+    <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
+    <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
+    <string name="mismatch_pin">mismatch pin</string>
+    <string name="key_brainkey">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+    <string name="txt_pin">pin</string>
+    <string name="txt_brain_key">Brainkey</string>
+    <string name="txt_brain_key_info">Print this out, or write it down. Anyone with access to your recovery key will have access to funds within this wallet.</string>
+    <string name="create_wallet">CREATE WALLET</string>
+    <string name="save">SAVE</string>
+    <string name="next">NEXT</string>
+
+    <string name="please_enter_brainkey">Please enter brainkey</string>
+    <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
+    <string name="balances">Balances</string>
+    <string name="contacts">Contacts</string>
+    <string name="receive_uppercase">RECEIVE</string>
+    <string name="send_uppercase">SEND</string>
+    <string name="transactions">Transactions</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="backup_asset">Backup Asset</string>
+    <string name="taxable_country">Taxable Country</string>
+    <string name="date_time">Display Dates and Times as</string>
+    <string name="check_for_updates">Check for updates on startup</string>
+    <string name="automatically_install">Automatically install major version</string>
+    <string name="require_pin">Require PIN/Pattern to send funds &amp; view memos</string>
+    <string name="close_bitshare">Automatically close Bitshares Wallet after 3 minutes of inactivity</string>
+    <string name="always_donate">Always Donate 2 BTS to the Support Developers at BitShares Munich(bitshares munich)</string>
+    <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
+    <string name="backup">BACKUP .bin</string>
+    <string name="checkbox_donate">Donate 2 BTS to the Support Developers at</string>
+    <string name="backup_brainkey">BACKUP BRAINKEY</string>
+    <string name="imported_created_accounts">Imported/Created Accounts</string>
+    <string name="register_new_account">REGISTER NEW ACCOUNT</string>
+    <string name="secure_pin">EDIT PIN</string>
+    <string name="export">Export</string>
+    <string name="show_more">Show more</string>
+    <string name="lisence_html"><![CDATA[<html><head><meta content=\"text/html; charset=UTF-8\" http-equiv=\"content-type\"><style type=\"text/css\">ul.lst-kix_4tihrp5o8icj-0{list-style-type:none}ul.lst-kix_4tihrp5o8icj-1{list-style-type:none}.lst-kix_4tihrp5o8icj-1>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-2>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-3>li:before{content:\"\\0025cf  \"}.lst-kix_4tihrp5o8icj-4>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-7>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-5>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-6>li:before{content:\"\\0025cf  \"}ul.lst-kix_4tihrp5o8icj-8{list-style-type:none}ul.lst-kix_4tihrp5o8icj-6{list-style-type:none}ul.lst-kix_4tihrp5o8icj-7{list-style-type:none}ul.lst-kix_4tihrp5o8icj-4{list-style-type:none}ul.lst-kix_4tihrp5o8icj-5{list-style-type:none}.lst-kix_4tihrp5o8icj-8>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-0>li:before{content:\"\\0025cf  \"}ul.lst-kix_4tihrp5o8icj-2{list-style-type:none}ul.lst-kix_4tihrp5o8icj-3{list-style-type:none}ol{margin:0;padding:0}table td,table th{padding:0}.c3{background-color:#ffffff;max-width:2000pt;padding:5pt 5pt 5pt 5pt}.c1{orphans:2;widows:2}.c2{margin-left:15pt;padding-left:0pt}.c5{padding:0;margin:0}.c4{height:11pt}.c0{font-size:9pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:\"Arial\"}p{margin:0;color:#000000;font-size:11pt;font-family:\"Arial\"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class=\"c3\"><p class=\"c1\"><span class=\"c0\">Smartcoins Wallet Terms and Conditions of Use</span></p><p class=\"c1\"><span class=\"c0\">The following terminology applies to these Terms and Conditions of Use (our &ldquo;Terms&rdquo;), the Privacy and Transparency Statement, and any and all other agreements between you and us: &ldquo;Client&rdquo;, &ldquo;Customer&rdquo;, &ldquo;User&rdquo;, &ldquo;You&rdquo; and &ldquo;Your&rdquo; refers to you, the person accessing the Smartcoins Wallet software application (&ldquo;App&rdquo;) and accepting our Terms. &ldquo;The Company&rdquo;, &ldquo;BitShares&rdquo;, &ldquo;BitShares Munich&rdquo;, &ldquo;Our&rdquo;, &ldquo;Ourselves&rdquo;, &ldquo;We&rdquo; and &ldquo;Us&rdquo; collectively refers to the App and to its owners, operators, developers, contractors, directors, officers, employees, agents, insurers, suppliers, and attorneys. &ldquo;Party&rdquo; refers to either you or Us. In these Terms, unless otherwise specified, words importing the singular include the plural and vice versa and words importing gender include all genders. &ldquo;Digital asset&rdquo;, &ldquo;asset&rdquo;, &ldquo;coin&rdquo;, &ldquo;cryptocurrency&rdquo;, &ldquo;good&rdquo;, &ldquo;ledger entry&rdquo;, &ldquo;altcoin&rdquo; and &ldquo;token&rdquo; refer to blockchain-based software ledger data entries. </span></p><p class=\"c1\"><span class=\"c0\">By using the App, you represent and warrant that you are:</span></p><ul class=\"c5 lst-kix_4tihrp5o8icj-0 start\"><li class=\"c1 c2\"><span class=\"c0\">at least 18 years old and have full capacity to contract under applicable law;</span></li><li class=\"c1 c2\"><span class=\"c0\">only transacting with the App with legally-obtained funds that belong to you;</span></li><li class=\"c1 c2\"><span class=\"c0\">not furthering, performing, undertaking, engaging in, aiding, or abetting any unlawful activity through your relationship with Us or through your use of the App; and,</span></li><li class=\"c1 c2\"><span class=\"c0\">comporting with and obeying all applicable laws.</span></li></ul><p class=\"c1\"><span class=\"c0\">We reserve the right to terminate your access to the App for any reason, including but not limited to breaches of our Terms, in our sole and absolute discretion. Use of the App is void where prohibited by applicable law.</span></p><p class=\"c1\"><span class=\"c0\">1. Terms</span></p><p class=\"c1\"><span class=\"c0\">By accessing the App, you agree to be bound by our Terms, all applicable laws and regulations, and you agree that you are responsible for compliance with, and that you are compliant with applicable law. If you do not agree with any of our Terms, you are prohibited from using or accessing the App; your only recourse is to stop using the App. Any use of the App is your deemed acceptance of our Terms as they may be modified and amended from time to time. The materials contained in the App are protected by applicable copyright and trademark laws and treaties. You should check back often in case our Terms undergo changes.</span></p><p class=\"c1\"><span class=\"c0\">By accepting our Terms, you expressly allow Us to export data outside of the jurisdiction in which you reside or are located when you access the App.</span></p><p class=\"c1\"><span class=\"c0\">2. Limitations</span></p><p class=\"c1\"><span class=\"c0\">Use of the App may carry financial risk, and is to be used as an experimental software utility only. In no event shall We be liable or responsible for any damages, claims, applications, losses, injuries, delays, accidents, costs, business interruption costs, or other expenses (including, without limitation, attorneys&rsquo; fees or the costs of any claim or suit), nor for any incidental, direct, indirect, general, special, punitive, exemplary, or consequential damages, loss of goodwill or business profits, loss of cryptocurrency or digital assets, work stoppage, data loss, computer or device failure or malfunction, or any other commercial or other losses directly or indirectly arising out of or related to: our Terms; the Privacy and Transparency Statement; any service We provide; the use of the App; any use of your digital assets or cryptocurrency with the App by any other party not authorized by you (collectively, all of the foregoing items shall be referred to herein as &ldquo;Losses&rdquo;). We are hereby released by you from liability for any and all Losses. We disclaim any and all warranties or guarantees, including any warranty of merchantability and warranty of fitness for any particular purpose. The foregoing limitations of liability shall apply whether the alleged liability or Losses are based on contract, negligence, tort, strict liability, or any other basis, even if We have been advised of or should have known of the possibility of such losses and damages, and without regard to the success or effectiveness of other remedies. Notwithstanding anything else in our Terms, in no event shall the combined aggregate liability for any Loss hereunder exceed 50.00&euro;.</span></p><p class=\"c1\"><span class=\"c0\">3. Prices, Exchange Rates, and Confirmations</span></p><p class=\"c1\"><span class=\"c0\">Cryptocurrency and digital assets are highly experimental and risky. Our App attempts to provide accurate price and exchange rate information, but this information is highly volatile and can change quickly without users necessarily being aware of these changes. For normal orders (i.e., not &ldquo;Specific Amount&rdquo; orders), the exchange rate you receive is calculated at the time your payment is accepted. Due to blockchain specifications, your payment is typically considered &ldquo;accepted&rdquo; at one block confirmation. We may occasionally accept a payment with zero confirmations, though this decision is at Our sole discretion. It is important to note that a payment being broadcast to the blockchain network does not constitute an acceptance by Us of that payment.</span></p><p class=\"c1\"><span class=\"c0\">Users who are sensitive to the exchange rate they receive should use Our &ldquo;Amount&rdquo; feature, which guarantees an exchange rate for a specified period of time. The User&rsquo;s payment must be received by Us within that period in order to receive the guaranteed exchange rate. Please contact Us for more information on exchange rates.</span></p><p class=\"c1\"><span class=\"c0\">4. Returns and Refund Policy</span></p><p class=\"c1\"><span class=\"c0\">Cryptocurrencies, tokens, and digital assets are, by their nature, generally irreversible, and their exchange rates are highly volatile and transitory. Once the User&rsquo;s asset has been transmitted to the User&rsquo;s address, no refund is possible, even if the wrong address was provided to the App. All sales after transmission are final.</span></p><p class=\"c1\"><span class=\"c0\">5. Governing Law </span></p><p class=\"c1\"><span class=\"c0\">These Terms are governed by the laws of Munich, Germany, and any and all laws applicable therein.</span></p><p class=\"c1\"><span class=\"c0\">6. Prohibited Jurisdictions</span></p><p class=\"c1\"><span class=\"c0\">It is prohibited to use or access cryptocurrencies and/or Digital assets from certain jurisdictions. Transactions from Users in these jurisdictions are prohibited. By accessing the App or any services therein, you represent and warrant that you are not physically located in a prohibited jurisdiction.</span></p><p class=\"c1\"><span class=\"c0\">7. Permissible Use</span></p><p class=\"c1\"><span class=\"c0\">The App and all its services may be used only as a mechanism of software ledger entry translation between the User and the BitShares blockchain. You are prohibited from using the App for the purpose of translating ledger entries with other parties, with the exception of explicit payment for goods and services.</span></p><p class=\"c1\"><span class=\"c0\">8. Terms of Use Modifications</span></p><p class=\"c1\"><span class=\"c0\">We may revise our Terms at any time and without notice to you or third parties. By using the App, you agree to be bound by the then-current version of our Terms. We reserve the right to make any changes retroactive.</span></p><p class=\"c1\"><span class=\"c0\">9. Costs</span></p><p class=\"c1\"><span class=\"c0\">From time to time, We may need to spend time dealing with issues brought to Us by customers. Where any customer issue is not caused by our negligence or oversight, We reserve the right to recover reasonable administrative costs spent addressing the customer issue.</span></p><p class=\"c1\"><span class=\"c0\">Privacy and Transparency Statement</span></p><p class=\"c1\"><span class=\"c0\">We respect the privacy of Users of Our App by not requesting any information that is unnecessary for the use of the service or to comport with our obligations under applicable law.</span></p><p class=\"c1\"><span class=\"c0\">We also do not in any way obscure the information that it does request or obtain. Due to the inherent transparency of blockchains, transactions to and from the App are public and easily correlated. Utilizing the App to obscure transactions or assets in any way is futile. Law enforcement has full access to blockchain information that goes in or out of the BitShares network.</span></p><p class=\"c1\"><span class=\"c0\">You accept that We will comply willingly with all legal requests for information from it. We reserve the right to provide information to law enforcement personnel and other third parties to answer inquiries; to respond to legal process; to respond to the order of a court of competent jurisdiction and those exercising the court&rsquo;s authority; and, to protect Ourselves and our users.
+   <p class=\"c1\"><span class=\"c0\">Copyright 2016 BitShares Munich IVS Registered in Kingdom of Denmark Company registration no.: CVR-NR 37 62 63 76 attn: J. Dall, Poul Sloths Vej 22, 8270 Højbjerg, Denmark.</p>
+    </span></p><p class=\"c1\"><span class=\"c0\">&nbsp;</span></p><p class=\"c1\"><span class=\"c0\">If you agree to these terms and conditions, please tap on the green button below.</span></p><p class=\"c1 c4\"><span class=\"c0\"></span></p></body></html>]]></string>
+    <string name="large_text">
+    </string>
+    <string name="share_text"><p>I just found this awesome Smartcoins Wallet that allows you to send and receive Smartcoins.</p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>Check it out !</p></string>
+    <string name="share_info">Invite one or more of your friends to try out the Smartcoins Wallet! Email addresses are not saved or collected by anyone so their privacy is assured.</string>
+    <string name="share_subject">Awesome Smartcoins Wallet</string>
+    <string name="share_heading">Share with a friend</string>
+    <string name="share_btn_text">OPEN EMAIL APPLICATION</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="txt_validating_account">Validating account...</string>
+    <string name="validating_account">Validating Account...</string>
+    <string name="account_name_should_be_longer">Account name should be longer</string>
+    <string name="account_name_already_exist">Account Name %s already exist</string>
+    <string name="account_name_not_exist">Account Name %s does not exist</string>
+    <string name="account_already_exist">Account already exist</string>
+    <string name="add_contact">Add</string>
+    <string name="edit_contact">Edit</string>
+    <string name="empty_list">Contact list is Empty</string>
+
+    <string name="account_name_validate">Account name is valid</string>
+    <string name="beta">""</string>
+    <string name="txt_no_internet_connection">No internet connection</string>
+
+    <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
+    </string>
+    <string name="importing_your_wallet">Importing your wallet...</string>
+
+    <string name="str_trading_pair_not_exist">Trading pair does not exist</string>
+
+
+    <string name="unable_to_create_qr_code">Unable to generate Qr code</string>
+    <string name="price">price</string>
+    <string name="currency">currency</string>
+    <string name="please_enter_amount">Please enter amount</string>
+    <string name="amount_should_be_greater_than_zero">Amount should be greater than zero</string>
+    <string name="no_amount_requested">No amount requested</string>
+
+
+    <string name="to_capital">To</string>
+    <string name="from_capital">From</string>
+    <string name="memo_capital">Memo</string>
+    <string name="empty_file_created">Empty File Created</string>
+    <string name="date">Date</string>
+    <string name="all">All</string>
+    <string name="to_from">To/From</string>
+    <string name="amount">Amount</string>
+    <string name="message">Message</string>
+
+    <string name="pdf_generated_msg">PDF generated and saved : </string>
+    <string name="pdf_generated_msg_error">Unable to generate pdf. Please retry. Error : </string>
+    <string name="raw_transactions">Raw Transaction : </string>
+    <string name="extensions">Extensions</string>
+    <string name="op_in_trx">op_in_trx</string>
+    <string name="virtual_op">virtual_op</string>
+    <string name="operation_results">operation_results</string>
+    <string name="sent_rcv">Sent/Received</string>
+    <string name="details">Details</string>
+    <string name="share_qr_code">Share QR Code</string>
+    <string name="done">Done</string>
+
+    <string name="id_s">id</string>
+    <string name="time">time</string>
+    <string name="operations">operations</string>
+    <string name="trx_in_block">trx_in_block</string>
+
+    <string name="symbol_capital">Symbol</string>
+
+
+
+    <string name="fee_capital">Fee</string>
+    <string name="ok">OK</string>
+
+    <string name="loading">Loading...</string>
+    <string name="pay_to">Pay to</string>
+
+    <string name="requested">requested</string>
+
+
+
+    <string name="failed_transaction">Failed Transaction</string>
+
+
+    <string name="str_warning_only_available">Warning! Only %1$s %2$s is available</string>
+    <string name="str_balance_available">%1$s %2$s available</string>
+    <string name="str_invalid_amount">Please enter valid amount</string>
+    <string name="str_invalid_receiver">Please enter valid To account</string>
+    <string name="str_transaction_failed">Transaction Failed</string>
+    <string name="please_enter_valid_amount">Please enter valid amount</string>
+    <string name="insufficient_amount">Insufficient Amount</string>
+
+    <string name="select_timezone">Select TimeZone</string>
+
+
+
+    <string name="old_pin">Old 6-digits PIN</string>
+    <string name="pin_created_successfully">PIN created successfully</string>
+    <string name="edit_pin">Edit PIN</string>
+    <string name="txt_edit">SAVE</string>
+    <string name="create_pin">Create PIN</string>
+    <string name="pin_changed_successfully">PIN changed successfully</string>
+    <string name="incorrect_old_pin">Incorrect old PIN</string>
+
+    <string name="date_time_zone">dateTimeZone</string>
+    <string name="copy">Copy</string>
+
+    <string name="pin_verification">UNLOCKED</string>
+
+    // Screen Names
+    <string name="send_screen_name">Send</string>
+    <string name="rcv_screen_name">Receive</string>
+    <string name="request_amount_screen_name">Amount</string>
+    <string name="payment_rcvd_screen_name">Thankyou</string>
+    <string name="settings_activity_name">Settings</string>
+    <string name="qr_code_activity_name">Scan QR</string>
+    <string name="share_account_activity_name">Share with friends</string>
+    <string name="add_contact_activity_name">Add Contact</string>
+    <string name="str_trade_not_available">Trade Not Available</string>
+    <string name="edit_contact_activity_name">Edit Contact</string>
+
+
+
+
+    // Not to be localized
+    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
+    <string name="sharePref_database">database</string>
+    <string name="sharePref_network_broadcast">network_broadcast</string>
+    <string name="sharePref_history">history</string>
+    <string name="sharePref_account_name">account_name</string>
+    <string name="preferred_lang">Preferred Language</string>
+    <string name="pref_account_from_brainkey">account_from_brainkey</string>
+    <string name="pref_wallet_accounts">wallet_accounts</string>
+    <string name="pref_country">country</string>
+    <string name="pref_timezone">timezone</string>
+    <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_account_name">account_name</string>
+    <string name="pref_language">language</string>
+    <string name="pref_backup_symbol">backup_symbol</string>
+    <string name="pref_always_donate">always_donate</string>
+    <string name="pref_fade_currency">fade_currency</string>
+    <string name="account_id">accountId</string>
+    <string name="account_name">account_name</string>
+    <string name="symbol">symbol</string>
+    <string name="fee">fee</string>
+    <string name="to">to</string>
+    <string name="from">from</string>
+    <string name="memo">memo</string>
+    <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
+    <string name="head_block_number">head_block_number</string>
+    <string name="e_receipt">e_receipt</string>
+
+    <string name="folder_name">SmartcoinsWallet</string>
+    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
+    </string>
+    <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
+    </string>
+    <string name="database_indentifier">
+        {\"method\":\"call\",\"params\":[1,\"database\",[]],\"id\":2}
+    </string>
+    <string name="network_broadcast_identifier">
+        {\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}
+    </string>
+
+    <string name="history_identifier">{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}
+    </string>
+    <string name="subscribe_callback">
+        {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
+    </string>
+    <!--<string name="subscribe_callback_full_account">-->
+    <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
+    <!--</string>-->
+    <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
+    <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
+    <string name="lookup_account_b">,\"lookup_accounts\",[</string>
+    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="account_create_url">https://bitshares.openledger.info</string>
+    <string name="transfer_server_url">http://188.166.147.110:9000</string>
+    <string name="qr_hash_url">http://188.166.147.110:8000</string>
+    <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
+    <string name="node_server_url">http://188.166.147.110:8000</string>
+    <string name="hash_server_url">http://188.166.147.110:9002</string>
+    <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
+
+    <string name="test_brain_key">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+
+    <string name="pref_local_transactions">my_local_transactions</string>
+    <string name="help_title">Help</string>
+    <string name="got_it">Got it</string>
+    <string formatted="false" name="help_message">Get 80% Cashback on Fees! Lifetime Members (LTM) get 80% cashback on every transaction fee they pay, and qualify to earn referral income from users they register
+        with or refer to the network. A Lifetime Membership is now under 20000 BTS!
+    </string>
+    <string name="txt_yes">Yes</string>
+    <string name="txt_no">No</string>
+    <string name="txt_confirmation">Confirmation</string>
+    <string name="txt_confirmation_msg">Upgrade to LTM now? 18000 BTS will be deducted from your %s account.</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Folder Created</string>
+
+    <string name="upgrade_failed">Upgrade failed</string>
+    <string name="upgrade_success">Upgrade Successful!</string>
+    <string name="upgrading">Upgrading...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">REMOVE ACCOUNT</string>
+    <string name="txt_alertmsg">Are you sure to delete this account</string>
+    <string name="delete">Delete</string>
+    <string name="validation_in_progress">Validation in progress..</string>
+    <string name="last_letter_cannot">last letter cannot be -</string>
+    <string name="account_name_shoud_have">account name shoud have atleast one -</string>
+    <string name="default_currency">EUR</string>
+    <string name="e_receipt_activity_name">eReceipt</string>
+    <string name="txt_back">Back</string>
+    <string name="please_pay">Please pay</string>
+    <string name="transfer_funds">Transferring Funds</string>
+    <string name="unable_to_process">Unable to process</string>
+    <string name="upgrade_to_ltm">Upgrade to LTM</string>
+    <string name="cancel">CANCEL</string>
+    <string name="donation">Donation</string>
+    <string name="insufficient_funds">Insufficient Funds</string>
+    <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
+        account in it
+    </string>
+    <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>
+    <string name="email_name">To display a photo for this Contact, enter its Gravatar e-mail here</string>
+    <string name="copied_to_clipboard">Copied to Clipboard</string>
+
+    <string name="select">"Select</string>
+    <string name="are_you_sure">"Are you sure?</string>
+    <string name="is_already_added">is already added</string>
+    <string name="in_valid_email">Invalid Email</string>
+    <string name="unable_to_import_account_from_bin_file">"Unable to import account from bin file"</string>
+    <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
+    <string name="import_backup">Import Backup from .bin file</string>
+
+    <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
+    <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
+
+
+    <string name="unable_to_load_brainkey">Unable to load brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Unable to generate bin format for key</string>
+    <string name="creating_backup_file">Creating Backup File</string>
+    <string name="fetching_key">Fetching Key</string>
+    <string name="generating_bin_format">Generating bin format</string>
+    <string name="invalid_pin">Invalid PIN</string>
+    <string name="saving_bin_file_to">Saving Bin File to</string>
+    <string name="bin_file_saved_successfully_to">Bin File saved successfully to</string>
+    <string name="unable_to_save_bin_file">Unable to save bin file</string>
+    <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
+    <string name="txt_alertmsg_la">account from this wallet?</string>
+
+    // new strings
+    <string name="try_again">Please try again after 5 minutes</string>
+    <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
+
+</resources>

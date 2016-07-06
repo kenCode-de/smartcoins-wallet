@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.bitshares_munich.smartcoinswallet">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <application
+        android:name="de.bitshares_munich.utils.Application"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:configChanges="locale"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/splashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TabActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyMaterialTheme"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity
+            android:name=".AccountActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SendScreen"
+            android:label="@string/send_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".RecieveActivity"
+            android:label="@string/rcv_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".RequestActivity"
+            android:label="@string/request_amount_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".PaymentRecieved"
+            android:label="@string/payment_rcvd_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".qrcodeActivity"
+            android:label="@string/qr_code_activity_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".BrainkeyActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ShareContact"
+            android:label="@string/share_account_activity_name"
+            android:screenOrientation="portrait">
+        </activity>
+
+
+        <activity
+            android:name=".eReceiptActivity"
+            android:label="@string/e_receipt_activity_name"
+            android:screenOrientation="portrait"
+            >
+
+    </activity>
+        <activity
+            android:name=".AddEditContacts"
+            android:label="@string/add_contact_activity_name"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".ImportBackupActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/settings_activity_name"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ExistingAccountActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".PinActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <service android:name=".MediaService" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="cb99d3535a61a111368ef6f50de88ca2774625b1"
+            />
+
+    </application>
+
+</manifest>
