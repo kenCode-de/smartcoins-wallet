@@ -195,6 +195,7 @@
 
 
     // Not to be localized
+    <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
     <string name="sharePref_database">database</string>
     <string name="sharePref_network_broadcast">network_broadcast</string>
@@ -321,8 +322,11 @@
     <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
     <string name="txt_alertmsg_la">account from this wallet?</string>
 
-    // new strings
     <string name="try_again">Please try again after 5 minutes</string>
     <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
+    // new strings
+    <string name="bugs_or_errors">Bugs or Errors?</string>
+    <string name="please_let_us_know">Please let us know:</string>
+
 
 </resources>
