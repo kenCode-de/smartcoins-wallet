@@ -35,16 +35,16 @@ public class popUpwindow {
         optionsList.add("BTC::2");
         optionsList.add("BTS::3");
         optionsList.add("CHF::4");
-        optionsList.add("EUR::5");
-        optionsList.add("GOLD::6");
-        optionsList.add("HKD::7");
-        optionsList.add("KRW::8");
-        optionsList.add("MXN::9");
-        optionsList.add("SGD::10");
-        optionsList.add("SILVER::11");
-        optionsList.add("TRY::12");
-        optionsList.add("USD::13"); //newly added
-        optionsList.add("CNY::14");
+        optionsList.add("CNY::5");
+        optionsList.add("EUR::6");
+        optionsList.add("GOLD::7");
+        optionsList.add("HKD::8");
+        optionsList.add("KRW::9");
+        optionsList.add("MXN::10");
+        optionsList.add("SGD::11");
+        optionsList.add("SILVER::12");
+        optionsList.add("TRY::13");
+        optionsList.add("USD::14"); 
         textView = textview;
         popUpContents = new String[optionsList.size()];
 
