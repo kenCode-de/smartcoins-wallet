@@ -167,7 +167,7 @@
     <string name="remove_account">Hiq llogarinë</string>
     <string name="txt_alertmsg">A jeni i sigurt për të fshirë këtë llogari</string>
     <string name="validation_in_progress">Validation në progres ..</string>
-    <string name="last_letter_cannot">Letra e fundit nuk mund të jetë -</string>
+    <string name="last_letter_cannot">Letra e fundit nuk mund të jetë -</string>spLanguage
     <string name="account_name_shoud_have">Emri i llogarisë shoud kanë atleast one -</string>
     <string name="default_currency">EUR</string>
     <string name="account_already_exist">Llogaria tashmë ekzistojnë</string>
@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">Jeni te sigurte qe doni te hiqni</string>
     <string name="txt_alertmsg_la">llogari nga ky portofol?</string>
+    <string name="bugs_or_errors">Bugs apo Gabimet?</string>
+    <string name="please_let_us_know">Ju lutem na njoftoni:</string>
+    <string name="try_again">Ju lutem provoni përsëri në minutën e 5</string>
+    <string name="warning_msg_same_account">Ju nuk mund të dërgoni sasi në të njëjtën llogari</string>
 
 </resources>

@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">Biztos, hogy el akarja távolítani a</string>
     <string name="txt_alertmsg_la">fiók ebből pénztárca?</string>
+    <string name="bugs_or_errors">Bugs vagy hibák?</string>
+    <string name="please_let_us_know">Kérem, tudassa velünk:</string>
+    <string name="try_again">Kérjük, próbálja meg újra 5 perc múlva</string>
+    <string name="warning_msg_same_account">Nem küldhet összegét a számlára</string>
 
 </resources>

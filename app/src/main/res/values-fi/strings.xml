@@ -1,182 +1,284 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources><string name="license">lisenssi</string>
-<string name="send_capital">Lähettää</string>
-<string name="account_create_register_or_import">TILIN LUO / rekisteri tai TUONTI</string>
-<string name="txt_account_name">Tilin nimi</string>
-<string name="time_stamp">Aikaleima</string>
-<string name="email_pdf">Sähköposti PDF</string>
-<string name="account">Tili</string>
-<string name="friendly_name">lempinimi</string>
-<string name="notes">Huomautuksia</string>
-<string name="note">Huomautus</string>
-<string name="payment_received">Maksu vastaanotettu</string>
-<string name="import_brainkey">Tuo BrainKey</string>
-<string name="import_backup_old">Tuo varmuuskopiointi</string>
-<string name="choose_backup">Valitse Backup</string>
-<string name="choose_file">Valitse tiedosto</string>
-    <string name="unable_to_import_account_from_bin_file">Ei voi tuoda tilin bin file</string>
-    <string name="importing_keys_from_bin_file">Tuodaan Keys Bin tiedosto</string>
-    <string name="import_backup">Tuo Varmuuskopiointi Bin tiedosto</string>
-    <string name="is_already_added">on jo lisätty</string>
-    <string name="in_valid_email">Virheellinen sähköpostiosoite</string>
-    <string name="select">valita</string>
-    <string name="are_you_sure">Oletko varma?</string>
-    <string name="please_make_sure_your_pin">Varmista, että tappi on oikein</string>
-    <string name="please_make_sure_your_pin_file">Varmista, että tappi on oikein tai oikea PIN-tiedosto on valittu</string>
-    <string name="no_file_chosen">Ei tiedostoa valittuna</string>
-<string name="account_label">Valitse tiedosto</string>
-<string name="loading_msg">Odota kunnes Talletukset ladataan</string>
-<string name="txt_6_digits_pin">6-numerot PIN</string>
-<string name="txt_6_digits_pin_confirm">6-numerot PIN confirm</string>
-<string name="create">LUODA</string>
-<string name="existing_account">Olemassa Account</string>
-<string name="agreement">sopimus</string>
-<string name="cancel_and_exit">Peruuta ja Lopeta</string>
-<string name="i_agree">Olen samaa mieltä</string>
-<string name="kindly_create_account">Ystävällisesti luo tunnus</string>
-<string name="please_enter_old_6_digit_pin">Anna vanha 6-numeroinen pin</string>
-<string name="please_enter_6_digit_pin">Anna 6-numeroinen pin</string>
-<string name="please_enter_6_digit_pin_confirm">Anna 6-numeroinen PIN vahvistus</string>
-<string name="mismatch_pin">epäsuhta pin</string>
-<string name="txt_brain_key">Brainkey</string>
-<string name="txt_brain_key_info">Tulosta tätä, tai kirjoita se muistiin. Kuka tahansa, jolla on pääsy palautusavaimen pääsevät varoja tämän lompakon.</string>
-<string name="create_wallet">Luo lompakon</string>
-<string name="cance">PERUUTTAA</string>
-<string name="save">TALLENTAA</string>
-<string name="next">SEURAAVA</string>
-<string name="please_enter_brainkey">Anna brainkey</string>
-<string name="please_enter_correct_brainkey">Anna oikeat brainkey</string>
-<string name="balances">saldot</string>
-<string name="contacts">Yhteydet</string>
-<string name="receive_uppercase">VASTAANOTTAA</string>
-<string name="send_uppercase">LÄHETTÄÄ</string>
-<string name="transactions">Transactions</string>
-<string name="title_activity_setting">SettingActivity</string>
-<string name="backup_asset">Backup Asset</string>
-<string name="taxable_country">Verolliset Maa</string>
-<string name="date_time">Näyttö päivämääriä ja kellonaikoja kuin</string>
-<string name="check_for_updates">Tarkista päivitykset käynnistettäessä</string>
-<string name="automatically_install">Automaattisesti asentaa pääversio</string>
-<string name="require_pin">Vaadi PIN / Pattern lähettää varoja &amp; näkymä muistiot</string>
-<string name="close_bitshare">Automaattisesti lähellä Bitshares Wallet 3 minuutin käyttämättömyyden</string>
-<string name="always_donate">Aina Lahjoita 2 BTS Support Kehittäjät BitShares Munich (bitshares Munich)</string>
-<string name="hide_donations">Piilota lahjoitukset aloitusvalikosta Maksutapahtumaluettelossa</string>
-<string name="backup">BACKUP Bin</string>
-<string name="checkbox_donate_old">Lahjoita 2 BTS Support Kehittäjät Bitshares Munich</string>
-<string name="backup_brainkey">BACKUP BRAINKEY</string>
-<string name="imported_created_accounts">Tuotujen / luodut tilit</string>
-<string name="register_new_account">Rekisteröi uusi tunnus</string>
-<string name="secure_pin">EDIT PIN</string>
-<string name="export">Viedä</string>
-<string name="show_more">Näytä lisää</string>
-<string name="share_text">Löysin juuri tämä mahtava Smartcoins Wallet, jonka avulla voit lähettää ja vastaanottaa Smartcoins. Tarkista se! Kippis</string>
-<string name="share_info">Kutsu yksi tai useampi ystäviä kokeilemaan Smartcoins Wallet! Sähköpostiosoitteet ei tallenneta tai kerättävä joku joten niiden yksityisyys on taattu.</string>
-<string name="share_subject">Awesome Smartcoins Wallet</string>
-<string name="share_heading">jakaa ystävän kanssa</string>
-<string name="share_btn_text">OPEN Sähköpostisovellus</string>
-<string name="action_settings">Asetukset</string>
-    <string name="checkbox_donate">Lahjoita 2 BTS Support Kehittäjät</string>
-<string name="txt_validating_account">Tarkistetaan tilin ...</string>
-<string name="validating_account">Tarkistetaan tili ...</string>
-<string name="account_name_should_be_longer">Tilin nimi pitäisi olla pidempi</string>
-<string name="account_name_already_exist">Tilin nimi %s on jo olemassa</string>
-<string name="account_name_not_exist">Tilin nimi %s ei ole olemassa</string>
-<string name="add_contact">Lisätä</string>
-<string name="edit_contact">Muokata</string>
-<string name="empty_list">Ota lista on tyhjä</string>
-<string name="account_name_validate">Tilin nimi on pätevä</string>
-<string name="txt_no_internet_connection">Ei internet-yhteyttä</string>
-<string name="unable_to_create_account_from_brainkey">Ei voi luoda tilin brainkey</string>
-<string name="importing_your_wallet">Tuodaan lompakkoasi ...</string>
-<string name="str_trading_pair_not_exist">Kaupankäynti pari ei ole olemassa</string>
-<string name="unable_to_create_qr_code">Voitu luoda QR Code</string>
-<string name="price">hinta</string>
-<string name="currency">valuutta</string>
-<string name="please_enter_amount">Anna summa</string>
-<string name="amount_should_be_greater_than_zero">Määrän olisi oltava suurempi kuin nolla</string>
-<string name="no_amount_requested">Ei haetun</string>
-<string name="to_capital">jotta</string>
-<string name="from_capital">Mistä</string>
-<string name="memo_capital">Muistio</string>
-<string name="empty_file_created">Tyhjä tiedosto Luotu</string>
-<string name="date">Päivämäärä</string>
-<string name="all">Kaikki</string>
-<string name="to_from">jotta</string>
-<string name="amount">Määrä</string>
-<string name="message">Viesti</string>
-<string name="pdf_generated_msg">PDF luotu ja tallennettu:</string>
-<string name="pdf_generated_msg_error">Voitu luoda pdf. Ole hyvä ja yritä uudelleen. Virhe:</string>
-<string name="raw_transactions">Raw Transaction:</string>
-<string name="extensions">Laajennukset</string>
-<string name="op_in_trx">op_in_trx</string>
-<string name="virtual_op">virtual_op</string>
-<string name="operation_results">operation_results</string>
-<string name="sent_rcv">Lähetetyt / Vastaanotetut</string>
-<string name="details">Yksityiskohdat</string>
-<string name="share_qr_code">Jaa QR Code</string>
-<string name="done">Tehty</string>
-<string name="id_s">id</string>
-<string name="time">aika</string>
-<string name="operations">toiminnot</string>
-<string name="trx_in_block">trx_in_block</string>
-<string name="symbol_capital">Symboli</string>
-<string name="fee_capital">Maksu</string>
-<string name="ok">kunnossa</string>
-<string name="loading">Ladataan ...</string>
-<string name="pay_to">Maksaa</string>
-<string name="requested">pyysi</string>
-<string name="failed_transaction">epäonnistui Transaction</string>
+<resources>
+    <string name="app_name">Smartcoins Wallet</string>
 
-<string name="str_invalid_amount">Anna kelvollinen summa</string>
-<string name="str_invalid_receiver">Anna kelvollinen Tilille</string>
-<string name="str_transaction_failed">Transaction epäonnistui</string>
-<string name="please_enter_valid_amount">Anna kelvollinen summa</string>
-<string name="select_timezone">Valitse TimeZone</string>
-<string name="old_pin">Vanha 6-numeroa PIN</string>
-<string name="pin_created_successfully">PIN luotu</string>
-<string name="edit_pin">Muokkaa PIN</string>
-<string name="txt_edit">TALLENTAA</string>
-<string name="create_pin">Luo PIN</string>
-<string name="pin_changed_successfully">PIN-koodin vaihtaminen onnistui</string>
-<string name="incorrect_old_pin">Väärä vanha PIN</string>
-<string name="copy">Kopio</string>
-<string name="pin_verification">AVATTU</string>
-<string name="send_screen_name">Lähettää</string>
-<string name="rcv_screen_name">Vastaanottaa</string>
-<string name="request_amount_screen_name">Määrä</string>
-<string name="payment_rcvd_screen_name">Kiitos</string>
-<string name="e_receipt_activity_name">Kuitin</string>
-<string name="settings_activity_name">Asetukset</string>
-<string name="qr_code_activity_name">Skannaa QR</string>
-<string name="share_account_activity_name">Jaa ystävien kanssa</string>
-<string name="add_contact_activity_name">Lisää yhteystieto</string>
-<string name="str_trade_not_available">Trade Ei saatavilla</string>
-    <string name="preferred_lang">ensisijainen kieli</string>
-    <string name="got_it">Sain sen</string>
-    <string name="upgrade_to_ltm">Päivitä LTM</string>
-    <string name="txt_back">Takaisin</string>
-    <string name="please_pay">kiinnitä</string>
-    <string name="transfer_funds">siirtämällä varoja</string>
-    <string name="unable_to_process">Pysty käsittelemään</string>
-    <string name="cancel">PERUUTTAA</string>
-    <string formatted="false" name="help_message">Saat 80% Cashback on Palkkiot! Lifetime Members (LTM) saavat 80% cashback joka palvelumaksu he maksavat, ja saada ansaita lähete tuloja käyttäjiltä ne rekisteröidyttävä tai viitata verkkoon. Lifetime Jäsenyys on nyt alle 20000 BTS!</string>
-    <string name="txt_yes">Kyllä</string>
-    <string name="txt_no">Ei</string>
-    <string name="txt_confirmation">Vahvistus</string>
-    <string name="txt_confirmation_msg">Ovatko varma?</string>
-    <string name="txt_folder_name">Smartcoins</string>
-    <string name="txt_folder_created">kansio Luotu</string>
-    <string name="upgrade_failed">Päivitys epäonnistui</string>
-    <string name="upgrading">Päivitys ...</string>
-    <string name="import_new_account">Tuo tilin</string>
-    <string name="upgrade_account">PÄIVITÄ TILI</string>
-    <string name="remove_account">Poista tili</string>
-    <string name="txt_alertmsg">Haluatko varmasti poistaa tämän tilin</string>
-    <string name="validation_in_progress">Validointi käynnissä ..</string>
-    <string name="last_letter_cannot">viimeinen kirjain voi olla -</string>
-    <string name="account_name_shoud_have">tilin nimi shoud on atleast yksi -</string>
-    <string name="default_currency">EUR</string>
+    <string name="send_capital">Lähetä</string>
+
+    <string name="account_create_register_or_import">TILIN LUONTI / LUO TAI TUO</string>
+    <string name="txt_account_name">Tilin nimi</string>
+    <string name="time_stamp">Aikaleima</string>
+    <string name="email_pdf">Sähköpostita PDF</string>
+    <string name="account">Tili</string>
+    <string name="friendly_name">Lempinimi</string>
+    <string name="notes">Muistiinpanot</string>
+    <string name="note">Muistiinpano</string>
+    <string name="payment_received">Maksu vastaanotettu</string>
+
+    <string name="import_brainkey">Tuo Aivolompakko</string>
+    <string name="import_backup_old">Tuo .bin-muotoinen varmuuskopio</string>
+    <string name="choose_backup">Valitse varmuuskopio</string>
+    <string name="choose_file">Valitse tiedosto</string>
+    <string name="no_file_chosen">Ei valittua tiedostoa</string>
+
+    <string name="account_label">Valitse tiedosto</string>
+    <string name="loading_msg">Odota, tilin katteita selvitetään</string>
+
+    <string name="txt_6_digits_pin">6-numeroinen PIN</string>
+    <string name="txt_6_digits_pin_confirm">Vahvista 6-numeroinen PIN</string>
+    <string name="create">LUO</string>
+    <string name="existing_account">Olemassa oleva tili</string>
+    <string name="v_1_0_beta">v 1.0 beta</string>
+    <string name="block_number">lohko# -------</string>
+    <string name="agreement">Sopimus</string>
+    <string name="cancel_and_exit">Hylkää ja Poistu</string>
+    <string name="i_agree">Hyväksyn</string>
+    <string name="kindly_create_account">Ystävällisesti luo tili</string>
+    <string name="please_enter_old_6_digit_pin">Syötä vanha 6-numeroinen PIN</string>
+    <string name="please_enter_6_digit_pin">Syötä 6-numeroinen PIN</string>
+    <string name="please_enter_6_digit_pin_confirm">Syötä 6-numeroinen PIN vahvistus</string>
+    <string name="mismatch_pin">erilaiset PIN-koodit</string>
+    <string name="key_brainkey">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+    <string name="txt_pin">pin</string>
+    <string name="txt_brain_key">Aivolompakko</string>
+    <string name="txt_brain_key_info">Tulosta tai kirjoita tämä talteen. Kuka tahansa kuka saa haltuunsa tämän avaimen pääsee käsiksi kaikkiin rahoihisi.</string>
+    <string name="create_wallet">LUO LOMPAKKO</string>
+    <string name="save">TALLENNA</string>
+    <string name="next">SEURAAVA</string>
+
+    <string name="please_enter_brainkey">Syötä aivolompakko</string>
+    <string name="please_enter_correct_brainkey">Syötä aivolompakko oikein</string>
+    <string name="balances">Katteet</string>
+    <string name="contacts">Yhteystiedot</string>
+    <string name="receive_uppercase">VASTAANOTA</string>
+    <string name="send_uppercase">LÄHETÄ</string>
+    <string name="transactions">Rahasiirrot</string>
+    <string name="title_activity_setting">Aktiivisuuden asettaminen</string>
+    <string name="backup_asset">Vara-maksuvaluutta</string>
+    <string name="taxable_country">Verotusmaa</string>
+    <string name="date_time">Ajan ja Päivämäärän esitys</string>
+    <string name="check_for_updates">Tarkista päivitykset käynnistettäessä</string>
+    <string name="automatically_install">Asenna isot päivitykset automaattisesti</string>
+    <string name="require_pin">Vaadi PIN/kuvio lähettämiseen &amp; viestien lukemiseen</string>
+    <string name="close_bitshare">Sulje sovellus automaattisesti 3 minuutin joutenolon jälkeen</string>
+    <string name="always_donate">Lahjoita aina 2 BTS sovelluksen kehittäjille: BitShares Munich(bitshares munich)</string>
+    <string name="hide_donations">Piilota lahjoitukset kotinäytön tilisiirroista</string>
+    <string name="backup">VARMUUSKOPIO .bin</string>
+    <string name="checkbox_donate">Tue kehittäjiä lahjoittamalla 2 BTS</string>
+    <string name="backup_brainkey">VARMUUSKOPIOI AIVOLOMPAKKO</string>
+    <string name="imported_created_accounts">Tuodut/Luodut tilit</string>
+    <string name="register_new_account">LUO UUSI TILI</string>
+    <string name="secure_pin">MUOKKAA PIN-KOODIA</string>
+    <string name="export">Vie</string>
+    <string name="show_more">Näytä lisää</string>
+    <string name="lisence_html"><![CDATA[<html><head><meta content=\"text/html; charset=UTF-8\" http-equiv=\"content-type\"><style type=\"text/css\">ul.lst-kix_4tihrp5o8icj-0{list-style-type:none}ul.lst-kix_4tihrp5o8icj-1{list-style-type:none}.lst-kix_4tihrp5o8icj-1>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-2>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-3>li:before{content:\"\\0025cf  \"}.lst-kix_4tihrp5o8icj-4>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-7>li:before{content:\"\\0025cb  \"}.lst-kix_4tihrp5o8icj-5>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-6>li:before{content:\"\\0025cf  \"}ul.lst-kix_4tihrp5o8icj-8{list-style-type:none}ul.lst-kix_4tihrp5o8icj-6{list-style-type:none}ul.lst-kix_4tihrp5o8icj-7{list-style-type:none}ul.lst-kix_4tihrp5o8icj-4{list-style-type:none}ul.lst-kix_4tihrp5o8icj-5{list-style-type:none}.lst-kix_4tihrp5o8icj-8>li:before{content:\"\\0025a0  \"}.lst-kix_4tihrp5o8icj-0>li:before{content:\"\\0025cf  \"}ul.lst-kix_4tihrp5o8icj-2{list-style-type:none}ul.lst-kix_4tihrp5o8icj-3{list-style-type:none}ol{margin:0;padding:0}table td,table th{padding:0}.c3{background-color:#ffffff;max-width:2000pt;padding:5pt 5pt 5pt 5pt}.c1{orphans:2;widows:2}.c2{margin-left:15pt;padding-left:0pt}.c5{padding:0;margin:0}.c4{height:11pt}.c0{font-size:9pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:\"Arial\"}p{margin:0;color:#000000;font-size:11pt;font-family:\"Arial\"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:\"Arial\";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style></head><body class=\"c3\"><p class=\"c1\"><span class=\"c0\">Smartcoins Wallet Terms and Conditions of Use</span></p><p class=\"c1\"><span class=\"c0\">The following terminology applies to these Terms and Conditions of Use (our &ldquo;Terms&rdquo;), the Privacy and Transparency Statement, and any and all other agreements between you and us: &ldquo;Client&rdquo;, &ldquo;Customer&rdquo;, &ldquo;User&rdquo;, &ldquo;You&rdquo; and &ldquo;Your&rdquo; refers to you, the person accessing the Smartcoins Wallet software application (&ldquo;App&rdquo;) and accepting our Terms. &ldquo;The Company&rdquo;, &ldquo;BitShares&rdquo;, &ldquo;BitShares Munich&rdquo;, &ldquo;Our&rdquo;, &ldquo;Ourselves&rdquo;, &ldquo;We&rdquo; and &ldquo;Us&rdquo; collectively refers to the App and to its owners, operators, developers, contractors, directors, officers, employees, agents, insurers, suppliers, and attorneys. &ldquo;Party&rdquo; refers to either you or Us. In these Terms, unless otherwise specified, words importing the singular include the plural and vice versa and words importing gender include all genders. &ldquo;Digital asset&rdquo;, &ldquo;asset&rdquo;, &ldquo;coin&rdquo;, &ldquo;cryptocurrency&rdquo;, &ldquo;good&rdquo;, &ldquo;ledger entry&rdquo;, &ldquo;altcoin&rdquo; and &ldquo;token&rdquo; refer to blockchain-based software ledger data entries. </span></p><p class=\"c1\"><span class=\"c0\">By using the App, you represent and warrant that you are:</span></p><ul class=\"c5 lst-kix_4tihrp5o8icj-0 start\"><li class=\"c1 c2\"><span class=\"c0\">at least 18 years old and have full capacity to contract under applicable law;</span></li><li class=\"c1 c2\"><span class=\"c0\">only transacting with the App with legally-obtained funds that belong to you;</span></li><li class=\"c1 c2\"><span class=\"c0\">not furthering, performing, undertaking, engaging in, aiding, or abetting any unlawful activity through your relationship with Us or through your use of the App; and,</span></li><li class=\"c1 c2\"><span class=\"c0\">comporting with and obeying all applicable laws.</span></li></ul><p class=\"c1\"><span class=\"c0\">We reserve the right to terminate your access to the App for any reason, including but not limited to breaches of our Terms, in our sole and absolute discretion. Use of the App is void where prohibited by applicable law.</span></p><p class=\"c1\"><span class=\"c0\">1. Terms</span></p><p class=\"c1\"><span class=\"c0\">By accessing the App, you agree to be bound by our Terms, all applicable laws and regulations, and you agree that you are responsible for compliance with, and that you are compliant with applicable law. If you do not agree with any of our Terms, you are prohibited from using or accessing the App; your only recourse is to stop using the App. Any use of the App is your deemed acceptance of our Terms as they may be modified and amended from time to time. The materials contained in the App are protected by applicable copyright and trademark laws and treaties. You should check back often in case our Terms undergo changes.</span></p><p class=\"c1\"><span class=\"c0\">By accepting our Terms, you expressly allow Us to export data outside of the jurisdiction in which you reside or are located when you access the App.</span></p><p class=\"c1\"><span class=\"c0\">2. Limitations</span></p><p class=\"c1\"><span class=\"c0\">Use of the App may carry financial risk, and is to be used as an experimental software utility only. In no event shall We be liable or responsible for any damages, claims, applications, losses, injuries, delays, accidents, costs, business interruption costs, or other expenses (including, without limitation, attorneys&rsquo; fees or the costs of any claim or suit), nor for any incidental, direct, indirect, general, special, punitive, exemplary, or consequential damages, loss of goodwill or business profits, loss of cryptocurrency or digital assets, work stoppage, data loss, computer or device failure or malfunction, or any other commercial or other losses directly or indirectly arising out of or related to: our Terms; the Privacy and Transparency Statement; any service We provide; the use of the App; any use of your digital assets or cryptocurrency with the App by any other party not authorized by you (collectively, all of the foregoing items shall be referred to herein as &ldquo;Losses&rdquo;). We are hereby released by you from liability for any and all Losses. We disclaim any and all warranties or guarantees, including any warranty of merchantability and warranty of fitness for any particular purpose. The foregoing limitations of liability shall apply whether the alleged liability or Losses are based on contract, negligence, tort, strict liability, or any other basis, even if We have been advised of or should have known of the possibility of such losses and damages, and without regard to the success or effectiveness of other remedies. Notwithstanding anything else in our Terms, in no event shall the combined aggregate liability for any Loss hereunder exceed 50.00&euro;.</span></p><p class=\"c1\"><span class=\"c0\">3. Prices, Exchange Rates, and Confirmations</span></p><p class=\"c1\"><span class=\"c0\">Cryptocurrency and digital assets are highly experimental and risky. Our App attempts to provide accurate price and exchange rate information, but this information is highly volatile and can change quickly without users necessarily being aware of these changes. For normal orders (i.e., not &ldquo;Specific Amount&rdquo; orders), the exchange rate you receive is calculated at the time your payment is accepted. Due to blockchain specifications, your payment is typically considered &ldquo;accepted&rdquo; at one block confirmation. We may occasionally accept a payment with zero confirmations, though this decision is at Our sole discretion. It is important to note that a payment being broadcast to the blockchain network does not constitute an acceptance by Us of that payment.</span></p><p class=\"c1\"><span class=\"c0\">Users who are sensitive to the exchange rate they receive should use Our &ldquo;Amount&rdquo; feature, which guarantees an exchange rate for a specified period of time. The User&rsquo;s payment must be received by Us within that period in order to receive the guaranteed exchange rate. Please contact Us for more information on exchange rates.</span></p><p class=\"c1\"><span class=\"c0\">4. Returns and Refund Policy</span></p><p class=\"c1\"><span class=\"c0\">Cryptocurrencies, tokens, and digital assets are, by their nature, generally irreversible, and their exchange rates are highly volatile and transitory. Once the User&rsquo;s asset has been transmitted to the User&rsquo;s address, no refund is possible, even if the wrong address was provided to the App. All sales after transmission are final.</span></p><p class=\"c1\"><span class=\"c0\">5. Governing Law </span></p><p class=\"c1\"><span class=\"c0\">These Terms are governed by the laws of Munich, Germany, and any and all laws applicable therein.</span></p><p class=\"c1\"><span class=\"c0\">6. Prohibited Jurisdictions</span></p><p class=\"c1\"><span class=\"c0\">It is prohibited to use or access cryptocurrencies and/or Digital assets from certain jurisdictions. Transactions from Users in these jurisdictions are prohibited. By accessing the App or any services therein, you represent and warrant that you are not physically located in a prohibited jurisdiction.</span></p><p class=\"c1\"><span class=\"c0\">7. Permissible Use</span></p><p class=\"c1\"><span class=\"c0\">The App and all its services may be used only as a mechanism of software ledger entry translation between the User and the BitShares blockchain. You are prohibited from using the App for the purpose of translating ledger entries with other parties, with the exception of explicit payment for goods and services.</span></p><p class=\"c1\"><span class=\"c0\">8. Terms of Use Modifications</span></p><p class=\"c1\"><span class=\"c0\">We may revise our Terms at any time and without notice to you or third parties. By using the App, you agree to be bound by the then-current version of our Terms. We reserve the right to make any changes retroactive.</span></p><p class=\"c1\"><span class=\"c0\">9. Costs</span></p><p class=\"c1\"><span class=\"c0\">From time to time, We may need to spend time dealing with issues brought to Us by customers. Where any customer issue is not caused by our negligence or oversight, We reserve the right to recover reasonable administrative costs spent addressing the customer issue.</span></p><p class=\"c1\"><span class=\"c0\">Privacy and Transparency Statement</span></p><p class=\"c1\"><span class=\"c0\">We respect the privacy of Users of Our App by not requesting any information that is unnecessary for the use of the service or to comport with our obligations under applicable law.</span></p><p class=\"c1\"><span class=\"c0\">We also do not in any way obscure the information that it does request or obtain. Due to the inherent transparency of blockchains, transactions to and from the App are public and easily correlated. Utilizing the App to obscure transactions or assets in any way is futile. Law enforcement has full access to blockchain information that goes in or out of the BitShares network.</span></p><p class=\"c1\"><span class=\"c0\">You accept that We will comply willingly with all legal requests for information from it. We reserve the right to provide information to law enforcement personnel and other third parties to answer inquiries; to respond to legal process; to respond to the order of a court of competent jurisdiction and those exercising the court&rsquo;s authority; and, to protect Ourselves and our users.
+   <p class=\"c1\"><span class=\"c0\">Copyright 2016 BitShares Munich IVS Registered in Kingdom of Denmark Company registration no.: CVR-NR 37 62 63 76 attn: J. Dall, Poul Sloths Vej 22, 8270 Højbjerg, Denmark.</p>
+    </span></p><p class=\"c1\"><span class=\"c0\">&nbsp;</span></p><p class=\"c1\"><span class=\"c0\">If you agree to these terms and conditions, please tap on the green button below.</span></p><p class=\"c1 c4\"><span class=\"c0\"></span></p></body></html>]]></string>
+    <string name="large_text">
+    </string>
+    <string name="share_text"><p>Löysin tällaisen sovelluksen, jolla voi käyttää älyvaluuttoja.</p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>Käyhän katsomassa!</p></string>
+    <string name="share_info">Pyydä ystäviäsi kokeilemaan tätä älyvaluuttalompakkoa! Yksityisyys on taattua, sillä emme tallenna sähköpostiosoitteita ollenkaan</string>
+    <string name="share_subject">Huippuhyvä älyrahalompakko</string>
+    <string name="share_heading">Kerro ystävälle</string>
+    <string name="share_btn_text">AVAA SÄHKÖPOSTISOVELLUS</string>
+    <string name="action_settings">Asetukset</string>
+
+    <string name="txt_validating_account">Tarkistetaan tiliä...</string>
+    <string name="validating_account">Tarkistetaan tiliä...</string>
+    <string name="account_name_should_be_longer">Tilillä tulee olla pidempi nimi</string>
+    <string name="account_name_already_exist">Tili nimellä %s on jo olemassa</string>
+    <string name="account_name_not_exist">Tiliä nimellä %s ei ole olemassa</string>
     <string name="account_already_exist">Tili on jo olemassa</string>
+    <string name="add_contact">Lisää</string>
+    <string name="edit_contact">Muokkaa</string>
+    <string name="empty_list">Yhteystietoluettelo on tyhjä</string>
+
+    <string name="account_name_validate">Ehdotettu tilin nimi on mahdollinen</string>
+    <string name="beta">""</string>
+    <string name="txt_no_internet_connection">Ei yhteyttä nettiin</string>
+
+    <string name="unable_to_create_account_from_brainkey">Aivolompakosta ei onnistu luoda tiliä</string>
+    <string name="importing_your_wallet">Tuodaan lompakkoa...</string>
+
+    <string name="str_trading_pair_not_exist">Kyseistä vaihtoparia ei ole</string>
+
+
+    <string name="unable_to_create_qr_code">QR-koodin luominen ei onnistu</string>
+    <string name="price">hinta</string>
+    <string name="currency">valuutta</string>
+    <string name="please_enter_amount">Anna summa</string>
+    <string name="amount_should_be_greater_than_zero">Summan pitää olla suurempi kuin 0</string>
+    <string name="no_amount_requested">Ei mitään summaa pyydetty</string>
+
+
+    <string name="to_capital">Vastaanottaja</string>
+    <string name="from_capital">Lähettäjä</string>
+    <string name="memo_capital">Viesti</string>
+    <string name="empty_file_created">Tyhjä tiedosto luotu</string>
+    <string name="date">PVM</string>
+    <string name="all">Kaikki</string>
+    <string name="to_from">Läh./Vast.</string>
+    <string name="amount">Summa</string>
+    <string name="message">Viesti</string>
+
+    <string name="pdf_generated_msg">PDF luotu ja tallennettu : </string>
+    <string name="pdf_generated_msg_error">PDF:n luominen meni myttyyn. Yritä uudelleen. Virhe : </string>
+    <string name="raw_transactions">Raaka tilisiirto : </string>
+    <string name="extensions">Laajennusosat</string>
+    <string name="op_in_trx">op_in_trx</string>
+    <string name="virtual_op">virtual_op</string>
+    <string name="operation_results">operation_results</string>
+    <string name="sent_rcv">Lähetetty/Vastaanotettu</string>
+    <string name="details">Yksityiskohdat</string>
+    <string name="share_qr_code">Jaa QR-koodi</string>
+    <string name="done">Valmis</string>
+
+    <string name="id_s">id</string>
+    <string name="time">time</string>
+    <string name="operations">operations</string>
+    <string name="trx_in_block">trx_in_block</string>
+
+    <string name="symbol_capital">Tunnus</string>
+
+
+
+    <string name="fee_capital">Kulu</string>
+    <string name="ok">OK</string>
+
+    <string name="loading">Lataa...</string>
+    <string name="pay_to">Maksun vastaanottaja</string>
+
+    <string name="requested">pyydetty</string>
+
+
+
+    <string name="failed_transaction">Epäonnistunut maksu</string>
+
+
+    <string name="str_warning_only_available">Varoitus! Vain %1$s %2$s käytettävissä</string>
+    <string name="str_balance_available">%1$s %2$s käytettävissä</string>
+    <string name="str_invalid_amount">Summa ei kelvollinen</string>
+    <string name="str_invalid_receiver">Syötä kelvollinen vastaanottaja</string>
+    <string name="str_transaction_failed">Tilisiirto epäonnistui</string>
+    <string name="please_enter_valid_amount">Syötä kelvollinen summma</string>
+    <string name="insufficient_amount">Summa ei riitä</string>
+
+    <string name="select_timezone">Valitse aikavyöhyke</string>
+
+
+
+    <string name="old_pin">Vanha 6-numeroinen PIN</string>
+    <string name="pin_created_successfully">PIN luotu onnistuneesti</string>
+    <string name="edit_pin">Muokkaa PINiä</string>
+    <string name="txt_edit">TALLENNA</string>
+    <string name="create_pin">Luo PIN</string>
+    <string name="pin_changed_successfully">PIN vaihdettiin onnistuneesti</string>
+    <string name="incorrect_old_pin">Väärä vanha PIN</string>
+
+    <string name="date_time_zone">dateTimeZone</string>
+    <string name="copy">Kopioi</string>
+
+    <string name="pin_verification">AVATTU</string>
+
+    // Screen Names
+    <string name="send_screen_name">Lähetä</string>
+    <string name="rcv_screen_name">Ota vastaan</string>
+    <string name="request_amount_screen_name">Summa</string>
+    <string name="payment_rcvd_screen_name">Kiitos</string>
+    <string name="settings_activity_name">Asetukset</string>
+    <string name="qr_code_activity_name">Kuvaa QR</string>
+    <string name="share_account_activity_name">Jaa ystäville</string>
+    <string name="add_contact_activity_name">Lisää yhteystieto</string>
+    <string name="str_trade_not_available">Kyseinen kauppa mahdoton</string>
+    <string name="edit_contact_activity_name">Muokkaa yhteystietoa</string>
+
+
+
+
+    // Not to be localized
+    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
+    <string name="sharePref_database">database</string>
+    <string name="sharePref_network_broadcast">network_broadcast</string>
+    <string name="sharePref_history">history</string>
+    <string name="sharePref_account_name">account_name</string>
+    <string name="preferred_lang">Preferred Language</string>
+    <string name="pref_account_from_brainkey">account_from_brainkey</string>
+    <string name="pref_wallet_accounts">wallet_accounts</string>
+    <string name="pref_country">country</string>
+    <string name="pref_timezone">timezone</string>
+    <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_account_name">account_name</string>
+    <string name="pref_language">language</string>
+    <string name="pref_backup_symbol">backup_symbol</string>
+    <string name="pref_always_donate">always_donate</string>
+    <string name="pref_fade_currency">fade_currency</string>
+    <string name="account_id">accountId</string>
+    <string name="account_name">account_name</string>
+    <string name="symbol">symbol</string>
+    <string name="fee">fee</string>
+    <string name="to">to</string>
+    <string name="from">from</string>
+    <string name="memo">memo</string>
+    <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
+    <string name="head_block_number">head_block_number</string>
+    <string name="e_receipt">e_receipt</string>
+
+    <string name="folder_name">SmartcoinsWallet</string>
+    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
+    </string>
+    <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
+    </string>
+    <string name="database_indentifier">
+        {\"method\":\"call\",\"params\":[1,\"database\",[]],\"id\":2}
+    </string>
+    <string name="network_broadcast_identifier">
+        {\"method\":\"call\",\"params\":[1,\"network_broadcast\",[]],\"id\":3}
+    </string>
+
+    <string name="history_identifier">{\"method\":\"call\",\"params\":[1,\"history\",[]],\"id\":4}
+    </string>
+    <string name="subscribe_callback">
+        {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
+    </string>
+    <!--<string name="subscribe_callback_full_account">-->
+    <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
+    <!--</string>-->
+    <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
+    <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
+    <string name="lookup_account_b">,\"lookup_accounts\",[</string>
+    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="account_create_url">https://bitshares.openledger.info</string>
+    <string name="transfer_server_url">http://188.166.147.110:9000</string>
+    <string name="qr_hash_url">http://188.166.147.110:8000</string>
+    <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
+    <string name="node_server_url">http://188.166.147.110:8000</string>
+    <string name="hash_server_url">http://188.166.147.110:9002</string>
+    <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
+
+    <string name="test_brain_key">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+
+    <string name="pref_local_transactions">my_local_transactions</string>
+    <string name="help_title">Help</string>
+    <string name="got_it">Got it</string>
+    <string formatted="false" name="help_message">Get 80% Cashback on Fees! Lifetime Members (LTM) get 80% cashback on every transaction fee they pay, and qualify to earn referral income from users they register
+        with or refer to the network. A Lifetime Membership is now under 20000 BTS!
+    </string>
+    <string name="txt_yes">Yes</string>
+    <string name="txt_no">No</string>
+    <string name="txt_confirmation">Confirmation</string>
+    <string name="txt_confirmation_msg">Upgrade to LTM now? 18000 BTS will be deducted from your %s account.</string>
+    <string name="txt_folder_name">Smartcoins</string>
+    <string name="txt_folder_created">Folder Created</string>
+
+    <string name="upgrade_failed">Upgrade failed</string>
+    <string name="upgrading">Upgrading...</string>
+    <string name="import_new_account">IMPORT ACCOUNT</string>
+    <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="remove_account">REMOVE ACCOUNT</string>
+    <string name="txt_alertmsg">Are you sure to delete this account</string>
+    <string name="delete">Delete</string>
+    <string name="validation_in_progress">Validation in progress..</string>
+    <string name="last_letter_cannot">last letter cannot be -</string>
+    <string name="account_name_shoud_have">account name shoud have atleast one -</string>
+    <string name="default_currency">EUR</string>
     <string name="donation">lahjoitus</string>
     <string name="insufficient_funds">Riittämättömät varat</string>
     <string name="txt_wallet_atleast_one_account">Valitettavasti lompakon pitää olla vähintään 1 huomioon se</string>
@@ -197,5 +299,27 @@
 
     <string name="txt_alertmsg_fr">Oletko varma, että haluat poistaa</string>
     <string name="txt_alertmsg_la">osuus tästä lompakon?</string>
+    <string name="bugs_or_errors">Vikoja tai virheitä?</string>
+    <string name="please_let_us_know">Kerro meille:</string>
+    <string name="try_again">Yritä uudelleen 5 minuutin kuluttua</string>
+    <string name="warning_msg_same_account">Et voi lähettää summan samalle tilille</string>
+    <string name="e_receipt_activity_name">eReceipt</string>
+    <string name="txt_back">Back</string>
+    <string name="please_pay">Please pay</string>
+    <string name="transfer_funds">Transferring Funds</string>
+    <string name="unable_to_process">Unable to process</string>
+    <string name="upgrade_to_ltm">Upgrade to LTM</string>
+    <string name="cancel">CANCEL</string>
+
+    <string name="select">"Select</string>
+    <string name="are_you_sure">"Are you sure?</string>
+    <string name="is_already_added">is already added</string>
+    <string name="in_valid_email">Invalid Email</string>
+    <string name="unable_to_import_account_from_bin_file">"Unable to import account from bin file"</string>
+    <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
+    <string name="import_backup">Import Backup from .bin file</string>
+
+    <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
+    <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
 </resources>

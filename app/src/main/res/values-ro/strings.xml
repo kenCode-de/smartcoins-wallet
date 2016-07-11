@@ -196,5 +196,9 @@
 
     <string name="txt_alertmsg_fr">Sunteți sigur că doriți să eliminați</string>
     <string name="txt_alertmsg_la">cont de acest portofel?</string>
+    <string name="bugs_or_errors">Bug-uri sau erori?</string>
+    <string name="please_let_us_know">Vă rugăm să ne anunțați:</string>
+    <string name="try_again">Vă rugăm să încercați din nou după 5 minute</string>
+    <string name="warning_msg_same_account">Nu puteți trimite suma în același cont</string>
 
 </resources>

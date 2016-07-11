@@ -198,4 +198,9 @@
     <string name="txt_alertmsg_fr">Ви впевнені, що хочете видалити</string>
     <string name="txt_alertmsg_la">рахунки з цього гаманця?</string>
 
+    <string name="bugs_or_errors">Помилки або помилки?</string>
+    <string name="please_let_us_know">Будь ласка дайте нам знати:</string>
+    <string name="try_again">Будь ласка, спробуйте ще раз через 5 хвилин</string>
+    <string name="warning_msg_same_account">Ви не можете відправити суму в той же рахунок</string>
+
 </resources>

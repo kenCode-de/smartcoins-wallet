@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">क्या आप वाकई निकालना चाहते हैं</string>
     <string name="txt_alertmsg_la">इस बटुए से खाता?</string>
+    <string name="bugs_or_errors">कीड़े या त्रुटियों?</string>
+    <string name="please_let_us_know">कृपया हमें बताएं:</string>
+    <string name="try_again">5 मिनट के बाद फिर से कोशिश करें</string>
+    <string name="warning_msg_same_account">आप एक ही खाते में राशि नहीं भेज सकते हैं</string>
 
 </resources>

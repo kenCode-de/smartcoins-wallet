@@ -197,5 +197,8 @@
 
     <string name="txt_alertmsg_fr">Bạn có chắc chắn bạn muốn loại bỏ</string>
     <string name="txt_alertmsg_la">tài khoản từ ví này?</string>
-
+    <string name="bugs_or_errors">Lỗi hoặc lỗi?</string>
+    <string name="please_let_us_know">Xin vui lòng cho chúng tôi biết:</string>
+    <string name="try_again">Vui lòng thử lại sau 5 phút</string>
+    <string name="warning_msg_same_account">Bạn không thể gửi tiền vào tài khoản cùng</string>
 </resources>

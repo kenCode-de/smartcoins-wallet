@@ -367,7 +367,7 @@ public class Helper {
         Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
         if (isFade) {
             String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
-            return currency[1].replace("(","").replace(")","");
+            return currency[currency.length-1].replace("(","").replace(")","");
         } else {
             return "";
         }

@@ -200,5 +200,9 @@
 
     <string name="txt_alertmsg_fr">Համոզված եք, որ ցանկանում եք հեռացնել</string>
     <string name="txt_alertmsg_la">հաշիվ այս դրամապանակից.</string>
+    <string name="bugs_or_errors">Bugs կամ սխալները.</string>
+    <string name="please_let_us_know">Խնդրում ենք տեղյակ պահեք մեզ:</string>
+    <string name="try_again">Խնդրում ենք կրկին փորձել այն բանից հետո, 5 րոպե</string>
+    <string name="warning_msg_same_account">Դուք չեք կարող ուղարկել գումարը հաշվի է նույն հաշվին</string>
 
 </resources>

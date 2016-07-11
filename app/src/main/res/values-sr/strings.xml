@@ -199,5 +199,9 @@
 
     <string name="txt_alertmsg_fr">Да ли сте сигурни да желите да уклоните</string>
     <string name="txt_alertmsg_la">налог на овом новцанику?</string>
+    <string name="bugs_or_errors">Бубе или грешке?</string>
+    <string name="please_let_us_know">Обавестите нас:</string>
+    <string name="try_again">Покушајте поново после 5 минута</string>
+    <string name="warning_msg_same_account">Не можете слати износ у исти рачун</string>
 
 </resources>

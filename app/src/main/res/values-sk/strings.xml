@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">Ste si istí, že chcete odstrániť</string>
     <string name="txt_alertmsg_la">účet z tejto peňaženky?</string>
+    <string name="bugs_or_errors">Chyby alebo chybu?</string>
+    <string name="please_let_us_know">Prosím dajte nám vedieť:</string>
+    <string name="try_again">Skúste to znovu po 5 minútach</string>
+    <string name="warning_msg_same_account">Nemôžete poslať čiastky na rovnaký účet</string>
 
 </resources>

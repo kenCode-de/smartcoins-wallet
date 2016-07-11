@@ -196,5 +196,9 @@
 
     <string name="txt_alertmsg_fr">Apakah Anda yakin ingin menghapus</string>
     <string name="txt_alertmsg_la">akun dari dompet ini?</string>
+    <string name="bugs_or_errors">Bug atau Kesalahan?</string>
+    <string name="please_let_us_know">Tolong beritahu kami:</string>
+    <string name="try_again">Coba lagi setelah 5 menit</string>
+    <string name="warning_msg_same_account">Anda tidak dapat mengirim jumlah ke rekening yang sama</string>
 
 </resources>

@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Вы уверены, что хотите удалить</string>
     <string name="txt_alertmsg_la">счета из этого кошелька?</string>
+    <string name="bugs_or_errors">Ошибки или ошибки?</string>
+    <string name="please_let_us_know">Пожалуйста дай нам знать:</string>
+    <string name="try_again">Пожалуйста, повторите попытку через 5 минут</string>
+    <string name="warning_msg_same_account">Вы не можете отправить сумму в тот же счет</string>
 
 </resources>

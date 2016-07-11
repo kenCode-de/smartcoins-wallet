@@ -199,5 +199,10 @@
 
     <string name="txt_alertmsg_fr">Ali ste prepričani, da želite odstraniti</string>
     <string name="txt_alertmsg_la">račun s to denarnico?</string>
+    <string name="bugs_or_errors">Bugs ali napake?</string>
+    <string name="please_let_us_know">Prosimo vas, da nam sporočite:</string>
+    <string name="try_again">Poskusite znova čez 5 minut</string>
+    <string name="warning_msg_same_account">Ne morete poslati znesek v isti račun</string>
+
 
 </resources>
