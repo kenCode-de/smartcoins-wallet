@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">Êtes-vous sûr de vouloir supprimer le</string>
     <string name="txt_alertmsg_la">compte de ce portefeuille?</string>
+    <string name="bugs_or_errors">Bugs ou erreurs?</string>
+    <string name="please_let_us_know">S\'il vous plaît laissez-nous savoir:</string>
+    <string name="try_again">S\'il vous plaît essayer de nouveau après 5 minutes</string>
+    <string name="warning_msg_same_account">Vous ne pouvez pas envoyer montant dans le même compte</string>
 
 </resources>

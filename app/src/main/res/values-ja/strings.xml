@@ -200,5 +200,9 @@
 
     <string name="txt_alertmsg_fr">あなたが削除してもよろしいです</string>
     <string name="txt_alertmsg_la">この財布からアカウント？</string>
+    <string name="bugs_or_errors">バグやエラー？</string>
+    <string name="please_let_us_know">お知らせください：</string>
+    <string name="try_again">5分後にもう一度お試しください</string>
+    <string name="warning_msg_same_account">あなたは、同じアカウントに金額を送信することはできません。</string>
 
 </resources>

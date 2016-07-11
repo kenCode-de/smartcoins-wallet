@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">Vai jūs tiešām vēlaties, lai novērstu</string>
     <string name="txt_alertmsg_la">kontu no maka?</string>
+    <string name="bugs_or_errors">Bugs vai kļūdas?</string>
+    <string name="please_let_us_know">Lūdzu, dariet mums zināt:</string>
+    <string name="try_again">Lūdzu, mēģiniet vēlreiz pēc 5 minūtēm</string>
+    <string name="warning_msg_same_account">Jūs nevarat sūtīt summu tajā pašā kontā</string>
 
 </resources>

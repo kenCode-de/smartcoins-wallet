@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Oletko varma, että haluat poistaa</string>
     <string name="txt_alertmsg_la">osuus tästä lompakon?</string>
+    <string name="bugs_or_errors">Vikoja tai virheitä?</string>
+    <string name="please_let_us_know">Kerro meille:</string>
+    <string name="try_again">Yritä uudelleen 5 minuutin kuluttua</string>
+    <string name="warning_msg_same_account">Et voi lähettää summan samalle tilille</string>
 
 </resources>

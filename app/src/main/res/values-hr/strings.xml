@@ -199,5 +199,9 @@
 
     <string name="txt_alertmsg_fr">Jeste li sigurni da želite ukloniti</string>
     <string name="txt_alertmsg_la">račun iz ovog novčanika?</string>
+    <string name="bugs_or_errors">Nedostaci ili pogrešaka?</string>
+    <string name="please_let_us_know">Javite nam se:</string>
+    <string name="try_again">Pokušajte ponovno nakon 5 minuta</string>
+    <string name="warning_msg_same_account">Ne možete poslati iznos na isti račun</string>
 
 </resources>

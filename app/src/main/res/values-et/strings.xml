@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Oled sa kindel, et soovid eemaldada</string>
     <string name="txt_alertmsg_la">moodustavad selle rahakoti?</string>
+    <string name="bugs_or_errors">Bugs või vead?</string>
+    <string name="please_let_us_know">Palun andke teada:</string>
+    <string name="try_again">Palun proovige uuesti 5 minuti pärast</string>
+    <string name="warning_msg_same_account">Sa ei saa saata summa samasse konto</string>
 
 </resources>

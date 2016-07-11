@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">당신은을 삭제 하시겠습니까</string>
     <string name="txt_alertmsg_la">이 지갑에서 계정?</string>
+    <string name="bugs_or_errors">버그 나 오류?</string>
+    <string name="please_let_us_know">알려 주시기 바랍니다 :</string>
+    <string name="try_again">5 분 후에 다시 시도하십시오</string>
+    <string name="warning_msg_same_account">동일한 계정으로 금액을 보낼 수 없습니다</string>
 
 </resources>
