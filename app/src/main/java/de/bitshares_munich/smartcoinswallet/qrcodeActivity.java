@@ -23,8 +23,6 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.common.HybridBinarizer;
 import com.loopj.android.http.*;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.zxing.Result;
 
 import org.json.JSONArray;
@@ -54,7 +52,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+   // private GoogleApiClient client;
 
     // Camera Permissions
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -94,7 +92,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         progressDialog = new ProgressDialog(this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+     //   client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
