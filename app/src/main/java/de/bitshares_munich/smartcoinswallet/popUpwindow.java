@@ -43,6 +43,8 @@ public class popUpwindow {
         optionsList.add("SGD::10");
         optionsList.add("SILVER::11");
         optionsList.add("TRY::12");
+        optionsList.add("USD::13"); //newly added
+        optionsList.add("CNY::14");
         textView = textview;
         popUpContents = new String[optionsList.size()];
 
