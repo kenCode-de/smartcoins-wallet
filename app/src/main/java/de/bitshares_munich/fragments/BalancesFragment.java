@@ -235,7 +235,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         };
 
 
-        loadBasic(false,true);
+        loadBasic(false,true,false);
         loadBalancesFromSharedPref();
         TransactionUpdateOnStartUp();
 
@@ -349,11 +349,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
         Boolean accountNameChange = checkIfAccountNameChange();
 
-        if(accountNameChange)
+        if(accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
             llBalances.removeAllViews();
 
-        if (isCheckedTimeZone || isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
-            loadBasic(true,accountNameChange);
+        if (isCheckedTimeZone || isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
+        {
+            if (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency) )
+            {
+                loadBasic(true,accountNameChange,true);
+            }
+            else
+            {
+                loadBasic(true,accountNameChange,false);
+            }
+
         }
     }
 
@@ -639,13 +648,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             faitCurrency = "EUR";
         }
 
+        final String fc = faitCurrency;
+
+        final List<String> pairs = new ArrayList<>();
         String values = "";
+
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
             if (!accountAsset.symbol.equals(faitCurrency)) {
                 values += accountAsset.symbol + ":" + faitCurrency + ",";
+                pairs.add(accountAsset.symbol + ":" + faitCurrency);
             }
         }
+
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values.substring(0, values.length() - 1));
@@ -673,6 +688,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             {
                                 String key = keys.next();
                                 hm.put(key.split(":")[0], rates.get(key));
+
+                                if ( pairs.contains(key) )
+                                {
+                                    pairs.remove(key);
+                                }
+                            }
+
+
+                            if ( pairs.size() > 0 )
+                            {
+                                getEquivalentComponentsIndirect(pairs,fc);
                             }
 
                             for (int i = 0; i < llBalances.getChildCount(); i++)
@@ -705,7 +731,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     }
                                     String asset = tvAsset.getText().toString();
                                     String amount = tvAmount.getText().toString();
-                                    amount = android.text.Html.fromHtml(amount).toString();
+                                    //amount = android.text.Html.fromHtml(amount).toString();
 
                                     if (amount.isEmpty())
                                     {
@@ -730,10 +756,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
                                             }
 
+                                            tvFaitAmount.setVisibility(View.VISIBLE);
+
                                         }
                                         catch (Exception e)
                                         {
-
+                                            tvFaitAmount.setVisibility(View.GONE);
                                         }
                                     }
                                     else
@@ -772,6 +800,187 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
             }
         });
+    }
+
+    private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency)
+    {
+        final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getEquivalentComponentsIndirect(leftOvers, faitCurrency);
+            }
+        };
+
+        List<String> newPairs = new ArrayList<>();
+
+        for (String pair:leftOvers)
+        {
+            String firstHalf = pair.split(":")[0];
+            newPairs.add(firstHalf + ":" + "BTS");
+        }
+
+        newPairs.add("BTS" + ":" + faitCurrency);
+
+        String values = "";
+
+        for(String pair : newPairs)
+        {
+            values += pair + ",";
+        }
+
+        values = values.substring(0, values.length() - 1);
+
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("method", "equivalent_component");
+        hashMap.put("values", values);
+
+        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+
+        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+            @Override
+            public void onResponse(Response<EquivalentComponentResponse> response)
+            {
+                if (response.isSuccess())
+                {
+                    EquivalentComponentResponse resp = response.body();
+                    if (resp.status.equals("success"))
+                    {
+                        try
+                        {
+                            JSONObject rates = new JSONObject(resp.rates);
+                            Iterator<String> keys = rates.keys();
+                            String btsToFait = "";
+
+                            while (keys.hasNext())
+                            {
+                                String key = keys.next();
+
+                                if ( key.equals("BTS:" + faitCurrency) )
+                                {
+                                    btsToFait = rates.get("BTS:" + faitCurrency).toString();
+                                    break;
+                                }
+                            }
+
+                            HashMap hm = new HashMap();
+
+                            if ( !btsToFait.isEmpty() )
+                            {
+                                keys = rates.keys();
+
+
+                                while (keys.hasNext())
+                                {
+                                    String key = keys.next();
+
+                                    if ( !key.equals("BTS:" + faitCurrency) )
+                                    {
+                                        String asset = key.split(":")[0];
+
+                                        String assetConversionToBTS = rates.get(key).toString();
+
+                                        double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+
+                                        String assetToFaitConversion = Double.toString(newConversionRate);
+
+                                        hm.put(asset,assetToFaitConversion);
+                                    }
+                                }
+                            }
+
+                            for (int i = 0; i < llBalances.getChildCount(); i++)
+                            {
+                                LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
+
+                                for (int j = 1; j <= 2; j++) {
+
+                                    TextView tvAsset;
+                                    TextView tvAmount;
+                                    TextView tvFaitAmount;
+
+                                    if (j == 1)
+                                    {
+                                        tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
+                                        tvAmount = (TextView) llRow.findViewById(R.id.amount_child_one);
+                                        tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_one);
+                                    }
+                                    else
+                                    {
+                                        tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_two);
+                                        tvAmount = (TextView) llRow.findViewById(R.id.amount_child_two);
+                                        tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
+                                    }
+
+                                    if (tvAsset == null || tvAmount == null || tvFaitAmount == null)
+                                    {
+                                        updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable,500);
+                                        return;
+                                    }
+
+                                    String asset = tvAsset.getText().toString();
+                                    String amount = tvAmount.getText().toString();
+
+                                    if (!amount.isEmpty() && hm.containsKey(asset))
+                                    {
+                                        Currency currency = Currency.getInstance(faitCurrency);
+
+                                        try
+                                        {
+                                            double d = convertLocalizeStringToDouble(amount);
+                                            Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
+
+                                            if ( Helper.isRTL(locale) )
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
+                                            }
+                                            else
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
+                                            }
+
+                                            tvFaitAmount.setVisibility(View.VISIBLE);
+
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            tvFaitAmount.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+                            //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                            e.printStackTrace();
+                        }
+                    }
+                    /*
+                    else
+                    {
+                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    }
+                    */
+                }
+                else
+                {
+                    hideDialog();
+                    Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                    //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                hideDialog();
+                //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable,500);
+            }
+        });
+
     }
 
     ArrayList<String> symbolsArray;
@@ -2051,7 +2260,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             public void run() {
                 _activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        loadViews(false,true);
+                        loadViews(false,true,false);
                     }
                 });
             }
@@ -2072,7 +2281,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     AssestsActivty myAssetsActivity;
 
-    void loadViews(Boolean onResume,Boolean accountNameChanged) {
+    void loadViews(Boolean onResume,Boolean accountNameChanged,boolean faitCurrencyChanged) {
         tableViewparent.setVisibility(View.GONE);
         load_more_values.setVisibility(View.GONE);
 
@@ -2092,7 +2301,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myAssetsActivity.registerDelegate();
         }
 
-        if ( !onResume || accountNameChanged) {
+        if ( !onResume || accountNameChanged || faitCurrencyChanged) {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
         }
@@ -2101,7 +2310,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
-    void loadBasic(boolean onResume,boolean accountNameChanged) {
+    void loadBasic(boolean onResume,boolean accountNameChanged, boolean faitCurrencyChanged) {
 
         if ( !onResume )
         {
@@ -2135,7 +2344,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isLifeTime(accountId, "15");
         get_full_accounts(accountId, "17");
 
-        loadViews(onResume,accountNameChanged);
+        loadViews(onResume,accountNameChanged, faitCurrencyChanged);
     }
 
     Boolean checkIfAccountNameChange() {
