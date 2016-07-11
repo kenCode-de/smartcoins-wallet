@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="+ 3.33 USD"
         android:fontFamily="sans-serif-light"
-        android:textSize="5pt"
+        android:textSize="6pt"
         android:textColor="@color/sendamount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"

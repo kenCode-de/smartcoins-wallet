@@ -221,11 +221,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         loadWebView(webviewTo,39, Helper.hash("", Helper.SHA256));
-        //loadWebView(webviewTo, 34, Helper.hash("", Helper.MD5));
-
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
 

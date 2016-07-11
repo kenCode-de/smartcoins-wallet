@@ -74,7 +74,7 @@
     </span></p><p class=\"c1\"><span class=\"c0\">&nbsp;</span></p><p class=\"c1\"><span class=\"c0\">If you agree to these terms and conditions, please tap on the green button below.</span></p><p class=\"c1 c4\"><span class=\"c0\"></span></p></body></html>]]></string>
     <string name="large_text">
     </string>
-    <string name="share_text">I just found this awesome Smartcoins Wallet that allows you to send and receive Smartcoins. Check it out! Cheers</string>
+    <string name="share_text"><p>I just found this awesome Smartcoins Wallet that allows you to send and receive Smartcoins.</p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>Check it out !</p></string>
     <string name="share_info">Invite one or more of your friends to try out the Smartcoins Wallet! Email addresses are not saved or collected by anyone so their privacy is assured.</string>
     <string name="share_subject">Awesome Smartcoins Wallet</string>
     <string name="share_heading">Share with a friend</string>
@@ -195,6 +195,7 @@
 
 
     // Not to be localized
+    <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
     <string name="sharePref_database">database</string>
     <string name="sharePref_network_broadcast">network_broadcast</string>
@@ -321,8 +322,11 @@
     <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
     <string name="txt_alertmsg_la">account from this wallet?</string>
 
-    // new strings
     <string name="try_again">Please try again after 5 minutes</string>
     <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
+    // new strings
+    <string name="bugs_or_errors">Bugs or Errors?</string>
+    <string name="please_let_us_know">Please let us know:</string>
+
 
 </resources>

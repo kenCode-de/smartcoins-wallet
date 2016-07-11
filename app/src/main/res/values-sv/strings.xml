@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Licens</string>
-<string name="app_name">Smartcoins Wallet</string>
 <string name="send_capital">Skicka</string>
 <string name="account_create_register_or_import">Konto Skapa / register eller IMPORT</string>
 <string name="txt_account_name">Kontonamn</string>

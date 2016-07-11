@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="license">رخصة</string>
-<string name="app_name">Smartcoins محفظة</string>
 <string name="send_capital">إرسال</string>
 <string name="account_create_register_or_import">حساب انشاء / تسجيل أو استيراد</string>
 <string name="txt_account_name">أسم الحساب</string>

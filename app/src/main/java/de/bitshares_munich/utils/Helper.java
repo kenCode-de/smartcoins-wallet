@@ -396,4 +396,19 @@ public class Helper {
         }
     }
 
+    public static boolean isRTL(Locale locale)
+    {
+        final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));
+
+        if ( (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT) ||
+                (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string name="license">执照</string>
-<string name="app_name">Smartcoins钱包</string>
 <string name="send_capital">发送</string>
 <string name="account_create_register_or_import">帐号创建/注册或进口</string>
 <string name="txt_account_name">用户名</string>

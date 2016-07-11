@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Lisans</string>
-<string name="app_name">Smartcoins Cüzdan</string>
 <string name="send_capital">göndermek</string>
 <string name="account_create_register_or_import">HESAP / KAYIT VEYA İTHALAT CREATE</string>
 <string name="txt_account_name">Hesap adı</string>

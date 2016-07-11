@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
  <string name="license">Liçensë</string>
-<string name="app_name">Smartcoins Wallet</string>
 <string name="send_capital">dërgoj</string>
 <string name="account_create_register_or_import">LLOGARIA CREATE / Regjistrohuni ose IMPORT</string>
 <string name="txt_account_name">Emri i llogarise</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">licencija</string>
-<string name="app_name">Smartcoins piniginė</string>
 <string name="send_capital">siųsti</string>
 <string name="account_create_register_or_import">SĄSKAITA CREATE / Registracija arba importuokite</string>
 <string name="txt_account_name">Paskyros vardas</string>

@@ -558,19 +558,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
 
-        for (int i = 0; i < ids.size(); i++) {
-            AccountAssets accountAsset = new AccountAssets();
+        for (int i = 0; i < ids.size(); i++)
+        {
+            long amount = Long.parseLong(am.get(i));
 
-            accountAsset.id = ids.get(i);
-            if (pre.size() > i) accountAsset.precision = pre.get(i);
-            if (sym.size() > i) accountAsset.symbol = sym.get(i);
-            if (am.size() > i) accountAsset.ammount = am.get(i);
+            if ( amount != 0 )
+            {
+                AccountAssets accountAsset = new AccountAssets();
 
-            // SupportMethods.testing("floatDoubleIssue", Float.parseFloat(returnFromPower(pre.get(i), am.get(i))), "txtamount");
-            // Log.i("uncle","aay1"+am.get(i));
-            accountAssets.add(accountAsset);
+                accountAsset.id = ids.get(i);
+                if (pre.size() > i) accountAsset.precision = pre.get(i);
+                if (sym.size() > i) accountAsset.symbol = sym.get(i);
+                if (am.size() > i) accountAsset.ammount = am.get(i);
+
+                accountAssets.add(accountAsset);
+            }
         }
-        try {
+
+        try
+        {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     accountDetails.get(i).AccountAssets = accountAssets;
@@ -578,7 +584,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     break;
                 }
             }
-        } catch (Exception w) {
+        }
+        catch (Exception w)
+        {
             SupportMethods.testing("Assets", w, "Asset Activity");
         }
 
@@ -712,7 +720,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         {
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
-                                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
+
+                                            if ( Helper.isRTL(locale) )
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
+                                            }
+                                            else
+                                            {
+                                                tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
+                                            }
+
                                         }
                                         catch (Exception e)
                                         {
