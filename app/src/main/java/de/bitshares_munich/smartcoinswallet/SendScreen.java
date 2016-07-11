@@ -15,7 +15,12 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -457,6 +462,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
         }
 
+        setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty , loyaltyAsset.symbol);
+
         if (loyaltyAsset != null && backupAssets != null) {
             count = 1;
             updateTotalStatus();
@@ -506,6 +513,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
+
+        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , backupAssets.symbol);
 
         if (backAssetRate != null)
         {
@@ -649,6 +658,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }else selectedAsset = "";
             selectedAccountAsset();
             Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+            String availableBalance = selectedBalance.toString();
             if (etAmount.getText().length() > 0) {
                 String enteredAmountStr = etAmount.getText().toString();
                 if (enteredAmountStr.equals(".")) {
@@ -676,11 +686,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
 
+
                 }
             } else {
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+
+
             }
+
+            setHyperlinkText(tvAmountStatus, availableBalance , etAmount , selectedAsset );
+
             updateTotalStatus();
         }
         catch (Exception e){
@@ -921,6 +937,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
                     tvLoyalty.setText(loyaltyAsset.symbol);
                     tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+                    setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty ,loyaltyAsset.symbol );
                     llLoyalty.setVisibility(View.VISIBLE);
                     tvLoyaltyStatus.setVisibility(View.VISIBLE);
                 }
@@ -1720,5 +1737,32 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if(contactListDialog!=null)
         contactListDialog.dismiss();
         createBitShareAN(false);
+    }
+
+    void setHyperlinkText(TextView textView , final String balances , final EditText editText , String symbol){
+        String text = textView.getText().toString();
+        String available = new String(symbol);
+
+        int index = text.indexOf( available );
+
+        SpannableString ss = new SpannableString(text);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                editText.setText(balances);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+                ds.setColor(Color.BLACK);
+            }
+        };
+        ss.setSpan(clickableSpan, 0 , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setHighlightColor(Color.TRANSPARENT);
+        textView.setTextColor(Color.BLACK);
     }
 }
