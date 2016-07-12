@@ -51,7 +51,7 @@
 <string name="receive_uppercase">RECEVOIR</string>
 <string name="send_uppercase">ENVOYER</string>
 <string name="transactions">Transactions</string>
-<string name="title_activity_setting">Paramètres d'activités</string>
+<string name="title_activity_setting">Paramètres d\'activités</string>
 <string name="backup_asset">Sauvegarder le capital</string>
 <string name="taxable_country">Pays imposable</string>
 <string name="date_time">Afficher les dates et les heures comme</string>
@@ -69,11 +69,11 @@
 <string name="secure_pin">MODIFIER LE CODE PIN</string>
 <string name="export">Exporter</string>
 <string name="show_more">Montrer plus</string>
-<string name="share_text">Je viens de découvrir ce portefeuille Smartcoins, c'est impressionnant, cela vous permet d\'envoyer et de recevoir des Smartcoins. Essayez-le!</string>
+<string name="share_text">Je viens de découvrir ce portefeuille Smartcoins, c\'est impressionnant, cela vous permet d\'envoyer et de recevoir des Smartcoins. Essayez-le!</string>
 <string name="share_info">Inviter un ou plusieurs de vos amis à essayer le portefeuille Smartcoins! Les adresses e-mail ne sont pas enregistrées ou collectées, la vie privée du destinataire est assurée.</string>
 <string name="share_subject">Impressionnant porte-feuille SmartCoin</string>
 <string name="share_heading">partager avec un ami</string>
-<string name="share_btn_text">OUVERT L'APPLICATION D\'E-MAIL</string>
+<string name="share_btn_text">OUVERT L\'APPLICATION D\'E-MAIL</string>
 <string name="action_settings">Paramètres</string>
     <string name="checkbox_donate">Donnez 2 BTS aux développeurs de Bitshares Munich pour les soutenir</string>
 <string name="txt_validating_account">Validation du compte ...</string>
@@ -88,7 +88,7 @@
 <string name="txt_no_internet_connection">Pas de connexion Internet</string>
 <string name="unable_to_create_account_from_brainkey">Impossible de créer un compte à partir du la clé de récupération - Brainkey</string>
 <string name="importing_your_wallet">Importation de votre portefeuille ...</string>
-<string name="str_trading_pair_not_exist">Cette paire d'échange n'existe pas</string>
+<string name="str_trading_pair_not_exist">Cette paire d\'échange n\'existe pas</string>
 <string name="unable_to_create_qr_code">Impossible de générer le QR Code</string>
 <string name="price">prix</string>
 <string name="currency">devise</string>
@@ -181,7 +181,7 @@
     <string name="donation">Dons</string>
     <string name="insufficient_funds">Fonds insuffisants</string>
     <string name="txt_wallet_atleast_one_account">Désolé, mais votre portefeuille doit avoir au moins 1 compte</string>
-    <string name="updating_transaction_id">Mise à jour de de l'ID de la transaction, Merci de patientez</string>
+    <string name="updating_transaction_id">Mise à jour de de l\'ID de la transaction, Merci de patientez</string>
     <string name="email_name">Pour afficher une photo de ce contact, entrez son e-mail associé à un compte Gravatar</string>
     <string name="upgrade_success">Mise à niveau réussie!</string>
     <string name="copied_to_clipboard">Copié dans le presse-papier</string>
