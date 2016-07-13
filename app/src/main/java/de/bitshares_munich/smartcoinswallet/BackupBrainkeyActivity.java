@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,6 +87,9 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
 
     @OnClick(R.id.btnDone)
     public void btnDone(Button button) {
+        Intent intent=new Intent(getApplicationContext(),TabActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
 
     }
 
