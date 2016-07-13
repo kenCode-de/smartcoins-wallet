@@ -396,6 +396,24 @@ public class Helper {
         }
     }
 
+    public static int convertDOubleToInt(Double value)
+    {
+        String valueString = Double.toString(value);
+
+        for ( int i = 0 ; i < valueString.length() ; i++ )
+        {
+            if ( valueString.charAt(i) == '.' )
+            {
+                valueString = valueString.substring(0,i);
+                break;
+            }
+        }
+
+        int valueInteger = Integer.parseInt(valueString);
+
+        return valueInteger;
+    }
+
     public static boolean isRTL(Locale locale)
     {
         final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));

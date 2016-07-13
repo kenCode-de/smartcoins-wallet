@@ -1,10 +1,13 @@
 package de.bitshares_munich.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -12,17 +15,42 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.TabActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by developer on 6/28/16.
  */
 public class BinHelper {
+
+    private Activity myActivity;
+    private Context myContext;
+    Handler createBackUp;
+    ProgressDialog progressDialog;
+    BackupBinDelegate backupBinDelegate;
+
+    public BinHelper()
+    {
+    }
+
+    public BinHelper(Activity activity,Context context, BackupBinDelegate _backupBinDelegate)
+    {
+        myActivity = activity;
+        myContext = context;
+        createBackUp = new Handler();
+        progressDialog = new ProgressDialog(activity);
+        backupBinDelegate = _backupBinDelegate;
+    }
 
     private int unsignedToBytes(byte b) {
         return b & 0xFF;
@@ -49,7 +77,6 @@ public class BinHelper {
             return null;
         }
     }
-
 
     public void addWallet(AccountDetails accountDetail, String brainKey, String pinCode, Context context, Activity activity) {
         TinyDB tinyDB = new TinyDB(context);
@@ -113,6 +140,170 @@ public class BinHelper {
         }
 
         return success;
+    }
+
+    public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName)
+    {
+        try
+        {
+            ServiceGenerator sg = new ServiceGenerator(myContext.getString(R.string.account_from_brainkey_url));
+            IWebService service = sg.getService(IWebService.class);
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("method", "backup_bin");
+            hashMap.put("password", pin);
+            hashMap.put("brainkey", brnKey);
+
+            Call<ResponseBinFormat> postingService = service.getBytesFromBrainKey(hashMap);
+
+            postingService.enqueue(new Callback<ResponseBinFormat>() {
+                @Override
+                public void onResponse(Response<ResponseBinFormat> response) {
+
+                    if (response.isSuccess())
+                    {
+                        ResponseBinFormat responseContent = response.body();
+                        if (responseContent.status.equals("failure"))
+                        {
+                            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                            hideDialog(false);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                List<Object> abc = (List<Object>) responseContent.content;
+
+                                List<Integer> resultContent = new ArrayList<>();
+
+                                for (Object in: abc)
+                                {
+                                    int _in = Helper.convertDOubleToInt((Double)in);
+                                    resultContent.add(_in);
+                                }
+
+                                saveBinContentToFile(resultContent, _accountName);
+                            }
+                            catch (Exception e)
+                            {
+                                hideDialog(false);
+                                Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_import_account_from_bin_file) + " : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        hideDialog(false);
+                        Log.d("bin","fail");
+                        Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    hideDialog(false);
+                    Log.d("bin","fail");
+                    Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            hideDialog(false);
+            Log.d("bin",e.getMessage());
+            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    public void saveBinContentToFile(List<Integer> content, String _accountName)
+    {
+        changeDialogMsg(myContext.getResources().getString(R.string.saving_bin_file_to) + " : " + myContext.getResources().getString(R.string.folder_name));
+
+        String folder = Environment.getExternalStorageDirectory() + File.separator + myContext.getResources().getString(R.string.folder_name);
+        String path =  folder + File.separator + _accountName + ".bin";
+
+        boolean success = saveBinFile(path,content,myActivity);
+
+        hideDialog(success);
+
+        if ( success )
+        {
+            Toast.makeText(myActivity, myContext.getResources().getString(R.string.bin_file_saved_successfully_to) + " : " + path,Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_save_bin_file),Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void hideDialog(boolean success) {
+
+        backupBinDelegate.backupComplete(success);
+
+        myActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.cancel();
+                    }
+                }
+            }
+        });
+    }
+
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
+        }
+    }
+
+    private void changeDialogMsg(String msg) {
+        if (progressDialog != null)
+        {
+            if (progressDialog.isShowing())
+            {
+                progressDialog.setMessage(msg);
+            }
+        }
+    }
+
+    public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode)
+    {
+        showDialog(myContext.getResources().getString(R.string.creating_backup_file),myContext.getResources().getString(R.string.fetching_key));
+
+        if (_brnKey.isEmpty())
+        {
+            Toast.makeText(myActivity,myContext.getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+            hideDialog(false);
+            return;
+        }
+
+        if ( pinCode.isEmpty() )
+        {
+            hideDialog(false);
+            Toast.makeText(myActivity,myContext.getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        changeDialogMsg(myContext.getResources().getString(R.string.generating_bin_format));
+
+        Runnable getFormat = new Runnable() {
+            @Override
+            public void run()
+            {
+                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
+            }
+        };
+
+        createBackUp.postDelayed(getFormat,200);
     }
 
 
