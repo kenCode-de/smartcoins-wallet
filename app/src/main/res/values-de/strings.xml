@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie entfernen möchten, die</string>
     <string name="txt_alertmsg_la">Konto von dieser Geldbörse?</string>
+    <string name="bugs_or_errors">Bugs oder Fehler?</string>
+    <string name="please_let_us_know">Informieren Sie uns bitte:</string>
+    <string name="try_again">Bitte versuchen Sie es erneut nach 5 Minuten</string>
+    <string name="warning_msg_same_account">Sie können nicht Betrag in das gleiche Konto senden</string>
 
 </resources>

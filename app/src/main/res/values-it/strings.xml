@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Sei sicuro di voler rimuovere il</string>
     <string name="txt_alertmsg_la">account da questo portafoglio?</string>
+    <string name="bugs_or_errors">Bug o errori?</string>
+    <string name="please_let_us_know">Fatecelo sapere:</string>
+    <string name="try_again">Riprova dopo 5 minuti</string>
+    <string name="warning_msg_same_account">Non è possibile inviare importo sullo stesso conto</string>
 
 </resources>

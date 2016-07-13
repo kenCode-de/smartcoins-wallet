@@ -199,5 +199,9 @@
 
     <string name="txt_alertmsg_fr">آیا مطمئن هستید که می خواهید به حذف</string>
     <string name="txt_alertmsg_la">از این کیف پول حساب؟</string>
+    <string name="bugs_or_errors">اشکالات یا اشتباهات.</string>
+    <string name="please_let_us_know">لطفا مارا در جریان بگذارید:</string>
+    <string name="try_again">لطفا بعد از 5 دقیقه دوباره امتحان کنید</string>
+    <string name="warning_msg_same_account">شما نمی توانید مقدار به همان حساب ارسال</string>
 
 </resources>

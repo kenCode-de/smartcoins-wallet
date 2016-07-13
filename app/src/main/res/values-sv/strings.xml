@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Är du säker på att du vill ta bort</string>
     <string name="txt_alertmsg_la">konto från plånboken?</string>
+    <string name="bugs_or_errors">Buggar eller fel?</string>
+    <string name="please_let_us_know">Vänligen meddela oss:</string>
+    <string name="try_again">Försök igen efter 5 minuter</string>
+    <string name="warning_msg_same_account">Du kan inte skicka belopp i samma konto</string>
 
 </resources>

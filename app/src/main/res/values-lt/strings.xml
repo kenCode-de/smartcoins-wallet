@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Ar tikrai norite pašalinti</string>
     <string name="txt_alertmsg_la">sąskaitą iš šios piniginė?</string>
+    <string name="bugs_or_errors">Klaidos ar klaidų?</string>
+    <string name="please_let_us_know">Prašau Pranešk mums:</string>
+    <string name="try_again">Bandykite dar kartą po 5 minučių</string>
+    <string name="warning_msg_same_account">Jūs negalite siųsti sumą į tą pačią sąskaitą</string>
 
 </resources>

@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Er du sikker på at du vil fjerne</string>
     <string name="txt_alertmsg_la">konto fra denne tegnebog?</string>
+    <string name="bugs_or_errors">Bugs eller fejl?</string>
+    <string name="please_let_us_know">Vær venlig at informere os:</string>
+    <string name="try_again">Prøv venligst igen efter 5 minutter</string>
+    <string name="warning_msg_same_account">Du kan ikke sende beløb på samme konto</string>
 
 </resources>

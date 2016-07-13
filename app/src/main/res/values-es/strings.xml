@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">¿Seguro que desea eliminar el</string>
     <string name="txt_alertmsg_la">dar cuenta de esta cartera?</string>
+    <string name="bugs_or_errors">Bugs y errores?</string>
+    <string name="please_let_us_know">Por favor déjanos saber:</string>
+    <string name="try_again">Por favor, inténtelo de nuevo después de 5 minutos</string>
+    <string name="warning_msg_same_account">No se puede enviar la cantidad en la misma cuenta</string>
 
 </resources>

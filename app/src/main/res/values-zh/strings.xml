@@ -198,5 +198,8 @@
 
     <string name="txt_alertmsg_fr">您确定要删除</string>
     <string name="txt_alertmsg_la">从这个钱包帐户？</string>
-
+    <string name="bugs_or_errors">错误或错误？</string>
+    <string name="please_let_us_know">请告诉我们：</string>
+    <string name="try_again">请5分钟后再试</string>
+    <string name="warning_msg_same_account">您不能发送量到相同的帐户</string>
 </resources>

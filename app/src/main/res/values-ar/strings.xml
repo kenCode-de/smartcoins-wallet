@@ -196,5 +196,9 @@
 
     <string name="txt_alertmsg_fr">هل أنت متأكد أنك تريد إزالة</string>
     <string name="txt_alertmsg_la">حساب من هذه المحفظة؟</string>
+    <string name="bugs_or_errors">الخلل أو الأخطاء؟</string>
+    <string name="please_let_us_know">من فضلك، اسمحوا لنا أن نعرف:</string>
+    <string name="try_again">يرجى المحاولة مرة أخرى بعد 5 دقائق</string>
+    <string name="warning_msg_same_account">لا يمكنك إرسال المبلغ في نفس الحساب</string>
 
 </resources>

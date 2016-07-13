@@ -2536,17 +2536,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     private void hideDialog() {
+        try {
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (progressDialog != null) {
-                    if (progressDialog.isShowing()) {
-                        progressDialog.cancel();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (progressDialog != null) {
+                        if (progressDialog.isShowing()) {
+                            progressDialog.cancel();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        catch (Exception e)
+        {}
     }
 
     private void showDialog(String title, String msg) {

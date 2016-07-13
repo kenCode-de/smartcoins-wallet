@@ -500,7 +500,7 @@
         <LinearLayout
             android:id="@+id/llBugs"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tvEmpty"
             android:layout_marginTop="10dp"
             android:background="@color/whiteColor"
@@ -532,7 +532,7 @@
                           android:textSize="13dp"/>
 
             </LinearLayout>
-
+            <Space android:layout_width="match_parent" android:layout_height="10dp"/>
         </LinearLayout>
 
 

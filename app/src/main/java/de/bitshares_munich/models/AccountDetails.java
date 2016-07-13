@@ -15,6 +15,7 @@ public class AccountDetails {
     public String wif_key;
     public String msg;
     public String pinCode;
+    public int posBackupAsset;
     public ArrayList<AccountAssets> AccountAssets;
     public Boolean isSelected;
     public Boolean isLifeTime=false;

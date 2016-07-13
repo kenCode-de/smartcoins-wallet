@@ -199,5 +199,10 @@
 
     <string name="txt_alertmsg_fr">คุณแน่ใจหรือว่าต้องการลบ</string>
     <string name="txt_alertmsg_la">บัญชีจากกระเป๋าสตางค์นี้หรือไม่?</string>
+    <string name="bugs_or_errors">ข้อบกพร่องหรือข้อผิดพลาด?</string>
+    <string name="please_let_us_know">โปรดแจ้งให้เราทราบ:</string>
+    <string name="try_again">โปรดลองอีกครั้งหลังจาก 5 นาที</string>
+    <string name="warning_msg_same_account">คุณไม่สามารถส่งจำนวนเงินเข้าไปในบัญชีเดียวกัน</string>
+    
 
 </resources>

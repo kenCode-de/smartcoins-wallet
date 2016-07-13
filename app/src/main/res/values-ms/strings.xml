@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Adakah anda pasti anda mahu mengeluarkan</string>
     <string name="txt_alertmsg_la">Akaun dari dompet ini?</string>
+    <string name="bugs_or_errors">Bug atau kesilapan?</string>
+    <string name="please_let_us_know">Sila maklumkan pada kami:</string>
+    <string name="try_again">Sila cuba lagi selepas 5 minit</string>
+    <string name="warning_msg_same_account">Anda tidak boleh menghantar jumlah ke dalam akaun yang sama</string>
 
 </resources>

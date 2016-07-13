@@ -197,5 +197,9 @@
 
     <string name="txt_alertmsg_fr">Tem certeza de que deseja remover o</string>
     <string name="txt_alertmsg_la">conta a partir desta carteira?</string>
+    <string name="bugs_or_errors">Bugs ou erros?</string>
+    <string name="please_let_us_know">Por favor nos informe:</string>
+    <string name="try_again">Por favor tente novamente após 5 minutos</string>
+    <string name="warning_msg_same_account">Não é possível enviar montante na mesma conta</string>
 
 </resources>

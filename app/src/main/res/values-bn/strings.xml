@@ -198,5 +198,9 @@
 
     <string name="txt_alertmsg_fr">আপনি নিশ্চিত ভাবে সরাতে ইচ্ছুক</string>
     <string name="txt_alertmsg_la">এই মানিব্যাগ থেকে অ্যাকাউন্ট?</string>
+    <string name="bugs_or_errors">বাগ বা ত্রুটি?</string>
+    <string name="please_let_us_know">অনুগ্রহ করে আমাদের জানতে দিন:</string>
+    <string name="try_again">5 মিনিট পরে আবার চেষ্টা করুন</string>
+    <string name="warning_msg_same_account">আপনি একই একাউন্টে পরিমাণ পাঠাতে পারবেন না</string>
 
 </resources>

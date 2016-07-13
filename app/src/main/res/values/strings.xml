@@ -263,6 +263,7 @@
     <string formatted="false" name="help_message">Get 80% Cashback on Fees! Lifetime Members (LTM) get 80% cashback on every transaction fee they pay, and qualify to earn referral income from users they register
         with or refer to the network. A Lifetime Membership is now under 20000 BTS!
     </string>
+
     <string name="txt_yes">Yes</string>
     <string name="txt_no">No</string>
     <string name="txt_confirmation">Confirmation</string>
@@ -324,9 +325,14 @@
 
     <string name="try_again">Please try again after 5 minutes</string>
     <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
-    // new strings
     <string name="bugs_or_errors">Bugs or Errors?</string>
     <string name="please_let_us_know">Please let us know:</string>
+
+    // new strings
+    <string name="please_backup_your_brainkey">Please backup your brainkey</string>
+
+    <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
+    <string name="pref_backup_bin_exist">backup_bin_exist</string>
 
 
 </resources>

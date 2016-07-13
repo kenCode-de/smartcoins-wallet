@@ -200,5 +200,9 @@
 
     <string name="txt_alertmsg_fr">Сигурни ли сте, че искате да премахнете</string>
     <string name="txt_alertmsg_la">акаунт от този портфейл?</string>
+    <string name="bugs_or_errors">Bugs или грешки?</string>
+    <string name="please_let_us_know">Моля да ни уведомите:</string>
+    <string name="try_again">Моля, опитайте отново след 5 минути</string>
+    <string name="warning_msg_same_account">Не можете да изпращате сума в същия профил</string>
 
 </resources>
