@@ -203,4 +203,10 @@
     <string name="try_again">Будь ласка, спробуйте ще раз через 5 хвилин</string>
     <string name="warning_msg_same_account">Ви не можете відправити суму в той же рахунок</string>
 
+    <string name="please_backup_your_brainkey">Будь ласка, створіть резервну копію brainkey</string>
+    <string name="backup_brainkey_msg">Зробіть резервну копію файлу .bin в безпечне місце або ваші кошти можуть бути втрачені!</string>
+    <string name="unable_to_trade_bAssets">Неможливо торгувати резервні ресурси</string>
+    <string name="unable_to_send_amount">Неможливо відправити Сума.</string>
+    <string name="unable_to_decode_QR">Неможливо декодувати QR-код.</string>
+
 </resources>

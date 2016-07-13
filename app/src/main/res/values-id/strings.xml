@@ -201,4 +201,10 @@
     <string name="try_again">Coba lagi setelah 5 menit</string>
     <string name="warning_msg_same_account">Anda tidak dapat mengirim jumlah ke rekening yang sama</string>
 
+    <string name="please_backup_your_brainkey">Silahkan backup brainkey Anda</string>
+    <string name="backup_brainkey_msg">Cadangan .bin file Anda di tempat yang aman atau dana Anda bisa hilang!</string>
+    <string name="unable_to_trade_bAssets">Tidak dapat perdagangan Aset Backup</string>
+    <string name="unable_to_send_amount">Tidak dapat mengirim Jumlah tersebut.</string>
+    <string name="unable_to_decode_QR">Tidak dapat decode QR code.</string>
+
 </resources>

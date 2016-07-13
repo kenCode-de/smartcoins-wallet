@@ -201,4 +201,11 @@
     <string name="please_let_us_know">Xin vui lòng cho chúng tôi biết:</string>
     <string name="try_again">Vui lòng thử lại sau 5 phút</string>
     <string name="warning_msg_same_account">Bạn không thể gửi tiền vào tài khoản cùng</string>
+
+    <string name="please_backup_your_brainkey">Xin vui lòng sao lưu brainkey của bạn</string>
+    <string name="backup_brainkey_msg">Sao lưu file .bin của bạn ở một nơi an toàn hoặc tiền của bạn có thể bị mất!</string>
+    <string name="unable_to_trade_bAssets">Không thể giao dịch các tài sản lưu</string>
+    <string name="unable_to_send_amount">Không thể để gửi tiền.</string>
+    <string name="unable_to_decode_QR">Không thể giải mã các mã QR.</string>
+
 </resources>

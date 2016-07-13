@@ -204,4 +204,10 @@
     <string name="try_again">Pokušajte ponovno nakon 5 minuta</string>
     <string name="warning_msg_same_account">Ne možete poslati iznos na isti račun</string>
 
+    <string name="please_backup_your_brainkey">Molimo backup svoj brainkey</string>
+    <string name="backup_brainkey_msg">Sigurnosna kopija tvoj .bin file negdje na sigurnom ili se sredstva mogla biti izgubljen!</string>
+    <string name="unable_to_trade_bAssets">Ne može se trgovati Backup imovine</string>
+    <string name="unable_to_send_amount">Ne mogu poslati visine.</string>
+    <string name="unable_to_decode_QR">Nije moguće dekodirati QR koda.</string>
+
 </resources>

@@ -203,4 +203,10 @@
     <string name="try_again">Vennligst prøv igjen etter 5 minutter</string>
     <string name="warning_msg_same_account">Du kan ikke sende beløpet til samme konto</string>
 
+    <string name="please_backup_your_brainkey">Vennligst ta sikkerhetskopi brainkey</string>
+    <string name="backup_brainkey_msg">Backup din .bin filen på et sikkert sted, eller midlene kan gå tapt!</string>
+    <string name="unable_to_trade_bAssets">Kan ikke handle Backup Eiendeler</string>
+    <string name="unable_to_send_amount">Kan ikke sende beløpet.</string>
+    <string name="unable_to_decode_QR">Kan ikke dekode QR-koden.</string>
+
 </resources>

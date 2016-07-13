@@ -203,4 +203,10 @@
     <string name="try_again">5 분 후에 다시 시도하십시오</string>
     <string name="warning_msg_same_account">동일한 계정으로 금액을 보낼 수 없습니다</string>
 
+    <string name="please_backup_your_brainkey">백업 brainkey하세요</string>
+    <string name="backup_brainkey_msg">안전한 곳에 나 펀드가 손실 될 수 당신의 .bin 파일 백업0!</string>
+    <string name="unable_to_trade_bAssets">백업 자산을 거래 할 수 없습니다</string>
+    <string name="unable_to_send_amount">양을 보낼 수 없습니다.</string>
+    <string name="unable_to_decode_QR">QR 코드를 디코딩 할 수 없음.</string>
+
 </resources>

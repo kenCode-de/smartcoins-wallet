@@ -203,6 +203,11 @@
     <string name="please_let_us_know">โปรดแจ้งให้เราทราบ:</string>
     <string name="try_again">โปรดลองอีกครั้งหลังจาก 5 นาที</string>
     <string name="warning_msg_same_account">คุณไม่สามารถส่งจำนวนเงินเข้าไปในบัญชีเดียวกัน</string>
-    
+
+    <string name="please_backup_your_brainkey">กรุณาสำรอง brainkey ของคุณ</string>
+    <string name="backup_brainkey_msg">การสำรองข้อมูลไฟล์ .bin ของคุณบางปลอดภัยหรือเงินของคุณอาจจะหายไป!</string>
+    <string name="unable_to_trade_bAssets">ไม่สามารถที่จะซื้อขายสินทรัพย์สำรอง</string>
+    <string name="unable_to_send_amount">ไม่สามารถส่งยอดเงิน</string>
+    <string name="unable_to_decode_QR">ไม่สามารถถอดรหัสรหัส QR</string>
 
 </resources>

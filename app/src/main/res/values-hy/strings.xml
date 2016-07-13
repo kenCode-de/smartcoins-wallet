@@ -205,4 +205,10 @@
     <string name="try_again">Խնդրում ենք կրկին փորձել այն բանից հետո, 5 րոպե</string>
     <string name="warning_msg_same_account">Դուք չեք կարող ուղարկել գումարը հաշվի է նույն հաշվին</string>
 
+    <string name="please_backup_your_brainkey">Խնդրում կրկնօրնկ Ձեր brainkey</string>
+    <string name="backup_brainkey_msg">Կրկնօրինակեք ձեր .bin ֆայլը տեղ անվտանգ, կամ ձեր միջոցները կարող են կորցրել.</string>
+    <string name="unable_to_trade_bAssets">Անհնար է առեւտրի, որ կրկնօրինակում ակտիվները</string>
+    <string name="unable_to_send_amount">Անհնար է ուղարկել գումարը:</string>
+    <string name="unable_to_decode_QR">Անհնար է վերծանել է QR կոդը.</string>
+
 </resources>

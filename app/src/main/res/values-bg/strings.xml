@@ -205,4 +205,10 @@
     <string name="try_again">Моля, опитайте отново след 5 минути</string>
     <string name="warning_msg_same_account">Не можете да изпращате сума в същия профил</string>
 
+    <string name="please_backup_your_brainkey">Моля резервната си brainkey</string>
+    <string name="backup_brainkey_msg">Backup ви .bin файл някъде безопасно или запасите си могат да бъдат загубени!</string>
+    <string name="unable_to_trade_bAssets">Не може да се търгува на Backup активи</string>
+    <string name="unable_to_send_amount">Не може да се изпрати на сумата.</string>
+    <string name="unable_to_decode_QR">Не може да се декодира кода QR.</string>
+
 </resources>

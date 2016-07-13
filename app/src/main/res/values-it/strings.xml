@@ -202,4 +202,10 @@
     <string name="try_again">Riprova dopo 5 minuti</string>
     <string name="warning_msg_same_account">Non è possibile inviare importo sullo stesso conto</string>
 
+    <string name="please_backup_your_brainkey">Si prega di eseguire il backup brainkey</string>
+    <string name="backup_brainkey_msg">Eseguire il backup dei file .bin un luogo sicuro o i fondi potrebbero essere persi!</string>
+    <string name="unable_to_trade_bAssets">Impossibile scambiare gli asset di backup</string>
+    <string name="unable_to_send_amount">Impossibile inviare l\'importo.</string>
+    <string name="unable_to_decode_QR">Impossibile decodificare il codice QR.</string>
+
 </resources>

@@ -203,4 +203,10 @@
     <string name="try_again">Ju lutem provoni përsëri në minutën e 5</string>
     <string name="warning_msg_same_account">Ju nuk mund të dërgoni sasi në të njëjtën llogari</string>
 
+    <string name="please_backup_your_brainkey">Ju lutemi të backup brainkey tuaj</string>
+    <string name="backup_brainkey_msg">Backup dosja juaj .bin diku të sigurt apo fondet tuaja mund të jetë e humbur!</string>
+    <string name="unable_to_trade_bAssets">Në pamundësi për të tregtisë pasurinë Backup</string>
+    <string name="unable_to_send_amount">Në pamundësi për të dërguar sasi.</string>
+    <string name="unable_to_decode_QR">Në pamundësi për të deshifroj kodin QR.</string>
+
 </resources>

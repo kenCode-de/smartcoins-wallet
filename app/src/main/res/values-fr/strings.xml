@@ -203,4 +203,10 @@
     <string name="try_again">S\'il vous plaît essayer de nouveau après 5 minutes</string>
     <string name="warning_msg_same_account">Vous ne pouvez pas envoyer montant dans le même compte</string>
 
+    <string name="please_backup_your_brainkey">Veuillez sauvegarder votre brainkey</string>
+    <string name="backup_brainkey_msg">Sauvegardez votre fichier .bin dans un endroit sûr ou vos fonds pourraient être perdus!</string>
+    <string name="unable_to_trade_bAssets">Impossible de négocier les actifs de sauvegarde</string>
+    <string name="unable_to_send_amount">Impossible d\'envoyer le montant.</string>
+    <string name="unable_to_decode_QR">Impossible de décoder le code QR.</string>
+
 </resources>

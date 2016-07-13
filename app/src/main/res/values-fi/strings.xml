@@ -322,4 +322,10 @@
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
+    <string name="please_backup_your_brainkey">Varmuuskopioi brainkey</string>
+    <string name="backup_brainkey_msg">Varmuuskopioida .bin tiedosto jonnekin turvallinen tai rahat voidaan menettää!</string>
+    <string name="unable_to_trade_bAssets">Onnistu kauppaa Backup Vastaavaa</string>
+    <string name="unable_to_send_amount">Ei voitu lähettää Määrä.</string>
+    <string name="unable_to_decode_QR">Ei voitu purkaa QR-koodin.</string>
+
 </resources>
