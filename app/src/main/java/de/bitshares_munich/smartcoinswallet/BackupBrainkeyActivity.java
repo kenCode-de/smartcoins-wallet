@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
+import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -95,6 +96,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
     public void btnDone(Button button) {
 
         if (isBackupKey) {
+            Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
