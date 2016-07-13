@@ -268,8 +268,6 @@ public class ImportBackupActivity extends BaseActivity {
                         }
                         else
                         {
-                            //  addWallet(accountDetails,brainKey,pinCode);
-                            //Toast.makeText(myActivity, "success", Toast.LENGTH_SHORT).show();
                             try
                             {
                                 //Crypt cr = new Crypt();
@@ -282,9 +280,21 @@ public class ImportBackupActivity extends BaseActivity {
                                 {
                                     brn = "";
                                 }
-                                new BinHelper().addWallet(accountDetails, brn, pin, getApplicationContext(),myActivity);
 
-                                Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+                                BinHelper myBinHelper = new BinHelper();
+                                myBinHelper.addWallet(accountDetails, brn, pin, getApplicationContext(),myActivity);
+
+                                Intent intent;
+
+                                if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
+                                {
+                                    intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
+                                }
+                                else
+                                {
+                                    intent = new Intent(getApplicationContext(), TabActivity.class);
+                                }
+
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
