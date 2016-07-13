@@ -17,6 +17,7 @@
         android:id="@+id/tvPin"
         android:textStyle="bold"
         android:textSize="17dp"
+        android:textColor="@color/black"
         android:layout_marginTop="10dp"/>
 
     <LinearLayout
