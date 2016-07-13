@@ -306,5 +306,55 @@ public class BinHelper {
         createBackUp.postDelayed(getFormat,200);
     }
 
+    private String getPin(ArrayList<AccountDetails> accountDetails)
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).pinCode;
+            }
+        }
+
+        return "";
+    }
+
+    private String getBrainKey(ArrayList<AccountDetails> accountDetails)
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).brain_key;
+            }
+        }
+
+        return "";
+    }
+
+    private String getAccountName(ArrayList<AccountDetails> accountDetails)
+    {
+        for (int i = 0; i < accountDetails.size(); i++)
+        {
+            if (accountDetails.get(i).isSelected)
+            {
+                return accountDetails.get(i).account_name;
+            }
+        }
+
+        return "";
+    }
+
+    public void createBackupBinFile()
+    {
+        TinyDB tinyDB = new TinyDB(myContext);
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(myContext.getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        String _brnKey = getBrainKey(accountDetails);
+        String _accountName = getAccountName(accountDetails);
+        String _pinCode = getPin(accountDetails);
+
+        createBackupBinFile(_brnKey,_accountName,_pinCode);
+    }
+
 
 }
