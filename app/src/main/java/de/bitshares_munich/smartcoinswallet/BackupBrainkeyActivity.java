@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
@@ -32,6 +33,10 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
 
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
+    Boolean isBackupKey = false;
+
+    @Bind(R.id.btnDone)
+    Button btnDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +44,13 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         setContentView(R.layout.activity_backup_brainkey);
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
-        BinHelper myBinHelper = new BinHelper(this,getApplicationContext(),this);
+        BinHelper myBinHelper = new BinHelper(this, getApplicationContext(), this);
         myBinHelper.createBackupBinFile();
 
     }
 
     private void showDialogBackupBrainKey() {
+
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_delete_dialog);
@@ -87,14 +93,19 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
 
     @OnClick(R.id.btnDone)
     public void btnDone(Button button) {
-        Intent intent=new Intent(getApplicationContext(),TabActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+
+        if (isBackupKey) {
+            Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.please_backup_your_brainkey), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     private void showDialogCopyBrainKey() {
-
+        isBackupKey = true;
         final Dialog dialog = new Dialog(this, R.style.stylishDialog);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
@@ -134,18 +145,16 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         dialog.show();
     }
 
-    private String getBrainKey()
-    {
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
-            if (accountDetails.get(i).isSelected)
-            {
+    private String getBrainKey() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).brain_key;
             }
         }
 
         return "";
     }
+
     @Override
     public void backupComplete(boolean success) {
         showDialogBackupBrainKey();
