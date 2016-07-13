@@ -369,7 +369,7 @@ public class Helper {
             String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
             return currency[currency.length-1].replace("(","").replace(")","");
         } else {
-            return "";
+            return "EUR";
         }
     }
 
