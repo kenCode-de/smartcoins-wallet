@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_height="match_parent"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="20dp"
+              android:paddingRight="@dimen/activity_vertical_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/please_backup_your_brainkey"
+        android:id="@+id/tvPin"
+        android:textStyle="bold"
+        android:textSize="17dp"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/ivBackupBrainKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteColor"
+            android:layout_gravity="center"
+            android:onClick="onClickBackupBrainkeybtn"
+            android:src="@drawable/brainkey_ic"
+        />
+        <TextView
+            android:id="@+id/tvBackupBrainKey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/backup_brainkey"/>
+        <Button
+            android:id="@+id/btnDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_border"
+            android:stateListAnimator="@animator/my_animated_button"
+            android:text="@string/done"
+            android:textColor="@drawable/btn_txt"
+            android:textStyle="normal"
+        />
+    </LinearLayout>
+
+</LinearLayout>

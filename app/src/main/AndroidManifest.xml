@@ -104,6 +104,10 @@
             android:name=".ExistingAccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".BackupBrainkeyActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".PinActivity"

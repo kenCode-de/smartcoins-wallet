@@ -359,11 +359,13 @@ public class SettingActivity extends BaseActivity {
 
 
         String accountName = "";
+        int posBackupAssets=-9;
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
             if (accountDetails.get(i).isSelected) {
                 accountName = accountDetails.get(i).account_name;
+                posBackupAssets=accountDetails.get(i).posBackupAsset;
             }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
@@ -406,10 +408,10 @@ public class SettingActivity extends BaseActivity {
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
 
-            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-            if (isBackupAsset) {
-                int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-                spBackupAsset.setSelection(indexBackupAsset);
+            //Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+            if (posBackupAssets!=-9) {
+                //int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+                spBackupAsset.setSelection(posBackupAssets);
             } else {
                 int index = arrayAccountAssets.indexOf("BTS");
                 if (index >= 0) {
@@ -552,8 +554,16 @@ public class SettingActivity extends BaseActivity {
     void onItemSelectedBackupAsset(int position) {
         designMethod();
         if (position >= 0) {
+
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
-            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if(accountDetails.get(i).isSelected)
+                {
+                    accountDetails.get(i).posBackupAsset=position;
+                }
+            }
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+           // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
         }
     }
 
