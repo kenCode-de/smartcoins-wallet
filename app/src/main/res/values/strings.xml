@@ -328,6 +328,7 @@
     <string name="please_let_us_know">Please let us know:</string>
 
     // new strings
+    <string name="please_backup_your_brainkey">Please backup your brainkey</string>
 
 
 </resources>
