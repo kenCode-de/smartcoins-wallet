@@ -27,6 +27,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
@@ -265,7 +266,7 @@ public class BrainkeyActivity extends BaseActivity {
     /////////////////
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
-        ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
         accountDetails.pinCode = pinCode;
@@ -276,7 +277,11 @@ public class BrainkeyActivity extends BaseActivity {
         accountDetails.status = "success";
         accountDetails.account_id = accountDetail.account_id;
 
+        BinHelper myBinHelper = new BinHelper();
+        myBinHelper.addWallet(accountDetails,brainKey,pinCode,getApplicationContext(),this);
 
+
+        /*
         for (int i = 0; i < accountDetailsList.size(); i++) {
 
             if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {
@@ -293,8 +298,19 @@ public class BrainkeyActivity extends BaseActivity {
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
         tinyDB.putTransactions(this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
+        */
 
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        Intent intent;
+
+        if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
+        {
+            intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
+        }
+        else
+        {
+            intent = new Intent(getApplicationContext(), TabActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

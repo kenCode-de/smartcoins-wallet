@@ -356,5 +356,21 @@ public class BinHelper {
         createBackupBinFile(_brnKey,_accountName,_pinCode);
     }
 
+    public int numberOfWalletAccounts(Context _context)
+    {
+        TinyDB tinyDB = new TinyDB(_context);
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(_context.getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+        if ( accountDetails != null )
+        {
+            return accountDetails.size();
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
 
 }
