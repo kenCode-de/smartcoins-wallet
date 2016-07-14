@@ -203,4 +203,10 @@
     <string name="try_again">5 मिनट के बाद फिर से कोशिश करें</string>
     <string name="warning_msg_same_account">आप एक ही खाते में राशि नहीं भेज सकते हैं</string>
 
+    <string name="please_backup_your_brainkey">बैकअप अपने brainkey कृपया</string>
+    <string name="backup_brainkey_msg">बैकअप अपने .bin फ़ाइल कहीं सुरक्षित या अपने धन खो दिया जा सकता है!</string>
+    <string name="unable_to_trade_bAssets">बैकअप संपत्ति व्यापार करने में असमर्थ</string>
+    <string name="unable_to_send_amount">राशि भेजने में असमर्थ।</string>
+    <string name="unable_to_decode_QR">क्यूआर कोड को डिकोड करने में असमर्थ है।</string>
+
 </resources>

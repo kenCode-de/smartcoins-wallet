@@ -202,4 +202,10 @@
     <string name="try_again">請5分鐘後再試</string>
     <string name="warning_msg_same_account">您不能發送量到相同的帳戶</string>
 
+    <string name="please_backup_your_brainkey">請備份您的brainkey</string>
+    <string name="backup_brainkey_msg">備份您的.bin文件某個安全的地方或者你的資金可能會丟失！</string>
+    <string name="unable_to_trade_bAssets">無法交易的資產備份</string>
+    <string name="unable_to_send_amount">無法發送金額。</string>
+    <string name="unable_to_decode_QR">無法解碼的QR碼。</string>
+
 </resources>

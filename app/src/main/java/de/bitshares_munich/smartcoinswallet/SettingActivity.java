@@ -53,6 +53,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
@@ -70,7 +71,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";
@@ -359,11 +360,13 @@ public class SettingActivity extends BaseActivity {
 
 
         String accountName = "";
+        int posBackupAssets=-9;
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
             if (accountDetails.get(i).isSelected) {
                 accountName = accountDetails.get(i).account_name;
+                posBackupAssets=accountDetails.get(i).posBackupAsset;
             }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
@@ -406,10 +409,10 @@ public class SettingActivity extends BaseActivity {
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
 
-            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-            if (isBackupAsset) {
-                int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-                spBackupAsset.setSelection(indexBackupAsset);
+            //Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+            if (posBackupAssets!=-9) {
+                //int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
+                spBackupAsset.setSelection(posBackupAssets);
             } else {
                 int index = arrayAccountAssets.indexOf("BTS");
                 if (index >= 0) {
@@ -552,8 +555,16 @@ public class SettingActivity extends BaseActivity {
     void onItemSelectedBackupAsset(int position) {
         designMethod();
         if (position >= 0) {
+
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
-            Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if(accountDetails.get(i).isSelected)
+                {
+                    accountDetails.get(i).posBackupAsset=position;
+                }
+            }
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+           // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
         }
     }
 
@@ -948,6 +959,7 @@ public class SettingActivity extends BaseActivity {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
 
+    /*
     Handler createBackUp = new Handler();
 
     private int convertDOubleToInt(Double value)
@@ -975,7 +987,7 @@ public class SettingActivity extends BaseActivity {
         String folder = Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name);
         String path =  folder + File.separator + _accountName + ".bin";
 
-        boolean success = new BinHelper().saveBinFile(path,content,activitySettings);
+        boolean success = new BinHelper(this,getApplicationContext()).saveBinFile(path,content,activitySettings);
 
         hideDialog();
 
@@ -1064,9 +1076,41 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+    public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode)
+    {
+        showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
+
+        if (_brnKey.isEmpty())
+        {
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+            hideDialog();
+            return;
+        }
+
+        changeDialogMsg(getResources().getString(R.string.generating_bin_format));
+
+        Runnable getFormat = new Runnable() {
+            @Override
+            public void run()
+            {
+                //String pinCode = getPin();
+                if ( pinCode.isEmpty() )
+                {
+                    hideDialog();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
+                }
+                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
+            }
+        };
+
+        createBackUp.postDelayed(getFormat,200);
+    }
+    */
+
     @OnClick(R.id.backup_ic)
     public void onClickBackupDotBin()
     {
+        /*
         showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
 
         final String _brnKey = getBrainKey();
@@ -1097,6 +1141,19 @@ public class SettingActivity extends BaseActivity {
         };
 
         createBackUp.postDelayed(getFormat,200);
+        */
+
+        String _brnKey = getBrainKey();
+        String _accountName = getAccountName();
+        String _pinCode = getPin();
+
+        BinHelper myBinHelper = new BinHelper(this,getApplicationContext(),this);
+        myBinHelper.createBackupBinFile(_brnKey,_accountName,_pinCode);
+
     }
 
+    @Override
+    public void backupComplete(boolean success) {
+        Log.d("Backup Complete","done");
+    }
 }

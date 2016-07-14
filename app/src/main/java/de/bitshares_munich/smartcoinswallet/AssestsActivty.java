@@ -60,9 +60,10 @@ public class AssestsActivty  implements IBalancesDelegate {
     final Handler handler = new Handler();
 
     Boolean sentCallForBalances = false;
+    final int time = 5000;
+
     void get_json_account_balances(final String account_name,final String id)
     {
-        Log.d("Assets Activity", "Sending call for assets");
 
         final Runnable updateTask2 = new Runnable() {
             @Override
@@ -72,7 +73,7 @@ public class AssestsActivty  implements IBalancesDelegate {
                     sentCallForBalances = false;
 
                     // if websocket is connected
-                    if ( Application.webSocketG != null && Application.webSocketG.isOpen() )
+                    if ( Application.isReady )
                     {
                         Application.webSocketG.close();
                         get_json_account_balances(account_name, id);
@@ -97,7 +98,7 @@ public class AssestsActivty  implements IBalancesDelegate {
                     Application.webSocketG.send(getDetails);
                     sentCallForBalances = true;
                     handler.removeCallbacks(updateTask2);
-                    handler.postDelayed(updateTask2, 3000);
+                    handler.postDelayed(updateTask2, time);
                     Log.d("Assets Activity", "Sent call for assets");
                 }
                 else
@@ -111,10 +112,62 @@ public class AssestsActivty  implements IBalancesDelegate {
         handler.postDelayed(updateTask, 100);
     }
 
-    void get_asset(String asset, String id) {
-        String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-        Application.webSocketG.send(getDetails);
+    Boolean sentCallForAssets = false;
+    void get_asset(final String asset,final String id)
+    {
+
+        final Runnable updateTask2 = new Runnable() {
+            @Override
+            public void run() {
+                if ( sentCallForAssets ) // if balances are not returned in one second
+                {
+                    sentCallForAssets = false;
+
+                    // if websocket is connected
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        get_asset(asset, id);
+                    }
+                    // if websocket was disconnected
+                    else
+                    {
+                        get_asset(asset, id);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( Application.isReady )
+                {
+                    String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+                    Application.webSocketG.send(getDetails);
+                    sentCallForAssets = true;
+                    handler.removeCallbacks(updateTask2);
+                    handler.postDelayed(updateTask2, time);
+                    Log.d("Assets Activity", "Sent call for assets");
+                }
+                else
+                {
+                    get_asset(asset, id);
+                }
+            }
+        };
+
+        handler.removeCallbacks(updateTask);
+        handler.postDelayed(updateTask, 100);
     }
+
+
+//    void get_asset(String asset, String id) {
+//        String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+//        Application.webSocketG.send(getDetails);
+//    }
     void get_asset(ArrayList<String> asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         StringBuilder stringBuilder = new StringBuilder();
@@ -123,8 +176,9 @@ public class AssestsActivty  implements IBalancesDelegate {
             if((i+1)<asset.size())
                 stringBuilder.append("\",\"");
         }
-        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+stringBuilder.toString()+"\"]]}";
-        Application.webSocketG.send(getDetails);
+        get_asset(stringBuilder.toString(),id);
+//        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+stringBuilder.toString()+"\"]]}";
+//        Application.webSocketG.send(getDetails);
     }
 
     HashMap<String, String> jsonToMap(String t) throws JSONException {
@@ -216,6 +270,7 @@ public class AssestsActivty  implements IBalancesDelegate {
 
         if(id==99)
         {
+            sentCallForAssets = false;
             Log.d("Assets Activity", "Assets received");
             String result = returnParse(s,"result");
             if(checkJsonStatus(result)==1) {

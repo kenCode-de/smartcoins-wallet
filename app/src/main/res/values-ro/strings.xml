@@ -201,4 +201,10 @@
     <string name="try_again">Vă rugăm să încercați din nou după 5 minute</string>
     <string name="warning_msg_same_account">Nu puteți trimite suma în același cont</string>
 
+    <string name="please_backup_your_brainkey">Vă rugăm să copie de rezervă brainkey ta</string>
+    <string name="backup_brainkey_msg">Backup fișierul .bin undeva în condiții de siguranță sau fondurile ar putea fi pierdute!</string>
+    <string name="unable_to_trade_bAssets">Nu se poate tranzactiona Activele de rezervă</string>
+    <string name="unable_to_send_amount">Nu se poate trimite suma.</string>
+    <string name="unable_to_decode_QR">Nu se poate decoda codul QR.</string>
+
 </resources>

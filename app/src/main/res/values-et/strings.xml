@@ -202,4 +202,10 @@
     <string name="try_again">Palun proovige uuesti 5 minuti pärast</string>
     <string name="warning_msg_same_account">Sa ei saa saata summa samasse konto</string>
 
+    <string name="please_backup_your_brainkey">Palun varundada brainkey</string>
+    <string name="backup_brainkey_msg">Backup oma .bin faili kuskil ohutu ega oma raha võib kaduma minna!</string>
+    <string name="unable_to_trade_bAssets">Ei saa kaubelda Backup vara</string>
+    <string name="unable_to_send_amount">Ei saa saata summa.</string>
+    <string name="unable_to_decode_QR">Ei õnnestu dekodeerida QR-koodi.</string>
+
 </resources>

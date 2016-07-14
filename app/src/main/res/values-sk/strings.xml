@@ -203,4 +203,10 @@
     <string name="try_again">Skúste to znovu po 5 minútach</string>
     <string name="warning_msg_same_account">Nemôžete poslať čiastky na rovnaký účet</string>
 
+    <string name="please_backup_your_brainkey">Prosím zálohujte svoj brainkey</string>
+    <string name="backup_brainkey_msg">Záloha .bin súbor niekam do bezpečia, alebo sa vaše finančné prostriedky by mohli byť stratené!</string>
+    <string name="unable_to_trade_bAssets">Nemožno obchodovať záložný podklady</string>
+    <string name="unable_to_send_amount">Nemožno odoslať sume.</string>
+    <string name="unable_to_decode_QR">Nemožno dekódovať QR kódu.</string>
+
 </resources>

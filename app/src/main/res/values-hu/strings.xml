@@ -203,4 +203,10 @@
     <string name="try_again">Kérjük, próbálja meg újra 5 perc múlva</string>
     <string name="warning_msg_same_account">Nem küldhet összegét a számlára</string>
 
+    <string name="please_backup_your_brainkey">Kérjük, hát az brainkey</string>
+    <string name="backup_brainkey_msg">Készítsen biztonsági másolatot a .bin fájlt biztonságos helyre, vagy a pénzeszközök elvesznek!</string>
+    <string name="unable_to_trade_bAssets">Nem lehet kereskedni a Backup Eszközök</string>
+    <string name="unable_to_send_amount">Nem sikerült elküldeni az összeget.</string>
+    <string name="unable_to_decode_QR">Nem lehet dekódolni a QR-kódot.</string>
+
 </resources>

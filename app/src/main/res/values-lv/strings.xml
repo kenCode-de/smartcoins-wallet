@@ -203,4 +203,10 @@
     <string name="try_again">Lūdzu, mēģiniet vēlreiz pēc 5 minūtēm</string>
     <string name="warning_msg_same_account">Jūs nevarat sūtīt summu tajā pašā kontā</string>
 
+    <string name="please_backup_your_brainkey">Lūdzu backup jūsu brainkey</string>
+    <string name="backup_brainkey_msg">Backup jūsu .bin fails kaut kur droši vai jūsu līdzekļi varētu pazust!</string>
+    <string name="unable_to_trade_bAssets">Nevar tirgoties backup Aktīvi</string>
+    <string name="unable_to_send_amount">Nevar nosūtīt apmēru.</string>
+    <string name="unable_to_decode_QR">Nevar atšifrēt QR kodu.</string>
+
 </resources>

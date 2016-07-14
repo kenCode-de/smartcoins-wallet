@@ -44,8 +44,14 @@ public class SplashActivity extends Activity {
         TinyDB tinyDB = new TinyDB(getApplicationContext());
 
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (arrayList.size() > 0) {
-            moveToMainScreen(tinyDB);
+
+        if (arrayList != null && arrayList.size() > 0) {
+            if (Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist))) {
+                moveToMainScreen(tinyDB);
+            } else {
+                moveToBackupBrainKey();
+            }
+
         } else {
             moveToAccountScreen();
         }
@@ -98,6 +104,13 @@ public class SplashActivity extends Activity {
         */
 
         Intent i = new Intent(SplashActivity.this, AccountActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void moveToBackupBrainKey() {
+
+        Intent i = new Intent(SplashActivity.this, BackupBrainkeyActivity.class);
         startActivity(i);
         finish();
     }

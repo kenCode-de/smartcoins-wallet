@@ -203,4 +203,10 @@
     <string name="try_again">5 মিনিট পরে আবার চেষ্টা করুন</string>
     <string name="warning_msg_same_account">আপনি একই একাউন্টে পরিমাণ পাঠাতে পারবেন না</string>
 
+    <string name="please_backup_your_brainkey">ব্যাকআপ আপনার brainkey দয়া</string>
+    <string name="backup_brainkey_msg">ব্যাকআপ আপনার .bin ফাইল কোথাও নিরাপদ বা আপনার তহবিল হারিয়ে যেতে পারে!</string>
+    <string name="unable_to_trade_bAssets">ব্যাকআপ সম্পদ ট্রেড করতে অক্ষম</string>
+    <string name="unable_to_send_amount">পরিমাণ পাঠাতে অক্ষম.</string>
+    <string name="unable_to_decode_QR">QR কোড ডিকোড করতে অক্ষম.</string>
+
 </resources>

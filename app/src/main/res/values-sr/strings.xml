@@ -204,4 +204,10 @@
     <string name="try_again">Покушајте поново после 5 минута</string>
     <string name="warning_msg_same_account">Не можете слати износ у исти рачун</string>
 
+    <string name="please_backup_your_brainkey">Плеасе резервне браинкеи</string>
+    <string name="backup_brainkey_msg">Бацкуп ваш .bin фајл негде на сигурно или се средства могла бити изгубљена!</string>
+    <string name="unable_to_trade_bAssets">У немогућности да тргују резервну копију активе</string>
+    <string name="unable_to_send_amount">Није могуће послати на износ.</string>
+    <string name="unable_to_decode_QR">Није могуће да декодира КР код.</string>
+
 </resources>

@@ -203,4 +203,10 @@
     <string name="try_again">Torneu-ho de nou després de 5 minuts</string>
     <string name="warning_msg_same_account">No es pot enviar la quantitat en el mateix compte</string>
 
+    <string name="please_backup_your_brainkey">Si us plau doni suport les seves brainkey</string>
+    <string name="backup_brainkey_msg">Còpia de seguretat del seu arxiu .bin en un lloc segur o els seus fons podrien perdre!</string>
+    <string name="unable_to_trade_bAssets">No és possible negociar els elements de backup</string>
+    <string name="unable_to_send_amount">No es pot enviar la quantitat.</string>
+    <string name="unable_to_decode_QR">No és possible descodificar el codi QR.</string>
+
 </resources>

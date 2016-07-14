@@ -38,8 +38,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -187,7 +185,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-    private GoogleApiClient client;
+  //  private GoogleApiClient client;
 
     private void startupTasks ()
     {

@@ -369,7 +369,7 @@ public class Helper {
             String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
             return currency[currency.length-1].replace("(","").replace(")","");
         } else {
-            return "";
+            return "EUR";
         }
     }
 
@@ -394,6 +394,24 @@ public class Helper {
                 return null;
             }
         }
+    }
+
+    public static int convertDOubleToInt(Double value)
+    {
+        String valueString = Double.toString(value);
+
+        for ( int i = 0 ; i < valueString.length() ; i++ )
+        {
+            if ( valueString.charAt(i) == '.' )
+            {
+                valueString = valueString.substring(0,i);
+                break;
+            }
+        }
+
+        int valueInteger = Integer.parseInt(valueString);
+
+        return valueInteger;
     }
 
     public static boolean isRTL(Locale locale)
