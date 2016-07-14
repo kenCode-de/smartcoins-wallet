@@ -668,6 +668,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                         remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
                         tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
+                        setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
                         updateTotalStatus(); // shayan
                     }
 
@@ -676,13 +677,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validAmount = true;
                     }
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-
-
                 }
             } else {
                 etBackupAsset.setText(""); //shayan
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+                setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
 
             setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
@@ -1318,7 +1318,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
                         backupAssets.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
 
-                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAsset.symbol, backupAssets.symbol); //shayan
+                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAsset.symbol, backupAssets.symbol); //
+
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
         } catch (Exception e) {
