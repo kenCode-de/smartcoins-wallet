@@ -1437,7 +1437,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("method", "trade");
         hm.put("wifkey", privateKey);
         hm.put("account", spinnerFrom.getSelectedItem().toString());
-        hm.put("sell_amount", sellAmount.toString());
+        hm.put("sell_amount", String.format(Locale.ENGLISH, "%.4f", sellAmount)); //shayan
         hm.put("sell_symbol", backupAsset);
         hm.put("buy_amount", String.format(Locale.ENGLISH, "%.4f", buyAmount));
         hm.put("buy_symbol", selectedAccountAsset.symbol);
