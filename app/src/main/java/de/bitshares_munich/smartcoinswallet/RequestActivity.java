@@ -1,9 +1,11 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,8 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     @Bind(R.id.btnDot) Button btnDot;
     @Bind(R.id.btnDoubleZero) Button btnDoubleZero;
     @Bind(R.id.txtScreen) TextView txtScreen;
+    @Bind(R.id.tvNext) TextView tvNext;
+    @Bind(R.id.llNext) LinearLayout llNext;
 
 
     @Override
@@ -51,7 +55,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_screen);
         ButterKnife.bind(this);
-
+        forwardDisabling();
         setBackButton(true);
         setTitle(getResources().getString(R.string.request_amount_screen_name));
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
@@ -116,8 +120,29 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
         if (str.length() > 0) {
             str = str.substring(0, str.length() - 1);
             txtScreen.setText(str);
+            try {
+
+                if (!txtScreen.getText().toString().isEmpty()) {
+                    Number number = format.parse(removeSpecialCharacters());
+                    if (number.doubleValue() > 0) {
+                        forwardEnabling();
+                    } else {
+                        forwardDisabling();
+                    }
+                    txtScreen.setText(Helper.setLocaleNumberFormat(locale, number));
+                } else {
+                    forwardDisabling();
+                }
+            } catch (ParseException e) {
+
+                e.printStackTrace();
+
+            }
+            //;
+        } else {
+            forwardDisabling();
         }
-        forwardEnabling();
+        // forwardEnabling();
     }
 
     public String method(String str) {
@@ -150,6 +175,11 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
             txtScreen.append(currentkey);
             try {
                 Number number = format.parse(removeSpecialCharacters());
+                if (number.doubleValue() > 0) {
+                    forwardEnabling();
+                } else {
+                    forwardDisabling();
+                }
                 txtScreen.setText(Helper.setLocaleNumberFormat(locale, number));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -207,7 +237,14 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void forwardEnabling() {
-
+        tvNext.setEnabled(true);
+        llNext.setBackgroundColor(Color.rgb(112, 136, 46));
     }
+
+    private void forwardDisabling() {
+        tvNext.setEnabled(false);
+        llNext.setBackgroundColor(Color.rgb(211, 211, 211));
+    }
+
 
 }
