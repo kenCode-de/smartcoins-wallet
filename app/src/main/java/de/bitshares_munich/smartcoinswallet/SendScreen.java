@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -14,15 +13,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -30,7 +26,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Scroller;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +45,6 @@ import org.json.JSONObject;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -315,7 +307,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
         loadWebView(webviewTo,34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
-       // loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
+        // loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
     }
 
     @OnFocusChange(R.id.etReceiverAccount)
@@ -417,7 +409,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             this.runningSpinerForFirstTime = false;
         }
 
-      //  loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
+        //  loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
         loadWebView(webviewFrom,34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.SHA256));
     }
 
@@ -449,13 +441,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Double loyaltyAmount = Double.parseDouble(text.toString());
         Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
         if (loyaltyAmount > loyaltyBalance) {
-            tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+
         } else {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
             tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
         }
 
-        setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty , loyaltyAsset.symbol);
+        setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty , 0, loyaltyAsset.symbol, Color.BLACK);
 
         if (loyaltyAsset != null && backupAssets != null) {
             count = 1;
@@ -507,7 +500,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
 
-        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , backupAssets.symbol);
+        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , 0,backupAssets.symbol, Color.BLACK);
 
         if (backAssetRate != null)
         {
@@ -652,25 +645,31 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             selectedAccountAsset();
             Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
             String availableBalance = selectedBalance.toString();
+
             if (etAmount.getText().length() > 0) {
                 String enteredAmountStr = etAmount.getText().toString();
+
                 if (enteredAmountStr.equals(".")) {
                     enteredAmountStr = "0.";
                 }
                 Double enteredAmount = Double.parseDouble(enteredAmountStr);
                 if (enteredAmount != 0) {
                     String remainingBalance = "0";
+
                     if (enteredAmount > selectedBalance | enteredAmount < 0) {
                         //etAmount.setText(selectedBalance.toString());
                         validAmount = false;
                         tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                         tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
-                    } else {
+                    }
+
+                    else {
                         validAmount = true;
 
                         remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
                         tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
-
+                        setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
+                        updateTotalStatus(); // shayan
                     }
 
                 } else {
@@ -678,18 +677,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validAmount = true;
                     }
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-
-
                 }
             } else {
+                etBackupAsset.setText(""); //shayan
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-
-
+                setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
 
-            setHyperlinkText(tvAmountStatus, availableBalance , etAmount , selectedAsset );
-
+            setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
+            tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
         }
         catch (Exception e){
@@ -930,7 +927,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
                     tvLoyalty.setText(loyaltyAsset.symbol);
                     tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
-                    setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty ,loyaltyAsset.symbol );
+                    setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty ,0,loyaltyAsset.symbol, Color.BLACK );
                     llLoyalty.setVisibility(View.VISIBLE);
                     tvLoyaltyStatus.setVisibility(View.VISIBLE);
                 }
@@ -972,7 +969,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         else
         {
             loadWebView(webviewFrom,34, Helper.hash(tvFrom.getText().toString(), Helper.SHA256));
-           // loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
+            // loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
         }
@@ -1171,7 +1168,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
                 }
                 hideDialog();
             }
@@ -1179,7 +1176,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             @Override
             public void onFailure(Throwable t) {
                 hideDialog();
-                Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1296,10 +1293,22 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void updateTotalStatus() {
 
         try {
+            // Send screen work start
+            Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+            Double backupAssetsBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
 
             String selectedAmount = Helper.padString(etAmount.getText().toString());
+            Double enteredAmount = Double.parseDouble(selectedAmount);
             String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
             String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
+            if ((enteredAmount > selectedBalance) | (enteredAmount < 0)) {
+                selectedAmount = String.valueOf(selectedBalance);
+                if ((backupAssetsBalance * backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) * backAssetRate) > 0) {
+                    backupAssetAmount = String.format(Locale.ENGLISH, "%.4f", ((enteredAmount - selectedBalance) / backAssetRate));
+
+                }
+            }
+            // Send screen work end
             if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
                 if (count == 1) {
                     Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
@@ -1319,11 +1328,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             } else if (loyaltyAsset != null && exchangeRate != null) {
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
                 tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
-            } else if (backupAssets != null && backAssetRate != null) {
+            } else if (backupAssets != null && backAssetRate != null)
+            {
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
                 tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
                         selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
                         backupAssets.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
+
+                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAsset.symbol, backupAssets.symbol); //
+
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
         } catch (Exception e) {
@@ -1440,7 +1453,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("method", "trade");
         hm.put("wifkey", privateKey);
         hm.put("account", spinnerFrom.getSelectedItem().toString());
-        hm.put("sell_amount", sellAmount.toString());
+        hm.put("sell_amount", String.format(Locale.ENGLISH, "%.4f", sellAmount)); //shayan
         hm.put("sell_symbol", backupAsset);
         hm.put("buy_amount", String.format(Locale.ENGLISH, "%.4f", buyAmount));
         hm.put("buy_symbol", selectedAccountAsset.symbol);
@@ -1464,14 +1477,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.unable_to_trade_bAssets), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 hideDialog();
-                Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.unable_to_trade_bAssets), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1492,14 +1505,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.unable_to_decode_QR), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 hideDialog();
-                Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.unable_to_decode_QR), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1624,11 +1637,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if(size>5) {
             setListViewHeightBasedOnChildren(listView,5);
         }else setListViewHeightBasedOnChildren(listView,size);
-  //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
+        //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
         contactListDialog.show();
     }
-    
-//    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
+
+    //    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
 //        @Override
 //        public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
 ////            Animation fadeInAnimation = AnimationUtils.loadAnimation(v.getContext(), android.R.anim.fade_in);
@@ -1745,11 +1758,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void isClicked(String s){
         etReceiverAccount.setText(s);
         if(contactListDialog!=null)
-        contactListDialog.dismiss();
+            contactListDialog.dismiss();
         createBitShareAN(false);
     }
 
-    void setHyperlinkText(TextView textView , final String balances , final EditText editText , String symbol){
+    void setHyperlinkText(TextView textView , final String balances , final EditText editText , int UnderlineStartingIndex, String symbol, final int color){
         String text = textView.getText().toString();
         String available = new String(symbol);
 
@@ -1765,10 +1778,39 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(true);
+                    ds.setColor(color);
+            }
+        };
+        ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(ss);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setHighlightColor(Color.TRANSPARENT);
+        textView.setTextColor(Color.BLACK);
+    }
+
+    void setHyperlinkTextDouble(TextView textView, final String balances , final String balances2, final EditText editText , final EditText editText2 ,int UnderlineStartingIndex, String symbol, String symbol2) //shayan
+    {
+        String text = textView.getText().toString();
+        String available = new String(symbol2);
+
+        int index = text.indexOf( available );
+
+        SpannableString ss = new SpannableString(text);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                editText.setText(balances);
+                editText2.setText(balances2);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
                 ds.setColor(Color.BLACK);
             }
         };
-        ss.setSpan(clickableSpan, 0 , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());

@@ -2073,7 +2073,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
-                    if (number_of_transactions_in_queue == 0) {
+                    if(isSavedTransactions) {
+                        myTransactions.clear();
+                        isSavedTransactions = false;
+                        myTransactions = new ArrayList<>();
+                        updateSortTableView(tableView, myTransactions);
+                    }
+
+                   if (number_of_transactions_in_queue == 0) {
                         load_more_values.setVisibility(View.GONE);
                     } else {
                         load_more_values.setVisibility(View.VISIBLE);
@@ -2258,6 +2265,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             public void run() {
                 _activity.runOnUiThread(new Runnable() {
                     public void run() {
+                        sentCallForTransactions = false;
+                        isSavedTransactions = true;
                         loadViews(false,true,false);
                     }
                 });
