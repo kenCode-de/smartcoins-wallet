@@ -1342,6 +1342,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 try
                 {
                     // remove zero balances not in previously loaded balances
+                    List<Integer> indexesToRemove = new ArrayList<>();
+
                     for( int i = 0 ; i < sym.size() ; i++ )
                     {
                         Long _amount = Long.parseLong(am.get(i));
@@ -1352,9 +1354,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             if ( !matchFound )
                             {
+                                indexesToRemove.add(i);
                                 sym.remove(i);
                                 am.remove(i);
                                 pre.remove(i);
+
+                                sym.trimToSize();
+                                am.trimToSize();
+                                pre.trimToSize();
+
+                                i--;
                             }
                         }
                     }
