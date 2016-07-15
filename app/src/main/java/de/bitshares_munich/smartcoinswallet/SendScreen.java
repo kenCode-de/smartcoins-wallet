@@ -1070,11 +1070,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     Boolean checkIfZero() {
-        String amount = etAmount.getText().toString();
-        Double am = Double.parseDouble(amount);
-        if (am <= 0.0)
+        try
+        {
+            String amount = etAmount.getText().toString();
+
+            if ( amount.isEmpty() )
+            {
+                return true;
+            }
+
+            Double am = Double.parseDouble(amount);
+
+            if (am <= 0.0)
+            {
+                return true;
+            }
+            
+            return false;
+        }
+        catch (Exception e)
+        {
             return true;
-        return false;
+        }
     }
 
     public boolean validateSend() {

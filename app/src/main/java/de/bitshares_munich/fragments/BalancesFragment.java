@@ -812,91 +812,81 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency)
     {
-        final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
-            @Override
-            public void run() {
-                getEquivalentComponentsIndirect(leftOvers, faitCurrency);
+        try {
+            final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    getEquivalentComponentsIndirect(leftOvers, faitCurrency);
+                }
+            };
+
+            List<String> newPairs = new ArrayList<>();
+
+            for (String pair : leftOvers) {
+                String firstHalf = pair.split(":")[0];
+                newPairs.add(firstHalf + ":" + "BTS");
             }
-        };
 
-        List<String> newPairs = new ArrayList<>();
+            newPairs.add("BTS" + ":" + faitCurrency);
 
-        for (String pair:leftOvers)
-        {
-            String firstHalf = pair.split(":")[0];
-            newPairs.add(firstHalf + ":" + "BTS");
-        }
+            String values = "";
 
-        newPairs.add("BTS" + ":" + faitCurrency);
+            for (String pair : newPairs) {
+                values += pair + ",";
+            }
 
-        String values = "";
+            values = values.substring(0, values.length() - 1);
 
-        for(String pair : newPairs)
-        {
-            values += pair + ",";
-        }
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("method", "equivalent_component");
+            hashMap.put("values", values);
 
-        values = values.substring(0, values.length() - 1);
+            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+            IWebService service = sg.getService(IWebService.class);
+            final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
 
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("method", "equivalent_component");
-        hashMap.put("values", values);
+            postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+                @Override
+                public void onResponse(Response<EquivalentComponentResponse> response) {
+                    if (response.isSuccess()) {
+                        EquivalentComponentResponse resp = response.body();
+                        if (resp.status.equals("success")) {
+                            try {
+                                JSONObject rates = new JSONObject(resp.rates);
+                                Iterator<String> keys = rates.keys();
+                                String btsToFait = "";
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
-
-        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
-            @Override
-            public void onResponse(Response<EquivalentComponentResponse> response)
-            {
-                if (response.isSuccess())
-                {
-                    EquivalentComponentResponse resp = response.body();
-                    if (resp.status.equals("success"))
-                    {
-                        try
-                        {
-                            JSONObject rates = new JSONObject(resp.rates);
-                            Iterator<String> keys = rates.keys();
-                            String btsToFait = "";
-
-                            while (keys.hasNext())
-                            {
-                                String key = keys.next();
-
-                                if ( key.equals("BTS:" + faitCurrency) )
-                                {
-                                    btsToFait = rates.get("BTS:" + faitCurrency).toString();
-                                    break;
-                                }
-                            }
-
-                            HashMap hm = new HashMap();
-
-                            if ( !btsToFait.isEmpty() )
-                            {
-                                keys = rates.keys();
-
-
-                                while (keys.hasNext())
-                                {
+                                while (keys.hasNext()) {
                                     String key = keys.next();
 
-                                    if ( !key.equals("BTS:" + faitCurrency) )
-                                    {
-                                        String asset = key.split(":")[0];
-
-                                        String assetConversionToBTS = rates.get(key).toString();
-
-                                        double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
-
-                                        String assetToFaitConversion = Double.toString(newConversionRate);
-
-                                        hm.put(asset,assetToFaitConversion);
+                                    if (key.equals("BTS:" + faitCurrency)) {
+                                        btsToFait = rates.get("BTS:" + faitCurrency).toString();
+                                        break;
                                     }
                                 }
-                            }
+
+                                HashMap hm = new HashMap();
+
+                                if (!btsToFait.isEmpty()) {
+                                    keys = rates.keys();
+
+
+                                    while (keys.hasNext()) {
+                                        String key = keys.next();
+
+                                        if (!key.equals("BTS:" + faitCurrency)) {
+                                            String asset = key.split(":")[0];
+
+                                            String assetConversionToBTS = rates.get(key).toString();
+
+                                            double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+
+                                            String assetToFaitConversion = Double.toString(newConversionRate);
+
+                                            hm.put(asset, assetToFaitConversion);
+                                        }
+                                    }
+                                }
 
 
                                 for (int i = 0; i < llBalances.getChildCount(); i++) {
@@ -949,13 +939,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 }
 
 
+                            } catch (JSONException e) {
+                                //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                                e.printStackTrace();
+                            }
                         }
-                        catch (JSONException e)
-                        {
-                            //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                            e.printStackTrace();
-                        }
-                    }
                     /*
                     else
                     {
@@ -963,22 +951,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                     }
                     */
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                    }
                 }
-                else
-                {
-                    hideDialog();
-                    Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-                    //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-                updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable,500);
-            }
-        });
+                @Override
+                public void onFailure(Throwable t) {
+                    hideDialog();
+                    //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+
+        }
 
     }
 
