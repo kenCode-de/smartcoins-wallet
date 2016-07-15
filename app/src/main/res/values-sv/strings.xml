@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Är du säker på att du vill ta bort</string>
     <string name="txt_alertmsg_la">konto från plånboken?</string>
+    <string name="bugs_or_errors">Buggar eller fel?</string>
+    <string name="please_let_us_know">Vänligen meddela oss:</string>
+    <string name="try_again">Försök igen efter 5 minuter</string>
+    <string name="warning_msg_same_account">Du kan inte skicka belopp i samma konto</string>
+
+    <string name="please_backup_your_brainkey">Vänligen säkerhetskopiera din brainkey</string>
+    <string name="backup_brainkey_msg">Backup din .bin fil någonstans säker eller dina pengar kan gå förlorade!</string>
+    <string name="unable_to_trade_bAssets">Det går inte att handla med reservtillgångar</string>
+    <string name="unable_to_send_amount">Det går inte att skicka beloppet.</string>
+    <string name="unable_to_decode_QR">Det går inte att avkoda QR-kod.</string>
 
 </resources>

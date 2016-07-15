@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -367,9 +368,9 @@ public class Helper {
         Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
         if (isFade) {
             String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
-            return currency[1].replace("(","").replace(")","");
+            return currency[currency.length-1].replace("(","").replace(")","");
         } else {
-            return "";
+            return "EUR";
         }
     }
 
@@ -396,8 +397,46 @@ public class Helper {
         }
     }
 
-    public static boolean isRTL(Locale locale)
+    public static int convertDOubleToInt(Double value)
     {
+        String valueString = Double.toString(value);
+
+        for ( int i = 0 ; i < valueString.length() ; i++ )
+        {
+            if ( valueString.charAt(i) == '.' )
+            {
+                valueString = valueString.substring(0,i);
+                break;
+            }
+        }
+
+        int valueInteger = Integer.parseInt(valueString);
+
+        return valueInteger;
+    }
+
+    public static boolean isRTL(Locale locale, String symbol)
+    {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+
+
+        // We then tell our formatter to use this symbol.
+        DecimalFormatSymbols decimalFormatSymbols = ((java.text.DecimalFormat) currencyFormat).getDecimalFormatSymbols();
+        decimalFormatSymbols.setCurrencySymbol(symbol);
+        ((java.text.DecimalFormat) currencyFormat).setDecimalFormatSymbols(decimalFormatSymbols);
+
+        String formattedtext = currencyFormat.format(100.0);
+
+        if ( formattedtext.startsWith(symbol) )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+        /*
         final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));
 
         if ( (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT) ||
@@ -409,6 +448,7 @@ public class Helper {
         {
             return false;
         }
+        */
     }
 
 }

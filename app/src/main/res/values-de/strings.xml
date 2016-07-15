@@ -195,6 +195,17 @@
     <string name="bin_file_saved_successfully_to">Bin Datei erfolgreich gespeichert </string>
     <string name="unable_to_save_bin_file">Bin Datei konnte nicht gespeichert werden</string>
 
+    <string name="bugs_or_errors">Bugs oder Fehler?</string>
+    <string name="please_let_us_know">Informieren Sie uns bitte:</string>
+    <string name="try_again">Bitte versuchen Sie es erneut nach 5 Minuten</string>
+    <string name="warning_msg_same_account">Sie können nicht Betrag in das gleiche Konto senden</string>
+
+    <string name="please_backup_your_brainkey">Bitte sichern Sie Ihre brainkey</string>
+    <string name="backup_brainkey_msg">Sichern Sie Ihre .bin-Datei an einem sicheren Ort oder Ihr Geld verloren gehen könnte!</string>
+    <string name="unable_to_trade_bAssets">Unfähig, die Backup-Assets zu handeln</string>
+    <string name="unable_to_send_amount">Kann nicht den Betrag zu senden.</string>
+    <string name="unable_to_decode_QR">Können Sie den QR-Code zu entschlüsseln.</string>
+
     <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie dieses Konto entfernen möchten, </string>
     <string name="txt_alertmsg_la">Das Konto von diesem Wallet?</string>
 

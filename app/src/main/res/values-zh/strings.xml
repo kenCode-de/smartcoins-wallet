@@ -198,5 +198,15 @@
 
     <string name="txt_alertmsg_fr">您确定要删除</string>
     <string name="txt_alertmsg_la">从这个钱包帐户？</string>
+    <string name="bugs_or_errors">错误或错误？</string>
+    <string name="please_let_us_know">请告诉我们：</string>
+    <string name="try_again">请5分钟后再试</string>
+    <string name="warning_msg_same_account">您不能发送量到相同的帐户</string>
+
+    <string name="please_backup_your_brainkey">请备份您的brainkey</string>
+    <string name="backup_brainkey_msg">备份您的.bin文件某个安全的地方或者你的资金可能会丢失！</string>
+    <string name="unable_to_trade_bAssets">无法交易的资产备份</string>
+    <string name="unable_to_send_amount">无法发送金额。</string>
+    <string name="unable_to_decode_QR">无法解码的QR码。</string>
 
 </resources>

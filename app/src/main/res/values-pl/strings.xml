@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Czy jesteś pewien, że chcesz usunąć</string>
     <string name="txt_alertmsg_la">Konto z tego portfela?</string>
+    <string name="bugs_or_errors">Błędy lub błędy?</string>
+    <string name="please_let_us_know">Daj nam znać:</string>
+    <string name="try_again">Spróbuj ponownie po 5 minutach</string>
+    <string name="warning_msg_same_account">Nie można wysyłać kwotę do tego samego konta</string>
+
+    <string name="please_backup_your_brainkey">Proszę wykonać kopię zapasową brainkey</string>
+    <string name="backup_brainkey_msg">Kopia zapasowa pliku .bin w bezpiecznym miejscu i środków finansowych mogą zostać utracone!</string>
+    <string name="unable_to_trade_bAssets">Nie można handlować z zasobów zapasowych</string>
+    <string name="unable_to_send_amount">Nie można wysłać tej kwoty.</string>
+    <string name="unable_to_decode_QR">Nie udało się rozszyfrować kod QR.</string>
 
 </resources>

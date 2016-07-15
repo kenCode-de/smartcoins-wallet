@@ -196,5 +196,15 @@
 
     <string name="txt_alertmsg_fr">هل أنت متأكد أنك تريد إزالة</string>
     <string name="txt_alertmsg_la">حساب من هذه المحفظة؟</string>
+    <string name="bugs_or_errors">الخلل أو الأخطاء؟</string>
+    <string name="please_let_us_know">من فضلك، اسمحوا لنا أن نعرف:</string>
+    <string name="try_again">يرجى المحاولة مرة أخرى بعد 5 دقائق</string>
+    <string name="warning_msg_same_account">لا يمكنك إرسال المبلغ في نفس الحساب</string>
+
+    <string name="please_backup_your_brainkey">إرضاء النسخ الاحتياطي brainkey الخاص بك</string>
+    <string name="backup_brainkey_msg">ملف النسخ الاحتياطي .bin لديك مكان آمن أو يمكن أن تضيع أموالك!</string>
+    <string name="unable_to_trade_bAssets">غير قادر على تداول الأصول الاحتياطية</string>
+    <string name="unable_to_send_amount">غير قادر على إرسال المبلغ</string>
+    <string name="unable_to_decode_QR">غير قادر على فك رمز الاستجابة السريعة</string>
 
 </resources>

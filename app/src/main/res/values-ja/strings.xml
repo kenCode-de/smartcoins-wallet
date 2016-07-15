@@ -198,7 +198,17 @@
     <string name="bin_file_saved_successfully_to">binファイルが次の場所に正常に保存されました</string>
     <string name="unable_to_save_bin_file">binファイルを保存することができませんでした。</string>
 
-    <string name="txt_alertmsg_fr">本当に削除してもよろしいですか</string>
-    <string name="txt_alertmsg_la">このウォレット内のアカウントを？</string>
+    <string name="txt_alertmsg_fr">あなたが削除してもよろしいです</string>
+    <string name="txt_alertmsg_la">この財布からアカウント？</string>
+    <string name="bugs_or_errors">バグやエラー？</string>
+    <string name="please_let_us_know">お知らせください：</string>
+    <string name="try_again">5分後にもう一度お試しください</string>
+    <string name="warning_msg_same_account">あなたは、同じアカウントに金額を送信することはできません。</string>
+
+    <string name="please_backup_your_brainkey">バックアップあなたのbrainkeyしてください</string>
+    <string name="backup_brainkey_msg">どこか安全か、あなたの資金をバックアップします.binファイルが失われる可能性があります！</string>
+    <string name="unable_to_trade_bAssets">バックアップ資産を取引することができません。</string>
+    <string name="unable_to_send_amount">金額を送信することができません。</string>
+    <string name="unable_to_decode_QR">QRコードをデコードすることができません。</string>
 
 </resources>

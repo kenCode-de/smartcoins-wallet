@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.TimeUtils;
 import android.widget.Toast;
 
+import com.itextpdf.text.ExceptionConverter;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
@@ -144,7 +145,7 @@ public class Application extends android.app.Application {
         iAccount = iAccount;
         isReady = false;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(5 * 1000);
+        get.setTimeout(10 * 1000);
 
         Log.d("Connecting to node", urlsSocketConnection[counter]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
@@ -152,9 +153,13 @@ public class Application extends android.app.Application {
             @Override
             public void onCompleted(final Exception ex, WebSocket webSocket) {
 
-                if (ex != null) {
+                if (ex != null)
+                {
+                    isReady = false;
                     counter++;
-                    if (counter > 3) {
+
+                    if (counter > 3)
+                    {
                         counter = 0;
                     }
 
@@ -163,26 +168,36 @@ public class Application extends android.app.Application {
                     Log.d("exception websocket", myEx.toString());
                     try {
                         final String exMessage = ex.getMessage();
-                        if (exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure")) {
+                        if (ex != null && exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure"))
+                        {
                             Log.d("exception3 websocket", "inside");
 
-                            Runnable updateTask = new Runnable() {
-                                @Override
-                                public void run() {
-                                    showWarningMessage(exMessage);
-                                }
-                            };
-                            warningHandler.postDelayed(updateTask, 1000);
+                            try {
+
+                                Runnable updateTask = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showWarningMessage(exMessage);
+                                    }
+                                };
+                                warningHandler.postDelayed(updateTask, 1000);
+                            }
+                            catch (Exception e)
+                            {
+                                Log.d("exception websocket", e.getMessage());
+                            }
                             //webSocketConnection();
                             Log.d("exception websocket", "showWarningMessagegetting out");
                         } else {
                             Log.d("exception websocket", "webbb socket");
                             if (webSocket != null) {
                                 Log.d("exception websocket", "inside webbb socket");
-                                if (webSocket.isOpen()) {
+                                if (webSocket.isOpen())
+                                {
                                     Log.d("exception websocket", "is open");
                                     webSocket.close();
                                     Log.d("exception websocket", "closed");
+                                    return;
                                 }
                             }
                             webSocketConnection();
@@ -196,6 +211,7 @@ public class Application extends android.app.Application {
 
                 webSocket.setClosedCallback(new CompletedCallback() {
                     public void onCompleted(Exception ex) {
+                        isReady = false;
                         webSocketConnection();
                     }
                 });

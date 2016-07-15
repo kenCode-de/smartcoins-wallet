@@ -199,5 +199,15 @@
 
     <string name="txt_alertmsg_fr">آیا مطمئن هستید که می خواهید به حذف</string>
     <string name="txt_alertmsg_la">از این کیف پول حساب؟</string>
+    <string name="bugs_or_errors">اشکالات یا اشتباهات.</string>
+    <string name="please_let_us_know">لطفا مارا در جریان بگذارید:</string>
+    <string name="try_again">لطفا بعد از 5 دقیقه دوباره امتحان کنید</string>
+    <string name="warning_msg_same_account">شما نمی توانید مقدار به همان حساب ارسال</string>
+
+    <string name="please_backup_your_brainkey">لطفا نسخه پشتیبان تهیه brainkey خود را</string>
+    <string name="backup_brainkey_msg">پشتیبان گیری فایل های .bin خود را در جایی امن و یا دارایی خود را می تواند از دست داده!</string>
+    <string name="unable_to_trade_bAssets">قادر به تجارت دارایی پشتیبان گیری</string>
+    <string name="unable_to_send_amount">قادر به ارسال مقدار.</string>
+    <string name="unable_to_decode_QR">رمزگشایی از کد QR.</string>
 
 </resources>

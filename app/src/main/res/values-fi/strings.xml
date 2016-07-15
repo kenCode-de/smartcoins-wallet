@@ -269,7 +269,6 @@
     <string name="txt_folder_created">Folder Created</string>
 
     <string name="upgrade_failed">Upgrade failed</string>
-    <string name="upgrade_success">Upgrade Successful!</string>
     <string name="upgrading">Upgrading...</string>
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
@@ -280,6 +279,30 @@
     <string name="last_letter_cannot">last letter cannot be -</string>
     <string name="account_name_shoud_have">account name shoud have atleast one -</string>
     <string name="default_currency">EUR</string>
+    <string name="donation">lahjoitus</string>
+    <string name="insufficient_funds">Riittämättömät varat</string>
+    <string name="txt_wallet_atleast_one_account">Valitettavasti lompakon pitää olla vähintään 1 huomioon se</string>
+    <string name="updating_transaction_id">Päivittäminen Tapahtumatunnus, Odota</string>
+    <string name="email_name">Voit näyttää valokuvan tätä yhteyttä, anna sen Gravatar sähköposti täällä</string>
+    <string name="upgrade_success">Päivitys suoritettu!</string>
+    <string name="copied_to_clipboard">Kopioitu leikepöydälle</string>
+
+    <string name="unable_to_load_brainkey">Lataaminen ei onnistu brainkey</string>
+    <string name="unable_to_generate_bin_format_for_key">Ei voitu luoda bin muodossa keskeisten</string>
+    <string name="creating_backup_file">Luominen Varmuuskopiotiedosto</string>
+    <string name="fetching_key">Haetaan Key</string>
+    <string name="generating_bin_format">Luodaan bin muodossa</string>
+    <string name="invalid_pin">Virheellinen PIN</string>
+    <string name="saving_bin_file_to">Tallentaminen Bin tiedosto</string>
+    <string name="bin_file_saved_successfully_to">Bin tiedosto tallennettu kohteeseen</string>
+    <string name="unable_to_save_bin_file">Ei voitu tallentaa bin tiedosto</string>
+
+    <string name="txt_alertmsg_fr">Oletko varma, että haluat poistaa</string>
+    <string name="txt_alertmsg_la">osuus tästä lompakon?</string>
+    <string name="bugs_or_errors">Vikoja tai virheitä?</string>
+    <string name="please_let_us_know">Kerro meille:</string>
+    <string name="try_again">Yritä uudelleen 5 minuutin kuluttua</string>
+    <string name="warning_msg_same_account">Et voi lähettää summan samalle tilille</string>
     <string name="e_receipt_activity_name">eReceipt</string>
     <string name="txt_back">Back</string>
     <string name="please_pay">Please pay</string>
@@ -287,14 +310,6 @@
     <string name="unable_to_process">Unable to process</string>
     <string name="upgrade_to_ltm">Upgrade to LTM</string>
     <string name="cancel">CANCEL</string>
-    <string name="donation">Donation</string>
-    <string name="insufficient_funds">Insufficient Funds</string>
-    <string name="txt_wallet_atleast_one_account">Sorry, but your wallet must have at least 1
-        account in it
-    </string>
-    <string name="updating_transaction_id">"Updating Transaction Id, Please wait"</string>
-    <string name="email_name">To display a photo for this Contact, enter its Gravatar e-mail here</string>
-    <string name="copied_to_clipboard">Copied to Clipboard</string>
 
     <string name="select">"Select</string>
     <string name="are_you_sure">"Are you sure?</string>
@@ -307,21 +322,10 @@
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
-
-    <string name="unable_to_load_brainkey">Unable to load brainkey</string>
-    <string name="unable_to_generate_bin_format_for_key">Unable to generate bin format for key</string>
-    <string name="creating_backup_file">Creating Backup File</string>
-    <string name="fetching_key">Fetching Key</string>
-    <string name="generating_bin_format">Generating bin format</string>
-    <string name="invalid_pin">Invalid PIN</string>
-    <string name="saving_bin_file_to">Saving Bin File to</string>
-    <string name="bin_file_saved_successfully_to">Bin File saved successfully to</string>
-    <string name="unable_to_save_bin_file">Unable to save bin file</string>
-    <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
-    <string name="txt_alertmsg_la">account from this wallet?</string>
-
-    // new strings
-    <string name="try_again">Please try again after 5 minutes</string>
-    <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
+    <string name="please_backup_your_brainkey">Varmuuskopioi brainkey</string>
+    <string name="backup_brainkey_msg">Varmuuskopioida .bin tiedosto jonnekin turvallinen tai rahat voidaan menettää!</string>
+    <string name="unable_to_trade_bAssets">Onnistu kauppaa Backup Vastaavaa</string>
+    <string name="unable_to_send_amount">Ei voitu lähettää Määrä.</string>
+    <string name="unable_to_decode_QR">Ei voitu purkaa QR-koodin.</string>
 
 </resources>

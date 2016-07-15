@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Ar tikrai norite pašalinti</string>
     <string name="txt_alertmsg_la">sąskaitą iš šios piniginė?</string>
+    <string name="bugs_or_errors">Klaidos ar klaidų?</string>
+    <string name="please_let_us_know">Prašau Pranešk mums:</string>
+    <string name="try_again">Bandykite dar kartą po 5 minučių</string>
+    <string name="warning_msg_same_account">Jūs negalite siųsti sumą į tą pačią sąskaitą</string>
+
+    <string name="please_backup_your_brainkey">Prašome atsarginę savo brainkey</string>
+    <string name="backup_brainkey_msg">Atsarginė kopija jūsų .bin failą kažkur saugiai arba jūsų lėšos gali būti prarasta!</string>
+    <string name="unable_to_trade_bAssets">Nepavyko prekybos atsarginė turtas</string>
+    <string name="unable_to_send_amount">Nepavyko išsiųsti sumą.</string>
+    <string name="unable_to_decode_QR">Nepavyko iššifruoti QR kodą.</string>
 
 </resources>
