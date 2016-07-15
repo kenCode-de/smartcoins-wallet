@@ -145,7 +145,7 @@ public class Application extends android.app.Application {
         iAccount = iAccount;
         isReady = false;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(30 * 1000);
+        get.setTimeout(10 * 1000);
 
         Log.d("Connecting to node", urlsSocketConnection[counter]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {

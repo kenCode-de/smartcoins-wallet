@@ -103,20 +103,7 @@ public class TransactionActivity implements IBalancesDelegate {
         catch (Exception e)
         {
             wifkey = "";
-            //testing("namak",e,"wifkey");
         }
-
-        /*
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if(account_id!=null)
-                {
-                    get_relative_account_history(account_id, "8", number_of_transactions_loaded,numberOfTransactionsToLoad );
-                }
-            }
-        });
-        */
 
         if(account_id!=null)
         {
@@ -124,58 +111,6 @@ public class TransactionActivity implements IBalancesDelegate {
         }
 
     }
-
-//    void get_relative_account_history(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad)
-//    {
-//
-//        final Runnable updateTask = new Runnable() {
-//            @Override
-//            public void run() {
-//                if ( Application.isReady )
-//                {
-//                    int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
-//                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
-//                    Application.webSocketG.send(getDetails);
-//                }
-//                else
-//                {
-//                    get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
-//                }
-//            }
-//        };
-//
-//        reRequest.postDelayed(updateTask, 100);
-//    }
-
-//    void loadTransactions(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad){
-//
-//        final Handler handlerTransactions = new Handler();
-//        final Runnable loadTask = new Runnable() {
-//            @Override
-//            public void run()
-//            {
-//
-//                if(!rcvdCallForTransactions) {
-//                    get_relative_account_history(account_id, id , n,numberOfTransactionsToLoad );
-//                    handlerTransactions.postDelayed(this, 3000);
-//                }
-//
-//            }
-//        };
-//        final Handler stopHandler = new Handler();
-//        final Runnable updateTask = new Runnable() {
-//            @Override
-//            public void run()
-//            {
-//                if ( rcvdCallForTransactions ){
-//                    handlerTransactions.removeCallbacks(loadTask);
-//                }
-//
-//            }
-//        };
-//        stopHandler.postDelayed(updateTask,100);
-//        handlerTransactions.postDelayed(loadTask, 100);
-//    }
 
     final int time = 10000;
 
@@ -217,7 +152,6 @@ public class TransactionActivity implements IBalancesDelegate {
                     sentCallForTransactions = true;
                     handlerTup.removeCallbacks(updateTask2);
                     handlerTup.postDelayed(updateTask2, time);
-                  //  Log.d("Assets Activity", "Sent call for assets");
                 }
                 else
                 {
@@ -242,9 +176,6 @@ public class TransactionActivity implements IBalancesDelegate {
 
             }
         };
-
-
-
 
         stopHandler.postDelayed(stopTask,100);
         handlerT.removeCallbacks(updateTask);
@@ -380,7 +311,6 @@ public class TransactionActivity implements IBalancesDelegate {
         stopHandler.postDelayed(stopTask,100);
     }
 
-
     final Handler handlerAssets = new Handler(Looper.getMainLooper());
     final Handler handlerAssetsUpdate = new Handler(Looper.getMainLooper());
     Boolean rcvdCallForAssets = false;
@@ -443,7 +373,6 @@ public class TransactionActivity implements IBalancesDelegate {
         };
         stopHandler.postDelayed(stopTask,100);
     }
-
 
     @Override
     public void OnUpdate(String s,int id)
@@ -640,129 +569,10 @@ public class TransactionActivity implements IBalancesDelegate {
         });
     }
 
-    /*
-    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req)
-    {
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            ArrayList<String> array = new ArrayList<>();
-            HashMap<String, ArrayList<String>> pairs = new HashMap<String, ArrayList<String>>();
-            for (int i = 0; i < myArray.length(); i++) {
-                JSONObject j = myArray.optJSONObject(i);
-                Iterator it = j.keys();
-                while (it.hasNext()) {
-                    String n = (String) it.next();
-                    if (n.equals(req)) {
-                        array.add(j.getString(n));
-                        pairs.put(req, array);
-                    }
-                }
-
-            }
-            return pairs;
-        }catch (Exception e){
-
-        }
-        return null;
-    }
-
-    String returnParse(String Json , String req){
-        try {
-            if(Json.contains(req)){
-                JSONObject myJson = new JSONObject(Json);
-                return  myJson.getString(req);}
-        }catch (Exception e){}
-        return "";
-    }
-
-    String returnArrayObj(String Json , int position){
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            if(myArray.length()>=position){
-                return  myArray.get(position).toString();
-            }
-        }catch (Exception e){}
-        return "";
-    }
-
-    int TotalArraysOfObj(String Json){
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            return myArray.length();
-        }catch (Exception e){}
-        return -1;
-    }
-    */
-
-    Handler reRequest = new Handler();
-
-//    void get_Time(final String block_num,final String id)
-//    {
-//        Runnable getTimeRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if ( Application.isReady )
-//                {
-//                    int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-//                    //{"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
-//                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-//                    Application.webSocketG.send(getDetails);
-//                }
-//                else
-//                {
-//                    get_Time(block_num, id);
-//                }
-//            }
-//        };
-//
-//        reRequest.postDelayed(getTimeRunnable,100);
-//    }
-
-//    void get_names(final String name_id, final String id)
-//    {
-//        Runnable getNamesRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if ( Application.isReady )
-//                {
-//                    int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-//                    //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-//                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-//                    Application.webSocketG.send(getDetails);
-//                }
-//                else
-//                {
-//                    get_names(name_id, id);
-//                }
-//            }
-//        };
-//        reRequest.postDelayed(getNamesRunnable,100);
-//
-//    }
-
-//    void get_asset(final String asset, final String id) {
-//        Runnable getAssetRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                if ( Application.isReady )
-//                {
-//                    //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
-//                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-//                    Application.webSocketG.send(getDetails);
-//                }
-//                else
-//                {
-//                    get_asset(asset, id);
-//                }
-//            }
-//        };
-//        reRequest.postDelayed(getAssetRunnable,100);
-//    }
-
-
     void testing(String msg , Object obj , String nameOfObject){
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + obj);
     }
+
     void testing(String msg , Exception e , String nameOfObject){
         StackTraceElement[] stackTrace = e.getStackTrace();
         String fullClassName = stackTrace[stackTrace.length - 1].getClassName();
@@ -922,6 +732,4 @@ public class TransactionActivity implements IBalancesDelegate {
 
         });
     }
-
-
 }

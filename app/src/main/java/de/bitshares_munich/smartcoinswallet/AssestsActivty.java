@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -57,7 +58,7 @@ public class AssestsActivty  implements IBalancesDelegate {
         get_json_account_balances(account_name,"999");
     }
 
-    final Handler handler = new Handler();
+    final Handler handler = new Handler(Looper.getMainLooper());
 
     Boolean sentCallForBalances = false;
     final int time = 5000;
