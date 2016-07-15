@@ -496,7 +496,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         else
         {
-            String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (backupAssetBalance - backupAssetAmount));
+            String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
             tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
         }
 
