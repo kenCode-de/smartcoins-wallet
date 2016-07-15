@@ -755,7 +755,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
-                                            if ( Helper.isRTL(locale) )
+                                            if ( Helper.isRTL(locale,currency.getSymbol()) )
                                             {
                                                 tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
                                             }
@@ -923,7 +923,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 double d = convertLocalizeStringToDouble(amount);
                                                 Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
-                                                if (Helper.isRTL(locale)) {
+                                                if (Helper.isRTL(locale,currency.getSymbol())) {
                                                     tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
                                                 } else {
                                                     tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
@@ -1977,7 +1977,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         tableView.setColumnComparator(1, new TransactionsSendRecieveComparator());
         tableView.setColumnComparator(3, new TransactionsAmountComparator());
 
-        tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+        //tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
 
         /*
         TableDataAdapter myAdapter = tableView.getDataAdapter();

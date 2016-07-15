@@ -671,12 +671,24 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 }
+
+
+
+
             } else {
                 etBackupAsset.setText(""); //shayan
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
+
+            /*
+            if ( !etBackupAsset.getText().toString().isEmpty() )
+            {
+                Double backupEnteredAMount = Double.parseDouble(etBackupAsset.getText().toString());
+               // Double backupAvailableAmount = backu
+            }
+            */
 
             setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
@@ -1034,7 +1046,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void findExchangeRate(int id) {
+    private void findExchangeRate(int id)
+    {
         if (application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
             String loyalOrBackupAssets = "";
@@ -1296,7 +1309,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
             if ((enteredAmount > selectedBalance) | (enteredAmount < 0)) {
                 selectedAmount = String.valueOf(selectedBalance);
-                if ((backupAssetsBalance * backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) * backAssetRate) > 0) {
+                if ((backupAssetsBalance / backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
                     backupAssetAmount = String.format(Locale.ENGLISH, "%.4f", ((enteredAmount - selectedBalance) / backAssetRate));
 
                 }
