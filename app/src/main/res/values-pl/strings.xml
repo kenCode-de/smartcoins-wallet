@@ -10,7 +10,7 @@
 <string name="notes">Uwagi</string>
 <string name="note">Opis</string>
 <string name="payment_received">Otrzymano płatność</string>
-<string name="import_brainkey">Importuj przez BrainKey</string>
+<string name="import_brainkey">Importuj za pomocą BrainKey</string>
 <string name="import_backup_old">Importuj z pliku .bin</string>
 <string name="choose_backup">Wybierz kopię zapasową</string>
 <string name="choose_file">Wybierz plik</string>
