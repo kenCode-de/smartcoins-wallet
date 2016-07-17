@@ -181,31 +181,31 @@
     <string name="insufficient_funds">Niewystarczające środki</string>
     <string name="txt_wallet_atleast_one_account">Przepraszamy, ale twój portfel musi zawierać conajmniej 1 konto</string>
     <string name="updating_transaction_id">Aktualizacja Identyfikatora transakcji, proszę czekać</string>
-    <string name="email_name">Aby wyświetlić zdjęcie dla tego adresu, wpisz jego e-mail z Grawatara</string>
+    <string name="email_name">Aby wyświetlić zdjęcie dla tego adresu, wpisz jego e-mail z gravatar.com</string>
     <string name="upgrade_success">Sukces!</string>
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
 
-    <string name="unable_to_load_brainkey">Nie można załadować brainkey</string>
+    <string name="unable_to_load_brainkey">Nie można załadować Brainkey</string>
     <string name="unable_to_generate_bin_format_for_key">Nie można wygenerować pliku bin dla tego klucza</string>
     <string name="creating_backup_file">Tworzenie kopii zapasowej bin</string>
     <string name="fetching_key">Pobieranie klucza</string>
     <string name="generating_bin_format">Generowanie formatu bin</string>
     <string name="invalid_pin">Nieprawidłowy PIN</string>
-    <string name="saving_bin_file_to">Zapisywanie do pliku Bin</string>
+    <string name="saving_bin_file_to">Zapisywanie do pliku bin</string>
     <string name="bin_file_saved_successfully_to">Plik bin został zapisany w</string>
     <string name="unable_to_save_bin_file">Nie można zapisać pliku bin</string>
 
-    <string name="txt_alertmsg_fr">Czy jesteś pewien, że chcesz usunąć</string>
+    <string name="txt_alertmsg_fr">Czy jesteś pewny/a, że chcesz usunąć</string>
     <string name="txt_alertmsg_la">Konto z tego portfela?</string>
-    <string name="bugs_or_errors">Błędy lub błędy?</string>
+    <string name="bugs_or_errors">Znalazłeś błąd?</string>
     <string name="please_let_us_know">Daj nam znać:</string>
     <string name="try_again">Spróbuj ponownie po 5 minutach</string>
     <string name="warning_msg_same_account">Nie można wysyłać kwotę do tego samego konta</string>
 
-    <string name="please_backup_your_brainkey">Proszę wykonać kopię zapasową brainkey</string>
-    <string name="backup_brainkey_msg">Kopia zapasowa pliku .bin w bezpiecznym miejscu i środków finansowych mogą zostać utracone!</string>
+    <string name="please_backup_your_brainkey">Proszę wykonać kopię zapasową Brainkey</string>
+    <string name="backup_brainkey_msg">Kopia zapasowa pliku .bin powinna być przechowywana w bezpiecznym miejscu i chroniona przed dostępem osób trzecich. W przeciwnym razie twoje środki mogą zostać utracone!</string>
     <string name="unable_to_trade_bAssets">Nie można handlować z zasobów zapasowych</string>
     <string name="unable_to_send_amount">Nie można wysłać tej kwoty.</string>
-    <string name="unable_to_decode_QR">Nie udało się rozszyfrować kod QR.</string>
+    <string name="unable_to_decode_QR">Nie udało się rozszyfrować kodu QR.</string>
 
 </resources>
