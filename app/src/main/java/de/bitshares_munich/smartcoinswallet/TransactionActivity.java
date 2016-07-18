@@ -1,9 +1,12 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -79,7 +87,7 @@ public class TransactionActivity implements IBalancesDelegate {
     HashMap<String,HashMap<String,String>> Symbols_Precisions = new HashMap<>();
     String wifkey;
 
-    public TransactionActivity(Context c,String account_id , AssetDelegate instance , String wif_key , int number_of_transactions_loaded, int numberOfTransactionsToLoad)
+    public TransactionActivity(Context c,final String account_id , AssetDelegate instance , String wif_key ,final int number_of_transactions_loaded,final int numberOfTransactionsToLoad)
     {
         context = c;
         assetDelegate = instance;
@@ -95,26 +103,55 @@ public class TransactionActivity implements IBalancesDelegate {
         catch (Exception e)
         {
             wifkey = "";
-            //testing("namak",e,"wifkey");
         }
 
         if(account_id!=null)
         {
             get_relative_account_history(account_id, "8", number_of_transactions_loaded,numberOfTransactionsToLoad );
         }
+
     }
 
+    final int time = 10000;
+
+    final Handler handlerT = new Handler(Looper.getMainLooper());
+    final Handler handlerTup = new Handler(Looper.getMainLooper());
+    Boolean sentCallForTransactions = false;
+    Boolean rcvdCallForTransactions = false;
     void get_relative_account_history(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad)
     {
 
-        final Runnable updateTask = new Runnable() {
+        final Runnable updateTask2 = new Runnable() {
             @Override
             public void run() {
+                if ( sentCallForTransactions && !rcvdCallForTransactions) // if balances are not returned in one second
+                {
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
+                    }
+                    else
+                    {
+                        get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run()
+            {
                 if ( Application.isReady )
                 {
                     int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
                     String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
                     Application.webSocketG.send(getDetails);
+                    sentCallForTransactions = true;
+                    handlerTup.removeCallbacks(updateTask2);
+                    handlerTup.postDelayed(updateTask2, time);
                 }
                 else
                 {
@@ -123,7 +160,218 @@ public class TransactionActivity implements IBalancesDelegate {
             }
         };
 
-        reRequest.postDelayed(updateTask, 100);
+
+
+        final Handler stopHandler = new Handler(Looper.getMainLooper());
+        final Runnable stopTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( rcvdCallForTransactions ){
+                    rcvdCallForTransactions = false;
+                    sentCallForTransactions = false;
+                    handlerT.removeCallbacks(updateTask);
+                    handlerTup.removeCallbacks(updateTask2);
+                }
+
+            }
+        };
+
+        stopHandler.postDelayed(stopTask,100);
+        handlerT.removeCallbacks(updateTask);
+        handlerT.postDelayed(updateTask, 100);
+    }
+
+    final Handler handlerTimes = new Handler(Looper.getMainLooper());
+    final Handler handlerTimesUpdate = new Handler(Looper.getMainLooper());
+    Boolean rcvdCallForTimes = false;
+    Boolean sentCallForTimes = false;
+    void get_Time(final String block_num,final String id){
+            final Runnable updateTask2 = new Runnable() {
+                @Override
+                public void run() {
+                    if ( sentCallForTimes && !rcvdCallForTimes) // if balances are not returned in one second
+                    {
+                        if ( Application.isReady )
+                        {
+                            Application.webSocketG.close();
+                            get_Time(block_num, id);                        }
+                        else
+                        {
+                            get_Time(block_num, id);
+                        }
+                    }
+                }
+            };
+
+
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run()
+                {
+                    if ( Application.isReady )
+                    {
+                        int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
+                        Application.webSocketG.send(getDetails);
+                        sentCallForTimes = true;
+                        handlerTimesUpdate.removeCallbacks(updateTask2);
+                        handlerTimesUpdate.postDelayed(updateTask2, time);
+                    }
+                    else
+                    {
+                        get_Time(block_num, id);
+                    }
+                }
+            };
+
+        handlerTimes.removeCallbacks(updateTask);
+        handlerTimes.postDelayed(updateTask, 100);
+
+
+        final Handler stopHandler = new Handler(Looper.getMainLooper());
+        final Runnable stopTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( rcvdCallForTimes ){
+                    rcvdCallForTimes = false;
+                    sentCallForTimes = false;
+                    handlerTimes.removeCallbacks(updateTask);
+                    handlerTimesUpdate.removeCallbacks(updateTask2);
+                }
+
+            }
+        };
+        stopHandler.postDelayed(stopTask,100);
+    }
+
+
+    final Handler handlerNames = new Handler(Looper.getMainLooper());
+    final Handler handlerNamesUpdates = new Handler(Looper.getMainLooper());
+    Boolean rcvdCallForNames = false;
+    Boolean sentCallForNames = false;
+    void get_names(final String name_id, final String id){
+        final Runnable updateTask2 = new Runnable() {
+            @Override
+            public void run() {
+                if ( sentCallForNames && !rcvdCallForNames) // if balances are not returned in one second
+                {
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        get_names(name_id, id);                        }
+                    else
+                    {
+                        get_names(name_id, id);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( Application.isReady )
+                {
+                    int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+                    Application.webSocketG.send(getDetails);
+                    sentCallForNames = true;
+                    handlerNamesUpdates.removeCallbacks(updateTask2);
+                    handlerNamesUpdates.postDelayed(updateTask2, time);
+                }
+                else
+                {
+                    get_names(name_id, id);
+                }
+            }
+        };
+
+        handlerNames.removeCallbacks(updateTask);
+        handlerNames.postDelayed(updateTask, 100);
+
+
+        final Handler stopHandler = new Handler(Looper.getMainLooper());
+        final Runnable stopTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( rcvdCallForNames ){
+                    rcvdCallForNames = false;
+                    sentCallForNames = false;
+                    handlerNames.removeCallbacks(updateTask);
+                    handlerNamesUpdates.removeCallbacks(updateTask2);
+                }
+
+            }
+        };
+        stopHandler.postDelayed(stopTask,100);
+    }
+
+    final Handler handlerAssets = new Handler(Looper.getMainLooper());
+    final Handler handlerAssetsUpdate = new Handler(Looper.getMainLooper());
+    Boolean rcvdCallForAssets = false;
+    Boolean sentCallForAssets = false;
+    void get_asset(final String asset, final String id) {
+        final Runnable updateTask2 = new Runnable() {
+            @Override
+            public void run() {
+                if ( sentCallForAssets && !rcvdCallForAssets) // if balances are not returned in one second
+                {
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        get_asset(asset, id);
+                    }
+                    else
+                    {
+                        get_asset(asset, id);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable updateTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( Application.isReady )
+                {
+                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";                    Application.webSocketG.send(getDetails);
+                    sentCallForAssets = true;
+                    handlerAssetsUpdate.removeCallbacks(updateTask2);
+                    handlerAssetsUpdate.postDelayed(updateTask2, time);
+                }
+                else
+                {
+                    get_asset(asset, id);
+                }
+            }
+        };
+
+        handlerAssets.removeCallbacks(updateTask);
+        handlerAssets.postDelayed(updateTask, 100);
+
+
+        final Handler stopHandler = new Handler(Looper.getMainLooper());
+        final Runnable stopTask = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( rcvdCallForAssets ){
+                    rcvdCallForAssets = false;
+                    sentCallForAssets = false;
+                    handlerAssets.removeCallbacks(updateTask);
+                    handlerAssetsUpdate.removeCallbacks(updateTask2);
+                }
+
+            }
+        };
+        stopHandler.postDelayed(stopTask,100);
     }
 
     @Override
@@ -131,10 +379,14 @@ public class TransactionActivity implements IBalancesDelegate {
     {
         if(id==8)
         {
+            sentCallForTransactions = false;
+            rcvdCallForTransactions = true;
             onFirstCall(s);
         }
         else if(id==9)
         {
+            sentCallForTimes = false;
+            rcvdCallForTimes = true;
             if(id_in_work<id_total_size)
             {
                 String result = SupportMethods.ParseJsonObject(s,"result");
@@ -146,12 +398,15 @@ public class TransactionActivity implements IBalancesDelegate {
                     get_names(ofNames.get(names_in_work),"10");
                 }
                 id_in_work++;
-                if(id_in_work<blocks.size())
-                get_Time(blocks.get(id_in_work),"9");
+                if(id_in_work<blocks.size()) {
+                    get_Time(blocks.get(id_in_work), "9");
+                }
             }
         }
         else if(id==10)
         {
+            sentCallForNames = false;
+            rcvdCallForNames = true;
             if (names_in_work < names_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                // String nameObject = returnArrayObj(result,0);
@@ -169,6 +424,8 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         else if(id==11)
         {
+            sentCallForAssets = false;
+            rcvdCallForAssets = true;
             if (assets_id_in_work < assets_id_total_size)
             {
                String result = SupportMethods.ParseJsonObject(s,"result");
@@ -312,128 +569,10 @@ public class TransactionActivity implements IBalancesDelegate {
         });
     }
 
-    /*
-    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req)
-    {
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            ArrayList<String> array = new ArrayList<>();
-            HashMap<String, ArrayList<String>> pairs = new HashMap<String, ArrayList<String>>();
-            for (int i = 0; i < myArray.length(); i++) {
-                JSONObject j = myArray.optJSONObject(i);
-                Iterator it = j.keys();
-                while (it.hasNext()) {
-                    String n = (String) it.next();
-                    if (n.equals(req)) {
-                        array.add(j.getString(n));
-                        pairs.put(req, array);
-                    }
-                }
-
-            }
-            return pairs;
-        }catch (Exception e){
-
-        }
-        return null;
-    }
-
-    String returnParse(String Json , String req){
-        try {
-            if(Json.contains(req)){
-                JSONObject myJson = new JSONObject(Json);
-                return  myJson.getString(req);}
-        }catch (Exception e){}
-        return "";
-    }
-
-    String returnArrayObj(String Json , int position){
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            if(myArray.length()>=position){
-                return  myArray.get(position).toString();
-            }
-        }catch (Exception e){}
-        return "";
-    }
-
-    int TotalArraysOfObj(String Json){
-        try {
-            JSONArray myArray = new JSONArray(Json);
-            return myArray.length();
-        }catch (Exception e){}
-        return -1;
-    }
-    */
-
-    Handler reRequest = new Handler();
-
-    void get_Time(final String block_num,final String id)
-    {
-        Runnable getTimeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if ( Application.isReady )
-                {
-                    int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-                    //{"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-                    Application.webSocketG.send(getDetails);
-                }
-                else
-                {
-                    get_Time(block_num, id);
-                }
-            }
-        };
-
-        reRequest.postDelayed(getTimeRunnable,100);
-    }
-
-    void get_names(final String name_id, final String id)
-    {
-        Runnable getNamesRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if ( Application.isReady )
-                {
-                    int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-                    //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-                    Application.webSocketG.send(getDetails);
-                }
-                else
-                {
-                    get_names(name_id, id);
-                }
-            }
-        };
-        reRequest.postDelayed(getNamesRunnable,100);
-
-    }
-
-    void get_asset(final String asset, final String id) {
-        Runnable getAssetRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if ( Application.isReady )
-                {
-                    //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-                    Application.webSocketG.send(getDetails);
-                }
-                else
-                {
-                    get_asset(asset, id);
-                }
-            }
-        };
-        reRequest.postDelayed(getAssetRunnable,100);
-    }
-
     void testing(String msg , Object obj , String nameOfObject){
         Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + obj);
     }
+
     void testing(String msg , Exception e , String nameOfObject){
         StackTraceElement[] stackTrace = e.getStackTrace();
         String fullClassName = stackTrace[stackTrace.length - 1].getClassName();
@@ -593,6 +732,4 @@ public class TransactionActivity implements IBalancesDelegate {
 
         });
     }
-
-
 }

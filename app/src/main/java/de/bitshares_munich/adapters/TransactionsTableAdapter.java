@@ -166,7 +166,7 @@ Context context;
                 }
 
                 String displayFaitAmount = "";
-                if ( Helper.isRTL(locale) )
+                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
                 {
                     displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
                 }
@@ -218,7 +218,7 @@ Context context;
                 }
 
                 String displayFaitAmount = "";
-                if ( Helper.isRTL(locale) )
+                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
                 {
                     displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
                 }

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
@@ -76,7 +79,31 @@ public class BrainkeyActivity extends BaseActivity {
         tinyDB = new TinyDB(getApplicationContext());
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
+        etBrainKey.addTextChangedListener(brainKeyWatcher);
+
     }
+
+    private final TextWatcher brainKeyWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String s = editable.toString();
+            if (!s.equals(s.toLowerCase())) {
+                s = s.toLowerCase();
+                etBrainKey.setText(s);
+                etBrainKey.setSelection(etBrainKey.getText().toString().length());
+            }
+        }
+    };
 
     @OnClick(R.id.btnCancel)
     public void cancel(Button button) {
@@ -90,6 +117,8 @@ public class BrainkeyActivity extends BaseActivity {
         if (etBrainKey.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
         } else {
+            String trimmedBrainKey = etBrainKey.getText().toString().trim();
+            etBrainKey.setText(trimmedBrainKey);
             if (etPin.getText().length() < 5) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             } else if (etPinConfirmation.getText().length() < 5) {
@@ -237,7 +266,7 @@ public class BrainkeyActivity extends BaseActivity {
     /////////////////
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
-        ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
         accountDetails.pinCode = pinCode;
@@ -248,7 +277,11 @@ public class BrainkeyActivity extends BaseActivity {
         accountDetails.status = "success";
         accountDetails.account_id = accountDetail.account_id;
 
+        BinHelper myBinHelper = new BinHelper();
+        myBinHelper.addWallet(accountDetails,brainKey,pinCode,getApplicationContext(),this);
 
+
+        /*
         for (int i = 0; i < accountDetailsList.size(); i++) {
 
             if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {
@@ -265,8 +298,19 @@ public class BrainkeyActivity extends BaseActivity {
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
         tinyDB.putTransactions(this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
+        */
 
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        Intent intent;
+
+        if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
+        {
+            intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
+        }
+        else
+        {
+            intent = new Intent(getApplicationContext(), TabActivity.class);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

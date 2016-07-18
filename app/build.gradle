@@ -12,8 +12,8 @@ android {
         applicationId "de.bitsharesmunich.smartcoinswallet"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName '1.0.1'
+        versionCode 185
+        versionName '1.0.3'
     }
     buildTypes {
         release {
@@ -38,7 +38,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+
     compile 'com.android.support:design:23.3.0'
     compile 'com.koushikdutta.async:androidasync:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'

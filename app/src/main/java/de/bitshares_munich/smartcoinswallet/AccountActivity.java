@@ -48,6 +48,7 @@ import de.bitshares_munich.models.GenerateKeys;
 import de.bitshares_munich.models.RegisterAccount;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
@@ -600,19 +601,23 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     void addWallet(String account_id) {
-        String name = etAccountName.getText().toString();
-        ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //String name = etAccountName.getText().toString();
+        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.pinCode=etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
-        accountDetails.account_name = name;
+        accountDetails.account_name = etAccountName.getText().toString();
         accountDetails.pub_key = pubKey;
         accountDetails.brain_key = brainPrivKey;
         accountDetails.isSelected = true;
         accountDetails.status = "success";
         accountDetails.account_id = account_id;
 
+        BinHelper myBinHelper = new BinHelper();
+        myBinHelper.addWallet(accountDetails,brainPrivKey,etPin.getText().toString(),getApplicationContext(),this);
 
+
+        /*
         for (int i = 0; i < accountDetailsList.size(); i++) {
             accountDetailsList.get(i).isSelected = false;
         }
@@ -624,10 +629,20 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
         tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
+        */
 
-  //      Application.accountCreate();
+        Intent intent;
 
-        Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+        if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
+        {
+            intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
+        }
+        else
+        {
+            intent = new Intent(getApplicationContext(), TabActivity.class);
+        }
+
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

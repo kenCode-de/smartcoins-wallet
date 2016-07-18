@@ -94,6 +94,10 @@
     <string name="account_name_validate">Account name is valid</string>
     <string name="beta">""</string>
     <string name="txt_no_internet_connection">No internet connection</string>
+    <string name="unable_to_trade_bAssets">Unable to trade the Backup Assets.</string>
+    <string name="unable_to_send_amount">Unable to send the Amount.</string>
+    <string name="unable_to_decode_QR">Unable to decode the QR code.</string>
+
 
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
@@ -195,7 +199,8 @@
 
 
     // Not to be localized
-    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s )</string>
+    <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
+    <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
     <string name="sharePref_network_broadcast">network_broadcast</string>
     <string name="sharePref_history">history</string>
@@ -262,6 +267,7 @@
     <string formatted="false" name="help_message">Get 80% Cashback on Fees! Lifetime Members (LTM) get 80% cashback on every transaction fee they pay, and qualify to earn referral income from users they register
         with or refer to the network. A Lifetime Membership is now under 20000 BTS!
     </string>
+
     <string name="txt_yes">Yes</string>
     <string name="txt_no">No</string>
     <string name="txt_confirmation">Confirmation</string>
@@ -321,8 +327,16 @@
     <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
     <string name="txt_alertmsg_la">account from this wallet?</string>
 
-    // new strings
     <string name="try_again">Please try again after 5 minutes</string>
     <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
+    <string name="bugs_or_errors">Bugs or Errors?</string>
+    <string name="please_let_us_know">Please let us know:</string>
+
+    // new strings
+    <string name="please_backup_your_brainkey">Please backup your brainkey</string>
+
+    <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
+    <string name="pref_backup_bin_exist">backup_bin_exist</string>
+
 
 </resources>

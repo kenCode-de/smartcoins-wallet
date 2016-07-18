@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Вы уверены, что хотите удалить</string>
     <string name="txt_alertmsg_la">счета из этого кошелька?</string>
+    <string name="bugs_or_errors">Ошибки или ошибки?</string>
+    <string name="please_let_us_know">Пожалуйста дай нам знать:</string>
+    <string name="try_again">Пожалуйста, повторите попытку через 5 минут</string>
+    <string name="warning_msg_same_account">Вы не можете отправить сумму в тот же счет</string>
+
+    <string name="please_backup_your_brainkey">Пожалуйста, создайте резервную копию brainkey</string>
+    <string name="backup_brainkey_msg">Сделайте резервную копию файла .bin в безопасное место или ваши средства могут быть потеряны!</string>
+    <string name="unable_to_trade_bAssets">Невозможно торговать резервные ресурсы</string>
+    <string name="unable_to_send_amount">Невозможно отправить Сумма.</string>
+    <string name="unable_to_decode_QR">Невозможно декодировать QR-код.</string>
 
 </resources>

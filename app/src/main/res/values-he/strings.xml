@@ -198,5 +198,15 @@
 
     <string name="txt_alertmsg_fr">האם אתה בטוח שברצונך להסיר את</string>
     <string name="txt_alertmsg_la">חשבון מארנק זה?</string>
+    <string name="bugs_or_errors">באגים או שגיאות?</string>
+    <string name="please_let_us_know">אנא תן לנו לדעת:</string>
+    <string name="try_again">נסה שוב אחרי 5 דקות</string>
+    <string name="warning_msg_same_account">אתה לא יכול לשלוח כמות לאותו חשבון</string>
+
+    <string name="please_backup_your_brainkey">אנא גיבוי brainkey שלך</string>
+    <string name="backup_brainkey_msg">גיבוי הקובץ? .bin שלך במקום בטוח או הקרנות שלך עלולים ללכת לאיבוד!</string>
+    <string name="unable_to_trade_bAssets">לא ניתן לסחור נכסי גיבוי</string>
+    <string name="unable_to_send_amount">לא ניתן לשלוח את הסכום.</string>
+    <string name="unable_to_decode_QR">לא ניתן לפענח את קוד ה- QR.</string>
 
 </resources>

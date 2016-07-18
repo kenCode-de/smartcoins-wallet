@@ -46,8 +46,8 @@ subprojects {
                 defaultConfig {
                     minSdkVersion 14
                     targetSdkVersion 23
-                    versionCode 184
-                    versionName "1.0.1"
+                    versionCode 185
+                    versionName "1.0.3"
                 }
             }
         }
@@ -90,21 +90,6 @@ subprojects {
                                 developerConnection 'scm:git@github.com:dm77/barcodescanner.git'
                             }
 
-                            licenses {
-                                license {
-                                    name 'The Apache Software License, Version 2.0'
-                                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                                    distribution 'repo'
-                                }
-                            }
-
-                            developers {
-                                developer {
-                                    id 'dm77'
-                                    name 'Dushyanth Maguluru'
-                                    email 'dushyanth.maguluru@gmail.com'
-                                }
-                            }
                         }
                     }
                 }

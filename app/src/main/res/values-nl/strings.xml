@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Weet u zeker dat u het verwijderen</string>
     <string name="txt_alertmsg_la">rekening van deze portefeuille?</string>
+    <string name="bugs_or_errors">Bugs of fouten?</string>
+    <string name="please_let_us_know">Laat het ons weten:</string>
+    <string name="try_again">Probeer het nog eens na 5 minuten</string>
+    <string name="warning_msg_same_account">Je kunt geen bedrag te sturen in dezelfde account</string>
+
+    <string name="please_backup_your_brainkey">Maak een backup van uw brainkey</string>
+    <string name="backup_brainkey_msg">Een backup van je .bin bestand ergens veilig of je tegoeden zouden kunnen worden verloren!</string>
+    <string name="unable_to_trade_bAssets">Kan het Backup Assets handel</string>
+    <string name="unable_to_send_amount">Kan het bedrag te sturen.</string>
+    <string name="unable_to_decode_QR">Niet in staat om de QR-code te decoderen.</string>
 
 </resources>

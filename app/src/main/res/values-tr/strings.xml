@@ -197,5 +197,15 @@
 
     <string name="txt_alertmsg_fr">Eğer kaldırmak istediğinizden emin misiniz</string>
     <string name="txt_alertmsg_la">Bu cüzdanından hesap?</string>
+    <string name="bugs_or_errors">Hatalar veya hatalar?</string>
+    <string name="please_let_us_know">Lütfen bize bildirin:</string>
+    <string name="try_again">5 dakika sonra tekrar deneyin</string>
+    <string name="warning_msg_same_account">Aynı hesaba miktarını gönderemezsiniz</string>
+
+    <string name="please_backup_your_brainkey">yedekleme brainkey Lütfen</string>
+    <string name="backup_brainkey_msg">güvenli bir yerde ya da para kaybolmuş olabilir sizin .bin dosya yedekleme!</string>
+    <string name="unable_to_trade_bAssets">Yedekleme Varlıklar ticaret yapılamıyor</string>
+    <string name="unable_to_send_amount">Tutar göndermek için açılamıyor.</string>
+    <string name="unable_to_decode_QR">QR kodu çözmek için açılamıyor.</string>
 
 </resources>

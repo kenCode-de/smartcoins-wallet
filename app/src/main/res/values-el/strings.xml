@@ -198,5 +198,15 @@
 
     <string name="txt_alertmsg_fr">Είστε βέβαιοι ότι θέλετε να καταργήσετε το</string>
     <string name="txt_alertmsg_la">λογαριασμού από αυτό το πορτοφόλι;</string>
+    <string name="bugs_or_errors">Σφάλματα ή λάθη;</string>
+    <string name="please_let_us_know">Παρακαλώ ενημερώστε μας:</string>
+    <string name="try_again">Παρακαλώ δοκιμάστε ξανά μετά από 5 λεπτά</string>
+    <string name="warning_msg_same_account">Δεν μπορείτε να στείλετε ποσό στον ίδιο λογαριασμό</string>
+
+    <string name="please_backup_your_brainkey">Παρακαλούμε αντιγράφων ασφαλείας brainkey σας</string>
+    <string name="backup_brainkey_msg">Δημιουργία αντιγράφων ασφαλείας αρχείο .bin σας σε ασφαλές μέρος ή τα κεφάλαιά σας θα μπορούσε να χαθεί!</string>
+    <string name="unable_to_trade_bAssets">Ανίκανος να το εμπόριο των αντιγράφων ασφαλείας Ενεργητικού</string>
+    <string name="unable_to_send_amount">Δεν μπορεί να στείλει το ποσό.</string>
+    <string name="unable_to_decode_QR">Δεν είναι δυνατή η αποκωδικοποίηση του κώδικα QR.</string>
 
 </resources>
