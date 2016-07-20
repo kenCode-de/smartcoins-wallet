@@ -2121,7 +2121,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         myTransactions.clear();
                         isSavedTransactions = false;
                         myTransactions = new ArrayList<>();
-                        updateSortTableView(tableView, myTransactions);
+                    //    updateSortTableView(tableView, myTransactions);
                     }
 
                    if (number_of_transactions_in_queue == 0) {
