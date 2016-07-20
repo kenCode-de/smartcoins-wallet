@@ -209,4 +209,11 @@
     <string name="unable_to_send_amount">পরিমাণ পাঠাতে অক্ষম.</string>
     <string name="unable_to_decode_QR">QR কোড ডিকোড করতে অক্ষম.</string>
 
+    <string name="loyalty_points">আনুগত্য পয়েন্ট</string>
+    <string name="str_warning_only_available">সতর্কবাণী! শুধু %1$s এর %2$s এর উপলব্ধ</string>
+    <string name="str_balance_available">%1$s এর %2$s এর প্রাপ্তিসাধ্য</string>
+
+
+
+
 </resources>

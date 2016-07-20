@@ -405,6 +405,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 arrayAccountAssets.add(accountAssets.get(j).symbol);
             }
 
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
+            arrayAccountAssets = assetsSymbols.updatedList(arrayAccountAssets);
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
@@ -555,8 +558,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     void onItemSelectedBackupAsset(int position) {
         designMethod();
         if (position >= 0) {
-
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
+            String selected = spBackupAsset.getSelectedItem().toString();
+            selected = selected.replace("bit","");
+            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), selected);
             for (int i = 0; i < accountDetails.size(); i++) {
                 if(accountDetails.get(i).isSelected)
                 {

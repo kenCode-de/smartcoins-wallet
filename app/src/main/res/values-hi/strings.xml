@@ -209,4 +209,9 @@
     <string name="unable_to_send_amount">राशि भेजने में असमर्थ।</string>
     <string name="unable_to_decode_QR">क्यूआर कोड को डिकोड करने में असमर्थ है।</string>
 
+
+    <string name="loyalty_points">वफादारी अंक</string>
+    <string name="str_warning_only_available">चेतावनी! केवल %1$s %2$s उपलब्ध है</string>
+    <string name="str_balance_available">%1$s %2$s उपलब्ध</string>
+
 </resources>

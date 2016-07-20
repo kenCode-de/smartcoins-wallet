@@ -208,4 +208,8 @@
     <string name="unable_to_send_amount">Impossibile inviare l\'importo.</string>
     <string name="unable_to_decode_QR">Impossibile decodificare il codice QR.</string>
 
+    <string name="loyalty_points">Punti fedeltà</string>
+    <string name="str_warning_only_available">Avvertimento! Solo %1$s %2$s è disponibile</string>
+    <string name="str_balance_available">%1$s %2$s disponibile</string>
+
 </resources>

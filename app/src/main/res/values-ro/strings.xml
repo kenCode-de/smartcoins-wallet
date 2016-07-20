@@ -207,4 +207,8 @@
     <string name="unable_to_send_amount">Nu se poate trimite suma.</string>
     <string name="unable_to_decode_QR">Nu se poate decoda codul QR.</string>
 
+    <string name="loyalty_points">Puncte de loialitate</string>
+    <string name="str_warning_only_available">Avertizare! Doar %1$s %2$s este disponibil</string>
+    <string name="str_balance_available">%1$s %2$s disponibilă</string>
+
 </resources>

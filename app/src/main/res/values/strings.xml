@@ -199,6 +199,8 @@
 
 
     // Not to be localized
+    <string name="pref_desired_smart_coin">desired_smart_coin</string>
+    <string name="pref_uia_coin">uia_coin</string>
     <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
@@ -338,5 +340,6 @@
     <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
     <string name="pref_backup_bin_exist">backup_bin_exist</string>
 
+    <string name="loyalty_points">Loyalty Points</string>
 
 </resources>

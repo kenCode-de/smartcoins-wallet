@@ -208,4 +208,8 @@
     <string name="unable_to_send_amount">Tutar göndermek için açılamıyor.</string>
     <string name="unable_to_decode_QR">QR kodu çözmek için açılamıyor.</string>
 
+    <string name="loyalty_points">Sadakat Puanları</string>
+    <string name="str_warning_only_available">Uyarı! Sadece %1$s %2$s mevcuttur</string>
+    <string name="str_balance_available">%1$s %2$s mevcut $ </string>
+
 </resources>

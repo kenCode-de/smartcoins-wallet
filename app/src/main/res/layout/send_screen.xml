@@ -328,13 +328,24 @@
                     android:orientation="vertical"
                     android:visibility="gone"
                 >
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loyalty Points: "
-                        android:textColor="#00060A"
-                        android:textSize="15sp"
-                    />
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/loyalty_points"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                            />
+                    </LinearLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/layout_margin"
@@ -393,13 +404,24 @@
                     android:orientation="vertical"
                     android:visibility="gone"
                 >
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Backup Asset: "
-                        android:textColor="#00060A"
-                        android:textSize="15sp"
-                    />
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/backup_asset"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textColor="#00060A"
+                            android:textSize="15sp"
+                            />
+                    </LinearLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/layout_margin"

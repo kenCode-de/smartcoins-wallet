@@ -209,4 +209,8 @@
     <string name="unable_to_send_amount">Неможливо відправити Сума.</string>
     <string name="unable_to_decode_QR">Неможливо декодувати QR-код.</string>
 
+    <string name="loyalty_points">окуляри лояльності</string>
+    <string name="str_warning_only_available">УВАГА! Тільки %1$s %2$s доступний</string>
+    <string name="str_balance_available">%1$s %2$s доступний</string>
+
 </resources>

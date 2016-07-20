@@ -208,5 +208,8 @@
     <string name="unable_to_trade_bAssets">Në pamundësi për të tregtisë pasurinë Backup</string>
     <string name="unable_to_send_amount">Në pamundësi për të dërguar sasi.</string>
     <string name="unable_to_decode_QR">Në pamundësi për të deshifroj kodin QR.</string>
+    <string name="loyalty_points">Pikat e Besnikërisë</string>
+    <string name="str_warning_only_available">Warning! Vetëm %1$s %2$s është i disponueshëm</string>
+    <string name="str_balance_available">%1$s %2$s në dispozicion</string>
 
 </resources>

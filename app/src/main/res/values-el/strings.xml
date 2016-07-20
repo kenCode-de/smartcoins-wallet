@@ -209,4 +209,8 @@
     <string name="unable_to_send_amount">Δεν μπορεί να στείλει το ποσό.</string>
     <string name="unable_to_decode_QR">Δεν είναι δυνατή η αποκωδικοποίηση του κώδικα QR.</string>
 
+    <string name="loyalty_points">Πόντοι Αφοσίωσης</string>
+    <string name="str_warning_only_available">Προειδοποίηση! Μόνο %1$s %2$s είναι διαθέσιμη</string>
+    <string name="str_balance_available">%1$s %2$s διαθέσιμη</string>
+
 </resources>

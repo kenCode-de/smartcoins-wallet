@@ -209,4 +209,9 @@
     <string name="unable_to_send_amount">양을 보낼 수 없습니다.</string>
     <string name="unable_to_decode_QR">QR 코드를 디코딩 할 수 없음.</string>
 
+    <string name="loyalty_points">로열티 포인트</string>
+    <string name="str_warning_only_available">경고! 만 %1$s 의 %2$s 이 (가) 사용 가능</string>
+    <string name="str_balance_available">%1$s %2$s 에 사용할 수 의</string>
+
+
 </resources>

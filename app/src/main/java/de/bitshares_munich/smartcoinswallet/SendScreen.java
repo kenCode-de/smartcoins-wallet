@@ -483,17 +483,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Double backupAssetAmount = Double.parseDouble(text.toString());
         Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
 
+        String backupAssetSym;
+        AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+        backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+
         if (backupAssetAmount > backupAssetBalance)
         {
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssets.symbol));
+            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
         }
         else
         {
             String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
+            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
         }
 
-        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , 0,backupAssets.symbol, Color.BLACK);
+        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , 0,backupAssetSym, Color.BLACK);
 
         if (backAssetRate != null)
         {
@@ -588,10 +592,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tradeAmount += Double.parseDouble(etAmount.getText().toString());
             }
             String mainAsset = spAssets.getSelectedItem().toString();
+            mainAsset = mainAsset.replace("bit","");
             transferAmount(String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", tradeAmount), mainAsset, etReceiverAccount.getText().toString());
         } else if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
             String mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
             String mainAsset = spAssets.getSelectedItem().toString();
+            mainAsset = mainAsset.replace("bit","");
             transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
         }
         if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
@@ -610,6 +616,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private void selectedAccountAsset() {
         try {
             String selectedAsset = spAssets.getSelectedItem().toString();
+            selectedAsset = selectedAsset.replace("bit","");
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
@@ -819,8 +826,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (backupAsset.isEmpty()) {
                 backupAsset = "BTS";
             }
+
+            String sym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            sym = assetsSymbols.updateString(backupAsset);
+
             llBackupAsset.setVisibility(View.VISIBLE);
-            tvBackupAsset.setText(backupAsset);
+            tvBackupAsset.setText(sym);
             getBackupAsset();
             getExchangeRate(200);
 
@@ -888,6 +900,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             //  Toast.makeText(context,"Callback identified",Toast.LENGTH_LONG).show();
             etReceiverAccount.setText(resJson.get("to").toString());
             //validReceiver = true;
+
             spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
             spAssets.setClickable(false);
             if (resJson.get("memo") != null) {
@@ -946,6 +959,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void createSpinner(List<String> spinnerArray, Spinner spinner) {
+
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.spinner_black, spinnerArray);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -996,7 +1011,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         try
         {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            List<String> spinnerArray = new ArrayList<String>();
+            ArrayList<String> spinnerArray = new ArrayList<String>();
             for (int i = 0; i < accountDetails.size(); i++)
             {
                 AccountDetails accountDetail = accountDetails.get(i);
@@ -1013,6 +1028,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                 }
             }
+
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
+            spinnerArray = assetsSymbols.updatedList(spinnerArray);
+
             createSpinner(spinnerArray, spAssets);
         }
         catch (Exception e)
@@ -1190,7 +1209,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private int getSpinnerIndex(Spinner spinner, String myString) {
         int index = 0;
         for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+            String spString = spinner.getItemAtPosition(i).toString();
+            spString = spString.replace("bit","");
+            if (spString.equalsIgnoreCase(myString)) {
                 index = i;
                 break;
             }
@@ -1266,6 +1287,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validating = false;
                         // This code works correct, donot edit if it shows red underline
                         String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+                        format = format.replaceAll("\\s+", " ").trim();
                         tvErrorRecieverAccount.setText(format);
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
@@ -1315,6 +1337,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
             }
             // Send screen work end
+
+            String selectedAccountAssetSym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            selectedAccountAssetSym = assetsSymbols.updateString(selectedAccountAsset.symbol);
+//
+//            String selectedAccountAssetSym;
+//            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+//            selectedAccountAssetSym = assetsSymbols.updateString(selectedAccountAsset.symbol);
+
+
             if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
                 if (count == 1) {
                     Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
@@ -1325,23 +1357,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         etAmount.setText(String.format(Locale.ENGLISH, "%.4f", amount));
                     }
                     count = 0;
+                    String backupAssetSym;
+                    backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+
                     Double total = amount + totalAmountBackupAssets + totalAmountLoyalty;
                     tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                            String.format(Locale.ENGLISH, "%.4f", amount), selectedAccountAsset.symbol, backupAssetAmount + backupAssets.symbol + " + ", loyaltyAmount + loyaltyAsset.symbol
-                            , String.format(Locale.ENGLISH, "%.4f", total), selectedAccountAsset.symbol));
+                            String.format(Locale.ENGLISH, "%.4f", amount), selectedAccountAssetSym, backupAssetAmount + backupAssetSym + " + ", loyaltyAmount + loyaltyAsset.symbol
+                            , String.format(Locale.ENGLISH, "%.4f", total), selectedAccountAssetSym));
                 }
                 count++;
             } else if (loyaltyAsset != null && exchangeRate != null) {
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
-                tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
+                tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAssetSym, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAssetSym));
             } else if (backupAssets != null && backAssetRate != null)
             {
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
+                String backupAssetSym;
+                backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
                 tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                        selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
-                        backupAssets.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
+                        selectedAmount, selectedAccountAssetSym, backupAssetAmount,
+                        backupAssetSym, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAssetSym));
 
-                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAsset.symbol, backupAssets.symbol); //
+                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAssetSym, backupAssetSym); //
 
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
@@ -1631,20 +1668,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //                return listItem;
 //            }
 //        };
+        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
 
-
-
-        contactListDialog = new Dialog(SendScreen.this);
-        contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        contactListDialog.setContentView(R.layout.contacts_list_send_screen);
-        ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
-        listView.setAdapter(new SendScreenListViewActivity(context,this));
-        int size = listView.getAdapter().getCount();
-        if(size>5) {
-            setListViewHeightBasedOnChildren(listView,5);
-        }else setListViewHeightBasedOnChildren(listView,size);
-        //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
-        contactListDialog.show();
+        if(contacts.size()>0) {
+            contactListDialog = new Dialog(SendScreen.this);
+            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            contactListDialog.setContentView(R.layout.contacts_list_send_screen);
+            ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
+            listView.setAdapter(new SendScreenListViewActivity(context, this));
+            int size = listView.getAdapter().getCount();
+            if (size > 5) {
+                setListViewHeightBasedOnChildren(listView, 5);
+            } else setListViewHeightBasedOnChildren(listView, size);
+            //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
+            contactListDialog.show();
+        }else {
+            Toast.makeText(context, R.string.empty_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {

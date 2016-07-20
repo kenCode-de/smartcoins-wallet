@@ -209,4 +209,10 @@
     <string name="unable_to_send_amount">לא ניתן לשלוח את הסכום.</string>
     <string name="unable_to_decode_QR">לא ניתן לפענח את קוד ה- QR.</string>
 
+
+    <string name="loyalty_points">נקודות נאמנות</string>
+    <string name="str_warning_only_available">אַזהָרָה! רק %1$s %2$s זמין</string>
+    <string name="str_balance_available">%1$s %2$s זמין</string>
+
+
 </resources>

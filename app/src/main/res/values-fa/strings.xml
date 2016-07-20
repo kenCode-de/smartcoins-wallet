@@ -210,4 +210,9 @@
     <string name="unable_to_send_amount">قادر به ارسال مقدار.</string>
     <string name="unable_to_decode_QR">رمزگشایی از کد QR.</string>
 
+    <string name="loyalty_points">امتیاز وفاداری</string>
+    <string name="str_warning_only_available">اخطار! فقط %1$s %2$s موجود است</string>
+    <string name="str_balance_available">%1$s %2$s در دسترس</string>
+
+
 </resources>

@@ -328,4 +328,7 @@
     <string name="unable_to_send_amount">Ei voitu lähettää Määrä.</string>
     <string name="unable_to_decode_QR">Ei voitu purkaa QR-koodin.</string>
 
+    <string name="loyalty_points">Lojaalisuuspisteet</string>
+
+
 </resources>

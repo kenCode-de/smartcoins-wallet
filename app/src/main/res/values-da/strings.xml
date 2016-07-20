@@ -208,4 +208,8 @@
     <string name="unable_to_send_amount">Kunne ikke sende beløbet.</string>
     <string name="unable_to_decode_QR">Kan ikke afkode QR-koden.</string>
 
+    <string name="loyalty_points">loyalitetspoint</string>
+    <string name="str_warning_only_available">Advarsel! Kun %1$s %2$s er tilgængelig</string>
+    <string name="str_balance_available">%1$s %2$s til rådighed</string>
+
 </resources>
