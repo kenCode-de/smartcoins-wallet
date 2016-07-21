@@ -47,17 +47,17 @@
 <string name="please_enter_brainkey">Wpisz Brainkey</string>
 <string name="please_enter_correct_brainkey">Wpisz poprawny Brainkey</string>
 <string name="balances">Twoje środki</string>
-<string name="contacts">Adresy</string>
+<string name="contacts">Kontakty</string>
 <string name="receive_uppercase">ODBIERZ</string>
 <string name="send_uppercase">WYŚLIJ</string>
-<string name="transactions">transakcje</string>
+<string name="transactions">Transakcje</string>
 <string name="title_activity_setting">SettingActivity</string>
 <string name="backup_asset">Waluta cyfrowa</string>
 <string name="taxable_country">Kraj podatnika</string>
 <string name="date_time">Strefa czasowa</string>
 <string name="check_for_updates">Sprawdź aktualizacje podczas startu</string>
 <string name="automatically_install">Automatycznie instaluj aktualizacje</string>
-<string name="require_pin">Wymagaj kodu PIN do wysłania transakcji</string>
+<string name="require_pin">Wymagaj kodu PIN do wysyłania transakcji</string>
 <string name="close_bitshare">Zamknij aplikację po trzech minutach bezczynności</string>
 <string name="always_donate">Zawsze przesyłaj datki dla programistów (2 BTS)</string>
 <string name="hide_donations">Nie pokazuj datków dla programistów na głównym ekranie</string>
@@ -69,7 +69,7 @@
 <string name="secure_pin">ZMIEŃ PIN</string>
 <string name="export">Eksportuj</string>
 <string name="show_more">Pokaż więcej</string>
-<string name="share_text">Właśnie znalazłem ten wspaniały Smartcoins Portfel, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to! Twoje zdrowie</string>
+<string name="share_text">Właśnie odkryłem ten wspaniały Smartcoins Wallet, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to!</string>
 <string name="share_info">Zaproś jednego lub więcej znajomych do wypróbowania Smartcoins Wallet! Nie zapisujemy i nie zbieramy adresów email, dbamy o twoją prywatność.</string>
 <string name="share_subject">Znakomity portfel kryptowalut, natychmiastowe płatności!</string>
 <string name="share_heading">Powiadom przyjaciół</string>
@@ -82,7 +82,7 @@
 <string name="account_name_already_exist">Konto %s jest już zajęte</string>
 <string name="account_name_not_exist">Konto %s nie istnieje</string>
 <string name="add_contact">Dodaj</string>
-<string name="edit_contact">Edytuj</string>
+<string name="edit_contact">Edytuj kontakt</string>
 <string name="empty_list">Lista adresów jest pusta</string>
 <string name="account_name_validate">Nazwa konta jest prawidłowa</string>
 <string name="txt_no_internet_connection">Brak połączenia z internetem</string>
@@ -148,14 +148,14 @@
 <string name="e_receipt_activity_name">E-paragon</string>
 <string name="settings_activity_name">Ustawienia</string>
 <string name="qr_code_activity_name">Skaner QR</string>
-<string name="share_account_activity_name">Powiadom przyjaciół.</string>
-<string name="add_contact_activity_name">Dodaj adres</string>
+<string name="share_account_activity_name">Powiadom przyjaciół</string>
+<string name="add_contact_activity_name">Dodaj kontakt</string>
 <string name="str_trade_not_available">Transakcja niedostępna</string>
-    <string name="preferred_lang">preferowany język</string>
+    <string name="preferred_lang">Preferowany Język</string>
     <string name="got_it">Rozumiem</string>
-    <string name="upgrade_to_ltm">Kup konto LTM</string>
-    <string formatted="false" name="help_message">Dożywotni, 80-procentowy zwrot kosztów transakcyjnych! Członkowie Lifetime (LTM) ponoszą znacznie niższe opłaty transakcyjne i mogą zarabiać dzięki systemowi poleceń. Członkostwo życia jest teraz warte mniej niż 20000 BTS!</string>
-    <string name="txt_yes">tak</string>
+    <string name="upgrade_to_ltm">Aktualizacja do LTM</string>
+    <string formatted="false" name="help_message">Dożywotni, 80-procentowy zwrot kosztów transakcyjnych! Członkowie Lifetime (LTM) ponoszą znacznie niższe opłaty transakcyjne i mogą zarabiać dzięki systemowi poleceń. Członkostwo Lifetime kosztuje teraz mniej niż 20000 BTS!</string>
+    <string name="txt_yes">Tak</string>
     <string name="txt_no">Nie</string>
     <string name="txt_confirmation">Potwierdzenie</string>
     <string name="txt_confirmation_msg">Jesteś pewien?</string>
@@ -163,15 +163,15 @@
     <string name="txt_folder_created">utworzonym folderze</string>
     <string name="upgrade_failed">Aktualizacja nie powiodła się</string>
     <string name="upgrading">Modernizacja ...</string>
-    <string name="import_new_account">RACHUNEK IMPORT</string>
+    <string name="import_new_account">IMPORTUJ NOWE KONTO</string>
     <string name="upgrade_account">ULEPSZ KONTO</string>
     <string name="remove_account">USUŃ KONTO</string>
     <string name="txt_alertmsg">Czy na pewno chcesz usunąć to konto</string>
     <string name="validation_in_progress">Walidacja w toku ..</string>
     <string name="last_letter_cannot">Ostatnim znakiem nie może być -</string>
-    <string name="account_name_shoud_have">Nazwa konta powinna zawierać conajmniej jedno -</string>
-    <string name="default_currency">EUR</string>
-    <string name="account_already_exist">Konto już istnieje</string>
+    <string name="account_name_shoud_have">Nazwa konta powinna zawierać conajmniej jeden myślnik "-"</string>
+    <string name="default_currency">PLN</string>
+    <string name="account_already_exist">To konto już istnieje</string>
     <string name="txt_back">Cofnij</string>
     <string name="please_pay">Proszę zapłacić</string>
     <string name="transfer_funds">Przekazanie środków</string>
@@ -179,28 +179,28 @@
     <string name="cancel">ANULUJ</string>
     <string name="donation">Darowizna</string>
     <string name="insufficient_funds">Niewystarczające środki</string>
-    <string name="txt_wallet_atleast_one_account">Przepraszamy, ale twój portfel musi zawierać conajmniej 1 konto</string>
-    <string name="updating_transaction_id">Aktualizacja Identyfikatora transakcji, proszę czekać</string>
+    <string name="txt_wallet_atleast_one_account">Przepraszamy, ale twój portfel musi posiadać conajmniej 1 konto</string>
+    <string name="updating_transaction_id">Aktualizacja identyfikatora transakcji, proszę czekać</string>
     <string name="email_name">Aby wyświetlić zdjęcie dla tego adresu, wpisz jego e-mail z gravatar.com</string>
     <string name="upgrade_success">Sukces!</string>
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
 
     <string name="unable_to_load_brainkey">Nie można załadować Brainkey</string>
     <string name="unable_to_generate_bin_format_for_key">Nie można wygenerować pliku bin dla tego klucza</string>
-    <string name="creating_backup_file">Tworzenie kopii zapasowej bin</string>
+    <string name="creating_backup_file">Tworzenie pliku kopii zapasowej</string>
     <string name="fetching_key">Pobieranie klucza</string>
     <string name="generating_bin_format">Generowanie formatu bin</string>
     <string name="invalid_pin">Nieprawidłowy PIN</string>
-    <string name="saving_bin_file_to">Zapisywanie do pliku bin</string>
+    <string name="saving_bin_file_to">Zapisywanie pliku bin do</string>
     <string name="bin_file_saved_successfully_to">Plik bin został zapisany w</string>
     <string name="unable_to_save_bin_file">Nie można zapisać pliku bin</string>
 
     <string name="txt_alertmsg_fr">Czy jesteś pewny/a, że chcesz usunąć</string>
-    <string name="txt_alertmsg_la">Konto z tego portfela?</string>
+    <string name="txt_alertmsg_la">to konto z portfela?</string>
     <string name="bugs_or_errors">Znalazłeś błąd?</string>
     <string name="please_let_us_know">Daj nam znać:</string>
     <string name="try_again">Spróbuj ponownie po 5 minutach</string>
-    <string name="warning_msg_same_account">Nie można wysyłać kwotę do tego samego konta</string>
+    <string name="warning_msg_same_account">Nie można wysłać kwoty na te same konto</string>
 
     <string name="please_backup_your_brainkey">Proszę wykonać kopię zapasową Brainkey</string>
     <string name="backup_brainkey_msg">Kopia zapasowa pliku .bin powinna być przechowywana w bezpiecznym miejscu i chroniona przed dostępem osób trzecich. W przeciwnym razie twoje środki mogą zostać utracone!</string>
