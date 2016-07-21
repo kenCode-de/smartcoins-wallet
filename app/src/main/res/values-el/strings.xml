@@ -23,18 +23,18 @@
 <string name="txt_6_digits_pin_confirm">Επιβεβαιώστε το 6-ψήφιο PIN</string>
 <string name="create">ΔΗΜΙΟΥΡΓΙΑ</string>
     <string name="unable_to_import_account_from_bin_file">Δεν είναι δυνατή η εισαγωγή του λογαριασμού από το αρχείο bin</string>
-    <string name="importing_keys_from_bin_file">Εισαγωγή κλειδιά από το αρχείο Bin</string>
-    <string name="import_backup">Εισαγωγής αντιγράφων ασφαλείας από .bin αρχείο</string>
+    <string name="importing_keys_from_bin_file">Εισαγωγή κλειδιών από το αρχείο Bin</string>
+    <string name="import_backup">Εισαγωγή αντιγράφου ασφαλείας από .bin αρχείο</string>
     <string name="is_already_added">έχει ήδη προστεθεί</string>
     <string name="in_valid_email">Άκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου</string>
-    <string name="select">Επιλέγω</string>
-    <string name="are_you_sure">Είσαι σίγουρος?</string>
+    <string name="select">Διαλέξτε</string>
+    <string name="are_you_sure">Είστε σίγουρος?</string>
 
-    <string name="existing_account">υπάρχοντα λογαριασμό</string>
+    <string name="existing_account">Υπάρχον λογαριασμός</string>
 <string name="agreement">Συμφωνία</string>
 <string name="cancel_and_exit">Ακύρωση και Έξοδος</string>
 <string name="i_agree">Συμφωνώ</string>
-<string name="kindly_create_account">Ευγενικά δημιουργήσετε το λογαριασμό</string>
+<string name="kindly_create_account">Παρακαλώ δημιουργήστε λογαριασμό</string>
 <string name="please_enter_old_6_digit_pin">Παρακαλούμε, εισάγετε παλιό 6-ψήφιο PIN</string>
 <string name="please_enter_6_digit_pin">Παρακαλώ εισάγετε 6-ψήφιο κωδικό PIN</string>
 <string name="please_enter_6_digit_pin_confirm">Παρακαλώ εισάγετε 6-ψήφιο PIN επιβεβαίωσης</string>
@@ -60,8 +60,8 @@
 <string name="automatically_install">Αυτόματη εγκατάσταση κύριας έκδοση</string>
 <string name="require_pin">Απαίτηση PIN/Pattern για αποστολή κεφαλαίων @amp; Δείτε υπομνήματα</string>
 <string name="close_bitshare">Κλείνει αυτόματα to Πορτοφόλι Bitshares μετά από 3 λεπτά αδράνειας</string>
-<string name="always_donate">Δώρισε πάντα 2 BTS για τους προγραμματιστές υποστήριξης BitShares Μονάχου(bitshares munich)</string>
-<string name="hide_donations">Απόκρυψη δωρεών από το homescreen συνναλαγών</string>
+<string name="always_donate">Δώρισε 2 BTS για τους προγραμματιστές υποστήριξης BitShares Μονάχου(bitshares munich)</string>
+<string name="hide_donations">Απόκρυψη δωρεών από homescreen συνναλαγών</string>
 <string name="backup">BACKUP .bin</string>
 <string name="checkbox_donate_old">Δωρεά 2 BTS στους προγραμματιστές υποστήριξης Bitshares Μoνάχου</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
@@ -82,7 +82,7 @@
 <string name="account_name_should_be_longer">Το όνομα του λογαριασμού ενδείκνυται να  είναι μεγαλύτερο</string>
 <string name="account_name_already_exist">Το όνομα λογαριασμού %s υπάρχει ήδη</string>
 <string name="account_name_not_exist">Το όνομα λογαριασμού %s δεν υπάρχει</string>
-<string name="add_contact">Προσθέτω</string>
+<string name="add_contact">Πρόσθεσε</string>
 <string name="edit_contact">Επεξεργασία</string>
 <string name="empty_list">Η λίστα επαφών είναι κενή</string>
 <string name="account_name_validate">Το όνομα λογαριασμού είναι έγκυρο</string>
@@ -96,7 +96,7 @@
 <string name="please_enter_amount">Παρακαλώ εισάγετε ποσό</string>
 <string name="amount_should_be_greater_than_zero">Το ποσό θα πρέπει να υπερβαίνει το μηδέν</string>
 <string name="no_amount_requested">Δε ζητήθηκε ποσό</string>
-<string name="to_capital">προς</string>
+<string name="to_capital">Προς</string>
 <string name="from_capital">Από</string>
 <string name="memo_capital">Σημείωμα</string>
 <string name="empty_file_created">Δημιουργήθηκε κενό αρχείο</string>
@@ -121,7 +121,7 @@
 <string name="operations">λειτουργίες</string>
 <string name="trx_in_block">trx_in_block</string>
 <string name="symbol_capital">Σύμβολο</string>
-<string name="fee_capital">Τέλη</string>
+<string name="fee_capital">Προμήθεια</string>
 <string name="ok">Εντάξει</string>
 <string name="loading">Φόρτωση...</string>
 <string name="pay_to">Πληρώστε σε</string>
@@ -142,7 +142,7 @@
 <string name="pin_changed_successfully">PIN άλλαξε με επιτυχία</string>
 <string name="incorrect_old_pin">Λανθασμένο παλιό PIN</string>
 <string name="copy">Αντίγραφο</string>
-<string name="pin_verification">ΞΕΚΛΕΊΔΩΤΟΣ</string>
+<string name="pin_verification">ΞΕΚΛΕΊΔΩΤΟ</string>
 <string name="send_screen_name">Αποστολή</string>
 <string name="rcv_screen_name">Λήψη</string>
 <string name="request_amount_screen_name">Ποσό</string>
