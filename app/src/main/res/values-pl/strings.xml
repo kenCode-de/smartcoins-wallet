@@ -47,7 +47,7 @@
 <string name="please_enter_brainkey">Wpisz Brainkey</string>
 <string name="please_enter_correct_brainkey">Wpisz poprawny Brainkey</string>
 <string name="balances">Twoje środki</string>
-<string name="contacts">Adresy</string>
+<string name="contacts">Kontakty</string>
 <string name="receive_uppercase">ODBIERZ</string>
 <string name="send_uppercase">WYŚLIJ</string>
 <string name="transactions">Transakcje</string>
@@ -69,7 +69,7 @@
 <string name="secure_pin">ZMIEŃ PIN</string>
 <string name="export">Eksportuj</string>
 <string name="show_more">Pokaż więcej</string>
-<string name="share_text">Właśnie znalazłem ten wspaniały Smartcoins Portfel, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to! Twoje zdrowie</string>
+<string name="share_text">Właśnie odkryłem ten wspaniały Smartcoins Wallet, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to!</string>
 <string name="share_info">Zaproś jednego lub więcej znajomych do wypróbowania Smartcoins Wallet! Nie zapisujemy i nie zbieramy adresów email, dbamy o twoją prywatność.</string>
 <string name="share_subject">Znakomity portfel kryptowalut, natychmiastowe płatności!</string>
 <string name="share_heading">Powiadom przyjaciół</string>
@@ -163,7 +163,7 @@
     <string name="txt_folder_created">utworzonym folderze</string>
     <string name="upgrade_failed">Aktualizacja nie powiodła się</string>
     <string name="upgrading">Modernizacja ...</string>
-    <string name="import_new_account">ZAIMPORTUJ NOWE KONTO</string>
+    <string name="import_new_account">IMPORTUJ NOWE KONTO</string>
     <string name="upgrade_account">ULEPSZ KONTO</string>
     <string name="remove_account">USUŃ KONTO</string>
     <string name="txt_alertmsg">Czy na pewno chcesz usunąć to konto</string>
