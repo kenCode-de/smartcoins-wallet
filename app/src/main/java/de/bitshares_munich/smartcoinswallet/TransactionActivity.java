@@ -658,6 +658,12 @@ public class TransactionActivity implements IBalancesDelegate {
                 values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
             }
         }
+
+        if ( values.isEmpty() )
+        {
+            return;
+        }
+
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values.substring(0, values.length() - 1));

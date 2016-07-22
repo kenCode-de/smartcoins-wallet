@@ -222,8 +222,6 @@
     <string name="e_receipt">e_receipt</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
-    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
-    </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
     </string>
     <string name="database_indentifier">
