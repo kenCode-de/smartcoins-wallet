@@ -211,4 +211,9 @@
     <string name="unable_to_send_amount">金額を送信することができません。</string>
     <string name="unable_to_decode_QR">QRコードをデコードすることができません。</string>
 
+    <string name="loyalty_points">ロイヤルティポイント</string>
+    <string name="str_warning_only_available">警告！唯一の ％1$s の ％2$s が利用可能です</string>
+    <string name="str_balance_available">％1$s の ％2$s が利用可能</string>
+
+
 </resources>

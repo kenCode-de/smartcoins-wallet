@@ -209,4 +209,8 @@
     <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie dieses Konto entfernen möchten, </string>
     <string name="txt_alertmsg_la">Das Konto von diesem Wallet?</string>
 
+    <string name="loyalty_points">Treuepunkte</string>
+    <string name="str_warning_only_available">Warnung! Nur %1$s %2$s ist verfügbar</string>
+    <string name="str_balance_available">%1$s %2$s verfügbar</string>
+
 </resources>

@@ -209,4 +209,8 @@
     <string name="unable_to_send_amount">无法发送金额。</string>
     <string name="unable_to_decode_QR">无法解码的QR码。</string>
 
+    <string name="loyalty_points">忠诚度积分</string>
+    <string name="str_warning_only_available">警告！只有 ％1$s ％2$s 可用</string>
+    <string name="str_balance_available">％1$s ％2$s 可用</string>
+
 </resources>

@@ -209,4 +209,8 @@
     <string name="unable_to_send_amount">Nevar nosūtīt apmēru.</string>
     <string name="unable_to_decode_QR">Nevar atšifrēt QR kodu.</string>
 
+    <string name="loyalty_points">lojalitātes punkti</string>
+    <string name="str_warning_only_available">Uzmanību! Tikai %1$s %2$s ir pieejams</string>
+    <string name="str_balance_available">%1$s %2$s pieejams</string>
+
 </resources>

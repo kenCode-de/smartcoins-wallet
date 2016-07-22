@@ -4,6 +4,7 @@
             android:layout_height="match_parent"
             android:background="@color/whiteColor"
             android:fillViewport="true"
+    android:focusable="false"
             android:nestedScrollingEnabled="true">
 
 

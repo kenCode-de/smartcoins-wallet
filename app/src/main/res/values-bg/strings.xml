@@ -211,4 +211,9 @@
     <string name="unable_to_send_amount">Не може да се изпрати на сумата.</string>
     <string name="unable_to_decode_QR">Не може да се декодира кода QR.</string>
 
+    <string name="loyalty_points">точки за лоялност</string>
+    <string name="str_warning_only_available">Внимание! Само %1$s %2$s и е на разположение</string>
+    <string name="str_balance_available">%1$s %2$s и достъпно</string>
+
+
 </resources>

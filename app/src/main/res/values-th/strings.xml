@@ -210,4 +210,8 @@
     <string name="unable_to_send_amount">ไม่สามารถส่งยอดเงิน</string>
     <string name="unable_to_decode_QR">ไม่สามารถถอดรหัสรหัส QR</string>
 
+    <string name="loyalty_points">จุดความจงรักภักดี</string>
+    <string name="str_warning_only_available">คำเตือน! เพียง %1$s %2$s ใช้ได้</string>
+    <string name="str_balance_available">%1$s %2$s ใช้ได้</string>
+
 </resources>

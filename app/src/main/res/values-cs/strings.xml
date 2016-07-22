@@ -207,4 +207,8 @@
     <string name="unable_to_send_amount">Nelze odeslat částce.</string>
     <string name="unable_to_decode_QR">Nelze dekódovat QR kódu.</string>
 
+    <string name="loyalty_points">Věrnostní body</string>
+    <string name="str_warning_only_available">Varování! Pouze %1$s %2$s je k dispozici</string>
+    <string name="str_balance_available">%1$s %2$s dostupné</string>
+
 </resources>

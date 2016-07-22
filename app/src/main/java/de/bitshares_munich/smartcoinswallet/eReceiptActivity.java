@@ -261,14 +261,15 @@ public class eReceiptActivity extends BaseActivity implements IBalancesDelegate 
                         .execute(emailGravatarUrl);
 
                 SupportMethods.testing("alpha",imageEmail.toString(),"imageview");
+                AssetsSymbols assetsSymbols = new AssetsSymbols(context);
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
                 feeAmount = SupportMethods.ConvertValueintoPrecision(sym_preFee.get("precision"), Freemap.get("amount"));
-                feeSymbol = sym_preFee.get("symbol");
+                feeSymbol = assetsSymbols.updateString(sym_preFee.get("symbol"));
 
                 HashMap<String, String> sym_preAmount = SymbolsPrecisions.get(Amountmap.get("asset_id"));
                 amountAmount = SupportMethods.ConvertValueintoPrecision(sym_preAmount.get("precision"), Amountmap.get("amount"));
-                amountSymbol = sym_preAmount.get("symbol");
+                amountSymbol = assetsSymbols.updateString(sym_preAmount.get("symbol"));
 
 
                 TvId.setText(eReciptmap.get("id"));

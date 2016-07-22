@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,17 +97,21 @@ Context context;
         View v = me.inflate(R.layout.transactiondetailsview, null);
         TextView textView = (TextView) v.findViewById(R.id.transactiondetailsto);
         String tString = context.getText(R.string.to_capital) + ": " + transactiondetails.getDetailsTo();
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
         textView.setText(tString);
         tString = context.getText(R.string.from_capital) + ": " + transactiondetails.getDetailsFrom();
         TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
+        textView1.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
         textView1.setText(tString);
         if(transactiondetails.getDetailsMemo().equals("----")){
         TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
             textView2.setText("");
+            textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setVisibility(View.GONE);
         }else{
             tString = context.getText(R.string.memo_capital) + " : " + transactiondetails.getDetailsMemo();
             TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setText(tString);
         }
         return v;

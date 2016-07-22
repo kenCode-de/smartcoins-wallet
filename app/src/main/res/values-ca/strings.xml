@@ -209,4 +209,9 @@
     <string name="unable_to_send_amount">No es pot enviar la quantitat.</string>
     <string name="unable_to_decode_QR">No és possible descodificar el codi QR.</string>
 
+    <string name="loyalty_points">Punts de fidelitat</string>
+    <string name="str_warning_only_available">Atenció! Només 1 %1$s %2$s està disponible</string>
+    <string name="str_balance_available">%1$s %2$s disponibles</string>
+
+
 </resources>

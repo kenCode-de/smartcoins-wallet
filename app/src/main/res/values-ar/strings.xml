@@ -207,4 +207,8 @@
     <string name="unable_to_send_amount">غير قادر على إرسال المبلغ</string>
     <string name="unable_to_decode_QR">غير قادر على فك رمز الاستجابة السريعة</string>
 
+    <string name="loyalty_points">نقاط الولاء</string>
+    <string name="str_warning_only_available">تحذير! فقط٪ 1 $ s من٪ 2 $ s غير متاح</string>
+    <string name="str_balance_available">٪ 1 $ s من٪ 2 $ الصورة المتاحة</string>
+
 </resources>
