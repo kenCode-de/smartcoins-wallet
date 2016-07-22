@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string name="license">Άδεια</string>
+<resources>
+    <string name="license">Άδεια</string>
 <string name="send_capital">Στείλε</string>
 <string name="account_create_register_or_import">Δημιουργία Λογαριασμού / ΕΓΓΡΑΦΗ Ή ΕΙΣΑΓΩΓΗ</string>
 <string name="txt_account_name">Όνομα λογαριασμού</string>
