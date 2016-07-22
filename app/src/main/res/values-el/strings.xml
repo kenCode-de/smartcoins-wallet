@@ -51,7 +51,7 @@
 <string name="receive_uppercase">ΛΑΜΒΆΝΩ</string>
 <string name="send_uppercase">ΣΤΈΛΝΩ</string>
 <string name="transactions">Συναλλαγές</string>
-<string name="title_activity_setting">SettingActivity</string>
+<string name="title_activity_setting">Ρυθμίσεις δραστηριότητας τίτλου</string>
 <string name="backup_asset">Αντίγραφο ασφαλείας Κεφαλαίου</string>
 <string name="taxable_country">Χώρα φορολόγησης</string>
 <string name="date_time">Προβολή Ημερομηνιών και Χρόνου ως</string>
