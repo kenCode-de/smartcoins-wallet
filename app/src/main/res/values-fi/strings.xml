@@ -202,7 +202,6 @@
     <string name="preferred_lang">Preferred Language</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="pref_wallet_accounts">wallet_accounts</string>
-    <string name="pref_country">country</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
     <string name="pref_account_name">account_name</string>

@@ -45,6 +45,7 @@ import org.json.JSONObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -919,6 +920,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             requiredAmount = totalAmount;
             DecimalFormat df = new DecimalFormat("####.####");
             df.setRoundingMode(RoundingMode.CEILING);
+            df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
                 etAmount.setEnabled(false);
