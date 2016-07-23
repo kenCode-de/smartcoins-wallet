@@ -39,7 +39,7 @@
 <string name="please_enter_6_digit_pin_confirm">Per favore inserire il PIN della conferma a 6 cifre</string>
 <string name="mismatch_pin">Il PIN e sbagliato, per favore prova un altro volta </string>
 <string name="txt_brain_key"> Brainkey</string>
-<string name="txt_brain_key_info"> Questo Brainkey e importante. Stampa questo fuori, o scriverlo. Chiunque abbia accesso al vostro chiave di ripristino avrà accesso ai fondi all\'interno di questo portafoglio.</string>
+<string name="txt_brain_key_info"> Il Brainkey e importante. Per favore esegui il backup del Brainkey. Se puoi, stampa questo fuori, o scriverlo giu in un posto sicuro. Chiunque abbia accesso al vostro chiave (brainkey)avrà accesso ai tuoi fondi/soldi di questo portafoglio.</string>
 <string name="create_wallet">Creare il PORTAFOGLIO</string>
 <string name="cancel"> Cancellare</string>
 <string name="save">SALVARE</string>
@@ -105,7 +105,7 @@
 <string name="amount">Quantità/ valore/ammontare</string>
 <string name="message">Messaggio</string>
 <string name="pdf_generated_msg">PDF generato e salvato:</string>
-<string name="pdf_generated_msg_error">Impossibile generare pdf. Si prega di riprovare. Errore:</string>
+<string name="pdf_generated_msg_error">Impossibile generare pdf. Per favore riprovare. Errore:</string>
 <string name="raw_transactions">Transazione di prima:</string>
 <string name="extensions">estensioni</string>
 <string name="op_in_trx">op_in_trx</string>
@@ -154,7 +154,7 @@
     <string name="preferred_lang">Lingua preferita</string>
     <string name="got_it">Capito</string>
     <string name="upgrade_to_ltm">Aggiornamento a LTM</string>
-    <string formatted="false" name="help_message">Ottenere 80% Cashback sulle tasse! I membri Lifetime (LTM) ottenere l\'80% cashback su ogni tassa di transazione che pagano, e si qualificano per guadagnare reddito di rinvio da parte degli utenti che si registrano con o fanno riferimento alla rete. Un abbonamento vitalizio è ora sotto 20000 BTS!</string>
+    <string formatted="false" name="help_message">Ottenere 80% Cashback sulle tasse! I membri Lifetime (LTM) ottenere l\'80% dei contanti indietro su ogni tassa di transazione che pagano, e si qualificano per guadagnare reddito di rinvio da parte degli utenti che si registrano con o fanno riferimento alla rete. Un abbonamento vitalizio è ora sotto 20000 BTS!</string>
     <string name="txt_yes">sì</string>
     <string name="txt_no">No</string>
     <string name="txt_confirmation">Conferma</string>
@@ -164,8 +164,8 @@
     <string name="upgrade_failed">Aggiornamento fallito</string>
     <string name="upgrading">Aggiornamento ...</string>
     <string name="import_new_account">Importa una nuova conto</string>
-    <string name="upgrade_account">Rivaluti il CONTO </string>
-    <string name="remove_account">Levare il conto L\'ACCOUNT</string>
+    <string name="upgrade_account">Rivaluti il conto </string>
+    <string name="remove_account">Levare il conto </string>
     <string name="txt_back">Indietro</string>
     <string name="please_pay">Per favore paga</string>
     <string name="transfer_funds">il trasferimento di soldi</string>
@@ -202,7 +202,7 @@
     <string name="try_again">Riprova dopo 5 minuti</string>
     <string name="warning_msg_same_account">Non è possibile inviare importo sullo stesso conto</string>
 
-    <string name="please_backup_your_brainkey">Si prega di eseguire il backup brainkey</string>
+    <string name="please_backup_your_brainkey">Per favore eseguire il backup del brainkey</string>
     <string name="backup_brainkey_msg">Eseguire il backup dei file .bin un luogo sicuro o i fondi potrebbero essere persi!</string>
     <string name="unable_to_trade_bAssets">Impossibile scambiare la proprieta di backup</string>
     <string name="unable_to_send_amount">Impossibile mandare/inviare l\'importo.</string>
