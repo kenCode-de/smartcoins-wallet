@@ -272,10 +272,48 @@ public class Helper {
             } catch (Exception e) {
 
             }
-            Collections.sort(countries);
+        }
+        Collections.sort(countries);
+        return countries;
+    }
+
+    public static String getCountryCode(String spinnerText) {
+        String[] locales = Locale.getISOCountries();
+        ArrayList<String> countries = new ArrayList<>();
+        for (String countryCode : locales) {
+
+            Locale locale = new Locale("", countryCode);
+            try
+            {
+                Currency currency = Currency.getInstance(locale);
+                String proposedSpinnerText = locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+
+                if ( proposedSpinnerText.equals(spinnerText) )
+                {
+                    return countryCode;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        return "";
+    }
+
+    public static String getSpinnertextCountry(String countryCode) {
+
+        Locale locale = new Locale("", countryCode);
+        try
+        {
+            Currency currency = Currency.getInstance(locale);
+            return locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+        }
+        catch (Exception e)
+        {
 
         }
-        return countries;
+        return "";
     }
 
 

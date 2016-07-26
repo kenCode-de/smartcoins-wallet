@@ -258,22 +258,49 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    boolean dontCallCountryChangedOnStart = true;
+
     @SuppressLint("NewApi")
     private void populateDropDowns() {
 
+        spCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                if ( selectedItemView != null )
+                {
+                    if ( dontCallCountryChangedOnStart )
+                    {
+                        dontCallCountryChangedOnStart = false;
+                    }
+                    else {
+                        spCountryItemSelected(position);
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         ArrayList<String> countries = Helper.getCountriesArray();
-        ArrayAdapter<String> adapterCountry = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, countries);
+        ArrayAdapter<String> adapterCountry = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, countries);
         adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCountry.setAdapter(adapterCountry);
-        final AdapterView.OnItemSelectedListener listener = spCountry.getOnItemSelectedListener();
 
         Boolean isCountry = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_country));
-        if (isCountry) {
-            int indexCountry = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_country));
-            spCountry.setSelection(indexCountry);
-        } else {
-
+        if (isCountry)
+        {
+            String countryCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country));
+            String spinnertext = Helper.getSpinnertextCountry(countryCode);
+            int index = countries.indexOf(spinnertext);
+            spCountry.setSelection(index);
+        }
+        else
+        {
             Locale locale = Locale.GERMANY;
             final int index = countries.indexOf(locale.getDisplayCountry() + " (EUR)");
             if (index > 0) {
@@ -283,7 +310,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     }
                 });
             }
-
         }
 
         ArrayList<LangCode> langArray = new ArrayList<>();
@@ -532,12 +558,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    private void spCountryItemSelected(int position)
+    {
+        designMethod();
+        String countryCode = Helper.getCountryCode(spCountry.getSelectedItem().toString());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_country), countryCode);
+    }
+
+    /*
     @OnItemSelected(R.id.spCountry)
     void onItemSelectedCountry(int position) {
-        designMethod();
-        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
-        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_country), position);
+        //spCountryItemSelected(position);
     }
+    */
 
     @OnItemSelected(R.id.spTimeZones)
     void onItemSelectedTimeZone(int position) {

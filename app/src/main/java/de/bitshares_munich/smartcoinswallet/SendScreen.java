@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -437,7 +439,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Double loyaltyAmount = Double.parseDouble(text.toString());
         Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
         if (loyaltyAmount > loyaltyBalance) {
-             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+            tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
 
         } else {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
@@ -692,14 +694,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
 
-            /*
-            if ( !etBackupAsset.getText().toString().isEmpty() )
-            {
-                Double backupEnteredAMount = Double.parseDouble(etBackupAsset.getText().toString());
-               // Double backupAvailableAmount = backu
-            }
-            */
-
             setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
@@ -919,6 +913,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             requiredAmount = totalAmount;
             DecimalFormat df = new DecimalFormat("####.####");
             df.setRoundingMode(RoundingMode.CEILING);
+            df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
                 etAmount.setEnabled(false);
@@ -1068,22 +1063,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void findExchangeRate(int id)
-    {
-        if (application.webSocketG.isOpen()) {
-            int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-            String loyalOrBackupAssets = "";
-            if (id == 200) {
-                loyalOrBackupAssets = backupAssets.id;
-            } else if (id == 100) {
-                loyalOrBackupAssets = loyaltyAsset.id;
-            }
-            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_identifier + ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
-            application.webSocketG.send(params);
-        }
-
-    }
-
     Boolean checkLastIndex() {
         String name = etAmount.getText().toString();
         if (name.length() >
@@ -1110,7 +1089,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             {
                 return true;
             }
-            
+
             return false;
         }
         catch (Exception e)
@@ -1118,6 +1097,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             return true;
         }
     }
+
 
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
@@ -1160,7 +1140,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
         }
-        HashMap hm = new HashMap();
+        HashMap<String,String> hm = new HashMap<>();
         hm.put("method", "transfer");
         hm.put("wifkey", privateKey);
         hm.put("from_account", spinnerFrom.getSelectedItem().toString());
@@ -1385,13 +1365,103 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
+
+            //shayan Friday night
+            if ( !etBackupAsset.getText().toString().isEmpty() )
+            {
+                Double backupEnteredAmount = Double.parseDouble(etBackupAsset.getText().toString());
+                Double backAssAmount = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+                Double backupAvailableAmount = backAssAmount;
+                if(backupEnteredAmount > backupAvailableAmount)
+                    validAmount = false;
+            }
+            // shayan friday night
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public void getTrxBlock(String id) {
-        if (application.webSocketG.isOpen()) {
+    private void findExchangeRate(int id)
+    {
+        if (Application.isReady)
+        {
+            int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+            String loyalOrBackupAssets = "";
+            if (id == 200) {
+                loyalOrBackupAssets = backupAssets.id;
+            } else if (id == 100) {
+                loyalOrBackupAssets = loyaltyAsset.id;
+            }
+            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_identifier + ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
+            Application.webSocketG.send(params);
+        }
+    }
+
+    //********Get trx block****************Start
+    Handler reTryGetTrxBlock = new Handler();
+    int reTryTimeGetTrxBlock = 1000;
+    boolean callInProgressForGettingTrx = false;
+    boolean callReceivedForGettingTrx = true;
+
+    public void getTrxBlock(final String id)
+    {
+
+        reTryGetTrxBlock.removeCallbacksAndMessages(null);
+
+        final Runnable checkifRecieved = new Runnable() {
+            @Override
+            public void run() {
+                if ( callInProgressForGettingTrx && !callReceivedForGettingTrx) // if balances are not returned in one second
+                {
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        getTrxBlock(id);
+                    }
+                    else
+                    {
+                        getTrxBlock(id);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable initiateTransactions = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( Application.isReady )
+                {
+                    String selectedAccountId = "";
+                    String selectedAccount = spinnerFrom.getSelectedItem().toString();
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        AccountDetails accountDetail = accountDetails.get(i);
+                        if (accountDetail.account_name.equals(selectedAccount)) {
+                            selectedAccountId = accountDetail.account_id;
+                        }
+                    }
+                    int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+                    String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
+                    Application.webSocketG.send(params);
+
+                    callInProgressForGettingTrx = true;
+                    callReceivedForGettingTrx = false;
+                    reTryGetTrxBlock.postDelayed(checkifRecieved, reTryTimeGetTrxBlock);
+                }
+                else
+                {
+                    getTrxBlock(id);
+                }
+            }
+        };
+
+        reTryGetTrxBlock.postDelayed(initiateTransactions,0);
+
+        /*
+        if (Application.isReady)
+        {
             String selectedAccountId = "";
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             for (int i = 0; i < accountDetails.size(); i++) {
@@ -1402,47 +1472,124 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
             int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
             String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
-            application.webSocketG.send(params);
+            Application.webSocketG.send(params);
+        }
+        */
+    }
+
+
+
+    private void fetchTrxBlockAndUpdateServer(final JSONArray jsonArray)
+    {
+        try
+        {
+            final Runnable reTry = new Runnable() {
+                @Override
+                public void run() {
+                    fetchTrxBlockAndUpdateServer(jsonArray);
+                }
+            };
+
+            for (int i = 0; i < 2; i++)
+            {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                JSONArray opArray = (JSONArray) jsonObject.get("op");
+                JSONObject operation = (JSONObject) opArray.get(1);
+
+                if (operation.get("to").toString().equals(receiverID))
+                {
+                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                    IWebService service = sg.getService(IWebService.class);
+
+                    if ( jsonObject.has("block_num") && jsonObject.has("trx_in_block") )
+                    {
+
+                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+                        postingService.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Response<Void> response) {
+                                if (response.isSuccess()) {
+
+                                } else {
+                                    reTryGetTrxBlock.postDelayed(reTry, 100);
+                                    //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                reTryGetTrxBlock.postDelayed(reTry, 100);
+                            }
+                        });
+                        break;
+                    }
+                    else
+                    {
+                        getTrxBlock("160");
+                    }
+                }
+                else
+                {
+                    getTrxBlock("160");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            //getTrxBlock("160");
         }
     }
+
+    //********Get trx block****************End
 
     @Override
     public void relativeHistoryCallback(JSONObject msg) {
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
             boolean found = false;
-            if (msg.get("id").equals(160)) {
-                for (int i = 0; i < 2; i++) {
-                    if (!found) {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        JSONArray opArray = (JSONArray) jsonObject.get("op");
-                        JSONObject operation = (JSONObject) opArray.get(1);
-                        if (operation.get("to").toString().equals(receiverID)) {
-                            found = true;
-                            ServiceGenerator sg = new ServiceGenerator(callbackURL);
-                            IWebService service = sg.getService(IWebService.class);
-                            final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
-                            postingService.enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Response<Void> response) {
-                                    if (response.isSuccess()) {
+            if (msg.get("id").equals(160))
+            {
+                callInProgressForGettingTrx = true;
+                callReceivedForGettingTrx = false;
+                reTryGetTrxBlock.removeCallbacksAndMessages(null);
 
-                                    } else {
-//                            Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-                                    }
+                fetchTrxBlockAndUpdateServer(jsonArray);
+
+                /*
+                for (int i = 0; i < 2; i++)
+                {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    JSONArray opArray = (JSONArray) jsonObject.get("op");
+                    JSONObject operation = (JSONObject) opArray.get(1);
+                    if (operation.get("to").toString().equals(receiverID))
+                    {
+                        found = true;
+                        ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                        IWebService service = sg.getService(IWebService.class);
+                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+                        postingService.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Response<Void> response)
+                            {
+                                if (response.isSuccess())
+                                {
 
                                 }
-
-                                @Override
-                                public void onFailure(Throwable t) {
-//                if (progressDialog.isShowing())
-//                    progressDialog.dismiss();
+                                else
+                                {
+                                //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                            break;
-                        }
+
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                            }
+                        });
+                        break;
                     }
                 }
+                */
             }
             if (msg.get("id").equals(161)) {
                 for (int i = 0; i < 2; i++) {
@@ -1495,7 +1642,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         sellAmount = Double.parseDouble(etBackupAsset.getText().toString());
         sellAmount = sellAmount + (sellAmount * 0.5 / 100);
         Double buyAmount = sellAmount * backAssetRate;
-        HashMap hm = new HashMap();
+        HashMap<String,String> hm = new HashMap<>();
         hm.put("method", "trade");
         hm.put("wifkey", privateKey);
         hm.put("account", spinnerFrom.getSelectedItem().toString());
@@ -1588,7 +1735,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
+                if (Application.webSocketG != null)
+                {
                     if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
@@ -1787,7 +1935,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(true);
-                    ds.setColor(color);
+                ds.setColor(color);
             }
         };
         ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
