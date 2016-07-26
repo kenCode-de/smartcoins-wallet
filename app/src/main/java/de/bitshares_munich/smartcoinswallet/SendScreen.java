@@ -283,8 +283,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
-        if (!text.toString().equals(text.toString().trim())) {
-            etReceiverAccount.setText(text.toString().trim());
+
+        if(text!=null) {
+            if (!text.toString().equals(text.toString().trim())) {
+                etReceiverAccount.setText(text.toString().trim());
+            }
         }
 
         if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
@@ -1193,7 +1196,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.unable_to_send_amount).toLowerCase()+".." , Toast.LENGTH_SHORT).show();
                 }
                 hideDialog();
             }
