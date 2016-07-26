@@ -181,11 +181,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-  //  private GoogleApiClient client;
 
     private void startupTasks ()
     {
@@ -276,8 +271,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 100);
             }
         }, 100);
-
-        //  client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
     }
 
@@ -441,7 +434,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Double loyaltyAmount = Double.parseDouble(text.toString());
         Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
         if (loyaltyAmount > loyaltyBalance) {
-             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+            tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
 
         } else {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
@@ -678,12 +671,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                     tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 }
+
+
+
+
             } else {
                 etBackupAsset.setText(""); //shayan
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
+
+             //fawaz bhai
 
             setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
@@ -1041,7 +1040,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void findExchangeRate(int id) {
+    private void findExchangeRate(int id)
+    {
         if (application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
             String loyalOrBackupAssets = "";
@@ -1082,7 +1082,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             {
                 return true;
             }
-            
+
             return false;
         }
         catch (Exception e)
@@ -1303,7 +1303,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
             if ((enteredAmount > selectedBalance) | (enteredAmount < 0)) {
                 selectedAmount = String.valueOf(selectedBalance);
-                if ((backupAssetsBalance * backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) * backAssetRate) > 0) {
+                if ((backupAssetsBalance / backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
                     backupAssetAmount = String.format(Locale.ENGLISH, "%.4f", ((enteredAmount - selectedBalance) / backAssetRate));
 
                 }
@@ -1339,6 +1339,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
+
+            //shayan Friday night
+            if ( !etBackupAsset.getText().toString().isEmpty() )
+            {
+                Double backupEnteredAmount = Double.parseDouble(etBackupAsset.getText().toString());
+                Double backAssAmount = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+                Double backupAvailableAmount = backAssAmount;
+                if(backupEnteredAmount > backupAvailableAmount)
+                    validAmount = false;
+            }
+            // shayan friday night
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -1714,46 +1726,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         dialog.show();
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        // ATTENTION: This was auto-generated to implement the App Indexing API.
-//        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        client.connect();
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "SendScreen Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app URL is correct.
-//                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.start(client, viewAction);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//
-//        // ATTENTION: This was auto-generated to implement the App Indexing API.
-//        // See https://g.co/AppIndexing/AndroidStudio for more information.
-//        Action viewAction = Action.newAction(
-//                Action.TYPE_VIEW, // TODO: choose an action type.
-//                "SendScreen Page", // TODO: Define a title for the content shown.
-//                // TODO: If you have web page content that matches this app activity's content,
-//                // make sure this auto-generated web page URL is correct.
-//                // Otherwise, set the URL to null.
-//                Uri.parse("http://host/path"),
-//                // TODO: Make sure this auto-generated app URL is correct.
-//                Uri.parse("android-app://de.bitshares_munich.smartcoinswallet/http/host/path")
-//        );
-//        AppIndex.AppIndexApi.end(client, viewAction);
-//        client.disconnect();
-//    }
-
     @Override
     public void isClicked(String s){
         etReceiverAccount.setText(s);
@@ -1778,7 +1750,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(true);
-                    ds.setColor(color);
+                ds.setColor(color);
             }
         };
         ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
