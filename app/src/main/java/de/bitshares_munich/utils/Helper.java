@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -271,10 +272,48 @@ public class Helper {
             } catch (Exception e) {
 
             }
-            Collections.sort(countries);
+        }
+        Collections.sort(countries);
+        return countries;
+    }
+
+    public static String getCountryCode(String spinnerText) {
+        String[] locales = Locale.getISOCountries();
+        ArrayList<String> countries = new ArrayList<>();
+        for (String countryCode : locales) {
+
+            Locale locale = new Locale("", countryCode);
+            try
+            {
+                Currency currency = Currency.getInstance(locale);
+                String proposedSpinnerText = locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+
+                if ( proposedSpinnerText.equals(spinnerText) )
+                {
+                    return countryCode;
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        return "";
+    }
+
+    public static String getSpinnertextCountry(String countryCode) {
+
+        Locale locale = new Locale("", countryCode);
+        try
+        {
+            Currency currency = Currency.getInstance(locale);
+            return locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+        }
+        catch (Exception e)
+        {
 
         }
-        return countries;
+        return "";
     }
 
 
@@ -414,8 +453,28 @@ public class Helper {
         return valueInteger;
     }
 
-    public static boolean isRTL(Locale locale)
+    public static boolean isRTL(Locale locale, String symbol)
     {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+
+
+        // We then tell our formatter to use this symbol.
+        DecimalFormatSymbols decimalFormatSymbols = ((java.text.DecimalFormat) currencyFormat).getDecimalFormatSymbols();
+        decimalFormatSymbols.setCurrencySymbol(symbol);
+        ((java.text.DecimalFormat) currencyFormat).setDecimalFormatSymbols(decimalFormatSymbols);
+
+        String formattedtext = currencyFormat.format(100.0);
+
+        if ( formattedtext.startsWith(symbol) )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+        /*
         final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));
 
         if ( (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT) ||
@@ -427,6 +486,7 @@ public class Helper {
         {
             return false;
         }
+        */
     }
 
 }

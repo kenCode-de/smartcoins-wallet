@@ -208,4 +208,9 @@
     <string name="unable_to_send_amount">Det går inte att skicka beloppet.</string>
     <string name="unable_to_decode_QR">Det går inte att avkoda QR-kod.</string>
 
+    <string name="loyalty_points">lojalitets~~POS=TRUNC</string>
+    <string name="str_warning_only_available">Varning! Endast %1$s %2$s är tillgänglig</string>
+    <string name="str_balance_available">%1$s %2$s tillgängliga</string>
+
+
 </resources>

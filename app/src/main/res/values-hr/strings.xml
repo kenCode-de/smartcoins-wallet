@@ -210,4 +210,10 @@
     <string name="unable_to_send_amount">Ne mogu poslati visine.</string>
     <string name="unable_to_decode_QR">Nije moguće dekodirati QR koda.</string>
 
+
+    <string name="loyalty_points">loyalty Points</string>
+    <string name="str_warning_only_available">Upozorenje! Samo %1$s %2$s je dostupan</string>
+    <string name="str_balance_available">%1$s %2$s dostupni</string>
+
+
 </resources>

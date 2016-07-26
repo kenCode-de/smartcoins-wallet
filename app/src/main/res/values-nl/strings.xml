@@ -208,4 +208,8 @@
     <string name="unable_to_send_amount">Kan het bedrag te sturen.</string>
     <string name="unable_to_decode_QR">Niet in staat om de QR-code te decoderen.</string>
 
+    <string name="loyalty_points">spaarpunten</string>
+    <string name="str_warning_only_available">Waarschuwing! Slechts %1$s %2$s is beschikbaar</string>
+    <string name="str_balance_available">%1$s %2$s beschikbaar</string>
+
 </resources>

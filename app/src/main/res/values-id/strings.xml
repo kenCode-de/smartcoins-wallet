@@ -207,4 +207,8 @@
     <string name="unable_to_send_amount">Tidak dapat mengirim Jumlah tersebut.</string>
     <string name="unable_to_decode_QR">Tidak dapat decode QR code.</string>
 
+    <string name="loyalty_points">loyalitas Poin</string>
+    <string name="str_warning_only_available">PERINGATAN! Hanya %1$s %2$s tersedia</string>
+    <string name="str_balance_available">%1$s %2$s tersedia</string>
+
 </resources>

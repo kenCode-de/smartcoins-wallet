@@ -210,4 +210,8 @@
     <string name="unable_to_send_amount">Ne more poslati Znesek.</string>
     <string name="unable_to_decode_QR">Ne morejo dekodirati QR kodo.</string>
 
+    <string name="loyalty_points">Točke zvestobe</string>
+    <string name="str_warning_only_available">Opozorilo! Šele %1$s %2$s je na voljo</string>
+    <string name="str_balance_available">%1$s %2$s na voljo</string>
+
 </resources>

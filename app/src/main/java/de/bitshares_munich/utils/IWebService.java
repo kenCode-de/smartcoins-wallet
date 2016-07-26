@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
+import de.bitshares_munich.models.CCAssets;
 import de.bitshares_munich.models.DecodeMemo;
 
 import de.bitshares_munich.models.GenerateKeys;
@@ -33,6 +34,10 @@ import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 public interface IWebService {
+
+    @Headers({"Content-Type: application/x-www-form-urlencoded"})
+    @GET("/assets/")
+    Call<CCAssets> getAssets();
 
     @Headers({"Content-Type: application/json"})
     @POST("/")

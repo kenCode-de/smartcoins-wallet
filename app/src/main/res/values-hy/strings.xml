@@ -211,4 +211,9 @@
     <string name="unable_to_send_amount">Անհնար է ուղարկել գումարը:</string>
     <string name="unable_to_decode_QR">Անհնար է վերծանել է QR կոդը.</string>
 
+    <string name="loyalty_points">հավատարմություն միավոր</string>
+    <string name="str_warning_only_available">Զգուշացում! ՄԻԱՅՆ %1$s %2$s հասանելի է</string>
+    <string name="str_balance_available">%1$s %2$s հասանելի</string>
+
+
 </resources>

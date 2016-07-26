@@ -199,6 +199,8 @@
 
 
     // Not to be localized
+    <string name="pref_desired_smart_coin">desired_smart_coin</string>
+    <string name="pref_uia_coin">uia_coin</string>
     <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
@@ -208,7 +210,7 @@
     <string name="preferred_lang">Preferred Language</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="pref_wallet_accounts">wallet_accounts</string>
-    <string name="pref_country">country</string>
+    <string name="pref_country">country_iso_code</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
     <string name="pref_account_name">account_name</string>
@@ -228,8 +230,7 @@
     <string name="e_receipt">e_receipt</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
-    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
-    </string>
+    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}</string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
     </string>
     <string name="database_indentifier">
@@ -338,5 +339,6 @@
     <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
     <string name="pref_backup_bin_exist">backup_bin_exist</string>
 
+    <string name="loyalty_points">Loyalty Points</string>
 
 </resources>

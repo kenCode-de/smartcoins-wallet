@@ -208,4 +208,8 @@
     <string name="unable_to_send_amount">Ei saa saata summa.</string>
     <string name="unable_to_decode_QR">Ei õnnestu dekodeerida QR-koodi.</string>
 
+    <string name="loyalty_points">lojaalsuspunkte</string>
+    <string name="str_warning_only_available">Hoiatus! Ainult %1$s %2$s on olemas</string>
+    <string name="str_balance_available">%1$s %2$s saadaval</string>
+
 </resources>

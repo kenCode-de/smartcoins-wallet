@@ -210,4 +210,8 @@
     <string name="unable_to_send_amount">Није могуће послати на износ.</string>
     <string name="unable_to_decode_QR">Није могуће да декодира КР код.</string>
 
+    <string name="loyalty_points">Поени за Лојалност</string>
+    <string name="str_warning_only_available">Упозорење! Само %1$s %2$s је доступан</string>
+    <string name="str_balance_available">%1$s %2$s доступан</string>
+
 </resources>

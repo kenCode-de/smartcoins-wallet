@@ -209,4 +209,9 @@
     <string name="unable_to_send_amount">Nem sikerült elküldeni az összeget.</string>
     <string name="unable_to_decode_QR">Nem lehet dekódolni a QR-kódot.</string>
 
+    <string name="loyalty_points">hűségpontok</string>
+    <string name="str_warning_only_available">Figyelem! Csak %1$s %2$s elérhető</string>
+    <string name="str_balance_available">%1$s %2$s elérhető</string>
+
+
 </resources>

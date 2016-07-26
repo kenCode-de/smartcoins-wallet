@@ -209,4 +209,9 @@
     <string name="unable_to_send_amount">U nemogućnosti da pošalje visini.</string>
     <string name="unable_to_decode_QR">U nemogućnosti da dekodira QR koda.</string>
 
+    <string name="loyalty_points">Loyalty Points</string>
+    <string name="str_warning_only_available">Upozorenje! Samo %1$s %2$s je dostupan</string>
+    <string name="str_balance_available">%1$s %2$s dostupan</string>
+
+
 </resources>

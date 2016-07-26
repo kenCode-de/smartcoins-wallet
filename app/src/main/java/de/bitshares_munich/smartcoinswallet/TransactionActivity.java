@@ -658,10 +658,17 @@ public class TransactionActivity implements IBalancesDelegate {
                 values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
             }
         }
+
+        if ( values.isEmpty() )
+        {
+            return;
+        }
+
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "equivalent_component");
+        if(values.length()>1)
         hashMap.put("values", values.substring(0, values.length() - 1));
-
+        else hashMap.put("values", "");
         ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);

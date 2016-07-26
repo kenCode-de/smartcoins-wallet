@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.premnirmal.textcounter.CounterView;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +60,7 @@ import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -72,11 +74,15 @@ import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
+import de.bitshares_munich.models.CCAssets;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.LtmFee;
+import de.bitshares_munich.models.Smartcoin;
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.Uia;
 import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
+import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -154,7 +160,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     LinearLayout whiteSpaceAfterBalances;
 
     private SortableTableView<TransactionDetails> tableView;
-    static List<TransactionDetails> myTransactions;
+    static ArrayList<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
 
@@ -215,7 +221,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
         tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
-
+        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+        assetsSymbols.getAssetsFromServer();
+       // getAssetsFromServer();
         final Handler handler = new Handler();
         final Runnable updateTask = new Runnable() {
             @Override
@@ -617,8 +625,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
-        if (count <= 0) BalanceAssetsLoad(sym, pre, am, onStartUp);
-        if (count > 0) BalanceAssetsUpdate(sym, pre, am);
+        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+        ArrayList<String> symbols = assetsSymbols.updatedList(sym);
+
+
+        if (count <= 0) BalanceAssetsLoad(symbols, pre, am, onStartUp);
+        if (count > 0) BalanceAssetsUpdate(symbols, pre, am);
 
         /*
         Handler zeroBalanceHandler = new Handler();
@@ -641,6 +653,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
     {
+
+        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
@@ -739,6 +753,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     }
                                     String asset = tvAsset.getText().toString();
                                     String amount = tvAmount.getText().toString();
+                                    asset = asset.replace("bit","");
                                     //amount = android.text.Html.fromHtml(amount).toString();
 
                                     if (amount.isEmpty())
@@ -755,7 +770,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             double d = convertLocalizeStringToDouble(amount);
                                             Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
-                                            if ( Helper.isRTL(locale) )
+                                            if ( Helper.isRTL(locale,currency.getSymbol()) )
                                             {
                                                 tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
                                             }
@@ -915,6 +930,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         String asset = tvAsset.getText().toString();
                                         String amount = tvAmount.getText().toString();
+                                        asset = asset.replace("bit","");
 
                                         if (!amount.isEmpty() && hm.containsKey(asset)) {
                                             Currency currency = Currency.getInstance(faitCurrency);
@@ -923,7 +939,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 double d = convertLocalizeStringToDouble(amount);
                                                 Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
-                                                if (Helper.isRTL(locale)) {
+                                                if (Helper.isRTL(locale,currency.getSymbol())) {
                                                     tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
                                                 } else {
                                                     tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
@@ -1006,6 +1022,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
 
+        final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+
+
         updateBalanceArrays( sym,pre,am );
 
         sym.clear();
@@ -1051,7 +1070,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                             float b = powerInFloat(pre.get(l), am.get(i));
-                            textView1.setText(String.format(locale, "%.4f", b));
+
+                            if(assetsSymbols.isUiaSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.4f", b));
+                            else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.2f", b));
                         }
 
                         if (counter == 2)
@@ -1061,7 +1082,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             String r = returnFromPower(pre.get(l), am.get(l));
 
-                            textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
+                            if(assetsSymbols.isUiaSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.4f",Float.parseFloat(r)));
+                            else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
+
                             llBalances.addView(customView);
                         }
 
@@ -1234,8 +1257,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             }
 
                             // update first balance amount
+                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                            if(assetsSymbols.isUiaSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
+                            else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
                             tvSymOne.setText(symbol);
-                            tvAmOne.setText(amount);
+                          //  tvAmOne.setText(amount);
                             tvfaitOne.setText(fait);
 
                             if (fait.isEmpty())
@@ -1286,8 +1312,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 }
                             }
 
+                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                            if(assetsSymbols.isUiaSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
+                            else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+
                             tvSymtwo.setText(symbol);
-                            tvAmtwo.setText(amount);
+                          //  tvAmtwo.setText(amount);
                             tvFaitTwo.setText(fait);
 
                             if (fait.isEmpty())
@@ -1342,6 +1372,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 try
                 {
                     // remove zero balances not in previously loaded balances
+                    List<Integer> indexesToRemove = new ArrayList<>();
+
                     for( int i = 0 ; i < sym.size() ; i++ )
                     {
                         Long _amount = Long.parseLong(am.get(i));
@@ -1352,9 +1384,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             if ( !matchFound )
                             {
+                                indexesToRemove.add(i);
                                 sym.remove(i);
                                 am.remove(i);
                                 pre.remove(i);
+
+                                sym.trimToSize();
+                                am.trimToSize();
+                                pre.trimToSize();
+
+                                i--;
                             }
                         }
                     }
@@ -1402,6 +1441,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 Log.d("Balances Update", "symbol : " + symbol);
 
                                 String amount = "";
+
+
                                 if (pre.size() > m && am.size() > m) {
                                     amount = returnFromPower(pre.get(m), am.get(m));
                                 }
@@ -1968,7 +2009,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         tableView.setColumnComparator(1, new TransactionsSendRecieveComparator());
         tableView.setColumnComparator(3, new TransactionsAmountComparator());
 
-        tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+        //tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
 
         /*
         TableDataAdapter myAdapter = tableView.getDataAdapter();
@@ -2041,7 +2082,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     private List<TransactionDetails> getTransactionsFromSharedPref() {
-        List<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions), TransactionDetails.class);
+        ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions), TransactionDetails.class);
+
+        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+        assetsSymbols.updatedTransactionDetails(mySavedList);
 
         for (TransactionDetails td : mySavedList) {
             td.updateContext(getContext());
@@ -2077,7 +2121,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         myTransactions.clear();
                         isSavedTransactions = false;
                         myTransactions = new ArrayList<>();
-                        updateSortTableView(tableView, myTransactions);
+                    //    updateSortTableView(tableView, myTransactions);
                     }
 
                    if (number_of_transactions_in_queue == 0) {
@@ -2092,6 +2136,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
 
                     myTransactions.addAll(transactionDetails);
+
+                    AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                    myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
+
                     tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
                     progressBar.setVisibility(View.GONE);
                     tableViewparent.setVisibility(View.VISIBLE);
@@ -2669,6 +2717,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 //            }
 //        }, 100);
 //    }
+
 
 
 }
