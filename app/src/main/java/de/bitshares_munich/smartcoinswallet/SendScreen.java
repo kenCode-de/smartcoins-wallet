@@ -277,8 +277,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         }, 100);
 
-
-        //getTrxBlock("160");
     }
 
     void init() {
@@ -441,7 +439,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Double loyaltyAmount = Double.parseDouble(text.toString());
         Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
         if (loyaltyAmount > loyaltyBalance) {
-             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+            tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
 
         } else {
             String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
@@ -695,14 +693,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
             }
-
-            /*
-            if ( !etBackupAsset.getText().toString().isEmpty() )
-            {
-                Double backupEnteredAMount = Double.parseDouble(etBackupAsset.getText().toString());
-               // Double backupAvailableAmount = backu
-            }
-            */
 
             setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
@@ -1111,8 +1101,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-
-
     Boolean checkLastIndex() {
         String name = etAmount.getText().toString();
         if (name.length() >
@@ -1139,7 +1127,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             {
                 return true;
             }
-            
+
             return false;
         }
         catch (Exception e)
@@ -1147,6 +1135,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             return true;
         }
     }
+
 
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
@@ -1416,6 +1405,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             }
             tvTotalStatus.setVisibility(View.VISIBLE);
+
+            //shayan Friday night
+            if ( !etBackupAsset.getText().toString().isEmpty() )
+            {
+                Double backupEnteredAmount = Double.parseDouble(etBackupAsset.getText().toString());
+                Double backAssAmount = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+                Double backupAvailableAmount = backAssAmount;
+                if(backupEnteredAmount > backupAvailableAmount)
+                    validAmount = false;
+            }
+            // shayan friday night
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -1994,7 +1995,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(true);
-                    ds.setColor(color);
+                ds.setColor(color);
             }
         };
         ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
