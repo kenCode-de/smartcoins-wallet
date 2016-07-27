@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import cz.msebera.android.httpclient.Header;
@@ -50,6 +51,7 @@ import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,6 +60,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/20/16.
  */
 public class TransactionActivity implements IBalancesDelegate {
+
     Context context;
     AssetDelegate assetDelegate;
     Application application = new Application();
@@ -87,6 +90,8 @@ public class TransactionActivity implements IBalancesDelegate {
     HashMap<String,HashMap<String,String>> Symbols_Precisions = new HashMap<>();
     String wifkey;
 
+    webSocketCallHelper myWebSocketHelper;
+
     public TransactionActivity(Context c,final String account_id , AssetDelegate instance , String wif_key ,final int number_of_transactions_loaded,final int numberOfTransactionsToLoad)
     {
         context = c;
@@ -95,6 +100,8 @@ public class TransactionActivity implements IBalancesDelegate {
         application.registerBalancesDelegateTransaction(this);
         accountid = account_id;
         timestamp = new HashMap<>();
+
+        myWebSocketHelper = new webSocketCallHelper(c);
 
         try
         {
@@ -109,284 +116,50 @@ public class TransactionActivity implements IBalancesDelegate {
         {
             get_relative_account_history(account_id, "8", number_of_transactions_loaded,numberOfTransactionsToLoad );
         }
-
     }
 
-    final int time = 10000;
-
-    final Handler handlerT = new Handler(Looper.getMainLooper());
-    final Handler handlerTup = new Handler(Looper.getMainLooper());
-    Boolean sentCallForTransactions = false;
-    Boolean rcvdCallForTransactions = false;
     void get_relative_account_history(final String account_id, final String id,final int n, final int numberOfTransactionsToLoad)
     {
-
-        final Runnable updateTask2 = new Runnable() {
-            @Override
-            public void run() {
-                if ( sentCallForTransactions && !rcvdCallForTransactions) // if balances are not returned in one second
-                {
-                    if ( Application.isReady )
-                    {
-                        Application.webSocketG.close();
-                        get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
-                    }
-                    else
-                    {
-                        get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
-                    }
-                }
-            }
-        };
-
-
-        final Runnable updateTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( Application.isReady )
-                {
-                    int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":["+history_id+",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
-                    Application.webSocketG.send(getDetails);
-                    sentCallForTransactions = true;
-                    handlerTup.removeCallbacks(updateTask2);
-                    handlerTup.postDelayed(updateTask2, time);
-                }
-                else
-                {
-                    get_relative_account_history(account_id,id,n,numberOfTransactionsToLoad);
-                }
-            }
-        };
-
-
-
-        final Handler stopHandler = new Handler(Looper.getMainLooper());
-        final Runnable stopTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( rcvdCallForTransactions ){
-                    rcvdCallForTransactions = false;
-                    sentCallForTransactions = false;
-                    handlerT.removeCallbacks(updateTask);
-                    handlerTup.removeCallbacks(updateTask2);
-                }
-
-            }
-        };
-
-        stopHandler.postDelayed(stopTask,100);
-        handlerT.removeCallbacks(updateTask);
-        handlerT.postDelayed(updateTask, 100);
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_relative_account_history\",[\""+account_id+"\",0," + Integer.toString(numberOfTransactionsToLoad) + ","+n+"]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.history);
     }
 
-    final Handler handlerTimes = new Handler(Looper.getMainLooper());
-    final Handler handlerTimesUpdate = new Handler(Looper.getMainLooper());
-    Boolean rcvdCallForTimes = false;
-    Boolean sentCallForTimes = false;
-    void get_Time(final String block_num,final String id){
-            final Runnable updateTask2 = new Runnable() {
-                @Override
-                public void run() {
-                    if ( sentCallForTimes && !rcvdCallForTimes) // if balances are not returned in one second
-                    {
-                        if ( Application.isReady )
-                        {
-                            Application.webSocketG.close();
-                            get_Time(block_num, id);                        }
-                        else
-                        {
-                            get_Time(block_num, id);
-                        }
-                    }
-                }
-            };
-
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run()
-                {
-                    if ( Application.isReady )
-                    {
-                        int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-                        Application.webSocketG.send(getDetails);
-                        sentCallForTimes = true;
-                        handlerTimesUpdate.removeCallbacks(updateTask2);
-                        handlerTimesUpdate.postDelayed(updateTask2, time);
-                    }
-                    else
-                    {
-                        get_Time(block_num, id);
-                    }
-                }
-            };
-
-        handlerTimes.removeCallbacks(updateTask);
-        handlerTimes.postDelayed(updateTask, 100);
-
-
-        final Handler stopHandler = new Handler(Looper.getMainLooper());
-        final Runnable stopTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( rcvdCallForTimes ){
-                    rcvdCallForTimes = false;
-                    sentCallForTimes = false;
-                    handlerTimes.removeCallbacks(updateTask);
-                    handlerTimesUpdate.removeCallbacks(updateTask2);
-                }
-
-            }
-        };
-        stopHandler.postDelayed(stopTask,100);
+    void get_Time(final String block_num,final String id)
+    {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_block_header\",[ " + block_num + "]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
-
-    final Handler handlerNames = new Handler(Looper.getMainLooper());
-    final Handler handlerNamesUpdates = new Handler(Looper.getMainLooper());
-    Boolean rcvdCallForNames = false;
-    Boolean sentCallForNames = false;
-    void get_names(final String name_id, final String id){
-        final Runnable updateTask2 = new Runnable() {
-            @Override
-            public void run() {
-                if ( sentCallForNames && !rcvdCallForNames) // if balances are not returned in one second
-                {
-                    if ( Application.isReady )
-                    {
-                        Application.webSocketG.close();
-                        get_names(name_id, id);                        }
-                    else
-                    {
-                        get_names(name_id, id);
-                    }
-                }
-            }
-        };
-
-
-        final Runnable updateTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( Application.isReady )
-                {
-                    int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-                    Application.webSocketG.send(getDetails);
-                    sentCallForNames = true;
-                    handlerNamesUpdates.removeCallbacks(updateTask2);
-                    handlerNamesUpdates.postDelayed(updateTask2, time);
-                }
-                else
-                {
-                    get_names(name_id, id);
-                }
-            }
-        };
-
-        handlerNames.removeCallbacks(updateTask);
-        handlerNames.postDelayed(updateTask, 100);
-
-
-        final Handler stopHandler = new Handler(Looper.getMainLooper());
-        final Runnable stopTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( rcvdCallForNames ){
-                    rcvdCallForNames = false;
-                    sentCallForNames = false;
-                    handlerNames.removeCallbacks(updateTask);
-                    handlerNamesUpdates.removeCallbacks(updateTask2);
-                }
-
-            }
-        };
-        stopHandler.postDelayed(stopTask,100);
+    void get_names(final String name_id, final String id)
+    {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
-    final Handler handlerAssets = new Handler(Looper.getMainLooper());
-    final Handler handlerAssetsUpdate = new Handler(Looper.getMainLooper());
-    Boolean rcvdCallForAssets = false;
-    Boolean sentCallForAssets = false;
-    void get_asset(final String asset, final String id) {
-        final Runnable updateTask2 = new Runnable() {
-            @Override
-            public void run() {
-                if ( sentCallForAssets && !rcvdCallForAssets) // if balances are not returned in one second
-                {
-                    if ( Application.isReady )
-                    {
-                        Application.webSocketG.close();
-                        get_asset(asset, id);
-                    }
-                    else
-                    {
-                        get_asset(asset, id);
-                    }
-                }
-            }
-        };
-
-
-        final Runnable updateTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( Application.isReady )
-                {
-                    String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";                    Application.webSocketG.send(getDetails);
-                    sentCallForAssets = true;
-                    handlerAssetsUpdate.removeCallbacks(updateTask2);
-                    handlerAssetsUpdate.postDelayed(updateTask2, time);
-                }
-                else
-                {
-                    get_asset(asset, id);
-                }
-            }
-        };
-
-        handlerAssets.removeCallbacks(updateTask);
-        handlerAssets.postDelayed(updateTask, 100);
-
-
-        final Handler stopHandler = new Handler(Looper.getMainLooper());
-        final Runnable stopTask = new Runnable() {
-            @Override
-            public void run()
-            {
-                if ( rcvdCallForAssets ){
-                    rcvdCallForAssets = false;
-                    sentCallForAssets = false;
-                    handlerAssets.removeCallbacks(updateTask);
-                    handlerAssetsUpdate.removeCallbacks(updateTask2);
-                }
-
-            }
-        };
-        stopHandler.postDelayed(stopTask,100);
+    void get_asset(final String asset, final String id)
+    {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,"", webSocketCallHelper.api_identifier.none);
     }
 
     @Override
     public void OnUpdate(String s,int id)
     {
+        myWebSocketHelper.cleanUpTransactionsHandler();
+
         if(id==8)
         {
-            sentCallForTransactions = false;
-            rcvdCallForTransactions = true;
+            //sentCallForTransactions = false;
+            //rcvdCallForTransactions = true;
             onFirstCall(s);
         }
         else if(id==9)
         {
-            sentCallForTimes = false;
-            rcvdCallForTimes = true;
+            //sentCallForTimes = false;
+            //rcvdCallForTimes = true;
             if(id_in_work<id_total_size)
             {
                 String result = SupportMethods.ParseJsonObject(s,"result");
@@ -405,8 +178,8 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         else if(id==10)
         {
-            sentCallForNames = false;
-            rcvdCallForNames = true;
+            //sentCallForNames = false;
+            //rcvdCallForNames = true;
             if (names_in_work < names_total_size) {
                 String result = SupportMethods.ParseJsonObject(s,"result");
                // String nameObject = returnArrayObj(result,0);
@@ -424,8 +197,8 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         else if(id==11)
         {
-            sentCallForAssets = false;
-            rcvdCallForAssets = true;
+            //sentCallForAssets = false;
+            //rcvdCallForAssets = true;
             if (assets_id_in_work < assets_id_total_size)
             {
                String result = SupportMethods.ParseJsonObject(s,"result");
@@ -515,7 +288,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void decodeMemo(final String memo, final String key)
     {
-        HashMap hm = new HashMap();
+        HashMap<String,String> hm= new HashMap<>();
         hm.put("method","decode_memo");
         hm.put("wifkey",wifkey);
         hm.put("memo", memo);
@@ -683,7 +456,7 @@ public class TransactionActivity implements IBalancesDelegate {
                         try {
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
-                            HashMap hm = new HashMap();
+                            HashMap<String,Object> hm = new HashMap<>();
 
                             while (keys.hasNext())
                             {
@@ -703,7 +476,7 @@ public class TransactionActivity implements IBalancesDelegate {
                                         Currency currency = Currency.getInstance(finalFaitCurrency);
                                         Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
                                         transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
-                                        transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+                                        transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format(Locale.ENGLISH,"%.4f", eqAmount));
                                     }
                                 }
                             }

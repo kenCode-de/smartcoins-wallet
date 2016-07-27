@@ -350,7 +350,7 @@ public class Application extends android.app.Application {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }
                             } else if (id == 17) {
-                                Log.d("account_update", jsonObject.toString());
+                                //Log.d("account_update", jsonObject.toString());
                             }
                             else if (id == 18) {
                                 if (iBalancesDelegate_ereceiptActivity != null) {

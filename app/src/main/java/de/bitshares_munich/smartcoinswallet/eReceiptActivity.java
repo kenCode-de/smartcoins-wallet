@@ -40,7 +40,8 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceiptActivity extends BaseActivity implements IBalancesDelegate {
+public class eReceiptActivity extends BaseActivity implements IBalancesDelegate
+{
     Context context;
     Application application = new Application();
 
