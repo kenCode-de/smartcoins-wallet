@@ -66,7 +66,7 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text="Syed Muhammad"
-                        android:textSize="20dp"
+                        android:textSize="15dp"
                         android:id="@+id/tvOtherName"
                         />
                     <TextView
@@ -76,6 +76,7 @@
                         android:textColor="@color/black"
                         android:text="131"
                         android:id="@+id/tvOtherId"
+                        android:textSize="13dp"
                         />
                     <TextView
                         android:layout_width="match_parent"
@@ -84,7 +85,7 @@
                         android:textColor="@color/black"
                         android:text="Address"
                         android:id="@+id/tvAddress"
-                        android:textSize="20dp"
+                        android:textSize="15dp"
                         />
                     <TextView
                         android:layout_width="match_parent"
@@ -93,7 +94,7 @@
                         android:textColor="@color/black"
                         android:text="Contacts"
                         android:id="@+id/tvContact"
-                        android:textSize="20dp"
+                        android:textSize="15dp"
 
                         />
                 </LinearLayout>
@@ -109,6 +110,7 @@
                         android:text="27/7/2016"
                         android:id="@+id/TvBlockNum"
                         android:layout_centerInParent="true"
+                        android:textSize="18dp"
                         />
 
 
@@ -128,7 +130,7 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text="Sender Account"
-                        android:textSize="25dp"
+                        android:textSize="18dp"
                         android:id="@+id/tvUserStatus"
                         />
 
@@ -138,7 +140,7 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text="Syed Abdullah"
-                        android:textSize="20dp"
+                        android:textSize="15dp"
                         android:id="@+id/tvUserName"
                         />
                     <TextView
@@ -148,6 +150,7 @@
                         android:textColor="@color/black"
                         android:text="131"
                         android:id="@+id/tvUserId"
+                        android:textSize="13dp"
                         />
                 </LinearLayout>
 

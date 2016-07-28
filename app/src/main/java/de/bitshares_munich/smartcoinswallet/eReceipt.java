@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -631,7 +632,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                     tvAmountEquivalent.setText(equivalentAmount.faitAmount+" "+equivalentAmount.faitAssetSymbol);
                 } else {
                     available = false;
-                    tvAmountEquivalent.setText(value);
+                    tvAmountEquivalent.setVisibility(View.GONE);
+                    setWeight(tvAmount);
                 }
             }
 
@@ -641,7 +643,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             if(available){
                 tvFeeEquivalent.setText(equivalentFee.faitAmount+" "+equivalentFee.faitAssetSymbol);
             } else {
-                tvFeeEquivalent.setText(value);
+                tvFeeEquivalent.setVisibility(View.GONE);
+                setWeight(tvFee);
             }
         }
 
@@ -651,7 +654,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 tvAmountEquivalent.setText(equivalentAmount.faitAmount+" "+equivalentAmount.faitAssetSymbol);
             } else {
                 available = false;
-                tvAmountEquivalent.setText(value);
+                tvAmountEquivalent.setVisibility(View.GONE);
+                setWeight(tvAmount);
             }
         }
 
@@ -659,7 +663,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             if(available){
                 tvFeeEquivalent.setText(equivalentFee.faitAmount+" "+equivalentFee.faitAssetSymbol);
             } else {
-                tvFeeEquivalent.setText(value);
+                tvFeeEquivalent.setVisibility(View.GONE);
+                setWeight(tvFee);
             }
         }
 
@@ -668,7 +673,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             tvTotalEquivalent.setText(equivalentAmount.faitAmount+equivalentFee.faitAmount+" "+equivalentAmount.faitAssetSymbol);
         }
         else{
+            tvTotalEquivalent.setVisibility(View.GONE);
             tvTotalEquivalent.setText(value);
+            setWeight(tvTotal);
         }
 
         tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
@@ -701,5 +708,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+    void setWeight(TextView textView){
+        ViewGroup.LayoutParams params = textView.getLayoutParams();
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.setLayoutParams(params);
     }
 }
