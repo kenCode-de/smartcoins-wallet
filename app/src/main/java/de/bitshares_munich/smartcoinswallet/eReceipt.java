@@ -4,10 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -52,7 +60,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     Application application = new Application();
 
     @Bind(R.id.ivOtherGravatar)
-    ImageView imageEmail;
+    ImageView ivOtherGravatar;
 
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
@@ -69,29 +77,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Bind(R.id.tvUserId)
     TextView tvUserId;
 
-    @Bind(R.id.tvUserAccount)
-    TextView tvUserAccount;
-
-    @Bind(R.id.tvOtherAccount)
-    TextView tvOtherAccount;
-
     @Bind(R.id.tvMemo)
     TextView tvMemo;
 
-    @Bind(R.id.tvTransactionId)
-    TextView tvTransactionId;
-
-    @Bind(R.id.tvBlockNumber)
-    TextView tvBlockNumber;
-
-    @Bind(R.id.tvOpInTrx)
-    TextView tvOpInTrx;
-
-    @Bind(R.id.tvTrxInBlock)
-    TextView tvTrxInBlock;
-
-    @Bind(R.id.tvVirtualOp)
-    TextView tvVirtualOp;
 
     @Bind(R.id.tvAmount)
     TextView tvAmount;
@@ -99,15 +87,35 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
 
+    @Bind(R.id.tvBlockNumber)
+    TextView tvBlockNumber;
+
+    @Bind(R.id.tvTrxInBlock)
+    TextView tvTrxInBlock;
+
     @Bind(R.id.tvFee)
     TextView tvFee;
 
     @Bind(R.id.tvFeeEquivalent)
     TextView tvFeeEquivalent;
 
+    @Bind(R.id.tvPaymentAmount)
+    TextView tvPaymentAmount;
+
+    @Bind(R.id.tvPaymentEquivalent)
+    TextView tvPaymentEquivalent;
+
     @Bind(R.id.tvTotalEquivalent)
     TextView tvTotalEquivalent;
 
+    @Bind(R.id.tvTotal)
+    TextView tvTotal;
+
+    @Bind(R.id.tvUserStatus)
+    TextView tvUserStatus;
+
+    @Bind(R.id.ivImageTag)
+    ImageView ivImageTag;
     //int names_in_work;
     //int names_total_size;
     int assets_id_in_work;
@@ -130,9 +138,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String amountSymbol = "";
     String feeAmount = "";
     String amountAmount = "";
-    String faitSymbol = "";
-    String faitAmount = "";
-    String email = "";
+    String emailOther = "";
+    String emailUser = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,22 +162,37 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         {
             userName = intent.getStringExtra("From");
             otherName = intent.getStringExtra("To");
-            tvUserAccount.setText("Recieved From");
-            tvOtherAccount.setText("Sent To");
-
+            //tvUserAccount.setText("Recieved From");
+            //tvOtherAccount.setText("Sent To");
+            tvUserStatus.setText("Sender Account");
             isSent = true;
+            ivImageTag.setImageResource(R.drawable.sendicon);
 //            email = get_email(to);
         }
         else
         {
-            tvOtherAccount.setText("Recieved From");
-            tvUserAccount.setText("Sent To");
-
+           // tvOtherAccount.setText("Recieved From");
+           // tvUserAccount.setText("Sent To");
+            tvUserStatus.setText("Receiver Account");
             userName = intent.getStringExtra("To");
             otherName = intent.getStringExtra("From");
             isSent = false;
+            ivImageTag.setImageResource(R.drawable.rcvicon);
 //            email = get_email(from);
         }
+
+        emailOther = get_email(otherName);
+        emailOther = "fawaz_ahmed@live.com";
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        ivOtherGravatar.requestLayout();
+
+        ivOtherGravatar.getLayoutParams().height = (width*40)/100;
+        ivOtherGravatar.getLayoutParams().width = (width*40)/100;
 
         init(eReciept);
 
@@ -310,15 +333,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         this.runOnUiThread(new Runnable() {
             public void run() {
 
-//                if(isSent)
-//                String fromAccountName = from;
-//                String toAccountName = to;
+                createEmail(emailOther,ivOtherGravatar);
 
-                String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
-                new DownloadImageTask(imageEmail)
-                        .execute(emailGravatarUrl);
+               // createEmail(emailUser,ivUserGravatar);
 
-                SupportMethods.testing("alpha",imageEmail.toString(),"imageview");
+
                 AssetsSymbols assetsSymbols = new AssetsSymbols(context);
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
@@ -349,9 +368,17 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 feeSymbol = assetsSymbols.updateString(sym_preFee.get("symbol"));
                 amountSymbol = assetsSymbols.updateString(sym_preAmount.get("symbol"));
 
+                tvBlockNumber.setText(eReciptmap.get("block_num"));
+                tvTrxInBlock.setText(eReciptmap.get("id"));
 
                 tvOtherName.setText(otherName);
                 tvUserName.setText(userName);
+
+                tvAmount.setText(amountAmount+" "+amountSymbol);
+                tvFee.setText(feeAmount+" "+feeSymbol);
+                tvTotal.setText(tvAmount.getText()+" + "+tvFee.getText());
+
+                tvPaymentAmount.setText(tvTotal.getText());
 
                 if(isSent) {
                     tvOtherId.setText(OPmap.get("to"));
@@ -365,11 +392,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 TvBlockNum.setText(date);
                 tvMemo.setText(memoMsg);
 
-                tvTransactionId.setText(eReciptmap.get("id"));
-                tvBlockNumber.setText(eReciptmap.get("block_num"));
-                tvOpInTrx.setText(eReciptmap.get("op_in_trx"));
-                tvVirtualOp.setText(eReciptmap.get("virtual_op"));
-                tvTrxInBlock.setText(eReciptmap.get("trx_in_block"));
 
             }
         });
@@ -425,9 +447,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
 
         pdfTable myTable = new pdfTable(context, this, filename);
-        if (imageEmail.getVisibility() == View.VISIBLE)
+        if (ivOtherGravatar.getVisibility() == View.VISIBLE)
         {
-            myTable.createTransactionpdf(map,imageEmail);
+            myTable.createTransactionpdf(map,ivOtherGravatar);
         }
         else
         {
@@ -463,7 +485,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         protected void onPostExecute(Bitmap result) {
             if(result==null) bmImage.setVisibility(View.GONE);
-            else bmImage.setImageBitmap(result);
+            else
+            {
+                Bitmap corner = getRoundedCornerBitmap(result);
+                bmImage.setImageBitmap(corner);
+            }
         }
     }
     String finalFaitCurrency;
@@ -594,9 +620,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     }
 
     void setEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentse){
-        tvAmount.setText(amountAmount+" "+amountSymbol);
-        tvFee.setText(feeAmount+" "+feeSymbol);
-        String value = "n/a";
+
+        String value = "";
         Boolean available = false;
 
         EquivalentComponents equivalentAmount  = equivalentComponentse.get(0);
@@ -620,11 +645,61 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             }
         }
 
+        if(equivalentFee.id==0){
+            if(equivalentAmount.available){
+                available = true;
+                tvAmountEquivalent.setText(equivalentAmount.faitAmount+" "+equivalentAmount.faitAssetSymbol);
+            } else {
+                available = false;
+                tvAmountEquivalent.setText(value);
+            }
+        }
+
+        if(equivalentAmount.id==1){
+            if(available){
+                tvFeeEquivalent.setText(equivalentFee.faitAmount+" "+equivalentFee.faitAssetSymbol);
+            } else {
+                tvFeeEquivalent.setText(value);
+            }
+        }
+
+
         if(available){
             tvTotalEquivalent.setText(equivalentAmount.faitAmount+equivalentFee.faitAmount+" "+equivalentAmount.faitAssetSymbol);
         }
         else{
             tvTotalEquivalent.setText(value);
         }
+
+        tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
+
+
+    }
+    void createEmail(String email, ImageView imageView){
+        String emailGravatarUrl = "https://www.gravatar.com/avatar/"+Helper.hash(email, Helper.MD5)+"?s=130&r=pg&d=404";
+        new DownloadImageTask(imageView)
+                .execute(emailGravatarUrl);
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = 90;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }
