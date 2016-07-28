@@ -49,6 +49,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,6 +66,7 @@ import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -133,6 +136,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Bind(R.id.upgrade_account)
     Button btnUpgrade;
 
+    @Bind(R.id.tvFolderPath)
+    TextView tvFolderPath;
+
     ProgressDialog progressDialog;
     Activity activitySettings;
 
@@ -166,6 +172,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     public void init() {
         setCheckedButtons();
+        setAudioFilePath();
     }
 
     public void onCheck(View v) {
@@ -1193,5 +1200,67 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Override
     public void backupComplete(boolean success) {
         Log.d("Backup Complete","done");
+    }
+
+
+    FileChooserDialog dialog;
+
+    private void chooseAudioFile() {
+        if (dialog == null) {
+            dialog = new FileChooserDialog(this);
+            dialog.addListener(this.onFileSelectedListener);
+            dialog.setFolderMode(false);
+            dialog.setCanCreateFiles(false);
+            dialog.setShowCancelButton(true);
+            dialog.setShowOnlySelectable(false);
+            dialog.setFilter(".*wav|.*mp3");
+
+
+            // Activate the confirmation dialogs.
+            dialog.setShowConfirmation(true, true);
+            // Define the labels.
+            FileChooserLabels labels = new FileChooserLabels();
+            labels.createFileDialogAcceptButton = getApplicationContext().getString(R.string.ok);
+            labels.createFileDialogCancelButton = getApplicationContext().getString(R.string.cancel);
+            labels.labelSelectButton = getApplicationContext().getString(R.string.select);
+            labels.messageConfirmSelection = getApplicationContext().getString(R.string.are_you_sure);
+            labels.labelConfirmYesButton = getApplicationContext().getString(R.string.txt_yes);
+            labels.labelConfirmNoButton = getApplicationContext().getString(R.string.txt_no);
+            labels.labelCancelButton = getApplicationContext().getString(R.string.cancel);
+            dialog.setLabels(labels);
+        }
+
+        // Show the dialog.
+        dialog.show();
+
+    }
+
+    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
+        public void onFileSelected(Dialog source, File file) {
+            source.hide();
+            onSuccess(file.getAbsolutePath());
+            tvFolderPath.setText(file.getAbsolutePath());
+        }
+
+        public void onFileSelected(Dialog source, File folder, String name) {
+            source.hide();
+            //   Toast.makeText(getApplicationContext(), name +"::::1",Toast.LENGTH_LONG).show();
+
+        }
+    };
+
+    void onSuccess(String filepath){
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        audioFilePath.storeAudioFilePath(filepath);
+        setAudioFilePath();
+    }
+    @OnClick(R.id.ivFolderPath)
+    public void folderSelect(View view){
+        chooseAudioFile();
+    }
+    void setAudioFilePath(){
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        String path = audioFilePath.fetchAudioFile();
+        tvFolderPath.setText(path);
     }
 }

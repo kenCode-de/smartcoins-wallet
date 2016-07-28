@@ -199,6 +199,7 @@
 
 
     // Not to be localized
+    <string name="audio_file_path">audio_file_path</string>
     <string name="pref_desired_smart_coin">desired_smart_coin</string>
     <string name="pref_uia_coin">uia_coin</string>
     <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>

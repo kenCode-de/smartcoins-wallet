@@ -23,7 +23,8 @@ public class MediaService extends Service {
     }
     public void onCreate()
     {
-        mp = MediaPlayer.create(this, R.raw.woohoo);
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        mp = audioFilePath.fetchMediaPlayer();
         mp.setLooping(false);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override

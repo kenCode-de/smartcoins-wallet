@@ -1,0 +1,725 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bg"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="@string/email_pdf"
+                android:id="@+id/buttonSend"
+                android:src="@drawable/share_icon"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/white"
+                />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/layout_margin"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/buttonSend"
+                    android:id="@+id/ll_Sec"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="left|center"
+                        android:textColor="@color/black"
+                        android:text="27/7/2016"
+                        android:id="@+id/TvBlockNum"
+                        android:layout_alignParentRight="true"
+                        />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_Sec"
+                    android:padding="5dp"
+                    android:orientation="vertical"
+                    android:id="@+id/llOtherAccount"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Balance Recieved From"
+                        android:id="@+id/tvOtherAccount"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+
+                        >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/ivOtherGravatar"
+                        android:src="@drawable/share_group"
+                        android:padding="10dp"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+
+                        >
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:visibility="gone"
+                        android:layout_weight="1"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Company Name"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" : "
+                                android:gravity="left|center"
+                                android:textColor="#000000"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="left|center"
+                                android:textColor="@color/black"
+                                android:text="Knysys"
+                                android:id="@+id/tvOtherCompany"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Account Name"
+                                    android:gravity="center"
+                                    android:textColor="@color/black"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=" : "
+                                    android:gravity="left|center"
+                                    android:textColor="#000000"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:textColor="@color/black"
+                                    android:text="Syed"
+                                    android:id="@+id/tvOtherName"
+                                    />
+                            </LinearLayout>
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Account Id"
+                                    android:gravity="center"
+                                    android:textColor="@color/black"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=" : "
+                                    android:gravity="left|center"
+                                    android:textColor="#000000"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="left|center"
+                                    android:textColor="@color/black"
+                                    android:text="131"
+                                    android:id="@+id/tvOtherId"
+                                    />
+                            </LinearLayout>
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llOtherAccount"
+                    android:padding="5dp"
+                    android:id="@+id/llUserAccount"
+                    android:orientation="vertical"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Balance Recieved From"
+                        android:id="@+id/tvUserAccount"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        >
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:id="@+id/ivUserGravatar"
+                            android:src="@drawable/share_group"
+                            android:padding="10dp"
+                            android:visibility="gone"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:paddingLeft="10dp"
+                            >
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:layout_weight="1"
+                                >
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Company Name"
+                                        android:gravity="center"
+                                        android:textColor="@color/black"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" : "
+                                        android:gravity="left|center"
+                                        android:textColor="#000000"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="left|center"
+                                        android:textColor="@color/black"
+                                        android:text="Knysys"
+                                        android:id="@+id/tvUserCompany"
+                                        />
+                                </LinearLayout>
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                >
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content"
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Account Name"
+                                        android:gravity="center"
+                                        android:textColor="@color/black"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" : "
+                                        android:gravity="left|center"
+                                        android:textColor="#000000"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="left|center"
+                                        android:textColor="@color/black"
+                                        android:text="Syed"
+                                        android:id="@+id/tvUserName"
+
+                                        />
+                                </LinearLayout>
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                >
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
+
+                                    >
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Account Id"
+                                        android:gravity="center"
+                                        android:textColor="@color/black"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=" : "
+                                        android:gravity="left|center"
+                                        android:textColor="#000000"
+                                        />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="left|center"
+                                        android:textColor="@color/black"
+                                        android:text="131"
+                                        android:id="@+id/tvUserId"
+
+                                        />
+                                </LinearLayout>
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/llDetailsTable"
+                    android:layout_below="@+id/llUserAccount"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edittext_bg"
+
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:background="@drawable/edittext_bg"
+
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Amount"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Equivalent"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Amount"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="+1E"
+                            android:id="@+id/tvAmount"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="+1E"
+                            android:id="@+id/tvAmountEquivalent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Fee"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="+1E"
+                            android:id="@+id/tvFee"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="+1E"
+                            android:id="@+id/tvFeeEquivalent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Total"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="+1E"
+                            android:id="@+id/tvTotalEquivalent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:background="@drawable/edittext_bg"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                  android:layout_width="match_parent"
+                    android:layout_below="@+id/llDetailsTable"
+                  android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:id="@+id/llMemo"
+                    android:orientation="vertical"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Memo"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="30sp"
+                            android:text=" : "
+                            android:gravity="left|center"
+                            />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Memo Order 90453"
+                        android:textColor="#000"
+                        android:id="@+id/tvMemo"
+                        android:background="@drawable/edittext_background_layer"
+                        />
+
+                     </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llMemo"
+                    android:padding="5dp"
+                    android:orientation="vertical"
+                    >
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:padding="5dp"
+                        android:background="@drawable/simple_line"
+                        >
+                            <TextView
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="transaction id"
+                                android:gravity="left"
+                                android:textColor="@color/black"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=": "
+                                android:gravity="left|center"
+                                android:textColor="#000000"
+                                />
+                        <TextView
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"
+                            android:text="34"
+                            android:id="@+id/tvTransactionId"
+                            android:paddingLeft="15dp"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:padding="5dp"
+                        android:background="@drawable/simple_line"
+                        >
+                        <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="block number"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=": "
+                            android:gravity="left|center"
+                            android:textColor="#000000"
+                            />
+                        <TextView
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"
+                            android:text="34"
+                            android:id="@+id/tvBlockNumber"
+                            android:paddingLeft="15dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:padding="5dp"
+                        android:background="@drawable/simple_line"
+                        >
+                        <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/op_in_trx"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=": "
+                            android:gravity="left|center"
+                            android:textColor="#000000"
+                            />
+                        <TextView
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"
+                            android:text="34"
+                            android:paddingLeft="15dp"
+                            android:id="@+id/tvOpInTrx"
+
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:padding="5dp"
+                        android:background="@drawable/simple_line"
+                        >
+                        <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/trx_in_block"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=": "
+                            android:gravity="left|center"
+                            android:textColor="#000000"
+                            />
+                        <TextView
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"
+                            android:text="34"
+                            android:id="@+id/tvTrxInBlock"
+
+                            android:paddingLeft="15dp"
+                            />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:padding="5dp"
+                        android:background="@drawable/simple_line"
+                        >
+                        <TextView
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/virtual_op"
+                            android:gravity="left"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=": "
+                            android:gravity="left|center"
+                            android:textColor="#000000"
+                            />
+                        <TextView
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="left|center"
+                            android:textColor="@color/black"
+                            android:text="34"
+                            android:paddingLeft="15dp"
+                            android:id="@+id/tvVirtualOp"
+                            />
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

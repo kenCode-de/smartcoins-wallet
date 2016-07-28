@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -51,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
@@ -69,9 +72,11 @@ import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -145,6 +150,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
+
 
     @Bind(R.id.cbAlwaysDonate)
     CheckBox cbAlwaysDonate;
@@ -280,6 +286,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setCheckboxAvailabilty();
         setSpinner();
     }
+
+
 
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
@@ -821,14 +829,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
 
             if (backupAsset.isEmpty()) {
-                backupAsset = "BTS";
+                llBackupAsset.setVisibility(View.GONE);
+                //backupAsset = "BTS";
+            }else {
+                llBackupAsset.setVisibility(View.VISIBLE);
             }
 
             String sym;
             AssetsSymbols assetsSymbols = new AssetsSymbols(context);
             sym = assetsSymbols.updateString(backupAsset);
 
-            llBackupAsset.setVisibility(View.VISIBLE);
+           // llBackupAsset.setVisibility(View.VISIBLE);
             tvBackupAsset.setText(sym);
             getBackupAsset();
             getExchangeRate(200);
@@ -1306,8 +1317,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         try {
             // Send screen work start
             Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
-            Double backupAssetsBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-
+            Double backupAssetsBalance = 0.0;
+            if(backupAssets!=null) {
+               backupAssetsBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+            }
             String selectedAmount = Helper.padString(etAmount.getText().toString());
             Double enteredAmount = Double.parseDouble(selectedAmount);
             String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
@@ -1350,9 +1363,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
                 count++;
             } else if (loyaltyAsset != null && exchangeRate != null) {
+
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
+
                 tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAssetSym, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAssetSym));
-            } else if (backupAssets != null && backAssetRate != null)
+
+            }
+
+            else if (backupAssets != null && backAssetRate != null)
             {
                 Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
                 String backupAssetSym;
@@ -1364,8 +1382,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAssetSym, backupAssetSym); //
 
             }
-            tvTotalStatus.setVisibility(View.VISIBLE);
 
+            tvTotalStatus.setVisibility(View.VISIBLE);
+            if(backupAssets == null){
+                tvTotalStatus.setVisibility(View.GONE);
+            }
             //shayan Friday night
             if ( !etBackupAsset.getText().toString().isEmpty() )
             {
@@ -1473,9 +1494,75 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
             String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
             Application.webSocketG.send(params);
+<<<<<<< HEAD
         }
         */
     }
+
+
+
+//    private void fetchTrxBlockAndUpdateServer(final JSONArray jsonArray)
+//    {
+//        try
+//        {
+//            final Runnable reTry = new Runnable() {
+//                @Override
+//                public void run() {
+//                    fetchTrxBlockAndUpdateServer(jsonArray);
+//                }
+//            };
+//
+//            for (int i = 0; i < 2; i++)
+//            {
+//                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+//                JSONArray opArray = (JSONArray) jsonObject.get("op");
+//                JSONObject operation = (JSONObject) opArray.get(1);
+//
+//                if (operation.get("to").toString().equals(receiverID))
+//                {
+//                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
+//                    IWebService service = sg.getService(IWebService.class);
+//
+//                    if ( jsonObject.has("block_num") && jsonObject.has("trx_in_block") )
+//                    {
+//
+//                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+//                        postingService.enqueue(new Callback<Void>() {
+//                            @Override
+//                            public void onResponse(Response<Void> response) {
+//                                if (response.isSuccess()) {
+//
+//                                } else {
+//                                    reTryGetTrxBlock.postDelayed(reTry, 100);
+//                                    //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Throwable t) {
+//                                reTryGetTrxBlock.postDelayed(reTry, 100);
+//                            }
+//                        });
+//                        break;
+//                    }
+//                    else
+//                    {
+//                        getTrxBlock("160");
+//                    }
+//                }
+//                else
+//                {
+//                    getTrxBlock("160");
+//                }
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            //getTrxBlock("160");
+//        }
+//
+//    }
+
 
 
 
@@ -1539,6 +1626,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             //getTrxBlock("160");
         }
     }
+
 
     //********Get trx block****************End
 
@@ -1974,4 +2062,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setHighlightColor(Color.TRANSPARENT);
         textView.setTextColor(Color.BLACK);
     }
+
+    //@OnClick(R.id.tvFolderPath)
+
 }

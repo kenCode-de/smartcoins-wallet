@@ -60,8 +60,9 @@
             android:layout_height="50dp"
             android:text="@string/email_pdf"
             android:id="@+id/buttonSend"
-            android:background="@drawable/icon_sg"
+            android:src="@drawable/share_icon"
             android:layout_alignParentRight="true"
+            android:background="@color/white"
             />
 
             <ImageView

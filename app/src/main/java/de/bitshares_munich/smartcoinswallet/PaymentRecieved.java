@@ -126,7 +126,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     }
     public void playSound() {
         try {
-            MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.woohoo);
+            AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+            MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
