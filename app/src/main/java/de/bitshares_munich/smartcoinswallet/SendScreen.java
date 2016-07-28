@@ -80,6 +80,7 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -218,6 +219,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
 
     Activity sendScreenActivity;
+    webSocketCallHelper myWebSocketHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +231,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setTitle(getResources().getString(R.string.send_screen_name));
 
         sendScreenActivity = this;
+        myWebSocketHelper = new webSocketCallHelper(getApplicationContext());
 
         context = getApplicationContext();
         ButterKnife.bind(this);
@@ -745,6 +748,41 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     };
 
+    private void lookupAccounts()
+    {
+        String socketText = getString(R.string.lookup_account_a);
+        String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+        myWebSocketHelper.make_websocket_call(socketText,scketText2, webSocketCallHelper.api_identifier.database);
+
+        /*
+        if ( Application.isReady )
+        {
+            String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
+            String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+            Application.webSocketG.send(socketText);
+        }
+        else
+        {
+            Runnable toAccountValidation = new Runnable() {
+                @Override
+                public void run()
+                {
+                    sendScreenActivity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            createBitShareAN(false);
+                        }
+                    });
+                }
+            };
+
+            reloadToAccountValidation.postDelayed(toAccountValidation,500);
+        }
+        */
+    }
+
     Handler reloadToAccountValidation = new Handler();
     public void createBitShareAN(boolean focused) {
         if (!focused)
@@ -754,6 +792,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tvErrorRecieverAccount.setText("");
                 tvErrorRecieverAccount.setVisibility(View.GONE);
 
+                lookupAccounts();
+                /*
                 if ( Application.isReady )
                 {
                     String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
@@ -779,6 +819,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                     reloadToAccountValidation.postDelayed(toAccountValidation,500);
                 }
+                */
             }
             else
             {
@@ -1215,7 +1256,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void callback_exchange_rate(JSONObject result, int id) throws JSONException {
-
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (result.length() > 0) {
 
@@ -1250,6 +1291,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
+
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -1407,15 +1450,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     {
         if (Application.isReady)
         {
-            int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+            //int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
             String loyalOrBackupAssets = "";
             if (id == 200) {
                 loyalOrBackupAssets = backupAssets.id;
             } else if (id == 100) {
                 loyalOrBackupAssets = loyaltyAsset.id;
             }
-            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_identifier + ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
-            Application.webSocketG.send(params);
+
+            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+            String params2 = ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
+            myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+            //Application.webSocketG.send(params);
         }
     }
 
@@ -1428,6 +1474,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void getTrxBlock(final String id)
     {
 
+        String selectedAccountId = "";
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
+        for (int i = 0; i < accountDetails.size(); i++) {
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_name.equals(selectedAccount)) {
+                selectedAccountId = accountDetail.account_id;
+            }
+        }
+        //int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+        String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String params2 = ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
+        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.history);
+
+
+        /*
         reTryGetTrxBlock.removeCallbacksAndMessages(null);
 
         final Runnable checkifRecieved = new Runnable() {
@@ -1479,6 +1540,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         };
 
         reTryGetTrxBlock.postDelayed(initiateTransactions,0);
+        */
 
         /*
         if (Application.isReady)
@@ -1632,6 +1694,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void relativeHistoryCallback(JSONObject msg) {
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
             boolean found = false;

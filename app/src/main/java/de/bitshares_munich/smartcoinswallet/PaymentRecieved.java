@@ -32,6 +32,7 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +67,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     Locale locale;
     String language;
 
+    webSocketCallHelper myWebSocketHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
 
         setBackButton(true);
         setTitle(getResources().getString(R.string.payment_rcvd_screen_name));
+
+        myWebSocketHelper = new webSocketCallHelper(getApplicationContext());
 
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         locale = new Locale(language);
@@ -103,26 +108,46 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         //startActivity(intent);
         finish();
     }
-    public void getAccountObject() {
+    public void getAccountObject()
+    {
+        String params = "{\"id\":13,\"method\":\"call\",\"params\":[";
+        String params2 = ",\"get_objects\",[[\""+sender_id+"\",\""+receiver_id+"\"],0]]}";
+        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+
+        /*
         if (Application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
             String params = "{\"id\":13,\"method\":\"call\",\"params\":["+db_identifier+",\"get_objects\",[[\""+sender_id+"\",\""+receiver_id+"\"],0]]}";
             Application.webSocketG.send(params);
         }
+        */
     }
-    public void getTransactionObject(String block, String trx) {
+    public void getTransactionObject(String block, String trx)
+    {
+        String params = "{\"id\":12,\"method\":\"call\",\"params\":[";
+        String params2 = ",\"get_transaction\",[\""+block+"\","+trx+"]]}";
+        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+        /*
         if (Application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
             String params = "{\"id\":12,\"method\":\"call\",\"params\":["+db_identifier+",\"get_transaction\",[\""+block+"\","+trx+"]]}";
             Application.webSocketG.send(params);
         }
+        */
     }
-    public void getAssetObject(String amountAsset, String feeAsset) {
+    public void getAssetObject(String amountAsset, String feeAsset)
+    {
+        String params = "{\"id\":14,\"method\":\"call\",\"params\":[";
+        String params2 = ",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
+        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+
+        /*
         if (Application.webSocketG.isOpen()) {
             int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
             String params = "{\"id\":14,\"method\":\"call\",\"params\":["+db_identifier+",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
             Application.webSocketG.send(params);
         }
+        */
     }
     public void playSound() {
         try {
@@ -135,6 +160,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     }
     @Override
     public void accountObjectCallback(JSONObject jsonObject){
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray resultArr = (JSONArray) jsonObject.get("result");
             for (int i = 0; i < resultArr.length(); i++) {
@@ -160,6 +186,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     }
     @Override
     public void checkTransactionObject(JSONObject jsonObject){
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONObject result = (JSONObject) jsonObject.get("result");
             JSONArray operations = (JSONArray) result.get("operations");
@@ -218,6 +245,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
 
     @Override
     public void assetObjectCallback(JSONObject jsonObject){
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray resultArr = (JSONArray) jsonObject.get("result");
             for (int i = 0; i < resultArr.length(); i++) {

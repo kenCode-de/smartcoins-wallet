@@ -102,6 +102,7 @@ import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.tableViewClickListener;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -200,6 +201,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         // Required empty public constructor
     }
 
+    webSocketCallHelper myWebSocketHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,7 +210,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         application.registerAssetDelegate(this);
         iSound=this;
         updateEquivalentAmount = new Handler();
-
+        myWebSocketHelper = new webSocketCallHelper(getContext());
     }
 
 
@@ -2114,7 +2117,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
-        sentCallForTransactions = true;
+        sentCallForTransactions = false;
         try {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -2167,64 +2170,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     void isLifeTime(final String name_id, final String id) {
-        try {
-            final int db_id = Helper.fetchIntSharePref(getContext(), getContext().getString(R.string.sharePref_database));
-            //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
 
-            final Handler handler = new Handler();
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-
-                    try {
-                        if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady)) {
-                            String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-                            SupportMethods.testing("getLifetime", getDetails, "getDetails");
-                            Application.webSocketG.send(getDetails);
-                        } else {
-                            isLifeTime(name_id, id);
-                        }
-                    }
-                    catch (Exception e)
-                    {}
-                }
-            };
-
-            handler.postDelayed(updateTask, 1000);
-        } catch (Exception e) {
-
-        }
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
-    void get_full_accounts(final String name_id, final String id) {
-        try {
-            final int db_id = Helper.fetchIntSharePref(getContext(), getContext().getString(R.string.sharePref_database));
-            //    {"id":4,"method":"call","params":[2,"get_full_accounts",[["1.2.101520"],true]]}
-
-            final Handler handler = new Handler();
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()) && (Application.isReady) ) {
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_full_accounts\",[[\"" + name_id + "\"],true]]}";
-                        SupportMethods.testing("get_full_accounts", getDetails, "getDetails");
-                        Application.webSocketG.send(getDetails);
-                    } else {
-                        get_full_accounts(name_id, id);
-                    }
-                }
-            };
-
-            handler.postDelayed(updateTask, 1000);
-        } catch (Exception e) {
-            SupportMethods.testing("get_full_accounts", e, "exception");
-        }
+    void get_full_accounts(final String name_id, final String id)
+    {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_full_accounts\",[[\"" + name_id + "\"],true]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
     @Override
     public void getLifetime(String s, int id) {
+        myWebSocketHelper.cleanUpTransactionsHandler();
+
         SupportMethods.testing("getLifetime", s, "s");
 
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -2315,7 +2277,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             public void run() {
                 _activity.runOnUiThread(new Runnable() {
                     public void run() {
-                        sentCallForTransactions = false;
+                        //sentCallForTransactions = false;
                         isSavedTransactions = true;
                         loadViews(false,true,false);
                     }
@@ -2329,11 +2291,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void loadAll() {
         loadOnDemand(getActivity());
-//        getActivity().runOnUiThread(new Runnable() {
-//            public void run() {
-//                loadViews();
-//            }
-//        });
     }
 
     AssestsActivty myAssetsActivity;
@@ -2365,9 +2322,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
         }
-        number_of_transactions_loaded = 0;
-        if(!sentCallForTransactions) {
-            sentCallForTransactions=true;
+
+        if(!sentCallForTransactions)
+        {
+            number_of_transactions_loaded = 0;
+            //sentCallForTransactions=true;
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
             number_of_transactions_loaded = number_of_transactions_loaded + 5;
         }
@@ -2405,7 +2364,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         Application.monitorAccountId = accountId;
         tvAccountName.setText(to);
         isLifeTime(accountId, "15");
-        get_full_accounts(accountId, "17");
+        //get_full_accounts(accountId, "17");
 
         loadViews(onResume,accountNameChanged, faitCurrencyChanged);
     }
@@ -2689,10 +2648,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad)
     {
+        sentCallForTransactions = true;
         new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
     }
     void loadTransactions(final Context context,final String id ,final String wkey,final int loaded,final int toLoad)
     {
+        sentCallForTransactions = true;
         new TransactionActivity(context, id ,this , wkey , loaded , toLoad);
     }
 //        final Handler handlerTransactions = new Handler();
