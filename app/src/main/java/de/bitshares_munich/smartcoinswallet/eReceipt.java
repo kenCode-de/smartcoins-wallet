@@ -545,25 +545,23 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                                     }
                                 }
                             } catch (Exception e) {
-                                // testing("trasac",e, "found,found");
+                               // ifEquivalentFailed();
                             }
 
-
                             setEquivalentComponents(equivalentComponentses);
-                            // Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-
-                            //assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
-
 
                         } catch (JSONException e) {
+                            ifEquivalentFailed();
                             //  testing("trasac",e, "found,found");
                         }
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
                     } else {
+                        ifEquivalentFailed();
                         //   testing("trasac","1", "found,found");
 //                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    ifEquivalentFailed();
                     //  testing("trasac","2", "found,found");
                     Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                 }
@@ -571,6 +569,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
             @Override
             public void onFailure(Throwable t) {
+                ifEquivalentFailed();
                 Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
 
@@ -635,6 +634,12 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
             }
 
+    }
+
+    void ifEquivalentFailed(){
+        setWeight(tvAmount);
+        setWeight(tvFee);
+        setWeight(tvTotal);
     }
 
     void createEmail(String email, ImageView imageView) {

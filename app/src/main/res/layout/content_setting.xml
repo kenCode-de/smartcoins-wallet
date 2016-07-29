@@ -234,7 +234,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/l41"
             android:id="@+id/l7"
             android:orientation="vertical"
@@ -256,11 +256,11 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:weightSum="3"
-                android:layout_height="24dp">
+                android:layout_height="wrap_content">
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="2.5"
-                android:layout_height="24dp"
+                android:layout_height="wrap_content"
                 android:text="No file selected"
                 android:paddingLeft="10dp"
                 android:id="@+id/tvFolderPath"
