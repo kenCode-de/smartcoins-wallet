@@ -83,6 +83,7 @@ import de.bitshares_munich.models.Uia;
 import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
+import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -1159,7 +1160,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     public void playSound() {
         try {
-            MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.woohoo);
+            AudioFilePath audioFilePath = new AudioFilePath(getContext());
+            MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();

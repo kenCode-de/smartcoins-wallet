@@ -206,7 +206,6 @@ public class pdfTable {
     }
     public void createTransactionpdf (HashMap<String,String> map, ImageView imageView)
     {
-
         Document document = new Document();
 
         try {
