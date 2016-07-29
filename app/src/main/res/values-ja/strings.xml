@@ -76,7 +76,7 @@
 <string name="share_info">あなたのフレンドを招待してSmartcoins Walletを試してもらおう！メールアドレスは保存・収集されないのでプライバシーも確保されています。</string>
 <string name="share_subject">素晴らしいSmartcoins Wallet</string>
 <string name="share_heading">友人と共有する</string>
-    <string name="checkbox_donate">サポート開発者に2 BTSを寄付</string>
+    <string name="checkbox_donate">サポート開発者に2 BTSを寄付:</string>
 <string name="share_btn_text">メールアプリを開く</string>
 <string name="action_settings">設定</string>
 <string name="txt_validating_account">アカウントを認証しています...</string>
@@ -109,7 +109,7 @@
 <string name="message">メッセージ</string>
 <string name="pdf_generated_msg">PDFが作成され、保存されました。</string>
 <string name="pdf_generated_msg_error">PDFファイルを作成することができません。再試行してください。エラー：</string>
-<string name="raw_transactions">生のトランザクション：</string>
+<string name="raw_transactions">生のトランザクション:</string>
 <string name="extensions">Extensions</string>
 <string name="op_in_trx">op_in_trx</string>
 <string name="virtual_op">virtual_op</string>
@@ -162,7 +162,7 @@
     <string name="transfer_funds">送金中</string>
     <string name="unable_to_process">処理できません</string>
     <string name="cancel">キャンセル</string>
-    <string formatted="false" name="help_message">手数料の80％がキャッシュバックされます！ライフタイムメンバー（LTM）は、ネットワークのすべての取引手数料の80％のキャッシュバックを取得できます。ライタイムメンバーになるための費用は現在20000 BTS以下です！</string>
+    <string formatted="false" name="help_message">手数料の80％がキャッシュバックされます！ライフタイムメンバー（LTM）は、ネットワークのすべての取引手数料の80％のキャッシュバックを取得できます。ライフタイムメンバーになるための費用は現在20000 BTS以下です！</string>
     <string name="txt_yes">はい</string>
     <string name="txt_no">いいえ</string>
     <string name="txt_confirmation">確認</string>
@@ -196,20 +196,20 @@
     <string name="invalid_pin">無効なPIN</string>
     <string name="saving_bin_file_to">次の場所に.binファイルを保存</string>
     <string name="bin_file_saved_successfully_to">binファイルが次の場所に正常に保存されました</string>
-    <string name="unable_to_save_bin_file">binファイルを保存することができませんでした。</string>
+    <string name="unable_to_save_bin_file">binファイルを保存することができませんでした</string>
 
-    <string name="txt_alertmsg_fr">あなたが削除してもよろしいです</string>
-    <string name="txt_alertmsg_la">この財布からアカウント？</string>
-    <string name="bugs_or_errors">バグやエラー？</string>
-    <string name="please_let_us_know">お知らせください：</string>
+    <string name="txt_alertmsg_fr">削除してもよろしいですか</string>
+    <string name="txt_alertmsg_la">このウォレットのアカウントを？</string>
+    <string name="bugs_or_errors">バグやエラーを発見しましたか？</string>
+    <string name="please_let_us_know">お知らせください:</string>
     <string name="try_again">5分後にもう一度お試しください</string>
-    <string name="warning_msg_same_account">あなたは、同じアカウントに金額を送信することはできません。</string>
+    <string name="warning_msg_same_account">同じアカウントに送金することはできません</string>
 
-    <string name="please_backup_your_brainkey">バックアップあなたのbrainkeyしてください</string>
-    <string name="backup_brainkey_msg">どこか安全か、あなたの資金をバックアップします.binファイルが失われる可能性があります！</string>
-    <string name="unable_to_trade_bAssets">バックアップ資産を取引することができません。</string>
-    <string name="unable_to_send_amount">金額を送信することができません。</string>
-    <string name="unable_to_decode_QR">QRコードをデコードすることができません。</string>
+    <string name="please_backup_your_brainkey">あなたのブレインキーをバックアップしてください</string>
+    <string name="backup_brainkey_msg">.binファイルを安全な場所にバックアップしてください。そうしなければあなたの資産は失われる可能性があります！</string>
+    <string name="unable_to_trade_bAssets">予備通貨を取引することができませんでした。</string>
+    <string name="unable_to_send_amount">その金額を送信することができませんでした。</string>
+    <string name="unable_to_decode_QR">QRコードを読み込むことができませんでした。</string>
 
     <string name="loyalty_points">ロイヤルティポイント</string>
     <string name="str_warning_only_available">警告！唯一の ％1$s の ％2$s が利用可能です</string>
