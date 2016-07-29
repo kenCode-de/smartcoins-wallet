@@ -11,7 +11,9 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
@@ -424,72 +426,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             Toast.makeText(context, getResources().getString(R.string.updating_transaction_id), Toast.LENGTH_SHORT).show();
             return;
         } else {
-            String filename = getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped;
-            Document document = new Document();
-            String dirpath = android.os.Environment.getExternalStorageDirectory().toString();
-            try {
-                PdfWriter.getInstance(document, new FileOutputStream(dirpath + "/imagedemo.pdf"));
-                document.open();
-                buttonSend.setVisibility(View.INVISIBLE);
-                Bitmap bitmap = Bitmap.createBitmap(
-                        scrollView.getChildAt(0).getWidth(),
-                        scrollView.getChildAt(0).getHeight(),
-                        Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(bitmap);
-                scrollView.getChildAt(0).draw(c);
-                buttonSend.setVisibility(View.VISIBLE);
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] imageInByte = stream.toByteArray();
-                Image myImage = Image.getInstance(imageInByte);
-                float documentWidth = document.getPageSize().getWidth();
-                float documentHeight = document.getPageSize().getHeight() - document.topMargin() - document.bottomMargin();
-                myImage.scaleToFit(documentWidth, documentHeight);
-
-                myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
-                document.add(myImage);
-            } catch (Exception e) {
-            }
-
-            document.close();
+            generatePdf();
         }
 
-
-        /*if ( !transactionIdUpdated )
-        {
-            Toast.makeText(context,getResources().getString(R.string.updating_transaction_id),Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String filename = getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" +transactionIdClipped;
-
-        map.put("id",eReciptmap.get("id"));
-        map.put("time",date);
-        map.put("trx_in_block",eReciptmap.get("trx_in_block"));
-
-        map.put("amountFee",feeAmount);
-        map.put("amountAmount",amountAmount);
-        map.put("symbolFee",feeSymbol);
-        map.put("symbolAmount",amountSymbol);
-
-//        map.put("from",from);
-//        map.put("to",to);
-        map.put("memo",memoMsg);
-        map.put("extensions","----");
-        map.put("op_in_trx",eReciptmap.get("op_in_trx"));
-        map.put("virtual_op",eReciptmap.get("virtual_op"));
-        map.put("operation_results","----");
-
-
-        pdfTable myTable = new pdfTable(context, this, filename);
-        if (ivOtherGravatar.getVisibility() == View.VISIBLE)
-        {
-            myTable.createTransactionpdf(map,ivOtherGravatar);
-        }
-        else
-        {
-            myTable.createTransactionpdf(map,null);
-        }*/
     }
 
     String get_email(String accountName) {
@@ -725,9 +664,48 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         return output;
     }
+
     void setWeight(TextView textView){
         ViewGroup.LayoutParams params = textView.getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         textView.setLayoutParams(params);
+    }
+
+    private void generatePdf()
+    {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator +getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped+".pdf";
+        Document document = new Document();
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(path));
+            document.open();
+            buttonSend.setVisibility(View.INVISIBLE);
+            Bitmap bitmap = Bitmap.createBitmap(
+                    scrollView.getChildAt(0).getWidth(),
+                    scrollView.getChildAt(0).getHeight(),
+                    Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(bitmap);
+            scrollView.getChildAt(0).draw(c);
+            buttonSend.setVisibility(View.VISIBLE);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] imageInByte = stream.toByteArray();
+            Image myImage = Image.getInstance(imageInByte);
+            float documentWidth = document.getPageSize().getWidth();
+            float documentHeight = document.getPageSize().getHeight() - document.topMargin() - document.bottomMargin();
+            myImage.scaleToFit(documentWidth, documentHeight);
+            myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
+            document.add(myImage);
+
+            Intent email = new Intent(Intent.ACTION_SEND);
+            Uri uri = Uri.fromFile(new File(path));
+            email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.setType("application/pdf");
+            email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(email);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        document.close();
     }
 }
