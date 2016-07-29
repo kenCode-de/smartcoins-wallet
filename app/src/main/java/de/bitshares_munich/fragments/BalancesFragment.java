@@ -161,7 +161,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     LinearLayout whiteSpaceAfterBalances;
 
     private SortableTableView<TransactionDetails> tableView;
-    static ArrayList<TransactionDetails> myTransactions;
+    private ArrayList<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
 
@@ -2097,6 +2097,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         return mySavedList;
     }
 
+    TransactionsTableAdapter myTransactionsTableAdapter;
     public void TransactionUpdateOnStartUp() {
         final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref();
 
@@ -2104,7 +2105,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     isSavedTransactions = true;
-                    tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), localTransactionDetails));
+                    if ( myTransactionsTableAdapter == null )
+                    {
+                        myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), localTransactionDetails);
+                    }
+                    else
+                    {
+                        myTransactionsTableAdapter.clear();
+                        myTransactionsTableAdapter.addAll(localTransactionDetails);
+                    }
+                    tableView.setDataAdapter(myTransactionsTableAdapter);
                 //    load_more_values.setVisibility(View.VISIBLE);
                 //    load_more_values.setEnabled(true);
                     tableViewparent.setVisibility(View.VISIBLE);
@@ -2113,47 +2123,128 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
+    Handler updateTransactionsList;
+
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
         sentCallForTransactions = false;
-        try {
+        try
+        {
+            if ( updateTransactionsList == null )
+            {
+                updateTransactionsList = new Handler();
+            }
+
+            if(isSavedTransactions)
+            {
+                myTransactions.clear();
+                isSavedTransactions = false;
+                myTransactions = new ArrayList<>();
+            }
+
+            if (myTransactions.size() == 0)
+            {
+                saveTransactions(transactionDetails);
+            }
+
+            myTransactions.addAll(transactionDetails);
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+            myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
+
+            //tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
+
             getActivity().runOnUiThread(new Runnable() {
-                public void run() {
+                @Override
+                public void run()
+                {
 
-                    if(isSavedTransactions) {
-                        myTransactions.clear();
-                        isSavedTransactions = false;
-                        myTransactions = new ArrayList<>();
-                    //    updateSortTableView(tableView, myTransactions);
-                    }
-
-                   if (number_of_transactions_in_queue == 0) {
+                    if (number_of_transactions_in_queue == 0)
+                    {
                         load_more_values.setVisibility(View.GONE);
                     } else {
                         load_more_values.setVisibility(View.VISIBLE);
                         load_more_values.setEnabled(true);
                     }
 
-                    if (myTransactions.size() == 0) {
-                        saveTransactions(transactionDetails);
+
+
+                    //tableView.setDataAdapter(myTransactionsTableAdapter);
+                    //tableView.getDataAdapter().clear();
+                    //tableView.getDataAdapter().addAll(myTransactions);
+
+                    if ( progressBar.getVisibility() != View.GONE )
+                        progressBar.setVisibility(View.GONE);
+
+                    if ( tableViewparent.getVisibility() != View.VISIBLE )
+                        tableViewparent.setVisibility(View.VISIBLE);
+                }
+            });
+
+            if ( myTransactionsTableAdapter == null )
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
+            }
+            else
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
+            }
+            //tableView.setDataAdapter(myTransactionsTableAdapter);
+            /*
+            if ( myTransactionsTableAdapter == null )
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
+            }
+            else
+            {
+
+                myTransactionsTableAdapter.clear();
+
+                Runnable updateList = new Runnable() {
+                    @Override
+                    public void run() {
+                        myTransactionsTableAdapter.addAll(myTransactions);
+                        //getActivity().runOnUiThread(new Runnable() {
+                            //@Override
+                            //public void run() {
+                                //for( TransactionDetails obj:myTransactions )
+                                //{
+                                //    myTransactionsTableAdapter.add(obj);
+                                //}
+                            //}
+                        //});
+
                     }
+                };
 
-                    myTransactions.addAll(transactionDetails);
+                updateTransactionsList.postDelayed(updateList,100);
 
-                    AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                    myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
 
-                    tableView.setDataAdapter(new TransactionsTableAdapter(getContext(), myTransactions));
-                    progressBar.setVisibility(View.GONE);
-                    tableViewparent.setVisibility(View.VISIBLE);
+
+                //tableView.setDataAdapter(myTransactionsTableAdapter);
+
+                //myTransactionsTableAdapter.clear();
+                //myTransactionsTableAdapter.addAll(myTransactions);
+
+            }
+            */
+
+
+
+
+                    /*
                     if(number_of_transactions_loaded<20){
                         loadTransactions(getContext(), accountId, wifkey, number_of_transactions_loaded, 5);
                         number_of_transactions_loaded = number_of_transactions_loaded + 5;
                         load_more_values.setVisibility(View.GONE);
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }
-            });
+                    */
+
+
+
         } catch (Exception e) {
             SupportMethods.testing("TransactionUpdate", e, "try/catch");
         }
@@ -2163,8 +2254,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void Load_more_Values() {
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
-        number_of_transactions_loaded = number_of_transactions_loaded + 5;
+        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
+        number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
     void isLifeTime(final String name_id, final String id) {
@@ -2293,22 +2384,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     AssestsActivty myAssetsActivity;
 
+    boolean firstTimeLoad = true;
+
     void loadViews(Boolean onResume,Boolean accountNameChanged,boolean faitCurrencyChanged) {
 
-        load_more_values.setVisibility(View.GONE);
+        if ( firstTimeLoad )
+        {
+            if(!isSavedTransactions)
+            {
+                tableViewparent.setVisibility(View.GONE);
+                myTransactions = new ArrayList<>();
+                updateSortTableView(tableView, myTransactions);
+            }
 
-        if(!isSavedTransactions) {
-            tableViewparent.setVisibility(View.GONE);
-            myTransactions = new ArrayList<>();
-            updateSortTableView(tableView, myTransactions);
+            tableView.addDataClickListener(new tableViewClickListener(getContext()));
+            progressBar.setVisibility(View.VISIBLE);
+            firstTimeLoad = false;
+            load_more_values.setVisibility(View.GONE);
         }
 
-        // llBalances.removeAllViews();
-
-        tableView.addDataClickListener(new tableViewClickListener(getContext()));
-
-        progressBar.setVisibility(View.VISIBLE);
-        //progressBar1.setVisibility(View.VISIBLE);
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
         if (myAssetsActivity == null) {
@@ -2316,17 +2410,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myAssetsActivity.registerDelegate();
         }
 
-        if ( !onResume || accountNameChanged || faitCurrencyChanged) {
+        if ( !onResume || accountNameChanged || faitCurrencyChanged)
+        {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
         }
 
-        if(!sentCallForTransactions)
+        if( !sentCallForTransactions )
         {
+            progressBar.setVisibility(View.VISIBLE);
+            load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
-            //sentCallForTransactions=true;
-            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 5);
-            number_of_transactions_loaded = number_of_transactions_loaded + 5;
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
+            number_of_transactions_loaded = number_of_transactions_loaded + 20;
         }
     }
 
@@ -2644,10 +2740,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
 
+    TransactionActivity myTransactionActivity;
     void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad)
     {
         sentCallForTransactions = true;
-        new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
+
+        if (myTransactionActivity == null)
+        {
+            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
+        }
+        else
+        {
+            myTransactionActivity = null;
+            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
+        }
+
+        //new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
     }
     void loadTransactions(final Context context,final String id ,final String wkey,final int loaded,final int toLoad)
     {
