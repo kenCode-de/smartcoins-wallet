@@ -18,7 +18,11 @@ import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import android.view.ViewGroup;
+
 import android.widget.ImageButton;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -639,54 +643,58 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         String value = "";
         Boolean available = false;
 
-        EquivalentComponents equivalentAmount = equivalentComponentse.get(0);
-        if (equivalentAmount.id == 0) {
-            if (equivalentAmount.available) {
-                available = true;
-                tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
-            } else {
-                available = false;
-                tvAmountEquivalent.setText(value);
+        EquivalentComponents equivalentAmount  = equivalentComponentse.get(0);
+            if(equivalentAmount.id==0) {
+                if (equivalentAmount.available) {
+                    available = true;
+                    tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
+                } else {
+                    available = false;
+                    tvAmountEquivalent.setVisibility(View.GONE);
+                    setWeight(tvAmount);
+                }
+
+                EquivalentComponents equivalentFee = equivalentComponentse.get(1);
+
+                if (equivalentFee.id == 1) {
+                    if (available) {
+                        tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
+                    } else {
+                        tvFeeEquivalent.setVisibility(View.GONE);
+                        setWeight(tvFee);
+                    }
+                }
+
+                if (equivalentFee.id == 0) {
+                    if (equivalentAmount.available) {
+                        available = true;
+                        tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
+                    } else {
+                        available = false;
+                        tvAmountEquivalent.setVisibility(View.GONE);
+                        setWeight(tvAmount);
+                    }
+                }
+
+                if (equivalentAmount.id == 1) {
+                    if (available) {
+                        tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
+                    } else {
+                        tvFeeEquivalent.setVisibility(View.GONE);
+                        setWeight(tvFee);
+                    }
+                }
+
+
+                if (available) {
+                    tvTotalEquivalent.setText(equivalentAmount.faitAmount + equivalentFee.faitAmount + " " + equivalentAmount.faitAssetSymbol);
+                } else {
+                    tvTotalEquivalent.setText(value);
+                    setWeight(tvTotal);
+                }
+
+                tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
             }
-        }
-
-        EquivalentComponents equivalentFee = equivalentComponentse.get(1);
-
-        if (equivalentFee.id == 1) {
-            if (available) {
-                tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
-            } else {
-                tvFeeEquivalent.setText(value);
-            }
-        }
-
-        if (equivalentFee.id == 0) {
-            if (equivalentAmount.available) {
-                available = true;
-                tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
-            } else {
-                available = false;
-                tvAmountEquivalent.setText(value);
-            }
-        }
-
-        if (equivalentAmount.id == 1) {
-            if (available) {
-                tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
-            } else {
-                tvFeeEquivalent.setText(value);
-            }
-        }
-
-
-        if (available) {
-            tvTotalEquivalent.setText(equivalentAmount.faitAmount + equivalentFee.faitAmount + " " + equivalentAmount.faitAssetSymbol);
-        } else {
-            tvTotalEquivalent.setText(value);
-        }
-
-        tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
-
 
     }
 
@@ -716,5 +724,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+    void setWeight(TextView textView){
+        ViewGroup.LayoutParams params = textView.getLayoutParams();
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        textView.setLayoutParams(params);
     }
 }
