@@ -327,7 +327,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             if (getLangCode.get(i).equalsIgnoreCase("zh-rTW")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rTW";
-                langCode.lang = "Chinese"+ "; " + "zh-TW " +  "(繁體中文)";
+                langCode.lang = "Chinese"+ "; " + "zh-rTW" +  "(繁體中文)";
                 langArray.add(langCode);
             } else {
                 LangCode langCode = new LangCode();

@@ -283,18 +283,14 @@ public class Helper {
         for (String countryCode : locales) {
 
             Locale locale = new Locale("", countryCode);
-            try
-            {
+            try {
                 Currency currency = Currency.getInstance(locale);
                 String proposedSpinnerText = locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
 
-                if ( proposedSpinnerText.equals(spinnerText) )
-                {
+                if (proposedSpinnerText.equals(spinnerText)) {
                     return countryCode;
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
 
             }
         }
@@ -304,13 +300,10 @@ public class Helper {
     public static String getSpinnertextCountry(String countryCode) {
 
         Locale locale = new Locale("", countryCode);
-        try
-        {
+        try {
             Currency currency = Currency.getInstance(locale);
             return locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
         return "";
@@ -326,7 +319,12 @@ public class Helper {
     }
 
     public static void setLocale(String lang, Resources res) {
-        Locale myLocale = new Locale(lang);
+        Locale myLocale;
+        if (lang.equalsIgnoreCase("zh-rTW")) {
+            myLocale = Locale.TRADITIONAL_CHINESE;
+        } else {
+            myLocale = new Locale(lang);
+        }
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
@@ -405,45 +403,33 @@ public class Helper {
     public static String getFadeCurrency(Context context) {
         Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
         if (isFade) {
-            String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
-            return currency[currency.length-1].replace("(","").replace(")","");
+            String currency[] = Helper.fetchStringSharePref(context, context.getString(R.string.pref_fade_currency)).split(" ");
+            return currency[currency.length - 1].replace("(", "").replace(")", "");
         } else {
             return "EUR";
         }
     }
 
-    public static String padString(String str)
-    {
-        if (str == null || str.isEmpty())
-        {
+    public static String padString(String str) {
+        if (str == null || str.isEmpty()) {
             return "0";
-        }
-        else if (str.equals("."))
-        {
+        } else if (str.equals(".")) {
             return "0.";
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 return String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(str));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return null;
             }
         }
     }
 
-    public static int convertDOubleToInt(Double value)
-    {
+    public static int convertDOubleToInt(Double value) {
         String valueString = Double.toString(value);
 
-        for ( int i = 0 ; i < valueString.length() ; i++ )
-        {
-            if ( valueString.charAt(i) == '.' )
-            {
-                valueString = valueString.substring(0,i);
+        for (int i = 0; i < valueString.length(); i++) {
+            if (valueString.charAt(i) == '.') {
+                valueString = valueString.substring(0, i);
                 break;
             }
         }
@@ -453,8 +439,7 @@ public class Helper {
         return valueInteger;
     }
 
-    public static boolean isRTL(Locale locale, String symbol)
-    {
+    public static boolean isRTL(Locale locale, String symbol) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
 
 
@@ -465,12 +450,9 @@ public class Helper {
 
         String formattedtext = currencyFormat.format(100.0);
 
-        if ( formattedtext.startsWith(symbol) )
-        {
+        if (formattedtext.startsWith(symbol)) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
 
