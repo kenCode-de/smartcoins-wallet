@@ -198,8 +198,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 //            email = get_email(from);
         }
 
-        emailOther = get_email(otherName);
-        emailOther = "fawaz_ahmed@live.com";
+      //  emailOther = get_email(otherName);
+     //   emailOther = "fawaz_ahmed@live.com";
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -335,7 +335,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         this.runOnUiThread(new Runnable() {
             public void run() {
 
-                createEmail(emailOther, ivOtherGravatar);
+             //   createEmail(emailOther, ivOtherGravatar);
 
                 // createEmail(emailUser,ivUserGravatar);
 

@@ -57,16 +57,17 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Knysys"
+                        android:text=""
                         android:textSize="35dp"
                         android:id="@+id/tvOtherCompany"
+                        android:visibility="gone"
                         />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Syed Muhammad"
+                        android:text=""
                         android:textSize="15dp"
                         android:id="@+id/tvOtherName"
                         />
@@ -75,7 +76,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="131"
+                        android:text=""
                         android:id="@+id/tvOtherId"
                         android:textSize="13dp"
                         />
@@ -84,7 +85,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Address"
+                        android:text=""
+                        android:visibility="gone"
                         android:id="@+id/tvAddress"
                         android:textSize="15dp"
                         />
@@ -93,8 +95,9 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Contacts"
+                        android:text=""
                         android:id="@+id/tvContact"
+                        android:visibility="gone"
                         android:textSize="15dp"
 
                         />
@@ -108,7 +111,6 @@
                         android:layout_height="match_parent"
                         android:gravity="left|center"
                         android:textColor="@color/black"
-                        android:text="27/7/2016"
                         android:id="@+id/TvBlockNum"
                         android:layout_centerInParent="true"
                         android:textSize="18dp"
@@ -130,7 +132,6 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Sender Account"
                         android:textSize="18dp"
                         android:id="@+id/tvUserStatus"
                         />
@@ -140,7 +141,6 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="Syed Abdullah"
                         android:textSize="15dp"
                         android:id="@+id/tvUserName"
                         />
@@ -149,7 +149,6 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text="131"
                         android:id="@+id/tvUserId"
                         android:textSize="13dp"
                         />
@@ -158,13 +157,82 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="250dp"
                     android:id="@+id/llDetailsTable"
                     android:layout_below="@+id/llUserAccount"
                     android:orientation="vertical"
                     android:layout_marginTop="10dp"
-                    android:weightSum="3"
+                    android:weightSum="5"
                     >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/simple_line"
+                        android:orientation="horizontal"
+                        android:layout_height="0dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Item 1"
+                            android:gravity="left|center"
+                            android:layout_height="match_parent" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:weightSum="2"
+                            android:paddingTop="3dp"
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_weight="2"
+                                android:text="----"
+                                android:textColor="@color/black"
+                                android:gravity="center_vertical|right"
+                                android:textSize="13dp"
+                                android:layout_height="0dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:weightSum="3"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/simple_line"
+                        android:orientation="horizontal"
+                        android:layout_height="0dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="Item 2"
+                            android:gravity="left|center"
+                            android:layout_height="match_parent" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:weightSum="2"
+                            android:paddingTop="3dp"
+                            >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_weight="2"
+                                android:text="----"                                android:textColor="@color/black"
+                                android:gravity="center_vertical|right"
+                                android:textSize="13dp"
+                                android:layout_height="0dp" />
+                        
+                        </LinearLayout>
+
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:weightSum="3"
