@@ -212,4 +212,11 @@
     <string name="str_warning_only_available">Avvertimento! Solo %1$s %2$s è disponibile</string>
     <string name="str_balance_available">%1$s %2$s disponibile</string>
 
+    <string name="select_backup_asset">Selezionare Asset Backup</string>
+    <string name="sender_account">account mittente</string>
+    <string name="receiver_account">conto Ricevitore</string>
+    <string name="total">Totale</string>
+    <string name="payment_method">Metodo di pagamento</string>
+    <string name="thankyou_string">Grazie per l\'utilizzo Smartcoins Portafoglio</string>
+
 </resources>

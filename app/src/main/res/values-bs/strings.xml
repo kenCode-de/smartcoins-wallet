@@ -213,5 +213,12 @@
     <string name="str_warning_only_available">Upozorenje! Samo %1$s %2$s je dostupan</string>
     <string name="str_balance_available">%1$s %2$s dostupan</string>
 
+    <string name="select_backup_asset">Odaberite Backup imovine</string>
+    <string name="sender_account">Sender računa</string>
+    <string name="receiver_account">Receiver računa</string>
+    <string name="total">ukupan</string>
+    <string name="payment_method">Način plaćanja</string>
+    <string name="thankyou_string">Hvala za korišćenje Smartcoins Wallet</string>
+
 
 </resources>

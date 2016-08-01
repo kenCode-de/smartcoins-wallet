@@ -210,5 +210,11 @@
     <string name="loyalty_points">نقاط الولاء</string>
     <string name="str_warning_only_available">تحذير! فقط٪ 1 $ s من٪ 2 $ s غير متاح</string>
     <string name="str_balance_available">٪ 1 $ s من٪ 2 $ الصورة المتاحة</string>
+    <string name="select_backup_asset">تحديد الأصول الاحتياطية</string>
+    <string name="sender_account">حساب المرسل</string>
+    <string name="receiver_account">حساب المتلقي</string>
+    <string name="total">مجموع</string>
+    <string name="payment_method">طريقة الدفع او السداد</string>
+    <string name="thankyou_string">الشكر لاستخدام Smartcoins محفظة</string>
 
 </resources>

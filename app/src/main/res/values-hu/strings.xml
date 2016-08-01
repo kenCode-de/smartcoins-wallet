@@ -213,5 +213,11 @@
     <string name="str_warning_only_available">Figyelem! Csak %1$s %2$s elérhető</string>
     <string name="str_balance_available">%1$s %2$s elérhető</string>
 
+    <string name="select_backup_asset">Válassza Backup Asset</string>
+    <string name="sender_account">feladó fiók</string>
+    <string name="receiver_account">Vevő számla</string>
+    <string name="total">Teljes</string>
+    <string name="payment_method">Fizetési mód</string>
+    <string name="thankyou_string">Köszönöm használatához Smartcoins Wallet</string>
 
 </resources>

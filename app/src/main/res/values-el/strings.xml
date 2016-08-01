@@ -225,4 +225,11 @@
     
     <string name="unable_to_send_amount">Αδυναμία αποστολής ποσού</string>
     <string name="unable_to_decode_QR">Αδυναμία αποκωδικοποίησης QR-Code.</string>
+
+    <string name="select_backup_asset">Επιλέξτε Δημιουργία αντιγράφων ασφαλείας Ενεργητικού</string>
+    <string name="sender_account">Ο λογαριασμός αποστολέα</string>
+    <string name="receiver_account">δέκτης Λογαριασμού</string>
+    <string name="total">Σύνολο</string>
+    <string name="payment_method">Μέθοδος πληρωμής</string>
+    <string name="thankyou_string">Σας ευχαριστώ για τη χρήση Smartcoins Πορτοφόλι</string>
   </resources>

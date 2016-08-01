@@ -214,4 +214,11 @@
     <string name="str_warning_only_available">चेतावनी! केवल %1$s %2$s उपलब्ध है</string>
     <string name="str_balance_available">%1$s %2$s उपलब्ध</string>
 
+    <string name="select_backup_asset">बैकअप एसेट का चयन करें</string>
+    <string name="sender_account">प्रेषक अकाउंट</string>
+    <string name="receiver_account">रिसीवर अकाउंट</string>
+    <string name="total">कुल</string>
+    <string name="payment_method">भुगतान का तरीका</string>
+    <string name="thankyou_string">ठनक Smartcoins बटुआ का उपयोग करने के लिए</string>
+
 </resources>

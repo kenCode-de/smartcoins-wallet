@@ -215,5 +215,12 @@
     <string name="str_warning_only_available">Զգուշացում! ՄԻԱՅՆ %1$s %2$s հասանելի է</string>
     <string name="str_balance_available">%1$s %2$s հասանելի</string>
 
+    <string name="select_backup_asset">Ընտրել Backup ակտիվի</string>
+    <string name="sender_account">Ուղարկողի Հաշվի</string>
+    <string name="receiver_account">ընդունիչ Հաշվի</string>
+    <string name="total">ընդհանուր</string>
+    <string name="payment_method">Վճարման եղանակ</string>
+    <string name="thankyou_string">Thankyou օգտագործելու համար Smartcoins Wallet</string>
+
 
 </resources>

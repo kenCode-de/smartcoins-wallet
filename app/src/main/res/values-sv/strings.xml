@@ -212,5 +212,12 @@
     <string name="str_warning_only_available">Varning! Endast %1$s %2$s är tillgänglig</string>
     <string name="str_balance_available">%1$s %2$s tillgängliga</string>
 
+    <string name="select_backup_asset">Välj Backup Asset</string>
+    <string name="sender_account">avsändarkonto</string>
+    <string name="receiver_account">mottagare konto</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Betalningsmetod</string>
+    <string name="thankyou_string">Tack för att du använder Smartcoins Wallet</string>
+
 
 </resources>
