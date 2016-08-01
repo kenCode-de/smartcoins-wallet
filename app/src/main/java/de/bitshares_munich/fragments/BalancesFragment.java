@@ -629,6 +629,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
+        // use standard asset names (like add bit etc)
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         ArrayList<String> symbols = assetsSymbols.updatedList(sym);
 
