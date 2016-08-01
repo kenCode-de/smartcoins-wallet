@@ -327,5 +327,12 @@
 
     <string name="loyalty_points">Lojaalisuuspisteet</string>
 
+    <string name="select_backup_asset">Valitse Backup Asset</string>
+    <string name="sender_account">lähettäjän Account</string>
+    <string name="receiver_account">vastaanotin Account</string>
+    <string name="total">Kaikki yhteensä</string>
+    <string name="payment_method">Maksutapa</string>
+    <string name="thankyou_string">Kiitos käyttää Smartcoins Wallet</string>
+
 
 </resources>

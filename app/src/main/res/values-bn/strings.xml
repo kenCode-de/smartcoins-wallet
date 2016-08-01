@@ -213,6 +213,13 @@
     <string name="str_warning_only_available">সতর্কবাণী! শুধু %1$s এর %2$s এর উপলব্ধ</string>
     <string name="str_balance_available">%1$s এর %2$s এর প্রাপ্তিসাধ্য</string>
 
+    <string name="select_backup_asset">ব্যাকআপ অ্যাসেট নির্বাচন</string>
+    <string name="sender_account">প্রেরকের অ্যাকাউন্ট</string>
+    <string name="receiver_account">রিসিভার অ্যাকাউন্ট</string>
+    <string name="total">মোট</string>
+    <string name="payment_method">মূল্যপরিশোধ পদ্ধতি</string>
+    <string name="thankyou_string">কুইক রেন্টাল Smartcoins ওয়ালেট ব্যবহার করার জন্য</string>
+
 
 
 

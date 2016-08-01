@@ -212,5 +212,12 @@
     <string name="str_warning_only_available">Предупреждение! Только %1$s %2$s доступен</string>
     <string name="str_balance_available">%1$s %2$s доступен</string>
 
+    <string name="select_backup_asset">Выберите резервные ресурсы</string>
+    <string name="sender_account">Счет отправителя</string>
+    <string name="receiver_account">Получатель Счет</string>
+    <string name="total">Всего</string>
+    <string name="payment_method">Способ оплаты</string>
+    <string name="thankyou_string">Thankyou для использования Smartcoins Кошелек</string>
+
 
 </resources>

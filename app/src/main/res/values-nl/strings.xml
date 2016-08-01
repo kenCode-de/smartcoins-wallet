@@ -212,5 +212,12 @@
     <string name="str_warning_only_available">Waarschuwing! Slechts %1$s %2$s is beschikbaar</string>
     <string name="str_balance_available">%1$s %2$s beschikbaar</string>
 
+    <string name="select_backup_asset">Selecteer Backup Asset</string>
+    <string name="sender_account">Sender account</string>
+    <string name="receiver_account">receiver account</string>
+    <string name="total">Totaal</string>
+    <string name="payment_method">Betalingsmiddel</string>
+    <string name="thankyou_string">Dank u voor het gebruik van Smartcoins Wallet</string>
+
 </resources>
 

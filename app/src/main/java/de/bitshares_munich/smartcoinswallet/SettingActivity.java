@@ -84,6 +84,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String hide_donations = "hide_donations";
     final String hide_donations_isChanged = "hide_donations_isChanged";
     final String date_time = "date_time";
+    Boolean isFirstTime = true;
     final String register_new_account = "register_new_account";
     //String brainKey = "";
 
@@ -441,20 +442,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
             arrayAccountAssets = assetsSymbols.updatedList(arrayAccountAssets);
 
+            arrayAccountAssets.add(0,getString(R.string.select_backup_asset));
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
 
-            //Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-            if (posBackupAssets!=-9) {
-                //int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-                spBackupAsset.setSelection(posBackupAssets);
-            } else {
-                int index = arrayAccountAssets.indexOf("BTS");
-                if (index >= 0) {
-                    spBackupAsset.setSelection(index);
-                } else {
-                    spBackupAsset.setSelection(0);
+            spBackupAsset.setSelection(0);
+
+            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
+            if(isBackupAsset) {
+                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
+                    if (posBackupAssets != -9) {
+                        spBackupAsset.setSelection(posBackupAssets);
+                    }
                 }
             }
         }
@@ -595,21 +596,48 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+//    @OnNothe
+//    ArrayList<String> arrayAccountAssets = new ArrayList<>();
+//    for (int j = 0; j < 10 ; j++) {
+//        arrayAccountAssets.add(String.valueOf(j));
+//    }
+//    ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
+//    adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//    spBackupAsset.setAdapter(adapterAccountAssets);
+
+
+
+
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
-        designMethod();
-        if (position >= 0) {
-            String selected = spBackupAsset.getSelectedItem().toString();
-            selected = selected.replace("bit","");
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), selected);
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if(accountDetails.get(i).isSelected)
-                {
-                    accountDetails.get(i).posBackupAsset=position;
+        if(!isFirstTime) {
+            designMethod();
+            if (position > 0) {
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), true);
+                String selected = spBackupAsset.getSelectedItem().toString();
+                selected = selected.replace("bit", "");
+                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), selected);
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).posBackupAsset = position;
+                    }
                 }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+                // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
             }
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-           // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
+        else  if (position == 0)
+            {
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), false);
+                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), "");
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).posBackupAsset = -9;
+                    }
+                }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            }
+        }else {
+            isFirstTime=false;
         }
     }
 

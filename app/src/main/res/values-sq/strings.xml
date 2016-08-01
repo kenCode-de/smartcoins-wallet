@@ -217,4 +217,11 @@
     <string name="unable_to_send_amount">e pamundur te dergosh shumen.</string>
     <string name="unable_to_decode_QR">e pamundur te deshifrosh kodin QR</string>
 
+    <string name="select_backup_asset">Zgjidhni Asetin Backup</string>
+    <string name="sender_account">Llogaria Sender</string>
+    <string name="receiver_account">Llogaria Marresit</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Metoda e pagesës</string>
+    <string name="thankyou_string">Thankyou për përdorimin Smartcoins portofolin</string>
+
 </resources>

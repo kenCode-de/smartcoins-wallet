@@ -215,4 +215,11 @@
     <string name="str_warning_only_available">Внимание! Само %1$s %2$s и е на разположение</string>
     <string name="str_balance_available">%1$s %2$s и достъпно</string>
 
+    <string name="select_backup_asset">Изберете Backup Асет</string>
+    <string name="sender_account">Sender профил</string>
+    <string name="receiver_account">приемник на профила</string>
+    <string name="total">Обща сума</string>
+    <string name="payment_method">Начин на плащане</string>
+    <string name="thankyou_string">Благодаря за помощта на Smartcoins Wallet</string>
+
 </resources>

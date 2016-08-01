@@ -633,8 +633,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         ArrayList<String> symbols = assetsSymbols.updatedList(sym);
 
 
-        if (count <= 0) BalanceAssetsLoad(symbols, pre, am, onStartUp);
-        if (count > 0) BalanceAssetsUpdate(symbols, pre, am);
+        if (count <= 0)
+            BalanceAssetsLoad(symbols, pre, am, onStartUp);
+        if (count > 0)
+            BalanceAssetsUpdate(symbols, pre, am);
 
         /*
         Handler zeroBalanceHandler = new Handler();
@@ -1077,6 +1079,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             if(assetsSymbols.isUiaSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.4f", b));
                             else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.2f", b));
+                            else textView1.setText(String.format(locale, "%.4f", b));
+
                         }
 
                         if (counter == 2)
@@ -1088,6 +1092,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             if(assetsSymbols.isUiaSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.4f",Float.parseFloat(r)));
                             else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
+                            else textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
 
                             llBalances.addView(customView);
                         }
@@ -1265,6 +1270,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
                             if(assetsSymbols.isUiaSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
                             else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            else tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
+
                             tvSymOne.setText(symbol);
                           //  tvAmOne.setText(amount);
                             tvfaitOne.setText(fait);
@@ -1320,6 +1327,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
                             if(assetsSymbols.isUiaSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
                             else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            else tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
 
                             tvSymtwo.setText(symbol);
                           //  tvAmtwo.setText(amount);

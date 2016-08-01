@@ -177,7 +177,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:text="Amount"
+                            android:text="@string/amount"
                             android:gravity="left|center"
                             android:layout_height="match_parent" />
                         <LinearLayout
@@ -221,7 +221,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:text="Fee"
+                            android:text="@string/fee_capital"
                             android:gravity="left|center"
                             android:layout_height="match_parent" />
                         <LinearLayout
@@ -265,7 +265,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_weight="1"
-                            android:text="Total"
+                            android:text="@string/total"
                             android:gravity="left|center"
                             android:layout_height="match_parent" />
                         <LinearLayout
@@ -318,7 +318,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="Payment Method"
+                            android:text="@string/payment_method"
                             android:gravity="center"
                             />
                         <TextView
@@ -362,7 +362,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
-                                    android:text="Smartcoins Wallet"
+                                    android:text="@string/app_name"
                                     android:gravity="left|center"
                                     android:textColor="@color/black"
                                     android:textSize="15dp"
@@ -418,7 +418,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="Memo"
+                            android:text="@string/memo_capital"
                             android:gravity="center"
                             />
                         <TextView
@@ -462,7 +462,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Thankyou for using Smartcoins Wallet"
+                android:text="@string/thankyou_string"
                 />
 
                 </LinearLayout>
