@@ -213,5 +213,12 @@
     <string name="str_warning_only_available">Advarsel! Bare %1$s %2$s er tilgjengelig</string>
     <string name="str_balance_available">%1$s %2$s tilgjengelig</string>
 
+    <string name="select_backup_asset">Velg Backup Asset</string>
+    <string name="sender_account">Sender konto</string>
+    <string name="receiver_account">mottaker konto</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Betalingsmetode</string>
+    <string name="thankyou_string">Takk for hjelp Smartcoins lommebok</string>
+
 
 </resources>

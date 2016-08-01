@@ -214,5 +214,12 @@
     <string name="str_warning_only_available">אַזהָרָה! רק %1$s %2$s זמין</string>
     <string name="str_balance_available">%1$s %2$s זמין</string>
 
+    <string name="select_backup_asset">בחר נכסי גיבוי</string>
+    <string name="sender_account">חשבון השולח</string>
+    <string name="receiver_account">חשבון מקלט</string>
+    <string name="total">סה"כ</string>
+    <string name="payment_method">אמצעי תשלום</string>
+    <string name="thankyou_string">תודה על השימוש בארנק Smartcoins</string>
+
 
 </resources>

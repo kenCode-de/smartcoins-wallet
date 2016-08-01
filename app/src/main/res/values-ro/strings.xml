@@ -212,4 +212,11 @@
     <string name="str_warning_only_available">Avertizare! Doar %1$s %2$s este disponibil</string>
     <string name="str_balance_available">%1$s %2$s disponibilă</string>
 
+    <string name="select_backup_asset">Selectați Activ Backup</string>
+    <string name="sender_account">cont expeditor</string>
+    <string name="receiver_account">Contul receptor</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Modalitate de plată</string>
+    <string name="thankyou_string">Vămulțumim pentru utilizarea Smartcoins Wallet</string>
+
 </resources>

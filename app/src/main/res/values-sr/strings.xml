@@ -214,4 +214,11 @@
     <string name="str_warning_only_available">Упозорење! Само %1$s %2$s је доступан</string>
     <string name="str_balance_available">%1$s %2$s доступан</string>
 
+    <string name="select_backup_asset">Изабери Бацкуп основног средства</string>
+    <string name="sender_account">пошиљалац налог</string>
+    <string name="receiver_account">пријемник рачуна</string>
+    <string name="total">укупан</string>
+    <string name="payment_method">Начин плаћања</string>
+    <string name="thankyou_string">Хвала за коришћење Смартцоинс новчаник</string>
+
 </resources>

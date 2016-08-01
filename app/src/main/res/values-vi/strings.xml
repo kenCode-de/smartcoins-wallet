@@ -212,5 +212,12 @@
     <string name="str_warning_only_available">Cảnh báo! Chỉ %1$s %2$s có sẵn</string>
     <string name="str_balance_available">%1$s %2$s có sẵn</string>
 
+    <string name="select_backup_asset">Chọn tài sản lưu</string>
+    <string name="sender_account">Tài khoản Tên người gửi</string>
+    <string name="receiver_account">Tài khoản thu</string>
+    <string name="total">Tổng số</string>
+    <string name="payment_method">Phương thức thanh toán</string>
+    <string name="thankyou_string">Thankyou cho sử dụng Smartcoins Wallet</string>
+
 
 </resources>

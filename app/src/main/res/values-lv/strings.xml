@@ -213,5 +213,12 @@
     <string name="str_warning_only_available">Uzmanību! Tikai %1$s %2$s ir pieejams</string>
     <string name="str_balance_available">%1$s %2$s pieejams</string>
 
+    <string name="select_backup_asset">Izvēlieties Backup Asset</string>
+    <string name="sender_account">sūtītājs konts</string>
+    <string name="receiver_account">uztvērējs konts</string>
+    <string name="total">Kopā</string>
+    <string name="payment_method">Apmaksas veids</string>
+    <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
+
 </resources>
 

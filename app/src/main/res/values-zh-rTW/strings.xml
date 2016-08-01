@@ -212,4 +212,11 @@
     <string name="str_warning_only_available">警告！只有 ％1$s ％2$s 可用</string>
     <string name="str_balance_available">％1$s ％2$s 可用</string>
 
+    <string name="select_backup_asset">選擇備份資產</string>
+    <string name="sender_account">發件人帳戶</string>
+    <string name="receiver_account">接收賬戶</string>
+    <string name="total">總</string>
+    <string name="payment_method">付款方法</string>
+    <string name="thankyou_string">三江源使用Smartcoins錢包</string>
+
 </resources>

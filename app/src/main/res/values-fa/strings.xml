@@ -214,5 +214,12 @@
     <string name="str_warning_only_available">اخطار! فقط %1$s %2$s موجود است</string>
     <string name="str_balance_available">%1$s %2$s در دسترس</string>
 
+    <string name="select_backup_asset">انتخاب دارایی پشتیبان گیری</string>
+    <string name="sender_account">حساب فرستنده</string>
+    <string name="receiver_account">حساب گیرنده</string>
+    <string name="total">جمع</string>
+    <string name="payment_method">روش پرداخت</string>
+    <string name="thankyou_string">Thankyou برای استفاده از کیف پول Smartcoins</string>
+
 
 </resources>

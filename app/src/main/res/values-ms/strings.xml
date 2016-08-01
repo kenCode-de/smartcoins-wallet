@@ -212,4 +212,11 @@
     <string name="str_warning_only_available">Amaran! Hanya %1$s %2$s boleh didapati</string>
     <string name="str_balance_available">%1$s %2$s tersedia</string>
 
+    <string name="select_backup_asset">Pilih Aset Sandaran</string>
+    <string name="sender_account">Akaun Pengguna</string>
+    <string name="receiver_account">Akaun penerima</string>
+    <string name="total">Jumlah</string>
+    <string name="payment_method">Kaedah pembayaran</string>
+    <string name="thankyou_string">Terima kasih kerana sudi menggunakan Smartcoins Wallet</string>
+
 </resources>
