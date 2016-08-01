@@ -214,6 +214,7 @@
     <string name="pref_country">country_iso_code</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_backup_asset_selected">backup_asset_selected</string>
     <string name="pref_account_name">account_name</string>
     <string name="pref_language">language</string>
     <string name="pref_backup_symbol">backup_symbol</string>
@@ -341,5 +342,14 @@
     <string name="pref_backup_bin_exist">backup_bin_exist</string>
 
     <string name="loyalty_points">Loyalty Points</string>
+
+
+    <string name="select_backup_asset">Select Backup Asset</string>
+    <string name="sender_account">Sender Account</string>
+    <string name="receiver_account">Receiver Account</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="thankyou_string">Thankyou for using Smartcoins Wallet</string>
+
 
 </resources>
