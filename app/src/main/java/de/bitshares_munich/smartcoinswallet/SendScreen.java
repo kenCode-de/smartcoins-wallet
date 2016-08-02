@@ -426,40 +426,44 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etLoyalty)
     void onLoyaltyChanged(CharSequence text) {
 
-        if (text.toString().equals("")) {
-            text = "0";
-        } else if (text.toString().equals(".")) {
-            text = "0.";
-        }
-        Double loyaltyAmount = Double.parseDouble(text.toString());
-        Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
-        if (loyaltyAmount > loyaltyBalance) {
-            tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+        try {
 
-        } else {
-            String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
-            tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
-        }
+            if (text.toString().equals("")) {
+                text = "0";
+            } else if (text.toString().equals(".")) {
+                text = "0.";
+            }
+            Double loyaltyAmount = Double.parseDouble(text.toString());
+            Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
+            if (loyaltyAmount > loyaltyBalance) {
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
 
-        setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
+            } else {
+                String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
+            }
 
-        if (loyaltyAsset != null && backupAssets != null) {
-            count = 1;
-            updateTotalStatus();
-        } else {
-            if (exchangeRate != null) {
-                String backupAssetAmount = etBackupAsset.getText().toString();
+            setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
 
-                if (backupAssetAmount.equals("")) {
-                    backupAssetAmount = "0";
-                }
-                Double remainingAmount = requiredAmount - (loyaltyAmount * exchangeRate) - Double.valueOf(backupAssetAmount);
-                etAmount.setText(remainingAmount.toString());
+            if (loyaltyAsset != null && backupAssets != null) {
+                count = 1;
                 updateTotalStatus();
             } else {
-                getExchangeRate(100);
+                if (exchangeRate != null) {
+                    String backupAssetAmount = etBackupAsset.getText().toString();
+
+                    if (backupAssetAmount.equals("")) {
+                        backupAssetAmount = "0";
+                    }
+                    Double remainingAmount = requiredAmount - (loyaltyAmount * exchangeRate) - Double.valueOf(backupAssetAmount);
+                    etAmount.setText(remainingAmount.toString());
+                    updateTotalStatus();
+                } else {
+                    getExchangeRate(100);
+                }
             }
         }
+        catch (Exception e){}
 
     }
 
@@ -470,44 +474,46 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     private void backupAssetCHanged(String text) {
-        count = 1;
-        if (text.toString().equals("")) {
-            text = "0";
-        } else if (text.toString().equals(".")) {
-            text = "0.";
-        }
-
-        Double backupAssetAmount = Double.parseDouble(text.toString());
-        Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-
-        String backupAssetSym;
-        AssetsSymbols assetsSymbols = new AssetsSymbols(context);
-        backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
-
-        if (backupAssetAmount > backupAssetBalance) {
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
-        } else {
-            String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
-        }
-
-        setHyperlinkText(tvBackupAssetBalanceValidate, backupAssetBalance.toString(), etBackupAsset, 0, backupAssetSym, Color.BLACK);
-
-        if (backAssetRate != null) {
-            String loyaltyAmount = etLoyalty.getText().toString();
-
-            if (loyaltyAmount.equals("")) {
-                loyaltyAmount = "0";
+        try {
+            count = 1;
+            if (text.toString().equals("")) {
+                text = "0";
+            } else if (text.toString().equals(".")) {
+                text = "0.";
             }
 
-            if (requiredAmount != null) {
-                Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
-                etAmount.setText(remainingAmount.toString());
+            Double backupAssetAmount = Double.parseDouble(text.toString());
+            Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+
+            String backupAssetSym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+
+            if (backupAssetAmount > backupAssetBalance) {
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
+            } else {
+                String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
             }
-            updateTotalStatus();
-        } else {
-            getExchangeRate(200);
-        }
+
+            setHyperlinkText(tvBackupAssetBalanceValidate, backupAssetBalance.toString(), etBackupAsset, 0, backupAssetSym, Color.BLACK);
+
+            if (backAssetRate != null) {
+                String loyaltyAmount = etLoyalty.getText().toString();
+
+                if (loyaltyAmount.equals("")) {
+                    loyaltyAmount = "0";
+                }
+
+                if (requiredAmount != null) {
+                    Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
+                    etAmount.setText(remainingAmount.toString());
+                }
+                updateTotalStatus();
+            } else {
+                getExchangeRate(200);
+            }
+        }catch (Exception e){}
     }
 
     @OnTextChanged(R.id.etBackupAsset)
@@ -687,6 +693,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
             }
 
+            //Crashing
             setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 14, selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
@@ -1273,9 +1280,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         sendBtnPressed = false;
                         validating = false;
                         // This code works correct, donot edit if it shows red underline
-                        String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                        format = format.replaceAll("\\s+", " ").trim();
-                        tvErrorRecieverAccount.setText(format);
+                        try {
+                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+                            format = format.replaceAll("\\s+", " ").trim();
+                            tvErrorRecieverAccount.setText(format);
+                        } catch (Exception e) {
+                            tvErrorRecieverAccount.setText("");
+                        }
+
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
                 });
@@ -1388,7 +1400,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             // shayan friday night
 
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
