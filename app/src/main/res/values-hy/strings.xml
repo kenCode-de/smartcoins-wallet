@@ -9,8 +9,8 @@
 <string name="account">Հաշիվ</string>
 <string name="friendly_name">Անուն</string>
 <string name="notes">Նշումներ</string>
-    <string name="please_make_sure_your_pin">Խնդրում ենք համոզվել, որ Ձեր PIN-ը ճիշտ է</string>
-    <string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ է կամ ճիշտ PIN ֆայլ է ընտրվել</string>
+    <!--<string name="please_make_sure_your_pin">Խնդրում ենք համոզվել, որ Ձեր PIN-ը ճիշտ է</string>-->
+    <!--<string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ է կամ ճիշտ PIN ֆայլ է ընտրվել</string>-->
 <string name="note">Նշում</string>
 <string name="payment_received">Վճարումը ստացվել է</string>
 <string name="import_brainkey">Ներմուծել բանալի BrainKey</string>
