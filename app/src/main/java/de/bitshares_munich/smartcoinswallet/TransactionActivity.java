@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -338,6 +339,7 @@ public class TransactionActivity implements IBalancesDelegate {
             @Override
             public void onFailure(Throwable t) {
           //      testing("bijli",t,"past_break");
+                Log.d("decode memo","failure " + t.getMessage());
             }
         });
     }
@@ -424,11 +426,20 @@ public class TransactionActivity implements IBalancesDelegate {
             faitCurrency = "EUR";
         }
 
+        final List<String> pairs = new ArrayList<>();
         String values = "";
+
         for (int i = 0; i < transactionDetailses.size(); i++) {
             TransactionDetails transactionDetails = transactionDetailses.get(i);
-            if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
-                values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
+            if (!transactionDetails.assetSymbol.equals(faitCurrency))
+            {
+                String toAdd = transactionDetails.assetSymbol + ":" + faitCurrency;
+
+                if ( !values.contains(toAdd) )
+                {
+                    values += toAdd + ",";
+                    pairs.add(toAdd);
+                }
             }
         }
 
@@ -450,10 +461,13 @@ public class TransactionActivity implements IBalancesDelegate {
         postingService.enqueue(new Callback<EquivalentComponentResponse>() {
             @Override
             public void onResponse(Response<EquivalentComponentResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess())
+                {
                     EquivalentComponentResponse resp = response.body();
-                    if (resp.status.equals("success")) {
-                        try {
+                    if (resp.status.equals("success"))
+                    {
+                        try
+                        {
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
                             HashMap<String,Object> hm = new HashMap<>();
@@ -462,6 +476,11 @@ public class TransactionActivity implements IBalancesDelegate {
                             {
                                 String key = keys.next();
                                 hm.put(key.split(":")[0], rates.get(key));
+
+                                if ( pairs.contains(key) )
+                                {
+                                    pairs.remove(key);
+                                }
                             }
 
                             try
@@ -482,34 +501,203 @@ public class TransactionActivity implements IBalancesDelegate {
                             }
                             catch (Exception e)
                             {
-                                testing("trasac",e, "found,found");
+                                //testing("trasac",e, "found,found");
                             }
-                            assetDelegate.TransactionUpdate(transactionDetailses,number_of_transactions_in_queue);
+
+
                         }
                         catch (JSONException e)
                         {
-                            testing("trasac",e, "found,found");
+                            //testing("trasac",e, "found,found");
                         }
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        testing("trasac","1", "found,found");
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                        //testing("trasac","1", "found,found");
                     }
                 }
                 else
                 {
-                    testing("trasac","2", "found,found");
+                    //testing("trasac","2", "found,found");
                     Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                }
+
+                /////////////////
+                if ( pairs.size() > 0 )
+                {
+                    getEquivalentComponentsIndirect(pairs,finalFaitCurrency,transactionDetailses);
+                }
+                else
+                {
+                    assetDelegate.TransactionUpdate(transactionDetailses, number_of_transactions_in_queue);
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Throwable t)
+            {
                 Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
-
         });
+    }
+
+
+    private double convertLocalizeStringToDouble(String text) {
+        double txtAmount_d = 0;
+        try {
+            NumberFormat format = NumberFormat.getInstance(Locale.ENGLISH);
+            Number number = format.parse(text);
+            txtAmount_d = number.doubleValue();
+        } catch (Exception e)
+        {
+            try {
+                String language = Helper.fetchStringSharePref(context, context.getString(R.string.pref_language));
+                Locale locale = new Locale(language);
+                NumberFormat format = NumberFormat.getInstance(locale);
+                Number number = format.parse(text);
+                txtAmount_d = number.doubleValue();
+
+            } catch (Exception e1) {
+
+            }
+        }
+        return txtAmount_d;
+    }
+
+    private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency, final ArrayList<TransactionDetails> transactionDetailses)
+    {
+        try
+        {
+            /*
+            final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    getEquivalentComponentsIndirect(leftOvers, faitCurrency,transactionDetailses);
+                }
+            };
+            */
+
+            List<String> newPairs = new ArrayList<>();
+
+            for (String pair : leftOvers) {
+                String firstHalf = pair.split(":")[0];
+                newPairs.add(firstHalf + ":" + "BTS");
+            }
+
+            newPairs.add("BTS" + ":" + faitCurrency);
+
+            String values = "";
+
+            for (String pair : newPairs) {
+                values += pair + ",";
+            }
+
+            values = values.substring(0, values.length() - 1);
+
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("method", "equivalent_component");
+            hashMap.put("values", values);
+
+            ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+            IWebService service = sg.getService(IWebService.class);
+            final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+
+            postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+                @Override
+                public void onResponse(Response<EquivalentComponentResponse> response) {
+                    if (response.isSuccess())
+                    {
+                        EquivalentComponentResponse resp = response.body();
+                        if (resp.status.equals("success"))
+                        {
+                            try {
+                                JSONObject rates = new JSONObject(resp.rates);
+                                Iterator<String> keys = rates.keys();
+                                String btsToFait = "";
+
+                                while (keys.hasNext())
+                                {
+                                    String key = keys.next();
+
+                                    if (key.equals("BTS:" + faitCurrency)) {
+                                        btsToFait = rates.get("BTS:" + faitCurrency).toString();
+                                        break;
+                                    }
+                                }
+
+                                HashMap hm = new HashMap();
+
+                                if (!btsToFait.isEmpty()) {
+                                    keys = rates.keys();
+
+
+                                    while (keys.hasNext()) {
+                                        String key = keys.next();
+
+                                        if (!key.equals("BTS:" + faitCurrency)) {
+                                            String asset = key.split(":")[0];
+
+                                            String assetConversionToBTS = rates.get(key).toString();
+
+                                            double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+
+                                            String assetToFaitConversion = Double.toString(newConversionRate);
+
+                                            hm.put(asset, assetToFaitConversion);
+                                        }
+                                    }
+                                }
+
+                                try
+                                {
+                                    for (int i = 0; i < transactionDetailses.size(); i++)
+                                    {
+                                        String asset = transactionDetailses.get(i).getAssetSymbol();
+                                        String amount = String.valueOf(transactionDetailses.get(i).getAmount());
+
+                                        if (!amount.isEmpty() && hm.containsKey(asset))
+                                        {
+                                            Currency currency = Currency.getInstance(finalFaitCurrency);
+                                            Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+                                            transactionDetailses.get(i).faitAssetSymbol = currency.getSymbol();
+                                            transactionDetailses.get(i).faitAmount = Float.parseFloat(String.format(Locale.ENGLISH,"%.4f", eqAmount));
+                                        }
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    //testing("trasac",e, "found,found");
+                                }
+                            }
+                            catch (JSONException e)
+                            {
+                                //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                                e.printStackTrace();
+                            }
+                        }
+
+                        assetDelegate.TransactionUpdate(transactionDetailses, number_of_transactions_in_queue);
+                    }
+                    else
+                    {
+                        //hideDialog();
+                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    //hideDialog();
+                    //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                    //updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
+                    Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 }

@@ -15,7 +15,7 @@ public class webSocketCallHelper {
     private boolean callInProgressForTransactions = false;
     private boolean callReceivedForTransactions = true;
     Context context;
-    int time = 10000;
+    int time = 5000;
 
     public enum api_identifier {
         database,
