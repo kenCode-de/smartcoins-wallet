@@ -297,11 +297,44 @@ public class Application extends android.app.Application {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
                                 iExchangeRate.callback_exchange_rate(obj, id);
-                            } else if (id == 8) {
-                                if (iBalancesDelegate_transactionActivity != null) {
+                            }
+                            else if (id == 8)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
                                     iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
-                            } else if (id == 12) {
+                            }
+                            else if (id == 20)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 21)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 22)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 23)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 12)
+                            {
                                 if (iTransactionObject != null) {
                                     iTransactionObject.checkTransactionObject(jsonObject);
                                 }

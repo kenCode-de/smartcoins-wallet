@@ -103,12 +103,16 @@ Context context;
         TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
         textView1.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
         textView1.setText(tString);
-        if(transactiondetails.getDetailsMemo().equals("----")){
-        TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+
+        if(transactiondetails.getDetailsMemo() == null || transactiondetails.getDetailsMemo().isEmpty())
+        {
+            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
             textView2.setText("");
             textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setVisibility(View.GONE);
-        }else{
+        }
+        else
+        {
             tString = context.getText(R.string.memo_capital) + " : " + transactiondetails.getDetailsMemo();
             TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
             textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
@@ -149,7 +153,7 @@ Context context;
                 textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
                 //amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
 
-                float faitAmount = transactiondetails.getFaitAmount();
+                double faitAmount = transactiondetails.getFaitAmount();
 
                 //Double faitAmount = Double.parseDouble(faitFloat);
 
@@ -201,7 +205,7 @@ Context context;
                 textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
                 //amount = Helper.setLocaleNumberFormat(locale, transactiondetails.getFaitAmount());
 
-                float faitAmount = transactiondetails.getFaitAmount();
+                double faitAmount = transactiondetails.getFaitAmount();
 
                 //Double faitAmount = Double.parseDouble(faitFloat);
 

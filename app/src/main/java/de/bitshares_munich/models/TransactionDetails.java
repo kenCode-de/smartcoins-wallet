@@ -18,9 +18,9 @@ public class TransactionDetails {
     public String To;
     public String From;
     public String Memo;
-    public float Amount;
+    public double Amount;
     public String assetSymbol;
-    public float faitAmount;
+    public double faitAmount;
     public String faitAssetSymbol;
     public String eReceipt;
     private Context context;
@@ -30,8 +30,13 @@ public class TransactionDetails {
         context = _context;
     }
 
-    public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, float _Amount,
-                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt)
+    public TransactionDetails()
+    {
+
+    }
+
+    public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
+                              String _assetSymbol, double _faitAmount, String _faitAssetSymbol , String _eReceipt)
     {
         this.Date = _date;
         this.Sent = _Sent;
@@ -97,7 +102,7 @@ public class TransactionDetails {
         return this.Memo;
     }
 
-    public float getAmount ()
+    public double getAmount ()
     {
         return this.Amount;
     }
@@ -106,7 +111,7 @@ public class TransactionDetails {
         return this.assetSymbol;
     }
 
-    public float getFaitAmount() {
+    public double getFaitAmount() {
         return this.faitAmount;
     }
 

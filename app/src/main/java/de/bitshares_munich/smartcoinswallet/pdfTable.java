@@ -176,11 +176,11 @@ public class pdfTable {
                 String amountText;
                 if ( td.getSent() )
                 {
-                    amountText = String.format("- %s %s\n- %s %s",Float.toString(td.getAmount()),td.getAssetSymbol(),Float.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("- %s %s\n- %s %s",Double.toString(td.getAmount()),td.getAssetSymbol(),Double.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
                 }
                 else
                 {
-                    amountText = String.format("+ %s %s\n+ %s %s",Float.toString(td.getAmount()),td.getAssetSymbol(),Float.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("+ %s %s\n+ %s %s",Double.toString(td.getAmount()),td.getAssetSymbol(),Double.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
                 }
                 PdfPCell amountsCell = new PdfPCell(new Paragraph(amountText));
                 amountsCell.setHorizontalAlignment(Element.ALIGN_RIGHT);

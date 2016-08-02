@@ -351,5 +351,25 @@
     <string name="payment_method">Payment Method</string>
     <string name="thankyou_string">Thankyou for using Smartcoins Wallet</string>
 
+    <string name="loading_transactions">Loading Transactions</string>
+    <string name="getting_equivalent_flat_exchange_rate">Getting equivalent fiat exchange rate
+    </string>
+    <string name="fetching_assets_in_transactions">Fetching assets in transactions...</string>
+    <string name="assets_retrieved">"Assets retrieved : "</string>
+    <string name="resolving_account_names_in_transactions">Resolving account names in transactions
+    </string>
+    <string name="generating_list_of_transactions">"Generating list of transactions : "</string>
+    <string name="fiat_exchange_rate_received">Fiat exchange rate received</string>
+    <string name="account_names_retrieved">Account names retrieved : </string>
+    <string name="decrypting_memos">"Decrypting memos : "</string>
+    <string name="invalid_transactions">Invalid Transactions</string>
+    <string name="failure">Failure : </string>
+    <string name="invalid_block_header">Invalid block header</string>
+    <string name="no_assets_found">No assets found</string>
+    <string name="invalid_assets">Invalid Assets</string>
+    <string name="invalid_accounts_name">Invalid Account Names</string>
+    <string name="invalid_input_for_fiat_conversion">Invalid input for fiat conversion</string>
+    <string name="account_names_not_found">Account names not found</string>
+
 
 </resources>

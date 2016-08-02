@@ -9,9 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.Paint;
@@ -22,7 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +35,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.premnirmal.textcounter.CounterView;
-import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,17 +45,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,24 +66,17 @@ import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
-import de.bitshares_munich.models.CCAssets;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.LtmFee;
-import de.bitshares_munich.models.Smartcoin;
 import de.bitshares_munich.models.TransactionDetails;
-import de.bitshares_munich.models.Uia;
-import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
-import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
-import de.bitshares_munich.smartcoinswallet.TransactionActivity;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
-import de.bitshares_munich.smartcoinswallet.popUpwindow;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -101,6 +86,7 @@ import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.TransactionActivity;
 import de.bitshares_munich.utils.tableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
@@ -657,7 +643,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     }
 
-
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
     {
 
@@ -723,7 +708,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     pairs.remove(key);
                                 }
                             }
-
 
                             if ( pairs.size() > 0 )
                             {
@@ -803,28 +787,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         }
                         catch (JSONException e)
                         {
-                            //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                            e.printStackTrace();
+                            updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                            //e.printStackTrace();
                         }
                     }
-                    /*
                     else
                     {
-                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                        updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                     }
-                    */
                 }
                 else
                 {
                     hideDialog();
-                    Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-                    //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                    updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                 }
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Throwable t)
+            {
                 hideDialog();
                 //Toast.makeText(getActivity(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
                 updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
@@ -834,7 +815,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency)
     {
-        try {
+        //try
+        //{
             final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -870,9 +852,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             postingService.enqueue(new Callback<EquivalentComponentResponse>() {
                 @Override
                 public void onResponse(Response<EquivalentComponentResponse> response) {
-                    if (response.isSuccess()) {
+                    if (response.isSuccess())
+                    {
                         EquivalentComponentResponse resp = response.body();
-                        if (resp.status.equals("success")) {
+
+                        if (resp.status.equals("success"))
+                        {
                             try {
                                 JSONObject rates = new JSONObject(resp.rates);
                                 Iterator<String> keys = rates.keys();
@@ -960,23 +945,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         }
                                     }
                                 }
-
-
-                            } catch (JSONException e) {
-                                //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                                e.printStackTrace();
+                            }
+                            catch (JSONException e)
+                            {
+                                hideDialog();
+                                updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
                             }
                         }
-                    /*
+                        else
+                        {
+                            hideDialog();
+                            updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
+                        }
+                    }
                     else
                     {
-                        //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
-                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-                    }
-                    */
-                    } else {
                         hideDialog();
-                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+                        updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
+                        //Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
                         //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                     }
                 }
@@ -988,11 +974,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     updateEquivalentAmount.postDelayed(getEquivalentCompIndirectRunnable, 500);
                 }
             });
-        }
-        catch (Exception e)
-        {
-
-        }
+        //}
+        //catch (Exception e)
+        //{
+        //}
 
     }
 
@@ -2083,10 +2068,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
+    private static int compareDoubles(double change1, double change2)
+    {
+        if (change1 < change2) {
+            return -1;
+        } else if (change1 == change2) {
+            return 0; // Fails on NaN however, not sure what you want
+        } else if (change2 > change2) {
+            return 1;
+        } else {
+            return 1;
+        }
+    }
+
     private static class TransactionsAmountComparator implements Comparator<TransactionDetails> {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
-            return compareFloats(one.getAmount(), two.getAmount());
+            return compareDoubles(one.getAmount(), two.getAmount());
         }
     }
 
@@ -2201,8 +2199,77 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
                 tableView.setDataAdapter(myTransactionsTableAdapter);
             }
-            //tableView.setDataAdapter(myTransactionsTableAdapter);
             /*
+            if(number_of_transactions_loaded<20){
+                loadTransactions(getContext(), accountId, wifkey, number_of_transactions_loaded, 5);
+                number_of_transactions_loaded = number_of_transactions_loaded + 5;
+                load_more_values.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+            }
+            */
+        }
+        catch (Exception e) {
+            SupportMethods.testing("TransactionUpdate", e, "try/catch");
+        }
+    }
+
+    @Override
+    public void transactionsLoadComplete(List<TransactionDetails> transactionDetails)
+    {
+        sentCallForTransactions = false;
+        try
+        {
+            if ( updateTransactionsList == null )
+            {
+                updateTransactionsList = new Handler();
+            }
+
+            if(isSavedTransactions)
+            {
+                myTransactions.clear();
+                isSavedTransactions = false;
+                myTransactions = new ArrayList<>();
+            }
+
+            if (myTransactions.size() == 0)
+            {
+                saveTransactions(transactionDetails);
+            }
+
+            Context context = getContext();
+            // update context
+            for(TransactionDetails td:transactionDetails)
+            {
+                td.updateContext(context);
+            }
+
+            number_of_transactions_loaded += 20;
+            myTransactions.addAll(transactionDetails);
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+            myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    if (myTransactionActivity.finalBlockRecieved)
+                    {
+                        load_more_values.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        load_more_values.setVisibility(View.VISIBLE);
+                        load_more_values.setEnabled(true);
+                    }
+
+                    if ( progressBar.getVisibility() != View.GONE )
+                        progressBar.setVisibility(View.GONE);
+
+                    if ( tableViewparent.getVisibility() != View.VISIBLE )
+                        tableViewparent.setVisibility(View.VISIBLE);
+                }
+            });
+
             if ( myTransactionsTableAdapter == null )
             {
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
@@ -2210,55 +2277,46 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             }
             else
             {
-
-                myTransactionsTableAdapter.clear();
-
-                Runnable updateList = new Runnable() {
-                    @Override
-                    public void run() {
-                        myTransactionsTableAdapter.addAll(myTransactions);
-                        //getActivity().runOnUiThread(new Runnable() {
-                            //@Override
-                            //public void run() {
-                                //for( TransactionDetails obj:myTransactions )
-                                //{
-                                //    myTransactionsTableAdapter.add(obj);
-                                //}
-                            //}
-                        //});
-
-                    }
-                };
-
-                updateTransactionsList.postDelayed(updateList,100);
-
-
-
-                //tableView.setDataAdapter(myTransactionsTableAdapter);
-
-                //myTransactionsTableAdapter.clear();
-                //myTransactionsTableAdapter.addAll(myTransactions);
-
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
             }
-            */
-
-
-
-
-                    /*
-                    if(number_of_transactions_loaded<20){
-                        loadTransactions(getContext(), accountId, wifkey, number_of_transactions_loaded, 5);
-                        number_of_transactions_loaded = number_of_transactions_loaded + 5;
-                        load_more_values.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-                    */
-
-
-
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             SupportMethods.testing("TransactionUpdate", e, "try/catch");
         }
+    }
+
+    @Override
+    public void transactionsLoadMessageStatus(String message)
+    {
+
+    }
+
+    @Override
+    public void transactionsLoadFailure(String reason)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run()
+            {
+                if (myTransactionActivity.finalBlockRecieved)
+                {
+                    load_more_values.setVisibility(View.GONE);
+                }
+                else
+                {
+                    load_more_values.setVisibility(View.VISIBLE);
+                    load_more_values.setEnabled(true);
+                }
+
+                if ( progressBar.getVisibility() != View.GONE )
+                    progressBar.setVisibility(View.GONE);
+
+                if ( tableViewparent.getVisibility() != View.VISIBLE )
+                    tableViewparent.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @OnClick(R.id.load_more_values)
@@ -2266,7 +2324,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
-        number_of_transactions_loaded = number_of_transactions_loaded + 20;
+        //number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
     void isLifeTime(final String name_id, final String id) {
@@ -2276,12 +2334,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
+    /*
     void get_full_accounts(final String name_id, final String id)
     {
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
         String getDetails2 = ",\"get_full_accounts\",[[\"" + name_id + "\"],true]]}";
         myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
     }
+    */
 
     @Override
     public void getLifetime(String s, int id) {
@@ -2433,7 +2493,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
-            number_of_transactions_loaded = number_of_transactions_loaded + 20;
+            //number_of_transactions_loaded = number_of_transactions_loaded + 20;
         }
     }
 
@@ -2768,11 +2828,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         //new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
     }
+
+    /*
     void loadTransactions(final Context context,final String id ,final String wkey,final int loaded,final int toLoad)
     {
         sentCallForTransactions = true;
         new TransactionActivity(context, id ,this , wkey , loaded , toLoad);
     }
+    */
 //        final Handler handlerTransactions = new Handler();
 //        handlerTransactions.postDelayed(new Runnable() {
 //            @Override

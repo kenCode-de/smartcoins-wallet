@@ -410,6 +410,12 @@ public class Helper {
         }
     }
 
+    public static String getFadeCurrencySymbol(Context context)
+    {
+        String currrencyCode = getFadeCurrency(context);
+        return Currency.getInstance(currrencyCode).getSymbol(Locale.ENGLISH);
+    }
+
     public static String padString(String str) {
         if (str == null || str.isEmpty()) {
             return "0";
