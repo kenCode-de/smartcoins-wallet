@@ -82,7 +82,7 @@
 <string name="validating_account">अकाउंट की पुष्टि...</string>
 <string name="account_name_should_be_longer">अकाउंट नाम लम्बा होना चाहिए</string>
 <string name="account_name_already_exist">अकाउंट नाम %s पहले से ही मौजूद</string>
-<string name="account_name_not_exist">अकाउंट  नाम% %s मौजूद नहीं है</string>
+<string name="account_name_not_exist">अकाउंट  नाम %s मौजूद नहीं है</string>
 <string name="add_contact">यहाँ लिखें</string>
 <string name="edit_contact">संपादित करें</string>
 <string name="empty_list">संपर्क सूची खाली है</string>
