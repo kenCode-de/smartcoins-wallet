@@ -1,30 +1,30 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Dialog;
-import android.content.res.Configuration;
+//import android.app.Dialog;
+//import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
+//import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+//import android.view.View;
+//import android.webkit.WebView;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.TextView;
+//import android.widget.Toast;
 
 import java.util.Locale;
 
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
+//import de.bitshares_munich.utils.SupportMethods;
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+//import com.crashlytics.android.Crashlytics;
+//import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by qasim on 5/9/16.
@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        //Fabric.with(this, new Crashlytics());
 
         String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
 //                SupportMethods.setLocale(getApplicationContext(),language);
@@ -74,10 +74,12 @@ public class BaseActivity extends AppCompatActivity {
 
     private Runnable disconnectCallback = new Runnable() {
         @Override
-        public void run() {
+        public void run()
+        {
             String close_bitshare = "close_bitshare";
             Boolean cb = Helper.fetchBoolianSharePref(getApplicationContext(), close_bitshare);
-            if (cb) {
+            if (cb)
+            {
                 finishAffinity();
             }
             else
@@ -113,16 +115,19 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         stopDisconnectTimer();
     }
+
+    /*
     protected void setToolbarAndNavigationBar(String heading, Boolean navigationBar) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//
-//        toolbar_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-//        // wb = (WebView) findViewById(R.id.wb);
-//        toolbar_title.setText(heading);
-//        //toolbar_title.setText(heading);
-//        //toolbar.setTitle(heading);
-//        //toolbar.setTitleTextColor(Color.WHITE);
-//        setSupportActionBar(toolbar);
+        //
+        //        toolbar_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        //        // wb = (WebView) findViewById(R.id.wb);
+        //        toolbar_title.setText(heading);
+        //        //toolbar_title.setText(heading);
+        //        //toolbar.setTitle(heading);
+        //        //toolbar.setTitleTextColor(Color.WHITE);
+        //        setSupportActionBar(toolbar);
 
     }
+    */
 }

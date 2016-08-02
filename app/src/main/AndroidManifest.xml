@@ -121,11 +121,6 @@
             android:screenOrientation="portrait"/>
         <service android:name=".MediaService" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="cb99d3535a61a111368ef6f50de88ca2774625b1"
-            />
-
     </application>
 
 </manifest>
