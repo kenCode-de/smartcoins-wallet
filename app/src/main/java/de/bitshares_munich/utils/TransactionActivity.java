@@ -1119,6 +1119,8 @@ public class TransactionActivity implements IBalancesDelegate {
                                     myTransactionDetails.Memo = "";
                                 }
 
+                                myTransactionDetails.eReceipt = transaction.toString();
+
                                 myTransactions.add(myTransactionDetails);
                                 assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.generating_list_of_transactions) + myTransactions.size());
                             }

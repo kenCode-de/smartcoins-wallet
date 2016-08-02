@@ -300,7 +300,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     void init(String eRecipt) {
         eReciptmap.put("id", SupportMethods.ParseJsonObject(eRecipt, "id"));
         eReciptmap.put("op", SupportMethods.ParseJsonObject(eRecipt, "op"));
-        eReciptmap.put("result", SupportMethods.ParseJsonObject(eRecipt, "result"));
+        //eReciptmap.put("result", SupportMethods.ParseJsonObject(eRecipt, "result"));
         String block_num = SupportMethods.ParseJsonObject(eRecipt, "block_num");
         eReciptmap.put("block_num", block_num);
         String trx_in_block = SupportMethods.ParseJsonObject(eRecipt, "trx_in_block");
