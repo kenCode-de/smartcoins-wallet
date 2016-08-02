@@ -1273,9 +1273,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         sendBtnPressed = false;
                         validating = false;
                         // This code works correct, donot edit if it shows red underline
-                        String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                        format = format.replaceAll("\\s+", " ").trim();
-                        tvErrorRecieverAccount.setText(format);
+                        try {
+                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+                            format = format.replaceAll("\\s+", " ").trim();
+                            tvErrorRecieverAccount.setText(format);
+                        } catch (Exception e) {
+                            tvErrorRecieverAccount.setText("");
+                        }
+
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
                 });

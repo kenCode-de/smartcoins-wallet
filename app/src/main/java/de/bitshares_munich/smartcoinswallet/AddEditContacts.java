@@ -232,7 +232,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();
         String _email = etEmail.getText().toString();
-        if(!SupportMethods.isEmailValid(_email)){
+        if (!SupportMethods.isEmailValid(_email)) {
             _email = "";
         }
 
@@ -294,7 +294,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             Accountname.setText(text.toString().trim());
         }
 
-        if(!Accountname.getText().toString().equals(accountid)) {
+        if (!Accountname.getText().toString().equals(accountid)) {
             if (Accountname.getText().length() > 0) {
 
                 validReceiver = false;
@@ -309,7 +309,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 myLowerCaseTimer.start();
                 myAccountNameValidationTimer.start();
             }
-        }else{
+        } else {
             warning.setText("");
         }
 
@@ -378,11 +378,11 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     @OnTextChanged(R.id.email)
     void onTextChangedEmail() {
-        String sEmail =  etEmail.getText().toString();
+        String sEmail = etEmail.getText().toString();
 
-        boolean hasSpecial   =  !sEmail.equals(sEmail.toLowerCase());
+        boolean hasSpecial = !sEmail.equals(sEmail.toLowerCase());
 
-        if(hasSpecial) {
+        if (hasSpecial) {
             etEmail.setText("");
             etEmail.append(sEmail.toLowerCase());
         }
@@ -420,13 +420,11 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         if (!focused) {
             // warning.setText("");
             //warning.setVisibility(View.GONE);
-            if (Accountname.getText().length() > 2)
-            {
-                if (!checkIfAlreadyAdded())
-                {
+            if (Accountname.getText().length() > 2) {
+                if (!checkIfAlreadyAdded()) {
                     String socketText = getString(R.string.lookup_account_a);
                     String socketText2 = getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                    myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);
+                    myWebSocketHelper.make_websocket_call(socketText, socketText2, webSocketCallHelper.api_identifier.database);
 
                     /*
                     if (Application.webSocketG != null && (Application.webSocketG.isOpen()))
@@ -437,16 +435,12 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                         Application.webSocketG.send(socketText);
                     }
                     */
-                }
-                else
-                {
-                    warning.setText(Accountname.getText().toString() + " " +getString(R.string.is_already_added));
+                } else {
+                    warning.setText(Accountname.getText().toString() + " " + getString(R.string.is_already_added));
                     warning.setTextColor(getColorWrapper(context, R.color.red));
                 }
 
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
                 // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
                 loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
@@ -458,8 +452,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     }
 
     @Override
-    public void checkAccount(JSONObject jsonObject)
-    {
+    public void checkAccount(JSONObject jsonObject) {
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -492,14 +485,21 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         validReceiver = false;
-                        String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format(acName.toString(), Accountname.getText().toString());
+                        try {
+                            String acName = getString(R.string.account_name_not_exist);
+                            String format = String.format(acName.toString(), Accountname.getText().toString());
+                            warning.setText(format);
+                        } catch (Exception e) {
+                            warning.setText("");
+                        }
                         SaveContact.setEnabled(false);
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
-                        warning.setText(format);
+
                         warning.setVisibility(View.VISIBLE);
                         warning.setTextColor(getColorWrapper(context, R.color.red));
+
 
                     }
                 });

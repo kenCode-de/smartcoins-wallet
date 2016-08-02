@@ -80,8 +80,8 @@
 <string name="txt_validating_account">खाते में मान्य ...</string>
 <string name="validating_account">खाते में मान्य ...</string>
 <string name="account_name_should_be_longer">खाता नाम लंबे समय तक होना चाहिए</string>
-<string name="account_name_already_exist">खाता नाम% %s पहले से ही मौजूद</string>
-<string name="account_name_not_exist">खाता नाम% %s मौजूद नहीं है</string>
+<string name="account_name_already_exist">खाता नाम %s पहले से ही मौजूद</string>
+<string name="account_name_not_exist">खाता नाम %s मौजूद नहीं है</string>
 <string name="add_contact">जोड़ना</string>
 <string name="edit_contact">संपादित करें</string>
 <string name="empty_list">संपर्क सूची खाली है</string>
