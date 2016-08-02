@@ -693,6 +693,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
             }
 
+            //Crashing
             setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 14, selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
@@ -1399,7 +1400,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             // shayan friday night
 
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
