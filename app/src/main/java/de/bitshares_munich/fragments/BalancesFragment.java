@@ -678,7 +678,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values.substring(0, values.length() - 1));
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        String url;
+        try
+        {
+            url = String.format(Locale.ENGLISH,"%s",getString(R.string.account_from_brainkey_url));
+        }
+        catch (Exception e)
+        {
+            return;
+        }
+
+        if ( url == null || url.isEmpty() )
+        {
+            return;
+        }
+
+        ServiceGenerator sg = new ServiceGenerator(url);
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
         finalFaitCurrency = faitCurrency;
@@ -844,7 +859,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             hashMap.put("method", "equivalent_component");
             hashMap.put("values", values);
 
-            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+            String url;
+            try
+            {
+                url = String.format(Locale.ENGLISH,"%s",getString(R.string.account_from_brainkey_url));
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+
+            if ( url == null || url.isEmpty() )
+            {
+                return;
+            }
+
+            ServiceGenerator sg = new ServiceGenerator(url);
             IWebService service = sg.getService(IWebService.class);
             final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
 
