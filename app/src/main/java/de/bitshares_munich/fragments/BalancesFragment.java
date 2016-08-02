@@ -645,8 +645,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
     {
-
-        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+        //AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
