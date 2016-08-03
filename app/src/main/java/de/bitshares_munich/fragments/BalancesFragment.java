@@ -142,7 +142,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     @Bind(R.id.llBalances)
     LinearLayout llBalances;
-    int number_of_transactions_loaded;
+    int number_of_transactions_loaded = 0;
+    int number_of_transactions_to_load = 0;
 
     @Bind(R.id.whiteSpaceAfterBalances)
     LinearLayout whiteSpaceAfterBalances;
@@ -2267,6 +2268,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 updateTransactionsList = new Handler();
             }
 
+            if ( number_of_transactions_loaded == 0 )
+            {
+                myTransactions.clear();
+            }
+
             if(isSavedTransactions)
             {
                 myTransactions.clear();
@@ -2286,10 +2292,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 td.updateContext(context);
             }
 
-            number_of_transactions_loaded += 20;
+
             myTransactions.addAll(transactionDetails);
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
+
+            if ( myTransactionsTableAdapter == null )
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
+            }
+            else
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                tableView.setDataAdapter(myTransactionsTableAdapter);
+            }
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -2313,16 +2330,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 }
             });
 
-            if ( myTransactionsTableAdapter == null )
+
+            number_of_transactions_loaded += number_of_transactions_to_load;
+
+            /*
+            if ( number_of_transactions_loaded < 20 )
             {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
+                loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
             }
-            else
-            {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
-            }
+            */
         }
         catch (Exception e)
         {
@@ -2339,6 +2355,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadFailure(String reason)
     {
+        sentCallForTransactions = false;
+
+        //if ( reason.equals(getContext().getString(R.string.no_assets_found)) )
+        {
+            //number_of_transactions_loaded += number_of_transactions_to_load;
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
+            return;
+        }
+
+        /*
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run()
@@ -2360,13 +2386,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     tableViewparent.setVisibility(View.VISIBLE);
             }
         });
+        */
     }
 
     @OnClick(R.id.load_more_values)
     public void Load_more_Values() {
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
+        number_of_transactions_to_load = 20;
+        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
         //number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
@@ -2535,7 +2563,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
-            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, 20);
+            number_of_transactions_to_load = 20;
+
+            /*
+            if ( myTransactions == null )
+            {
+                myTransactions = new ArrayList<TransactionDetails>();
+            }
+            else
+            {
+                myTransactions.clear();
+            }
+            */
+
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
             //number_of_transactions_loaded = number_of_transactions_loaded + 20;
         }
     }
