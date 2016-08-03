@@ -253,8 +253,8 @@
 <string name="txt_validating_account">验证账户...</string>
 <string name="validating_account">验证账户...</string>
 <string name="account_name_should_be_longer">账户名称太短</string>
-<string name="account_name_already_exist">账户名称 ％s 已经存在</string>
-<string name="account_name_not_exist">账户名称 ％s 不存在</string>
+<string name="account_name_already_exist">账户名称 %s 已经存在</string>
+<string name="account_name_not_exist">账户名称 %s 不存在</string>
 <string name="add_contact">添加</string>
 <string name="edit_contact">编辑</string>
 <string name="empty_list">联系人列表为空</string>
@@ -275,7 +275,6 @@
 <string name="empty_file_created">创建了空文件</string>
 <string name="date">日期</string>
 <string name="all">所有</string>
-<string name="to_from">To/From</string>
 <string name="amount">数额</string>
 <string name="message">信息</string>
 <string name="pdf_generated_msg">生成 PDF 并保存：</string>
@@ -388,5 +387,8 @@
     <string name="total">总</string>
     <string name="payment_method">付款方法</string>
     <string name="thankyou_string">三江源使用Smartcoins钱包</string>
+    <string name="to_from">至/从</string>
+    <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
+    <string name="str_balance_available">%1$s %2$s 可用</string>
 
 </resources>
