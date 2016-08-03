@@ -185,7 +185,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             //tvOtherAccount.setText("Sent To");
             tvUserStatus.setText(getString(R.string.sender_account));
             isSent = true;
-            ivImageTag.setImageResource(R.drawable.sendicon);
+            ivImageTag.setImageResource(R.drawable.send);
 //            email = get_email(to);
         } else {
             // tvOtherAccount.setText("Recieved From");
@@ -194,7 +194,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             userName = intent.getStringExtra("To");
             otherName = intent.getStringExtra("From");
             isSent = false;
-            ivImageTag.setImageResource(R.drawable.rcvicon);
+            ivImageTag.setImageResource(R.drawable.receive);
 //            email = get_email(from);
         }
 

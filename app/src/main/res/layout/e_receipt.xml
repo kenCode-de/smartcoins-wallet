@@ -29,7 +29,7 @@
                 android:layout_height="50dp"
                 android:text="@string/email_pdf"
                 android:id="@+id/buttonSend"
-                android:src="@drawable/share_icon"
+                android:src="@drawable/share"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="@color/white"
@@ -38,7 +38,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/ivOtherGravatar"
-                    android:src="@drawable/share_group"
+                    android:src="@drawable/people"
                     android:layout_below="@+id/buttonSend"
                     android:layout_centerInParent="true"
                     />
