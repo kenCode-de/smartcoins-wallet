@@ -1,7 +1,10 @@
 package de.bitshares_munich.smartcoinswallet;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -161,6 +165,12 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String emailOther = "";
     String emailUser = "";
 
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +208,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 //            email = get_email(from);
         }
 
-      //  emailOther = get_email(otherName);
-     //   emailOther = "fawaz_ahmed@live.com";
+        //  emailOther = get_email(otherName);
+        //   emailOther = "fawaz_ahmed@live.com";
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -335,7 +345,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         this.runOnUiThread(new Runnable() {
             public void run() {
 
-             //   createEmail(emailOther, ivOtherGravatar);
+                //   createEmail(emailOther, ivOtherGravatar);
 
                 // createEmail(emailUser,ivUserGravatar);
 
@@ -545,7 +555,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                                     }
                                 }
                             } catch (Exception e) {
-                               // ifEquivalentFailed();
+                                // ifEquivalentFailed();
                             }
 
                             setEquivalentComponents(equivalentComponentses);
@@ -581,8 +591,29 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         String value = "";
         Boolean available = false;
 
-        EquivalentComponents equivalentAmount  = equivalentComponentse.get(0);
-            if(equivalentAmount.id==0) {
+        EquivalentComponents equivalentAmount = equivalentComponentse.get(0);
+        if (equivalentAmount.id == 0) {
+            if (equivalentAmount.available) {
+                available = true;
+                tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
+            } else {
+                available = false;
+                tvAmountEquivalent.setVisibility(View.GONE);
+                setWeight(tvAmount);
+            }
+
+            EquivalentComponents equivalentFee = equivalentComponentse.get(1);
+
+            if (equivalentFee.id == 1) {
+                if (available) {
+                    tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
+                } else {
+                    tvFeeEquivalent.setVisibility(View.GONE);
+                    setWeight(tvFee);
+                }
+            }
+
+            if (equivalentFee.id == 0) {
                 if (equivalentAmount.available) {
                     available = true;
                     tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
@@ -591,52 +622,31 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                     tvAmountEquivalent.setVisibility(View.GONE);
                     setWeight(tvAmount);
                 }
-
-                EquivalentComponents equivalentFee = equivalentComponentse.get(1);
-
-                if (equivalentFee.id == 1) {
-                    if (available) {
-                        tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
-                    } else {
-                        tvFeeEquivalent.setVisibility(View.GONE);
-                        setWeight(tvFee);
-                    }
-                }
-
-                if (equivalentFee.id == 0) {
-                    if (equivalentAmount.available) {
-                        available = true;
-                        tvAmountEquivalent.setText(equivalentAmount.faitAmount + " " + equivalentAmount.faitAssetSymbol);
-                    } else {
-                        available = false;
-                        tvAmountEquivalent.setVisibility(View.GONE);
-                        setWeight(tvAmount);
-                    }
-                }
-
-                if (equivalentAmount.id == 1) {
-                    if (available) {
-                        tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
-                    } else {
-                        tvFeeEquivalent.setVisibility(View.GONE);
-                        setWeight(tvFee);
-                    }
-                }
-
-
-                if (available) {
-                    tvTotalEquivalent.setText(equivalentAmount.faitAmount + equivalentFee.faitAmount + " " + equivalentAmount.faitAssetSymbol);
-                } else {
-                    tvTotalEquivalent.setText(value);
-                    setWeight(tvTotal);
-                }
-
-                tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
             }
+
+            if (equivalentAmount.id == 1) {
+                if (available) {
+                    tvFeeEquivalent.setText(equivalentFee.faitAmount + " " + equivalentFee.faitAssetSymbol);
+                } else {
+                    tvFeeEquivalent.setVisibility(View.GONE);
+                    setWeight(tvFee);
+                }
+            }
+
+
+            if (available) {
+                tvTotalEquivalent.setText(equivalentAmount.faitAmount + equivalentFee.faitAmount + " " + equivalentAmount.faitAssetSymbol);
+            } else {
+                tvTotalEquivalent.setText(value);
+                setWeight(tvTotal);
+            }
+
+            tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
+        }
 
     }
 
-    void ifEquivalentFailed(){
+    void ifEquivalentFailed() {
         setWeight(tvAmount);
         setWeight(tvFee);
         setWeight(tvTotal);
@@ -670,15 +680,29 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         return output;
     }
 
-    void setWeight(TextView textView){
+    void setWeight(TextView textView) {
         ViewGroup.LayoutParams params = textView.getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         textView.setLayoutParams(params);
     }
 
-    private void generatePdf()
-    {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator +getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped+".pdf";
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    private void generatePdf() {
+        verifyStoragePermissions(this);
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped + ".pdf";
         Document document = new Document();
         try {
             PdfWriter.getInstance(document, new FileOutputStream(path));
