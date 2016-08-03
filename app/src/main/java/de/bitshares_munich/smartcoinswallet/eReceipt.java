@@ -201,15 +201,15 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
       //  emailOther = get_email(otherName);
      //   emailOther = "fawaz_ahmed@live.com";
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-        ivOtherGravatar.requestLayout();
-
-        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
-        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int width = size.x;
+//
+//        ivOtherGravatar.requestLayout();
+//
+//        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+//        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
 
         init(eReciept);
 
@@ -460,8 +460,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         protected void onPostExecute(Bitmap result) {
             if (result == null) bmImage.setVisibility(View.GONE);
             else {
-                Bitmap corner = getRoundedCornerBitmap(result);
-                bmImage.setImageBitmap(corner);
+               // Bitmap corner = getRoundedCornerBitmap(result);
+                bmImage.setImageBitmap(result);
             }
         }
     }
