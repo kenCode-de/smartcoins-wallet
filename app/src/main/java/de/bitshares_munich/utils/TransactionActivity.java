@@ -161,16 +161,19 @@ public class TransactionActivity implements IBalancesDelegate {
 
                     if ( identifer == api_identifier.database )
                     {
+                        if ( context == null ) return;
                         int database_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
                         call = call_string_before_identifier + database_id + call_string_after_identifier;
                     }
                     else if ( identifer == api_identifier.history )
                     {
+                        if ( context == null ) return;
                         int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
                         call = call_string_before_identifier + history_id + call_string_after_identifier;
                     }
                     else if ( identifer == api_identifier.network )
                     {
+                        if ( context == null ) return;
                         int nw_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_network_broadcast));
                         call = call_string_before_identifier + nw_id + call_string_after_identifier;
                     }
@@ -304,6 +307,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
                 if ( firstTransactionId.isEmpty() )
                 {
+                    if ( context == null ) return;
                     assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_transactions));
                     return;
                 }
@@ -452,6 +456,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Loading Transactions",e.getMessage());
         }
@@ -481,6 +486,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
                 if ( firstTransactionId.isEmpty() )
                 {
+                    if ( context == null ) return;
                     assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_transactions));
                     return;
                 }
@@ -630,6 +636,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Loading Transactions",e.getMessage());
         }
@@ -646,6 +653,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Transactions Time",e.getMessage());
         }
@@ -661,6 +669,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !resultJson.has("result") )
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_block_header));
                 return;
             }
@@ -669,6 +678,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !header.has("timestamp"))
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_block_header));
                 return;
             }
@@ -708,6 +718,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Transactions Time",e.getMessage());
         }
@@ -722,6 +733,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !resultJson.has("result") )
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_block_header));
                 return;
             }
@@ -730,6 +742,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !header.has("timestamp"))
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_block_header));
                 return;
             }
@@ -759,6 +772,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Transactions Time",e.getMessage());
         }
@@ -774,6 +788,7 @@ public class TransactionActivity implements IBalancesDelegate {
             // headerTimings
             // assetsRecievedHm
 
+            if ( context == null ) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fetching_assets_in_transactions));
 
             if ( assetsRecievedHm.size() > 0 )
@@ -791,13 +806,13 @@ public class TransactionActivity implements IBalancesDelegate {
             }
             else
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.no_assets_found));
             }
-
-
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
@@ -811,6 +826,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !resultJson.has("result") )
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_assets));
                 return;
             }
@@ -827,13 +843,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
+            if ( context == null ) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.assets_retrieved) + assetsRecievedHm.size() );
 
             getNamesInTransactionsRecieved();
-
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
@@ -842,6 +859,7 @@ public class TransactionActivity implements IBalancesDelegate {
     {
         try
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.resolving_account_names_in_transactions));
             if ( namesToResolveHm.size() > 0 )
             {
@@ -858,11 +876,13 @@ public class TransactionActivity implements IBalancesDelegate {
             }
             else
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.account_names_not_found));
             }
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
@@ -876,6 +896,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             if ( !resultJson.has("result") )
             {
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_accounts_name));
                 return;
             }
@@ -892,12 +913,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
+            if ( context == null ) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.account_names_retrieved)+ namesToResolveHm.size());
 
             getEquivalentFiatRates();
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
@@ -908,6 +931,8 @@ public class TransactionActivity implements IBalancesDelegate {
         hm.put("method","decode_memo");
         hm.put("wifkey",wifkey);
         hm.put("memo", memo.toString());
+
+        if ( context == null ) return;
         ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
@@ -957,6 +982,7 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 decodeMemoTransactionsRecieved(encryptedMemos[indexEncryptedMemos]);
                 indexEncryptedMemos++;
+                if ( context == null ) return;
                 assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.decrypting_memos) + indexEncryptedMemos + " of " + memosToDecodeHm.size());
             }
             else
@@ -1056,6 +1082,7 @@ public class TransactionActivity implements IBalancesDelegate {
                                     if ( equivalentRatesHm.get(myTransactionDetails.assetSymbol) != null )
                                     {
                                         myTransactionDetails.faitAmount = SupportMethods.convertAssetAmountToFiat(myTransactionDetails.Amount,equivalentRatesHm.get(myTransactionDetails.assetSymbol));
+                                        if ( context == null ) return;
                                         myTransactionDetails.faitAssetSymbol = Helper.getFadeCurrencySymbol(context);
                                     }
                                     else
@@ -1122,6 +1149,7 @@ public class TransactionActivity implements IBalancesDelegate {
                                 myTransactionDetails.eReceipt = transaction.toString();
 
                                 myTransactions.add(myTransactionDetails);
+                                if ( context == null ) return;
                                 assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.generating_list_of_transactions) + myTransactions.size());
                             }
                         }
@@ -1134,6 +1162,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
@@ -1160,9 +1189,11 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void getEquivalentFiatRates()
     {
+        if ( context == null ) return;
         assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.getting_equivalent_flat_exchange_rate));
         equivalentRatesHm = new HashMap<>();
 
+        if ( context == null ) return;
         final String faitCurrency = Helper.getFadeCurrency(context);
 
         final List<String> pairs = new ArrayList<>();
@@ -1186,6 +1217,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
         if ( values.isEmpty() )
         {
+            if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_input_for_fiat_conversion));
             return;
         }
@@ -1196,6 +1228,7 @@ public class TransactionActivity implements IBalancesDelegate {
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values);
 
+        if ( context == null ) return;
         ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
@@ -1227,6 +1260,7 @@ public class TransactionActivity implements IBalancesDelegate {
                                 }
                             }
 
+                            if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
 
                             if ( pairs.size() > 0 )
@@ -1305,6 +1339,7 @@ public class TransactionActivity implements IBalancesDelegate {
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values);
 
+        if ( context == null ) return;
         ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
@@ -1373,6 +1408,7 @@ public class TransactionActivity implements IBalancesDelegate {
                                 }
                             }
 
+                            if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
 
                             decodeRecievedMemos();
@@ -1410,6 +1446,7 @@ public class TransactionActivity implements IBalancesDelegate {
         } catch (Exception e)
         {
             try {
+                if ( context == null ) return txtAmount_d;
                 String language = Helper.fetchStringSharePref(context, context.getString(R.string.pref_language));
                 Locale locale = new Locale(language);
                 NumberFormat format = NumberFormat.getInstance(locale);
