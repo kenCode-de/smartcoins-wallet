@@ -442,7 +442,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
             arrayAccountAssets = assetsSymbols.updatedList(arrayAccountAssets);
 
-            arrayAccountAssets.add(0,getString(R.string.select_backup_asset));
+            arrayAccountAssets.add(0,"-------");
 
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -1282,13 +1282,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         audioFilePath.storeAudioFilePath(filepath);
         setAudioFilePath();
     }
-    @OnClick(R.id.ivFolderPath)
-    public void folderSelect(View view){
+    @OnClick(R.id.llFolderPath)
+    public void llFolderSelect(View view){
+        chooseAudioFile();
+    }
+    @OnClick(R.id.tvFolderPath)
+    public void tvFolderSelect(View view){
         chooseAudioFile();
     }
     void setAudioFilePath(){
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
-        String path = audioFilePath.fetchAudioFile();
+        String path = audioFilePath.userAudioFilePathIfExist();
         tvFolderPath.setText(path);
     }
 }
