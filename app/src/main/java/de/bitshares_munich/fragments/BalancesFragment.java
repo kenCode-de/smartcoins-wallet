@@ -1087,7 +1087,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         if (counter == 1)
                         {
                             TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                            textView.setText(sym.get(l));
+                            //textView.setText(sym.get(l));
+                            assetsSymbols.displaySpannable(textView,sym.get(l));
+
                             TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                             float b = powerInFloat(pre.get(l), am.get(i));
@@ -1101,7 +1103,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         if (counter == 2)
                         {
                             TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            textView2.setText(sym.get(l));
+                           // textView2.setText(sym.get(l));
+                            assetsSymbols.displaySpannable(textView2,sym.get(l));
+
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             String r = returnFromPower(pre.get(l), am.get(l));
 
@@ -1287,7 +1291,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
                             else tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
 
-                            tvSymOne.setText(symbol);
+                            //tvSymOne.setText(symbol);
+                            assetsSymbols.displaySpannable(tvSymOne,symbol);
                           //  tvAmOne.setText(amount);
                             tvfaitOne.setText(fait);
 
@@ -1344,7 +1349,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
                             else tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
 
-                            tvSymtwo.setText(symbol);
+                            //tvSymtwo.setText(symbol);
+                            assetsSymbols.displaySpannable(tvSymtwo,symbol);
                           //  tvAmtwo.setText(amount);
                             tvFaitTwo.setText(fait);
 
@@ -1495,7 +1501,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 if (!symbol.equals(txtSymbol))
                                 {
-                                    tvSymOne.setText(symbol);
+                                    AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                                    assetsSymbols.displaySpannable(tvSymOne,symbol);
+                                    //tvSymOne.setText(symbol);
                                 }
 
                                 if (!amountInInt.equals(txtAmount)) {
@@ -1682,7 +1690,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 Long amount_d = Long.parseLong(amountInInt);
 
                                 if (!symbol.equals(txtSymbol)) {
-                                    tvSymtwo.setText(symbol);
+                                    AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                                    assetsSymbols.displaySpannable(tvSymtwo,symbol);
+                                 //   tvSymtwo.setText(symbol);
                                 }
 
                                 if (!amountInInt.equals(txtAmount))
@@ -1845,7 +1855,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                         // Insert/remove balance objects if updated
                         Log.d("Balances Update","Insert or remove balance objects if needed");
-
+                        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
                         int loop = sym.size() - m; // number of extra balances to be loaded
 
                         if (loop > 0)
@@ -1874,7 +1884,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     if (counter == 1)
                                     {
                                         TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                                        textView.setText(sym.get(l));
+                                     //   textView.setText(sym.get(l));
+                                        assetsSymbols.displaySpannable(textView,sym.get(l));
+
                                         TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                                         if ( (pre.size() > l) && (am.size() > i) )
@@ -1891,7 +1903,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     if (counter == 2)
                                     {
                                         TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                                        textView2.setText(sym.get(l));
+                                      //  textView2.setText(sym.get(l));
+                                        assetsSymbols.displaySpannable(textView2,sym.get(l));
+
                                         TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                                         if ( (pre.size() > l) && (am.size() > l) )
                                         {

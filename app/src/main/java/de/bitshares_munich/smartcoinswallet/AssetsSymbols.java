@@ -1,6 +1,8 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -114,5 +116,15 @@ public class AssetsSymbols {
         }else if(isUiaSymbol(string)){
             return string;
         }else return string;
+    }
+    public void displaySpannable(TextView textView,String bit){
+        if(bit.contains("bit")) {
+            SpannableString ss1 = new SpannableString(bit);
+            ss1.setSpan(new RelativeSizeSpan(0.8f), 0, 3, 0); // set size
+            ss1.setSpan(0, 3, bit.length(), 0);
+            textView.setText(ss1);
+        } else {
+            textView.setText(bit);
+        }
     }
 }
