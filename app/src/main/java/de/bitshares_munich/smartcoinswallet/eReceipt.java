@@ -195,7 +195,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             //tvOtherAccount.setText("Sent To");
             tvUserStatus.setText(getString(R.string.sender_account));
             isSent = true;
-            ivImageTag.setImageResource(R.drawable.sendicon);
+            ivImageTag.setImageResource(R.drawable.send);
 //            email = get_email(to);
         } else {
             // tvOtherAccount.setText("Recieved From");
@@ -204,22 +204,22 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             userName = intent.getStringExtra("To");
             otherName = intent.getStringExtra("From");
             isSent = false;
-            ivImageTag.setImageResource(R.drawable.rcvicon);
+            ivImageTag.setImageResource(R.drawable.receive);
 //            email = get_email(from);
         }
 
         //  emailOther = get_email(otherName);
         //   emailOther = "fawaz_ahmed@live.com";
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-        ivOtherGravatar.requestLayout();
-
-        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
-        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+//        Display display = getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        int width = size.x;
+//
+//        ivOtherGravatar.requestLayout();
+//
+//        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+//        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
 
         init(eReciept);
 
@@ -470,8 +470,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         protected void onPostExecute(Bitmap result) {
             if (result == null) bmImage.setVisibility(View.GONE);
             else {
-                Bitmap corner = getRoundedCornerBitmap(result);
-                bmImage.setImageBitmap(corner);
+               // Bitmap corner = getRoundedCornerBitmap(result);
+                bmImage.setImageBitmap(result);
             }
         }
     }
