@@ -236,11 +236,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/l41"
-            android:id="@+id/l7"
+            android:id="@+id/llFolderPath"
             android:orientation="vertical"
             android:layout_marginTop="10dp"
             android:background="@color/whiteColor"
+            android:clickable="true"
             android:elevation="5dp"
+            android:focusable="true"
             >
             <TextView
                 android:layout_width="match_parent"
@@ -252,32 +254,18 @@
 
                 />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_height="wrap_content">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="2.5"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No file selected"
+                android:text=""
                 android:paddingLeft="10dp"
                 android:id="@+id/tvFolderPath"
                 android:clickable="true"
                 android:textColor="#002"
                 android:textSize="15sp"
                 android:gravity="left|center"
+
                 />
-                <ImageButton
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/editicon"
-                    android:background="#fff"
-                    android:id="@+id/ivFolderPath"
-                    />
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -285,7 +273,7 @@
             android:id="@+id/button_rows"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/l7"
+            android:layout_below="@+id/llFolderPath"
             android:layout_marginTop="10dp"
             android:background="@color/whiteColor"
             android:elevation="5dp"
