@@ -462,8 +462,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     getExchangeRate(100);
                 }
             }
+        } catch (Exception e) {
         }
-        catch (Exception e){}
 
     }
 
@@ -513,7 +513,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             } else {
                 getExchangeRate(200);
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @OnTextChanged(R.id.etBackupAsset)
@@ -593,13 +594,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String mainAsset = spAssets.getSelectedItem().toString();
             mainAsset = mainAsset.replace("bit", "");
             String mainAmount;
-
-            if (mainAsset.equalsIgnoreCase("YASHA")) {
-                mainAmount = String.format(Locale.ENGLISH, "%.3f", Double.parseDouble(etAmount.getText().toString()));
+            if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
+                mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
             } else {
                 mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
             }
-
             transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
         }
         if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
@@ -1732,7 +1731,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         sellAmount = Double.parseDouble(etBackupAsset.getText().toString());
         sellAmount = sellAmount + (sellAmount * 0.5 / 100);
-        Double buyAmount = sellAmount * backAssetRate;
+        Double buyAmount;
+        if (backAssetRate != null) {
+            buyAmount = sellAmount * backAssetRate;
+        } else {
+            buyAmount = sellAmount;
+        }
         HashMap<String, String> hm = new HashMap<>();
         hm.put("method", "trade");
         hm.put("wifkey", privateKey);
@@ -1758,6 +1762,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                             }
                         }, 15000);
                     } else {
+                        hideDialog();
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
