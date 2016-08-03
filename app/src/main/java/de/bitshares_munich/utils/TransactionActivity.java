@@ -26,6 +26,7 @@ import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.DecodeMemo;
 import de.bitshares_munich.models.EquivalentComponentResponse;
+import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
 import retrofit2.Call;
@@ -916,7 +917,9 @@ public class TransactionActivity implements IBalancesDelegate {
             if ( context == null ) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.account_names_retrieved)+ namesToResolveHm.size());
 
-            getEquivalentFiatRates();
+            if ( context == null ) return;
+            String faitCurrency = Helper.getFadeCurrency(context);
+            getEquivalentFiatRates(faitCurrency);
         }
         catch (Exception e)
         {
@@ -1170,31 +1173,34 @@ public class TransactionActivity implements IBalancesDelegate {
     HashMap<String,String> equivalentRatesHm;
     int retryGetEquivalentRates = 0 ;
 
-    private void reTryGetEquivalentComponents ()
+    private void reTryGetEquivalentComponents (final String fc)
     {
         if ( retryGetEquivalentRates++ < 2 )
         {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    getEquivalentFiatRates();
+                    getEquivalentFiatRates(fc);
                 }
             }, 100);
         }
         else
         {
+            if ( context == null ) return;
+            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+            equivalentRatesHm = myFiatStorage.getEqHM(fc);
             decodeRecievedMemos();
         }
     }
 
-    private void getEquivalentFiatRates()
+    private void getEquivalentFiatRates(final String faitCurrency)
     {
         if ( context == null ) return;
         assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.getting_equivalent_flat_exchange_rate));
         equivalentRatesHm = new HashMap<>();
 
-        if ( context == null ) return;
-        final String faitCurrency = Helper.getFadeCurrency(context);
+        //if ( context == null ) return;
+        //final String faitCurrency = Helper.getFadeCurrency(context);
 
         final List<String> pairs = new ArrayList<>();
         String values = "";
@@ -1249,6 +1255,8 @@ public class TransactionActivity implements IBalancesDelegate {
                             Iterator<String> keys = rates.keys();
                             equivalentRatesHm = new HashMap<>();
 
+
+
                             while (keys.hasNext())
                             {
                                 String key = keys.next();
@@ -1259,6 +1267,10 @@ public class TransactionActivity implements IBalancesDelegate {
                                     pairs.remove(key);
                                 }
                             }
+
+                            if ( context == null ) return;
+                            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+                            myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
 
                             if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
@@ -1275,24 +1287,24 @@ public class TransactionActivity implements IBalancesDelegate {
                         }
                         catch (Exception e)
                         {
-                            reTryGetEquivalentComponents();
+                            reTryGetEquivalentComponents(faitCurrency);
                         }
                     }
                     else
                     {
-                        reTryGetEquivalentComponents();
+                        reTryGetEquivalentComponents(faitCurrency);
                     }
                 }
                 else
                 {
-                    reTryGetEquivalentComponents();
+                    reTryGetEquivalentComponents(faitCurrency);
                 }
             }
 
             @Override
             public void onFailure(Throwable t)
             {
-                reTryGetEquivalentComponents();
+                reTryGetEquivalentComponents(faitCurrency);
             }
         });
     }
@@ -1312,6 +1324,9 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         else
         {
+            if ( context == null ) return;
+            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
             decodeRecievedMemos();
         }
     }
@@ -1406,6 +1421,10 @@ public class TransactionActivity implements IBalancesDelegate {
                                         equivalentRatesHm.put(asset, assetToFaitConversion);
                                     }
                                 }
+
+                                if ( context == null ) return;
+                                EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+                                myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
                             }
 
                             if ( context == null ) return;
@@ -1415,24 +1434,24 @@ public class TransactionActivity implements IBalancesDelegate {
                         }
                         catch (Exception e)
                         {
-                            getIndirectEquivalentFiatRates(leftOvers,faitCurrency);
+                            reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
                         }
                     }
                     else
                     {
-                        getIndirectEquivalentFiatRates(leftOvers,faitCurrency);
+                        reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
                     }
                 }
                 else
                 {
-                    getIndirectEquivalentFiatRates(leftOvers,faitCurrency);
+                    reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
                 }
             }
 
             @Override
             public void onFailure(Throwable t)
             {
-                getIndirectEquivalentFiatRates(leftOvers,faitCurrency);
+                reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
             }
         });
     }
