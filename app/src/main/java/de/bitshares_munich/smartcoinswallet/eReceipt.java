@@ -57,6 +57,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentComponentResponse;
+import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.TransactionIdResponse;
@@ -165,6 +166,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String emailOther = "";
     String emailUser = "";
 
+
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -187,6 +189,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         memoMsg = intent.getStringExtra("Memo");
         date = intent.getStringExtra("Date");
+
 
         if (intent.getBooleanExtra("Sent", false)) {
             userName = intent.getStringExtra("From");
@@ -377,6 +380,12 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
                 getEquivalentComponents(arrayList);
 
+//                if(faitAmount!=null && faitSymbol!=null) {
+//                    tvTotalEquivalent.setText(faitAmount + " " + faitSymbol);
+//                    tvPaymentEquivalent.setText(faitAmount + " " + faitSymbol);
+//                    ifEquivalentFailed();
+//                }
+
                 feeSymbol = assetsSymbols.updateString(sym_preFee.get("symbol"));
                 amountSymbol = assetsSymbols.updateString(sym_preAmount.get("symbol"));
 
@@ -496,8 +505,100 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         }
     }
 
-    private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
-        String faitCurrency = Helper.getFadeCurrency(context);
+//    private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
+//        String faitCurrency = Helper.getFadeCurrency(context);
+//
+//        if (faitCurrency.isEmpty()) {
+//            faitCurrency = "EUR";
+//        }
+//
+//        String values = "";
+//        for (int i = 0; i < equivalentComponentses.size(); i++) {
+//            EquivalentComponents transactionDetails = equivalentComponentses.get(i);
+//            if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
+//                values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
+//            }
+//        }
+//
+//        if (values.isEmpty()) {
+//            return;
+//        }
+//
+//        HashMap<String, String> hashMap = new HashMap<>();
+//        hashMap.put("method", "equivalent_component");
+//        if (values.length() > 1)
+//            hashMap.put("values", values.substring(0, values.length() - 1));
+//        else hashMap.put("values", "");
+//        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+//        IWebService service = sg.getService(IWebService.class);
+//        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
+//        finalFaitCurrency = faitCurrency;
+//
+//        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
+//            @Override
+//            public void onResponse(Response<EquivalentComponentResponse> response) {
+//                if (response.isSuccess()) {
+//                    EquivalentComponentResponse resp = response.body();
+//                    if (resp.status.equals("success")) {
+//                        try {
+//                            JSONObject rates = new JSONObject(resp.rates);
+//                            Iterator<String> keys = rates.keys();
+//                            HashMap hm = new HashMap();
+//
+//                            while (keys.hasNext()) {
+//                                String key = keys.next();
+//                                hm.put(key.split(":")[0], rates.get(key));
+//                            }
+//
+//                            try {
+//                                for (int i = 0; i < equivalentComponentses.size(); i++) {
+//                                    String asset = equivalentComponentses.get(i).getAssetSymbol();
+//                                    String amount = String.valueOf(equivalentComponentses.get(i).getAmount());
+//                                    equivalentComponentses.get(i).available = false;
+//                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
+//                                        equivalentComponentses.get(i).available = true;
+//                                        Currency currency = Currency.getInstance(finalFaitCurrency);
+//                                        Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+//                                        equivalentComponentses.get(i).faitAssetSymbol = currency.getSymbol();
+//                                        equivalentComponentses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+//                                    }
+//                                }
+//                            } catch (Exception e) {
+//                                // ifEquivalentFailed();
+//                            }
+//
+//                            setEquivalentComponents(equivalentComponentses);
+//
+//                        } catch (JSONException e) {
+//                            ifEquivalentFailed();
+//                            //  testing("trasac",e, "found,found");
+//                        }
+////                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        ifEquivalentFailed();
+//                        //   testing("trasac","1", "found,found");
+////                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    ifEquivalentFailed();
+//                    //  testing("trasac","2", "found,found");
+//                    Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                ifEquivalentFailed();
+//                Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+//            }
+//
+//        });
+//    }
+
+
+       private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
+
+           String faitCurrency = Helper.getFadeCurrency(context);
 
         if (faitCurrency.isEmpty()) {
             faitCurrency = "EUR";
@@ -515,76 +616,35 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             return;
         }
 
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("method", "equivalent_component");
-        if (values.length() > 1)
-            hashMap.put("values", values.substring(0, values.length() - 1));
-        else hashMap.put("values", "");
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
-        finalFaitCurrency = faitCurrency;
+           EquivalentFiatStorage equivalentFiatStorage = new EquivalentFiatStorage(context);
+           HashMap hm = equivalentFiatStorage.getEqHM(faitCurrency);
 
-        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
-            @Override
-            public void onResponse(Response<EquivalentComponentResponse> response) {
-                if (response.isSuccess()) {
-                    EquivalentComponentResponse resp = response.body();
-                    if (resp.status.equals("success")) {
-                        try {
-                            JSONObject rates = new JSONObject(resp.rates);
-                            Iterator<String> keys = rates.keys();
-                            HashMap hm = new HashMap();
-
-                            while (keys.hasNext()) {
-                                String key = keys.next();
-                                hm.put(key.split(":")[0], rates.get(key));
-                            }
-
-                            try {
+                                       try {
                                 for (int i = 0; i < equivalentComponentses.size(); i++) {
                                     String asset = equivalentComponentses.get(i).getAssetSymbol();
                                     String amount = String.valueOf(equivalentComponentses.get(i).getAmount());
                                     equivalentComponentses.get(i).available = false;
                                     if (!amount.isEmpty() && hm.containsKey(asset)) {
                                         equivalentComponentses.get(i).available = true;
-                                        Currency currency = Currency.getInstance(finalFaitCurrency);
+                                        Currency currency = Currency.getInstance(faitCurrency);
                                         Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
                                         equivalentComponentses.get(i).faitAssetSymbol = currency.getSymbol();
                                         equivalentComponentses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+                                    }else{
+                                        equivalentComponentses.get(i).faitAssetSymbol = "";
+                                        equivalentComponentses.get(i).faitAmount = 0f;
                                     }
                                 }
                             } catch (Exception e) {
-                                // ifEquivalentFailed();
+                                 ifEquivalentFailed();
                             }
 
-                            setEquivalentComponents(equivalentComponentses);
+           setEquivalentComponents(equivalentComponentses);
 
-                        } catch (JSONException e) {
-                            ifEquivalentFailed();
-                            //  testing("trasac",e, "found,found");
-                        }
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
-                    } else {
-                        ifEquivalentFailed();
-                        //   testing("trasac","1", "found,found");
-//                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    ifEquivalentFailed();
-                    //  testing("trasac","2", "found,found");
-                    Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
+          // ifEquivalentFailed();
 
-            @Override
-            public void onFailure(Throwable t) {
-                ifEquivalentFailed();
-                Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-            }
 
-        });
-    }
+       }
 
     void setEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentse) {
 
