@@ -71,7 +71,7 @@
 <string name="show_more">Pokaż więcej</string>
 <string name="share_text">Właśnie odkryłem ten wspaniały Smartcoins Wallet, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to!</string>
 <string name="share_info">Zaproś jednego lub więcej znajomych do wypróbowania Smartcoins Wallet! Nie zapisujemy i nie zbieramy adresów email, dbamy o twoją prywatność.</string>
-<string name="share_subject">Znakomity portfel kryptowalut, natychmiastowe płatności!</string>
+<string name="share_subject">Znakomity portfel do kryptowalut, natychmiastowe płatności!</string>
 <string name="share_heading">Powiadom przyjaciół</string>
 <string name="share_btn_text">OTWÓRZ POCZTĘ</string>
 <string name="action_settings">Ustawienia</string>
@@ -140,7 +140,7 @@
 <string name="pin_changed_successfully">PIN został pomyślnie zmieniony</string>
 <string name="incorrect_old_pin">Nieprawidłowy stary PIN</string>
 <string name="copy">Kopiuj</string>
-<string name="pin_verification">odblokowany</string>
+<string name="pin_verification">Odblokuj</string>
 <string name="send_screen_name">Wyślij</string>
 <string name="rcv_screen_name">Otrzymaj</string>
 <string name="request_amount_screen_name">Ilość</string>
