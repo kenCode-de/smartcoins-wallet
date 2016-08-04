@@ -220,6 +220,7 @@
     <string name="total">סה"כ</string>
     <string name="payment_method">אמצעי תשלום</string>
     <string name="thankyou_string">תודה על השימוש בארנק Smartcoins</string>
+    <string name="audio_folder_path">נתיב תיקיית אודיו</string>
 
 
 </resources>

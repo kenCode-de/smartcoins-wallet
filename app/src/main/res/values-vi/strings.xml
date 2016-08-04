@@ -218,6 +218,6 @@
     <string name="total">Tổng số</string>
     <string name="payment_method">Phương thức thanh toán</string>
     <string name="thankyou_string">Thankyou cho sử dụng Smartcoins Wallet</string>
-
+    <string name="audio_folder_path">Âm thanh Folder Path</string>
 
 </resources>

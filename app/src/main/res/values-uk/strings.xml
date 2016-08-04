@@ -219,5 +219,6 @@
     <string name="total">загальний</string>
     <string name="payment_method">спосіб оплати</string>
     <string name="thankyou_string">Thankyou для використання Smartcoins Гаманець</string>
+    <string name="audio_folder_path">Аудіо Шлях до папки</string>
 
 </resources>

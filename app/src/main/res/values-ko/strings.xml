@@ -219,5 +219,6 @@
     <string name="total">합계</string>
     <string name="payment_method">지불 방법</string>
     <string name="thankyou_string">감사합니다 Smartcoins 지갑을 사용하는</string>
+    <string name="audio_folder_path">오디오 폴더 경로</string>
 
 </resources>

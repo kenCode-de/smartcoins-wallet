@@ -220,5 +220,5 @@
     <string name="total">ทั้งหมด</string>
     <string name="payment_method">วิธีการชำระเงิน</string>
     <string name="thankyou_string">ขอบคุณสำหรับการใช้ Smartcoins Wallet</string>
-
+    <string name="audio_folder_path">เส้นทางโฟลเดอร์เสียง</string>
 </resources>

@@ -218,5 +218,6 @@
     <string name="total">visas</string>
     <string name="payment_method">Mokėjimo būdas</string>
     <string name="thankyou_string">Ačiū už naudojimąsi Smartcoins Piniginė</string>
+    <string name="audio_folder_path">Garso katal</string>
 
 </resources>
