@@ -248,7 +248,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
                 android:paddingLeft="10dp"
-                android:text="Audio Folder Path"
+                android:text="@string/audio_folder_path"
                 android:textSize="13sp"
                 android:gravity="left|center"
 

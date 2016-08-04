@@ -8,7 +8,8 @@
 <string name="account">अकाउंट </string>
 <string name="friendly_name">सुखद  नाम</string>
 <string name="notes">नोट्स</string>
-<string name="note">नोट</string>
+    <string name="bts_will_be_deducted">बीटीएस से काट लिया जाएगा</string>
+    <string name="note">नोट</string>
 <string name="payment_received">पपेमेन्ट मिल गई </string>
 <string name="import_brainkey">BrainKey इम्पोर्ट करें </string>
 <string name="import_backup_old">पपुराने .bin बैकअप को इम्पोर्ट करो </string>
@@ -221,5 +222,5 @@
     <string name="total">कुल</string>
     <string name="payment_method">भुगतान का तरीका</string>
     <string name="thankyou_string">ठनक Smartcoins बटुआ का उपयोग करने के लिए</string>
-
+    <string name="audio_folder_path">ऑडियो फ़ोल्डर पथ</string>
 </resources>

@@ -2,6 +2,7 @@
     <string name="app_name">Smartcoins Wallet</string>
 
     <string name="send_capital">Lähetä</string>
+    <string name="bts_will_be_deducted">BTS vähennetään</string>
 
     <string name="account_create_register_or_import">TILIN LUONTI / LUO TAI TUO</string>
     <string name="txt_account_name">Tilin nimi</string>
@@ -333,6 +334,7 @@
     <string name="total">Kaikki yhteensä</string>
     <string name="payment_method">Maksutapa</string>
     <string name="thankyou_string">Kiitos käyttää Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio kansion polku</string>
 
 
 </resources>

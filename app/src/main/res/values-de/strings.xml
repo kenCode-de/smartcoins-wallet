@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Lizenz</string>
-<string name="send_capital">Senden</string>
+    <string name="bts_will_be_deducted">BTS wird aus abgezogen werden</string>
+    <string name="send_capital">Senden</string>
 <string name="account_create_register_or_import">Konto erstellen Registrieren oder IMPORT</string>
 <string name="txt_account_name">Kontobezeichnung</string>
 <string name="time_stamp">Zeitstempel</string>
@@ -219,5 +220,6 @@
     <string name="total">Gesamt</string>
     <string name="payment_method">Bezahlverfahren</string>
     <string name="thankyou_string">Vielen Dank für die Verwendung von Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Ordnerpfad</string>
 
 </resources>

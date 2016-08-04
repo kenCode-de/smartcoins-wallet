@@ -8,7 +8,8 @@
 <string name="account">Konts</string>
 <string name="friendly_name">Kontakta vārds</string>
 <string name="notes">Piezīmes</string>
-<string name="note">Piezīme</string>
+    <string name="bts_will_be_deducted">BTS tiks atskaitīta no</string>
+    <string name="note">Piezīme</string>
     <string name="please_make_sure_your_pin">Lūdzu pārliecinieties, ka jūsu PIN pareizs</string>
     <string name="please_make_sure_your_pin_file">Lūdzu pārliecinieties, ka jūsu PIN ir pareizs vai pareizais PIN fails ir izvēlēts</string>
 <string name="payment_received">Maksājums saņemts</string>
@@ -219,6 +220,7 @@
     <string name="total">Kopā</string>
     <string name="payment_method">Apmaksas veids</string>
     <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
 
 </resources>
 

@@ -9,7 +9,8 @@
 <string name="friendly_name">Nome amigável</string>
 <string name="notes">notas</string>
 <string name="note">Nota</string>
-<string name="payment_received">Pagamento recebido</string>
+    <string name="bts_will_be_deducted">BTS será deduzido</string>
+    <string name="payment_received">Pagamento recebido</string>
 <string name="import_brainkey">Importar de BrainKey</string>
 <string name="import_backup_old">importação de backup</string>
 <string name="choose_backup">Escolha backup</string>
@@ -218,5 +219,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Método de pagamento</string>
     <string name="thankyou_string">Obrigado por usar Smartcoins Wallet</string>
+    <string name="audio_folder_path">Caminho da pasta de áudio</string>
 
 </resources>

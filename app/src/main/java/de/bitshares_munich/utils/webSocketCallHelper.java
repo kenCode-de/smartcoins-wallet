@@ -39,7 +39,7 @@ public class webSocketCallHelper {
 
     public void make_websocket_call(final String call_string_before_identifier, final String call_string_after_identifier,final api_identifier identifer)
     {
-        transactionsHandler.removeCallbacksAndMessages(null);
+        //transactionsHandler.removeCallbacksAndMessages(null);
 
         final Runnable checkifTransactionRecieved = new Runnable() {
             @Override

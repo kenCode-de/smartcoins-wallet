@@ -13,6 +13,7 @@
 <string name="import_brainkey">BrainKey İthalat</string>
 <string name="import_backup_old">İthalat Yedekleme</string>
 <string name="choose_backup">Yedekleme seçin</string>
+    <string name="bts_will_be_deducted">BTS düşülecektir</string>
 <string name="choose_file">Dosya seçin</string>
     <string name="unable_to_import_account_from_bin_file">bin dosyadan hesabı almak için açılamıyor</string>
     <string name="importing_keys_from_bin_file">Bin dosyasından Keys İthalat</string>
@@ -218,5 +219,5 @@
     <string name="total">Genel Toplam</string>
     <string name="payment_method">Ödeme şekli</string>
     <string name="thankyou_string">Teşekkür Smartcoins Cüzdan kullanılarak</string>
-
+    <string name="audio_folder_path">Ses Klasör Yolu</string>
 </resources>

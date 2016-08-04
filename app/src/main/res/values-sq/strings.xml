@@ -10,7 +10,8 @@
 <string name="notes">shenime</string>
 <string name="note">shenim</string>
 <string name="payment_received">pagese e marre</string>
-<string name="import_brainkey">importo  celesin</string>
+    <string name="bts_will_be_deducted">BTS do të zbriten nga</string>
+    <string name="import_brainkey">importo  celesin</string>
 <string name="import_backup_old">importo backup</string>
 <string name="choose_backup">zgjidh backup</string>
 <string name="choose_file">zgjidh skedarin</string>
@@ -223,5 +224,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Metoda e pagesës</string>
     <string name="thankyou_string">Thankyou për përdorimin Smartcoins portofolin</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
 
 </resources>

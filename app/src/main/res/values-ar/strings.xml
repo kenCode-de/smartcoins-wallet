@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="license">رخصة</string>
+    <string name="bts_will_be_deducted">سيتم خصم BTS من</string>
+    <string name="license">رخصة</string>
 <string name="send_capital">إرسال</string>
 <string name="account_create_register_or_import">انشاء حساب جديد أو استيراد حساب</string>
 <string name="txt_account_name">أسم الحساب</string>
@@ -216,5 +217,6 @@
     <string name="total">مجموع</string>
     <string name="payment_method">طريقة الدفع او السداد</string>
     <string name="thankyou_string">الشكر لاستخدام Smartcoins محفظة</string>
+    <string name="audio_folder_path">الصوت مسار المجلد</string>
 
 </resources>

@@ -8,7 +8,8 @@
 <string name="account">Conto</string>
 <string name="friendly_name">Nome amichevole</string>
 <string name="notes">Note</string>
-<string name="note">Nota</string>
+    <string name="bts_will_be_deducted">BTS sarà detratto dal</string>
+    <string name="note">Nota</string>
 <string name="payment_received">Pagamento ricevuto</string>
 <string name="import_brainkey">Importa il BrainKey</string>
 <string name="import_backup_old">Importa il Backup</string>
@@ -218,5 +219,6 @@
     <string name="total">Totale</string>
     <string name="payment_method">Metodo di pagamento</string>
     <string name="thankyou_string">Grazie per l\'utilizzo Smartcoins Portafoglio</string>
+    <string name="audio_folder_path">Percorso cartella Audio</string>
 
 </resources>

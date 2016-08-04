@@ -57,7 +57,7 @@ public class Helper {
         languages.add("bs");
         languages.add("bg");
         languages.add("ca");
-        languages.add("zh");
+        languages.add("zh-rCN");
         languages.add("zh-rTW");
         languages.add("hr");
         languages.add("cs");
@@ -322,7 +322,11 @@ public class Helper {
         Locale myLocale;
         if (lang.equalsIgnoreCase("zh-rTW")) {
             myLocale = Locale.TRADITIONAL_CHINESE;
-        } else {
+        }
+        else if (lang.equalsIgnoreCase("zh-rCN")) {
+            myLocale = Locale.SIMPLIFIED_CHINESE;
+        }
+        else {
             myLocale = new Locale(lang);
         }
         DisplayMetrics dm = res.getDisplayMetrics();

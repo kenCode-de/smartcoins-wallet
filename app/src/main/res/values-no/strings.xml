@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Tillatelse</string>
 <string name="send_capital">Sende</string>
-<string name="account_create_register_or_import">Konto Opprett / register eller IMPORT</string>
+    <string name="bts_will_be_deducted">BTS vil bli trukket fra</string>
+    <string name="account_create_register_or_import">Konto Opprett / register eller IMPORT</string>
 <string name="txt_account_name">Brukernavn</string>
 <string name="time_stamp">tidsstempel</string>
 <string name="email_pdf">E-post PDF</string>
@@ -219,6 +220,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Betalingsmetode</string>
     <string name="thankyou_string">Takk for hjelp Smartcoins lommebok</string>
-
+    <string name="audio_folder_path">Audio mappebane</string>
 
 </resources>

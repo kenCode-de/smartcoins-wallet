@@ -8,7 +8,8 @@
 <string name="account">Учетная Запись</string>
 <string name="friendly_name">Имя контакта</string>
 <string name="notes">Заметки</string>
-<string name="note">Заметка</string>
+    <string name="bts_will_be_deducted">БТС будет вычтена из</string>
+    <string name="note">Заметка</string>
 <string name="payment_received">Платеж получен</string>
 <string name="import_brainkey">Импорт ключа (BrainKey)</string>
 <string name="import_backup_old">Загрузка резервной копии</string>
@@ -218,6 +219,7 @@
     <string name="total">Всего</string>
     <string name="payment_method">Способ оплаты</string>
     <string name="thankyou_string">Thankyou для использования Smartcoins Кошелек</string>
+    <string name="audio_folder_path">Аудио Путь к папке</string>
 
 
 </resources>

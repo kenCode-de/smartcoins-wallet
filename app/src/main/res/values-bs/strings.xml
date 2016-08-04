@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="license">Licenca</string>
+    <string name="bts_will_be_deducted">BTS će se odbiti od</string>
+
+    <string name="license">Licenca</string>
 <string name="send_capital">poslati</string>
 <string name="account_create_register_or_import">Nalog Napravi REGISTER ili uvoz</string>
 <string name="txt_account_name">Ime računa</string>
@@ -219,6 +221,7 @@
     <string name="total">ukupan</string>
     <string name="payment_method">Način plaćanja</string>
     <string name="thankyou_string">Hvala za korišćenje Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
 
 
 </resources>

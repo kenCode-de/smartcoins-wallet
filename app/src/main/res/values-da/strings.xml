@@ -5,7 +5,8 @@
 <string name="txt_account_name">Kontonavn</string>
 <string name="time_stamp">tidsstempel</string>
 <string name="email_pdf">Email PDF</string>
-<string name="account">Konto</string>
+    <string name="bts_will_be_deducted">BTS vil blive fratrukket</string>
+    <string name="account">Konto</string>
 <string name="friendly_name">Venligt navn</string>
 <string name="notes">Noter</string>
 <string name="note">Note</string>
@@ -218,5 +219,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Betalingsmetode</string>
     <string name="thankyou_string">Tak for hjælp Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
 
 </resources>
