@@ -71,8 +71,8 @@
 <string name="export">Eksportuj</string>
 <string name="show_more">Pokaż więcej</string>
 <string name="share_text">Właśnie odkryłem ten wspaniały Smartcoins Wallet, który pozwala na wysyłanie i odbieranie Smartcoins. Sprawdź to!</string>
-<string name="share_info">Zaproś jednego lub więcej znajomych do wypróbowania Smartcoins Wallet! Nie zapisujemy i nie zbieramy adresów email, dbamy o twoją prywatność.</string>
-<string name="share_subject">Znakomity portfel kryptowalut, natychmiastowe płatności!</string>
+<string name="share_info">Zaproś jednego lub więcej znajomych do wypróbowania Smartcoins Wallet! Nie zapisujemy i nie gromadzimy adresów email, dbamy o twoją prywatność.</string>
+<string name="share_subject">Znakomity portfel do kryptowalut, natychmiastowe płatności!</string>
 <string name="share_heading">Powiadom przyjaciół</string>
 <string name="share_btn_text">OTWÓRZ POCZTĘ</string>
 <string name="action_settings">Ustawienia</string>
@@ -106,7 +106,7 @@
 <string name="amount">Ilość</string>
 <string name="message">Wiadomość</string>
 <string name="pdf_generated_msg">PDF utworzony i zapisany: </string>
-<string name="pdf_generated_msg_error">Nie można wygenerować pdf. Proszę spróbować ponownie. błąd:</string>
+<string name="pdf_generated_msg_error">Nie można wygenerować pliku pdf. Proszę spróbować ponownie. błąd:</string>
 <string name="raw_transactions">Raw transakcji:</string>
 <string name="extensions">rozszerzenia</string>
 <string name="op_in_trx">op_in_trx</string>
@@ -114,7 +114,7 @@
 <string name="operation_results">operation_results</string>
 <string name="sent_rcv">Wysłanych / odebranych</string>
 <string name="details">Detale</string>
-<string name="share_qr_code">Podziel QR Code</string>
+<string name="share_qr_code">Wyślij kod QR</string>
 <string name="done">Gotowe</string>
 <string name="id_s">ID</string>
 <string name="time">czas</string>
@@ -141,7 +141,7 @@
 <string name="pin_changed_successfully">PIN został pomyślnie zmieniony</string>
 <string name="incorrect_old_pin">Nieprawidłowy stary PIN</string>
 <string name="copy">Kopiuj</string>
-<string name="pin_verification">odblokowany</string>
+<string name="pin_verification">Odblokuj</string>
 <string name="send_screen_name">Wyślij</string>
 <string name="rcv_screen_name">Otrzymaj</string>
 <string name="request_amount_screen_name">Ilość</string>
@@ -201,7 +201,7 @@
     <string name="bugs_or_errors">Znalazłeś błąd?</string>
     <string name="please_let_us_know">Daj nam znać:</string>
     <string name="try_again">Spróbuj ponownie po 5 minutach</string>
-    <string name="warning_msg_same_account">Nie można wysłać kwoty na te same konto</string>
+    <string name="warning_msg_same_account">Nie można wysłać kwoty na to samo konto</string>
 
     <string name="please_backup_your_brainkey">Proszę wykonać kopię zapasową Brainkey</string>
     <string name="backup_brainkey_msg">Kopia zapasowa pliku .bin powinna być przechowywana w bezpiecznym miejscu i chroniona przed dostępem osób trzecich. W przeciwnym razie twoje środki mogą zostać utracone!</string>
