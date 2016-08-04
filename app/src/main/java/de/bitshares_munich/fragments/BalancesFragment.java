@@ -2517,22 +2517,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     private void loadOnDemand(final Activity _activity)
     {
-        loadOndemand.removeCallbacksAndMessages(null);
+        try {
+            loadOndemand.removeCallbacksAndMessages(null);
 
-        Runnable loadOnDemandRunnable = new Runnable() {
-            @Override
-            public void run() {
-                _activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        //sentCallForTransactions = false;
-                        isSavedTransactions = true;
-                        loadViews(false,true,false);
+            Runnable loadOnDemandRunnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        _activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                //sentCallForTransactions = false;
+                                isSavedTransactions = true;
+                                loadViews(false, true, false);
+                            }
+                        });
                     }
-                });
-            }
-        };
-        loadOndemand.removeCallbacks(loadOnDemandRunnable);
-        loadOndemand.postDelayed(loadOnDemandRunnable,1000);
+                    catch (Exception e){}
+                }
+            };
+            loadOndemand.removeCallbacks(loadOnDemandRunnable);
+            loadOndemand.postDelayed(loadOnDemandRunnable, 1000);
+        }
+        catch (Exception e){}
     }
 
     @Override

@@ -219,5 +219,6 @@
     <string name="total">Jumlah</string>
     <string name="payment_method">Kaedah pembayaran</string>
     <string name="thankyou_string">Terima kasih kerana sudi menggunakan Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Path Folder</string>
 
 </resources>

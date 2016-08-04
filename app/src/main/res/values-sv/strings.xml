@@ -219,6 +219,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Betalningsmetod</string>
     <string name="thankyou_string">Tack för att du använder Smartcoins Wallet</string>
-
+    <string name="audio_folder_path">Audio Mappsökväg</string>
 
 </resources>

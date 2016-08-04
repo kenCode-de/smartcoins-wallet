@@ -219,5 +219,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Modalitate de plată</string>
     <string name="thankyou_string">Vămulțumim pentru utilizarea Smartcoins Wallet</string>
+    <string name="audio_folder_path">Cale dosar audio</string>
 
 </resources>

@@ -220,6 +220,6 @@
     <string name="total">Total</string>
     <string name="payment_method">Betalingsmetode</string>
     <string name="thankyou_string">Takk for hjelp Smartcoins lommebok</string>
-
+    <string name="audio_folder_path">Audio mappebane</string>
 
 </resources>

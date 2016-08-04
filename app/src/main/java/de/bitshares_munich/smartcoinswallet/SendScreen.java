@@ -1688,7 +1688,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     if (opArray.get(0).equals(4)) {
                         JSONObject operation = (JSONObject) opArray.get(1);
                         JSONObject pays = (JSONObject) operation.get("pays");
-                        if (pays.get("asset_id").equals(backupAssets.id) && Double.parseDouble(pays.get("amount").toString()) == Math.round(sellAmount * Math.pow(10, Double.parseDouble(backupAssets.precision)))) {
+                        if (pays.get("asset_id").equals(backupAssets.id)) {
                             found = true;
                             runOnUiThread(new Runnable() {
                                 @Override

@@ -219,5 +219,5 @@
     <string name="total">Genel Toplam</string>
     <string name="payment_method">Ödeme şekli</string>
     <string name="thankyou_string">Teşekkür Smartcoins Cüzdan kullanılarak</string>
-
+    <string name="audio_folder_path">Ses Klasör Yolu</string>
 </resources>

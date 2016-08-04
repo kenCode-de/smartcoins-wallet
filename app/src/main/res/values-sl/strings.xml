@@ -221,5 +221,6 @@
     <string name="total">Skupaj</string>
     <string name="payment_method">Plačilna metoda</string>
     <string name="thankyou_string">Hvala za uporabo Smartcoins denarnico</string>
+    <string name="audio_folder_path">Pot Audio Mapa</string>
 
 </resources>

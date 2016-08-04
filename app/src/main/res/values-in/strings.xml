@@ -218,5 +218,6 @@
  <string name="total">Total</string>
  <string name="payment_method">Metode pembayaran</string>
  <string name="thankyou_string">Terima kasih untuk menggunakan Smartcoins Wallet</string>
+ <string name="audio_folder_path">Audio Folder Jalur</string>
 
 </resources>

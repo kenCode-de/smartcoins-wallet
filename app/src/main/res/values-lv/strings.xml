@@ -220,6 +220,7 @@
     <string name="total">Kopā</string>
     <string name="payment_method">Apmaksas veids</string>
     <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
 
 </resources>
 

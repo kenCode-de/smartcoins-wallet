@@ -220,5 +220,6 @@
     <string name="total">Gesamt</string>
     <string name="payment_method">Bezahlverfahren</string>
     <string name="thankyou_string">Vielen Dank für die Verwendung von Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Ordnerpfad</string>
 
 </resources>

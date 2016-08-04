@@ -220,5 +220,6 @@
     <string name="total">Teljes</string>
     <string name="payment_method">Fizetési mód</string>
     <string name="thankyou_string">Köszönöm használatához Smartcoins Wallet</string>
+    <string name="audio_folder_path">Hang mappa elérési útja</string>
 
 </resources>

@@ -222,6 +222,7 @@
     <string name="total">ukupno</string>
     <string name="payment_method">Metoda plaćanja</string>
     <string name="thankyou_string">Hvala što koristite Smartcoins novčanik</string>
+    <string name="audio_folder_path">Audio Put do mape</string>
 
 
 </resources>

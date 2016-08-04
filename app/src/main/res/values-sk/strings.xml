@@ -222,5 +222,6 @@
     <string name="total">celkom</string>
     <string name="payment_method">Spôsob platby</string>
     <string name="thankyou_string">Ďakujem za použitia Smartcoins Peňaženka</string>
+    <string name="audio_folder_path">Audio Cesta zložky</string>
 
 </resources>

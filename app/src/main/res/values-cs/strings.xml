@@ -216,5 +216,6 @@
     <string name="total">Celkový</string>
     <string name="payment_method">Způsob platby</string>
     <string name="thankyou_string">Děkuji za použití Smartcoins Peněženka</string>
+    <string name="audio_folder_path">Audio Cesta ke složce</string>
 
 </resources>
