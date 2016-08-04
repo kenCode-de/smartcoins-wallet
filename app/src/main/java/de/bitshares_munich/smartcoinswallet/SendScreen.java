@@ -1331,7 +1331,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
             if ((enteredAmount > selectedBalance) | (enteredAmount < 0)) {
                 selectedAmount = String.valueOf(selectedBalance);
-                if ((backupAssetsBalance / backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
+                if ((backupAssetsBalance) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
                     backupAssetAmount = String.format(Locale.ENGLISH, "%.4f", ((enteredAmount - selectedBalance) / backAssetRate));
 
                 }

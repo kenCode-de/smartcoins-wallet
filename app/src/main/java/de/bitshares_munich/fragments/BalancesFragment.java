@@ -67,6 +67,7 @@ import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.EquivalentComponentResponse;
+import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
@@ -711,18 +712,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         {
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
-                            HashMap hm = new HashMap();
+                            HashMap<String,String> hm = new HashMap<>();
 
                             while (keys.hasNext())
                             {
                                 String key = keys.next();
-                                hm.put(key.split(":")[0], rates.get(key));
+                                hm.put(key.split(":")[0], rates.get(key).toString());
 
                                 if ( pairs.contains(key) )
                                 {
                                     pairs.remove(key);
                                 }
                             }
+
+                            if ( getContext() == null ) return;
+                            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
+                            myFiatStorage.saveEqHM(fc,hm);
 
                             if ( pairs.size() > 0 )
                             {
@@ -904,11 +909,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 HashMap hm = new HashMap();
 
-                                if (!btsToFait.isEmpty()) {
+                                if (!btsToFait.isEmpty())
+                                {
                                     keys = rates.keys();
 
 
-                                    while (keys.hasNext()) {
+                                    while (keys.hasNext())
+                                    {
                                         String key = keys.next();
 
                                         if (!key.equals("BTS:" + faitCurrency)) {
@@ -923,6 +930,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             hm.put(asset, assetToFaitConversion);
                                         }
                                     }
+
+                                    if ( getContext() == null ) return;
+                                    EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
+                                    myFiatStorage.saveEqHM(faitCurrency,hm);
                                 }
 
 

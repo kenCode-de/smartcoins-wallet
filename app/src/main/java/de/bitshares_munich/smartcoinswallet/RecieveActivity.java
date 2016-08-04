@@ -136,7 +136,7 @@ public class RecieveActivity extends BaseActivity {
         hm.put("memo", "Order: " + orderId);
         hm.put("amount", price);
         hm.put("fee", 0);
-        hm.put("symbol", currency);
+        hm.put("symbol", currency.replace("bit",""));
         hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId + "/");
 //        hm.put("note","merchant_email:\"abc@live.com\"");
         getQrHashKey(this, hm);
