@@ -221,5 +221,6 @@
     <string name="total">Обща сума</string>
     <string name="payment_method">Начин на плащане</string>
     <string name="thankyou_string">Благодаря за помощта на Smartcoins Wallet</string>
+    <string name="audio_folder_path">Аудио Folder Path</string>
 
 </resources>

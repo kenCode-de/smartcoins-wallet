@@ -216,5 +216,6 @@
     <string name="total">مجموع</string>
     <string name="payment_method">طريقة الدفع او السداد</string>
     <string name="thankyou_string">الشكر لاستخدام Smartcoins محفظة</string>
+    <string name="audio_folder_path">الصوت مسار المجلد</string>
 
 </resources>

@@ -219,6 +219,7 @@
     <string name="total">total</string>
     <string name="payment_method">Mètode de pagament</string>
     <string name="thankyou_string">Gràcies per utilitzar Smartcoins Moneder</string>
+    <string name="audio_folder_path">Ruta de la carpeta d\'àudio</string>
 
 
 </resources>

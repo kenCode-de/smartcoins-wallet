@@ -232,4 +232,5 @@
     <string name="total">Σύνολο</string>
     <string name="payment_method">Μέθοδος πληρωμής</string>
     <string name="thankyou_string">Σας ευχαριστώ για τη χρήση Smartcoins Πορτοφόλι</string>
+    <string name="audio_folder_path">Ήχου Διαδρομή φακέλου</string>
   </resources>

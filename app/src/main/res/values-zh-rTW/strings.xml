@@ -218,5 +218,6 @@
     <string name="total">總</string>
     <string name="payment_method">付款方法</string>
     <string name="thankyou_string">三江源使用Smartcoins錢包</string>
+    <string name="audio_folder_path">音頻文件夾路徑</string>
 
 </resources>

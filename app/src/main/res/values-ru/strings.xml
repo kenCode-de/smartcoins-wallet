@@ -218,6 +218,7 @@
     <string name="total">Всего</string>
     <string name="payment_method">Способ оплаты</string>
     <string name="thankyou_string">Thankyou для использования Smartcoins Кошелек</string>
+    <string name="audio_folder_path">Аудио Путь к папке</string>
 
 
 </resources>

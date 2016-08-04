@@ -218,7 +218,6 @@
     <string name="total">Całkowity</string>
     <string name="payment_method">Metoda płatności</string>
     <string name="thankyou_string">Dziękuje za korzystanie Smartcoins Portfel</string>
-
-
+    <string name="audio_folder_path">Ścieżka audio Folder</string>
 
 </resources>

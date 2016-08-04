@@ -221,6 +221,7 @@
     <string name="total">合計</string>
     <string name="payment_method">支払方法</string>
     <string name="thankyou_string">Smartcoinsウォレットを使用するためのありがとう</string>
+    <string name="audio_folder_path">オーディオフォルダパス</string>
 
 
 </resources>

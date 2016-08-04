@@ -390,5 +390,6 @@
     <string name="to_from">至/从</string>
     <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
     <string name="str_balance_available">%1$s %2$s 可用</string>
+    <string name="audio_folder_path">音频文件夹路径</string>
 
 </resources>
