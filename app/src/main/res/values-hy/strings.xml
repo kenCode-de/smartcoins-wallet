@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
 <string name="license">Լիցենզիա</string>
 <string name="send_capital">Ուղարկել</string>
-<string name="account_create_register_or_import">ՍՏԵՂԾԵԼ ՀԱՇԻՎ/ ԳՐԱՆՑՎԵԼ ԿԱՄ ՆԵՐՄՈՒԾԵԼ</string>
+    <string name="bts_will_be_deducted">BTS չի հանվում</string>
+    <string name="account_create_register_or_import">ՍՏԵՂԾԵԼ ՀԱՇԻՎ/ ԳՐԱՆՑՎԵԼ ԿԱՄ ՆԵՐՄՈՒԾԵԼ</string>
 <string name="txt_account_name">Օգտագործողի անունը</string>
 <string name="time_stamp">Ժամային գոտին</string>
 <string name="email_pdf">Ուղարկել PDF ֆայլ</string>

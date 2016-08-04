@@ -8,7 +8,8 @@
 <string name="account">Účet</string>
 <string name="friendly_name">Jméno účtu</string>
 <string name="notes">Poznámky</string>
-<string name="note">Poznámka</string>
+    <string name="bts_will_be_deducted">BTS bude odečten od</string>
+    <string name="note">Poznámka</string>
 <string name="payment_received">platba přijata</string>
 <string name="import_brainkey">Import z BrainKey</string>
 <string name="import_backup_old">import zálohy</string>

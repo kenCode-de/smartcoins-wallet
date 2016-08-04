@@ -5,7 +5,8 @@
 <string name="txt_account_name">Nama Akun</string>
 <string name="time_stamp">Cap jam</string>
 <string name="email_pdf">Email PDF</string>
-<string name="account">Akun</string>
+ <string name="bts_will_be_deducted">BTS akan dipotong dari</string>
+ <string name="account">Akun</string>
 <string name="friendly_name">Nama Ramah</string>
 <string name="notes">Catatan</string>
 <string name="note">Catatan</string>

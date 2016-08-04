@@ -10,6 +10,7 @@
     <string name="importing_keys_from_bin_file">Uvažanje Tipke iz Bin datoteke</string>
     <string name="import_backup">Uvoz Backup iz .bin datoteke</string>
     <string name="is_already_added">je že dodan</string>
+    <string name="bts_will_be_deducted">BTS se odšteje od</string>
     <string name="in_valid_email">Neveljaven e-naslov</string>
     <string name="select">Izberite</string>
     <string name="are_you_sure">Ali si prepričan?</string>

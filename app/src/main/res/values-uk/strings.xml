@@ -12,6 +12,7 @@
 <string name="payment_received">Отримана компенсація</string>
 <string name="import_brainkey">Імпорт з BrainKey</string>
 <string name="import_backup_old">Імпорт резервного копіювання</string>
+    <string name="bts_will_be_deducted">БТС буде вирахувана з</string>
 <string name="choose_backup">Виберіть Резервне копіювання</string>
 <string name="choose_file">Виберіть файл</string>
 <string name="no_file_chosen">Немає обраного файлу </string>

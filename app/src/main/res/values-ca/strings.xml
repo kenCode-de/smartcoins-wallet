@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="license">Llicència</string>
+    <string name="bts_will_be_deducted">BTS s\'ha de deduir de</string>
+
+    <string name="license">Llicència</string>
 <string name="send_capital">Enviar</string>
 <string name="account_create_register_or_import">CREAR COMPTE o importació</string>
 <string name="txt_account_name">Nom del compte</string>

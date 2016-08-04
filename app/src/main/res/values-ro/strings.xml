@@ -9,7 +9,8 @@
 <string name="friendly_name">Nume prietenos</string>
 <string name="notes">notițe</string>
 <string name="note">Notă</string>
-<string name="payment_received">Plata primită</string>
+    <string name="bts_will_be_deducted">BTS vor fi deduse din</string>
+    <string name="payment_received">Plata primită</string>
 <string name="import_brainkey">Importă BrainKey</string>
 <string name="import_backup_old">Importare de copie de siguranță</string>
 <string name="choose_backup">Alege Copia de siguranță</string>

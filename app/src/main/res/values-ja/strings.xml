@@ -10,7 +10,8 @@
 <string name="account">アカウント</string>
 <string name="friendly_name">表示名</string>
 <string name="notes">備考</string>
-<string name="note">備考</string>
+    <string name="bts_will_be_deducted">BTSから差し引かれます</string>
+    <string name="note">備考</string>
 <string name="payment_received">支払を受け取りました</string>
 <string name="import_brainkey">ブレインキーからインポート</string>
 <string name="import_backup_old">インポートバックアップ</string>

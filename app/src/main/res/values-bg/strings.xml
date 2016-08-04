@@ -106,7 +106,9 @@
 <string name="date">Дата</string>
 <string name="all">Всички</string>
 <string name="to_from">До/От</string>
-<string name="amount">Количество</string>
+    <string name="bts_will_be_deducted">BTS ще бъде приспадната от</string>
+
+    <string name="amount">Количество</string>
 <string name="message">Съобщение</string>
 <string name="pdf_generated_msg">PDF генериран и записан:</string>
 <string name="pdf_generated_msg_error">Не може да се генерира PDF. Моля, опитайте отново. Грешка:</string>

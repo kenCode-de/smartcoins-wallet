@@ -7,7 +7,8 @@
 <string name="email_pdf">이메일 PDF</string>
 <string name="account">계정</string>
 <string name="friendly_name">별칭</string>
-<string name="notes">노트</string>
+    <string name="bts_will_be_deducted">BTS가에서 공제됩니다</string>
+    <string name="notes">노트</string>
 <string name="note">노트</string>
     <string name="please_make_sure_your_pin">핀을 확인하십시오</string>
     <string name="please_make_sure_your_pin_file">핀을 확인하시거나 정확한 핀 파일이 선택되어 있는지 확인하십시오</string>

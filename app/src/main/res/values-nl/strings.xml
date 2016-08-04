@@ -8,7 +8,8 @@
 <string name="account">Account</string>
 <string name="friendly_name">Vriendelijke naam</string>
 <string name="notes">Notities</string>
-<string name="note">Notitie</string>
+    <string name="bts_will_be_deducted">BTS zal worden afgetrokken van</string>
+    <string name="note">Notitie</string>
 <string name="payment_received">Betaling ontvangen</string>
 <string name="import_brainkey">Importeer BrainKey</string>
 <string name="import_backup_old">importeer Backup</string>

@@ -12,6 +12,7 @@
 <string name="payment_received">Betalning mottagen</string>
 <string name="import_brainkey">Import från BrainKey</string>
 <string name="import_backup_old">import Backup</string>
+    <string name="bts_will_be_deducted">BTS kommer att dras från</string>
 <string name="choose_backup">Välj Backup</string>
     <string name="unable_to_import_account_from_bin_file">Det går inte att importera konto från bin-fil</string>
     <string name="importing_keys_from_bin_file">Importera nycklar från Bin fil</string>

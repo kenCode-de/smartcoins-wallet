@@ -14,6 +14,7 @@
 <string name="import_backup_old">импорт резервне копије</string>
 <string name="choose_backup">Изаберите Бацкуп</string>
 <string name="choose_file">Одаберите датотеку</string>
+    <string name="bts_will_be_deducted">БТС ће бити одузети од</string>
 <string name="no_file_chosen">Фајл није одабран</string>
     <string name="unable_to_import_account_from_bin_file">Није могуће увести налог са бин филе</string>
     <string name="importing_keys_from_bin_file">Увоз кључева од Бин филе</string>

@@ -9,7 +9,8 @@
 <string name="friendly_name">Nombre amigable</string>
 <string name="notes">notas</string>
 <string name="note">Nota</string>
-<string name="payment_received">Pago recibido</string>
+    <string name="bts_will_be_deducted">BTS se deducirá de</string>
+    <string name="payment_received">Pago recibido</string>
 <string name="import_brainkey">Importar de BrainKey</string>
 <string name="import_backup_old">importación de copia de seguridad</string>
 <string name="choose_backup">Seleccione Copia de seguridad</string>

@@ -385,6 +385,7 @@
     <string name="sender_account">发件人帐户</string>
     <string name="receiver_account">接收账户</string>
     <string name="total">总</string>
+    <string name="bts_will_be_deducted">BTS将从中扣除</string>
     <string name="payment_method">付款方法</string>
     <string name="thankyou_string">三江源使用Smartcoins钱包</string>
     <string name="to_from">至/从</string>

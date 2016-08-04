@@ -8,7 +8,8 @@
 <string name="account">sąskaita</string>
 <string name="friendly_name">draugiškas vardas</string>
 <string name="notes">Pastabos</string>
-<string name="note">pastaba</string>
+    <string name="bts_will_be_deducted">BTS bus išskaičiuota iš</string>
+    <string name="note">pastaba</string>
 <string name="payment_received">Apmokėjimas gautas</string>
 <string name="import_brainkey">Importas iš BrainKey</string>
 <string name="import_backup_old">importas Atsarginė</string>

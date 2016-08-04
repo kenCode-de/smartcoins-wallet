@@ -10,7 +10,8 @@
 <string name="friendly_name">Φιλική Ονομασία</string>
 <string name="notes">Σημειώσεις</string>
 <string name="note">Σημείωση</string>
-<string name="payment_received">Η πληρωμή ελήφθη</string>
+    <string name="bts_will_be_deducted">BTS θα αφαιρεθεί από</string>
+    <string name="payment_received">Η πληρωμή ελήφθη</string>
 <string name="please_make_sure_your_pin">Παρακαλώ επιβεβαιώστε το PIN σας </string>
 <string name="please_make_sure_your_pin_file">Παρακαλώ επιβεβαιώστε το PIN αρχείο σας</string>
 <string name="import_brainkey">Εισαγωγή από BrainKey</string>

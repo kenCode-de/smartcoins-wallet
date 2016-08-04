@@ -211,7 +211,7 @@
     <string name="loyalty_points">忠誠度積分</string>
     <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
     <string name="str_balance_available">%1$s %2$s 可用</string>
-
+    <string name="bts_will_be_deducted">BTS將從中扣除</string>
     <string name="select_backup_asset">選擇備份資產</string>
     <string name="sender_account">發件人帳戶</string>
     <string name="receiver_account">接收賬戶</string>

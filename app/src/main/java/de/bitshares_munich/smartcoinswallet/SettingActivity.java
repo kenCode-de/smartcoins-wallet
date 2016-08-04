@@ -795,7 +795,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 //Check Balance
                 String ltmAmount = Helper.fetchStringSharePref(getApplicationContext(), "ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
+                   // alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
+                    alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + spAccounts.getSelectedItem().toString() + getString(R.string.account).toLowerCase()+".");
+
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_no));
                 } else {

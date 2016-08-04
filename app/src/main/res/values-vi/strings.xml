@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">giấy phép</string>
+    <string name="bts_will_be_deducted">BTS sẽ được khấu trừ từ</string>
 <string name="send_capital">gởi</string>
 <string name="account_create_register_or_import">TÀI KHOẢN TẠO / ĐĂNG KÝ HOẶC NHẬP</string>
 <string name="txt_account_name">Tên tài khoản</string>

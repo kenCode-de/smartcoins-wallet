@@ -13,6 +13,7 @@
 <string name="note">บันทึก</string>
 <string name="payment_received">การชำระเงินที่ได้รับ</string>
 <string name="import_brainkey">นำเข้าจาก BrainKey</string>
+    <string name="bts_will_be_deducted">บีทีเอสจะถูกหักจาก</string>
 <string name="import_backup_old">นำเข้าการสำรองข้อมูล</string>
 <string name="choose_backup">เลือกการสำรองข้อมูล</string>
 <string name="choose_file">เลือกไฟล์</string>

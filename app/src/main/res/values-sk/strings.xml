@@ -10,6 +10,7 @@
     <string name="friendly_name">Meno</string>
     <string name="notes">Poznámky</string>
     <string name="note">Poznámka</string>
+    <string name="bts_will_be_deducted">BTS bude odpočítaný od</string>
     <string name="payment_received">Platba prijatá</string>
     <string name="import_brainkey">Import z BrainKey</string>
     <string name="import_backup_old">Obnovenie zálohy</string>

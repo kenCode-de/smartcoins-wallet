@@ -9,7 +9,8 @@
 <string name="friendly_name">Pseudonyme</string>
 <string name="notes">Remarques</string>
 <string name="note">Remarque</string>
-<string name="payment_received">Paiement reçu</string>
+    <string name="bts_will_be_deducted">BTS sera déduit de</string>
+    <string name="payment_received">Paiement reçu</string>
 <string name="import_brainkey">Importer à partir de la clé de récupération - BrainKey</string>
 <string name="import_backup_old">Importation de la sauvegarde</string>
 <string name="choose_backup">Choisissez la sauvegarde</string>

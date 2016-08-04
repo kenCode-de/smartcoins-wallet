@@ -371,5 +371,9 @@
     <string name="invalid_input_for_fiat_conversion">Invalid input for fiat conversion</string>
     <string name="account_names_not_found">Account names not found</string>
 
+    <string name="audio_folder_path">Audio Folder Path</string>
+
+
+    <string name="bts_will_be_deducted"> BTS will be deducted from </string>
 
 </resources>

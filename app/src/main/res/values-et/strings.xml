@@ -10,7 +10,9 @@
 <string name="notes">Märkused</string>
 <string name="note">Märge</string>
 <string name="payment_received">Makse vastu võetud</string>
-<string name="import_brainkey">Impordi BrainKey</string>
+    <string name="bts_will_be_deducted">BTS võetakse maha</string>
+
+    <string name="import_brainkey">Impordi BrainKey</string>
 <string name="import_backup_old">Impordi tagavara .bin failist</string>
 <string name="choose_backup">Vali tagavara</string>
 <string name="choose_file">Vali fail</string>
