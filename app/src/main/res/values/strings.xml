@@ -254,6 +254,7 @@
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="decode_memos_array_url">http://188.166.147.110:9004</string>
     <string name="account_create_url">https://bitshares.openledger.info</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
