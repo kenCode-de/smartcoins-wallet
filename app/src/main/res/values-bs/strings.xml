@@ -229,6 +229,7 @@
     <string name="payment_method">Način plaćanja</string>
     <string name="thankyou_string">Hvala za korišćenje Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Molimo provjerite PIN je odabran ispravan ili ispravan bin fajl</string>
 
 
 </resources>

@@ -220,5 +220,6 @@
     <string name="payment_method">Phương thức thanh toán</string>
     <string name="thankyou_string">Thankyou cho sử dụng Smartcoins Wallet</string>
     <string name="audio_folder_path">Âm thanh Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Hãy chắc chắn rằng pin của bạn là chính xác hay đúng bin file được chọn</string>
 
 </resources>

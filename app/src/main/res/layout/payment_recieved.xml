@@ -242,6 +242,7 @@
                         android:layout_height="match_parent"
                         android:text="@string/fee_capital"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:gravity="center_vertical" android:textSize="20sp"
                         android:textColor="#000"
                         />
@@ -251,6 +252,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:text=""
+                         android:visibility="gone"
                         android:gravity="center_vertical" android:textSize="20sp"
                          android:textColor="#000"
                         />

@@ -131,7 +131,7 @@ public class pdfTable {
 
                 TransactionDetails td = myTransactions.get(i);
 
-                String dateText = String.format("%s\n%s\n%s",td.getDateString(),td.getTimeString(),td.getTimeZone());
+                String dateText = String.format("%s\n%s\n%s",td.getDateStringWithYear(),td.getTimeString(),td.getTimeZone());
                 PdfPCell dateCell = new PdfPCell(new Paragraph(dateText));
                 table.addCell(dateCell);
 
@@ -176,11 +176,11 @@ public class pdfTable {
                 String amountText;
                 if ( td.getSent() )
                 {
-                    amountText = String.format("- %s %s\n- %s %s",Double.toString(td.getAmount()),td.getAssetSymbol(),Double.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getAmount()),td.getAssetSymbol(),getAmount(td.getFaitAmount()),td.getFaitAssetSymbol());
                 }
                 else
                 {
-                    amountText = String.format("+ %s %s\n+ %s %s",Double.toString(td.getAmount()),td.getAssetSymbol(),Double.toString(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("+ %s %s\n+ %s %s",getAmount(td.getAmount()),td.getAssetSymbol(),getAmount(td.getFaitAmount()),td.getFaitAssetSymbol());
                 }
                 PdfPCell amountsCell = new PdfPCell(new Paragraph(amountText));
                 amountsCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -289,5 +289,11 @@ public class pdfTable {
         table.addCell(cell2);
         table.completeRow();
         return table;
+    }
+    String getAmount(Double amount){
+        if(!amount.equals(0.0)) {
+            return String.format("%.5f", amount);
+        }
+        return  "";
     }
 }

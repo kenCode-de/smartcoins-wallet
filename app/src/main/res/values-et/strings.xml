@@ -221,5 +221,6 @@
     <string name="payment_method">Makseviis</string>
     <string name="thankyou_string">ThankYou kasutamise Smartcoins Rahakott</string>
     <string name="audio_folder_path">Audio kausta tee</string>
+    <string name="please_make_sure_your_bin_file">Palun veenduge, et Teie pin on õige või korrektne bin fail on valitud</string>
 
 </resources>

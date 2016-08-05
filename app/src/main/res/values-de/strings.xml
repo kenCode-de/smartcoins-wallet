@@ -221,5 +221,6 @@
     <string name="payment_method">Bezahlverfahren</string>
     <string name="thankyou_string">Vielen Dank für die Verwendung von Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Ordnerpfad</string>
+    <string name="please_make_sure_your_bin_file">Bitte stellen Sie sicher, dass Ihr Stift ist richtig oder nicht vollständig entsprechen bin-Datei ausgewählt ist,</string>
 
 </resources>

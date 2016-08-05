@@ -84,6 +84,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
 
+    @Bind(R.id.tvTime)
+    TextView tvTime;
+
     @Bind(R.id.tvOtherName)
     TextView tvOtherName;
 
@@ -163,6 +166,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String amountSymbol = "";
     String feeAmount = "";
     String amountAmount = "";
+    String time = "";
+    String timeZone = "";
     String emailOther = "";
     String emailUser = "";
 
@@ -189,7 +194,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         memoMsg = intent.getStringExtra("Memo");
         date = intent.getStringExtra("Date");
-
+        time = intent.getStringExtra("Time");
+        timeZone = intent.getStringExtra("TimeZone");
 
         if (intent.getBooleanExtra("Sent", false)) {
             userName = intent.getStringExtra("From");
@@ -210,7 +216,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             ivImageTag.setImageResource(R.drawable.receive);
 //            email = get_email(from);
         }
-
+        tvOtherName.setText(otherName);
+        tvUserName.setText(userName);
+        TvBlockNum.setText(date);
+        tvTime.setText(time+" "+timeZone);
         //  emailOther = get_email(otherName);
         //   emailOther = "fawaz_ahmed@live.com";
 
@@ -392,8 +401,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 tvBlockNumber.setText(eReciptmap.get("block_num"));
                 tvTrxInBlock.setText(eReciptmap.get("id"));
 
-                tvOtherName.setText(otherName);
-                tvUserName.setText(userName);
 
                 tvAmount.setText(amountAmount + " " + amountSymbol);
                 tvFee.setText(feeAmount + " " + feeSymbol);
@@ -410,7 +417,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                 }
 
 
-                TvBlockNum.setText(date);
                 tvMemo.setText(memoMsg);
 
 

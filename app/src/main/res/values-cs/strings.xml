@@ -217,5 +217,6 @@
     <string name="payment_method">Způsob platby</string>
     <string name="thankyou_string">Děkuji za použití Smartcoins Peněženka</string>
     <string name="audio_folder_path">Audio Cesta ke složce</string>
+    <string name="please_make_sure_your_bin_file">Prosím, ujistěte se, že pin je správný nebo správný soubor přihrádka je vybrána</string>
 
 </resources>

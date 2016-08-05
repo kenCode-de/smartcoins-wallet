@@ -264,7 +264,7 @@ public class ImportBackupActivity extends BaseActivity {
                         AccountDetails accountDetails = response.body();
                         if (accountDetails.status.equals("failure"))
                         {
-                            Toast.makeText(myActivity, accountDetails.msg, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
                         }
                         else
                         {
@@ -326,7 +326,7 @@ public class ImportBackupActivity extends BaseActivity {
         {
             hideDialog();
             Log.d("bin",e.getMessage());
-            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_pin_file), Toast.LENGTH_LONG).show();
+            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
         }
 
     }
