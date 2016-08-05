@@ -65,7 +65,7 @@ public class AudioFilePath {
         File file = new File(folder.getAbsolutePath(), "Woohoo.wav");
         String userFilePath = fetchAudioFilePathFromPref();
         String defaultAudioPath = file.getAbsolutePath();
-        if(userFilePath.equals(defaultAudioPath)){
+        if(userFilePath.equals(defaultAudioPath) || userFilePath.isEmpty()){
             return "-------";
         }
         else {

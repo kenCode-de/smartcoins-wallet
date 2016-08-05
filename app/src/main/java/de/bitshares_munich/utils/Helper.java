@@ -370,6 +370,27 @@ public class Helper {
         }
     }
 
+    public static String convertDateToGMTWithYear(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM yy");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(date);
+            return result;
+
+        } else {
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM yyy");
+            String result = destFormat.format(date);
+            return result;
+        }
+    }
+
+
+
 
     public static String convertTimeToGMT(Date date, Context context) {
 

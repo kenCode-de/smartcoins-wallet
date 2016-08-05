@@ -116,6 +116,17 @@
                         android:textSize="18dp"
                         />
 
+                <TextView
+                    android:layout_below="@+id/TvBlockNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:textColor="@color/black"
+                    android:id="@+id/tvTime"
+                    android:layout_centerInParent="true"
+                    android:textSize="12dp"
+                    />
+
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -123,7 +134,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_centerInParent="true"
-                    android:layout_below="@+id/TvBlockNum"
+                    android:layout_below="@+id/tvTime"
                     android:id="@+id/llUserAccount"
                     >
 

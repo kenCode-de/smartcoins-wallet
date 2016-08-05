@@ -66,6 +66,12 @@ public class TransactionDetails {
 
     }
 
+    public String getDateStringWithYear()
+    {
+        return Helper.convertDateToGMTWithYear(this.Date,context);
+
+    }
+
     public String getTimeString()
     {
      /*   SimpleDateFormat df = new SimpleDateFormat("hh:mm a");

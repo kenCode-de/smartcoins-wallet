@@ -79,11 +79,11 @@ Context context;
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
         if ( transactiondetails.getSent() )
         {
-            imgView.setImageResource(R.drawable.sendicon);
+            imgView.setImageResource(R.drawable.send);
         }
         else
         {
-            imgView.setImageResource(R.drawable.rcvicon);
+            imgView.setImageResource(R.drawable.receive);
         }
 
 
