@@ -1271,6 +1271,7 @@ public class TransactionActivity implements IBalancesDelegate {
                             if ( context == null ) return;
                             EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
                             myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
+                            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
 
                             if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
@@ -1426,6 +1427,10 @@ public class TransactionActivity implements IBalancesDelegate {
                                 EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
                                 myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
                             }
+
+                            if ( context == null ) return;
+                            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+                            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
 
                             if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));

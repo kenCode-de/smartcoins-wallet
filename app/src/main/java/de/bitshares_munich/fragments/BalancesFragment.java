@@ -732,7 +732,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             if ( pairs.size() > 0 )
                             {
                                 getEquivalentComponentsIndirect(pairs,fc);
+                                return;
                             }
+
+                            if ( getContext() == null ) return;
+                            hm = myFiatStorage.getEqHM(fc);
 
                             for (int i = 0; i < llBalances.getChildCount(); i++)
                             {
@@ -907,7 +911,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     }
                                 }
 
-                                HashMap hm = new HashMap();
+                                HashMap<String,String> hm = new HashMap<>();
 
                                 if (!btsToFait.isEmpty())
                                 {
@@ -935,6 +939,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
                                     myFiatStorage.saveEqHM(faitCurrency,hm);
                                 }
+
+                                if ( getContext() == null ) return;
+                                EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
+                                hm = myFiatStorage.getEqHM(faitCurrency);
 
 
                                 for (int i = 0; i < llBalances.getChildCount(); i++) {
@@ -1553,8 +1561,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                cView.setTypeface(null, Typeface.NORMAL);
-                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                                try {
+                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                }
+                                                catch (Exception e)
+                                                {
+
+                                                }
                                             }
                                         };
                                         animateNsoundHandler.postDelayed(updateTask, 4000);
@@ -1563,9 +1577,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    cView.setText("");
-                                                    aView.setText("");
-                                                    bView.setText("");
+                                                    try {
+                                                        cView.setText("");
+                                                        aView.setText("");
+                                                        bView.setText("");
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1629,8 +1649,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                cView.setTypeface(null, Typeface.NORMAL);
-                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                                try {
+                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                }
+                                                catch (Exception e)
+                                                {
+
+                                                }
                                             }
                                         };
                                         animateNsoundHandler.postDelayed(updateTask, 4000);
@@ -1639,9 +1665,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    cView.setText("");
-                                                    aView.setText("");
-                                                    bView.setText("");
+                                                    try {
+                                                        cView.setText("");
+                                                        aView.setText("");
+                                                        bView.setText("");
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1728,8 +1760,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                cView.setTypeface(null, Typeface.NORMAL);
-                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                                try {
+                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                }
+                                                catch (Exception e)
+                                                {
+
+                                                }
                                             }
                                         };
 
@@ -1739,9 +1777,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    cView.setText("");
-                                                    aView.setText("");
-                                                    bView.setText("");
+                                                    try
+                                                    {
+                                                        cView.setText("");
+                                                        aView.setText("");
+                                                        bView.setText("");
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1764,7 +1809,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    playSound();
+                                                    try
+                                                    {
+                                                        playSound();
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1774,7 +1826,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                     try {
                                                         getActivity().runOnUiThread(new Runnable() {
                                                             public void run() {
-                                                                rotateRecieveButton();
+                                                                try
+                                                                {
+                                                                    rotateRecieveButton();
+                                                                }
+                                                                catch (Exception e)
+                                                                {
+
+                                                                }
                                                             }
                                                         });
 
@@ -1804,8 +1863,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                cView.setTypeface(null, Typeface.NORMAL);
-                                                cView.setTextColor(getResources().getColor(R.color.green));
+                                                try
+                                                {
+                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                }
+                                                catch (Exception e)
+                                                {
+
+                                                }
                                             }
                                         };
 
@@ -1815,9 +1881,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    cView.setText("");
-                                                    aView.setText("");
-                                                    bView.setText("");
+                                                    try {
+                                                        cView.setText("");
+                                                        aView.setText("");
+                                                        bView.setText("");
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1934,7 +2006,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    playSound();
+                                                    try {
+                                                        playSound();
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
@@ -1972,7 +2050,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    playSound();
+                                                    try {
+                                                        playSound();
+                                                    }
+                                                    catch (Exception e)
+                                                    {
+
+                                                    }
                                                 }
                                             };
 
