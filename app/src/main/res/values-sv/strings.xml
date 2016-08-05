@@ -220,5 +220,6 @@
     <string name="payment_method">Betalningsmetod</string>
     <string name="thankyou_string">Tack för att du använder Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Mappsökväg</string>
+    <string name="please_make_sure_your_bin_file">Se till att din PIN-kod är korrekt eller korrekt bin fil väljs</string>
 
 </resources>

@@ -219,5 +219,6 @@
  <string name="payment_method">Metode pembayaran</string>
  <string name="thankyou_string">Terima kasih untuk menggunakan Smartcoins Wallet</string>
  <string name="audio_folder_path">Audio Folder Jalur</string>
+ <string name="please_make_sure_your_bin_file">Pastikan pin Anda benar atau benar file bin dipilih</string>
 
 </resources>

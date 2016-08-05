@@ -335,6 +335,7 @@
     <string name="payment_method">Maksutapa</string>
     <string name="thankyou_string">Kiitos käyttää Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio kansion polku</string>
+    <string name="please_make_sure_your_bin_file">Varmista, että tappi on oikein tai oikea bin tiedosto valitaan</string>
 
 
 </resources>

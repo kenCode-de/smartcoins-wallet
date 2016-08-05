@@ -224,5 +224,6 @@
     <string name="payment_method">Начин на плащане</string>
     <string name="thankyou_string">Благодаря за помощта на Smartcoins Wallet</string>
     <string name="audio_folder_path">Аудио Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Моля, уверете се, че вашият пин се е избран правилно или правилен бин файл</string>
 
 </resources>

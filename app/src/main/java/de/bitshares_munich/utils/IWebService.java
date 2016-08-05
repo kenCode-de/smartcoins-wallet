@@ -10,6 +10,7 @@ import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.CCAssets;
 import de.bitshares_munich.models.DecodeMemo;
 
+import de.bitshares_munich.models.DecodeMemosArray;
 import de.bitshares_munich.models.GenerateKeys;
 
 import de.bitshares_munich.models.EquivalentComponentResponse;
@@ -69,6 +70,10 @@ public interface IWebService {
     @Headers({"Content-Type: application/json"})
     @POST("/")
     Call<DecodeMemo> getDecodedMemo(@Body Map<String, String> params);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/")
+    Call<DecodeMemosArray> getDecodedMemosArray(@Body Map<String, String> params);
 
     @Headers({"Content-Type: application/json"})
     @POST("/")

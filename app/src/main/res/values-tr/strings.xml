@@ -220,4 +220,7 @@
     <string name="payment_method">Ödeme şekli</string>
     <string name="thankyou_string">Teşekkür Smartcoins Cüzdan kullanılarak</string>
     <string name="audio_folder_path">Ses Klasör Yolu</string>
+
+    <string name="please_make_sure_your_bin_file">Doğru veya doğru bin dosya seçili olduğundan emin pin olduğunu olun</string>
+
 </resources>

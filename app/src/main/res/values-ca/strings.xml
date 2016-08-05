@@ -223,5 +223,6 @@
     <string name="thankyou_string">Gràcies per utilitzar Smartcoins Moneder</string>
     <string name="audio_folder_path">Ruta de la carpeta d\'àudio</string>
 
+    <string name="please_make_sure_your_bin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer bin correcta o correcta</string>
 
 </resources>

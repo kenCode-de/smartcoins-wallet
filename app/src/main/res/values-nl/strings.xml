@@ -220,6 +220,7 @@
     <string name="payment_method">Betalingsmiddel</string>
     <string name="thankyou_string">Dank u voor het gebruik van Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Zorg ervoor dat uw pincode correct is of juist bin bestand is geselecteerd</string>
 
 </resources>
 

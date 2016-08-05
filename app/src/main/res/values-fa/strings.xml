@@ -223,6 +223,7 @@
     <string name="payment_method">روش پرداخت</string>
     <string name="thankyou_string">Thankyou برای استفاده از کیف پول Smartcoins</string>
     <string name="audio_folder_path">مسیر پوشه صوتی</string>
+    <string name="please_make_sure_your_bin_file">لطفا مطمئن شوید که PIN خود را صحیح یا صحیح فایل بن انتخاب شده است</string>
 
 
 </resources>
