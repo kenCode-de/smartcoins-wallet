@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="+ 30.00 OBITS"
         android:fontFamily="sans-serif-light"
-        android:textSize="8pt"
+        android:textSize="7.2pt"
         android:textColor="@color/sendamount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"

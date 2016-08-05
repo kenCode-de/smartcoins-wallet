@@ -1562,7 +1562,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                  //  cView.setTypeface(null, Typeface.NORMAL);
                                                     cView.setTextColor(getResources().getColor(R.color.green));
                                                 }
                                                 catch (Exception e)
@@ -1650,7 +1650,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    //cView.setTypeface(null, Typeface.NORMAL);
                                                     cView.setTextColor(getResources().getColor(R.color.green));
                                                 }
                                                 catch (Exception e)
@@ -1761,7 +1761,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                    //cView.setTypeface(null, Typeface.NORMAL);
                                                     cView.setTextColor(getResources().getColor(R.color.green));
                                                 }
                                                 catch (Exception e)
@@ -1865,7 +1865,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try
                                                 {
-                                                    cView.setTypeface(null, Typeface.NORMAL);
+                                                  //  cView.setTypeface(null, Typeface.NORMAL);
                                                     cView.setTextColor(getResources().getColor(R.color.green));
                                                 }
                                                 catch (Exception e)
