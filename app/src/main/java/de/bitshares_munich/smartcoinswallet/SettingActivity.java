@@ -1305,4 +1305,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         String path = audioFilePath.userAudioFilePathIfExist();
         tvFolderPath.setText(path);
     }
+    @OnClick(R.id.spFolderPath)
+    public void spFolderSelect(View view){
+        chooseAudioFile();
+    }
 }

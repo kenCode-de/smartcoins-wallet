@@ -34,9 +34,9 @@ public class AudioFilePath {
         if(audioFile.exists()){
             return path;
         }
-        else if(defaultAudioFilePath()) {
-           return fetchAudioFilePathFromPref();
-        }
+//        else if(defaultAudioFilePath()) {
+//           return fetchAudioFilePathFromPref();
+//        }
         else
         {
             return "";
@@ -60,12 +60,24 @@ public class AudioFilePath {
         }
         return false;
     }
-    public String userAudioFilePathIfExist(){
-        File folder = new File(Environment.getExternalStorageDirectory() + File.separator + context.getResources().getString(R.string.folder_name));
-        File file = new File(folder.getAbsolutePath(), "Woohoo.wav");
+//    public String userAudioFilePathIfExist(){
+//        File folder = new File(Environment.getExternalStorageDirectory() + File.separator + context.getResources().getString(R.string.folder_name));
+//        File file = new File(folder.getAbsolutePath(), "Woohoo.wav");
+//        String userFilePath = fetchAudioFilePathFromPref();
+//        String defaultAudioPath = file.getAbsolutePath();
+//        if(userFilePath.equals(defaultAudioPath) || userFilePath.isEmpty()){
+//            return "-------";
+//        }
+//        else {
+//            return userFilePath;
+//        }
+//    }
+        public String userAudioFilePathIfExist(){
+//        File folder = new File(Environment.getExternalStorageDirectory() + File.separator + context.getResources().getString(R.string.folder_name));
+//        File file = new File(folder.getAbsolutePath(), "Woohoo.wav");
         String userFilePath = fetchAudioFilePathFromPref();
-        String defaultAudioPath = file.getAbsolutePath();
-        if(userFilePath.equals(defaultAudioPath) || userFilePath.isEmpty()){
+      //  String defaultAudioPath = file.getAbsolutePath();
+        if(userFilePath.isEmpty()){
             return "-------";
         }
         else {
