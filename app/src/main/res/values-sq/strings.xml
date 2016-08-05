@@ -225,5 +225,6 @@
     <string name="payment_method">Metoda e pagesës</string>
     <string name="thankyou_string">Thankyou për përdorimin Smartcoins portofolin</string>
     <string name="audio_folder_path">Audio Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Ju lutem sigurohuni që pin juaj është e saktë apo e saktë fotografi bin është zgjedhur</string>
 
 </resources>

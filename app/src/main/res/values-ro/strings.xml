@@ -220,5 +220,6 @@
     <string name="payment_method">Modalitate de plată</string>
     <string name="thankyou_string">Vămulțumim pentru utilizarea Smartcoins Wallet</string>
     <string name="audio_folder_path">Cale dosar audio</string>
+    <string name="please_make_sure_your_bin_file">Asigurați-vă că PIN-ul este corect de fișier sau corect bin este selectat</string>
 
 </resources>

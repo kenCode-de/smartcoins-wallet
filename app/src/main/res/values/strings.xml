@@ -317,7 +317,6 @@
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
-
     <string name="unable_to_load_brainkey">Unable to load brainkey</string>
     <string name="unable_to_generate_bin_format_for_key">Unable to generate bin format for key</string>
     <string name="creating_backup_file">Creating Backup File</string>
@@ -376,5 +375,7 @@
 
     <string name="bts_will_be_deducted"> BTS will be deducted from </string>
 
+
+    <string name="please_make_sure_your_bin_file">Please make sure your pin is correct or correct bin file is selected</string>
 
 </resources>

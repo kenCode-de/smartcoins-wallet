@@ -234,4 +234,7 @@
     <string name="payment_method">Μέθοδος πληρωμής</string>
     <string name="thankyou_string">Σας ευχαριστώ για τη χρήση Smartcoins Πορτοφόλι</string>
     <string name="audio_folder_path">Ήχου Διαδρομή φακέλου</string>
-  </resources>
+
+    <string name="please_make_sure_your_bin_file">Παρακαλώ βεβαιωθείτε ότι το PIN σας έχει επιλεγεί σωστή ή σωστό αρχείο bin</string>
+
+</resources>

@@ -223,4 +223,7 @@
     <string name="payment_method">भुगतान का तरीका</string>
     <string name="thankyou_string">ठनक Smartcoins बटुआ का उपयोग करने के लिए</string>
     <string name="audio_folder_path">ऑडियो फ़ोल्डर पथ</string>
+
+    <string name="please_make_sure_your_bin_file">सुनिश्चित करें कि आपके पिन है सही या सही बिन फ़ाइल चयनित है कृपया</string>
+
 </resources>

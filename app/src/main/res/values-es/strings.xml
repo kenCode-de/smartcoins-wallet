@@ -220,5 +220,6 @@
     <string name="payment_method">Método de pago</string>
     <string name="thankyou_string">Gracias por usar Smartcoins Monedero</string>
     <string name="audio_folder_path">Ruta de la carpeta de audio</string>
+    <string name="please_make_sure_your_bin_file">Por favor asegúrese de que el pasador se ha seleccionado el archivo bin correcta o correcta</string>
 
 </resources>

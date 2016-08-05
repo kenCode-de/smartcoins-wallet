@@ -392,5 +392,7 @@
     <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
     <string name="str_balance_available">%1$s %2$s 可用</string>
     <string name="audio_folder_path">音频文件夹路径</string>
+    <string name="please_make_sure_your_bin_file">请确保您的密码是否正确，或正确的bin文件被选中</string>
+
 
 </resources>
