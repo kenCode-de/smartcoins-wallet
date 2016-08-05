@@ -66,7 +66,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
 
     Locale locale;
     String language;
-
+    String block="";
+    String trx="";
     webSocketCallHelper myWebSocketHelper;
 
     @Override
@@ -76,7 +77,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         ButterKnife.bind(this);
 
         setBackButton(true);
-        setTitle(getResources().getString(R.string.payment_rcvd_screen_name));
+        setTitle(getResources().getString(R.string.payment_received));
 
         myWebSocketHelper = new webSocketCallHelper(getApplicationContext());
 
@@ -86,12 +87,12 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         application.registerTransactionObject(this);
         application.registerAccountObjectCallback(this);
         application.registerAssetObjectCallback(this);
-        String block = getIntent().getStringExtra("block");
-        String trx = getIntent().getStringExtra("trx");
+        block = getIntent().getStringExtra("block");
+        trx = getIntent().getStringExtra("trx");
         receiver_id = getIntent().getStringExtra("receiver_id");
         sender_id = getIntent().getStringExtra("sender_id");
         getAccountObject();
-        getTransactionObject(block,trx);
+       // getTransactionObject(block,trx);
 
 
 
@@ -183,6 +184,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        getTransactionObject(block,trx);
     }
     @Override
     public void checkTransactionObject(JSONObject jsonObject){
