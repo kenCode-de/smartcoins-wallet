@@ -2392,21 +2392,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
 
-            if ( myTransactionsTableAdapter == null )
-            {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
-            }
-            else
-            {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
-            }
+            number_of_transactions_loaded += number_of_transactions_to_load;
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run()
                 {
+                    if ( myTransactionsTableAdapter == null )
+                    {
+                        myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                        tableView.setDataAdapter(myTransactionsTableAdapter);
+                    }
+                    else
+                    {
+                        myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                        tableView.setDataAdapter(myTransactionsTableAdapter);
+                    }
+
                     if (myTransactionActivity.finalBlockRecieved)
                     {
                         load_more_values.setVisibility(View.GONE);
@@ -2426,7 +2428,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             });
 
 
-            number_of_transactions_loaded += number_of_transactions_to_load;
+
 
             /*
             if ( number_of_transactions_loaded < 20 )
