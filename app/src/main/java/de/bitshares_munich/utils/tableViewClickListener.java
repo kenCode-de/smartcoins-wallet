@@ -39,7 +39,9 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
             Intent intent = new Intent(myContext, eReceipt.class);
             intent.putExtra(myContext.getResources().getString(R.string.e_receipt), td.eReceipt);
             intent.putExtra("Memo", td.Memo);
-            intent.putExtra("Date", td.getDateString() + " " + td.getTimeString() + " " + td.getTimeZone());
+            intent.putExtra("Date", td.getDateStringWithYear());
+            intent.putExtra("Time", td.getTimeString());
+            intent.putExtra("TimeZone", td.getTimeZone());
             intent.putExtra("To", td.To);
             intent.putExtra("From", td.From);
             intent.putExtra("Sent", td.Sent);
