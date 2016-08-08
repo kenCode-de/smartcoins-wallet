@@ -1261,7 +1261,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void reTryGetEquivalentComponents (final String fc)
     {
-        if ( retryGetEquivalentRates++ < 2 )
+        if ( retryGetEquivalentRates++ < 1 )
         {
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -1282,11 +1282,15 @@ public class TransactionActivity implements IBalancesDelegate {
     private void getEquivalentFiatRates(final String faitCurrency)
     {
         if ( context == null ) return;
+        EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+        //myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
+        equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+        decodeRecievedMemos();
+
+        /*
+        if ( context == null ) return;
         assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.getting_equivalent_flat_exchange_rate));
         equivalentRatesHm = new HashMap<>();
-
-        //if ( context == null ) return;
-        //final String faitCurrency = Helper.getFadeCurrency(context);
 
         final List<String> pairs = new ArrayList<>();
         String values = "";
@@ -1394,13 +1398,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 reTryGetEquivalentComponents(faitCurrency);
             }
         });
+        */
     }
 
     int retryGetIndirectEquivalentRates = 0 ;
 
     private void reTryGetIndirectEquivalentComponents (final List<String> leftOvers, final String faitCurrency)
     {
-        if ( retryGetIndirectEquivalentRates++ < 2 )
+        if ( retryGetIndirectEquivalentRates++ < 1 )
         {
             new Timer().schedule(new TimerTask() {
                 @Override
