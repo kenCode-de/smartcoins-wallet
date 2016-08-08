@@ -816,6 +816,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             Intent email = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(new File(path));
             email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(email);
