@@ -1548,7 +1548,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.red));
 
                                         animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
@@ -1600,7 +1600,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         Log.d("Balances Update", "Balance received");
 
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
                                         // run animation
@@ -1748,7 +1748,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update", "Balance sent");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
                                         Log.d("Balances Update", "Text animated");
@@ -1802,7 +1802,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update","Balance is received");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         // run animation
                                         if (animateOnce) {
