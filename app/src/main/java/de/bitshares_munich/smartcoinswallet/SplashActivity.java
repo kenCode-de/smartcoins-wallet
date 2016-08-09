@@ -28,7 +28,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-
+        //String myLocale = Locale.getDefault().getDisplayLanguage();
         //supportInvalidateOptionsMenu();
         //this.invalidateOptionsMenu();
 

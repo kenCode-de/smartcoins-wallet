@@ -150,6 +150,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
+    @Bind(R.id.llall)
+    LinearLayout llall;
+
 
     //int names_in_work;
     //int names_total_size;
@@ -178,6 +181,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String emailOther = "";
     String emailUser = "";
     ProgressDialog progressDialog;
+    boolean loadComplete = false;
     boolean btnPress = false;
 
     // Storage Permissions
@@ -197,7 +201,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         progressDialog = new ProgressDialog(this);
         application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
-
+        hideProgressBar();
         Intent intent = getIntent();
         String eReciept = intent.getStringExtra(getResources().getString(R.string.e_receipt));
 
@@ -278,58 +282,86 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String transactionIdClipped = "";
     Boolean transactionIdUpdated = false;
 
-    private void getTransactionId(final String block_num, final String trx_in_block) {
+    private void getTransactionId(final String block_num, final String trx_in_block)
+    {
+        try {
+            final Handler handler = new Handler();
 
-        final Handler handler = new Handler();
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("method", "get_transaction_id");
+                    hashMap.put("block_num", block_num);
+                    hashMap.put("trx_in_block", trx_in_block);
 
-        final Runnable updateTask = new Runnable() {
-            @Override
-            public void run() {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("method", "get_transaction_id");
-                hashMap.put("block_num", block_num);
-                hashMap.put("trx_in_block", trx_in_block);
+                    ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+                    IWebService service = sg.getService(IWebService.class);
+                    final Call<TransactionIdResponse> postingService = service.getTransactionIdComponent(hashMap);
 
-                ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-                IWebService service = sg.getService(IWebService.class);
-                final Call<TransactionIdResponse> postingService = service.getTransactionIdComponent(hashMap);
+                    postingService.enqueue(new Callback<TransactionIdResponse>() {
 
-                postingService.enqueue(new Callback<TransactionIdResponse>() {
+                        @Override
+                        public void onResponse(Response<TransactionIdResponse> response) {
+                            if (response.isSuccess()) {
+                                TransactionIdResponse resp = response.body();
 
-                    @Override
-                    public void onResponse(Response<TransactionIdResponse> response) {
-                        if (response.isSuccess()) {
-                            TransactionIdResponse resp = response.body();
+                                if (resp.status.equals("success")) {
+                                    try {
+                                        String trx_id = resp.transaction_id;
+                                        transactionIdClipped = trx_id.substring(0, 7);
+                                        transactionIdUpdated = true;
 
-                            if (resp.status.equals("success")) {
-                                try {
-                                    String trx_id = resp.transaction_id;
-                                    transactionIdClipped = trx_id.substring(0, 7);
-                                    transactionIdUpdated = true;
-                                    if (btnPress) {
-                                        generatePdf();
+                                        checkifloadingComplete();
+
+//                                        if (btnPress)
+//                                        {
+//                                            try
+//                                            {
+//                                                Handler handlerStop = new Handler();
+//                                                handlerStop.postDelayed(new Runnable() {
+//                                                    public void run() {
+//                                                        //hideDialog();
+//                                                       // hideProgressBar();
+//                                                    }
+//                                                }, 1500);
+//                                            }
+//                                            catch (Exception e)
+//                                            {
+//
+//                                            }
+//                                            //generatePdf();
+//                                            generatepdfDoc();
+//                                        }
+
+
+
+                                    } catch (Exception e) {
+                                        //e.printStackTrace();
+                                        getTransactionId(block_num, trx_in_block);
                                     }
-                                } catch (Exception e) {
-                                    //e.printStackTrace();
-                                    //getTransactionId(block_num,trx_in_block);
+                                } else {
+                                    getTransactionId(block_num, trx_in_block);
                                 }
+
                             } else {
-                                //getTransactionId(block_num,trx_in_block);
+                                getTransactionId(block_num, trx_in_block);
                             }
-
-                        } else {
-                            //getTransactionId(block_num,trx_in_block);
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Throwable t) {
-                        getTransactionId(block_num, trx_in_block);
-                    }
-                });
-            }
-        };
-        handler.postDelayed(updateTask, 100);
+                        @Override
+                        public void onFailure(Throwable t) {
+                            getTransactionId(block_num, trx_in_block);
+                        }
+                    });
+                }
+            };
+            handler.postDelayed(updateTask, 100);
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
     void init(String eRecipt) {
@@ -432,6 +464,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
                 tvMemo.setText(memoMsg);
 
+                loadComplete = true;
+                checkifloadingComplete();
+               // hideProgressBar();
 
             }
         });
@@ -460,28 +495,37 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
         btnPress = true;
-        if (!transactionIdUpdated) {
-            //showDialog("", getResources().getString(R.string.updating_transaction_id));
-            showProgressBar();
-        } else {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    //showDialog("", getResources().getString(R.string.updating_transaction_id));
-                    showProgressBar();
-                }
-            }, 0);
-            Handler handlerStop = new Handler();
-            handlerStop.postDelayed(new Runnable() {
-                public void run() {
-                  //  hideDialog();
-                    hideProgressBar();
-
-                }
-            }, 1500);
-            generatePdf();
-
-        }
+        checkifloadingComplete();
+//        if(loadComplete) {
+//            showProgressBar();
+//            if (!transactionIdUpdated) {
+                //showDialog("", getResources().getString(R.string.updating_transaction_id));
+                //showProgressBar();
+//            } else {
+             //   showProgressBar();
+//                Handler handler = new HatransactionIdUpdatedndler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        //showDialog("", getResources().getString(R.string.updating_transaction_id));
+//                        showProgressBar();
+//                    }
+//                }, 0);
+//                Handler handlerStop = new Handler();
+//                handlerStop.postDelayed(new Runnable() {
+//                    public void run() {
+//                        //  hideDialog();
+//                        hideProgressBar();
+//
+//                    }
+//                }, 1500);
+                //generatePdf();
+//            }
+//
+//        }
+//        else{
+//            showProgressBar();
+//            Toast.makeText(context,getString(R.string.updating_transaction_id),Toast.LENGTH_LONG).show();
+//        }
 
     }
 
@@ -795,21 +839,37 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         }
     }
 
-    private void generatePdf() {
-        verifyStoragePermissions(this);
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped + ".pdf";
-        Document document = new Document();
-        try {
+    private void generatePdf()
+    {
+        try
+        {
+            showProgressBar();
+         //   buttonSend.setVisibility(View.INVISIBLE);
+            verifyStoragePermissions(this);
+            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped + ".pdf";
+            Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
-            buttonSend.setVisibility(View.INVISIBLE);
+//            buttonSend.setVisibility(View.INVISIBLE);
+//            hideProgressBar();
+
+//            Bitmap bitmap = Bitmap.createBitmap(
+//                    scrollView.getChildAt(0).getWidth(),
+//                    scrollView.getChildAt(0).getHeight(),
+//                    Bitmap.Config.ARGB_8888);
+
             Bitmap bitmap = Bitmap.createBitmap(
-                    scrollView.getChildAt(0).getWidth(),
-                    scrollView.getChildAt(0).getHeight(),
+                    llall.getWidth(),
+                    llall.getHeight(),
                     Bitmap.Config.ARGB_8888);
+
+
             Canvas c = new Canvas(bitmap);
-            scrollView.getChildAt(0).draw(c);
-            buttonSend.setVisibility(View.VISIBLE);
+           // scrollView.getChildAt(0).draw(c);
+            llall.draw(c);
+
+          //  buttonSend.setVisibility(View.VISIBLE);
+         //   showProgressBar();
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] imageInByte = stream.toByteArray();
@@ -819,8 +879,12 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             myImage.scaleToFit(documentWidth, documentHeight);
             myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
             document.add(myImage);
+
             //hideDialog();
-            hideProgressBar();
+
+            document.close();
+            this.runOnUiThread(new Runnable() {
+                public void run() {
             Intent email = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(new File(path));
             email.putExtra(Intent.EXTRA_STREAM, uri);
@@ -828,15 +892,18 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(email);
-
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            hideProgressBar();
         }
-
-        document.close();
+        catch (Exception e)
+        {
+        //    Toast.makeText(getApplicationContext(), getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void showDialog(String title, String msg) {
+    private void showDialog(String title, String msg)
+    {
         if (progressDialog != null) {
             if (!progressDialog.isShowing()) {
                 progressDialog.setTitle(title);
@@ -859,10 +926,58 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     }
 
     private void showProgressBar() {
-       progressBar.setVisibility(View.VISIBLE);
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+                buttonSend.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void hideProgressBar() {
-        progressBar.setVisibility(View.GONE);
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+                buttonSend.setVisibility(View.VISIBLE);
+            }
+        });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        checkifloadingComplete();
+      //  buttonSend.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkifloadingComplete();
+       // buttonSend.setVisibility(View.VISIBLE);
+    }
+    void generatepdfDoc(){
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+            generatePdf();
+            }
+        });
+
+        t.start();
+    }
+
+    void checkifloadingComplete(){
+        if(transactionIdUpdated && loadComplete){
+            hideProgressBar();
+        }
+        if(btnPress){
+            showProgressBar();
+        }
+        if(transactionIdUpdated && loadComplete && btnPress){
+          //  hideProgressBar();
+            generatepdfDoc();
+            btnPress = false;
+        }
+    }
+
 }

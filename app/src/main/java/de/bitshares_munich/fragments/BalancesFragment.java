@@ -2291,11 +2291,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         sentCallForTransactions = false;
         try
         {
-            if ( updateTransactionsList == null )
-            {
-                updateTransactionsList = new Handler();
-            }
-
             if(isSavedTransactions)
             {
                 myTransactions.clear();
@@ -2318,6 +2313,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 @Override
                 public void run()
                 {
+                    if ( updateTransactionsList == null )
+                    {
+                        updateTransactionsList = new Handler();
+                    }
 
                     if (number_of_transactions_in_queue == 0)
                     {
@@ -2371,11 +2370,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         sentCallForTransactions = false;
         try
         {
-            if ( updateTransactionsList == null )
-            {
-                updateTransactionsList = new Handler();
-            }
-
             if ( number_of_transactions_loaded == 0 )
             {
                 myTransactions.clear();
@@ -2400,7 +2394,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 td.updateContext(context);
             }
 
-
             myTransactions.addAll(transactionDetails);
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
@@ -2411,6 +2404,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 @Override
                 public void run()
                 {
+                    if ( updateTransactionsList == null )
+                    {
+                        updateTransactionsList = new Handler();
+                    }
+
                     if ( myTransactionsTableAdapter == null )
                     {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);

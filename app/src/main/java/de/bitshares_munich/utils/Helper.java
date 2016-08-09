@@ -323,7 +323,7 @@ public class Helper {
         if (lang.equalsIgnoreCase("zh-rTW")) {
             myLocale = Locale.TRADITIONAL_CHINESE;
         }
-        else if (lang.equalsIgnoreCase("zh-rCN")) {
+        else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
             myLocale = Locale.SIMPLIFIED_CHINESE;
         }
         else {

@@ -331,7 +331,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 langCode.lang = "Chinese"+ "; " + "zh-rTW" +  " (繁體中文)";
                 langArray.add(langCode);
             }
-            else if(getLangCode.get(i).equalsIgnoreCase("zh-rCN"))
+            else if(getLangCode.get(i).equalsIgnoreCase("zh-rCN") || getLangCode.get(i).equalsIgnoreCase("zh"))
             {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rCN";
@@ -353,14 +353,23 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         //  Helper.setLocale(langCode, getResources());
-        if (langCode != "") {
+        if (langCode != "")
+        {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
-                if (lc.code.equalsIgnoreCase(langCode)) {
+
+                if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
+                {
+                    spLanguage.setSelection(i);
+                }
+                else if (lc.code.equalsIgnoreCase(langCode))
+                {
                     spLanguage.setSelection(i);
                 }
             }
-        } else {
+        }
+        else
+        {
             spLanguage.setSelection(13);
             Helper.setLocale("de", getResources());
         }
