@@ -234,7 +234,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/l41"
             android:id="@+id/llFolderPath"
             android:orientation="vertical"
@@ -246,15 +246,17 @@
             >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:weightSum="3"
                 android:background="@drawable/edittext_background_layer">
 
 
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"
                 android:paddingLeft="10dp"
                 android:text="@string/audio_folder_path"
                 android:textSize="13sp"
@@ -262,35 +264,36 @@
 
                 />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/spFolderPath"
-                android:clickable="true"
-                >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:paddingLeft="10dp"
-                android:minHeight="30dp"
-                android:id="@+id/tvFolderPath"
-                android:clickable="true"
-                android:textColor="#002"
-                android:textSize="15sp"
-                android:layout_weight="2.5"
-                android:gravity="left|center"
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:id="@+id/spFolderPath"-->
+                <!--android:clickable="true"-->
+                <!--&gt;-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text=""-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:minHeight="30dp"-->
+                <!--android:id="@+id/tvFolderPath"-->
+                <!--android:clickable="true"-->
+                <!--android:textColor="#002"-->
+                <!--android:textSize="15sp"-->
+                <!--android:layout_weight="2.5"-->
+                <!--android:gravity="left|center"-->
 
-                />
+                <!--/>-->
             <Spinner
-                android:enabled="false"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:layout_gravity="center"
                 android:textColor="#002"
+                android:id="@+id/spFolderPath"
                 />
-        </LinearLayout>
+        <!--</LinearLayout>-->
         </LinearLayout>
 
         </LinearLayout>
