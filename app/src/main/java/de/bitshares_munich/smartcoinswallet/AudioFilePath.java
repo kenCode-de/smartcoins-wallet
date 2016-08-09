@@ -1,12 +1,14 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
 
+import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.utils.Helper;
 
 /**
@@ -28,6 +30,23 @@ public class AudioFilePath {
         return Helper.fetchStringSharePref(context, context.getString(R.string.audio_file_path));
     }
 
+    public void storeAudioFileName(String name){
+        Helper.storeStringSharePref(context, context.getString(R.string.audio_file_name), name);
+    }
+
+    public String fetchAudioFileNameFromPref(){
+        return Helper.fetchStringSharePref(context, context.getString(R.string.audio_file_name));
+    }
+
+    public void storeAudioEnabled(Boolean enabled){
+      //  audioService(enabled);
+        Helper.storeBoolianSharePref(context, context.getString(R.string.audio_file_mute), enabled);
+    }
+
+    public Boolean fetchAudioEnabled(){
+        return Helper.fetchBoolianSharePref(context, context.getString(R.string.audio_file_mute));
+    }
+
     public String fetchAudioFile(){
         String path = fetchAudioFilePathFromPref();
         File audioFile = new File(path);
@@ -44,11 +63,15 @@ public class AudioFilePath {
     }
 
     public MediaPlayer fetchMediaPlayer(){
-        String audioFilePath = fetchAudioFile();
-        MediaPlayer mediaPlayer;
-        if(audioFilePath.isEmpty()) mediaPlayer = MediaPlayer.create(context , R.raw.woohoo);
-        else mediaPlayer = MediaPlayer.create(context , Uri.parse(audioFilePath));
-        return mediaPlayer;
+        if(fetchAudioEnabled()){
+            return null;
+        }else {
+            String audioFilePath = fetchAudioFile();
+            MediaPlayer mediaPlayer;
+            if (audioFilePath.isEmpty()) mediaPlayer = MediaPlayer.create(context, R.raw.woohoo);
+            else mediaPlayer = MediaPlayer.create(context, Uri.parse(audioFilePath));
+            return mediaPlayer;
+        }
     }
 
     Boolean defaultAudioFilePath(){
@@ -72,16 +95,25 @@ public class AudioFilePath {
 //            return userFilePath;
 //        }
 //    }
-        public String userAudioFilePathIfExist(){
+        public String userAudioFileNameIfExist(){
 //        File folder = new File(Environment.getExternalStorageDirectory() + File.separator + context.getResources().getString(R.string.folder_name));
 //        File file = new File(folder.getAbsolutePath(), "Woohoo.wav");
-        String userFilePath = fetchAudioFilePathFromPref();
+        String userFileName = fetchAudioFileNameFromPref();
       //  String defaultAudioPath = file.getAbsolutePath();
-        if(userFilePath.isEmpty()){
-            return "-------";
+        if(userFileName.isEmpty()){
+            return "Woohoo.wav";
         }
         else {
-            return userFilePath;
+            return userFileName;
+        }
+    }
+
+    void audioService(Boolean enabled){
+
+        if(enabled){
+            BalancesFragment.balanceActivity.stopService(new Intent(BalancesFragment.balanceActivity, MediaService.class));
+        }else {
+            BalancesFragment.balanceActivity.startService(new Intent(BalancesFragment.balanceActivity, MediaService.class));
         }
     }
 }

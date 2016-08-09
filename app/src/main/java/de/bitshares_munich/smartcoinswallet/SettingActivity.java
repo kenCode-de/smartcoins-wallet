@@ -119,6 +119,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Bind(R.id.tvAccounts)
     TextView tvAccounts;
 
+    @Bind(R.id.spFolderPath)
+    Spinner spFolderPath;
 
     @Bind(R.id.backup_ic)
     ImageView backup_ic;
@@ -137,8 +139,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Bind(R.id.upgrade_account)
     Button btnUpgrade;
 
-    @Bind(R.id.tvFolderPath)
-    TextView tvFolderPath;
 
     ProgressDialog progressDialog;
     Activity activitySettings;
@@ -173,7 +173,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     public void init() {
         setCheckedButtons();
-        setAudioFilePath();
+        initAudioPath();
     }
 
     public void onCheck(View v) {
@@ -1250,7 +1250,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     }
 
 
+
     FileChooserDialog dialog;
+    ArrayList<String> list = new ArrayList<>();
+    String itemSelected;
+    String selected;
+
 
     private void chooseAudioFile() {
         if (dialog == null) {
@@ -1277,6 +1282,16 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             dialog.setLabels(labels);
         }
 
+        this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+                if(itemSelected.equals("Change")){
+                    initAudioPath();
+                }
+            }
+        });
+
         // Show the dialog.
         dialog.show();
 
@@ -1285,37 +1300,92 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
         public void onFileSelected(Dialog source, File file) {
             source.hide();
-            onSuccess(file.getAbsolutePath());
-            tvFolderPath.setText(file.getAbsolutePath());
+            onSuccess(file.getAbsolutePath(),file.getName());
+         //   tvFolderPath.setText(file.getAbsolutePath());
         }
 
         public void onFileSelected(Dialog source, File folder, String name) {
             source.hide();
             //   Toast.makeText(getApplicationContext(), name +"::::1",Toast.LENGTH_LONG).show();
-
         }
     };
 
-    void onSuccess(String filepath){
+    void onSuccess(String filepath,String fileName){
+        dialog = null;
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         audioFilePath.storeAudioFilePath(filepath);
-        setAudioFilePath();
+        audioFilePath.storeAudioFileName(fileName);
+        audioFilePath.storeAudioEnabled(false);
+        initAudioPath();
     }
-    @OnClick(R.id.llFolderPath)
-    public void llFolderSelect(View view){
-        chooseAudioFile();
-    }
-    @OnClick(R.id.tvFolderPath)
-    public void tvFolderSelect(View view){
-        chooseAudioFile();
-    }
+//    @OnClick(R.id.llFolderPath)
+//    public void llFolderSelect(View view){
+//        chooseAudioFile();
+//    }
+//    @OnClick(R.id.tvFolderPath)
+//    public void tvFolderSelect(View view){
+//        chooseAudioFile();
+//    }
     void setAudioFilePath(){
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
-        String path = audioFilePath.userAudioFilePathIfExist();
-        tvFolderPath.setText(path);
+        selected = audioFilePath.userAudioFileNameIfExist();
+     //   tvFolderPath.setText(path);
     }
-    @OnClick(R.id.spFolderPath)
-    public void spFolderSelect(View view){
-        chooseAudioFile();
+
+    Boolean checkAudioStatus(){
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        return audioFilePath.fetchAudioEnabled();
     }
+
+//    @OnClick(R.id.spFolderPath)
+//    public void spFolderSelect(View view){
+//        chooseAudioFile();
+//    }
+
+    void initAudioPath(){
+
+        setAudioFilePath();
+
+        list.clear();
+
+        if(checkAudioStatus()) {
+            list.add(0, "-------");
+            list.add(1, selected);
+        }else {
+            list.add(0, selected);
+            list.add(1, "-------");
+        }
+
+
+        list.add(2,"Change");
+
+
+        ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFolderPath.setAdapter(adapterAccountAssets);
+
+    }
+    Boolean startup = false;
+
+    @OnItemSelected(R.id.spFolderPath)
+    public void onItemSelectedAudio()
+    {
+        if(startup) {
+            AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+            String selectedString = spFolderPath.getSelectedItem().toString();
+            itemSelected = selectedString;
+            if (selectedString.equals("Change")) {
+                chooseAudioFile();
+            } else if (selectedString.equals("-------")) {
+                audioFilePath.storeAudioEnabled(true);
+            } else {
+                audioFilePath.storeAudioEnabled(false);
+            }
+        }else{
+            startup = true;
+        }
+
+    }
+
+
 }

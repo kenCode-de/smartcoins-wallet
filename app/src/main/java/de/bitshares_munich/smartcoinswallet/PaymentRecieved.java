@@ -154,6 +154,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         try {
             AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
             MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
+            if(mediaPlayer != null)
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();

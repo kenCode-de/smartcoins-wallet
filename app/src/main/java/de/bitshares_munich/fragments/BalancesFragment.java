@@ -103,6 +103,10 @@ import retrofit2.Response;
  */
 public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
+    public static Activity balanceActivity;
+
+    static Boolean audioSevice = false;
+
     Application application = new Application();
     int accountDetailsId;
     String accountId = "";
@@ -209,6 +213,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         ButterKnife.bind(this, rootView);
         language = Helper.fetchStringSharePref(getActivity(), getString(R.string.pref_language));
         locale = new Locale(language);
+        balanceActivity = getActivity();
         format = NumberFormat.getInstance(locale);
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
@@ -1206,6 +1211,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         try {
             AudioFilePath audioFilePath = new AudioFilePath(getContext());
             MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
+            if(mediaPlayer != null)
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1548,7 +1554,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.red));
 
                                         animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
@@ -1600,12 +1606,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         Log.d("Balances Update", "Balance received");
 
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
                                         // run animation
                                         if (animateOnce) {
-                                            getActivity().startService(new Intent(getActivity(), MediaService.class));
+                                            AudioFilePath audioFilePath = new AudioFilePath(getContext());
+                                            if(!audioFilePath.fetchAudioEnabled()) {
+                                                audioSevice = true;
+                                                getActivity().startService(new Intent(getActivity(), MediaService.class));
+                                            }
                                            /* final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1748,7 +1758,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update", "Balance sent");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
                                         Log.d("Balances Update", "Text animated");
@@ -1802,7 +1812,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update","Balance is received");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         // run animation
                                         if (animateOnce) {
@@ -2175,7 +2185,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     @Override
     public void soundFinish() {
-        getActivity().stopService(new Intent(getActivity(), MediaService.class));
+        if(audioSevice) {
+            getActivity().stopService(new Intent(getActivity(), MediaService.class));
+        }
+        audioSevice = false;
     }
 
     private static class TransactionsDateComparator implements Comparator<TransactionDetails>
