@@ -20,7 +20,7 @@ public interface AssetDelegate {
     //void rawTransactionsLoaded(long numberOfTransactions);
     //void allTransactionsLoaded(long numberOfTransactions);
     //void transactionTimeLoaded(long numberOfTransactions, long totalNumberOfTransactions);
-    void transactionsLoadComplete(List<TransactionDetails> transactionDetails);
+    void transactionsLoadComplete(List<TransactionDetails> transactionDetails, int newTransactionsLoaded);
     void transactionsLoadMessageStatus(String message);
     void transactionsLoadFailure(String reason);
 }

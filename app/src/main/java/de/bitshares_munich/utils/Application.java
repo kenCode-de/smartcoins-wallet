@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
@@ -58,7 +60,7 @@ public class Application extends android.app.Application {
                     //,"https://valen-tin.fr:8090"
             };
 
-    public static int counter = 0;
+    //public static int counter = 0;
 
     public static String monitorAccountId;
 
@@ -147,10 +149,11 @@ public class Application extends android.app.Application {
     public static void webSocketConnection() {
         //iAccount = iAccount;
         isReady = false;
-        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(30 * 1000);
+        int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
+        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);
+        get.setTimeout(10 * 1000);
 
-        Log.d("Connecting to node", urlsSocketConnection[counter]);
+        Log.d("Connecting to node", urlsSocketConnection[nodeIndex]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
@@ -159,12 +162,11 @@ public class Application extends android.app.Application {
                 if (ex != null)
                 {
                     isReady = false;
-                    counter++;
 
-                    if (counter > 3)
-                    {
-                        counter = 0;
-                    }
+//                    if ( ++counter >= urlsSocketConnection.length )
+//                    {
+//                        counter = 0;
+//                    }
 
                     Log.d("exception websocket", ex.toString());
                     final Exception myEx = ex;

@@ -39,7 +39,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/20/16.
  */
 public class TransactionActivity implements IBalancesDelegate {
-    Context context;
+    public Context context;
     AssetDelegate assetDelegate;
     Application application = new Application();
 
@@ -50,7 +50,9 @@ public class TransactionActivity implements IBalancesDelegate {
     long numberOfTransactionsLoaded = 0;
     long numberOfTransactionsToLoad = 0;
 
-    public TransactionActivity(Context c, final String account_id , AssetDelegate instance , String wif_key , final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad)
+    ArrayList<TransactionDetails> alreadyLoadedTransactions;
+
+    public TransactionActivity(Context c, final String account_id , AssetDelegate instance , String wif_key , final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions)
     {
         context = c;
         assetDelegate = instance;
@@ -70,6 +72,8 @@ public class TransactionActivity implements IBalancesDelegate {
 
         numberOfTransactionsLoaded = _numberOfTransactionsLoaded;
         numberOfTransactionsToLoad = _numberOfTransactionsToLoad;
+
+        alreadyLoadedTransactions = _alreadyLoadedTransactions;
 
         try
         {
@@ -330,6 +334,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
             for (int i = 0 ; i < myJson.length(); i++)
             {
+                // check if last transaction recieved
                 if (    !( (hourlyNumberOfTransactionsLoaded == 0) && (i == 0) )
                         && myJson.getJSONObject(i).has("id")
                         && myJson.getJSONObject(i).get("id").toString().equals(firstTransactionId)
@@ -341,7 +346,8 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
                 else
                 {
-                    if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") )
+                    // Fetch only transactions wrt to block number and transaction ids 1.11.0002320
+                    if ( myJson.getJSONObject(i).has("block_num") && myJson.getJSONObject(i).has("id") )
                     {
                         if ( transactionsRecievedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString()) )
                         {
@@ -507,6 +513,12 @@ public class TransactionActivity implements IBalancesDelegate {
             //List<String> headersReceived = new ArrayList<>();
             headersTimeToFetch = new ArrayList<>();
 
+            HashMap<String,String> alreadyLoadedIds = new HashMap<>();
+            for ( TransactionDetails td:alreadyLoadedTransactions )
+            {
+                alreadyLoadedIds.put(td.id,null);
+            }
+
             for (int i = 0 ; i < myJson.length(); i++)
             {
                 if (    !( (hourlyNumberOfTransactionsLoaded == 0) && (i == 0) )
@@ -518,99 +530,94 @@ public class TransactionActivity implements IBalancesDelegate {
                     // meaning last transaction is already received
                     finalBlockRecieved = true;
                 }
-                else
+
+                if ( myJson.getJSONObject(i).has("id") && alreadyLoadedIds.containsKey(myJson.getJSONObject(i).getString("id")) )
                 {
-                    if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") )
+                    continue;
+                }
+
+                if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") && myJson.getJSONObject(i).has("op")  )
+                {
+
+                    if ( transactionsRecievedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString()) )
                     {
-                        if ( transactionsRecievedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString()) )
+                        if ( transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString()) )
                         {
-                            if ( transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString()) )
-                            {
-                                // id already exists
-                            }
-                            else
-                            {
-                                transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(),myJson.getJSONObject(i));
-                            }
+                            // id already exists
                         }
                         else
                         {
-                            HashMap<String, JSONObject> newENtry = new HashMap<>();
-                            newENtry.put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
-                            transactionsRecievedHm.put(myJson.getJSONObject(i).get("block_num").toString(),newENtry );
-
-                            headersTimeToFetch.add(myJson.getJSONObject(i).get("block_num").toString());
+                            transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(),myJson.getJSONObject(i));
                         }
                     }
                     else
                     {
-                        Log.d("Loading Transactions","duplication");
+                        HashMap<String, JSONObject> newENtry = new HashMap<>();
+                        newENtry.put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
+                        transactionsRecievedHm.put(myJson.getJSONObject(i).get("block_num").toString(),newENtry );
+
+                        headersTimeToFetch.add(myJson.getJSONObject(i).get("block_num").toString());
                     }
-                }
 
-                try
-                {
-                    if ( myJson.getJSONObject(i).has("op") )
+
+                    for (int j = 0; j < myJson.getJSONObject(i).getJSONArray("op").length(); j++)
                     {
-                        for (int j = 0; j < myJson.getJSONObject(i).getJSONArray("op").length(); j++)
+                        if (myJson.getJSONObject(i).getJSONArray("op").get(j) instanceof JSONObject)
                         {
-                            if (myJson.getJSONObject(i).getJSONArray("op").get(j) instanceof JSONObject)
+                            // get fee asset
+                            if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("fee"))
                             {
-                                // get fee asset
-                                if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("fee"))
-                                {
-                                    String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("fee").get("asset_id").toString();
+                                String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("fee").get("asset_id").toString();
 
-                                    if ( !assetsRecievedHm.containsKey(asset_id) )
-                                    {
-                                        assetsRecievedHm.put(asset_id,null);
-                                    }
+                                if ( !assetsRecievedHm.containsKey(asset_id) )
+                                {
+                                    assetsRecievedHm.put(asset_id,null);
                                 }
+                            }
 
-                                // get amount asset
-                                if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("amount"))
+                            // get amount asset
+                            if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("amount"))
+                            {
+                                String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("amount").get("asset_id").toString();
+
+                                if ( !assetsRecievedHm.containsKey(asset_id) )
                                 {
-                                    String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("amount").get("asset_id").toString();
-
-                                    if ( !assetsRecievedHm.containsKey(asset_id) )
-                                    {
-                                        assetsRecievedHm.put(asset_id,null);
-                                    }
+                                    assetsRecievedHm.put(asset_id,null);
                                 }
+                            }
 
-                                // get names of person from which money is recieved
-                                if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("from"))
+                            // get names of person from which money is recieved
+                            if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("from"))
+                            {
+                                if ( !namesToResolveHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("from")) )
                                 {
-                                    if ( !namesToResolveHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("from")) )
-                                    {
-                                        namesToResolveHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("from"),null);
-                                    }
+                                    namesToResolveHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("from"),null);
                                 }
+                            }
 
-                                // get names of person to whom money is sent
-                                if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("to"))
+                            // get names of person to whom money is sent
+                            if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("to"))
+                            {
+                                if ( !namesToResolveHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("to")) )
                                 {
-                                    if ( !namesToResolveHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("to")) )
-                                    {
-                                        namesToResolveHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("to"),null);
-                                    }
+                                    namesToResolveHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getString("to"),null);
                                 }
+                            }
 
-                                // get memos to decode
-                                if ( myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("memo") && myJson.getJSONObject(i).has("block_num") )
+                            // get memos to decode
+                            if ( myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("memo") && myJson.getJSONObject(i).has("block_num") )
+                            {
+                                if ( !memosToDecodeHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("memo")) )
                                 {
-                                    if ( !memosToDecodeHm.containsKey(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("memo")) )
-                                    {
-                                        memosToDecodeHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("memo"),myJson.getJSONObject(i).getString("block_num"));
-                                    }
+                                    memosToDecodeHm.put(myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("memo"),myJson.getJSONObject(i).getString("block_num"));
                                 }
                             }
                         }
                     }
                 }
-                catch (Exception e)
+                else
                 {
-
+                    Log.d("Loading Transactions","duplication");
                 }
             }
 
@@ -701,6 +708,8 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 //assetDelegate.transactionTimeLoaded(indexHeadersTimeToFetch + 1 + hourlyNumberOfTransactionsLoaded - 100 ,headersTimeToFetch.size() + hourlyNumberOfTransactionsLoaded - 100);
                 String msg = String.format("%d / %d",indexHeadersTimeToFetch + 1 + hourlyNumberOfTransactionsLoaded - 100,headersTimeToFetch.size() + hourlyNumberOfTransactionsLoaded - 100);
+
+                if (context == null) return;
                 assetDelegate.transactionsLoadMessageStatus(msg);
 
                 if (++indexHeadersTimeToFetch < headersTimeToFetch.size())
@@ -755,6 +764,8 @@ public class TransactionActivity implements IBalancesDelegate {
             Date formattedDate = formatter.parse(time);
 
             String msg = String.format(Locale.ENGLISH,"%d / %d",indexHeadersTimeToFetch + 1 + numberOfTransactionsLoaded - numberOfTransactionsToLoad,headersTimeToFetch.size() + numberOfTransactionsLoaded - numberOfTransactionsToLoad);
+
+            if (context == null) return;
             assetDelegate.transactionsLoadMessageStatus(msg);
 
             if (++indexHeadersTimeToFetch < headersTimeToFetch.size())
@@ -879,7 +890,8 @@ public class TransactionActivity implements IBalancesDelegate {
             else
             {
                 if ( context == null ) return;
-                assetDelegate.transactionsLoadFailure(context.getString(R.string.account_names_not_found));
+                String faitCurrency = Helper.getFadeCurrency(context);
+                getEquivalentFiatRates(faitCurrency);
             }
         }
         catch (Exception e)
@@ -1154,6 +1166,7 @@ public class TransactionActivity implements IBalancesDelegate {
                             if (transaction.getJSONArray("op").get(j) instanceof JSONObject)
                             {
                                 TransactionDetails myTransactionDetails = new TransactionDetails();
+                                myTransactionDetails.id = id;
                                 myTransactionDetails.Date = headerTimings.get(blockNum);
 
                                 // get amount asset
@@ -1246,8 +1259,66 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
+            // combine myTransactions with already Transactions
+
+            /*
+            HashMap<String,TransactionDetails> completeTransactions = new HashMap<>();
+            HashMap<String,Date> completeTransactionsTime = new HashMap<>();
+
+            for(TransactionDetails td:myTransactions)
+            {
+                completeTransactions.put(td.id,td);
+                completeTransactionsTime.put(td.id,td.Date);
+            }
+            for(TransactionDetails td:alreadyLoadedTransactions)
+            {
+                completeTransactions.put(td.id,td);
+                completeTransactionsTime.put(td.id,td.Date);
+            }
+            */
+
+            //String[] arrayOfIds = completeTransactions.keySet().toArray(new String[completeTransactions.size()]);
+            //List<String> listOfIds = Arrays.asList(arrayOfIds);
+
+            //Collections.sort(listOfIds);
+            //Collections.reverse(listOfIds);
+
+            //Date[] arrayOfDates = completeTransactionsTime.values().toArray(new Date[completeTransactionsTime.size()]);
+            //List<Date> listOfDates = Arrays.asList(arrayOfDates);
+
+            /*
+            List<Date> listOfDates = new ArrayList<>();
+            for(TransactionDetails td:myTransactions)
+            {
+                completeTransactions.put(td.id,td);
+                listOfDates.add(td.Date);
+            }
+            for(TransactionDetails td:alreadyLoadedTransactions)
+            {
+                completeTransactions.put(td.id,td);
+                listOfDates.add(td.Date);
+            }
+
+            Collections.sort(listOfDates);
+            Collections.reverse(listOfDates);
+
+            List<TransactionDetails> completeListOfTransactionsToDisplay = new ArrayList<>();
+
+            for (Date date:listOfDates)
+            {
+                completeListOfTransactionsToDisplay.add(completeTransactions.get(id));
+            }
+            */
+
+            List<TransactionDetails> completeListOfTransactionsToDisplay = new ArrayList<>();
+            completeListOfTransactionsToDisplay.addAll(myTransactions);
+            completeListOfTransactionsToDisplay.addAll(alreadyLoadedTransactions);
+
+            Collections.sort(completeListOfTransactionsToDisplay, new transactionsDateComparator());
+
             // return transactiondetails array
-            assetDelegate.transactionsLoadComplete(myTransactions);
+            if ( context == null ) return;
+            assetDelegate.transactionsLoadComplete(completeListOfTransactionsToDisplay,myTransactions.size());
         }
         catch (Exception e)
         {

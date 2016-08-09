@@ -178,8 +178,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     ProgressDialog progressDialog;
 
-    Boolean sentCallForTransactions = false;
-    Boolean isSavedTransactions = false;
+    //Boolean sentCallForTransactions = false;
+    //Boolean isSavedTransactions = false;
 
 
     Locale locale;
@@ -246,7 +246,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         loadBasic(false,true,false);
         loadBalancesFromSharedPref();
-        TransactionUpdateOnStartUp();
+        TransactionUpdateOnStartUp(to);
 
         handler.postDelayed(updateTask, 2000);
 
@@ -2241,12 +2241,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
 
-    private void saveTransactions(List<TransactionDetails> transactionDetails) {
-        tinyDB.putTransactions(getActivity(), getContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(transactionDetails));
+    private void saveTransactions(List<TransactionDetails> transactionDetails, String accountName) {
+        tinyDB.putTransactions(getActivity(), getContext(), getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
     }
 
-    private List<TransactionDetails> getTransactionsFromSharedPref() {
-        ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions), TransactionDetails.class);
+    private ArrayList<TransactionDetails> getTransactionsFromSharedPref(String accountName)
+    {
+        ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, TransactionDetails.class);
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.updatedTransactionDetails(mySavedList);
@@ -2259,13 +2260,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     TransactionsTableAdapter myTransactionsTableAdapter;
-    public void TransactionUpdateOnStartUp() {
-        final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref();
+    public void TransactionUpdateOnStartUp(String accountName)
+    {
+        final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref(accountName);
 
-        if (localTransactionDetails != null && localTransactionDetails.size() > 0) {
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    isSavedTransactions = true;
+        if (localTransactionDetails != null && localTransactionDetails.size() > 0)
+        {
+            //myTransactions.addAll(localTransactionDetails);
+
+            getActivity().runOnUiThread(new Runnable()
+            {
+                public void run()
+                {
+                    //isSavedTransactions = true;
                     if ( myTransactionsTableAdapter == null )
                     {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), localTransactionDetails);
@@ -2287,7 +2294,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     Handler updateTransactionsList;
 
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue)
+    {
+        /*
         sentCallForTransactions = false;
         try
         {
@@ -2350,26 +2359,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
                 tableView.setDataAdapter(myTransactionsTableAdapter);
             }
-            /*
-            if(number_of_transactions_loaded<20){
-                loadTransactions(getContext(), accountId, wifkey, number_of_transactions_loaded, 5);
-                number_of_transactions_loaded = number_of_transactions_loaded + 5;
-                load_more_values.setVisibility(View.GONE);
-                progressBar.setVisibility(View.VISIBLE);
-            }
-            */
         }
         catch (Exception e) {
             SupportMethods.testing("TransactionUpdate", e, "try/catch");
         }
+        */
     }
 
+    int counterRepeatTransactionLoad = 0;
     @Override
-    public void transactionsLoadComplete(List<TransactionDetails> transactionDetails)
+    public void transactionsLoadComplete(List<TransactionDetails> transactionDetails,int newTransactionsLoaded)
     {
-        sentCallForTransactions = false;
+        //sentCallForTransactions = false;
         try
         {
+            /*
             if ( number_of_transactions_loaded == 0 )
             {
                 myTransactions.clear();
@@ -2386,6 +2390,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             {
                 saveTransactions(transactionDetails);
             }
+            */
+
+
+            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 20) )
+            {
+                if (Application.isReady)
+                {
+                    Application.webSocketG.close();
+                }
+                loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+                return;
+            }
+
+            updateTriggerFromNetworkBroadcast = false;
+            counterRepeatTransactionLoad = 0;
 
             Context context = getContext();
             // update context
@@ -2394,9 +2413,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 td.updateContext(context);
             }
 
+            myTransactions.clear();
             myTransactions.addAll(transactionDetails);
+
+
+
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
+
+            saveTransactions(myTransactions,to);
 
             number_of_transactions_loaded += number_of_transactions_to_load;
 
@@ -2438,9 +2463,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 }
             });
 
-
-
-
             /*
             if ( number_of_transactions_loaded < 20 )
             {
@@ -2463,19 +2485,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadFailure(String reason)
     {
-        sentCallForTransactions = false;
+        //sentCallForTransactions = false;
 
         if ( reason.equals(getContext().getString(R.string.account_names_not_found)) )
         {
-            number_of_transactions_loaded += number_of_transactions_to_load;
+            //number_of_transactions_loaded += number_of_transactions_to_load;
         }
 
         //if ( reason.equals(getContext().getString(R.string.no_assets_found)) )
-        {
+        //{
             //number_of_transactions_loaded += number_of_transactions_to_load;
-            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
-            return;
-        }
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load,myTransactions);
+            //return;
+        //}
 
         /*
         getActivity().runOnUiThread(new Runnable() {
@@ -2507,7 +2529,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         number_of_transactions_to_load = 20;
-        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
+        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load,myTransactions);
         //number_of_transactions_loaded = number_of_transactions_loaded + 20;
     }
 
@@ -2625,7 +2647,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         _activity.runOnUiThread(new Runnable() {
                             public void run() {
                                 //sentCallForTransactions = false;
-                                isSavedTransactions = true;
+                                //isSavedTransactions = true;
                                 loadViews(false, true, false);
                             }
                         });
@@ -2633,71 +2655,70 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     catch (Exception e){}
                 }
             };
-            loadOndemand.removeCallbacks(loadOnDemandRunnable);
+            //loadOndemand.removeCallbacks(loadOnDemandRunnable);
             loadOndemand.postDelayed(loadOnDemandRunnable, 1000);
         }
         catch (Exception e){}
     }
 
+
+    boolean updateTriggerFromNetworkBroadcast = false;
+
     @Override
-    public void loadAll() {
+    public void loadAll()
+    {
+        updateTriggerFromNetworkBroadcast = true;
         loadOnDemand(getActivity());
     }
 
     AssestsActivty myAssetsActivity;
 
     boolean firstTimeLoad = true;
+    String transactionsLoadedAccountName = "";
 
     void loadViews(Boolean onResume,Boolean accountNameChanged,boolean faitCurrencyChanged) {
 
         if ( firstTimeLoad )
         {
-            if(!isSavedTransactions)
-            {
-                tableViewparent.setVisibility(View.GONE);
-                myTransactions = new ArrayList<>();
-                updateSortTableView(tableView, myTransactions);
-            }
+            //if(!isSavedTransactions)
+            //{
+            tableViewparent.setVisibility(View.GONE);
+            myTransactions = new ArrayList<>();
+            updateSortTableView(tableView, myTransactions);
+            //}
 
             tableView.addDataClickListener(new tableViewClickListener(getContext()));
             progressBar.setVisibility(View.VISIBLE);
-            firstTimeLoad = false;
+
             load_more_values.setVisibility(View.GONE);
+
+            firstTimeLoad = false;
         }
 
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        if (myAssetsActivity == null) {
+        if (myAssetsActivity == null)
+        {
             myAssetsActivity = new AssestsActivty(getContext(), to, this, application);
             myAssetsActivity.registerDelegate();
         }
 
-        if ( !onResume || accountNameChanged || faitCurrencyChanged)
+        // get transactions from sharedPref
+        myTransactions = getTransactionsFromSharedPref(to);
+        //myTransactions.clear();
+        //saveTransactions(myTransactions);
+
+        if ( !onResume || accountNameChanged || faitCurrencyChanged )
         {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
-        }
 
-        if( !sentCallForTransactions )
-        {
+            //sentCallForTransactions = false;
             progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
-
-            /*
-            if ( myTransactions == null )
-            {
-                myTransactions = new ArrayList<TransactionDetails>();
-            }
-            else
-            {
-                myTransactions.clear();
-            }
-            */
-
-            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load);
-            //number_of_transactions_loaded = number_of_transactions_loaded + 20;
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
         }
     }
 
@@ -3016,18 +3037,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
 
     TransactionActivity myTransactionActivity;
-    void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad)
+    void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions)
     {
-        sentCallForTransactions = true;
+        //sentCallForTransactions = true;
 
         if (myTransactionActivity == null)
         {
-            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
+            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad,alreadyLoadedTransactions);
         }
         else
         {
-            myTransactionActivity = null;
-            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
+            //myTransactionActivity = null;
+            myTransactionActivity.context = null;
+            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad,alreadyLoadedTransactions);
         }
 
         //new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
