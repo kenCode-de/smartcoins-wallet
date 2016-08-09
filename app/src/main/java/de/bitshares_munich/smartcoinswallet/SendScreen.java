@@ -1296,13 +1296,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void showDialog(String title, String msg) {
-        if (progressDialog != null) {
-            if (!progressDialog.isShowing()) {
-                progressDialog.setTitle(title);
-                progressDialog.setMessage(msg);
-                progressDialog.show();
+    private void showDialog(String title, String msg)
+    {
+        try
+        {
+            if (progressDialog != null) {
+                if (!progressDialog.isShowing()) {
+                    progressDialog.setTitle(title);
+                    progressDialog.setMessage(msg);
+                    progressDialog.show();
+                }
             }
+        }
+        catch (Exception e)
+        {
+
         }
     }
 
