@@ -32,6 +32,7 @@ import android.widget.ImageButton;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -145,6 +146,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
     @Bind(R.id.scrollView)
     ScrollView scrollView;
+
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+
+
     //int names_in_work;
     //int names_total_size;
     int assets_id_in_work;
@@ -455,19 +461,21 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     public void onSendButton() {
         btnPress = true;
         if (!transactionIdUpdated) {
-            showDialog("", getResources().getString(R.string.updating_transaction_id));
+            //showDialog("", getResources().getString(R.string.updating_transaction_id));
+            showProgressBar();
         } else {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    showDialog("", getResources().getString(R.string.updating_transaction_id));
-
+                    //showDialog("", getResources().getString(R.string.updating_transaction_id));
+                    showProgressBar();
                 }
             }, 0);
             Handler handlerStop = new Handler();
             handlerStop.postDelayed(new Runnable() {
                 public void run() {
-                    hideDialog();
+                  //  hideDialog();
+                    hideProgressBar();
 
                 }
             }, 1500);
@@ -811,8 +819,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             myImage.scaleToFit(documentWidth, documentHeight);
             myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
             document.add(myImage);
-            hideDialog();
-
+            //hideDialog();
+            hideProgressBar();
             Intent email = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(new File(path));
             email.putExtra(Intent.EXTRA_STREAM, uri);
@@ -848,5 +856,13 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         }
 
 
+    }
+
+    private void showProgressBar() {
+       progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 }

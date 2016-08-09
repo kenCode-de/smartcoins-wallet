@@ -24,22 +24,35 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="50dp"
+                    android:id="@+id/rlbuttonSend"
+                    android:layout_height="50dp">
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="@string/email_pdf"
                 android:id="@+id/buttonSend"
                 android:src="@drawable/share"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:background="@color/white"
                 />
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:indeterminateDrawable="@drawable/loader_homescreen">
+                    </ProgressBar>
+                </RelativeLayout>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/ivOtherGravatar"
                     android:src="@drawable/people"
-                    android:layout_below="@+id/buttonSend"
+                    android:layout_below="@+id/rlbuttonSend"
                     android:layout_centerInParent="true"
                     />
 
