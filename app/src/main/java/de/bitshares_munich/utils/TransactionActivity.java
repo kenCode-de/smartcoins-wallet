@@ -25,6 +25,7 @@ import java.util.TimerTask;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.DecodeMemo;
+import de.bitshares_munich.models.DecodeMemosArray;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
@@ -975,6 +976,59 @@ public class TransactionActivity implements IBalancesDelegate {
         });
     }
 
+
+    private void decodeAllMemosInTransactionsRecieved(final List<JSONObject> memosArray)
+    {
+        HashMap<String,String> hm = new HashMap<>();
+        hm.put("method","decode_memos_array");
+        hm.put("wifkey",wifkey);
+        hm.put("memos_array", memosArray.toString());
+
+        if ( context == null ) return;
+        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.decode_memos_array_url));
+        IWebService service = sg.getService(IWebService.class);
+        final Call<DecodeMemosArray> postingService = service.getDecodedMemosArray(hm);
+        postingService.enqueue(new Callback<DecodeMemosArray>() {
+            @Override
+            public void onResponse(Response<DecodeMemosArray> response)
+            {
+                if (response.isSuccess())
+                {
+                    DecodeMemosArray resp = response.body();
+                    if (resp.status.equals("success"))
+                    {
+                        int index = 0;
+                        for(JSONObject memoFetched:memosArray)
+                        {
+                            if ( memosToDecodeHm.containsKey(memoFetched) )
+                            {
+                                memosToDecodeHm.put(memoFetched,resp.memos.get(index));
+                            }
+
+                            index++;
+                        }
+
+                        decodingMemosComplete();
+                    }
+                    else
+                    {
+                        decodingMemosComplete();
+                    }
+                }
+                else
+                {
+                    decodingMemosComplete();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t)
+            {
+                decodingMemosComplete();
+            }
+        });
+    }
+
     JSONObject[] encryptedMemos;
     int indexEncryptedMemos;
     private void loadMemoSListForDecoding()
@@ -993,6 +1047,31 @@ public class TransactionActivity implements IBalancesDelegate {
                 generateTransactionsDetailArray();
             }
 
+        }
+        catch (Exception e)
+        {
+            generateTransactionsDetailArray();
+        }
+    }
+
+    private void decodingMemosComplete()
+    {
+        try
+        {
+            /*
+            if ( indexEncryptedMemos < memosToDecodeHm.size() )
+            {
+                decodeMemoTransactionsRecieved(encryptedMemos[indexEncryptedMemos]);
+                indexEncryptedMemos++;
+                if ( context == null ) return;
+                assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.decrypting_memos) + indexEncryptedMemos + " of " + memosToDecodeHm.size());
+            }
+            else
+            {
+                generateTransactionsDetailArray();
+            }
+            */
+            generateTransactionsDetailArray();
         }
         catch (Exception e)
         {
@@ -1023,8 +1102,15 @@ public class TransactionActivity implements IBalancesDelegate {
             if ( memosToDecodeHm.size() > 0 )
             {
                 encryptedMemos = memosToDecodeHm.keySet().toArray(new JSONObject[memosToDecodeHm.size()]);
-                indexEncryptedMemos = 0;
-                loadMemoSListForDecoding();
+                //String[] encryptedMemoObjectsEncoded = memosToDecodeHm.values().toArray(new String[memosToDecodeHm.size()]);
+                //indexEncryptedMemos = 0;
+                //loadMemoSListForDecoding();
+                List<JSONObject> memosList = new ArrayList<>();
+                for (JSONObject memoObj:Arrays.asList(encryptedMemos))
+                {
+                    memosList.add(memoObj);
+                }
+                decodeAllMemosInTransactionsRecieved(memosList);
             }
             else
             {
@@ -1175,7 +1261,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void reTryGetEquivalentComponents (final String fc)
     {
-        if ( retryGetEquivalentRates++ < 2 )
+        if ( retryGetEquivalentRates++ < 1 )
         {
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -1196,11 +1282,15 @@ public class TransactionActivity implements IBalancesDelegate {
     private void getEquivalentFiatRates(final String faitCurrency)
     {
         if ( context == null ) return;
+        EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+        //myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
+        equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+        decodeRecievedMemos();
+
+        /*
+        if ( context == null ) return;
         assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.getting_equivalent_flat_exchange_rate));
         equivalentRatesHm = new HashMap<>();
-
-        //if ( context == null ) return;
-        //final String faitCurrency = Helper.getFadeCurrency(context);
 
         final List<String> pairs = new ArrayList<>();
         String values = "";
@@ -1308,13 +1398,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 reTryGetEquivalentComponents(faitCurrency);
             }
         });
+        */
     }
 
     int retryGetIndirectEquivalentRates = 0 ;
 
     private void reTryGetIndirectEquivalentComponents (final List<String> leftOvers, final String faitCurrency)
     {
-        if ( retryGetIndirectEquivalentRates++ < 2 )
+        if ( retryGetIndirectEquivalentRates++ < 1 )
         {
             new Timer().schedule(new TimerTask() {
                 @Override

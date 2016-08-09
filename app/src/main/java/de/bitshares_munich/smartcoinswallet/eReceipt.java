@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -170,7 +171,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String timeZone = "";
     String emailOther = "";
     String emailUser = "";
-
+    ProgressDialog progressDialog;
+    boolean btnPress = false;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -186,6 +188,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         ButterKnife.bind(this);
 
         context = getApplicationContext();
+        progressDialog = new ProgressDialog(this);
         application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
 
@@ -219,7 +222,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         tvOtherName.setText(otherName);
         tvUserName.setText(userName);
         TvBlockNum.setText(date);
-        tvTime.setText(time+" "+timeZone);
+        tvTime.setText(time + " " + timeZone);
         //  emailOther = get_email(otherName);
         //   emailOther = "fawaz_ahmed@live.com";
 
@@ -270,6 +273,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     Boolean transactionIdUpdated = false;
 
     private void getTransactionId(final String block_num, final String trx_in_block) {
+
         final Handler handler = new Handler();
 
         final Runnable updateTask = new Runnable() {
@@ -296,6 +300,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                                     String trx_id = resp.transaction_id;
                                     transactionIdClipped = trx_id.substring(0, 7);
                                     transactionIdUpdated = true;
+                                    if (btnPress) {
+                                        generatePdf();
+                                    }
                                 } catch (Exception e) {
                                     //e.printStackTrace();
                                     //getTransactionId(block_num,trx_in_block);
@@ -446,12 +453,26 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
-
+        btnPress = true;
         if (!transactionIdUpdated) {
-            Toast.makeText(context, getResources().getString(R.string.updating_transaction_id), Toast.LENGTH_SHORT).show();
-            return;
+            showDialog("", getResources().getString(R.string.updating_transaction_id));
         } else {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    showDialog("", getResources().getString(R.string.updating_transaction_id));
+
+                }
+            }, 0);
+            Handler handlerStop = new Handler();
+            handlerStop.postDelayed(new Runnable() {
+                public void run() {
+                    hideDialog();
+
+                }
+            }, 1500);
             generatePdf();
+
         }
 
     }
@@ -485,7 +506,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         protected void onPostExecute(Bitmap result) {
             if (result == null) bmImage.setVisibility(View.GONE);
             else {
-               // Bitmap corner = getRoundedCornerBitmap(result);
+                // Bitmap corner = getRoundedCornerBitmap(result);
                 bmImage.setImageBitmap(result);
             }
         }
@@ -602,9 +623,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 //    }
 
 
-       private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
+    private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
 
-           String faitCurrency = Helper.getFadeCurrency(context);
+        String faitCurrency = Helper.getFadeCurrency(context);
 
         if (faitCurrency.isEmpty()) {
             faitCurrency = "EUR";
@@ -622,35 +643,35 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             return;
         }
 
-           EquivalentFiatStorage equivalentFiatStorage = new EquivalentFiatStorage(context);
-           HashMap hm = equivalentFiatStorage.getEqHM(faitCurrency);
+        EquivalentFiatStorage equivalentFiatStorage = new EquivalentFiatStorage(context);
+        HashMap hm = equivalentFiatStorage.getEqHM(faitCurrency);
 
-                                       try {
-                                for (int i = 0; i < equivalentComponentses.size(); i++) {
-                                    String asset = equivalentComponentses.get(i).getAssetSymbol();
-                                    String amount = String.valueOf(equivalentComponentses.get(i).getAmount());
-                                    equivalentComponentses.get(i).available = false;
-                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
-                                        equivalentComponentses.get(i).available = true;
-                                        Currency currency = Currency.getInstance(faitCurrency);
-                                        Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
-                                        equivalentComponentses.get(i).faitAssetSymbol = currency.getSymbol();
-                                        equivalentComponentses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
-                                    }else{
-                                        equivalentComponentses.get(i).faitAssetSymbol = "";
-                                        equivalentComponentses.get(i).faitAmount = 0f;
-                                    }
-                                }
-                            } catch (Exception e) {
-                                 ifEquivalentFailed();
-                            }
+        try {
+            for (int i = 0; i < equivalentComponentses.size(); i++) {
+                String asset = equivalentComponentses.get(i).getAssetSymbol();
+                String amount = String.valueOf(equivalentComponentses.get(i).getAmount());
+                equivalentComponentses.get(i).available = false;
+                if (!amount.isEmpty() && hm.containsKey(asset)) {
+                    equivalentComponentses.get(i).available = true;
+                    Currency currency = Currency.getInstance(faitCurrency);
+                    Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
+                    equivalentComponentses.get(i).faitAssetSymbol = currency.getSymbol();
+                    equivalentComponentses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
+                } else {
+                    equivalentComponentses.get(i).faitAssetSymbol = "";
+                    equivalentComponentses.get(i).faitAmount = 0f;
+                }
+            }
+        } catch (Exception e) {
+            ifEquivalentFailed();
+        }
 
-           setEquivalentComponents(equivalentComponentses);
+        setEquivalentComponents(equivalentComponentses);
 
-          // ifEquivalentFailed();
+        // ifEquivalentFailed();
 
 
-       }
+    }
 
     void setEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentse) {
 
@@ -790,17 +811,42 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             myImage.scaleToFit(documentWidth, documentHeight);
             myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
             document.add(myImage);
+            hideDialog();
 
             Intent email = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(new File(path));
             email.putExtra(Intent.EXTRA_STREAM, uri);
+            email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(email);
+
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
         document.close();
+    }
+
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+        }
+    }
+
+    private void hideDialog() {
+
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
+        }
+
+
     }
 }

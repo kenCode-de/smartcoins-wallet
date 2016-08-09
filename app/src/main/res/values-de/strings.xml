@@ -29,7 +29,7 @@
     <string name="loading_msg">Bitte warten Sie, bis Ihr Kontostand geladen wurde</string>
 <string name="txt_6_digits_pin">6-stelliger PIN</string>
 <string name="txt_6_digits_pin_confirm">6-stelliger PIN bestätigen</string>
-<string name="create">ERSTELLEN</string>
+<string name="create">NEUES KONTO ERSTELLEN</string>
 <string name="existing_account">Bestehendes Konto</string>
 <string name="agreement">Zustimmen</string>
 <string name="cancel_and_exit">Abbrechen und Beenden</string>
@@ -153,7 +153,7 @@
 <string name="add_contact_activity_name">Kontakt hinzufügen</string>
 <string name="str_trade_not_available">Handel nicht verfügbar</string>
     <string name="preferred_lang">Bevorzugte Sprache</string>
-    <string name="got_it">Ich habs</string>
+    <string name="got_it">Alles klar</string>
     <string name="upgrade_to_ltm">Upgrade auf LTM</string>
     <string name="txt_back">Zurück</string>
     <string name="please_pay">Bitte zahlen Sie</string>
@@ -197,15 +197,15 @@
     <string name="unable_to_save_bin_file">Bin Datei konnte nicht gespeichert werden</string>
 
     <string name="bugs_or_errors">Bugs oder Fehler?</string>
-    <string name="please_let_us_know">Informieren Sie uns bitte:</string>
-    <string name="try_again">Bitte versuchen Sie es erneut nach 5 Minuten</string>
-    <string name="warning_msg_same_account">Sie können nicht Betrag in das gleiche Konto senden</string>
+    <string name="please_let_us_know">Bitte informieren Sie uns:</string>
+    <string name="try_again">Bitte versuchen Sie es in 5 Minuten erneut</string>
+    <string name="warning_msg_same_account">Sie können nicht den Betrag an das selbe Konto senden</string>
 
-    <string name="please_backup_your_brainkey">Bitte sichern Sie Ihre brainkey</string>
-    <string name="backup_brainkey_msg">Sichern Sie Ihre .bin-Datei an einem sicheren Ort oder Ihr Geld verloren gehen könnte!</string>
-    <string name="unable_to_trade_bAssets">Unfähig, die Backup-Assets zu handeln</string>
-    <string name="unable_to_send_amount">Kann nicht den Betrag zu senden.</string>
-    <string name="unable_to_decode_QR">Können Sie den QR-Code zu entschlüsseln.</string>
+    <string name="please_backup_your_brainkey">Bitte sichern Sie Ihren Brainkey</string>
+    <string name="backup_brainkey_msg">Speichern Sie Ihre .bin-Datei an einem sicheren Ort ansonsten könnten Sie Ihr Geld verlieren!</string>
+    <string name="unable_to_trade_bAssets">Fehler, Das Backup-Assets konnte nicht gehandelt werden</string>
+    <string name="unable_to_send_amount">Der Betrag konnte nicht gesendet werden.</string>
+    <string name="unable_to_decode_QR">Der QR-Code konnte nich gelesen werden.</string>
 
     <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie dieses Konto entfernen möchten, </string>
     <string name="txt_alertmsg_la">Das Konto von diesem Wallet?</string>

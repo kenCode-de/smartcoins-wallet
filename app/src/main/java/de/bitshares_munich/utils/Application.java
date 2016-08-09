@@ -50,10 +50,13 @@ public class Application extends android.app.Application {
     public static String blockHead = "";
     private static Activity currentActivity;
 
-    public static String urlsSocketConnection[] = {"https://bitshares.openledger.info/ws",
-            "https://bitshares.dacplay.org:8089/ws",
-            "https://dele-puppy.com/ws",
-            "https://valen-tin.fr:8090"};
+    public static String urlsSocketConnection[] =
+            {
+                    "https://bitshares.openledger.info/ws"
+                    ,"https://bitshares.dacplay.org:8089/ws"
+                    //,"https://dele-puppy.com/ws"
+                    //,"https://valen-tin.fr:8090"
+            };
 
     public static int counter = 0;
 
@@ -142,10 +145,10 @@ public class Application extends android.app.Application {
     }
 
     public static void webSocketConnection() {
-        iAccount = iAccount;
+        //iAccount = iAccount;
         isReady = false;
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
-        get.setTimeout(10 * 1000);
+        get.setTimeout(30 * 1000);
 
         Log.d("Connecting to node", urlsSocketConnection[counter]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {

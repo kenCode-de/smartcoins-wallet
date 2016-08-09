@@ -1554,7 +1554,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         SupportMethods.testing("float", txtAmount_d, "txtamount");
                                         SupportMethods.testing("float", amount_d, "amount");
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.red));
 
                                         animateText(tvAmOne, convertLocalizeStringToFloat(tvAmOne.getText().toString()), convertLocalizeStringToFloat(amount));
@@ -1606,7 +1606,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         Log.d("Balances Update", "Balance received");
 
-                                        tvAmOne.setTypeface(null, Typeface.BOLD);
+                                        tvAmOne.setTypeface(tvAmOne.getTypeface(), Typeface.BOLD);
                                         tvAmOne.setTextColor(getResources().getColor(R.color.green));
 
                                         // run animation
@@ -1758,7 +1758,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update", "Balance sent");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
                                         Log.d("Balances Update", "Text animated");
@@ -1812,7 +1812,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     {
                                         Log.d("Balances Update","Balance is received");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
-                                        tvAmtwo.setTypeface(null, Typeface.BOLD);
+                                        tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
                                         // run animation
                                         if (animateOnce) {
@@ -2405,21 +2405,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
 
-            if ( myTransactionsTableAdapter == null )
-            {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
-            }
-            else
-            {
-                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                tableView.setDataAdapter(myTransactionsTableAdapter);
-            }
+            number_of_transactions_loaded += number_of_transactions_to_load;
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run()
                 {
+                    if ( myTransactionsTableAdapter == null )
+                    {
+                        myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                        tableView.setDataAdapter(myTransactionsTableAdapter);
+                    }
+                    else
+                    {
+                        myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+                        tableView.setDataAdapter(myTransactionsTableAdapter);
+                    }
+
                     if (myTransactionActivity.finalBlockRecieved)
                     {
                         load_more_values.setVisibility(View.GONE);
@@ -2439,7 +2441,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             });
 
 
-            number_of_transactions_loaded += number_of_transactions_to_load;
+
 
             /*
             if ( number_of_transactions_loaded < 20 )
