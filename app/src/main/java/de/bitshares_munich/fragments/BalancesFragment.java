@@ -3072,15 +3072,11 @@ if(!updateTriggerFromNetworkBroadcast) {
         return txtAmount_d;
     }
 
-   // Boolean closed = false;
     TransactionActivity myTransactionActivity;
     void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions)
     {
 
-      //  new TransactionActivity(context, id ,in , wkey , loaded , toLoad,alreadyLoadedTransactions);
-        //sentCallForTransactions = true;
 
-      //  if(closed) {
             if (myTransactionActivity == null) {
                 myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
             } else {
@@ -3088,7 +3084,7 @@ if(!updateTriggerFromNetworkBroadcast) {
                 myTransactionActivity.context = null;
                 myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
             }
-       // }
+
 
         //new TransactionActivity(context, id ,in , wkey , loaded , toLoad);
     }
