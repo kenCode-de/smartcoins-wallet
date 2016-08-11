@@ -220,5 +220,5 @@
     <string name="thankyou_string">三江源使用Smartcoins錢包</string>
     <string name="audio_folder_path">音頻文件夾路徑</string>
     <string name="please_make_sure_your_bin_file">請確保您的密碼是否正確，或正確的bin文件被選中</string>
-
+    <string name="change">更改...</string>
 </resources>

@@ -221,5 +221,7 @@
     <string name="thankyou_string">Dziękuje za korzystanie Smartcoins Portfel</string>
     <string name="audio_folder_path">Ścieżka audio Folder</string>
     <string name="please_make_sure_your_bin_file">Należy upewnić się, że trzpień jest poprawne, czy wybrano właściwy plik bin</string>
+    <string name="change">Zmiana...</string>
+
 
 </resources>

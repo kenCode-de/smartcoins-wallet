@@ -40,7 +40,7 @@
                     android:layout_gravity="left|center_vertical"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/green"
+                    android:textColor="@color/recieveamount"
                     android:text=""
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-light"
@@ -63,7 +63,7 @@
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-light"
                         android:textSize="7.2pt"
-                        android:textColor="@color/green"
+                        android:textColor="@color/recieveamount"
 
                         android:text=""/>
                     <TextView
@@ -78,7 +78,7 @@
                         android:fontFamily="sans-serif-light"
                         android:textSize="6pt"
                         android:paddingLeft="5dp"
-                        android:textColor="@color/green"
+                        android:textColor="@color/recieveamount"
                         android:text=""/>
                 </LinearLayout>
             </LinearLayout>
@@ -109,7 +109,7 @@
                     android:layout_gravity="left|center_vertical"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/green"
+                    android:textColor="@color/recieveamount"
                     android:text=""
                     android:fontFamily="sans-serif-light"
                     android:textSize="7.2pt"
@@ -133,7 +133,7 @@
                     android:textSize="7.2pt"
                     android:paddingLeft="5dp"
                     android:textStyle="bold"
-                    android:textColor="@color/green"/>
+                    android:textColor="@color/recieveamount"/>
                   <TextView
                       android:id="@+id/fait_child_two"
                       android:visibility="visible"
@@ -146,7 +146,7 @@
                       android:fontFamily="sans-serif-light"
                       android:textSize="6pt"
                       android:paddingLeft="5dp"
-                      android:textColor="@color/green"
+                      android:textColor="@color/recieveamount"
                       android:text=""/>
             </LinearLayout>
             </LinearLayout>

@@ -221,6 +221,7 @@
     <string name="payment_method">지불 방법</string>
     <string name="thankyou_string">감사합니다 Smartcoins 지갑을 사용하는</string>
     <string name="audio_folder_path">오디오 폴더 경로</string>
+    <string name="change">변화...</string>
 
     <string name="please_make_sure_your_bin_file">올바른 또는 올바른 bin 파일이 선택되어 있는지 당신의 핀이되어 있는지 확인하십시오</string>
 </resources>

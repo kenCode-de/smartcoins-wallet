@@ -222,5 +222,5 @@
     <string name="audio_folder_path">Аудио Путь к папке</string>
 
     <string name="please_make_sure_your_bin_file">Пожалуйста, убедитесь, что ваш контакт выбран правильный или правильный файл бен</string>
-
+    <string name="change">Изменить...</string>
 </resources>

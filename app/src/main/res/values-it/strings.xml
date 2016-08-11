@@ -221,5 +221,6 @@
     <string name="thankyou_string">Grazie per l\'utilizzo Smartcoins Portafoglio</string>
     <string name="audio_folder_path">Percorso cartella Audio</string>
     <string name="please_make_sure_your_bin_file">Si prega di assicurarsi che il perno sia file bin corretto o corretto sia selezionato</string>
+    <string name="change">Cambiamento...</string>
 
 </resources>

@@ -228,6 +228,6 @@
     <string name="thankyou_string">Merci pour l\'utilisation de Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Chemin du dossier</string>
     <string name="please_make_sure_your_bin_file">S\'il vous plaît assurez-vous que votre NIP est fichier correct ou de corriger bin est sélectionné</string>
-
+    <string name="change">Changement...</string>
 
 </resources>

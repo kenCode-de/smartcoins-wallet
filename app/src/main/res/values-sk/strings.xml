@@ -224,5 +224,6 @@
     <string name="thankyou_string">Ďakujem za použitia Smartcoins Peňaženka</string>
     <string name="audio_folder_path">Audio Cesta zložky</string>
     <string name="please_make_sure_your_bin_file">Prosím, uistite sa, že pin je správny alebo správny súbor priehradka je vybraná</string>
+    <string name="change">Zmeniť ...</string>
 
 </resources>

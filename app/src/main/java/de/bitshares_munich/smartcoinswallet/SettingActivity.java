@@ -1286,7 +1286,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             @Override
             public void onCancel(DialogInterface dialog) {
                 dialog.dismiss();
-                if(itemSelected.equals("Change")){
+                if(itemSelected.contains(getString(R.string.change))){
                     initAudioPath();
                 }
             }
@@ -1357,7 +1357,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
 
 
-        list.add(2,"Change");
+        list.add(2,getString(R.string.change));
 
 
         ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
@@ -1374,7 +1374,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
             String selectedString = spFolderPath.getSelectedItem().toString();
             itemSelected = selectedString;
-            if (selectedString.equals("Change")) {
+            if (selectedString.contains(getString(R.string.change))) {
                 chooseAudioFile();
             } else if (selectedString.equals("-------")) {
                 audioFilePath.storeAudioEnabled(true);
