@@ -7,6 +7,7 @@ import android.content.Context;
  */
 public class transactionsJsonSerializable {
     public String id;
+    public String blockNumber;
     public java.util.Date Date;
     public Boolean Sent; // false : if received
     public String To;

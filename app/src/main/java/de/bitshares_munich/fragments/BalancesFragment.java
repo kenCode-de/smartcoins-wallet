@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -178,7 +179,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     ProgressDialog progressDialog;
 
-    //Boolean sentCallForTransactions = false;
+    Boolean sentCallForTransactions = false;
     //Boolean isSavedTransactions = false;
 
 
@@ -2393,18 +2394,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             */
 
 
-            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 20) )
+            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 5) )
             {
                 if (Application.isReady)
                 {
                     Application.webSocketG.close();
                 }
+
+                sentCallForTransactions = false;
+
                 loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
                 return;
             }
 
             updateTriggerFromNetworkBroadcast = false;
             counterRepeatTransactionLoad = 0;
+            sentCallForTransactions = false;
 
             Context context = getContext();
             // update context
@@ -2474,6 +2479,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         {
             SupportMethods.testing("TransactionUpdate", e, "try/catch");
         }
+
+
     }
 
     @Override
@@ -2485,7 +2492,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadFailure(String reason)
     {
-        //sentCallForTransactions = false;
+        sentCallForTransactions = false;
 
         if ( reason.equals(getContext().getString(R.string.account_names_not_found)) )
         {
@@ -3037,19 +3044,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
 
     TransactionActivity myTransactionActivity;
+    Handler pendingTransactionsLoad;
     void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions)
     {
-        //sentCallForTransactions = true;
-
-        if (myTransactionActivity == null)
+        if ( sentCallForTransactions )
         {
-            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad,alreadyLoadedTransactions);
+            if ( pendingTransactionsLoad == null )
+            {
+                pendingTransactionsLoad = new Handler(Looper.getMainLooper());
+            }
+
+            pendingTransactionsLoad.removeCallbacksAndMessages(null);
+
+            pendingTransactionsLoad.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if ( context != null )
+                    loadTransactions( context,id,in,wkey,loaded,toLoad,alreadyLoadedTransactions );
+                }
+            },500);
+
         }
         else
         {
-            //myTransactionActivity = null;
-            myTransactionActivity.context = null;
-            myTransactionActivity = new TransactionActivity(context, id ,in , wkey , loaded , toLoad,alreadyLoadedTransactions);
+            sentCallForTransactions = true;
+
+            if (myTransactionActivity == null) {
+                myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
+            } else {
+                //myTransactionActivity = null;
+                myTransactionActivity.context = null;
+                myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
+            }
         }
 
         //new TransactionActivity(context, id ,in , wkey , loaded , toLoad);

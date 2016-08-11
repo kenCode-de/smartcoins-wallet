@@ -146,8 +146,8 @@ public class Application extends android.app.Application {
         }
     }
 
-    public static void webSocketConnection() {
-        //iAccount = iAccount;
+    public static void webSocketConnection()
+    {
         isReady = false;
         int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
         final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);

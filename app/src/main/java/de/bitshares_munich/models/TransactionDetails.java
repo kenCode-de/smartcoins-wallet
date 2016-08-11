@@ -15,6 +15,7 @@ import de.bitshares_munich.utils.Helper;
 public class TransactionDetails
 {
     public String id;
+    public String blockNumber;
     public java.util.Date Date;
     public Boolean Sent; // false : if received
     public String To;
@@ -37,10 +38,11 @@ public class TransactionDetails
 
     }
 
-    public TransactionDetails(String _id,Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
+    public TransactionDetails(String _id,String _blockNumber,Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
                               String _assetSymbol, double _faitAmount, String _faitAssetSymbol , String _eReceipt)
     {
         this.id = _id;
+        this.blockNumber = _blockNumber;
         this.Date = _date;
         this.Sent = _Sent;
         this.To = _to;

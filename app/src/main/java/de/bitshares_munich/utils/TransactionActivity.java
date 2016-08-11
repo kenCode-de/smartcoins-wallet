@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -516,7 +517,7 @@ public class TransactionActivity implements IBalancesDelegate {
             HashMap<String,String> alreadyLoadedIds = new HashMap<>();
             for ( TransactionDetails td:alreadyLoadedTransactions )
             {
-                alreadyLoadedIds.put(td.id,null);
+                alreadyLoadedIds.put(td.id,td.blockNumber);
             }
 
             for (int i = 0 ; i < myJson.length(); i++)
@@ -531,9 +532,19 @@ public class TransactionActivity implements IBalancesDelegate {
                     finalBlockRecieved = true;
                 }
 
-                if ( myJson.getJSONObject(i).has("id") && alreadyLoadedIds.containsKey(myJson.getJSONObject(i).getString("id")) )
+                if (
+                        myJson.getJSONObject(i).has("id")
+                        && alreadyLoadedIds.containsKey(myJson.getJSONObject(i).getString("id"))
+                   )
                 {
-                    continue;
+                    //if (
+                    //        myJson.getJSONObject(i).has("block_num") &&
+                    //                myJson.getJSONObject(i).getString("block_num").equals( alreadyLoadedIds.get(myJson.getJSONObject(i).getString("id")) )
+                    //        )
+                    //{
+                        Log.d("trx", "continue");
+                        continue;
+                    //}
                 }
 
                 if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") && myJson.getJSONObject(i).has("op")  )
@@ -820,7 +831,8 @@ public class TransactionActivity implements IBalancesDelegate {
             else
             {
                 if ( context == null ) return;
-                assetDelegate.transactionsLoadFailure(context.getString(R.string.no_assets_found));
+                getNamesInTransactionsRecieved();
+                //assetDelegate.transactionsLoadFailure(context.getString(R.string.no_assets_found));
             }
         }
         catch (Exception e)
@@ -1167,6 +1179,7 @@ public class TransactionActivity implements IBalancesDelegate {
                             {
                                 TransactionDetails myTransactionDetails = new TransactionDetails();
                                 myTransactionDetails.id = id;
+                                myTransactionDetails.blockNumber = blockNum;
                                 myTransactionDetails.Date = headerTimings.get(blockNum);
 
                                 // get amount asset
@@ -1313,6 +1326,18 @@ public class TransactionActivity implements IBalancesDelegate {
             List<TransactionDetails> completeListOfTransactionsToDisplay = new ArrayList<>();
             completeListOfTransactionsToDisplay.addAll(myTransactions);
             completeListOfTransactionsToDisplay.addAll(alreadyLoadedTransactions);
+
+            // remove any duplications if exists
+            HashMap<String,TransactionDetails> finalHm = new HashMap<>();
+
+            for( TransactionDetails td:completeListOfTransactionsToDisplay )
+            {
+                finalHm.put(td.id,td);
+            }
+
+            //hashSet.addAll(completeListOfTransactionsToDisplay.);
+            completeListOfTransactionsToDisplay.clear();
+            completeListOfTransactionsToDisplay.addAll(finalHm.values());
 
             Collections.sort(completeListOfTransactionsToDisplay, new transactionsDateComparator());
 
