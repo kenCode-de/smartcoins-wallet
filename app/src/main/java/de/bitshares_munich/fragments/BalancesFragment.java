@@ -2398,7 +2398,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             */
 
 
-            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 5) )
+            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 15) )
             {
                 if (Application.isReady)
                 {

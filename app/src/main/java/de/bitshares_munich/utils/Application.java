@@ -56,6 +56,7 @@ public class Application extends android.app.Application {
             {
                     "https://bitshares.openledger.info/ws"
                     ,"https://bitshares.dacplay.org:8089/ws"
+                    ,"https://openledger.hk/ws"
                     //,"https://dele-puppy.com/ws"
                     //,"https://valen-tin.fr:8090"
             };
