@@ -79,8 +79,8 @@
 <string name="txt_validating_account">驗證帳戶...</string>
 <string name="validating_account">驗證帳戶...</string>
 <string name="account_name_should_be_longer">賬戶名稱應越長</string>
-<string name="account_name_already_exist">賬戶名稱 ％s 已經存在</string>
-<string name="account_name_not_exist">賬戶名稱 ％s 不存在</string>
+<string name="account_name_already_exist">賬戶名稱 %s 已經存在</string>
+<string name="account_name_not_exist">賬戶名稱 %s 不存在</string>
 <string name="add_contact">加</string>
 <string name="edit_contact">編輯</string>
 <string name="empty_list">聯繫人列表為空</string>
@@ -208,4 +208,17 @@
     <string name="unable_to_send_amount">無法發送金額。</string>
     <string name="unable_to_decode_QR">無法解碼的QR碼。</string>
 
+    <string name="loyalty_points">忠誠度積分</string>
+    <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
+    <string name="str_balance_available">%1$s %2$s 可用</string>
+    <string name="bts_will_be_deducted">BTS將從中扣除</string>
+    <string name="select_backup_asset">選擇備份資產</string>
+    <string name="sender_account">發件人帳戶</string>
+    <string name="receiver_account">接收賬戶</string>
+    <string name="total">總</string>
+    <string name="payment_method">付款方法</string>
+    <string name="thankyou_string">三江源使用Smartcoins錢包</string>
+    <string name="audio_folder_path">音頻文件夾路徑</string>
+    <string name="please_make_sure_your_bin_file">請確保您的密碼是否正確，或正確的bin文件被選中</string>
+    <string name="change">更改...</string>
 </resources>

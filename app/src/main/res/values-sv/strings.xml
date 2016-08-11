@@ -12,6 +12,7 @@
 <string name="payment_received">Betalning mottagen</string>
 <string name="import_brainkey">Import från BrainKey</string>
 <string name="import_backup_old">import Backup</string>
+    <string name="bts_will_be_deducted">BTS kommer att dras från</string>
 <string name="choose_backup">Välj Backup</string>
     <string name="unable_to_import_account_from_bin_file">Det går inte att importera konto från bin-fil</string>
     <string name="importing_keys_from_bin_file">Importera nycklar från Bin fil</string>
@@ -208,4 +209,18 @@
     <string name="unable_to_send_amount">Det går inte att skicka beloppet.</string>
     <string name="unable_to_decode_QR">Det går inte att avkoda QR-kod.</string>
 
+    <string name="loyalty_points">lojalitets~~POS=TRUNC</string>
+    <string name="str_warning_only_available">Varning! Endast %1$s %2$s är tillgänglig</string>
+    <string name="str_balance_available">%1$s %2$s tillgängliga</string>
+
+    <string name="select_backup_asset">Välj Backup Asset</string>
+    <string name="sender_account">avsändarkonto</string>
+    <string name="receiver_account">mottagare konto</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Betalningsmetod</string>
+    <string name="thankyou_string">Tack för att du använder Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Mappsökväg</string>
+    <string name="please_make_sure_your_bin_file">Se till att din PIN-kod är korrekt eller korrekt bin fil väljs</string>
+
+    <string name="change">Byta...</string>
 </resources>

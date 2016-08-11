@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -42,13 +43,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
@@ -67,12 +72,15 @@ import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +88,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory , OnClickListView{
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
     Context context;
     Application application = new Application();
     TinyDB tinyDB;
@@ -144,6 +152,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
 
+
     @Bind(R.id.cbAlwaysDonate)
     CheckBox cbAlwaysDonate;
 
@@ -182,16 +191,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
-    private void startupTasks ()
-    {
+    private void startupTasks() {
         runningSpinerForFirstTime = true;
         init();
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
-        if (res != null)
-        {
-            if (res.containsKey("sResult") && res.containsKey("id"))
-            {
+        if (res != null) {
+            if (res.containsKey("sResult") && res.containsKey("id")) {
                 if (res.getInt("id") == 5) {
                     getJsonFromHash(res.getString("sResult"));
                 }
@@ -200,16 +206,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         String basset = etBackupAsset.getText().toString();
 
-        if ( !basset.isEmpty() )
-        {
+        if (!basset.isEmpty()) {
             backupAssetCHanged(basset);
         }
 
-        loadWebView(webviewTo,39, Helper.hash("", Helper.SHA256));
+        loadWebView(webviewTo, 39, Helper.hash("", Helper.SHA256));
     }
 
 
     Activity sendScreenActivity;
+    webSocketCallHelper myWebSocketHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +227,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setTitle(getResources().getString(R.string.send_screen_name));
 
         sendScreenActivity = this;
+        myWebSocketHelper = new webSocketCallHelper(getApplicationContext());
 
         context = getApplicationContext();
         ButterKnife.bind(this);
@@ -235,7 +242,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         tinyDB = new TinyDB(context);
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-        cbAlwaysDonate.setText(getString(R.string.checkbox_donate)+" BitShares Munich");
+        cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
 
 
         startupTasks();
@@ -246,10 +253,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void run() {
 
 
-                if(!validReceiver && !validating)
-                {
-                    if (etReceiverAccount.getText().length() > 0)
-                    {
+                if (!validReceiver && !validating) {
+                    if (etReceiverAccount.getText().length() > 0) {
                         myLowerCaseTimer.cancel();
                         myAccountNameValidationTimer.cancel();
                         myLowerCaseTimer.start();
@@ -257,8 +262,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                 }
                 //Do something after 100ms
-                if (validateSend() && validReceiver)
-                {
+                if (validateSend() && validReceiver) {
                     btnSend.setEnabled(true);
                     btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
                     sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
@@ -279,12 +283,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setSpinner();
     }
 
+
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
-        if (!text.toString().equals(text.toString().trim())) {
-            etReceiverAccount.setText(text.toString().trim());
+
+        if (text != null) {
+            if (!text.toString().equals(text.toString().trim())) {
+                etReceiverAccount.setText(text.toString().trim());
+            }
         }
 
         if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
@@ -299,7 +307,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             myAccountNameValidationTimer.start();
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
-        loadWebView(webviewTo,34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
+        loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
         // loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.MD5));
     }
 
@@ -349,21 +357,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Boolean runningSpinerForFirstTime = true;
 
     @OnItemSelected(R.id.spinnerFrom)
-    void onItemSelected(int position)
-    {
-        if (!runningSpinerForFirstTime)
-        {
+    void onItemSelected(int position) {
+        if (!runningSpinerForFirstTime) {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
 
-            for (int i = 0; i < accountDetails.size(); i++)
-            {
+            for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount))
-                {
+                if (accountDetail.account_name.equals(selectedAccount)) {
                     accountDetail.isSelected = true;
-                }
-                else
-                {
+                } else {
                     accountDetail.isSelected = false;
                 }
             }
@@ -396,14 +398,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 onLoyaltyChanged(etAmount.getText());
             }
             */
-        }
-        else
-        {
+        } else {
             this.runningSpinerForFirstTime = false;
         }
 
         //  loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.MD5));
-        loadWebView(webviewFrom,34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.SHA256));
+        loadWebView(webviewFrom, 34, Helper.hash(spinnerFrom.getSelectedItem().toString(), Helper.SHA256));
     }
 
     @OnItemSelected(R.id.spAssets)
@@ -426,39 +426,43 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnTextChanged(R.id.etLoyalty)
     void onLoyaltyChanged(CharSequence text) {
 
-        if (text.toString().equals("")) {
-            text = "0";
-        } else if (text.toString().equals(".")) {
-            text = "0.";
-        }
-        Double loyaltyAmount = Double.parseDouble(text.toString());
-        Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
-        if (loyaltyAmount > loyaltyBalance) {
-             tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
+        try {
 
-        } else {
-            String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
-            tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
-        }
+            if (text.toString().equals("")) {
+                text = "0";
+            } else if (text.toString().equals(".")) {
+                text = "0.";
+            }
+            Double loyaltyAmount = Double.parseDouble(text.toString());
+            Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
+            if (loyaltyAmount > loyaltyBalance) {
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
 
-        setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty , 0, loyaltyAsset.symbol, Color.BLACK);
+            } else {
+                String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
+            }
 
-        if (loyaltyAsset != null && backupAssets != null) {
-            count = 1;
-            updateTotalStatus();
-        } else {
-            if (exchangeRate != null) {
-                String backupAssetAmount = etBackupAsset.getText().toString();
+            setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
 
-                if (backupAssetAmount.equals("")) {
-                    backupAssetAmount = "0";
-                }
-                Double remainingAmount = requiredAmount - (loyaltyAmount * exchangeRate) - Double.valueOf(backupAssetAmount);
-                etAmount.setText(remainingAmount.toString());
+            if (loyaltyAsset != null && backupAssets != null) {
+                count = 1;
                 updateTotalStatus();
             } else {
-                getExchangeRate(100);
+                if (exchangeRate != null) {
+                    String backupAssetAmount = etBackupAsset.getText().toString();
+
+                    if (backupAssetAmount.equals("")) {
+                        backupAssetAmount = "0";
+                    }
+                    Double remainingAmount = requiredAmount - (loyaltyAmount * exchangeRate) - Double.valueOf(backupAssetAmount);
+                    etAmount.setText(remainingAmount.toString());
+                    updateTotalStatus();
+                } else {
+                    getExchangeRate(100);
+                }
             }
+        } catch (Exception e) {
         }
 
     }
@@ -469,51 +473,47 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         super.onConfigurationChanged(newConfig);
     }
 
-    private void backupAssetCHanged (String text)
-    {
-        count = 1;
-        if (text.toString().equals(""))
-        {
-            text = "0";
-        } else if (text.toString().equals("."))
-        {
-            text = "0.";
-        }
-
-        Double backupAssetAmount = Double.parseDouble(text.toString());
-        Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-
-        if (backupAssetAmount > backupAssetBalance)
-        {
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssets.symbol));
-        }
-        else
-        {
-            String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
-            tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssets.symbol));
-        }
-
-        setHyperlinkText(tvBackupAssetBalanceValidate,backupAssetBalance.toString(),etBackupAsset , 0,backupAssets.symbol, Color.BLACK);
-
-        if (backAssetRate != null)
-        {
-            String loyaltyAmount = etLoyalty.getText().toString();
-
-            if (loyaltyAmount.equals(""))
-            {
-                loyaltyAmount = "0";
+    private void backupAssetCHanged(String text) {
+        try {
+            count = 1;
+            if (text.toString().equals("")) {
+                text = "0";
+            } else if (text.toString().equals(".")) {
+                text = "0.";
             }
 
-            if (requiredAmount != null)
-            {
-                Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
-                etAmount.setText(remainingAmount.toString());
+            Double backupAssetAmount = Double.parseDouble(text.toString());
+            Double backupAssetBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+
+            String backupAssetSym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+
+            if (backupAssetAmount > backupAssetBalance) {
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
+            } else {
+                String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
             }
-            updateTotalStatus();
-        }
-        else
-        {
-            getExchangeRate(200);
+
+            setHyperlinkText(tvBackupAssetBalanceValidate, backupAssetBalance.toString(), etBackupAsset, 0, backupAssetSym, Color.BLACK);
+
+            if (backAssetRate != null) {
+                String loyaltyAmount = etLoyalty.getText().toString();
+
+                if (loyaltyAmount.equals("")) {
+                    loyaltyAmount = "0";
+                }
+
+                if (requiredAmount != null) {
+                    Double remainingAmount = requiredAmount - (backupAssetAmount * backAssetRate) - Double.valueOf(loyaltyAmount);
+                    etAmount.setText(remainingAmount.toString());
+                }
+                updateTotalStatus();
+            } else {
+                getExchangeRate(200);
+            }
+        } catch (Exception e) {
         }
     }
 
@@ -588,15 +588,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tradeAmount += Double.parseDouble(etAmount.getText().toString());
             }
             String mainAsset = spAssets.getSelectedItem().toString();
+            mainAsset = mainAsset.replace("bit", "");
             transferAmount(String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", tradeAmount), mainAsset, etReceiverAccount.getText().toString());
         } else if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
-            String mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
             String mainAsset = spAssets.getSelectedItem().toString();
+            mainAsset = mainAsset.replace("bit", "");
+            String mainAmount;
+            if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
+                mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
+            } else {
+                mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
+            }
             transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
         }
         if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
-            String loyaltyAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etLoyalty.getText().toString()));
+            String loyaltyAmount;
             String loyaltyAsset = tvLoyalty.getText().toString();
+            if (loyaltyAsset.equalsIgnoreCase("YASHA")) {
+                loyaltyAmount = String.format(Locale.ENGLISH, "%.3f", Double.parseDouble(etLoyalty.getText().toString()));
+            } else {
+                loyaltyAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etLoyalty.getText().toString()));
+            }
+
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
         }
         if (alwaysDonate || cbAlwaysDonate.isChecked()) {
@@ -610,6 +623,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private void selectedAccountAsset() {
         try {
             String selectedAsset = spAssets.getSelectedItem().toString();
+            selectedAsset = selectedAsset.replace("bit", "");
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
@@ -632,9 +646,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         try {
             tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
             String selectedAsset;
-            if(spAssets.getChildCount()>0) {
+            if (spAssets.getChildCount() > 0) {
                 selectedAsset = spAssets.getSelectedItem().toString();
-            }else selectedAsset = "";
+            } else selectedAsset = "";
             selectedAccountAsset();
             Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
             String availableBalance = selectedBalance.toString();
@@ -654,14 +668,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validAmount = false;
                         tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
                         tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
-                    }
-
-                    else {
+                    } else {
                         validAmount = true;
 
                         remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
                         tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
-                        setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
+                        setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
                         updateTotalStatus(); // shayan
                     }
 
@@ -673,32 +685,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 }
 
 
-
-
             } else {
                 etBackupAsset.setText(""); //shayan
                 validAmount = false;
                 tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-                setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 0,selectedAsset, Color.BLACK); //shayan
+                setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
             }
 
-            /*
-            if ( !etBackupAsset.getText().toString().isEmpty() )
-            {
-                Double backupEnteredAMount = Double.parseDouble(etBackupAsset.getText().toString());
-               // Double backupAvailableAmount = backu
-            }
-            */
-
-            setHyperlinkText(tvAmountStatus, availableBalance , etAmount , 14,selectedAsset, Color.RED);
+            //Crashing
+            setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 14, selectedAsset, Color.RED);
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
-    private void loadWebView(WebView webView,int size, String encryptText) {
+
+    private void loadWebView(WebView webView, int size, String encryptText) {
         String htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -733,15 +736,50 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     };
 
-    Handler reloadToAccountValidation = new Handler();
-    public void createBitShareAN(boolean focused) {
-        if (!focused)
+    private void lookupAccounts() {
+        String socketText = getString(R.string.lookup_account_a);
+        String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+        myWebSocketHelper.make_websocket_call(socketText, scketText2, webSocketCallHelper.api_identifier.database);
+
+        /*
+        if ( Application.isReady )
         {
-            if (etReceiverAccount.getText().length() > 2)
-            {
+            String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
+            String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+            Application.webSocketG.send(socketText);
+        }
+        else
+        {
+            Runnable toAccountValidation = new Runnable() {
+                @Override
+                public void run()
+                {
+                    sendScreenActivity.runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            createBitShareAN(false);
+                        }
+                    });
+                }
+            };
+
+            reloadToAccountValidation.postDelayed(toAccountValidation,500);
+        }
+        */
+    }
+
+    Handler reloadToAccountValidation = new Handler();
+
+    public void createBitShareAN(boolean focused) {
+        if (!focused) {
+            if (etReceiverAccount.getText().length() > 2) {
                 tvErrorRecieverAccount.setText("");
                 tvErrorRecieverAccount.setVisibility(View.GONE);
 
+                lookupAccounts();
+                /*
                 if ( Application.isReady )
                 {
                     String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
@@ -767,9 +805,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                     reloadToAccountValidation.postDelayed(toAccountValidation,500);
                 }
-            }
-            else
-            {
+                */
+            } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
             }
         }
@@ -817,10 +854,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
 
             if (backupAsset.isEmpty()) {
-                backupAsset = "BTS";
+                llBackupAsset.setVisibility(View.GONE);
+                //backupAsset = "BTS";
+            } else {
+                llBackupAsset.setVisibility(View.VISIBLE);
             }
-            llBackupAsset.setVisibility(View.VISIBLE);
-            tvBackupAsset.setText(backupAsset);
+
+            String sym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            sym = assetsSymbols.updateString(backupAsset);
+
+            // llBackupAsset.setVisibility(View.VISIBLE);
+            tvBackupAsset.setText(sym);
             getBackupAsset();
             getExchangeRate(200);
 
@@ -829,16 +874,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void getBackupAsset()
-    {
-        try
-        {
+    private void getBackupAsset() {
+        try {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            for (int i = 0; i < accountDetails.size(); i++)
-            {
+            for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount))
-                {
+                if (accountDetail.account_name.equals(selectedAccount)) {
                     try {
                         for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
                             AccountAssets tempAccountAsset = accountDetail.AccountAssets.get(j);
@@ -847,15 +888,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                                 break;
                             }
                         }
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         backupAssets = null;
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.d("getBackupAsset", e.getMessage());
         }
     }
@@ -888,6 +926,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             //  Toast.makeText(context,"Callback identified",Toast.LENGTH_LONG).show();
             etReceiverAccount.setText(resJson.get("to").toString());
             //validReceiver = true;
+
             spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
             spAssets.setClickable(false);
             if (resJson.get("memo") != null) {
@@ -903,6 +942,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             requiredAmount = totalAmount;
             DecimalFormat df = new DecimalFormat("####.####");
             df.setRoundingMode(RoundingMode.CEILING);
+            df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
                 etAmount.setEnabled(false);
@@ -932,7 +972,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
                     tvLoyalty.setText(loyaltyAsset.symbol);
                     tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
-                    setHyperlinkText(tvLoyaltyStatus,loyaltyBalance.toString(),etLoyalty ,0,loyaltyAsset.symbol, Color.BLACK );
+                    setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
                     llLoyalty.setVisibility(View.VISIBLE);
                     tvLoyaltyStatus.setVisibility(View.VISIBLE);
                 }
@@ -946,18 +986,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void createSpinner(List<String> spinnerArray, Spinner spinner) {
+
+
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.spinner_black, spinnerArray);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
     }
 
-    public void populateAccountsSpinner()
-    {
+    public void populateAccountsSpinner() {
         List<String> spinnerArray = new ArrayList<String>();
 
-        String accountname="";
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
+        String accountname = "";
+        for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             tvFrom.setText(accountDetail.account_name);
             if (accountDetail.isSelected)
@@ -966,14 +1006,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             spinnerArray.add(accountDetail.account_name);
         }
 
-        if (accountDetails.size() > 1)
-        {
+        if (accountDetails.size() > 1) {
             spinnerFrom.setVisibility(View.VISIBLE);
             tvFrom.setVisibility(View.GONE);
-        }
-        else
-        {
-            loadWebView(webviewFrom,34, Helper.hash(tvFrom.getText().toString(), Helper.SHA256));
+        } else {
+            loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.SHA256));
             // loadWebView(webviewFrom, 34, Helper.hash(tvFrom.getText().toString(), Helper.MD5));
             spinnerFrom.setVisibility(View.GONE);
             tvFrom.setVisibility(View.VISIBLE);
@@ -981,47 +1018,40 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         createSpinner(spinnerArray, spinnerFrom);
 
-        if (accountname.isEmpty())
-        {
+        if (accountname.isEmpty()) {
             spinnerFrom.setSelection(0);
-        }
-        else
-        {
+        } else {
             spinnerFrom.setSelection(spinnerArray.indexOf(accountname));
         }
     }
 
-    public void populateAssetsSpinner()
-    {
-        try
-        {
+    public void populateAssetsSpinner() {
+        try {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
-            List<String> spinnerArray = new ArrayList<String>();
-            for (int i = 0; i < accountDetails.size(); i++)
-            {
+            ArrayList<String> spinnerArray = new ArrayList<String>();
+            for (int i = 0; i < accountDetails.size(); i++) {
                 AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount))
-                {
+                if (accountDetail.account_name.equals(selectedAccount)) {
                     try {
                         for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
                             selectedAccountAsset = accountDetail.AccountAssets.get(j);
                             spinnerArray.add(selectedAccountAsset.symbol);
                         }
-                    }
-                    catch (Exception r){
+                    } catch (Exception r) {
                         selectedAccountAsset = null;
                     }
                 }
             }
+
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
+            spinnerArray = assetsSymbols.updatedList(spinnerArray);
+
             createSpinner(spinnerArray, spAssets);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         }
     }
 
-    void setSpinner()
-    {
+    void setSpinner() {
         populateAccountsSpinner();
         populateAssetsSpinner();
         setBackUpAsset();
@@ -1046,22 +1076,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void findExchangeRate(int id)
-    {
-        if (application.webSocketG.isOpen()) {
-            int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-            String loyalOrBackupAssets = "";
-            if (id == 200) {
-                loyalOrBackupAssets = backupAssets.id;
-            } else if (id == 100) {
-                loyalOrBackupAssets = loyaltyAsset.id;
-            }
-            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_identifier + ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
-            application.webSocketG.send(params);
-        }
-
-    }
-
     Boolean checkLastIndex() {
         String name = etAmount.getText().toString();
         if (name.length() >
@@ -1073,29 +1087,25 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     Boolean checkIfZero() {
-        try
-        {
+        try {
             String amount = etAmount.getText().toString();
 
-            if ( amount.isEmpty() )
-            {
+            if (amount.isEmpty()) {
                 return true;
             }
 
             Double am = Double.parseDouble(amount);
 
-            if (am <= 0.0)
-            {
+            if (am <= 0.0) {
                 return true;
             }
-            
+
             return false;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return true;
         }
     }
+
 
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
@@ -1138,7 +1148,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
         }
-        HashMap hm = new HashMap();
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("method", "transfer");
         hm.put("wifkey", privateKey);
         hm.put("from_account", spinnerFrom.getSelectedItem().toString());
@@ -1174,7 +1184,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.unable_to_send_amount).toLowerCase() + "..", Toast.LENGTH_SHORT).show();
                 }
                 hideDialog();
             }
@@ -1190,7 +1200,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private int getSpinnerIndex(Spinner spinner, String myString) {
         int index = 0;
         for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+            String spString = spinner.getItemAtPosition(i).toString();
+            spString = spString.replace("bit", "");
+            if (spString.equalsIgnoreCase(myString)) {
                 index = i;
                 break;
             }
@@ -1200,7 +1212,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void callback_exchange_rate(JSONObject result, int id) throws JSONException {
-
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (result.length() > 0) {
 
@@ -1236,6 +1248,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Override
     public void checkAccount(JSONObject jsonObject) {
 
+        myWebSocketHelper.cleanUpTransactionsHandler();
+
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             boolean found = false;
@@ -1265,8 +1279,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         sendBtnPressed = false;
                         validating = false;
                         // This code works correct, donot edit if it shows red underline
-                        String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                        tvErrorRecieverAccount.setText(format);
+                        try {
+                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+                            format = format.replaceAll("\\s+", " ").trim();
+                            tvErrorRecieverAccount.setText(format);
+                        } catch (Exception e) {
+                            tvErrorRecieverAccount.setText("");
+                        }
+
                         tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                     }
                 });
@@ -1276,13 +1296,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private void showDialog(String title, String msg) {
-        if (progressDialog != null) {
-            if (!progressDialog.isShowing()) {
-                progressDialog.setTitle(title);
-                progressDialog.setMessage(msg);
-                progressDialog.show();
+    private void showDialog(String title, String msg)
+    {
+        try
+        {
+            if (progressDialog != null) {
+                if (!progressDialog.isShowing()) {
+                    progressDialog.setTitle(title);
+                    progressDialog.setMessage(msg);
+                    progressDialog.show();
+                }
             }
+        }
+        catch (Exception e)
+        {
+
         }
     }
 
@@ -1301,20 +1329,32 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         try {
             // Send screen work start
             Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
-            Double backupAssetsBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
-
+            Double backupAssetsBalance = 0.0;
+            if (backupAssets != null) {
+                backupAssetsBalance = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+            }
             String selectedAmount = Helper.padString(etAmount.getText().toString());
             Double enteredAmount = Double.parseDouble(selectedAmount);
             String loyaltyAmount = Helper.padString(etLoyalty.getText().toString());
             String backupAssetAmount = Helper.padString(etBackupAsset.getText().toString());
             if ((enteredAmount > selectedBalance) | (enteredAmount < 0)) {
                 selectedAmount = String.valueOf(selectedBalance);
-                if ((backupAssetsBalance / backAssetRate) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
+                if ((backupAssetsBalance) - (Double.parseDouble(String.valueOf(enteredAmount - selectedBalance)) / backAssetRate) > 0) {
                     backupAssetAmount = String.format(Locale.ENGLISH, "%.4f", ((enteredAmount - selectedBalance) / backAssetRate));
 
                 }
             }
             // Send screen work end
+
+            String selectedAccountAssetSym;
+            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+            selectedAccountAssetSym = assetsSymbols.updateString(selectedAccountAsset.symbol);
+//
+//            String selectedAccountAssetSym;
+//            AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+//            selectedAccountAssetSym = assetsSymbols.updateString(selectedAccountAsset.symbol);
+
+
             if (loyaltyAsset != null && backupAssets != null && exchangeRate != null && backAssetRate != null) {
                 if (count == 1) {
                     Double totalAmountLoyalty = (Double.parseDouble(loyaltyAmount) * exchangeRate);
@@ -1325,33 +1365,148 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         etAmount.setText(String.format(Locale.ENGLISH, "%.4f", amount));
                     }
                     count = 0;
+                    String backupAssetSym;
+                    backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+
                     Double total = amount + totalAmountBackupAssets + totalAmountLoyalty;
                     tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                            String.format(Locale.ENGLISH, "%.4f", amount), selectedAccountAsset.symbol, backupAssetAmount + backupAssets.symbol + " + ", loyaltyAmount + loyaltyAsset.symbol
-                            , String.format(Locale.ENGLISH, "%.4f", total), selectedAccountAsset.symbol));
+                            String.format(Locale.ENGLISH, "%.4f", amount), selectedAccountAssetSym, backupAssetAmount + backupAssetSym + " + ", loyaltyAmount + loyaltyAsset.symbol
+                            , String.format(Locale.ENGLISH, "%.4f", total), selectedAccountAssetSym));
                 }
                 count++;
             } else if (loyaltyAsset != null && exchangeRate != null) {
-                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
-                tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAsset.symbol, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
-            } else if (backupAssets != null && backAssetRate != null)
-            {
-                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
-                tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
-                        selectedAmount, selectedAccountAsset.symbol, backupAssetAmount,
-                        backupAssets.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAsset.symbol));
 
-                setHyperlinkTextDouble(tvTotalStatus,selectedAmount.toString(),backupAssetAmount.toString(),etAmount, etBackupAsset,1,selectedAccountAsset.symbol, backupAssets.symbol); //
+                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(loyaltyAmount) * exchangeRate);
+
+                tvTotalStatus.setText(String.format(getString(R.string.str_total_status), selectedAmount, selectedAccountAssetSym, loyaltyAmount, loyaltyAsset.symbol, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAssetSym));
+
+            } else if (backupAssets != null && backAssetRate != null) {
+                Double totalAmount = Double.parseDouble(selectedAmount) + (Double.parseDouble(backupAssetAmount) * backAssetRate);
+                String backupAssetSym;
+                backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
+                tvTotalStatus.setText(String.format(getString(R.string.str_total_status),
+                        selectedAmount, selectedAccountAssetSym, backupAssetAmount,
+                        backupAssetSym, String.format(Locale.ENGLISH, "%.4f", totalAmount), selectedAccountAssetSym));
+
+                setHyperlinkTextDouble(tvTotalStatus, selectedAmount.toString(), backupAssetAmount.toString(), etAmount, etBackupAsset, 1, selectedAccountAssetSym, backupAssetSym); //
 
             }
+
             tvTotalStatus.setVisibility(View.VISIBLE);
+            if (backupAssets == null) {
+                tvTotalStatus.setVisibility(View.GONE);
+            }
+            //shayan Friday night
+            if (!etBackupAsset.getText().toString().isEmpty()) {
+                Double backupEnteredAmount = Double.parseDouble(etBackupAsset.getText().toString());
+                Double backAssAmount = Double.parseDouble(backupAssets.ammount) / Math.pow(10, Integer.parseInt(backupAssets.precision));
+                Double backupAvailableAmount = backAssAmount;
+                if (backupEnteredAmount > backupAvailableAmount)
+                    validAmount = false;
+            }
+            // shayan friday night
+
         } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), R.string.unable_to_process + " : " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public void getTrxBlock(String id) {
-        if (application.webSocketG.isOpen()) {
+    private void findExchangeRate(int id) {
+        if (Application.isReady) {
+            //int db_identifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+            String loyalOrBackupAssets = "";
+            if (id == 200) {
+                loyalOrBackupAssets = backupAssets.id;
+            } else if (id == 100) {
+                loyalOrBackupAssets = loyaltyAsset.id;
+            }
+
+            String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+            String params2 = ",\"get_limit_orders\",[\"" + loyalOrBackupAssets + "\",\"" + selectedAccountAsset.id + "\",1]]}";
+            myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.database);
+            //Application.webSocketG.send(params);
+        }
+    }
+
+    //********Get trx block****************Start
+    Handler reTryGetTrxBlock = new Handler();
+    int reTryTimeGetTrxBlock = 1000;
+    boolean callInProgressForGettingTrx = false;
+    boolean callReceivedForGettingTrx = true;
+
+    public void getTrxBlock(final String id) {
+
+        String selectedAccountId = "";
+        String selectedAccount = spinnerFrom.getSelectedItem().toString();
+        for (int i = 0; i < accountDetails.size(); i++) {
+            AccountDetails accountDetail = accountDetails.get(i);
+            if (accountDetail.account_name.equals(selectedAccount)) {
+                selectedAccountId = accountDetail.account_id;
+            }
+        }
+        //int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+        String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String params2 = ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
+        myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.history);
+
+
+        /*
+        reTryGetTrxBlock.removeCallbacksAndMessages(null);
+
+        final Runnable checkifRecieved = new Runnable() {
+            @Override
+            public void run() {
+                if ( callInProgressForGettingTrx && !callReceivedForGettingTrx) // if balances are not returned in one second
+                {
+                    if ( Application.isReady )
+                    {
+                        Application.webSocketG.close();
+                        getTrxBlock(id);
+                    }
+                    else
+                    {
+                        getTrxBlock(id);
+                    }
+                }
+            }
+        };
+
+
+        final Runnable initiateTransactions = new Runnable() {
+            @Override
+            public void run()
+            {
+                if ( Application.isReady )
+                {
+                    String selectedAccountId = "";
+                    String selectedAccount = spinnerFrom.getSelectedItem().toString();
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        AccountDetails accountDetail = accountDetails.get(i);
+                        if (accountDetail.account_name.equals(selectedAccount)) {
+                            selectedAccountId = accountDetail.account_id;
+                        }
+                    }
+                    int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+                    String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
+                    Application.webSocketG.send(params);
+
+                    callInProgressForGettingTrx = true;
+                    callReceivedForGettingTrx = false;
+                    reTryGetTrxBlock.postDelayed(checkifRecieved, reTryTimeGetTrxBlock);
+                }
+                else
+                {
+                    getTrxBlock(id);
+                }
+            }
+        };
+
+        reTryGetTrxBlock.postDelayed(initiateTransactions,0);
+        */
+
+        /*
+        if (Application.isReady)
+        {
             String selectedAccountId = "";
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             for (int i = 0; i < accountDetails.size(); i++) {
@@ -1362,47 +1517,177 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
             int historyIdentifier = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
             String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + historyIdentifier + ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
-            application.webSocketG.send(params);
+            Application.webSocketG.send(params);
+<<<<<<< HEAD
+        }
+        */
+    }
+
+
+//    private void fetchTrxBlockAndUpdateServer(final JSONArray jsonArray)
+//    {
+//        try
+//        {
+//            final Runnable reTry = new Runnable() {
+//                @Override
+//                public void run() {
+//                    fetchTrxBlockAndUpdateServer(jsonArray);
+//                }
+//            };
+//
+//            for (int i = 0; i < 2; i++)
+//            {
+//                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+//                JSONArray opArray = (JSONArray) jsonObject.get("op");
+//                JSONObject operation = (JSONObject) opArray.get(1);
+//
+//                if (operation.get("to").toString().equals(receiverID))
+//                {
+//                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
+//                    IWebService service = sg.getService(IWebService.class);
+//
+//                    if ( jsonObject.has("block_num") && jsonObject.has("trx_in_block") )
+//                    {
+//
+//                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+//                        postingService.enqueue(new Callback<Void>() {
+//                            @Override
+//                            public void onResponse(Response<Void> response) {
+//                                if (response.isSuccess()) {
+//
+//                                } else {
+//                                    reTryGetTrxBlock.postDelayed(reTry, 100);
+//                                    //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Throwable t) {
+//                                reTryGetTrxBlock.postDelayed(reTry, 100);
+//                            }
+//                        });
+//                        break;
+//                    }
+//                    else
+//                    {
+//                        getTrxBlock("160");
+//                    }
+//                }
+//                else
+//                {
+//                    getTrxBlock("160");
+//                }
+//            }
+//        }
+//        catch (Exception e)
+//        {
+//            //getTrxBlock("160");
+//        }
+//
+//    }
+
+
+    private void fetchTrxBlockAndUpdateServer(final JSONArray jsonArray) {
+        try {
+            final Runnable reTry = new Runnable() {
+                @Override
+                public void run() {
+                    fetchTrxBlockAndUpdateServer(jsonArray);
+                }
+            };
+
+            for (int i = 0; i < 2; i++) {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                JSONArray opArray = (JSONArray) jsonObject.get("op");
+                JSONObject operation = (JSONObject) opArray.get(1);
+
+                if (operation.get("to").toString().equals(receiverID)) {
+                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                    IWebService service = sg.getService(IWebService.class);
+
+                    if (jsonObject.has("block_num") && jsonObject.has("trx_in_block")) {
+
+                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+                        postingService.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Response<Void> response) {
+                                if (response.isSuccess()) {
+
+                                } else {
+                                    reTryGetTrxBlock.postDelayed(reTry, 100);
+                                    //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                reTryGetTrxBlock.postDelayed(reTry, 100);
+                            }
+                        });
+                        break;
+                    } else {
+                        getTrxBlock("160");
+                    }
+                } else {
+                    getTrxBlock("160");
+                }
+            }
+        } catch (Exception e) {
+            //getTrxBlock("160");
         }
     }
 
+
+    //********Get trx block****************End
+
     @Override
     public void relativeHistoryCallback(JSONObject msg) {
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
             boolean found = false;
             if (msg.get("id").equals(160)) {
-                for (int i = 0; i < 2; i++) {
-                    if (!found) {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        JSONArray opArray = (JSONArray) jsonObject.get("op");
-                        JSONObject operation = (JSONObject) opArray.get(1);
-                        if (operation.get("to").toString().equals(receiverID)) {
-                            found = true;
-                            ServiceGenerator sg = new ServiceGenerator(callbackURL);
-                            IWebService service = sg.getService(IWebService.class);
-                            final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
-                            postingService.enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Response<Void> response) {
-                                    if (response.isSuccess()) {
+                callInProgressForGettingTrx = true;
+                callReceivedForGettingTrx = false;
+                reTryGetTrxBlock.removeCallbacksAndMessages(null);
 
-                                    } else {
-//                            Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-                                    }
+                fetchTrxBlockAndUpdateServer(jsonArray);
+
+                /*
+                for (int i = 0; i < 2; i++)
+                {
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    JSONArray opArray = (JSONArray) jsonObject.get("op");
+                    JSONObject operation = (JSONObject) opArray.get(1);
+                    if (operation.get("to").toString().equals(receiverID))
+                    {
+                        found = true;
+                        ServiceGenerator sg = new ServiceGenerator(callbackURL);
+                        IWebService service = sg.getService(IWebService.class);
+                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
+                        postingService.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Response<Void> response)
+                            {
+                                if (response.isSuccess())
+                                {
 
                                 }
-
-                                @Override
-                                public void onFailure(Throwable t) {
-//                if (progressDialog.isShowing())
-//                    progressDialog.dismiss();
+                                else
+                                {
+                                //Toast.makeText(context, getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                            break;
-                        }
+
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                            }
+                        });
+                        break;
                     }
                 }
+                */
             }
             if (msg.get("id").equals(161)) {
                 for (int i = 0; i < 2; i++) {
@@ -1411,7 +1696,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     if (opArray.get(0).equals(4)) {
                         JSONObject operation = (JSONObject) opArray.get(1);
                         JSONObject pays = (JSONObject) operation.get("pays");
-                        if (pays.get("asset_id").equals(backupAssets.id) && Double.parseDouble(pays.get("amount").toString()) == Math.round(sellAmount * Math.pow(10, Double.parseDouble(backupAssets.precision)))) {
+                        if (pays.get("asset_id").equals(backupAssets.id)) {
                             found = true;
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -1454,8 +1739,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         sellAmount = Double.parseDouble(etBackupAsset.getText().toString());
         sellAmount = sellAmount + (sellAmount * 0.5 / 100);
-        Double buyAmount = sellAmount * backAssetRate;
-        HashMap hm = new HashMap();
+        Double buyAmount;
+        if (backAssetRate != null) {
+            buyAmount = sellAmount * backAssetRate;
+        } else {
+            buyAmount = sellAmount;
+        }
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("method", "trade");
         hm.put("wifkey", privateKey);
         hm.put("account", spinnerFrom.getSelectedItem().toString());
@@ -1480,6 +1770,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                             }
                         }, 15000);
                     } else {
+                        hideDialog();
                         Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -1631,20 +1922,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //                return listItem;
 //            }
 //        };
+        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
 
-
-
-        contactListDialog = new Dialog(SendScreen.this);
-        contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        contactListDialog.setContentView(R.layout.contacts_list_send_screen);
-        ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
-        listView.setAdapter(new SendScreenListViewActivity(context,this));
-        int size = listView.getAdapter().getCount();
-        if(size>5) {
-            setListViewHeightBasedOnChildren(listView,5);
-        }else setListViewHeightBasedOnChildren(listView,size);
-        //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
-        contactListDialog.show();
+        if (contacts.size() > 0) {
+            contactListDialog = new Dialog(SendScreen.this);
+            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            contactListDialog.setContentView(R.layout.contacts_list_send_screen);
+            ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
+            listView.setAdapter(new SendScreenListViewActivity(context, this));
+            int size = listView.getAdapter().getCount();
+            if (size > 5) {
+                setListViewHeightBasedOnChildren(listView, 5);
+            } else setListViewHeightBasedOnChildren(listView, size);
+            //     listView.setOnItemClickListener(new DropdownOnItemClickListener());
+            contactListDialog.show();
+        } else {
+            Toast.makeText(context, R.string.empty_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //    public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -1659,7 +1953,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            createBitShareAN(false);
 //        }
 //    }
-    public static void setListViewHeightBasedOnChildren(ListView listView,int size) {
+    public static void setListViewHeightBasedOnChildren(ListView listView, int size) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
@@ -1721,18 +2015,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @Override
-    public void isClicked(String s){
+    public void isClicked(String s) {
         etReceiverAccount.setText(s);
-        if(contactListDialog!=null)
+        if (contactListDialog != null)
             contactListDialog.dismiss();
         createBitShareAN(false);
     }
 
-    void setHyperlinkText(TextView textView , final String balances , final EditText editText , int UnderlineStartingIndex, String symbol, final int color){
+    void setHyperlinkText(TextView textView, final String balances, final EditText editText, int UnderlineStartingIndex, String symbol, final int color) {
         String text = textView.getText().toString();
         String available = new String(symbol);
 
-        int index = text.indexOf( available );
+        int index = text.indexOf(available);
 
         SpannableString ss = new SpannableString(text);
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -1740,14 +2034,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             public void onClick(View textView) {
                 editText.setText(balances);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(true);
-                    ds.setColor(color);
+                ds.setColor(color);
             }
         };
-        ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, UnderlineStartingIndex, index - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -1755,12 +2050,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setTextColor(Color.BLACK);
     }
 
-    void setHyperlinkTextDouble(TextView textView, final String balances , final String balances2, final EditText editText , final EditText editText2 ,int UnderlineStartingIndex, String symbol, String symbol2) //shayan
+    void setHyperlinkTextDouble(TextView textView, final String balances, final String balances2, final EditText editText, final EditText editText2, int UnderlineStartingIndex, String symbol, String symbol2) //shayan
     {
         String text = textView.getText().toString();
         String available = new String(symbol2);
 
-        int index = text.indexOf( available );
+        int index = text.indexOf(available);
 
         SpannableString ss = new SpannableString(text);
         ClickableSpan clickableSpan = new ClickableSpan() {
@@ -1769,6 +2064,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 editText.setText(balances);
                 editText2.setText(balances2);
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -1776,11 +2072,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 ds.setColor(Color.BLACK);
             }
         };
-        ss.setSpan(clickableSpan, UnderlineStartingIndex , index-1 , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, UnderlineStartingIndex, index - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setHighlightColor(Color.TRANSPARENT);
         textView.setTextColor(Color.BLACK);
     }
+
+    //@OnClick(R.id.tvFolderPath)
+
 }

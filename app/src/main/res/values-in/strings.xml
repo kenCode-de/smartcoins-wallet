@@ -5,7 +5,8 @@
 <string name="txt_account_name">Nama Akun</string>
 <string name="time_stamp">Cap jam</string>
 <string name="email_pdf">Email PDF</string>
-<string name="account">Akun</string>
+ <string name="bts_will_be_deducted">BTS akan dipotong dari</string>
+ <string name="account">Akun</string>
 <string name="friendly_name">Nama Ramah</string>
 <string name="notes">Catatan</string>
 <string name="note">Catatan</string>
@@ -206,5 +207,19 @@
  <string name="unable_to_trade_bAssets">Tidak bisa perdagangan cadangan asset</string>
  <string name="unable_to_send_amount">Tidak bisa mengirim jumlah tersebut.</string>
  <string name="unable_to_decode_QR">Tidak dapat decode QR code.</string>
+
+    <string name="loyalty_points">loyalitas Poin</string>
+    <string name="str_warning_only_available">PERINGATAN! Hanya %1$s %2$s tersedia</string>
+    <string name="str_balance_available">%1$s %2$s tersedia</string>
+
+ <string name="select_backup_asset">Pilih Backup Asset</string>
+ <string name="sender_account">Akun pengirim</string>
+ <string name="receiver_account">Akun receiver</string>
+ <string name="total">Total</string>
+ <string name="payment_method">Metode pembayaran</string>
+ <string name="thankyou_string">Terima kasih untuk menggunakan Smartcoins Wallet</string>
+ <string name="audio_folder_path">Audio Folder Jalur</string>
+ <string name="please_make_sure_your_bin_file">Pastikan pin Anda benar atau benar file bin dipilih</string>
+ <string name="change">Perubahan...</string>
 
 </resources>

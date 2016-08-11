@@ -7,7 +7,8 @@
 <string name="email_pdf">이메일 PDF</string>
 <string name="account">계정</string>
 <string name="friendly_name">별칭</string>
-<string name="notes">노트</string>
+    <string name="bts_will_be_deducted">BTS가에서 공제됩니다</string>
+    <string name="notes">노트</string>
 <string name="note">노트</string>
     <string name="please_make_sure_your_pin">핀을 확인하십시오</string>
     <string name="please_make_sure_your_pin_file">핀을 확인하시거나 정확한 핀 파일이 선택되어 있는지 확인하십시오</string>
@@ -70,7 +71,7 @@
 <string name="secure_pin">PIN 편집</string>
 <string name="export">보내기</string>
 <string name="show_more">자세히</string>
-<string name="share_text"><p>스마트코인을 보내고 받을수 있는 멋진 스마트코인 지갑을 찾았어.</p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>당장 확인해봐!</string>
+<string name="share_text"><p>스마트코인을 보내고 받을수 있는 멋진 스마트코인 지갑을 찾았어.</p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>당장 확인해봐!</p></string>
 <string name="share_info">스마트코인 지갑을 사용할 친구 1명 이상 초대! 이메일 주소는 누군가에 의해 저장 또는 수집되지 않습니다</string>
 <string name="share_subject">멋진 스마트코인 지갑</string>
 <string name="share_heading">친구와 공유</string>
@@ -136,7 +137,7 @@
 <string name="old_pin">이전 6 자리 PIN</string>
 <string name="pin_created_successfully">PIN 성공적으로 생성</string>
 <string name="edit_pin">PIN 수정</string>
-<string name="txt_edit">저장</string></string>
+<string name="txt_edit">저장</string>
 <string name="create_pin">PIN 생성</string>
 <string name="pin_changed_successfully">PIN 성공적으로 변경</string>
 <string name="incorrect_old_pin">이전 PIN이 맞지 않습니다</string>
@@ -209,4 +210,18 @@
     <string name="unable_to_send_amount">금액을 보낼 수 없습니다.</string>
     <string name="unable_to_decode_QR">QR 코드를 디코딩 할 수 없습니다.</string>
 
+    <string name="loyalty_points">로열티 포인트</string>
+    <string name="str_warning_only_available">경고! 만 %1$s 의 %2$s 이 (가) 사용 가능</string>
+    <string name="str_balance_available">%1$s %2$s 에 사용할 수 의</string>
+
+    <string name="select_backup_asset">백업 자산을 선택</string>
+    <string name="sender_account">보낸 사람 계정</string>
+    <string name="receiver_account">수신기 계정</string>
+    <string name="total">합계</string>
+    <string name="payment_method">지불 방법</string>
+    <string name="thankyou_string">감사합니다 Smartcoins 지갑을 사용하는</string>
+    <string name="audio_folder_path">오디오 폴더 경로</string>
+    <string name="change">변화...</string>
+
+    <string name="please_make_sure_your_bin_file">올바른 또는 올바른 bin 파일이 선택되어 있는지 당신의 핀이되어 있는지 확인하십시오</string>
 </resources>

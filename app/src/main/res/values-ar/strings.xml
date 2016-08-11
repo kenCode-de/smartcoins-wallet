@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="license">رخصة</string>
+    <string name="bts_will_be_deducted">سيتم خصم BTS من</string>
+    <string name="license">رخصة</string>
 <string name="send_capital">إرسال</string>
-<string name="account_create_register_or_import">انشاء حساب جديد أو استيراد حساب/string>
+<string name="account_create_register_or_import">انشاء حساب جديد أو استيراد حساب</string>
 <string name="txt_account_name">أسم الحساب</string>
 <string name="time_stamp">الطابع الزمني</string>
 <string name="email_pdf">البريد الإلكتروني PDF</string>
@@ -10,7 +11,7 @@
 <string name="friendly_name">اسم لطيف</string>
 <string name="notes">الملاحظات</string>
 <string name="note">ملاحظة</string>
-<string name="payment_received">تم الدفع/string>
+<string name="payment_received">تم الدفع</string>
 <string name="import_brainkey">استيراد Brainkey</string>
 <string name="import_backup_old">استيراد النسخة الاحتياطية القديمة</string>
 <string name="choose_backup">اختيار النسخة الاحتياطية</string>
@@ -21,7 +22,7 @@
 <string name="account_label">وسم الحساب</string>
 <string name="loading_msg">يرجى الانتظار حتى يتم تحميل الأرصدة</string>
 <string name="txt_6_digits_pin">أرقام الرمز التعريفي الستة</string>
-<string name="txt_6_digits_pin_confirm">التأكد من أرقام الرمز التعريفي الستة<</string>
+<string name="txt_6_digits_pin_confirm">التأكد من أرقام الرمز التعريفي الستة</string>
 <string name="create">انشاء</string>
 <string name="existing_account">حساب موجود</string>
 <string name="agreement">الاتفاقية</string>
@@ -31,7 +32,7 @@
 <string name="please_enter_old_6_digit_pin">الرجاء ادخال الرمو السري القديم من ستة أرقام</string>
 <string name="please_enter_6_digit_pin">الرجاء ادخال الرمز السري القديم من ستة ارقام</string>
 <string name="please_enter_6_digit_pin_confirm">الرجاء تأكيد الرمز السري من ستة أرقام</string>
-<string name="mismatch_pin">عدم تطابق الرمز السري/string>
+<string name="mismatch_pin">عدم تطابق الرمز السري</string>
 <string name="txt_brain_key">Brainkey</string>
 <string name="txt_brain_key_info">اطبع ال Brainkey و احفظه. أي شخص يحصل عليه يستطيع الوصول الى الأموال داخل المحفظة</string>
 <string name="create_wallet">انشاء محفظة</string>
@@ -59,11 +60,11 @@
 <string name="checkbox_donate_old">التبرع ل Bitshares</string>
 <string name="backup_brainkey">انشاء نسخة احتياطية من Brainkey</string>
 <string name="imported_created_accounts">استيراد حسابات منشئة من الأصل</string>
-<string name="register_new_account">تسجيل حساب جديد<//string>
+<string name="register_new_account">تسجيل حساب جديد</string>
 <string name="secure_pin">تعديل الرمز السري</string>
 <string name="export">تصدير</string>
 <string name="show_more">أظهر المزيد</string>
-<string name="share_text">لقد عثؤت على هذه المحفظة التي تسمح لك بارسال و استقبال smartcoins</tring>
+<string name="share_text">لقد عثؤت على هذه المحفظة التي تسمح لك بارسال و استقبال smartcoins</string>
 <string name="share_info">ادع اصدقائك لتجربة محفظة smartcoin. البريد الالكتروني لا يحفظ لذلك لا داعي من الخوف على الخصوصية</string>
 <string name="share_subject">رهيبة محفظة Smartcoins</string>
 <string name="share_heading">مشاركة مع أصدقاء</string>
@@ -77,7 +78,7 @@
 <string name="add_contact">إضافة</string>
 <string name="edit_contact">تحرير</string>
 <string name="empty_list">قائمة الاتصال فارغة</string>
-<string name="account_name_validate">اسم الحساب صحيح<//string>
+<string name="account_name_validate">اسم الحساب صحيح</string>
 <string name="txt_no_internet_connection">لا يوجد اتصال إنترنت</string>
 <string name="unable_to_create_account_from_brainkey">غير قادر على إنشاء حساب من brainkey</string>
 <string name="importing_your_wallet">استيراد محفظتك ...</string>
@@ -98,7 +99,7 @@
 <string name="amount">كمية</string>
 <string name="message">الرسالة</string>
 <string name="pdf_generated_msg">تم انشاء و حفظ PDF</string>
-<string name="pdf_generated_msg_error">خظأز غير قادر على انشاء ملف PDF</tring>
+<string name="pdf_generated_msg_error">خظأز غير قادر على انشاء ملف PDF</string>
 <string name="raw_transactions">صفقة خام</string>
 <string name="extensions">ملحقات</string>
 <string name="op_in_trx">op_in_trx</string>
@@ -206,5 +207,19 @@
     <string name="unable_to_trade_bAssets">غير قادر على تداول الأصول الاحتياطية</string>
     <string name="unable_to_send_amount">غير قادر على إرسال المبلغ</string>
     <string name="unable_to_decode_QR">غير قادر على فك رمز QR</string>
+
+    <string name="loyalty_points">نقاط الولاء</string>
+    <string name="str_warning_only_available">تحذير! فقط٪ 1 $ s من٪ 2 $ s غير متاح</string>
+    <string name="str_balance_available">٪ 1 $ s من٪ 2 $ الصورة المتاحة</string>
+    <string name="select_backup_asset">تحديد الأصول الاحتياطية</string>
+    <string name="sender_account">حساب المرسل</string>
+    <string name="receiver_account">حساب المتلقي</string>
+    <string name="total">مجموع</string>
+    <string name="payment_method">طريقة الدفع او السداد</string>
+    <string name="thankyou_string">الشكر لاستخدام Smartcoins محفظة</string>
+    <string name="audio_folder_path">الصوت مسار المجلد</string>
+    <string name="please_make_sure_your_bin_file">يرجى التأكد من رقم التعريف الشخصي الخاص بك هو تحديد الصحيح أو الصحيح ملف بن ل</string>
+
+    <string name="change">تغيير...</string>
 
 </resources>

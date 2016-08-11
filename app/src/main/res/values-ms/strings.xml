@@ -9,6 +9,7 @@
 <string name="friendly_name">Nama mesra</string>
 <string name="notes">Nota</string>
 <string name="note">Nota</string>
+    <string name="bts_will_be_deducted">BTS akan ditolak daripada</string>
     <string name="unable_to_import_account_from_bin_file">Tidak dapat mengimport akaun dari fail bin</string>
     <string name="importing_keys_from_bin_file">Mengimport kunci dari fail Bin</string>
     <string name="import_backup">Import sandaran dari fail .bin</string>
@@ -207,5 +208,19 @@
     <string name="unable_to_trade_bAssets">Tidak dapat berdagang dengan aset sandaran</string>
     <string name="unable_to_send_amount">Tidak dapat menghantar jumlah.</string>
     <string name="unable_to_decode_QR">Tidak dapat mensahkan kod QR.</string>
+
+    <string name="loyalty_points">Mata kesetiaan</string>
+    <string name="str_warning_only_available">Amaran! Hanya %1$s %2$s boleh didapati</string>
+    <string name="str_balance_available">%1$s %2$s tersedia</string>
+
+    <string name="select_backup_asset">Pilih Aset Sandaran</string>
+    <string name="sender_account">Akaun Pengguna</string>
+    <string name="receiver_account">Akaun penerima</string>
+    <string name="total">Jumlah</string>
+    <string name="payment_method">Kaedah pembayaran</string>
+    <string name="thankyou_string">Terima kasih kerana sudi menggunakan Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Path Folder</string>
+    <string name="please_make_sure_your_bin_file">Sila pastikan pin anda adalah betul atau betul fail bin dipilih</string>
+    <string name="change">Ubah...</string>
 
 </resources>

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
 <string name="license">Լիցենզիա</string>
 <string name="send_capital">Ուղարկել</string>
-<string name="account_create_register_or_import">ՍՏԵՂԾԵԼ ՀԱՇԻՎ/ ԳՐԱՆՑՎԵԼ ԿԱՄ ՆԵՐՄՈՒԾԵԼ</string>
+    <string name="bts_will_be_deducted">BTS չի հանվում</string>
+    <string name="account_create_register_or_import">ՍՏԵՂԾԵԼ ՀԱՇԻՎ/ ԳՐԱՆՑՎԵԼ ԿԱՄ ՆԵՐՄՈՒԾԵԼ</string>
 <string name="txt_account_name">Օգտագործողի անունը</string>
 <string name="time_stamp">Ժամային գոտին</string>
 <string name="email_pdf">Ուղարկել PDF ֆայլ</string>
 <string name="account">Հաշիվ</string>
 <string name="friendly_name">Անուն</string>
 <string name="notes">Նշումներ</string>
-    <string name="please_make_sure_your_pin">Խնդրում ենք համոզվել, որ Ձեր PIN-ը ճիշտ է</string>
-    <string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ է կամ ճիշտ PIN ֆայլ է ընտրվել</string>
+    <!--<string name="please_make_sure_your_pin">Խնդրում ենք համոզվել, որ Ձեր PIN-ը ճիշտ է</string>-->
+    <!--<string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ է կամ ճիշտ PIN ֆայլ է ընտրվել</string>-->
 <string name="note">Նշում</string>
 <string name="payment_received">Վճարումը ստացվել է</string>
 <string name="import_brainkey">Ներմուծել բանալի BrainKey</string>
@@ -208,5 +210,21 @@
     <string name="unable_to_trade_bAssets">Հնարավոր չէ վաճառել պահուստային ռեսուրսները</string>
     <string name="unable_to_send_amount">Հնարավոր չէ ուղարկել գումարը:</string>
     <string name="unable_to_decode_QR">Հնարավոր չէ ճանաչել QR-ծածկագիրը:</string>
+
+    <string name="loyalty_points">հավատարմություն միավոր</string>
+    <string name="str_warning_only_available">Զգուշացում! ՄԻԱՅՆ %1$s %2$s հասանելի է</string>
+    <string name="str_balance_available">%1$s %2$s հասանելի</string>
+
+    <string name="select_backup_asset">Ընտրել Backup ակտիվի</string>
+    <string name="sender_account">Ուղարկողի Հաշվի</string>
+    <string name="receiver_account">ընդունիչ Հաշվի</string>
+    <string name="total">ընդհանուր</string>
+    <string name="payment_method">Վճարման եղանակ</string>
+    <string name="thankyou_string">Thankyou օգտագործելու համար Smartcoins Wallet</string>
+    <string name="audio_folder_path">Աուդիո Թղթապանակ Path</string>
+
+    <string name="please_make_sure_your_bin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ կամ ճիշտ bin ֆայլ է ընտրվել</string>
+
+    <string name="change">Փոխեք ...</string>
 
 </resources>

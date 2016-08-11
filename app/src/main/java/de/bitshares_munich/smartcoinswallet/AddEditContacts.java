@@ -49,6 +49,7 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/25/16.
@@ -102,6 +103,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     TextView tvWarningEmail;
 
     ContactsDelegate contactsDelegate;
+    webSocketCallHelper myWebSocketHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +117,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         context = this;
         tinyDB = new TinyDB(context);
         application.registerCallback(this);
+
+        myWebSocketHelper = new webSocketCallHelper(this);
 
         contactsDelegate = ContactsFragment.contactsDelegate;
         //loadWebView(39, Helper.hash("", Helper.MD5));
@@ -228,7 +232,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();
         String _email = etEmail.getText().toString();
-        if(!SupportMethods.isEmailValid(_email)){
+        if (!SupportMethods.isEmailValid(_email)) {
             _email = "";
         }
 
@@ -290,7 +294,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             Accountname.setText(text.toString().trim());
         }
 
-        if(!Accountname.getText().toString().equals(accountid)) {
+        if (!Accountname.getText().toString().equals(accountid)) {
             if (Accountname.getText().length() > 0) {
 
                 validReceiver = false;
@@ -305,7 +309,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 myLowerCaseTimer.start();
                 myAccountNameValidationTimer.start();
             }
-        }else{
+        } else {
             warning.setText("");
         }
 
@@ -374,11 +378,11 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     @OnTextChanged(R.id.email)
     void onTextChangedEmail() {
-        String sEmail =  etEmail.getText().toString();
+        String sEmail = etEmail.getText().toString();
 
-        boolean hasSpecial   =  !sEmail.equals(sEmail.toLowerCase());
+        boolean hasSpecial = !sEmail.equals(sEmail.toLowerCase());
 
-        if(hasSpecial) {
+        if (hasSpecial) {
             etEmail.setText("");
             etEmail.append(sEmail.toLowerCase());
         }
@@ -418,17 +422,21 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             //warning.setVisibility(View.GONE);
             if (Accountname.getText().length() > 2) {
                 if (!checkIfAlreadyAdded()) {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
+                    String socketText = getString(R.string.lookup_account_a);
+                    String socketText2 = getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                    myWebSocketHelper.make_websocket_call(socketText, socketText2, webSocketCallHelper.api_identifier.database);
+
+                    /*
+                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()))
+                    {
                         //String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                         String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
                         String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                         Application.webSocketG.send(socketText);
-
                     }
-                }else {
-
-                    warning.setText(Accountname.getText().toString() + " " +getString(R.string.is_already_added));
-
+                    */
+                } else {
+                    warning.setText(Accountname.getText().toString() + " " + getString(R.string.is_already_added));
                     warning.setTextColor(getColorWrapper(context, R.color.red));
                 }
 
@@ -445,7 +453,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
-
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             boolean found = false;
@@ -477,14 +485,21 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         validReceiver = false;
-                        String acName = getString(R.string.account_name_not_exist);
-                        String format = String.format(acName.toString(), Accountname.getText().toString());
+                        try {
+                            String acName = getString(R.string.account_name_not_exist);
+                            String format = String.format(acName.toString(), Accountname.getText().toString());
+                            warning.setText(format);
+                        } catch (Exception e) {
+                            warning.setText("");
+                        }
                         SaveContact.setEnabled(false);
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
-                        warning.setText(format);
+
                         warning.setVisibility(View.VISIBLE);
                         warning.setTextColor(getColorWrapper(context, R.color.red));
+
 
                     }
                 });

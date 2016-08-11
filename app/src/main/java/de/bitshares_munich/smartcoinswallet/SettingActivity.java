@@ -49,6 +49,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import ar.com.daidalos.afiledialog.FileChooserDialog;
+import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -64,6 +66,7 @@ import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
+import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -81,6 +84,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String hide_donations = "hide_donations";
     final String hide_donations_isChanged = "hide_donations_isChanged";
     final String date_time = "date_time";
+    Boolean isFirstTime = true;
     final String register_new_account = "register_new_account";
     //String brainKey = "";
 
@@ -115,6 +119,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Bind(R.id.tvAccounts)
     TextView tvAccounts;
 
+    @Bind(R.id.spFolderPath)
+    Spinner spFolderPath;
 
     @Bind(R.id.backup_ic)
     ImageView backup_ic;
@@ -132,6 +138,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     @Bind(R.id.upgrade_account)
     Button btnUpgrade;
+
 
     ProgressDialog progressDialog;
     Activity activitySettings;
@@ -166,6 +173,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     public void init() {
         setCheckedButtons();
+        initAudioPath();
     }
 
     public void onCheck(View v) {
@@ -258,22 +266,49 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    boolean dontCallCountryChangedOnStart = true;
+
     @SuppressLint("NewApi")
     private void populateDropDowns() {
 
+        spCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                if ( selectedItemView != null )
+                {
+                    if ( dontCallCountryChangedOnStart )
+                    {
+                        dontCallCountryChangedOnStart = false;
+                    }
+                    else {
+                        spCountryItemSelected(position);
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
         ArrayList<String> countries = Helper.getCountriesArray();
-        ArrayAdapter<String> adapterCountry = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, countries);
+        ArrayAdapter<String> adapterCountry = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, countries);
         adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCountry.setAdapter(adapterCountry);
-        final AdapterView.OnItemSelectedListener listener = spCountry.getOnItemSelectedListener();
 
         Boolean isCountry = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_country));
-        if (isCountry) {
-            int indexCountry = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_country));
-            spCountry.setSelection(indexCountry);
-        } else {
-
+        if (isCountry)
+        {
+            String countryCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country));
+            String spinnertext = Helper.getSpinnertextCountry(countryCode);
+            int index = countries.indexOf(spinnertext);
+            spCountry.setSelection(index);
+        }
+        else
+        {
             Locale locale = Locale.GERMANY;
             final int index = countries.indexOf(locale.getDisplayCountry() + " (EUR)");
             if (index > 0) {
@@ -283,7 +318,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     }
                 });
             }
-
         }
 
         ArrayList<LangCode> langArray = new ArrayList<>();
@@ -294,9 +328,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             if (getLangCode.get(i).equalsIgnoreCase("zh-rTW")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rTW";
-                langCode.lang = "Chinese"+ "; " + "zh-TW " +  "(繁體中文)";
+                langCode.lang = "Chinese"+ "; " + "zh-rTW" +  " (繁體中文)";
                 langArray.add(langCode);
-            } else {
+            }
+            else if(getLangCode.get(i).equalsIgnoreCase("zh-rCN") || getLangCode.get(i).equalsIgnoreCase("zh"))
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "zh-rCN";
+                langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
+                langArray.add(langCode);
+            }
+            else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
                 langCode.lang = locale.getDisplayName() + "; " + locale.toString() + " ("+locale.getDisplayLanguage(locale)+")" ;
@@ -311,14 +353,23 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         //  Helper.setLocale(langCode, getResources());
-        if (langCode != "") {
+        if (langCode != "")
+        {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
-                if (lc.code.equalsIgnoreCase(langCode)) {
+
+                if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
+                {
+                    spLanguage.setSelection(i);
+                }
+                else if (lc.code.equalsIgnoreCase(langCode))
+                {
                     spLanguage.setSelection(i);
                 }
             }
-        } else {
+        }
+        else
+        {
             spLanguage.setSelection(13);
             Helper.setLocale("de", getResources());
         }
@@ -405,20 +456,23 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 arrayAccountAssets.add(accountAssets.get(j).symbol);
             }
 
+            AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
+            arrayAccountAssets = assetsSymbols.updatedList(arrayAccountAssets);
+
+            arrayAccountAssets.add(0,"-------");
+
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spBackupAsset.setAdapter(adapterAccountAssets);
 
-            //Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-            if (posBackupAssets!=-9) {
-                //int indexBackupAsset = Helper.fetchIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset));
-                spBackupAsset.setSelection(posBackupAssets);
-            } else {
-                int index = arrayAccountAssets.indexOf("BTS");
-                if (index >= 0) {
-                    spBackupAsset.setSelection(index);
-                } else {
-                    spBackupAsset.setSelection(0);
+            spBackupAsset.setSelection(0);
+
+            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
+            if(isBackupAsset) {
+                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
+                    if (posBackupAssets != -9) {
+                        spBackupAsset.setSelection(posBackupAssets);
+                    }
                 }
             }
         }
@@ -529,12 +583,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    private void spCountryItemSelected(int position)
+    {
+        designMethod();
+        String countryCode = Helper.getCountryCode(spCountry.getSelectedItem().toString());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
+        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_country), countryCode);
+    }
+
+    /*
     @OnItemSelected(R.id.spCountry)
     void onItemSelectedCountry(int position) {
-        designMethod();
-        Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
-        Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_country), position);
+        //spCountryItemSelected(position);
     }
+    */
 
     @OnItemSelected(R.id.spTimeZones)
     void onItemSelectedTimeZone(int position) {
@@ -551,20 +613,48 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+//    @OnNothe
+//    ArrayList<String> arrayAccountAssets = new ArrayList<>();
+//    for (int j = 0; j < 10 ; j++) {
+//        arrayAccountAssets.add(String.valueOf(j));
+//    }
+//    ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
+//    adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//    spBackupAsset.setAdapter(adapterAccountAssets);
+
+
+
+
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
-        designMethod();
-        if (position >= 0) {
-
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), spBackupAsset.getSelectedItem().toString());
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if(accountDetails.get(i).isSelected)
-                {
-                    accountDetails.get(i).posBackupAsset=position;
+        if(!isFirstTime) {
+            designMethod();
+            if (position > 0) {
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), true);
+                String selected = spBackupAsset.getSelectedItem().toString();
+                selected = selected.replace("bit", "");
+                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), selected);
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).posBackupAsset = position;
+                    }
                 }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+                // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
             }
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-           // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
+        else  if (position == 0)
+            {
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), false);
+                Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), "");
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).posBackupAsset = -9;
+                    }
+                }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            }
+        }else {
+            isFirstTime=false;
         }
     }
 
@@ -722,7 +812,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 //Check Balance
                 String ltmAmount = Helper.fetchStringSharePref(getApplicationContext(), "ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
+                   // alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
+                    alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + spAccounts.getSelectedItem().toString() + getString(R.string.account).toLowerCase()+".");
+
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_no));
                 } else {
@@ -1156,4 +1248,144 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void backupComplete(boolean success) {
         Log.d("Backup Complete","done");
     }
+
+
+
+    FileChooserDialog dialog;
+    ArrayList<String> list = new ArrayList<>();
+    String itemSelected;
+    String selected;
+
+
+    private void chooseAudioFile() {
+        if (dialog == null) {
+            dialog = new FileChooserDialog(this);
+            dialog.addListener(this.onFileSelectedListener);
+            dialog.setFolderMode(false);
+            dialog.setCanCreateFiles(false);
+            dialog.setShowCancelButton(true);
+            dialog.setShowOnlySelectable(false);
+            dialog.setFilter(".*wav|.*mp3");
+
+
+            // Activate the confirmation dialogs.
+            dialog.setShowConfirmation(true, true);
+            // Define the labels.
+            FileChooserLabels labels = new FileChooserLabels();
+            labels.createFileDialogAcceptButton = getApplicationContext().getString(R.string.ok);
+            labels.createFileDialogCancelButton = getApplicationContext().getString(R.string.cancel);
+            labels.labelSelectButton = getApplicationContext().getString(R.string.select);
+            labels.messageConfirmSelection = getApplicationContext().getString(R.string.are_you_sure);
+            labels.labelConfirmYesButton = getApplicationContext().getString(R.string.txt_yes);
+            labels.labelConfirmNoButton = getApplicationContext().getString(R.string.txt_no);
+            labels.labelCancelButton = getApplicationContext().getString(R.string.cancel);
+            dialog.setLabels(labels);
+        }
+
+        this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+                if(itemSelected.contains(getString(R.string.change))){
+                    initAudioPath();
+                }
+            }
+        });
+
+        // Show the dialog.
+        dialog.show();
+
+    }
+
+    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
+        public void onFileSelected(Dialog source, File file) {
+            source.hide();
+            onSuccess(file.getAbsolutePath(),file.getName());
+         //   tvFolderPath.setText(file.getAbsolutePath());
+        }
+
+        public void onFileSelected(Dialog source, File folder, String name) {
+            source.hide();
+            //   Toast.makeText(getApplicationContext(), name +"::::1",Toast.LENGTH_LONG).show();
+        }
+    };
+
+    void onSuccess(String filepath,String fileName){
+        dialog = null;
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        audioFilePath.storeAudioFilePath(filepath);
+        audioFilePath.storeAudioFileName(fileName);
+        audioFilePath.storeAudioEnabled(false);
+        initAudioPath();
+    }
+//    @OnClick(R.id.llFolderPath)
+//    public void llFolderSelect(View view){
+//        chooseAudioFile();
+//    }
+//    @OnClick(R.id.tvFolderPath)
+//    public void tvFolderSelect(View view){
+//        chooseAudioFile();
+//    }
+    void setAudioFilePath(){
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        selected = audioFilePath.userAudioFileNameIfExist();
+     //   tvFolderPath.setText(path);
+    }
+
+    Boolean checkAudioStatus(){
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        return audioFilePath.fetchAudioEnabled();
+    }
+
+//    @OnClick(R.id.spFolderPath)
+//    public void spFolderSelect(View view){
+//        chooseAudioFile();
+//    }
+
+    void initAudioPath(){
+
+        setAudioFilePath();
+
+        list.clear();
+
+        if(checkAudioStatus()) {
+            list.add(0, "-------");
+            list.add(1, selected);
+        }else {
+            list.add(0, selected);
+            list.add(1, "-------");
+        }
+
+
+        list.add(2,getString(R.string.change));
+
+
+        ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
+        adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spFolderPath.setAdapter(adapterAccountAssets);
+
+    }
+    Boolean startup = false;
+
+    @OnItemSelected(R.id.spFolderPath)
+    public void onItemSelectedAudio()
+    {
+        if(startup) {
+            AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+            String selectedString = spFolderPath.getSelectedItem().toString();
+            itemSelected = selectedString;
+            if (selectedString.contains(getString(R.string.change))) {
+                chooseAudioFile();
+            } else if (selectedString.equals("-------")) {
+                audioFilePath.storeAudioEnabled(true);
+            } else {
+                audioFilePath.storeAudioEnabled(false);
+            }
+        }else{
+            startup = true;
+        }
+
+    }
+
+
 }

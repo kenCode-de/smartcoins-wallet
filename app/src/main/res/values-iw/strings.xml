@@ -42,7 +42,7 @@
 <string name="txt_brain_key">מפתח-מוח</string>
 <string name="txt_brain_key_info">הדפס או כתוב את מפתח-המוח. למי שיש גישה למפתח יש גישה לכספים בארנק.</string>
 <string name="create_wallet">צור ארנק</string>
-<string name="cancel">לְבַטֵל</string>
+<!--<string name="cancel">לְבַטֵל</string>-->
 <string name="save">לשמור</string>
 <string name="next">הַבָּא</string>
 <string name="please_enter_brainkey"> נא להזין מפתח-מוח</string>
@@ -197,7 +197,7 @@
     <string name="unable_to_save_bin_file">אין אפשרות לשמור את קובץ bin</string>
 
     <string name="txt_alertmsg_fr">האם אתה בטוח שברצונך להסיר את</string>
-    <string name="txt_alertmsg_la">?החשבון מארנק זה</string>
+    <!--<string name="txt_alertmsg_la">?החשבון מארנק זה</string>-->
     <string name="bugs_or_errors">באגים או שגיאות?</string>
     <string name="please_let_us_know">אנא ספר לנו:</string>
     <string name="try_again">נסה שוב אחרי 5 דקות</string>
@@ -208,5 +208,19 @@
     <string name="unable_to_trade_bAssets">לא ניתן לסחור בנכסי גיבוי</string>
     <string name="unable_to_send_amount">לא ניתן לשלוח את הסכום.</string>
     <string name="unable_to_decode_QR">לא ניתן לפענח את קוד ה- QR.</string>
+
+
+    <string name="loyalty_points">נקודות נאמנות</string>
+    <string name="str_warning_only_available">אַזהָרָה! רק %1$s %2$s זמין</string>
+    <string name="str_balance_available">%1$s %2$s זמין</string>
+
+    <string name="select_backup_asset">בחר נכסי גיבוי</string>
+    <string name="sender_account">חשבון השולח</string>
+    <string name="receiver_account">חשבון מקלט</string>
+    <string name="total">סה"כ</string>
+    <string name="payment_method">אמצעי תשלום</string>
+    <string name="thankyou_string">תודה על השימוש בארנק Smartcoins</string>
+    <string name="audio_folder_path">נתיב תיקיית אודיו</string>
+
 
 </resources>

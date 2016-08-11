@@ -8,7 +8,8 @@
 <string name="account">अकाउंट </string>
 <string name="friendly_name">सुखद  नाम</string>
 <string name="notes">नोट्स</string>
-<string name="note">नोट</string>
+    <string name="bts_will_be_deducted">बीटीएस से काट लिया जाएगा</string>
+    <string name="note">नोट</string>
 <string name="payment_received">पपेमेन्ट मिल गई </string>
 <string name="import_brainkey">BrainKey इम्पोर्ट करें </string>
 <string name="import_backup_old">पपुराने .bin बैकअप को इम्पोर्ट करो </string>
@@ -77,11 +78,12 @@
 <string name="share_btn_text">ईमेल खोलिए </string>
     <string name="checkbox_donate">यहाँ पर दो BTS, समर्थन डेवलपर्स को  , दान कीजिए </string>
 <string name="action_settings">सेटिंग्स</string>
+
 <string name="txt_validating_account">अकाउंट की पुष्टि...</string>
 <string name="validating_account">अकाउंट की पुष्टि...</string>
 <string name="account_name_should_be_longer">अकाउंट नाम लम्बा होना चाहिए</string>
 <string name="account_name_already_exist">अकाउंट नाम %s पहले से ही मौजूद</string>
-<string name="account_name_not_exist">अकाउंट  नाम% %s मौजूद नहीं है</string>
+<string name="account_name_not_exist">अकाउंट  नाम %s मौजूद नहीं है</string>
 <string name="add_contact">यहाँ लिखें</string>
 <string name="edit_contact">संपादित करें</string>
 <string name="empty_list">संपर्क सूची खाली है</string>
@@ -208,5 +210,21 @@
     <string name="unable_to_trade_bAssets">बैकअप एसेट्स  का व्यापार करना असंभव</string>
     <string name="unable_to_send_amount">यह अमाउंट भेज नही सकते </string>
     <string name="unable_to_decode_QR">क्यूआर कोड को डिकोड नहीं कर सकते </string>
+
+
+    <string name="loyalty_points">वफादारी अंक</string>
+    <string name="str_warning_only_available">चेतावनी! केवल %1$s %2$s उपलब्ध है</string>
+    <string name="str_balance_available">%1$s %2$s उपलब्ध</string>
+
+    <string name="select_backup_asset">बैकअप एसेट का चयन करें</string>
+    <string name="sender_account">प्रेषक अकाउंट</string>
+    <string name="receiver_account">रिसीवर अकाउंट</string>
+    <string name="total">कुल</string>
+    <string name="payment_method">भुगतान का तरीका</string>
+    <string name="thankyou_string">ठनक Smartcoins बटुआ का उपयोग करने के लिए</string>
+    <string name="audio_folder_path">ऑडियो फ़ोल्डर पथ</string>
+
+    <string name="please_make_sure_your_bin_file">सुनिश्चित करें कि आपके पिन है सही या सही बिन फ़ाइल चयनित है कृपया</string>
+    <string name="change">परिवर्तन...</string>
 
 </resources>

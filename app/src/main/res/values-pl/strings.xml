@@ -8,7 +8,8 @@
 <string name="account">Konto</string>
 <string name="friendly_name">Imię</string>
 <string name="notes">Uwagi</string>
-<string name="note">Opis</string>
+    <string name="bts_will_be_deducted">BTS zostanie odjęta od</string>
+    <string name="note">Opis</string>
 <string name="payment_received">Otrzymano płatność</string>
 <string name="import_brainkey">Importuj za pomocą BrainKey</string>
 <string name="import_backup_old">Importuj z pliku .bin</string>
@@ -207,5 +208,20 @@
     <string name="unable_to_trade_bAssets">Nie można handlować z zasobów zapasowych</string>
     <string name="unable_to_send_amount">Nie można wysłać tej kwoty.</string>
     <string name="unable_to_decode_QR">Nie udało się rozszyfrować kodu QR.</string>
+
+    <string name="loyalty_points">Punkty lojalnościowe</string>
+    <string name="str_warning_only_available">Ostrzeżenie! Tylk %1$s %2$s jest dostępna</string>
+    <string name="str_balance_available">%1$s %2$s dostępne</string>
+
+    <string name="select_backup_asset">Wybierz zasób kopii zapasowej</string>
+    <string name="sender_account">konto nadawcy</string>
+    <string name="receiver_account">konto Receiver</string>
+    <string name="total">Całkowity</string>
+    <string name="payment_method">Metoda płatności</string>
+    <string name="thankyou_string">Dziękuje za korzystanie Smartcoins Portfel</string>
+    <string name="audio_folder_path">Ścieżka audio Folder</string>
+    <string name="please_make_sure_your_bin_file">Należy upewnić się, że trzpień jest poprawne, czy wybrano właściwy plik bin</string>
+    <string name="change">Zmiana...</string>
+
 
 </resources>

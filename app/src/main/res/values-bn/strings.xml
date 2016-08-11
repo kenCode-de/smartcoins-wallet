@@ -74,8 +74,8 @@
 <string name="txt_validating_account">অ্যাকাউন্ট যাচাই করা হচ্ছে ...</string>
 <string name="validating_account">অ্যাকাউন্ট যাচাই করা হচ্ছে ...</string>
 <string name="account_name_should_be_longer">অ্যাকাউন্ট নাম আর হওয়া উচিত</string>
-<string name="account_name_already_exist">একাউন্ট নাম% %s ইতিমধ্যেই বিদ্যমান</string>
-<string name="account_name_not_exist">একাউন্ট নাম% %s এর অস্তিত্ব নেই</string>
+<string name="account_name_already_exist">একাউন্ট নাম %s ইতিমধ্যেই বিদ্যমান</string>
+<string name="account_name_not_exist">একাউন্ট নাম %s এর অস্তিত্ব নেই</string>
 <string name="add_contact">যোগ</string>
 <string name="edit_contact">সম্পাদন করা</string>
 <string name="empty_list">যোগাযোগ তালিকা খালি</string>
@@ -147,6 +147,7 @@
 <string name="str_trade_not_available">ট্রেড উপলব্ধ নয়</string>
     <string name="preferred_lang">পছন্দের ভাষা</string>
     <string name="got_it">বুঝেছি</string>
+    <string name="bts_will_be_deducted">বিটিএস থেকে কেটে নেওয়া হবে</string>
     <string name="upgrade_to_ltm">LTM এ আপগ্রেড করুন</string>
     <string formatted="false" name="help_message">ফি 80% Cashback পান! আজীবন সদস্য (LTM) প্রতিটি লেনদেনের ফি তারা পরিশোধ উপর 80% cashback পেতে, এবং ব্যবহারকারীদের তারা সাথে নিবন্ধন অথবা নেটওয়ার্কে পড়ুন থেকে রেফারেল আয় যোগ্যতা অর্জন. একটি লাইফটাইম সদস্যপদ 20000 বিটিএস অধীনে এখন হয়!</string>
     <string name="txt_yes">হাঁ</string>
@@ -209,4 +210,20 @@
     <string name="unable_to_send_amount">পরিমাণ পাঠাতে অক্ষম.</string>
     <string name="unable_to_decode_QR">QR কোড ডিকোড করতে অক্ষম.</string>
 
+    <string name="loyalty_points">আনুগত্য পয়েন্ট</string>
+    <string name="str_warning_only_available">সতর্কবাণী! শুধু %1$s এর %2$s এর উপলব্ধ</string>
+    <string name="str_balance_available">%1$s এর %2$s এর প্রাপ্তিসাধ্য</string>
+
+    <string name="select_backup_asset">ব্যাকআপ অ্যাসেট নির্বাচন</string>
+    <string name="sender_account">প্রেরকের অ্যাকাউন্ট</string>
+    <string name="receiver_account">রিসিভার অ্যাকাউন্ট</string>
+    <string name="total">মোট</string>
+    <string name="payment_method">মূল্যপরিশোধ পদ্ধতি</string>
+    <string name="thankyou_string">কুইক রেন্টাল Smartcoins ওয়ালেট ব্যবহার করার জন্য</string>
+    <string name="audio_folder_path">অডিও ফোল্ডার পাথ</string>
+
+    <string name="please_make_sure_your_bin_file">নিশ্চিত করুন যে আপনার পিন হয় সঠিক অথবা সঠিক বিন ফাইল নির্বাচন করা হয় দয়া করে</string>
+
+
+    <string name="change">পরিবর্তন...</string>
 </resources>

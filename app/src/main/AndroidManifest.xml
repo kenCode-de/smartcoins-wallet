@@ -82,6 +82,12 @@
             android:name=".eReceiptActivity"
             android:label="@string/e_receipt_activity_name"
             android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".eReceipt"
+            android:label="@string/e_receipt_activity_name"
+            android:screenOrientation="portrait"
             >
 
     </activity>
@@ -114,11 +120,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <service android:name=".MediaService" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="cb99d3535a61a111368ef6f50de88ca2774625b1"
-            />
 
     </application>
 

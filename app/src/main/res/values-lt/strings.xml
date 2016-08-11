@@ -8,7 +8,8 @@
 <string name="account">sąskaita</string>
 <string name="friendly_name">draugiškas vardas</string>
 <string name="notes">Pastabos</string>
-<string name="note">pastaba</string>
+    <string name="bts_will_be_deducted">BTS bus išskaičiuota iš</string>
+    <string name="note">pastaba</string>
 <string name="payment_received">Apmokėjimas gautas</string>
 <string name="import_brainkey">Importas iš BrainKey</string>
 <string name="import_backup_old">importas Atsarginė</string>
@@ -207,5 +208,20 @@
     <string name="unable_to_trade_bAssets">Nepavyko prekybos atsarginė turtas</string>
     <string name="unable_to_send_amount">Nepavyko išsiųsti sumą.</string>
     <string name="unable_to_decode_QR">Nepavyko iššifruoti QR kodą.</string>
+
+    <string name="loyalty_points">Lojalumo Taškai</string>
+    <string name="str_warning_only_available">Dėmesio! Vos %1$s %2$s yra prieinama</string>
+    <string name="str_balance_available">%1$s %2$s galima</string>
+
+    <string name="select_backup_asset">Pasirinkite atsarginės turtą</string>
+    <string name="sender_account">siuntėjas paskyra</string>
+    <string name="receiver_account">imtuvas paskyra</string>
+    <string name="total">visas</string>
+    <string name="payment_method">Mokėjimo būdas</string>
+    <string name="thankyou_string">Ačiū už naudojimąsi Smartcoins Piniginė</string>
+    <string name="audio_folder_path">Garso katal</string>
+    <string name="please_make_sure_your_bin_file">Prašome įsitikinkite, kad jūsų PIN teisingas, ar teisingai bin failas yra pasirinktas</string>
+
+    <string name="change">Keisti ...</string>
 
 </resources>

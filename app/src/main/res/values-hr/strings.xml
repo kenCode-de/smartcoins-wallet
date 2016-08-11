@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string name="license">Licenca</string>
+<!--<resources><string name="license">licenca</string>-->
+    <!--<string name="bts_will_be_deducted">BTS će se odbiti od</string>-->
+    <!--<string name="send_capital">Poslati</string>-->
+<!--<string name="account_create_register_or_import">Izradi račun / Registracija ili uvoz</string>-->
+<resources>
+    <string name="bts_will_be_deducted">BTS će se odbiti od</string>
+    <string name="license">Licenca</string>
 <string name="send_capital">Pošalji</string>
 <string name="account_create_register_or_import">IZRADI RAČUN/ REGISTRACIJA ili UVOZ</string>
 <string name="txt_account_name">Korisničko ime</string>
@@ -108,7 +114,7 @@
 <string name="message">Poruka</string>
 <string name="pdf_generated_msg">PDF generiran i spremljen:</string>
 <string name="pdf_generated_msg_error">Nije moguće generirati pdf. Pokušajte ponovno. Pogreška:</string>
-<string name="raw_transactions">'Raw' transakcija:</string>
+<string name="raw_transactions">\'Raw\' transakcija:</string>
 <string name="extensions">Proširenja</string>
 <string name="op_in_trx">op_in_trx</string>
 <string name="virtual_op">virtual_op</string>
@@ -209,5 +215,20 @@
     <string name="unable_to_trade_bAssets">Ne može se trgovati Backup imovine</string>
     <string name="unable_to_send_amount">Ne možemo poslati iznos.</string>
     <string name="unable_to_decode_QR">Nije moguće dekodirati QR kod.</string>
+
+
+    <string name="loyalty_points">loyalty Points</string>
+    <string name="str_warning_only_available">Upozorenje! Samo %1$s %2$s je dostupan</string>
+    <string name="str_balance_available">%1$s %2$s dostupni</string>
+
+    <string name="select_backup_asset">Odaberite Backup Imovina</string>
+    <string name="sender_account">pošiljatelj račun</string>
+    <string name="receiver_account">Primatelj računa</string>
+    <string name="total">ukupno</string>
+    <string name="payment_method">Metoda plaćanja</string>
+    <string name="thankyou_string">Hvala što koristite Smartcoins novčanik</string>
+    <string name="audio_folder_path">Audio Put do mape</string>
+    <string name="please_make_sure_your_bin_file">Molimo provjerite je li igla je ispravan ili ispraviti bin datoteke je odabran</string>
+    <string name="change">Promijeniti...</string>
 
 </resources>

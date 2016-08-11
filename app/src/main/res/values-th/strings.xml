@@ -13,6 +13,7 @@
 <string name="note">บันทึก</string>
 <string name="payment_received">การชำระเงินที่ได้รับ</string>
 <string name="import_brainkey">นำเข้าจาก BrainKey</string>
+    <string name="bts_will_be_deducted">บีทีเอสจะถูกหักจาก</string>
 <string name="import_backup_old">นำเข้าการสำรองข้อมูล</string>
 <string name="choose_backup">เลือกการสำรองข้อมูล</string>
 <string name="choose_file">เลือกไฟล์</string>
@@ -209,5 +210,18 @@
     <string name="unable_to_trade_bAssets">ไม่สามารถที่จะซื้อขายสินทรัพย์สำรอง</string>
     <string name="unable_to_send_amount">ไม่สามารถส่งยอดเงิน</string>
     <string name="unable_to_decode_QR">ไม่สามารถถอดรหัสรหัส QR</string>
+
+    <string name="loyalty_points">จุดความจงรักภักดี</string>
+    <string name="str_warning_only_available">คำเตือน! เพียง %1$s %2$s ใช้ได้</string>
+    <string name="str_balance_available">%1$s %2$s ใช้ได้</string>
+
+    <string name="select_backup_asset">เลือกสินทรัพย์สำรอง</string>
+    <string name="sender_account">บัญชีผู้ส่ง</string>
+    <string name="receiver_account">บัญชีผู้รับ</string>
+    <string name="total">ทั้งหมด</string>
+    <string name="payment_method">วิธีการชำระเงิน</string>
+    <string name="thankyou_string">ขอบคุณสำหรับการใช้ Smartcoins Wallet</string>
+    <string name="audio_folder_path">เส้นทางโฟลเดอร์เสียง</string>
+    <string name="please_make_sure_your_bin_file">กรุณาตรวจสอบให้แน่ใจว่าขาของคุณถูกต้องหรือแก้ไขไฟล์ bin จะถูกเลือก</string>
 
 </resources>

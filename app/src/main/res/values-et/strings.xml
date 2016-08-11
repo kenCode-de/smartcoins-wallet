@@ -10,7 +10,9 @@
 <string name="notes">Märkused</string>
 <string name="note">Märge</string>
 <string name="payment_received">Makse vastu võetud</string>
-<string name="import_brainkey">Impordi BrainKey</string>
+    <string name="bts_will_be_deducted">BTS võetakse maha</string>
+
+    <string name="import_brainkey">Impordi BrainKey</string>
 <string name="import_backup_old">Impordi tagavara .bin failist</string>
 <string name="choose_backup">Vali tagavara</string>
 <string name="choose_file">Vali fail</string>
@@ -37,7 +39,7 @@
 <string name="please_enter_old_6_digit_pin">Palun sisesta vana 6-kohaline PIN</string>
 <string name="please_enter_6_digit_pin">Palun sisesta 6-kohaline PIN</string>
 <string name="please_enter_6_digit_pin_confirm">Palun sisesta 6-kohaline PIN kinnituseks</string>
-<string name="mismatch_pin">PIN'id ei ühti</string>
+<string name="mismatch_pin">PIN\'id ei ühti</string>
 <string name="txt_brain_key">Brainkey</string>
 <string name="txt_brain_key_info">Trüki võti välja või pane kirja. Igaüks, kellel on juurdepääs taastevõtmele saavad ka juurdepääsu selle rahakoti vahenditele.</string>
 <string name="create_wallet">Loo rahakott</string>
@@ -153,7 +155,7 @@
 <string name="str_trade_not_available">Kaubandus pole saadaval</string>
     <string name="preferred_lang">Eelistatud keel</string>
     <string name="got_it">Sain aru</string>
-    <string name="upgrade_to_ltm">Uuenda LTM'iks</string>
+    <string name="upgrade_to_ltm">Uuenda LTM\'iks</string>
     <string name="txt_back">Tagasi</string>
     <string name="please_pay">Palun maksta</string>
     <string name="transfer_funds">Rahaülekandetoiming</string>
@@ -180,12 +182,12 @@
     <string name="donation">Annetus</string>
     <string name="insufficient_funds">Pole piisavalt raha</string>
     <string name="txt_wallet_atleast_one_account">Vabandame, kuid teie rahakott peab sisaldama vähemalt 1 kontot </string>
-    <string name="updating_transaction_id">Uuendame tehingu ID'd Palun oodake</string>
+    <string name="updating_transaction_id">Uuendame tehingu ID\'d Palun oodake</string>
     <string name="email_name">Et kuvada kontakti fotot, sisestage oma Gravatar e-mail siia</string>
     <string name="upgrade_success">Uuendus edukas!</string>
     <string name="copied_to_clipboard">Kopeeritud lõikelauda</string>
 
-    <string name="unable_to_load_brainkey">Ei saa laadida Brainkey'd</string>
+    <string name="unable_to_load_brainkey">Ei saa laadida Brainkey\'d</string>
     <string name="unable_to_generate_bin_format_for_key">Ei saa luua bin formaati võtmest</string>
     <string name="creating_backup_file">Varukoopiafaili loomine</string>
     <string name="fetching_key">Võtme tõmbamine</string>
@@ -208,4 +210,18 @@
     <string name="unable_to_send_amount">Ei saa saata summat.</string>
     <string name="unable_to_decode_QR">Ei õnnestu dekodeerida QR-koodi.</string>
 
+    <string name="loyalty_points">lojaalsuspunkte</string>
+    <string name="str_warning_only_available">Hoiatus! Ainult %1$s %2$s on olemas</string>
+    <string name="str_balance_available">%1$s %2$s saadaval</string>
+
+    <string name="select_backup_asset">Valige Backup Asset</string>
+    <string name="sender_account">Saatja konto</string>
+    <string name="receiver_account">vastuvõtja konto</string>
+    <string name="total">summaarne</string>
+    <string name="payment_method">Makseviis</string>
+    <string name="thankyou_string">ThankYou kasutamise Smartcoins Rahakott</string>
+    <string name="audio_folder_path">Audio kausta tee</string>
+    <string name="please_make_sure_your_bin_file">Palun veenduge, et Teie pin on õige või korrektne bin fail on valitud</string>
+
+    <string name="change">Muuda ...</string>
 </resources>

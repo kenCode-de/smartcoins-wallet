@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
+//repositories {
+//    maven { url 'https://maven.fabric.io/public' }
+//}
 
 android {
     compileSdkVersion 23
@@ -12,8 +12,11 @@ android {
         applicationId "de.bitsharesmunich.smartcoinswallet"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 185
-        versionName '1.0.3'
+
+
+        versionCode 186
+
+        versionName '1.0.5'
     }
     buildTypes {
         release {
@@ -26,6 +29,12 @@ android {
     dexOptions {
         jumboMode true
     }
+
+    lintOptions {
+        disable 'MissingTranslation','ExtraTranslation'
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -33,12 +42,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile supportLibraryDependency
-
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
-
     compile 'com.android.support:design:23.3.0'
     compile 'com.koushikdutta.async:androidasync:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
@@ -48,9 +55,6 @@ dependencies {
     compile 'com.itextpdf:itextpdf:5.5.9'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.github.premnirmal:TextCounter:1.1.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
-        transitive = true;
-    }
     compile project(':zxing')
     compile project(':aFileDialog')
 }

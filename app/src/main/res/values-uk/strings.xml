@@ -2,16 +2,17 @@
 <resources><string name="license">ліцензія</string>
 <string name="send_capital">послати</string>
 <string name="account_create_register_or_import">РАХУНОК створитиакаунт / реєстрація АБО ІМПОРТ</string>
-<string name="txt_account_name">Ім'я акаунту</string>
+<string name="txt_account_name">Ім\'я акаунту</string>
 <string name="time_stamp">відмітка часу</string>
 <string name="email_pdf">E-mail PDF</string>
 <string name="account">рахунки</string>
-<string name="friendly_name">ясна ім'я</string>
+<string name="friendly_name">ясна ім\'я</string>
 <string name="notes">примітки</string>
 <string name="note">Примітка</string>
 <string name="payment_received">Отримана компенсація</string>
 <string name="import_brainkey">Імпорт з BrainKey</string>
 <string name="import_backup_old">Імпорт резервного копіювання</string>
+    <string name="bts_will_be_deducted">БТС буде вирахувана з</string>
 <string name="choose_backup">Виберіть Резервне копіювання</string>
 <string name="choose_file">Виберіть файл</string>
 <string name="no_file_chosen">Немає обраного файлу </string>
@@ -78,13 +79,13 @@
 <string name="action_settings">настройки</string>
 <string name="txt_validating_account">Перевірка облікового запису ...</string>
 <string name="validating_account">Перевірка облікового запису ...</string>
-<string name="account_name_should_be_longer">Ім'я облікового запису має бути більше</string>
-<string name="account_name_already_exist">Ім'я облікового запису вже існує</string>
-<string name="account_name_not_exist">Ім'я облікового запису %s не існує</string>
+<string name="account_name_should_be_longer">Ім\'я облікового запису має бути більше</string>
+<string name="account_name_already_exist">Ім\'я облікового запису вже існує</string>
+<string name="account_name_not_exist">Ім\'я облікового запису %s не існує</string>
 <string name="add_contact">додати</string>
 <string name="edit_contact">редагувати</string>
 <string name="empty_list">Список контактів пустий</string>
-<string name="account_name_validate">Ім'я облікового запису дійсна</string>
+<string name="account_name_validate">Ім\'я облікового запису дійсна</string>
 <string name="txt_no_internet_connection">Немає підключення до Інтернету</string>
 <string name="unable_to_create_account_from_brainkey">Неможливо створити обліковий запис з brainkey</string>
 <string name="importing_your_wallet">Імпортуй свій гаманець ...</string>
@@ -159,7 +160,7 @@
     <string name="txt_no">Нi</string>
     <string name="txt_confirmation">підтвердження</string>
     <string name="txt_confirmation_msg">Ви впевнені?</string>
-    <string name="txt_folder_name">Smartcoins ім'я папки </string>
+    <string name="txt_folder_name">Smartcoins ім\'я папки </string>
     <string name="txt_folder_created">папка створена</string>
     <string name="upgrade_failed">Помилка оновлення</string>
     <string name="upgrading">Оновлення ...</string>
@@ -208,5 +209,18 @@
     <string name="unable_to_trade_bAssets">Неможливо торгувати резервні ресурси</string>
     <string name="unable_to_send_amount">Неможливо відправити Сума.</string>
     <string name="unable_to_decode_QR">Неможливо декодувати QR-код.</string>
+
+    <string name="loyalty_points">окуляри лояльності</string>
+    <string name="str_warning_only_available">УВАГА! Тільки %1$s %2$s доступний</string>
+    <string name="str_balance_available">%1$s %2$s доступний</string>
+
+    <string name="select_backup_asset">Виберіть резервні ресурси</string>
+    <string name="sender_account">рахунок відправника</string>
+    <string name="receiver_account">одержувач Рахунок</string>
+    <string name="total">загальний</string>
+    <string name="payment_method">спосіб оплати</string>
+    <string name="thankyou_string">Thankyou для використання Smartcoins Гаманець</string>
+    <string name="audio_folder_path">Аудіо Шлях до папки</string>
+    <string name="please_make_sure_your_bin_file">Будь ласка, переконайтеся, що ваш контакт обрано правильний або правильний файл бен</string>
 
 </resources>

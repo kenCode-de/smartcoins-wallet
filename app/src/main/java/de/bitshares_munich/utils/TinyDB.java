@@ -365,6 +365,8 @@ public class TinyDB {
         {
             transactionsJsonSerializable myObj = new transactionsJsonSerializable();
 
+            myObj.id = abc.id;
+            myObj.blockNumber = abc.blockNumber;
             myObj.Date = abc.Date;
             myObj.Sent = abc.Sent; // false : if received
             myObj.To = abc.To;
@@ -401,7 +403,7 @@ public class TinyDB {
             for (String jObjString : objStrings) {
                 transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
 
-                TransactionDetails myObject = new TransactionDetails(value.Date, value.Sent, value.To, value.From, value.Memo,
+                TransactionDetails myObject = new TransactionDetails(value.id,value.blockNumber,value.Date, value.Sent, value.To, value.From, value.Memo,
                         value.Amount, value.assetSymbol, value.faitAmount, value.faitAssetSymbol, value.eReceipt);
 
                 objects.add(myObject);

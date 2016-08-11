@@ -8,7 +8,8 @@
 <string name="account">Konts</string>
 <string name="friendly_name">Kontakta vārds</string>
 <string name="notes">Piezīmes</string>
-<string name="note">Piezīme</string>
+    <string name="bts_will_be_deducted">BTS tiks atskaitīta no</string>
+    <string name="note">Piezīme</string>
     <string name="please_make_sure_your_pin">Lūdzu pārliecinieties, ka jūsu PIN pareizs</string>
     <string name="please_make_sure_your_pin_file">Lūdzu pārliecinieties, ka jūsu PIN ir pareizs vai pareizais PIN fails ir izvēlēts</string>
 <string name="payment_received">Maksājums saņemts</string>
@@ -208,6 +209,20 @@
     <string name="unable_to_trade_bAssets">Nevar tirgoties backup Aktīvi</string>
     <string name="unable_to_send_amount">Nevar nosūtīt apmēru.</string>
     <string name="unable_to_decode_QR">Nevar atšifrēt QR kodu.</string>
+
+    <string name="loyalty_points">lojalitātes punkti</string>
+    <string name="str_warning_only_available">Uzmanību! Tikai %1$s %2$s ir pieejams</string>
+    <string name="str_balance_available">%1$s %2$s pieejams</string>
+
+    <string name="select_backup_asset">Izvēlieties Backup Asset</string>
+    <string name="sender_account">sūtītājs konts</string>
+    <string name="receiver_account">uztvērējs konts</string>
+    <string name="total">Kopā</string>
+    <string name="payment_method">Apmaksas veids</string>
+    <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Lūdzu, pārliecinieties, ka jūsu pin ir pareizs vai pareiza bin fails ir izvēlēts</string>
+    <string name="change">Mainīt ...</string>
 
 </resources>
 

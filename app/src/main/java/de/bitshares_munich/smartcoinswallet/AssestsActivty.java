@@ -18,6 +18,7 @@ import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.utils.webSocketCallHelper;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
@@ -32,6 +33,8 @@ public class AssestsActivty  implements IBalancesDelegate {
     AssetDelegate assetDelegate;
     Application application;
 
+    webSocketCallHelper myWebSocketCallHelper;
+
     public AssestsActivty(Context c,String account_name , AssetDelegate instance, Application app){
         context = c;
         application = app;
@@ -40,6 +43,7 @@ public class AssestsActivty  implements IBalancesDelegate {
         symbols = new ArrayList<>();
         ammount = new ArrayList<>();
         assetDelegate = instance;
+        myWebSocketCallHelper = new webSocketCallHelper(c);
 
         /*
         balancesLoad = new BalancesLoad(context,this);
@@ -65,7 +69,10 @@ public class AssestsActivty  implements IBalancesDelegate {
 
     void get_json_account_balances(final String account_name,final String id)
     {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
+        myWebSocketCallHelper.make_websocket_call(getDetails,"", webSocketCallHelper.api_identifier.none);
 
+        /*
         final Runnable updateTask2 = new Runnable() {
             @Override
             public void run() {
@@ -111,12 +118,16 @@ public class AssestsActivty  implements IBalancesDelegate {
 
         handler.removeCallbacks(updateTask);
         handler.postDelayed(updateTask, 100);
+        */
     }
 
     Boolean sentCallForAssets = false;
     void get_asset(final String asset,final String id)
     {
+        String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
+        myWebSocketCallHelper.make_websocket_call(getDetails,"", webSocketCallHelper.api_identifier.none);
 
+        /*
         final Runnable updateTask2 = new Runnable() {
             @Override
             public void run() {
@@ -162,6 +173,7 @@ public class AssestsActivty  implements IBalancesDelegate {
 
         handler.removeCallbacks(updateTask);
         handler.postDelayed(updateTask, 100);
+        */
     }
 
 
@@ -240,8 +252,10 @@ public class AssestsActivty  implements IBalancesDelegate {
 
     @Override
     public void OnUpdate(String s,int id){
-        SupportMethods.testing("assests",s,"ids");
-        Log.d("Assets Activity", "Call received");
+
+        myWebSocketCallHelper.cleanUpTransactionsHandler();
+        //SupportMethods.testing("assests",s,"ids");
+        //Log.d("Assets Activity", "Call received");
 
         String convert;
         try

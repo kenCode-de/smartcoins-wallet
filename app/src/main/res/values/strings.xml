@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smartcoins Wallet</string>
+    <string name="app_name" translatable="false">Smartcoins Wallet</string>
 
     <string name="send_capital">Send</string>
 
@@ -26,8 +26,8 @@
     <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
     <string name="create">CREATE</string>
     <string name="existing_account">Existing Account</string>
-    <string name="v_1_0_beta">v 1.0 beta</string>
-    <string name="block_number">block# -------</string>
+    <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
+    <string name="block_number" translatable="false">block# -------</string>
     <string name="agreement">Agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
@@ -36,8 +36,8 @@
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="mismatch_pin">mismatch pin</string>
-    <string name="key_brainkey">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
-    <string name="txt_pin">pin</string>
+    <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+    <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>
     <string name="txt_brain_key_info">Print this out, or write it down. Anyone with access to your recovery key will have access to funds within this wallet.</string>
     <string name="create_wallet">CREATE WALLET</string>
@@ -199,6 +199,12 @@
 
 
     // Not to be localized
+    <string name="audio_file_path">audio_file_path</string>
+    <string name="audio_file_name">audio_file_name</string>
+    <string name="audio_file_mute">audio_file_mute</string>
+
+    <string name="pref_desired_smart_coin">desired_smart_coin</string>
+    <string name="pref_uia_coin">uia_coin</string>
     <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
@@ -208,9 +214,10 @@
     <string name="preferred_lang">Preferred Language</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="pref_wallet_accounts">wallet_accounts</string>
-    <string name="pref_country">country</string>
+    <string name="pref_country">country_iso_code</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
+    <string name="pref_backup_asset_selected">backup_asset_selected</string>
     <string name="pref_account_name">account_name</string>
     <string name="pref_language">language</string>
     <string name="pref_backup_symbol">backup_symbol</string>
@@ -228,8 +235,7 @@
     <string name="e_receipt">e_receipt</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
-    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
-    </string>
+    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}</string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
     </string>
     <string name="database_indentifier">
@@ -251,6 +257,7 @@
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
+    <string name="decode_memos_array_url">http://188.166.147.110:9004</string>
     <string name="account_create_url">https://bitshares.openledger.info</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
@@ -314,7 +321,6 @@
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
-
     <string name="unable_to_load_brainkey">Unable to load brainkey</string>
     <string name="unable_to_generate_bin_format_for_key">Unable to generate bin format for key</string>
     <string name="creating_backup_file">Creating Backup File</string>
@@ -338,5 +344,43 @@
     <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
     <string name="pref_backup_bin_exist">backup_bin_exist</string>
 
+    <string name="loyalty_points">Loyalty Points</string>
 
+
+    <string name="select_backup_asset">Select Backup Asset</string>
+    <string name="sender_account">Sender Account</string>
+    <string name="receiver_account">Receiver Account</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="thankyou_string">Thankyou for using Smartcoins Wallet</string>
+
+    <string name="loading_transactions">Loading Transactions</string>
+    <string name="getting_equivalent_flat_exchange_rate">Getting equivalent fiat exchange rate
+    </string>
+    <string name="fetching_assets_in_transactions">Fetching assets in transactions...</string>
+    <string name="assets_retrieved">"Assets retrieved : "</string>
+    <string name="resolving_account_names_in_transactions">Resolving account names in transactions
+    </string>
+    <string name="generating_list_of_transactions">"Generating list of transactions : "</string>
+    <string name="fiat_exchange_rate_received">Fiat exchange rate received</string>
+    <string name="account_names_retrieved">Account names retrieved : </string>
+    <string name="decrypting_memos">"Decrypting memos : "</string>
+    <string name="invalid_transactions">Invalid Transactions</string>
+    <string name="failure">Failure : </string>
+    <string name="invalid_block_header">Invalid block header</string>
+    <string name="no_assets_found">No assets found</string>
+    <string name="invalid_assets">Invalid Assets</string>
+    <string name="invalid_accounts_name">Invalid Account Names</string>
+    <string name="invalid_input_for_fiat_conversion">Invalid input for fiat conversion</string>
+    <string name="account_names_not_found">Account names not found</string>
+
+    <string name="audio_folder_path">Audio Folder Path</string>
+
+
+    <string name="bts_will_be_deducted"> BTS will be deducted from </string>
+
+
+    <string name="please_make_sure_your_bin_file">Please make sure your pin is correct or correct bin file is selected</string>
+
+    <string name="change">Change...</string>
 </resources>

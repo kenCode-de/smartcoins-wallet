@@ -8,7 +8,8 @@
 <string name="account">Účet</string>
 <string name="friendly_name">Jméno účtu</string>
 <string name="notes">Poznámky</string>
-<string name="note">Poznámka</string>
+    <string name="bts_will_be_deducted">BTS bude odečten od</string>
+    <string name="note">Poznámka</string>
 <string name="payment_received">platba přijata</string>
 <string name="import_brainkey">Import z BrainKey</string>
 <string name="import_backup_old">import zálohy</string>
@@ -151,7 +152,7 @@
 <string name="str_trade_not_available">Obchod není k dispozici</string>
     <string name="preferred_lang">preferovaný jazyk</string>
     <string name="got_it">Mám to</string>
-    <string name="upgrade_to_ltm">Přechod na doživotní členství/string>
+    <string name="upgrade_to_ltm">Přechod na doživotní členství</string>
     <string name="txt_back">Zadní</string>
     <string name="please_pay">Věnujte</string>
     <string name="transfer_funds">Přenos fondů</string>
@@ -204,5 +205,19 @@
     <string name="unable_to_trade_bAssets">Nelze obchodovat záložní aktiva</string>
     <string name="unable_to_send_amount">Nelze odeslat částku.</string>
     <string name="unable_to_decode_QR">Nelze dekódovat QR kód.</string>
+
+    <string name="loyalty_points">Věrnostní body</string>
+    <string name="str_warning_only_available">Varování! Pouze %1$s %2$s je k dispozici</string>
+    <string name="str_balance_available">%1$s %2$s dostupné</string>
+
+    <string name="select_backup_asset">Vyberte záložní podklad</string>
+    <string name="sender_account">odesílatel Account</string>
+    <string name="receiver_account">přijímač Account</string>
+    <string name="total">Celkový</string>
+    <string name="payment_method">Způsob platby</string>
+    <string name="thankyou_string">Děkuji za použití Smartcoins Peněženka</string>
+    <string name="audio_folder_path">Audio Cesta ke složce</string>
+    <string name="please_make_sure_your_bin_file">Prosím, ujistěte se, že pin je správný nebo správný soubor přihrádka je vybrána</string>
+    <string name="change">Přeměna...</string>
 
 </resources>

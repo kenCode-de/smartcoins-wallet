@@ -10,7 +10,8 @@
 <string name="friendly_name">Φιλική Ονομασία</string>
 <string name="notes">Σημειώσεις</string>
 <string name="note">Σημείωση</string>
-<string name="payment_received">Η πληρωμή ελήφθη</string>
+    <string name="bts_will_be_deducted">BTS θα αφαιρεθεί από</string>
+    <string name="payment_received">Η πληρωμή ελήφθη</string>
 <string name="please_make_sure_your_pin">Παρακαλώ επιβεβαιώστε το PIN σας </string>
 <string name="please_make_sure_your_pin_file">Παρακαλώ επιβεβαιώστε το PIN αρχείο σας</string>
 <string name="import_brainkey">Εισαγωγή από BrainKey</string>
@@ -71,7 +72,7 @@
 <string name="export">Εξαγωγή</string>
 <string name="checkbox_donate">Δωρεά 2 BTS για τους προγραμματιστές υποστήριξης σε</string>
 <string name="show_more">Δείτε περισσότερα</string>
-<string name="share_text">Μόλις βρήκα αυτό το φοβερό Smartcoins-Wallet που σου επιτρέπει να στέλνεις και να λαμβάνεις Smartcoins. </p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>Check it out !</p></string></string>
+<string name="share_text"><p>Μόλις βρήκα αυτό το φοβερό Smartcoins-Wallet που σου επιτρέπει να στέλνεις και να λαμβάνεις Smartcoins. </p><a href= "http://BitShares-Munich.de">http://BitShares-Munich.de</a> <p>Check it out !</p></string>
 <string name="share_info">Προσκαλέστε έναν ή περισσότερους φίλους σας να δοκιμάσουν το πορτοφόλι Smartcoins! Οι διευθύνσεις ηλεκτρονικού ταχυδρομείου δεν αποθηκεύονται ούτε συλλέγονται από οποιονδήποτε, έτσι είναι εξασφαλισμένη η ιδιωτική τους ζωή.</string>
 <string name="share_subject">Εκπληκτικό Πορτοφόλι Smartcoins</string>
 <string name="share_heading">Μοιραστείτε με ένα φίλο</string>
@@ -197,6 +198,22 @@
     <string name="unable_to_save_bin_file">Δεν είναι δυνατή η αποθήκευση του αρχείου bin</string>
 
     <string name="txt_alertmsg_fr">Είστε βέβαιοι ότι θέλετε να καταργήσετε το</string>
+    <!--<string name="txt_alertmsg_la">λογαριασμού από αυτό το πορτοφόλι;</string>-->
+    <!--<string name="bugs_or_errors">Σφάλματα ή λάθη;</string>-->
+    <!--<string name="please_let_us_know">Παρακαλώ ενημερώστε μας:</string>-->
+    <!--<string name="try_again">Παρακαλώ δοκιμάστε ξανά μετά από 5 λεπτά</string>-->
+    <!--<string name="warning_msg_same_account">Δεν μπορείτε να στείλετε ποσό στον ίδιο λογαριασμό</string>-->
+
+    <!--<string name="please_backup_your_brainkey">Παρακαλούμε αντιγράφων ασφαλείας brainkey σας</string>-->
+    <!--<string name="backup_brainkey_msg">Δημιουργία αντιγράφων ασφαλείας αρχείο .bin σας σε ασφαλές μέρος ή τα κεφάλαιά σας θα μπορούσε να χαθεί!</string>-->
+    <!--<string name="unable_to_trade_bAssets">Ανίκανος να το εμπόριο των αντιγράφων ασφαλείας Ενεργητικού</string>-->
+    <!--<string name="unable_to_send_amount">Δεν μπορεί να στείλει το ποσό.</string>-->
+    <!--<string name="unable_to_decode_QR">Δεν είναι δυνατή η αποκωδικοποίηση του κώδικα QR.</string>-->
+
+    <string name="loyalty_points">Πόντοι Αφοσίωσης</string>
+    <string name="str_warning_only_available">Προειδοποίηση! Μόνο %1$s %2$s είναι διαθέσιμη</string>
+    <string name="str_balance_available">%1$s %2$s διαθέσιμη</string>
+
     <string name="txt_alertmsg_la">λογαριασμό από αυτό το πορτοφόλι;</string>
     <string name="bugs_or_errors">Bugs ή λάθοι</string>
     <string name="please_let_us_know">Παρακαλώ ενημερώστε μας</string>
@@ -209,4 +226,16 @@
     
     <string name="unable_to_send_amount">Αδυναμία αποστολής ποσού</string>
     <string name="unable_to_decode_QR">Αδυναμία αποκωδικοποίησης QR-Code.</string>
-  </resources>
+
+    <string name="select_backup_asset">Επιλέξτε Δημιουργία αντιγράφων ασφαλείας Ενεργητικού</string>
+    <string name="sender_account">Ο λογαριασμός αποστολέα</string>
+    <string name="receiver_account">δέκτης Λογαριασμού</string>
+    <string name="total">Σύνολο</string>
+    <string name="payment_method">Μέθοδος πληρωμής</string>
+    <string name="thankyou_string">Σας ευχαριστώ για τη χρήση Smartcoins Πορτοφόλι</string>
+    <string name="audio_folder_path">Ήχου Διαδρομή φακέλου</string>
+
+    <string name="please_make_sure_your_bin_file">Παρακαλώ βεβαιωθείτε ότι το PIN σας έχει επιλεγεί σωστή ή σωστό αρχείο bin</string>
+    <string name="change">Αλλαγή...</string>
+
+</resources>

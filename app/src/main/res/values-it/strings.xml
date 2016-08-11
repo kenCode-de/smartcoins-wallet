@@ -8,14 +8,15 @@
 <string name="account">Conto</string>
 <string name="friendly_name">Nome amichevole</string>
 <string name="notes">Note</string>
-<string name="note">Nota</string>
+    <string name="bts_will_be_deducted">BTS sarà detratto dal</string>
+    <string name="note">Nota</string>
 <string name="payment_received">Pagamento ricevuto</string>
 <string name="import_brainkey">Importa il BrainKey</string>
 <string name="import_backup_old">Importa il Backup</string>
 <string name="choose_backup">Scegliere il Backup</string>
 <string name="choose_file">Scegli il file</string>
 <string name="no_file_chosen">Nessun file scelto</string>
-<string name="account_label"> L'etichetta del conto </string>
+<string name="account_label"> L\'etichetta del conto </string>
 <string name="loading_msg"> Aspetta un momento, stiamo processando la tua richiesta</string>
 <string name="txt_6_digits_pin"> Scegliere un PIN a 6 cifre </string>
 <string name="txt_6_digits_pin_confirm"> Conferma il Pin a 6-cifre </string>
@@ -32,16 +33,16 @@
     <string name="existing_account">Account esistente</string>
 <string name="agreement">Accordo</string>
 <string name="cancel_and_exit">Cancellare ed Esci </string>
-<string name="i_agree"> Sono d'accordo </string>
+<string name="i_agree"> Sono d\'accordo </string>
 <string name="kindly_create_account">Si prega di creare un conto</string>
 <string name="please_enter_old_6_digit_pin">Per favore metti il vecchio PIN di 6 cifre</string>
 <string name="please_enter_6_digit_pin">Per favore inserire il PIN di 6 cifre </string>
 <string name="please_enter_6_digit_pin_confirm">Per favore inserire il PIN della conferma a 6 cifre</string>
-<string name="mismatch_pin">Il PIN e' sbagliato, per favore riprova </string>
+<string name="mismatch_pin">Il PIN e\' sbagliato, per favore riprova </string>
 <string name="txt_brain_key"> Brainkey</string>
 <string name="txt_brain_key_info"> Il Brainkey è importante. Per favore esegui il backup del Brainkey. Se puoi, stampalo, o scrivilo e mettilo in un posto sicuro. Chiunque abbia accesso alla vostra chiave (brainkey) avrà accesso ai tuoi fondi di questo portafoglio.</string>
 <string name="create_wallet">Creare il PORTAFOGLIO</string>
-<string name="cancel"> Cancella</string>
+<!--<string name="cancel"> Cancella</string>-->
 <string name="save">SALVARE</string>
 <string name="next">IL PROSSIMO / Seguente </string>
 <string name="please_enter_brainkey">Per favore inserire il brainkey</string>
@@ -54,7 +55,7 @@
 <string name="title_activity_setting"> Il titolo della posizione della attività </string>
 <string name="backup_asset"> Il Backup della proprietà </string>
 <string name="taxable_country">Il Paese che è tassabile</string>
-<string name="date_time"> la data e l'ora</string>
+<string name="date_time"> la data e l\'ora</string>
 <string name="check_for_updates">Controlla per gli aggiornamenti\'avvio</string>
 <string name="automatically_install">Installare automaticamente </string>
 <string name="require_pin">Richiedi il PIN </string>
@@ -85,14 +86,14 @@
 <string name="edit_contact">Modifica contatto</string>
 <string name="empty_list">La lista dei contatti è vuota</string>
 <string name="account_name_validate">Nome del conto è valido</string>
-<string name="txt_no_internet_connection">Non c'e connessione a Internet</string>
+<string name="txt_no_internet_connection">Non c\'e connessione a Internet</string>
 <string name="unable_to_create_account_from_brainkey">Impossibile di creare un conto dal brainkey</string>
 <string name="importing_your_wallet">Importazione del portafoglio ...</string>
 <string name="str_trading_pair_not_exist">la trading pair non esiste</string>
 <string name="unable_to_create_qr_code">Impossibile generare il codice QR</string>
 <string name="price">prezzo</string>
 <string name="currency">moneta</string>
-<string name="please_enter_amount">Per favore metti il valore del'ammontare> l\'importo</string>
+<string name="please_enter_amount">Per favore metti il valore del\'ammontare> l\'importo</string>
 <string name="amount_should_be_greater_than_zero">Il valore deve essere piu di zero</string>
 <string name="no_amount_requested">Nessun ammontare richiesto</string>
 <string name="to_capital"> A capitale </string>
@@ -116,7 +117,7 @@
 <string name="share_qr_code">Condividi il Codice QR</string>
 <string name="done">Fatto/finito</string>
 <string name="id_s">id</string>
-<string name="time">tempo/l'ora</string>
+<string name="time">tempo/l\'ora</string>
 <string name="operations">operazioni</string>
 <string name="trx_in_block">trx_in_block</string>
 <string name="symbol_capital">Simbolo del capitale</string>
@@ -207,5 +208,19 @@
     <string name="unable_to_trade_bAssets">Impossibile scambiare la proprietà di backup</string>
     <string name="unable_to_send_amount">Impossibile mandare/inviare l\'importo.</string>
     <string name="unable_to_decode_QR">Impossibile decodificare il codice del QR.</string>
+
+    <string name="loyalty_points">Punti fedeltà</string>
+    <string name="str_warning_only_available">Avvertimento! Solo %1$s %2$s è disponibile</string>
+    <string name="str_balance_available">%1$s %2$s disponibile</string>
+
+    <string name="select_backup_asset">Selezionare Asset Backup</string>
+    <string name="sender_account">account mittente</string>
+    <string name="receiver_account">conto Ricevitore</string>
+    <string name="total">Totale</string>
+    <string name="payment_method">Metodo di pagamento</string>
+    <string name="thankyou_string">Grazie per l\'utilizzo Smartcoins Portafoglio</string>
+    <string name="audio_folder_path">Percorso cartella Audio</string>
+    <string name="please_make_sure_your_bin_file">Si prega di assicurarsi che il perno sia file bin corretto o corretto sia selezionato</string>
+    <string name="change">Cambiamento...</string>
 
 </resources>

@@ -38,11 +38,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical"
-                    android:textSize="17dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/green"
+                    android:textColor="@color/recieveamount"
                     android:text=""
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="7.2pt"
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
@@ -57,9 +59,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textSize="17dp"
                         android:paddingLeft="5dp"
-                        android:textColor="@color/green"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
+                        android:textSize="7.2pt"
+                        android:textColor="@color/recieveamount"
+
                         android:text=""/>
                     <TextView
                         android:id="@+id/fait_child_one"
@@ -69,9 +74,11 @@
                         android:layout_gravity="center_vertical"
                         android:lines="1"
                         android:ellipsize="end"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
                         android:textSize="6pt"
                         android:paddingLeft="5dp"
-                        android:textColor="@color/green"
+                        android:textColor="@color/recieveamount"
                         android:text=""/>
                 </LinearLayout>
             </LinearLayout>
@@ -100,11 +107,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical"
-                    android:textSize="17dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/green"
+                    android:textColor="@color/recieveamount"
                     android:text=""
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="7.2pt"
+                    android:textStyle="bold"
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
@@ -120,10 +129,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textSize="17dp"
+                    android:fontFamily="sans-serif-light"
+                    android:textSize="7.2pt"
                     android:paddingLeft="5dp"
-                    android:textColor="@color/green"
-                    android:text=""/>
+                    android:textStyle="bold"
+                    android:textColor="@color/recieveamount"/>
                   <TextView
                       android:id="@+id/fait_child_two"
                       android:visibility="visible"
@@ -132,9 +142,11 @@
                       android:layout_gravity="center_vertical"
                       android:lines="1"
                       android:ellipsize="end"
+                      android:textStyle="bold"
+                      android:fontFamily="sans-serif-light"
                       android:textSize="6pt"
                       android:paddingLeft="5dp"
-                      android:textColor="@color/green"
+                      android:textColor="@color/recieveamount"
                       android:text=""/>
             </LinearLayout>
             </LinearLayout>

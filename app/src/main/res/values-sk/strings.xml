@@ -10,6 +10,7 @@
     <string name="friendly_name">Meno</string>
     <string name="notes">Poznámky</string>
     <string name="note">Poznámka</string>
+    <string name="bts_will_be_deducted">BTS bude odpočítaný od</string>
     <string name="payment_received">Platba prijatá</string>
     <string name="import_brainkey">Import z BrainKey</string>
     <string name="import_backup_old">Obnovenie zálohy</string>
@@ -210,5 +211,19 @@
     <string name="unable_to_trade_bAssets">Nemožno obchodovať záložné aktíva.</string>
     <string name="unable_to_send_amount">Nemožno odoslať čiastku.</string>
     <string name="unable_to_decode_QR">Nemožno dekódovať QR kód.</string>
+
+    <string name="loyalty_points">vernostné body</string>
+    <string name="str_warning_only_available">Výstraha! Iba %1$s %2$s je k dispozícii</string>
+    <string name="str_balance_available">%1$s %2$s dostupné</string>
+
+    <string name="select_backup_asset">Vyberte záložný podklad</string>
+    <string name="sender_account">odosielateľ Account</string>
+    <string name="receiver_account">prijímač Account</string>
+    <string name="total">celkom</string>
+    <string name="payment_method">Spôsob platby</string>
+    <string name="thankyou_string">Ďakujem za použitia Smartcoins Peňaženka</string>
+    <string name="audio_folder_path">Audio Cesta zložky</string>
+    <string name="please_make_sure_your_bin_file">Prosím, uistite sa, že pin je správny alebo správny súbor priehradka je vybraná</string>
+    <string name="change">Zmeniť ...</string>
 
 </resources>

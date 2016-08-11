@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="license">Llicència</string>
+    <string name="bts_will_be_deducted">BTS s\'ha de deduir de</string>
+
+    <string name="license">Llicència</string>
 <string name="send_capital">Enviar</string>
 <string name="account_create_register_or_import">CREAR COMPTE o importació</string>
 <string name="txt_account_name">Nom del compte</string>
@@ -19,14 +21,14 @@
 <string name="choose_file">Triar l\'arxiu</string>
 <string name="no_file_chosen">Cap arxiu triat</string>
 <string name="account_label">Trieu larxiu</string>
-<string name="loading_msg">El vostre saldo s'està carregant</string>
+<string name="loading_msg">El vostre saldo s\'està carregant</string>
 <string name="txt_6_digits_pin">PIN de 6 dígits</string>
 <string name="txt_6_digits_pin_confirm">Confirma el PIN de 6 dígits</string>
 <string name="create">CREAR</string>
 <string name="existing_account">Compte existent</string>
 <string name="agreement">Acord</string>
 <string name="cancel_and_exit">Cancel·lar i Sortir</string>
-<string name="i_agree">Estic d'acord</string>
+<string name="i_agree">Estic d\'acord</string>
     <string name="unable_to_import_account_from_bin_file">No es pot importar el compte de l\'arxiu del compartiment</string>
     <string name="importing_keys_from_bin_file">La importació de claus d\'arxiu Bin</string>
     <string name="import_backup">Importació de còpia de seguretat del fitxer .bin</string>
@@ -36,7 +38,7 @@
     <string name="are_you_sure">Estàs segur?</string>
 
     <string name="kindly_create_account">amablement Entrada</string>
-<string name="please_enter_old_6_digit_pin">Si us plau, l'antic PIN de 6 dígits</string>
+<string name="please_enter_old_6_digit_pin">Si us plau, l\'antic PIN de 6 dígits</string>
 <string name="please_enter_6_digit_pin">Si us plau, introdueixi el nou PIN de 6 dígits</string>
 <string name="please_enter_6_digit_pin_confirm">Si us plau, introdueixi la confirmació PIN 6 dígits</string>
 <string name="mismatch_pin">El PIN no correspon</string>
@@ -208,5 +210,20 @@
     <string name="unable_to_trade_bAssets">No és possible negociar els elements de backup</string>
     <string name="unable_to_send_amount">No es pot enviar la quantitat.</string>
     <string name="unable_to_decode_QR">No és possible descodificar el codi QR.</string>
+
+    <string name="loyalty_points">Punts de fidelitat</string>
+    <string name="str_warning_only_available">Atenció! Només 1 %1$s %2$s està disponible</string>
+    <string name="str_balance_available">%1$s %2$s disponibles</string>
+
+    <string name="select_backup_asset">Seleccioneu l\'element de backup</string>
+    <string name="sender_account">de compte de l\'emissor</string>
+    <string name="receiver_account">compte receptor</string>
+    <string name="total">total</string>
+    <string name="payment_method">Mètode de pagament</string>
+    <string name="thankyou_string">Gràcies per utilitzar Smartcoins Moneder</string>
+    <string name="audio_folder_path">Ruta de la carpeta d\'àudio</string>
+
+    <string name="please_make_sure_your_bin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer bin correcta o correcta</string>
+    <string name="change">Canvia ...</string>
 
 </resources>

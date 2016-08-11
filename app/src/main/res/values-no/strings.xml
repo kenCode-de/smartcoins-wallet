@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Tillatelse</string>
 <string name="send_capital">Sende</string>
-<string name="account_create_register_or_import">Konto Opprett / register eller IMPORT</string>
+    <string name="bts_will_be_deducted">BTS vil bli trukket fra</string>
+    <string name="account_create_register_or_import">Konto Opprett / register eller IMPORT</string>
 <string name="txt_account_name">Brukernavn</string>
 <string name="time_stamp">tidsstempel</string>
 <string name="email_pdf">E-post PDF</string>
@@ -209,4 +210,17 @@
     <string name="unable_to_send_amount">Kan ikke sende beløpet.</string>
     <string name="unable_to_decode_QR">Kan ikke dekode QR-koden.</string>
 
+    <string name="loyalty_points">lojalitets~~POS=TRUNC</string>
+    <string name="str_warning_only_available">Advarsel! Bare %1$s %2$s er tilgjengelig</string>
+    <string name="str_balance_available">%1$s %2$s tilgjengelig</string>
+
+    <string name="select_backup_asset">Velg Backup Asset</string>
+    <string name="sender_account">Sender konto</string>
+    <string name="receiver_account">mottaker konto</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Betalingsmetode</string>
+    <string name="thankyou_string">Takk for hjelp Smartcoins lommebok</string>
+    <string name="audio_folder_path">Audio mappebane</string>
+    <string name="please_make_sure_your_bin_file">Vennligst sørg for at pinnen er riktig eller riktig bin fil er valgt</string>
+    <string name="change">Endring...</string>
 </resources>

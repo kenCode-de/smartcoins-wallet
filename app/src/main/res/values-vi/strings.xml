@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">giấy phép</string>
+    <string name="bts_will_be_deducted">BTS sẽ được khấu trừ từ</string>
 <string name="send_capital">gởi</string>
 <string name="account_create_register_or_import">TÀI KHOẢN TẠO / ĐĂNG KÝ HOẶC NHẬP</string>
 <string name="txt_account_name">Tên tài khoản</string>
@@ -207,5 +208,18 @@
     <string name="unable_to_trade_bAssets">Không thể giao dịch các tài sản lưu</string>
     <string name="unable_to_send_amount">Không thể để gửi tiền.</string>
     <string name="unable_to_decode_QR">Không thể giải mã các mã QR.</string>
+
+    <string name="loyalty_points">điểm Loyalty</string>
+    <string name="str_warning_only_available">Cảnh báo! Chỉ %1$s %2$s có sẵn</string>
+    <string name="str_balance_available">%1$s %2$s có sẵn</string>
+
+    <string name="select_backup_asset">Chọn tài sản lưu</string>
+    <string name="sender_account">Tài khoản Tên người gửi</string>
+    <string name="receiver_account">Tài khoản thu</string>
+    <string name="total">Tổng số</string>
+    <string name="payment_method">Phương thức thanh toán</string>
+    <string name="thankyou_string">Thankyou cho sử dụng Smartcoins Wallet</string>
+    <string name="audio_folder_path">Âm thanh Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Hãy chắc chắn rằng pin của bạn là chính xác hay đúng bin file được chọn</string>
 
 </resources>

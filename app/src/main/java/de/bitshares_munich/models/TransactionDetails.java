@@ -12,15 +12,18 @@ import de.bitshares_munich.utils.Helper;
 /**
  * Created by developer on 5/24/16.
  */
-public class TransactionDetails {
+public class TransactionDetails
+{
+    public String id;
+    public String blockNumber;
     public java.util.Date Date;
     public Boolean Sent; // false : if received
     public String To;
     public String From;
     public String Memo;
-    public float Amount;
+    public double Amount;
     public String assetSymbol;
-    public float faitAmount;
+    public double faitAmount;
     public String faitAssetSymbol;
     public String eReceipt;
     private Context context;
@@ -30,9 +33,16 @@ public class TransactionDetails {
         context = _context;
     }
 
-    public TransactionDetails(Date _date, Boolean _Sent, String _to, String _from, String _memo, float _Amount,
-                              String _assetSymbol, float _faitAmount, String _faitAssetSymbol , String _eReceipt)
+    public TransactionDetails()
     {
+
+    }
+
+    public TransactionDetails(String _id,String _blockNumber,Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
+                              String _assetSymbol, double _faitAmount, String _faitAssetSymbol , String _eReceipt)
+    {
+        this.id = _id;
+        this.blockNumber = _blockNumber;
         this.Date = _date;
         this.Sent = _Sent;
         this.To = _to;
@@ -58,6 +68,12 @@ public class TransactionDetails {
         String formattedDate = df.format(this.Date);
         return formattedDate;//Calendar.getInstance().getTime();*/
         return Helper.convertDateToGMT(this.Date,context);
+
+    }
+
+    public String getDateStringWithYear()
+    {
+        return Helper.convertDateToGMTWithYear(this.Date,context);
 
     }
 
@@ -97,7 +113,7 @@ public class TransactionDetails {
         return this.Memo;
     }
 
-    public float getAmount ()
+    public double getAmount ()
     {
         return this.Amount;
     }
@@ -106,7 +122,7 @@ public class TransactionDetails {
         return this.assetSymbol;
     }
 
-    public float getFaitAmount() {
+    public double getFaitAmount() {
         return this.faitAmount;
     }
 

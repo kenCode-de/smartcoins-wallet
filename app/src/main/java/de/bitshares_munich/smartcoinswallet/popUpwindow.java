@@ -30,25 +30,36 @@ public class popUpwindow {
 
     public popUpwindow(Context c,TextView textview) {
         context = c;
-        List<String> optionsList = new ArrayList<String>();
-        optionsList.add("AUD::1");
-        optionsList.add("BTC::2");
-        optionsList.add("BTS::3");
-        optionsList.add("CHF::4");
-        optionsList.add("CNY::5");
-        optionsList.add("EUR::6");
-        optionsList.add("GOLD::7");
-        optionsList.add("HKD::8");
-        optionsList.add("KRW::9");
-        optionsList.add("MXN::10");
-        optionsList.add("SGD::11");
-        optionsList.add("SILVER::12");
-        optionsList.add("TRY::13");
-        optionsList.add("USD::14"); 
-        textView = textview;
-        popUpContents = new String[optionsList.size()];
+        ArrayList<String> optionsList = new ArrayList<String>();
+        optionsList.add("AUD");
+        optionsList.add("BTC");
+        optionsList.add("BTS");
+        optionsList.add("CHF");
+        optionsList.add("CNY");
+        optionsList.add("EUR");
+        optionsList.add("GOLD");
+        optionsList.add("HKD");
+        optionsList.add("KRW");
+        optionsList.add("MXN");
+        optionsList.add("SGD");
+        optionsList.add("SILVER");
+        optionsList.add("TRY");
+        optionsList.add("USD");
 
-        optionsList.toArray(popUpContents);
+        AssetsSymbols assetsSymbols = new AssetsSymbols(c);
+        optionsList = assetsSymbols.updatedList(optionsList);
+
+        ArrayList<String> optionsNewList = new ArrayList<String>();
+        int count = 0 ;
+        for(String s : optionsList){
+            count++;
+            optionsNewList.add(s+"::"+count);
+        }
+
+        textView = textview;
+        popUpContents = new String[optionsNewList.size()];
+
+        optionsNewList.toArray(popUpContents);
 
         popupWindow = popupWindow();
 //add

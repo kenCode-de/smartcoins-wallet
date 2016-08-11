@@ -57,7 +57,7 @@ public class Helper {
         languages.add("bs");
         languages.add("bg");
         languages.add("ca");
-        languages.add("zh");
+        languages.add("zh-rCN");
         languages.add("zh-rTW");
         languages.add("hr");
         languages.add("cs");
@@ -272,10 +272,41 @@ public class Helper {
             } catch (Exception e) {
 
             }
-            Collections.sort(countries);
+        }
+        Collections.sort(countries);
+        return countries;
+    }
+
+    public static String getCountryCode(String spinnerText) {
+        String[] locales = Locale.getISOCountries();
+        ArrayList<String> countries = new ArrayList<>();
+        for (String countryCode : locales) {
+
+            Locale locale = new Locale("", countryCode);
+            try {
+                Currency currency = Currency.getInstance(locale);
+                String proposedSpinnerText = locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+
+                if (proposedSpinnerText.equals(spinnerText)) {
+                    return countryCode;
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        return "";
+    }
+
+    public static String getSpinnertextCountry(String countryCode) {
+
+        Locale locale = new Locale("", countryCode);
+        try {
+            Currency currency = Currency.getInstance(locale);
+            return locale.getDisplayCountry() + " (" + currency.getCurrencyCode() + ")";
+        } catch (Exception e) {
 
         }
-        return countries;
+        return "";
     }
 
 
@@ -288,7 +319,16 @@ public class Helper {
     }
 
     public static void setLocale(String lang, Resources res) {
-        Locale myLocale = new Locale(lang);
+        Locale myLocale;
+        if (lang.equalsIgnoreCase("zh-rTW")) {
+            myLocale = Locale.TRADITIONAL_CHINESE;
+        }
+        else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
+            myLocale = Locale.SIMPLIFIED_CHINESE;
+        }
+        else {
+            myLocale = new Locale(lang);
+        }
         DisplayMetrics dm = res.getDisplayMetrics();
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
@@ -330,6 +370,27 @@ public class Helper {
         }
     }
 
+    public static String convertDateToGMTWithYear(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM yy");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(date);
+            return result;
+
+        } else {
+            SimpleDateFormat destFormat = new SimpleDateFormat("dd MMM yyy");
+            String result = destFormat.format(date);
+            return result;
+        }
+    }
+
+
+
 
     public static String convertTimeToGMT(Date date, Context context) {
 
@@ -367,45 +428,39 @@ public class Helper {
     public static String getFadeCurrency(Context context) {
         Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
         if (isFade) {
-            String currency[]=Helper.fetchStringSharePref(context,context.getString(R.string.pref_fade_currency)).split(" ");
-            return currency[currency.length-1].replace("(","").replace(")","");
+            String currency[] = Helper.fetchStringSharePref(context, context.getString(R.string.pref_fade_currency)).split(" ");
+            return currency[currency.length - 1].replace("(", "").replace(")", "");
         } else {
             return "EUR";
         }
     }
 
-    public static String padString(String str)
+    public static String getFadeCurrencySymbol(Context context)
     {
-        if (str == null || str.isEmpty())
-        {
+        String currrencyCode = getFadeCurrency(context);
+        return Currency.getInstance(currrencyCode).getSymbol(Locale.ENGLISH);
+    }
+
+    public static String padString(String str) {
+        if (str == null || str.isEmpty()) {
             return "0";
-        }
-        else if (str.equals("."))
-        {
+        } else if (str.equals(".")) {
             return "0.";
-        }
-        else
-        {
-            try
-            {
+        } else {
+            try {
                 return String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(str));
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 return null;
             }
         }
     }
 
-    public static int convertDOubleToInt(Double value)
-    {
+    public static int convertDOubleToInt(Double value) {
         String valueString = Double.toString(value);
 
-        for ( int i = 0 ; i < valueString.length() ; i++ )
-        {
-            if ( valueString.charAt(i) == '.' )
-            {
-                valueString = valueString.substring(0,i);
+        for (int i = 0; i < valueString.length(); i++) {
+            if (valueString.charAt(i) == '.') {
+                valueString = valueString.substring(0, i);
                 break;
             }
         }
@@ -415,8 +470,7 @@ public class Helper {
         return valueInteger;
     }
 
-    public static boolean isRTL(Locale locale, String symbol)
-    {
+    public static boolean isRTL(Locale locale, String symbol) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
 
 
@@ -427,12 +481,9 @@ public class Helper {
 
         String formattedtext = currencyFormat.format(100.0);
 
-        if ( formattedtext.startsWith(symbol) )
-        {
+        if (formattedtext.startsWith(symbol)) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
 

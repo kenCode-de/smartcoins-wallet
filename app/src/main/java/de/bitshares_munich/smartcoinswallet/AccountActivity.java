@@ -56,6 +56,7 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitshares_munich.utils.webSocketCallHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,6 +114,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     // icon_setting
 
+    webSocketCallHelper myWebSocketHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +126,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
         context = this;
+
+        myWebSocketHelper = new webSocketCallHelper(this);
+
         validationAccountName();
         gson = new Gson();
         application = new Application();
@@ -251,21 +257,28 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     public void createBitShareAN(boolean focused) {
         if (!focused) {
 
-            if (etAccountName.getText().length() > 5) {
+            if (etAccountName.getText().length() > 5)
+            {
                 tvErrorAccountName.setText("");
                 tvErrorAccountName.setVisibility(View.GONE);
-                if (Application.webSocketG.isOpen()) {
-                    // int databaseIndent=Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.sharePref_database));
-                    //String socketText = getString(R.string.lookup_account_a) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
+
+                String socketText = getString(R.string.lookup_account_a);
+                String socketText2 = getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
+                myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);
+
+                /*
+                if (Application.webSocketG.isOpen())
+                {
                     String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
                     String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
                     Application.webSocketG.send(socketText);
-
                 }
-            } else {
+                */
+            }
+            else
+            {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
                 checkingValidation = false;
-
             }
         }
     }
@@ -542,7 +555,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
-
+        myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             boolean found = false;
@@ -649,7 +662,13 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
 
-    void get_account_id(final String name_id, final String id) {
+    void get_account_id(final String name_id, final String id)
+    {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
+        String getDetails2 = ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
+        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
+
+        /*
         try {
             final int db_id = Helper.fetchIntSharePref(context, getString(R.string.sharePref_database));
             //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
@@ -674,6 +693,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         } catch (Exception e) {
 
         }
+        */
     }
 
     private void updateBlockNumberHead() {
@@ -707,6 +727,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @Override
     public void accountId(String string) {
+        myWebSocketHelper.cleanUpTransactionsHandler();
         //addWallet(etAccountName.getText().toString());
         String result = SupportMethods.ParseJsonObject(string, "result");
         String id_account = SupportMethods.ParseJsonObject(result, "id");

@@ -10,7 +10,8 @@
 <string name="notes">shenime</string>
 <string name="note">shenim</string>
 <string name="payment_received">pagese e marre</string>
-<string name="import_brainkey">importo  celesin</string>
+    <string name="bts_will_be_deducted">BTS do të zbriten nga</string>
+    <string name="import_brainkey">importo  celesin</string>
 <string name="import_backup_old">importo backup</string>
 <string name="choose_backup">zgjidh backup</string>
 <string name="choose_file">zgjidh skedarin</string>
@@ -41,7 +42,7 @@
 <string name="txt_brain_key"> celesi</string>
 <string name="txt_brain_key_info"> celesi eshte i rendesishem, bej backupin e celesit. Nese mundesh stampoje ose shruaje dhe vendose ne nje vend te sigurt. Kushdo qe ka hyrje ne celesin tuaj do te kete te drejte te hyje ne fondet e portafolit tuaj</string>
 <string name="create_wallet">krijo portafolin</string>
-<string name="cancel"> fshij</string>
+<!--<string name="cancel"> fshij</string>-->
 <string name="save">shpeto</string>
 <string name="next">ne vazhdim</string>
 <string name="please_enter_brainkey">ju lutem vendosni celesin tuaj</string>
@@ -202,10 +203,29 @@
     <string name="try_again">riprovo pas 5 minutash</string>
     <string name="warning_msg_same_account">nuk eshte e mundur te dergohet shuma ne te njejten llogari</string>
 
+    <!--<string name="please_backup_your_brainkey">Ju lutemi të backup brainkey tuaj</string>-->
+    <!--<string name="backup_brainkey_msg">Backup dosja juaj .bin diku të sigurt apo fondet tuaja mund të jetë e humbur!</string>-->
+    <!--<string name="unable_to_trade_bAssets">Në pamundësi për të tregtisë pasurinë Backup</string>-->
+    <!--<string name="unable_to_send_amount">Në pamundësi për të dërguar sasi.</string>-->
+    <!--<string name="unable_to_decode_QR">Në pamundësi për të deshifroj kodin QR.</string>-->
+    <string name="loyalty_points">Pikat e Besnikërisë</string>
+    <string name="str_warning_only_available">Warning! Vetëm %1$s %2$s është i disponueshëm</string>
+    <string name="str_balance_available">%1$s %2$s në dispozicion</string>
+
     <string name="please_backup_your_brainkey">Ju lutemi tė mbėshtetur nė brainkey</string>
     <string name="backup_brainkey_msg">Bej backup te karteles .bin ne nje vend te sigurt nese jo fondet do te humbasin</string>
     <string name="unable_to_trade_bAssets">e pamundur te nderosh pronen e backup</string>
     <string name="unable_to_send_amount">e pamundur te dergosh shumen.</string>
     <string name="unable_to_decode_QR">e pamundur te deshifrosh kodin QR</string>
+
+    <string name="select_backup_asset">Zgjidhni Asetin Backup</string>
+    <string name="sender_account">Llogaria Sender</string>
+    <string name="receiver_account">Llogaria Marresit</string>
+    <string name="total">Total</string>
+    <string name="payment_method">Metoda e pagesës</string>
+    <string name="thankyou_string">Thankyou për përdorimin Smartcoins portofolin</string>
+    <string name="audio_folder_path">Audio Folder Path</string>
+    <string name="please_make_sure_your_bin_file">Ju lutem sigurohuni që pin juaj është e saktë apo e saktë fotografi bin është zgjedhur</string>
+    <string name="change">Ndrysho ...</string>
 
 </resources>

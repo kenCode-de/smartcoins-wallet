@@ -2,6 +2,7 @@
     <string name="app_name">Smartcoins Wallet</string>
 
     <string name="send_capital">Lähetä</string>
+    <string name="bts_will_be_deducted">BTS vähennetään</string>
 
     <string name="account_create_register_or_import">TILIN LUONTI / LUO TAI TUO</string>
     <string name="txt_account_name">Tilin nimi</string>
@@ -202,7 +203,6 @@
     <string name="preferred_lang">Preferred Language</string>
     <string name="pref_account_from_brainkey">account_from_brainkey</string>
     <string name="pref_wallet_accounts">wallet_accounts</string>
-    <string name="pref_country">country</string>
     <string name="pref_timezone">timezone</string>
     <string name="pref_backup_asset">backup_asset</string>
     <string name="pref_account_name">account_name</string>
@@ -222,8 +222,6 @@
     <string name="e_receipt">e_receipt</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
-    <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}
-    </string>
     <string name="exchange_rate_params">{\"id\":7,\"method\":\"call\",\"params\":[1,\"get_limit_orders\",[\"1.3.0\",\"1.3.120\",1]]}
     </string>
     <string name="database_indentifier">
@@ -327,5 +325,17 @@
     <string name="unable_to_trade_bAssets">Onnistu kauppaa Backup Vastaavaa</string>
     <string name="unable_to_send_amount">Ei voitu lähettää Määrä.</string>
     <string name="unable_to_decode_QR">Ei voitu purkaa QR-koodin.</string>
+
+    <string name="loyalty_points">Lojaalisuuspisteet</string>
+
+    <string name="select_backup_asset">Valitse Backup Asset</string>
+    <string name="sender_account">lähettäjän Account</string>
+    <string name="receiver_account">vastaanotin Account</string>
+    <string name="total">Kaikki yhteensä</string>
+    <string name="payment_method">Maksutapa</string>
+    <string name="thankyou_string">Kiitos käyttää Smartcoins Wallet</string>
+    <string name="audio_folder_path">Audio kansion polku</string>
+    <string name="please_make_sure_your_bin_file">Varmista, että tappi on oikein tai oikea bin tiedosto valitaan</string>
+    <string name="change">Muuttaa...</string>
 
 </resources>

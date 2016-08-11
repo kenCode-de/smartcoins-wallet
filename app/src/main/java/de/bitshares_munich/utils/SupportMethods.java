@@ -29,8 +29,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.bitshares_munich.smartcoinswallet.R;
-
 /**
  * Created by Syed Muhammad Muzzammil on 5/24/16.
  */
@@ -46,6 +44,26 @@ public class SupportMethods {
         }
         return  Double.toString(value/ok);
     }
+
+    public static double convertAssetAmountToDouble(String precision,String number){
+        Double ok = 1.0;
+        Double pre = Double.valueOf(precision);
+        Double value = Double.valueOf(number);
+        for(int k = 0 ; k<pre ; k++ ){
+            ok = ok*10;
+        }
+        return  value/ok;
+    }
+
+    public static double convertAssetAmountToFiat(double amount,double exchanegrate){
+        return  amount*exchanegrate;
+    }
+
+    public static double convertAssetAmountToFiat(double amount,String exchanegrate){
+        double eR = Double.valueOf(exchanegrate);
+        return  convertAssetAmountToFiat(amount,eR);
+    }
+
     public static String ParseJsonObject(String Json , String Req){
         try {
             if(Json.contains(Req)){
@@ -54,16 +72,22 @@ public class SupportMethods {
         }catch (Exception e){ testing("SupportMethods",e,"ParseJsonObject");}
         return "";
     }
-    public static String ParseObjectFromJsonArray(String Json , int position){
-        try {
+    public static String ParseObjectFromJsonArray(String Json , int position)
+    {
+        try
+        {
             JSONArray myArray = new JSONArray(Json);
             if(myArray.length()>=position){
                 return  myArray.get(position).toString();
             }
-        }catch (Exception e){            testing("SupportMethods",e,"ParseObjectFromJsonArray");
+        }
+        catch (Exception e)
+        {
+            testing("SupportMethods",e,"ParseObjectFromJsonArray");
         }
         return "";
     }
+
     @Nullable
     public static HashMap<String,ArrayList<String>> ParseJsonArray(String Json , String req){
         try {

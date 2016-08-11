@@ -23,15 +23,16 @@ public class MediaService extends Service {
     }
     public void onCreate()
     {
-        mp = MediaPlayer.create(this, R.raw.woohoo);
-        mp.setLooping(false);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-                BalancesFragment.iSound.soundFinish();
-            }
-        });
+        AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
+        mp = audioFilePath.fetchMediaPlayer();
+            mp.setLooping(false);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                    BalancesFragment.iSound.soundFinish();
+                }
+            });
     }
     public void onDestroy()
     {

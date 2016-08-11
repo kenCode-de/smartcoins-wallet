@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Engedély</string>
 <string name="send_capital">Küldés</string>
-<string name="account_create_register_or_import">Fiók létrehozása / regisztrálás, vagy importálás</string>
+    <string name="bts_will_be_deducted">BTS levonásra kerül</string>
+    <string name="account_create_register_or_import">Fiók létrehozása / regisztrálás, vagy importálás</string>
 <string name="txt_account_name">Felhasználónév</string>
 <string name="time_stamp">Időbélyeg</string>
 <string name="email_pdf">E-mail PDF</string>
@@ -208,5 +209,19 @@
     <string name="unable_to_trade_bAssets">Nem lehet kereskedni a Backup Eszközökkel</string>
     <string name="unable_to_send_amount">Nem sikerült elküldeni az összeget.</string>
     <string name="unable_to_decode_QR">Nem lehet dekódolni a QR-kódot.</string>
+
+    <string name="loyalty_points">hűségpontok</string>
+    <string name="str_warning_only_available">Figyelem! Csak %1$s %2$s elérhető</string>
+    <string name="str_balance_available">%1$s %2$s elérhető</string>
+
+    <string name="select_backup_asset">Válassza Backup Asset</string>
+    <string name="sender_account">feladó fiók</string>
+    <string name="receiver_account">Vevő számla</string>
+    <string name="total">Teljes</string>
+    <string name="payment_method">Fizetési mód</string>
+    <string name="thankyou_string">Köszönöm használatához Smartcoins Wallet</string>
+    <string name="audio_folder_path">Hang mappa elérési útja</string>
+    <string name="please_make_sure_your_bin_file">Kérjük, ellenőrizze, hogy a csap a helyes vagy a megfelelő bin fájl kiválasztva</string>
+    <string name="change">Változás...</string>
 
 </resources>

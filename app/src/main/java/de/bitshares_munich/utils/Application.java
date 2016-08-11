@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Random;
+
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IAccount;
@@ -50,12 +52,15 @@ public class Application extends android.app.Application {
     public static String blockHead = "";
     private static Activity currentActivity;
 
-    public static String urlsSocketConnection[] = {"https://bitshares.openledger.info/ws",
-            "https://bitshares.dacplay.org:8089/ws",
-            "https://dele-puppy.com/ws",
-            "https://valen-tin.fr:8090"};
+    public static String urlsSocketConnection[] =
+            {
+                    "https://bitshares.openledger.info/ws"
+                    ,"https://bitshares.dacplay.org:8089/ws"
+                    //,"https://dele-puppy.com/ws"
+                    //,"https://valen-tin.fr:8090"
+            };
 
-    public static int counter = 0;
+    //public static int counter = 0;
 
     public static String monitorAccountId;
 
@@ -141,13 +146,14 @@ public class Application extends android.app.Application {
         }
     }
 
-    public static void webSocketConnection() {
-        iAccount = iAccount;
+    public static void webSocketConnection()
+    {
         isReady = false;
-        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[counter]);
+        int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
+        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);
         get.setTimeout(10 * 1000);
 
-        Log.d("Connecting to node", urlsSocketConnection[counter]);
+        Log.d("Connecting to node", urlsSocketConnection[nodeIndex]);
         AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
 
             @Override
@@ -156,12 +162,11 @@ public class Application extends android.app.Application {
                 if (ex != null)
                 {
                     isReady = false;
-                    counter++;
 
-                    if (counter > 3)
-                    {
-                        counter = 0;
-                    }
+//                    if ( ++counter >= urlsSocketConnection.length )
+//                    {
+//                        counter = 0;
+//                    }
 
                     Log.d("exception websocket", ex.toString());
                     final Exception myEx = ex;
@@ -297,11 +302,44 @@ public class Application extends android.app.Application {
                                     obj = (JSONObject) jsonArray.get(1);
                                 }
                                 iExchangeRate.callback_exchange_rate(obj, id);
-                            } else if (id == 8) {
-                                if (iBalancesDelegate_transactionActivity != null) {
+                            }
+                            else if (id == 8)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
                                     iBalancesDelegate_transactionActivity.OnUpdate(s, id);
                                 }
-                            } else if (id == 12) {
+                            }
+                            else if (id == 20)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 21)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 22)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 23)
+                            {
+                                if (iBalancesDelegate_transactionActivity != null)
+                                {
+                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                                }
+                            }
+                            else if (id == 12)
+                            {
                                 if (iTransactionObject != null) {
                                     iTransactionObject.checkTransactionObject(jsonObject);
                                 }
@@ -350,7 +388,7 @@ public class Application extends android.app.Application {
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }
                             } else if (id == 17) {
-                                Log.d("account_update", jsonObject.toString());
+                                //Log.d("account_update", jsonObject.toString());
                             }
                             else if (id == 18) {
                                 if (iBalancesDelegate_ereceiptActivity != null) {

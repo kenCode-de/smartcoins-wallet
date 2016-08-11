@@ -13,6 +13,7 @@
 <string name="import_brainkey">BrainKey İthalat</string>
 <string name="import_backup_old">İthalat Yedekleme</string>
 <string name="choose_backup">Yedekleme seçin</string>
+    <string name="bts_will_be_deducted">BTS düşülecektir</string>
 <string name="choose_file">Dosya seçin</string>
     <string name="unable_to_import_account_from_bin_file">bin dosyadan hesabı almak için açılamıyor</string>
     <string name="importing_keys_from_bin_file">Bin dosyasından Keys İthalat</string>
@@ -207,5 +208,19 @@
     <string name="unable_to_trade_bAssets">Yedekleme Varlıklar ticaret yapılamıyor</string>
     <string name="unable_to_send_amount">Tutar göndermek için açılamıyor.</string>
     <string name="unable_to_decode_QR">QR kodu çözmek için açılamıyor.</string>
+
+    <string name="loyalty_points">Sadakat Puanları</string>
+    <string name="str_warning_only_available">Uyarı! Sadece %1$s %2$s mevcuttur</string>
+    <string name="str_balance_available">%1$s %2$s mevcut $ </string>
+
+    <string name="select_backup_asset">Yedekleme Varlık seçin</string>
+    <string name="sender_account">gönderen Hesabı</string>
+    <string name="receiver_account">Alıcı Hesap</string>
+    <string name="total">Genel Toplam</string>
+    <string name="payment_method">Ödeme şekli</string>
+    <string name="thankyou_string">Teşekkür Smartcoins Cüzdan kullanılarak</string>
+    <string name="audio_folder_path">Ses Klasör Yolu</string>
+
+    <string name="please_make_sure_your_bin_file">Doğru veya doğru bin dosya seçili olduğundan emin pin olduğunu olun</string>
 
 </resources>
