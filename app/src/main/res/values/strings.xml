@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smartcoins Wallet</string>
+    <string name="app_name" translatable="false">Smartcoins Wallet</string>
 
     <string name="send_capital">Send</string>
 
@@ -26,8 +26,8 @@
     <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
     <string name="create">CREATE</string>
     <string name="existing_account">Existing Account</string>
-    <string name="v_1_0_beta">v 1.0 beta</string>
-    <string name="block_number">block# -------</string>
+    <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
+    <string name="block_number" translatable="false">block# -------</string>
     <string name="agreement">Agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
@@ -36,8 +36,8 @@
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="mismatch_pin">mismatch pin</string>
-    <string name="key_brainkey">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
-    <string name="txt_pin">pin</string>
+    <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
+    <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>
     <string name="txt_brain_key_info">Print this out, or write it down. Anyone with access to your recovery key will have access to funds within this wallet.</string>
     <string name="create_wallet">CREATE WALLET</string>

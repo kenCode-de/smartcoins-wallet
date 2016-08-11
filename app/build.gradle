@@ -29,6 +29,10 @@ android {
     dexOptions {
         jumboMode true
     }
+
+    lintOptions {
+        disable 'MissingTranslation','ExtraTranslation'
+    }
 }
 
 dependencies {
