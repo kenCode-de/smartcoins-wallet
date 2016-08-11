@@ -222,6 +222,7 @@
     <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Folder Path</string>
     <string name="please_make_sure_your_bin_file">Lūdzu, pārliecinieties, ka jūsu pin ir pareizs vai pareiza bin fails ir izvēlēts</string>
+    <string name="change">Mainīt ...</string>
 
 </resources>
 

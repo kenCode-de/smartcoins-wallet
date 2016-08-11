@@ -222,5 +222,5 @@
     <string name="thankyou_string">Takk for hjelp Smartcoins lommebok</string>
     <string name="audio_folder_path">Audio mappebane</string>
     <string name="please_make_sure_your_bin_file">Vennligst sørg for at pinnen er riktig eller riktig bin fil er valgt</string>
-
+    <string name="change">Endring...</string>
 </resources>

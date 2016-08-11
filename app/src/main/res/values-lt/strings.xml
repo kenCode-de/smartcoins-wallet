@@ -222,4 +222,6 @@
     <string name="audio_folder_path">Garso katal</string>
     <string name="please_make_sure_your_bin_file">Prašome įsitikinkite, kad jūsų PIN teisingas, ar teisingai bin failas yra pasirinktas</string>
 
+    <string name="change">Keisti ...</string>
+
 </resources>

@@ -222,4 +222,5 @@
     <string name="audio_folder_path">Audio Mappsökväg</string>
     <string name="please_make_sure_your_bin_file">Se till att din PIN-kod är korrekt eller korrekt bin fil väljs</string>
 
+    <string name="change">Byta...</string>
 </resources>

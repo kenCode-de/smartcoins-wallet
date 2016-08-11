@@ -236,5 +236,6 @@
     <string name="audio_folder_path">Ήχου Διαδρομή φακέλου</string>
 
     <string name="please_make_sure_your_bin_file">Παρακαλώ βεβαιωθείτε ότι το PIN σας έχει επιλεγεί σωστή ή σωστό αρχείο bin</string>
+    <string name="change">Αλλαγή...</string>
 
 </resources>

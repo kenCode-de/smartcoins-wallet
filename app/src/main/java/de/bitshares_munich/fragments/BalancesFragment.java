@@ -48,13 +48,16 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -90,6 +93,7 @@ import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionActivity;
 import de.bitshares_munich.utils.tableViewClickListener;
+import de.bitshares_munich.utils.transactionsDateComparator;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
@@ -1570,7 +1574,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                   //  cView.setTypeface(null, Typeface.NORMAL);
-                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
                                                 }
                                                 catch (Exception e)
                                                 {
@@ -1662,7 +1666,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                     //cView.setTypeface(null, Typeface.NORMAL);
-                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
                                                 }
                                                 catch (Exception e)
                                                 {
@@ -1773,7 +1777,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                     //cView.setTypeface(null, Typeface.NORMAL);
-                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
                                                 }
                                                 catch (Exception e)
                                                 {
@@ -1877,7 +1881,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 try
                                                 {
                                                   //  cView.setTypeface(null, Typeface.NORMAL);
-                                                    cView.setTextColor(getResources().getColor(R.color.green));
+                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
                                                 }
                                                 catch (Exception e)
                                                 {
@@ -2441,11 +2445,26 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                     if ( myTransactionsTableAdapter == null )
                     {
+//                        Set<TransactionDetails> hs = new HashSet<>();
+//                        hs.addAll(myTransactions);
+//                        myTransactions.clear();
+//                        myTransactions.addAll(hs);
+//
+//                        Collections.sort(myTransactions, new transactionsDateComparator());
+
+
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
                         tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
                     else
                     {
+//                        Set<TransactionDetails> hs = new HashSet<>();
+//                        hs.addAll(myTransactions);
+//                        myTransactions.clear();
+//                        myTransactions.addAll(hs);
+//
+//                        Collections.sort(myTransactions, new transactionsDateComparator());
+
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
                         tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
@@ -2674,8 +2693,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void loadAll()
     {
-        updateTriggerFromNetworkBroadcast = true;
-        loadOnDemand(getActivity());
+
+        //extra
+//if(!updateTriggerFromNetworkBroadcast) {
+//
+////
+//    ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions) + to, TransactionDetails.class);
+//
+//    mySavedList.clear();
+//
+//    tinyDB.putTransactions(getActivity(), getContext(), getResources().getString(R.string.pref_local_transactions) + to, mySavedList);
+
+    //original
+
+    updateTriggerFromNetworkBroadcast = true;
+    loadOnDemand(getActivity());
+//}
     }
 
     AssestsActivty myAssetsActivity;
@@ -2711,7 +2744,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
 
         // get transactions from sharedPref
+
+
         myTransactions = getTransactionsFromSharedPref(to);
+
+
         //myTransactions.clear();
         //saveTransactions(myTransactions);
 
@@ -3041,7 +3078,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
         return txtAmount_d;
     }
-
 
     TransactionActivity myTransactionActivity;
     Handler pendingTransactionsLoad;

@@ -245,5 +245,5 @@
     <string name="thankyou_string">Хвала за коришћење Смартцоинс новчаник</string>
     <string name="audio_folder_path">Аудио Путања</string>
     <string name="please_make_sure_your_bin_file">Уверите се да је пин је изабран исправан или исправан бин фајл</string>
-
+    <string name="change">Цханге ...</string>
 </resources>

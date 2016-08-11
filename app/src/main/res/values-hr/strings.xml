@@ -229,6 +229,6 @@
     <string name="thankyou_string">Hvala što koristite Smartcoins novčanik</string>
     <string name="audio_folder_path">Audio Put do mape</string>
     <string name="please_make_sure_your_bin_file">Molimo provjerite je li igla je ispravan ili ispraviti bin datoteke je odabran</string>
-
+    <string name="change">Promijeniti...</string>
 
 </resources>

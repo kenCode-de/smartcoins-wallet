@@ -225,5 +225,6 @@
     <string name="audio_folder_path">ऑडियो फ़ोल्डर पथ</string>
 
     <string name="please_make_sure_your_bin_file">सुनिश्चित करें कि आपके पिन है सही या सही बिन फ़ाइल चयनित है कृपया</string>
+    <string name="change">परिवर्तन...</string>
 
 </resources>

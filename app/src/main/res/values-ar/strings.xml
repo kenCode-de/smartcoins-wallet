@@ -220,4 +220,6 @@
     <string name="audio_folder_path">الصوت مسار المجلد</string>
     <string name="please_make_sure_your_bin_file">يرجى التأكد من رقم التعريف الشخصي الخاص بك هو تحديد الصحيح أو الصحيح ملف بن ل</string>
 
+    <string name="change">تغيير...</string>
+
 </resources>
