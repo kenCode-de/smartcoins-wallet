@@ -7,7 +7,6 @@
 <string name="time_stamp">tidsstempel</string>
 <string name="email_pdf">E-post PDF</string>
 <string name="account">Konto</string>
-<string name="friendly_name">Friendly Name</string>
 <string name="notes">Merknader</string>
 <string name="note">Notat</string>
 <string name="payment_received">Betaling mottatt</string>
@@ -223,4 +222,6 @@
     <string name="audio_folder_path">Audio mappebane</string>
     <string name="please_make_sure_your_bin_file">Vennligst sørg for at pinnen er riktig eller riktig bin fil er valgt</string>
     <string name="change">Endring...</string>
+
+    <string name="friendly_name">Vennlig Navn</string>
 </resources>

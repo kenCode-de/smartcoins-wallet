@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><string name="license">Licens</string>
 <string name="send_capital">Skicka</string>
-<string name="account_create_register_or_import">Konto Skapa / register eller IMPORT</string>
 <string name="txt_account_name">Kontonamn</string>
 <string name="time_stamp">Tidsstämpel</string>
 <string name="email_pdf">e-PDF</string>
@@ -10,13 +9,10 @@
 <string name="notes">Anmärkningar</string>
 <string name="note">Notera</string>
 <string name="payment_received">Betalning mottagen</string>
-<string name="import_brainkey">Import från BrainKey</string>
-<string name="import_backup_old">import Backup</string>
     <string name="bts_will_be_deducted">BTS kommer att dras från</string>
 <string name="choose_backup">Välj Backup</string>
     <string name="unable_to_import_account_from_bin_file">Det går inte att importera konto från bin-fil</string>
     <string name="importing_keys_from_bin_file">Importera nycklar från Bin fil</string>
-    <string name="import_backup">Import Backup från BIN-fil</string>
     <string name="is_already_added">redan har lagts</string>
     <string name="in_valid_email">Ogiltig email</string>
     <string name="select">Välja</string>
@@ -138,7 +134,6 @@
     <string name="txt_folder_created">mapp Skapad</string>
     <string name="upgrade_failed">uppgradera misslyckades</string>
     <string name="upgrading">Uppgradering ...</string>
-    <string name="import_new_account">IMPORT KONTO</string>
     <string name="upgrade_account">UPPGRADERA KONTO</string>
     <string name="remove_account">TA BORT KONTO</string>
     <string name="txt_alertmsg">Är du säker på att ta bort det här kontot</string>
@@ -223,4 +218,9 @@
     <string name="please_make_sure_your_bin_file">Se till att din PIN-kod är korrekt eller korrekt bin fil väljs</string>
 
     <string name="change">Byta...</string>
+    <string name="account_create_register_or_import">Konto Skapa / register eller IMPORTERA</string>
+    <string name="import_brainkey">Importera från BrainKey</string>
+    <string name="import_backup">Importera Backup från BIN-fil</string>
+    <string name="import_new_account">IMPORTERA KONTO</string>
+
 </resources>

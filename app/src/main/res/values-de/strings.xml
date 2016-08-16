@@ -66,7 +66,6 @@
 <string name="checkbox_donate_old">Spende 2 BTS an das BitShares Munich Entwickler Team</string>
 <string name="backup_brainkey">BRAINKEY SICHERN</string>
 <string name="imported_created_accounts">Importierte / Erstellt Accounts</string>
-<string name="register_new_account">Neuer Account</string>
 <string name="secure_pin">PIN ÄNDERN</string>
 <string name="export">Export</string>
 <string name="show_more">Weitere Transaktionen</string>
@@ -169,8 +168,6 @@
     <string name="txt_folder_created">Ordner erstellt</string>
     <string name="upgrade_failed">Aktualisierung fehlgeschlagen</string>
     <string name="upgrading">Aktualisieren ...</string>
-    <string name="import_new_account">IMPORT ACCOUNT</string>
-    <string name="upgrade_account">UPGRADE ACCOUNT</string>
     <string name="remove_account">KONTO ENTFERNEN</string>
     <string name="txt_alertmsg">Sind Sie sich sicher, dass Sie dieses Konto entfernen möchten?</string>
     <string name="validation_in_progress">Validierung im bearbeitung ..</string>
@@ -223,5 +220,9 @@
     <string name="audio_folder_path">Audio Ordnerpfad</string>
     <string name="please_make_sure_your_bin_file">Bitte stellen Sie sicher, dass Ihr Stift ist richtig oder nicht vollständig entsprechen bin-Datei ausgewählt ist,</string>
     <string name="change">Veränderung...</string>
+
+    <string name="register_new_account">Neuer Konto</string>
+    <string name="import_new_account">EINFUHR KONTO</string>
+    <string name="upgrade_account">UPGRADE KONTO</string>
 
 </resources>

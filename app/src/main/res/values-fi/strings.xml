@@ -268,9 +268,6 @@
 
     <string name="upgrade_failed">Upgrade failed</string>
     <string name="upgrading">Upgrading...</string>
-    <string name="import_new_account">IMPORT ACCOUNT</string>
-    <string name="upgrade_account">UPGRADE ACCOUNT</string>
-    <string name="remove_account">REMOVE ACCOUNT</string>
     <string name="txt_alertmsg">Are you sure to delete this account</string>
     <string name="delete">Delete</string>
     <string name="validation_in_progress">Validation in progress..</string>
@@ -306,7 +303,6 @@
     <string name="please_pay">Please pay</string>
     <string name="transfer_funds">Transferring Funds</string>
     <string name="unable_to_process">Unable to process</string>
-    <string name="upgrade_to_ltm">Upgrade to LTM</string>
     <string name="cancel">CANCEL</string>
 
     <string name="select">"Select</string>
@@ -337,5 +333,10 @@
     <string name="audio_folder_path">Audio kansion polku</string>
     <string name="please_make_sure_your_bin_file">Varmista, että tappi on oikein tai oikea bin tiedosto valitaan</string>
     <string name="change">Muuttaa...</string>
+
+    <string name="import_new_account">Tuo tilin</string>
+    <string name="upgrade_account">PÄIVITÄ TILI</string>
+    <string name="remove_account">Poista tili</string>
+    <string name="upgrade_to_ltm">Päivitä LTM</string>
 
 </resources>
