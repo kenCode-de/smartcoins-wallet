@@ -449,7 +449,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 String ltmAmount=Helper.fetchStringSharePref(getActivity(),"ltmAmount");
                 //Check Balance
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + tvAccountName.getText().toString() + " account.");
+                   // alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + tvAccountName.getText().toString() + " account.");
+                    alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + tvAccountName.getText().toString() + getString(R.string.account));
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_back));
                 } else {

@@ -179,7 +179,6 @@
     <string name="please_pay">Prosimo, bodite</string>
     <string name="transfer_funds">prenos skladov</string>
     <string name="unable_to_process">Ni mogoče obdelati</string>
-    <string name="cancel">CANCEL</string>
     <string name="donation">donacija</string>
     <string name="insufficient_funds">Nezadostna sredstva</string>
     <string name="txt_wallet_atleast_one_account">Žal vaše denarnice mora imeti vsaj 1 račun v njej</string>
@@ -225,5 +224,6 @@
 
     <string name="please_make_sure_your_bin_file">Prepričajte se, da vaš pin je pravilna ali pravilna bin datoteka je izbrana</string>
     <string name="change">Spremeni ...</string>
+    <string name="cancel">PREKLIČI</string>
 
 </resources>

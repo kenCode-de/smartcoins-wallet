@@ -154,7 +154,6 @@
 <string name="str_trade_not_available">Торговля не доступна</string>
     <string name="preferred_lang">предпочтительный язык</string>
     <string name="got_it">Понял</string>
-    <string name="upgrade_to_ltm">Повышение до ранга LTM (Lifetime Members)</string>
     <string formatted="false" name="help_message">Получите кэшбэк 80% на сборах! Lifetime Members (LTM) получают кэшбэк 80% от каждого взноса за транзакцию, которую они платят, и право получать доход от рефералов. Стоимость Lifetime Member 20000 BTS!</string>
     <string name="txt_yes">Да</string>
     <string name="txt_no">Нет</string>
@@ -223,4 +222,6 @@
 
     <string name="please_make_sure_your_bin_file">Пожалуйста, убедитесь, что ваш контакт выбран правильный или правильный файл бен</string>
     <string name="change">Изменить...</string>
+
+    <string name="upgrade_to_ltm">Обновление до LTM</string>
 </resources>
