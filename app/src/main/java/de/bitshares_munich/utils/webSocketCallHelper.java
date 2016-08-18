@@ -15,7 +15,10 @@ public class webSocketCallHelper {
     private boolean callInProgressForTransactions = false;
     private boolean callReceivedForTransactions = true;
     Context context;
-    int time = 5000;
+
+    // 10 to 15 seconds are needed for the socket to connect
+    // so a timeout interval of 20 seconds is best suited for a stable connection
+    int time = 20000;
 
     public enum api_identifier {
         database,

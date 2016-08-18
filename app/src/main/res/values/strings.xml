@@ -205,7 +205,7 @@
 
     <string name="pref_desired_smart_coin">desired_smart_coin</string>
     <string name="pref_uia_coin">uia_coin</string>
-    <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
+    <string name="url_bug" translatable="false">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
     <string name="sharePref_network_broadcast">network_broadcast</string>
