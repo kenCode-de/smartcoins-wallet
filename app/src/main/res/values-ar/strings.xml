@@ -57,7 +57,7 @@
 <string name="always_donate">دائما تبرع ب 2 BTS لدعم المطورين في Bitshares ميونخ</string>
 <string name="hide_donations">إخفاء التبرعات من قائمة المعاملات الشاشة الرئيسية</string>
 <string name="backup">انشاء نسخة احتياطية ل .BIN</string>
-<string name="checkbox_donate">التبرع ل Bitshares</string>
+<!--<string name="checkbox_donate">التبرع ل Bitshares</string>-->
 <string name="backup_brainkey">انشاء نسخة احتياطية من Brainkey</string>
 <string name="imported_created_accounts">استيراد حسابات منشئة من الأصل</string>
 <string name="register_new_account">تسجيل حساب جديد</string>
