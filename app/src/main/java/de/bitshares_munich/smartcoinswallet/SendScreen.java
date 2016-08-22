@@ -1815,14 +1815,18 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void saveMerchantEmail(String string) {
-        String json = SupportMethods.ParseJsonObject(string, "json");
-        String accountName = SupportMethods.ParseJsonObject(json, "to");
-        String note = SupportMethods.ParseJsonObject(json, "note");
-        if (!note.equals("")) {
-            String email = note.replace("merchant_email:\"", "");
-            if (email.length() > 0) {
-                email = email.substring(0, email.length() - 1);
-                if (SupportMethods.isEmailValid(email)) {
+        //String json = SupportMethods.ParseJsonObject(string, "json");
+        String accountName = SupportMethods.ParseJsonObject(string, "to");
+        String note = SupportMethods.ParseJsonObject(string, "note");
+        if (!note.isEmpty())
+        {
+            String email = SupportMethods.ParseJsonObject(note,"merchant_email");
+            //String email = note.replace("merchant_email:\"", "");
+            if (email.length() > 0)
+            {
+                //email = email.substring(0, email.length() - 1);
+                if (SupportMethods.isEmailValid(email))
+                {
                     MerchantEmail merchantEmail = new MerchantEmail(getApplicationContext());
                     merchantEmail.saveMerchantEmail(accountName, email);
                 }
