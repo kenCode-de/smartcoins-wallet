@@ -179,6 +179,19 @@ public class Helper {
         return preferences.getBoolean(key, false);
     }
 
+    public static void storeLongSharePref(Context context, String key, long value) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
+    public static long fetchLongSharePref(Context context, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefsEditor = preferences.edit();
+        return preferences.getLong(key, -1);
+    }
+
     public static Boolean containKeySharePref(Context context, String key) {
         Boolean isContainer = false;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

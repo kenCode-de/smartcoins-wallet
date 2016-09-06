@@ -454,33 +454,40 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
-//        if(canAccountCreate()) {
+    Application.timeStamp();
 
-        if (checkingValidation) {
-            Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
-        } else if (etAccountName.getText().toString().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
-        } else if (etAccountName.getText().toString().length() <= 5) {
-            Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-        } else if (checkLastIndex()) {
-            tvErrorAccountName.setVisibility(View.VISIBLE);
-            tvErrorAccountName.setText(R.string.last_letter_cannot);
-        } else if (!checkHyphen()) {
-            tvErrorAccountName.setVisibility(View.VISIBLE);
-            tvErrorAccountName.setText(R.string.account_name_shoud_have);
-        } else {
-            if (etPin.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-            } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+    finish();
+
+
+
+        Boolean original = false;
+        if(original) {
+            if (checkingValidation) {
+                Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
+            } else if (etAccountName.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
+            } else if (etAccountName.getText().toString().length() <= 5) {
+                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+            } else if (checkLastIndex()) {
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                tvErrorAccountName.setText(R.string.last_letter_cannot);
+            } else if (!checkHyphen()) {
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                tvErrorAccountName.setText(R.string.account_name_shoud_have);
             } else {
-                if (validAccount) {
-                    if (!checkingValidation) {
-                        showDialog("", "");
-                        accountCreated = false;
-                        generateKeys();
+                if (etPin.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
+                } else if (etPinConfirmation.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+                } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+                } else {
+                    if (validAccount) {
+                        if (!checkingValidation) {
+                            showDialog("", "");
+                            accountCreated = false;
+                            generateKeys();
+                        }
                     }
                 }
             }
@@ -656,6 +663,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
+        Application.timeStamp();
+
         finish();
     }
 
@@ -733,5 +743,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         addWallet(id_account);
     }
+
 
 }

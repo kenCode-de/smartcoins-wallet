@@ -15,6 +15,7 @@ import com.itextpdf.text.ExceptionConverter;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.AsyncHttpClient;
 import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.Headers;
 import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONArray;
@@ -23,7 +24,11 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import de.bitshares_munich.Interfaces.AssetDelegate;
@@ -94,6 +99,7 @@ public class Application extends android.app.Application implements de.bitshares
         blockHead = "";
 //        webSocketConnection();
         init();
+        accountCreateInit();
     }
 
     public void init()
@@ -637,6 +643,59 @@ public static int nodeIndex = 0;
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+    }
+
+    public static void timeStamp(){
+
+        Helper.storeBoolianSharePref(context,"account_can_create",false);
+        setTimeStamp();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Helper.storeBoolianSharePref(context,"account_can_create",true);
+
+                }
+            }, 10 * 60000);
+    }
+    @NonNull
+    public static Boolean accountCanCreate(){
+        return Helper.fetchBoolianSharePref(context,"account_can_create");
+    }
+    void accountCreateInit(){
+        if(Helper.containKeySharePref(context,"account_can_create")){
+           if(!accountCanCreate()){
+              getTimeStamp();
+           }
+        }else {
+            Helper.storeBoolianSharePref(context,"account_can_create",true);
+        }
+    }
+    static void setTimeStamp(){
+        Calendar c = Calendar.getInstance();
+        long time = c.getTimeInMillis();
+        Helper.storeLongSharePref(context,"account_create_timestamp",time);
+    }
+    static void getTimeStamp(){
+        try {
+            Calendar c = Calendar.getInstance();
+            long currentTime = c.getTimeInMillis();;
+            long oldTime = Helper.fetchLongSharePref(context, "account_create_timestamp");
+            long diff = currentTime-oldTime;
+            if(diff < TimeUnit.MINUTES.toMillis(10)){
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Helper.storeBoolianSharePref(context,"account_can_create",true);
+                    }
+                }, TimeUnit.MINUTES.toMillis(10)-diff);
+            }else {
+                Helper.storeBoolianSharePref(context,"account_can_create",true);
+            }
+        }catch (Exception e){
+            Helper.storeBoolianSharePref(context,"account_can_create",true);
+        }
     }
 }
 
