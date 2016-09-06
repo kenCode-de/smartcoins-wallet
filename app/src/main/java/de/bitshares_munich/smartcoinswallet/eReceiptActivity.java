@@ -43,7 +43,6 @@ import retrofit2.Response;
 public class eReceiptActivity extends BaseActivity implements IBalancesDelegate
 {
     Context context;
-    Application application = new Application();
 
     @Bind(R.id.ll_operations)
     LinearLayout ll_operations;
@@ -99,7 +98,7 @@ public class eReceiptActivity extends BaseActivity implements IBalancesDelegate
         ButterKnife.bind(this);
 
         context = getApplicationContext();
-        application.registerBalancesDelegateEReceipt(this);
+        Application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
 
         Intent intent = getIntent();
@@ -324,20 +323,20 @@ public class eReceiptActivity extends BaseActivity implements IBalancesDelegate
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
         //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_names(String name_id,String id){
         int db_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
         //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_asset(String asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     @OnClick(R.id.buttonSend)

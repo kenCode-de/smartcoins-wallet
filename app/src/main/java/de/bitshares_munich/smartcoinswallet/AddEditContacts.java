@@ -62,7 +62,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     String emailtxt = "";
     String accountid = "";
     String note = "";
-    Application application = new Application();
 
     boolean validReceiver = false;
 
@@ -116,7 +115,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
         context = this;
         tinyDB = new TinyDB(context);
-        application.registerCallback(this);
+        Application.registerCallback(this);
 
         myWebSocketHelper = new webSocketCallHelper(this);
 

@@ -57,9 +57,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.Interfaces.GravatarDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
+import de.bitshares_munich.models.Gravatar;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.TransactionIdResponse;
@@ -76,12 +78,14 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceipt extends BaseActivity implements IBalancesDelegate {
+public class eReceipt extends BaseActivity implements IBalancesDelegate,GravatarDelegate {
     Context context;
-    Application application = new Application();
 
     @Bind(R.id.ivOtherGravatar)
     ImageView ivOtherGravatar;
+
+    @Bind(R.id.tvOtherCompany)
+    TextView tvOtherCompany;
 
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
@@ -107,6 +111,13 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
     @Bind(R.id.tvAmount)
     TextView tvAmount;
+
+    @Bind(R.id.tvAddress)
+    TextView tvAddress;
+
+    @Bind(R.id.tvContact)
+    TextView tvContact;
+
 
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
@@ -178,11 +189,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String amountAmount = "";
     String time = "";
     String timeZone = "";
-    String emailOther = "";
-    String emailUser = "";
     ProgressDialog progressDialog;
     boolean loadComplete = false;
     boolean btnPress = false;
+
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -199,7 +209,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         context = getApplicationContext();
         progressDialog = new ProgressDialog(this);
-        application.registerBalancesDelegateEReceipt(this);
+        Application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
         hideProgressBar();
         Intent intent = getIntent();
@@ -233,18 +243,24 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         tvUserName.setText(userName);
         TvBlockNum.setText(date);
         tvTime.setText(time + " " + timeZone);
+
+
+
         //  emailOther = get_email(otherName);
         //   emailOther = "fawaz_ahmed@live.com";
 
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        int width = size.x;
-//
-//        ivOtherGravatar.requestLayout();
-//
-//        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
-//        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        ivOtherGravatar.requestLayout();
+
+        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+
+
+        fetchGravatarInfo(get_email(otherName));
 
         init(eReciept);
 
@@ -461,7 +477,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                     tvUserId.setText(OPmap.get("to"));
                 }
 
-
+//                fetchGravatarInfo(get_email(tvOtherId.getText().toString()));
                 tvMemo.setText(memoMsg);
 
                 loadComplete = true;
@@ -476,20 +492,20 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
         //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_names(String name_id, String id) {
         int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
         //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_asset(String asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\"" + asset + "\"]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     @OnClick(R.id.buttonSend)
@@ -532,6 +548,35 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String get_email(String accountName) {
         MerchantEmail merchantEmail = new MerchantEmail(context);
         return merchantEmail.getMerchantEmail(accountName);
+    }
+
+    @Override
+    public void updateProfile(Gravatar myGravatar) {
+        tvOtherCompany.setText(myGravatar.companyName);
+        tvAddress.setText(myGravatar.address);
+        tvContact.setText(myGravatar.url);
+    }
+
+    @Override
+    public void updateCompanyLogo(Bitmap logo) {
+        Bitmap bitmap = getRoundedCornerBitmap(logo);
+        ivOtherGravatar.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void failureUpdateProfile() {
+
+    }
+
+    @Override
+    public void failureUpdateLogo() {
+
+    }
+    GravatarDelegate instance(){
+        return this;
+    }
+    void fetchGravatarInfo(String email){
+        Gravatar.getInstance(instance()).fetch(email);
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

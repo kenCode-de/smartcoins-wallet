@@ -2,7 +2,11 @@ package de.bitshares_munich.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TimeUtils;
 import android.widget.Toast;
@@ -17,6 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Random;
 
 import butterknife.ButterKnife;
@@ -29,14 +35,16 @@ import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
 import de.bitshares_munich.Interfaces.ITransactionObject;
+import de.bitshares_munich.autobahn.WebSocketConnection;
+import de.bitshares_munich.autobahn.WebSocketException;
 import de.bitshares_munich.smartcoinswallet.R;
 
 /**
  * Created by qasim on 5/9/16.
  */
-public class Application extends android.app.Application {
+public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver {
 
-    public static WebSocket webSocketG;
+//    public static WebSocket webSocketG;
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
@@ -54,9 +62,10 @@ public class Application extends android.app.Application {
 
     public static String urlsSocketConnection[] =
             {
-                    "https://bitshares.openledger.info/ws"
-                    ,"https://bitshares.dacplay.org:8089/ws"
-                    ,"https://openledger.hk/ws"
+                    "wss://de.blockpay.ch:8089",                // German node
+                    "wss://fr.blockpay.ch:8089",               // France node
+                    "wss://bitshares.openledger.info/ws",      // Openledger node
+           //         "wss://bitshares.dacplay.org:8089/ws"
                     //,"https://dele-puppy.com/ws"
                     //,"https://valen-tin.fr:8090"
             };
@@ -83,18 +92,35 @@ public class Application extends android.app.Application {
         context = getApplicationContext();
         //showDialogPin();
         blockHead = "";
-        webSocketConnection();
+//        webSocketConnection();
+        init();
     }
 
-    public void registerCallback(IAccount callbackClass) {
+    public void init()
+    {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if ( mConnection == null )
+                {
+                    mConnection = new WebSocketConnection();
+                    webSocketConnection();
+                }
+            }
+        },1000);
+
+    }
+
+
+    public static void  registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
     }
 
-    public void registerCallbackIAccountID(IAccountID callbackClass) {
+    public static void  registerCallbackIAccountID(IAccountID callbackClass) {
         iAccountID = callbackClass;
     }
 
-    public void registerExchangeRateCallback(IExchangeRate callbackClass) {
+    public static void registerExchangeRateCallback(IExchangeRate callbackClass) {
         iExchangeRate = callbackClass;
     }
 
@@ -104,35 +130,35 @@ public class Application extends android.app.Application {
     }
     */
 
-    public void registerBalancesDelegateTransaction(IBalancesDelegate callbackClass) {
+    public static void registerBalancesDelegateTransaction(IBalancesDelegate callbackClass) {
         iBalancesDelegate_transactionActivity = callbackClass;
     }
 
-    public void registerBalancesDelegateEReceipt(IBalancesDelegate callbackClass) {
+    public static void  registerBalancesDelegateEReceipt(IBalancesDelegate callbackClass) {
         iBalancesDelegate_ereceiptActivity = callbackClass;
     }
 
-    public void registerBalancesDelegateAssets(IBalancesDelegate callbackClass) {
+    public static void  registerBalancesDelegateAssets(IBalancesDelegate callbackClass) {
         iBalancesDelegate_assetsActivity = callbackClass;
     }
 
-    public void registerAssetDelegate(AssetDelegate callbackClass) {
+    public static void registerAssetDelegate(AssetDelegate callbackClass) {
         iAssetDelegate = callbackClass;
     }
 
-    public void registerTransactionObject(ITransactionObject callbackClass) {
+    public static void registerTransactionObject(ITransactionObject callbackClass) {
         iTransactionObject = callbackClass;
     }
 
-    public void registerAccountObjectCallback(IAccountObject callbackClass) {
+    public static void registerAccountObjectCallback(IAccountObject callbackClass) {
         iAccountObject = callbackClass;
     }
 
-    public void registerAssetObjectCallback(IAssetObject callbackClass) {
+    public static void registerAssetObjectCallback(IAssetObject callbackClass) {
         iAssetObject = callbackClass;
     }
 
-    public void registerRelativeHistoryCallback(IRelativeHistory callbackClass) {
+    public static void registerRelativeHistoryCallback(IRelativeHistory callbackClass) {
         iRelativeHistory = callbackClass;
     }
 
@@ -147,108 +173,133 @@ public class Application extends android.app.Application {
         }
     }
 
-    public static void webSocketConnection()
-    {
-        isReady = false;
-        int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
-        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);
-        get.setTimeout(10 * 1000);
-
-        Log.d("Connecting to node", urlsSocketConnection[nodeIndex]);
-        AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
-
-            @Override
-            public void onCompleted(final Exception ex, WebSocket webSocket) {
-
-                if (ex != null)
-                {
-                    isReady = false;
-
-//                    if ( ++counter >= urlsSocketConnection.length )
-//                    {
-//                        counter = 0;
+//    public static void webSocketConnection()
+//    {
+//        isReady = false;
+//        int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
+//        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);
+//        get.setTimeout(10 * 1000);
+//
+//        Log.d("Connecting to node", urlsSocketConnection[nodeIndex]);
+//        AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
+//
+//            @Override
+//            public void onCompleted(final Exception ex, WebSocket webSocket) {
+//
+//                if (ex != null)
+//                {
+//                    isReady = false;
+//
+////                    if ( ++counter >= urlsSocketConnection.length )
+////                    {
+////                        counter = 0;
+////                    }
+//
+//                    Log.d("exception websocket", ex.toString());
+//                    final Exception myEx = ex;
+//                    Log.d("exception websocket", myEx.toString());
+//                    try {
+//                        final String exMessage = ex.getMessage();
+//                        if (ex != null && exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure"))
+//                        {
+//                            Log.d("exception3 websocket", "inside");
+//
+//                            try {
+//
+//                                Runnable updateTask = new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        showWarningMessage(exMessage);
+//                                    }
+//                                };
+//                                warningHandler.postDelayed(updateTask, 1000);
+//                            }
+//                            catch (Exception e)
+//                            {
+//                                Log.d("exception websocket", e.getMessage());
+//                            }
+//                            //webSocketConnection();
+//                            Log.d("exception websocket", "showWarningMessagegetting out");
+//                        } else {
+//                            Log.d("exception websocket", "webbb socket");
+//                            if (webSocket != null) {
+//                                Log.d("exception websocket", "inside webbb socket");
+//                                if (webSocket.isOpen())
+//                                {
+//                                    Log.d("exception websocket", "is open");
+//                                    webSocket.close();
+//                                    Log.d("exception websocket", "closed");
+//                                    return;
+//                                }
+//                            }
+//                            webSocketConnection();
+//                        }
+//                    } catch (Exception e) {
+//                        Log.d("exception websocket", e.getMessage());
 //                    }
+//                    //ex.printStackTrace();
+//                    return;
+//                }
+//
+//                webSocket.setClosedCallback(new CompletedCallback() {
+//                    public void onCompleted(Exception ex) {
+//                        isReady = false;
+//                        webSocketConnection();
+//                    }
+//                });
+//
+//                webSocket.setEndCallback(new CompletedCallback() {
+//                    public void onCompleted(Exception ex) {
+//
+//                    }
+//                });
+//
+//                Log.d("exception websocket", "before making application.websocketg");
+//                Application.webSocketG = webSocket;
+//                Log.d("exception websocket", "sending initial socket");
+//                sendInitialSocket(context);
+//                Log.d("exception websocket", "completed");
+//            }
+//
+//
+//        });
+//
+//    }
 
-                    Log.d("exception websocket", ex.toString());
-                    final Exception myEx = ex;
-                    Log.d("exception websocket", myEx.toString());
-                    try {
-                        final String exMessage = ex.getMessage();
-                        if (ex != null && exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure"))
-                        {
-                            Log.d("exception3 websocket", "inside");
 
-                            try {
 
-                                Runnable updateTask = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        showWarningMessage(exMessage);
-                                    }
-                                };
-                                warningHandler.postDelayed(updateTask, 1000);
-                            }
-                            catch (Exception e)
-                            {
-                                Log.d("exception websocket", e.getMessage());
-                            }
-                            //webSocketConnection();
-                            Log.d("exception websocket", "showWarningMessagegetting out");
-                        } else {
-                            Log.d("exception websocket", "webbb socket");
-                            if (webSocket != null) {
-                                Log.d("exception websocket", "inside webbb socket");
-                                if (webSocket.isOpen())
-                                {
-                                    Log.d("exception websocket", "is open");
-                                    webSocket.close();
-                                    Log.d("exception websocket", "closed");
-                                    return;
-                                }
-                            }
-                            webSocketConnection();
-                        }
-                    } catch (Exception e) {
-                        Log.d("exception websocket", e.getMessage());
-                    }
-                    //ex.printStackTrace();
-                    return;
-                }
+public static int nodeIndex = 0;
 
-                webSocket.setClosedCallback(new CompletedCallback() {
-                    public void onCompleted(Exception ex) {
-                        isReady = false;
-                        webSocketConnection();
-                    }
-                });
+    private void webSocketConnection()
+    {
+        Log.i("internetBlockpay", "in Application webSocketConnection");
 
-                webSocket.setEndCallback(new CompletedCallback() {
-                    public void onCompleted(Exception ex) {
+        Log.i("Connect", "in Application webSocketConnection");
+        isReady = false;
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                nodeIndex = nodeIndex % urlsSocketConnection.length;
 
-                    }
-                });
+                Log.i("internetBlockpay", "preparing to connect to:" + urlsSocketConnection[nodeIndex]);
 
-                Log.d("exception websocket", "before making application.websocketg");
-                Application.webSocketG = webSocket;
-                Log.d("exception websocket", "sending initial socket");
-                sendInitialSocket(context);
-                Log.d("exception websocket", "completed");
+                connect(urlsSocketConnection[nodeIndex]);
+                nodeIndex++;
+
             }
-
-
-        });
+        }, 500);
 
     }
 
     public static Boolean isReady = false;
 
-    public static void sendInitialSocket(final Context context) {
+    public static void stringTextRecievedWs(String s) {
 
-        if (Application.webSocketG.isOpen()) {
-
-            Application.webSocketG.send(context.getString(R.string.login_api));
-            Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
-                public void onStringAvailable(String s) {
+//        if (Application.webSocketG.isOpen()) {
+//
+//            Application.webSocketG.send(context.getString(R.string.login_api));
+//            Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
+//                public void onStringAvailable(String s) {
 
                     try {
                         //System.out.println("I got a string: " + s);
@@ -259,19 +310,19 @@ public class Application extends android.app.Application {
 
                             if (id == 1) {
                                 if (s.contains("true")) {
-                                    Application.webSocketG.send(context.getString(R.string.database_indentifier));
+                                    Application.send(context.getString(R.string.database_indentifier));
                                 } else {
-                                    Application.webSocketG.send(context.getString(R.string.login_api));
+                                    Application.send(context.getString(R.string.login_api));
                                 }
                             } else if (id == 2) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_database), jsonObject.getInt("result"));
-                                Application.webSocketG.send(context.getString(R.string.network_broadcast_identifier));
+                                Application.send(context.getString(R.string.network_broadcast_identifier));
                             } else if (id == 3) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
-                                Application.webSocketG.send(context.getString(R.string.history_identifier));
+                                Application.send(context.getString(R.string.history_identifier));
                             } else if (id == 4) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
-                                Application.webSocketG.send(context.getString(R.string.subscribe_callback));
+                                Application.send(context.getString(R.string.subscribe_callback));
                                 //Application.webSocketG.send(context.getString(R.string.subscribe_callback_full_account));
                                 isReady = true;
 
@@ -434,9 +485,18 @@ public class Application extends android.app.Application {
 
                     }
                 }
-            });
+//            });
+//
+//
+//        }
+//    }
 
+    private static void sendInitialSocket(final Context context)
+    {
 
+        if (Application.mIsConnected)
+        {
+            Application.send(context.getString(R.string.login_api));
         }
     }
 
@@ -461,5 +521,122 @@ public class Application extends android.app.Application {
         return blockHead = result;
     }
 
+
+    //WebSocketConnection
+
+    public static void send(String message)
+    {
+        if (mIsConnected)
+        {
+            mConnection.sendTextMessage(message);
+        }
+    }
+
+    private static boolean mIsConnected = false;
+    static String connectedSocket;
+
+    public static void disconnect() {
+        Log.i("internetBlockpay", "Disconnect");
+        if(mConnection!=null) {
+            mConnection.disconnect();
+        }
+    }
+
+    @Override
+    public void onOpen()
+    {
+        Log.i("internetBlockpay", "open internet");
+        mIsConnected = true;
+        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
+        sendInitialSocket(context);
+    }
+
+    Handler connectionHandler = new Handler();
+    public void checkConnection(){
+        connectionHandler.removeCallbacksAndMessages(null);
+        connectionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(checkInternetConnection()) {{
+                        webSocketConnection();
+                    }
+                }else {
+                    connectionHandler.postDelayed(this,500);
+                }
+
+            }
+        }, 500);
+    }
+
+
+    @Override
+    public void onClose(WebSocketCloseNotification code, String reason)
+    {
+        Log.i("internetBlockpay", "close internet");
+        mIsConnected = false;
+        checkConnection();
+    }
+
+    @Override
+    public void onTextMessage(String payload)
+    {
+      stringTextRecievedWs(payload);
+    }
+
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+    }
+
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+    }
+
+    private static WebSocketConnection mConnection;
+    private static URI mServerURI;
+
+    @NonNull
+    public static Boolean isConnected(){
+        return mConnection!=null && (mConnection.isConnected());
+    }
+
+    private void connect(String node)
+    {
+        Log.i("internetBlockpay", "connecting to internet");
+        Log.i("Connect", "connect(String node) called");
+        try
+        {
+            if ( !mIsConnected )
+            {
+                Log.i("Connect", "Inside when not mIsConnected");
+                mServerURI = new URI(node);
+                connectedSocket = node;
+                mConnection.connect(mServerURI, this);
+            }
+        }
+        catch (URISyntaxException e)
+        {
+            String message = e.getLocalizedMessage();
+            Log.i("Connect", "Inside catch block when not mIsConnected, got exception, msg is:" + message);
+            checkConnection();
+        }
+        catch (WebSocketException e)
+        {
+            String message = e.getLocalizedMessage();
+            Log.i("Connect", "Inside catch block when not mIsConnected, got exception, msg is:" + message);
+            if ( !mIsConnected ) {
+                checkConnection();
+            }
+        }
+    }
+
+    Boolean checkInternetConnection(){
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
 }
 

@@ -87,7 +87,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     Gson gson;
     ProgressDialog progressDialog;
-    Application application;
 
     @Bind(R.id.tvErrorAccountName)
     TextView tvErrorAccountName;
@@ -131,9 +130,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         validationAccountName();
         gson = new Gson();
-        application = new Application();
-        application.registerCallback(this);
-        application.registerCallbackIAccountID(this);
+        Application.registerCallback(this);
+        Application.registerCallbackIAccountID(this);
         progressDialog = new ProgressDialog(this);
         updateBlockNumberHead();
 
@@ -704,16 +702,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.isConnected()) {
+                  //  if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-                        ivSocketConnected.startAnimation(myFadeInAnimation);
-                    }
+//                    } else {
+//                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+//                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+//                        ivSocketConnected.startAnimation(myFadeInAnimation);
+//                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);

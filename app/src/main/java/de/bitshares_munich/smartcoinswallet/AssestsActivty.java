@@ -31,13 +31,11 @@ public class AssestsActivty  implements IBalancesDelegate {
     ArrayList<String> ammount;
     Context context;
     AssetDelegate assetDelegate;
-    Application application;
 
     webSocketCallHelper myWebSocketCallHelper;
 
     public AssestsActivty(Context c,String account_name , AssetDelegate instance, Application app){
         context = c;
-        application = app;
         ids = new ArrayList<>();
         precisons = new ArrayList<>();
         symbols = new ArrayList<>();
@@ -54,7 +52,7 @@ public class AssestsActivty  implements IBalancesDelegate {
 
     public void registerDelegate ()
     {
-        application.registerBalancesDelegateAssets(this);
+        Application.registerBalancesDelegateAssets(this);
     }
 
     public void loadBalances(String account_name)

@@ -109,6 +109,7 @@ public interface IWebService {
     @POST("/")
     Call<LtmFee> getLtmFee(@Body Map<String, String> params);
 
-
+    @GET("/{md5Email}.json")
+    Call<Object> getGravatarProfile(@Path("md5Email") String md5Email);
 
 }

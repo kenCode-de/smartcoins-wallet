@@ -45,7 +45,6 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
             intent.putExtra("To", td.To);
             intent.putExtra("From", td.From);
             intent.putExtra("Sent", td.Sent);
-
             myContext.startActivity(intent);
         }
 //        Application.getCurrentActivity().startActivity(intent);

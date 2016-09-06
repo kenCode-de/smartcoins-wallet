@@ -41,7 +41,6 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
 public class PaymentRecieved extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
-    Application application = new Application();
     String receiver_id;
     String sender_id;
     JSONObject amountObj;
@@ -84,9 +83,9 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         locale = new Locale(language);
         playSound();
-        application.registerTransactionObject(this);
-        application.registerAccountObjectCallback(this);
-        application.registerAssetObjectCallback(this);
+        Application.registerTransactionObject(this);
+        Application.registerAccountObjectCallback(this);
+        Application.registerAssetObjectCallback(this);
         block = getIntent().getStringExtra("block");
         trx = getIntent().getStringExtra("trx");
         receiver_id = getIntent().getStringExtra("receiver_id");

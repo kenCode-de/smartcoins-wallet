@@ -243,16 +243,16 @@ public class BrainkeyActivity extends BaseActivity {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.isConnected()) {
+   //                 if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-                        ivSocketConnected.startAnimation(myFadeInAnimation);
-                    }
+//                    } else {
+//                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
+//                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
+//                        ivSocketConnected.startAnimation(myFadeInAnimation);
+//                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);

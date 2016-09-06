@@ -42,7 +42,6 @@ import retrofit2.Response;
 public class TransactionActivity implements IBalancesDelegate {
     public Context context;
     AssetDelegate assetDelegate;
-    Application application = new Application();
 
     String accountid;
     String wifkey;
@@ -58,7 +57,7 @@ public class TransactionActivity implements IBalancesDelegate {
         context = c;
         assetDelegate = instance;
         //balancesDelegate = this;
-        application.registerBalancesDelegateTransaction(this);
+        Application.registerBalancesDelegateTransaction(this);
         accountid = account_id;
         //timestamp = new HashMap<>();
 
@@ -95,7 +94,7 @@ public class TransactionActivity implements IBalancesDelegate {
     {
         context = c;
         assetDelegate = instance;
-        application.registerBalancesDelegateTransaction(this);
+        Application.registerBalancesDelegateTransaction(this);
         accountid = account_id;
 
         try
@@ -147,7 +146,7 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 if ( callInProgressForHourlyTransactions && !callReceivedForHourlyTransactions && Application.isReady) // if balances are not returned in one second
                 {
-                    Application.webSocketG.close();
+                    Application.disconnect();
                     make_websocket_call(call_string_before_identifier,call_string_after_identifier,identifer);
                 }
                 else if ( callInProgressForHourlyTransactions && !callReceivedForHourlyTransactions )
@@ -189,7 +188,7 @@ public class TransactionActivity implements IBalancesDelegate {
                         call = call_string_before_identifier;
                     }
 
-                    Application.webSocketG.send(call);
+                    Application.send(call);
                     callInProgressForHourlyTransactions = true;
                     callReceivedForHourlyTransactions = false;
                     handleHourlyTransactions.postDelayed(checkifTransactionRecieved, time);

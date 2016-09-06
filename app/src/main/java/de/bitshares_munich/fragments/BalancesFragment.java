@@ -112,7 +112,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     static Boolean audioSevice = false;
 
-    Application application = new Application();
     int accountDetailsId;
     String accountId = "";
     DecimalFormat df = new DecimalFormat("0.0");
@@ -204,7 +203,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
-        application.registerAssetDelegate(this);
+        Application.registerAssetDelegate(this);
         iSound=this;
         updateEquivalentAmount = new Handler();
         myWebSocketHelper = new webSocketCallHelper(getContext());
@@ -2403,7 +2402,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             {
                 if (Application.isReady)
                 {
-                    Application.webSocketG.close();
+                    Application.disconnect();
                 }
 
                 sentCallForTransactions = false;
@@ -2740,7 +2739,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         if (myAssetsActivity == null)
         {
-            myAssetsActivity = new AssestsActivty(getContext(), to, this, application);
+            myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
             myAssetsActivity.registerDelegate();
         }
 
