@@ -1221,6 +1221,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String base_amount = base.get("amount").toString();
             JSONObject quote = (JSONObject) sell_price.get("base");
             String quote_amount = quote.get("amount").toString();
+            if(backupAssets!=null){
             Double baseWithPrecision = Double.parseDouble(base_amount) / Math.pow(10, Double.parseDouble(backupAssets.precision));
             if (id == 200) {
                 Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(selectedAccountAsset.precision));
@@ -1228,7 +1229,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             } else if (id == 100) {
                 Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(loyaltyAsset.precision));
                 exchangeRate = quoteWithPrecision / baseWithPrecision;
-            }
+            }}
             runOnUiThread(new Runnable() {
                 public void run() {
                     updateTotalStatus();
