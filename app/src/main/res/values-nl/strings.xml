@@ -223,5 +223,8 @@
     <string name="please_make_sure_your_bin_file">Zorg ervoor dat uw pincode correct is of juist bin bestand is geselecteerd</string>
     <string name="change">Verandering...</string>
 
+    <string name="connected_to">Verbonden met</string>
+    <string name="account_create_msg">Slechts één account elke 10 minuten kunnen worden geregistreerd</string>
+
 </resources>
 

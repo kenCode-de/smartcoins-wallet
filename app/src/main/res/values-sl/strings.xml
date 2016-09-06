@@ -226,4 +226,8 @@
     <string name="change">Spremeni ...</string>
     <string name="cancel">PREKLIČI</string>
 
+    <string name="connected_to">Povezan z</string>
+    <string name="account_create_msg">Le en račun vsakih 10 minut, se lahko registrirajo</string>
+
+
 </resources>

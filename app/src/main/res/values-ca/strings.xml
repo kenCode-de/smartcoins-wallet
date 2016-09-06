@@ -226,4 +226,7 @@
     <string name="please_make_sure_your_bin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer bin correcta o correcta</string>
     <string name="change">Canvia ...</string>
 
+    <string name="connected_to">Connectat a</string>
+    <string name="account_create_msg">Només un compte cada 10 minuts es pot registrar</string>
+
 </resources>

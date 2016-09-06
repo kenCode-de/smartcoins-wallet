@@ -222,4 +222,8 @@
     <string name="audio_folder_path">Audio Folder Path</string>
     <string name="please_make_sure_your_bin_file">Sørg din pin er rigtig eller korrekt bin fil er valgt</string>
     <string name="change">Lave om...</string>
+
+    <string name="connected_to">Forbundet til</string>
+    <string name="account_create_msg">Kun én konto hver 10 minutter kan registreres</string>
+
 </resources>

@@ -222,4 +222,8 @@
     <string name="please_make_sure_your_bin_file">Si prega di assicurarsi che il perno sia file bin corretto o corretto sia selezionato</string>
     <string name="change">Cambiamento...</string>
     <string name="notes">Gli appunti</string>
+
+    <string name="connected_to">Collegato a</string>
+    <string name="account_create_msg">Solo un conto ogni 10 minuti può essere registrato</string>
+
 </resources>

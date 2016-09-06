@@ -339,4 +339,8 @@
     <string name="remove_account">Poista tili</string>
     <string name="upgrade_to_ltm">Päivitä LTM</string>
 
+    <string name="connected_to">Yhdistetty</string>
+    <string name="account_create_msg">Vain yksi tili 10 minuutin välein voidaan rekisteröidä</string>
+
+
 </resources>

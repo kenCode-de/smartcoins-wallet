@@ -224,4 +224,8 @@
     <string name="change">Endring...</string>
 
     <string name="friendly_name">Vennlig Navn</string>
+
+    <string name="connected_to">Koblet til</string>
+    <string name="account_create_msg">Bare én konto hvert 10. minutt kan registreres</string>
+
 </resources>

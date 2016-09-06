@@ -223,4 +223,8 @@
     <string name="please_make_sure_your_bin_file">Verifique se o seu pino é arquivo bin correto ou correto está selecionado</string>
 
     <string name="change">Alterar...</string>
+
+    <string name="connected_to">Conectado a</string>
+    <string name="account_create_msg">Apenas uma conta a cada 10 minutos podem ser registrados</string>
+
 </resources>

@@ -226,5 +226,7 @@
     <string name="please_make_sure_your_bin_file">あなたのピンが正しいか、正しいbinファイルが選択されていることを確認してください</string>
     <string name="change">変化する...</string>
 
+    <string name="connected_to">に接続されています</string>
+    <string name="account_create_msg">唯一のアカウントごとに10分を登録することができます</string>
 
 </resources>

@@ -238,4 +238,7 @@
     <string name="please_make_sure_your_bin_file">Παρακαλώ βεβαιωθείτε ότι το PIN σας έχει επιλεγεί σωστή ή σωστό αρχείο bin</string>
     <string name="change">Αλλαγή...</string>
 
+    <string name="connected_to">Συνδεδεμένος με</string>
+    <string name="account_create_msg">Μόνο ένας λογαριασμός ανά 10 λεπτά μπορεί να καταχωρηθεί</string>
+
 </resources>

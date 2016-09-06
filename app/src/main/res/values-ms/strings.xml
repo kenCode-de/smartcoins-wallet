@@ -223,4 +223,7 @@
     <string name="please_make_sure_your_bin_file">Sila pastikan pin anda adalah betul atau betul fail bin dipilih</string>
     <string name="change">Ubah...</string>
 
+    <string name="connected_to">Berhubung dengan</string>
+    <string name="account_create_msg">Hanya satu akaun setiap 10 minit boleh didaftarkan</string>
+
 </resources>

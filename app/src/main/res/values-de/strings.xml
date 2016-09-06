@@ -225,4 +225,7 @@
     <string name="import_new_account">EINFUHR KONTO</string>
     <string name="upgrade_account">UPGRADE KONTO</string>
 
+    <string name="connected_to">Angeschlossen</string>
+    <string name="account_create_msg">Nur ein Konto kann alle 10 Minuten registriert werden</string>
+
 </resources>

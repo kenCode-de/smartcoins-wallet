@@ -223,4 +223,7 @@
 
     <string name="please_make_sure_your_bin_file">Doğru veya doğru bin dosya seçili olduğundan emin pin olduğunu olun</string>
 
+    <string name="connected_to">Bağlı</string>
+    <string name="account_create_msg">Sadece bir hesap her 10 dakikada kaydedilebilir</string>
+
 </resources>

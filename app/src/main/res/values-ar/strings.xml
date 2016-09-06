@@ -222,4 +222,7 @@
     <string name="checkbox_donate">تبرع 2 BTS للمطورين الدعم في</string>
     <string name="change">تغيير...</string>
 
+    <string name="connected_to">متصلا</string>
+    <string name="account_create_msg">حساب واحد فقط كل 10 دقائق يمكن تسجيلها</string>
+
 </resources>

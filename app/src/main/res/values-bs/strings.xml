@@ -232,4 +232,7 @@
     <string name="please_make_sure_your_bin_file">Molimo provjerite PIN je odabran ispravan ili ispravan bin fajl</string>
     <string name="change">Promijeni ...</string>
 
+    <string name="connected_to">Spojen na</string>
+    <string name="account_create_msg">Samo jedan račun svakih 10 minuta možete se registrovati</string>
+
 </resources>

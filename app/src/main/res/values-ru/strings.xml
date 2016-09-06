@@ -224,4 +224,8 @@
     <string name="change">Изменить...</string>
 
     <string name="upgrade_to_ltm">Обновление до LTM</string>
+
+    <string name="connected_to">Подключен к</string>
+    <string name="account_create_msg">Только один счет каждые 10 минут может быть зарегистрировано</string>
+
 </resources>

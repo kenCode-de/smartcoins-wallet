@@ -222,4 +222,7 @@
     <string name="audio_folder_path">Âm thanh Folder Path</string>
     <string name="please_make_sure_your_bin_file">Hãy chắc chắn rằng pin của bạn là chính xác hay đúng bin file được chọn</string>
 
+    <string name="connected_to">Kết nối với</string>
+    <string name="account_create_msg">Chỉ có một tài khoản mỗi 10 phút có thể được đăng ký</string>
+
 </resources>

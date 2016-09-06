@@ -225,4 +225,8 @@
 
     <string name="register_new_account">নিবন্ধীকরণ করুন নতুন অ্যাকাউন্ট</string>
     <string name="change">পরিবর্তন...</string>
+
+    <string name="connected_to">এর সাথে সংযুক্ত</string>
+    <string name="account_create_msg">শুধুমাত্র একটি অ্যাকাউন্ট প্রতি 10 মিনিট নিবন্ধন করা যাবে</string>
+
 </resources>
