@@ -2513,10 +2513,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     {
         sentCallForTransactions = false;
 
-        if ( reason.equals(getContext().getString(R.string.account_names_not_found)) )
-        {
-            //number_of_transactions_loaded += number_of_transactions_to_load;
-        }
+//        if ( reason.equals(getContext().getString(R.string.account_names_not_found)) )
+//        {
+//            //number_of_transactions_loaded += number_of_transactions_to_load;
+//        }
 
         //if ( reason.equals(getContext().getString(R.string.no_assets_found)) )
         //{

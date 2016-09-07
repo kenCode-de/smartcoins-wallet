@@ -782,7 +782,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             intent.putExtra("activity_id", 919);
             startActivity(intent);
         }else {
-            Toast.makeText(getApplicationContext(), "Only one account every 10 minutes can be registered" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
         }
     }
 
@@ -953,7 +953,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         editor.clear();
         editor.apply();
 
-        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
+        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
 
         Intent k = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage(getBaseContext().getPackageName());

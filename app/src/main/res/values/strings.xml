@@ -29,6 +29,7 @@
     <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
     <string name="block_number" translatable="false">block# -------</string>
     <string name="agreement">Agreement</string>
+    <string name="pref_agreement">pref_agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
     <string name="kindly_create_account">Kindly create account</string>

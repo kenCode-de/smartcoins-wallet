@@ -284,7 +284,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void onStart() {
         super.onStart();
-        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.agreement))) {
+        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) {
             showDialogLiscence();
         }
     }
@@ -313,7 +313,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
                 dialog.cancel();
             }
         });
