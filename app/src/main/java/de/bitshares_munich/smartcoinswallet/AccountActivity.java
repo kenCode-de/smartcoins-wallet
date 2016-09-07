@@ -363,7 +363,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         postingService.enqueue(new Callback<GenerateKeys>() {
             @Override
             public void onResponse(Response<GenerateKeys> response) {
+
                 if (response.isSuccess()) {
+
+
                     GenerateKeys resp = response.body();
                     if (resp.status.equals("success")) {
                         try {
@@ -376,13 +379,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             registerdKeys(accountName, resp.keys.pub_key);
                         } catch (Exception e) {
 
+                            generateKeys();
+
                         }
 
                     } else if (resp.status.equals("failure")) {
-                        SupportMethods.testing("accountActivity", resp.toString(), "past_break");
+                        generateKeys();
 
                     }
                 } else {
+                    generateKeys();
                     Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
 
                 }
@@ -391,24 +397,29 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             @Override
             public void onFailure(Throwable t) {
                 SupportMethods.testing("accountActivity", t, "past_break");
+                generateKeys();
             }
         });
     }
 
     private void registerdKeys(final String accountName, String key) {
+
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("name", accountName);
-        hm.put("account_name", accountName);
         hm.put("owner_key", key);
         hm.put("active_key", key);
         hm.put("memo_key", key);
         hm.put("refcode", "bitshares-munich");
         hm.put("referrer", "bitshares-munich");
 
+        HashMap<String, HashMap> hashMap = new HashMap<>();
+        hashMap.put("account", hm);
+
+
         try {
             ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_create_url));
             IWebService service = sg.getService(IWebService.class);
-            final Call<RegisterAccount> postingService = service.getReg(hm);
+            final Call<RegisterAccount> postingService = service.getReg(hashMap);
             postingService.enqueue(new Callback<RegisterAccount>() {
                 @Override
                 public void onResponse(Response<RegisterAccount> response) {
@@ -416,52 +427,50 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         RegisterAccount resp = response.body();
                         if (resp.account != null) {
                             try {
-                                accountCreated = true;
-                                etAccountName.setText(accountName);
-//                            String pubKey = Crypt.getInstance().encrypt_string(resp.keys.pub_key);
-//                            String wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-//                            String brainPrivKey = Crypt.getInstance().encrypt_string(resp.keys.brain_priv_key);
-//                            String accountName = etAccountName.getText().toString();
 
+                                if(resp.account.name.equals(accountName))
+                                {
+                                get_account_id(etAccountName.getText().toString(), "151");
+                                tvErrorAccountName.setVisibility(View.GONE);
+                                }
+//                                accountCreated = true;
+//                                etAccountName.setText(accountName);
                             } catch (Exception e) {
-                                accountCreated = true;
-                                etAccountName.setText(accountName);
-                                SupportMethods.testing("accountActivity", resp.toString(), "past_break");
+
+                                Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+//                                accountCreated = true;
+//                                etAccountName.setText(accountName);
 
                             }
-
                         }
-                    } else {
-                        accountCreated = true;
-                        etAccountName.setText(accountName);
-                        SupportMethods.testing("accountActivity","failed", "past_break");
 
+                    } else {
+
+
+                        Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+//                        accountCreated = true;
+//                        etAccountName.setText(accountName);
                     }
                 }
-
                 @Override
                 public void onFailure(Throwable t) {
-                    SupportMethods.testing("accountActivity", t, "past_break");
+                    Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            SupportMethods.testing("accountActivity", e, "past_break");
-
+            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
         }
-        SupportMethods.testing("accountActivity", "1", "past");
     }
 
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
-    Application.timeStamp();
-
-    finish();
-
-
-
-        Boolean original = false;
-        if(original) {
+//    finish();
+//
+//
+//
+//        Boolean original = false;
+//        if(original) {
             if (checkingValidation) {
                 Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
             } else if (etAccountName.getText().toString().length() == 0) {
@@ -485,13 +494,13 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     if (validAccount) {
                         if (!checkingValidation) {
                             showDialog("", "");
-                            accountCreated = false;
+                            //accountCreated = false;
                             generateKeys();
                         }
                     }
                 }
             }
-        }
+    //    }
 
 //        }else {
 //                 Toast.makeText(getApplicationContext(), "Wait few mins", Toast.LENGTH_SHORT).show();
@@ -588,10 +597,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         tvErrorAccountName.setText(format);
                         tvErrorAccountName.setVisibility(View.VISIBLE);
                         checkingValidation = false;
-                        if (accountCreated) {
+                       /* if (accountCreated) {
                             get_account_id(etAccountName.getText().toString(), "151");
                             tvErrorAccountName.setVisibility(View.GONE);
-                        }
+                        }*/
                     }
                 });
             }
@@ -600,13 +609,13 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     @Override
                     public void run() {
                         validAccount = true;
-                        if (accountCreated) {
+                      /*  if (accountCreated) {
                             hideDialog();
                             accountCreated = false;
                             //  tvErrorAccountName.setText("account created");
                             Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                             tvErrorAccountName.setVisibility(View.GONE);
-                        }
+                        }*/
 //                        tvErrorAccountName.setText("Validation Complete");
                         tvErrorAccountName.setVisibility(View.GONE);
                         checkingValidation = false;

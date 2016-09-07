@@ -1,8 +1,10 @@
 package de.bitshares_munich.models;
 
+
 /**
  * Created by afnan on 6/16/16.
  */
 public class RegisterAccount {
-    public String account;
+    public Account account;
+
 }

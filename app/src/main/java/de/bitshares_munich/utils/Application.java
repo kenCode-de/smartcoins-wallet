@@ -110,7 +110,7 @@ public class Application extends android.app.Application implements de.bitshares
                 if ( mConnection == null )
                 {
                     mConnection = new WebSocketConnection();
-                    webSocketConnection();
+                   checkConnection();
                 }
             }
         },1000);
