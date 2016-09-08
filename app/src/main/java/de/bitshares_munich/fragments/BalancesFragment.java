@@ -2295,10 +2295,27 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadFailure(String reason)
     {
+        Log.d("LogTransactions",reason);
+
         sentCallForTransactions = false;
 
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load,myTransactions);
 
+    }
+    Boolean isTransactionUpdating = false;
+    @Override
+    public void loadAgain() {
+        if(updateTriggerFromNetworkBroadcast){
+            progressBar.setVisibility(View.VISIBLE);
+            load_more_values.setVisibility(View.GONE);
+            number_of_transactions_loaded = 0;
+            number_of_transactions_to_load = 20;
+            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+            sentCallForTransactions = false;
+        }else {
+            load_more_values.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.load_more_values)

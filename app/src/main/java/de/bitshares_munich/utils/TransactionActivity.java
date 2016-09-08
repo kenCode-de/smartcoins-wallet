@@ -625,6 +625,8 @@ public class TransactionActivity implements IBalancesDelegate {
             }
 
             if(isNew) {
+                Log.d("LogTransactions","found");
+
                 numberOfTransactionsLoaded += numberOfTransactionsToLoad;
 
 
@@ -644,10 +646,11 @@ public class TransactionActivity implements IBalancesDelegate {
 
                 getTimeForTransactionsRecieved();
             }else {
+                Log.d("LogTransactions","not found");
                 callInProgressForHourlyTransactions = false;
                 callReceivedForHourlyTransactions = true;
                 handleHourlyTransactions.removeCallbacksAndMessages(null);
-                return;
+                assetDelegate.loadAgain();
             }
         }
         catch (Exception e)

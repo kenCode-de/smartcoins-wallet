@@ -16,4 +16,5 @@ public interface AssetDelegate {
     void transactionsLoadComplete(List<TransactionDetails> transactionDetails, int newTransactionsLoaded);
     void transactionsLoadMessageStatus(String message);
     void transactionsLoadFailure(String reason);
+    void loadAgain();
 }
