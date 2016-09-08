@@ -96,12 +96,12 @@ public class BrainkeyActivity extends BaseActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            String s = editable.toString();
-            if (!s.equals(s.toLowerCase())) {
-                s = s.toLowerCase();
-                etBrainKey.setText(s);
-                etBrainKey.setSelection(etBrainKey.getText().toString().length());
-            }
+//            String s = editable.toString();
+//            if (!s.equals(s.toLowerCase())) {
+//                s = s.toLowerCase();
+//                etBrainKey.setText(s);
+//                etBrainKey.setSelection(etBrainKey.getText().toString().length());
+//            }
         }
     };
 
