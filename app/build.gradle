@@ -10,7 +10,7 @@ android {
     buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "de.bitsharesmunich.smartcoinswallet"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
 
 
