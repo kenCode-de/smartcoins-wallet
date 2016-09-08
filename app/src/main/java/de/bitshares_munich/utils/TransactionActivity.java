@@ -512,6 +512,8 @@ public class TransactionActivity implements IBalancesDelegate {
                 alreadyLoadedIds.put(td.id,td.blockNumber);
             }
 
+            Boolean isNew=false;
+
             for (int i = 0 ; i < myJson.length(); i++)
             {
                 if (    !( (hourlyNumberOfTransactionsLoaded == 0) && (i == 0) )
@@ -534,6 +536,8 @@ public class TransactionActivity implements IBalancesDelegate {
                         continue;
 
                 }
+
+                isNew=true;
 
                 if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") && myJson.getJSONObject(i).has("op")  )
                 {
@@ -620,26 +624,31 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
-            numberOfTransactionsLoaded += numberOfTransactionsToLoad;
+            if(isNew) {
+                numberOfTransactionsLoaded += numberOfTransactionsToLoad;
 
 
-            if ( headersTimeToFetch.size() == 0 )
-            {
-                getAssetsInTransactionsReceived();
+                if (headersTimeToFetch.size() == 0) {
+                    getAssetsInTransactionsReceived();
+                    return;
+                }
+
+                Collections.sort(headersTimeToFetch);
+                Collections.reverse(headersTimeToFetch);
+
+                indexHeadersTimeToFetch = 0;
+
+                if (headerTimings == null) {
+                    headerTimings = new HashMap<>();
+                }
+
+                getTimeForTransactionsRecieved();
+            }else {
+                callInProgressForHourlyTransactions = false;
+                callReceivedForHourlyTransactions = true;
+                handleHourlyTransactions.removeCallbacksAndMessages(null);
                 return;
             }
-
-            Collections.sort(headersTimeToFetch);
-            Collections.reverse(headersTimeToFetch);
-
-            indexHeadersTimeToFetch = 0;
-
-            if ( headerTimings == null )
-            {
-                headerTimings = new HashMap<>();
-            }
-
-            getTimeForTransactionsRecieved();
         }
         catch (Exception e)
         {
@@ -647,6 +656,8 @@ public class TransactionActivity implements IBalancesDelegate {
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
             Log.d("Loading Transactions",e.getMessage());
         }
+
+
     }
 
 
@@ -765,9 +776,11 @@ public class TransactionActivity implements IBalancesDelegate {
             if (context == null) return;
             assetDelegate.transactionsLoadMessageStatus(msg);
 
+            if (indexHeadersTimeToFetch < headersTimeToFetch.size()) {
+                headerTimings.put(headersTimeToFetch.get(indexHeadersTimeToFetch), formattedDate);
+            }
             if (++indexHeadersTimeToFetch < headersTimeToFetch.size())
             {
-                headerTimings.put(headersTimeToFetch.get(indexHeadersTimeToFetch - 1), formattedDate);
                 getTimeForTransactionsRecieved();
             }
             else if ( finalBlockRecieved )
