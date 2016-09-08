@@ -87,96 +87,13 @@ public class ListViewActivity extends BaseAdapter {
         }
 
 
-//        public View getView(final int position, View convertView, final ViewGroup parent) {
-//            if (convertView == null)
-//                convertView = mInflater.inflate(R.layout.listview_contacts, null);
-//
-//            if (imageLoader == null) {
-//                imageLoader = ImageLoader.getInstance();
-//                imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-//            }
-//
-//
-//            TextView username = (TextView) convertView.findViewById(R.id.username);
-//            TextView txtaccount = (TextView) convertView.findViewById(R.id.accountname);
-//            ImageButton delete = (ImageButton) convertView.findViewById(R.id.deleteitem);
-//            TextView txtnote = (TextView) convertView.findViewById(R.id.note_txt);
-//            ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
-//
-//            String accountnm = listContact.get(position).GetAccount();
-//            txtaccount.setText(accountnm);
-//
-//            String name = listContact.get(position).GetName();
-//            username.setText(name);
-//
-//            txtnote.setText(listContact.get(position).GetNote());
-//
-//            final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
-//            loadWebView(webView , 40, Helper.hash(accountnm, Helper.SHA256));
-//
-//
-//            final ImageView ivEmail = (ImageView) convertView.findViewById(R.id.imageEmail);
-//            ivEmail.setImageBitmap(null);
-//
-//            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(listContact.get(position).GetEmail(), Helper.MD5) + "?s=130&r=pg&d=404";
-//            imageLoader.loadImage(emailGravatarUrl, new SimpleImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String imageUri, View view) {
-//                    if (!listContact.get(position).GetEmail().isEmpty()) {
-//                        webView.setVisibility(View.GONE);
-//                    }
-//                }
-//                @Override
-//                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                    Bitmap corner = getRoundedCornerBitmap(loadedImage);
-//                    ivEmail.setImageBitmap(corner);
-//                    ivEmail.setVisibility(View.VISIBLE);
-//
-//                }
-//            });
-//
-//
-//            delete.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View v) {
-//
-//                        showDialog(position);
-//
-//                    }
-//                });
-//
-//
-//            ibEdit.setOnClickListener(new View.OnClickListener() {
-//                    public void onClick(View v) {
-//                        int index = position;
-//                        Intent intent = new Intent(context, AddEditContacts.class);
-//                        intent.putExtra("id", index);
-//                        intent.putExtra("name", listContact.get(index).GetName());
-//                        intent.putExtra("account", listContact.get(index).GetAccount());
-//                        intent.putExtra("note", listContact.get(index).GetNote());
-//                        intent.putExtra("email", listContact.get(index).GetEmail());
-//                        context.startActivity(intent);
-//
-//                    }
-//                });
-//
-//            return convertView;
-//        }
-
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-//        if (convertView == null) {
             if(listContact.get(position).isImage) {
                 convertView = mInflater.inflate(R.layout.list_view_contacts_imageview, null);
             }else {
                 convertView = mInflater.inflate(R.layout.list_view_contacts_webview, null);
             }
-        //}
-
-//        if (imageLoader == null) {
-//            imageLoader = ImageLoader.getInstance();
-//            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-//        }
-
 
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView txtaccount = (TextView) convertView.findViewById(R.id.accountname);
@@ -214,18 +131,6 @@ public class ListViewActivity extends BaseAdapter {
         if(listContact.get(position).isImage) {
             final ImageView ivEmail = (ImageView) convertView.findViewById(R.id.imageEmail);
             setGravator(listContact.get(position).GetEmail(),ivEmail);
-//            String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(listContact.get(position).GetEmail(), Helper.MD5) + "?s=130&r=pg&d=404";
-//            imageLoader.loadImage(emailGravatarUrl, new SimpleImageLoadingListener() {
-//                @Override
-//                public void onLoadingStarted(String imageUri, View view) {
-//                }
-//
-//                @Override
-//                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                    Bitmap corner = getRoundedCornerBitmap(loadedImage);
-//                    ivEmail.setImageBitmap(corner);
-//                }
-//            });
         }else {
             final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
             loadWebView(webView, 40, Helper.hash(accountnm, Helper.SHA256));
@@ -313,8 +218,6 @@ public class ListViewActivity extends BaseAdapter {
 
     public void showDialog(final int position){
                 final Dialog dialog = new Dialog(context);
-                //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
-//                dialog.setTitle(R.string.pin_verification);
                 dialog.setContentView(R.layout.alert_delete_dialog);
                 Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
                 Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
@@ -340,8 +243,6 @@ public class ListViewActivity extends BaseAdapter {
                             dialog.cancel();
                          }
                    });
-//                dialog.setCancelable(false);
-
                 dialog.show();
 
 

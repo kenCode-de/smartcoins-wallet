@@ -206,7 +206,6 @@ public class Helper {
 
     public static String saveToInternalStorage(Context context, Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(context);
-        // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
         File mypath = new File(directory, "gravatar.jpg");
@@ -239,10 +238,7 @@ public class Helper {
 
 
     public static void initImageLoader(Context context) {
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
+
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -500,19 +496,6 @@ public class Helper {
             return true;
         }
 
-        /*
-        final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));
-
-        if ( (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT) ||
-                (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        */
     }
     public static final String md5(final String s) {
         final String MD5 = "MD5";

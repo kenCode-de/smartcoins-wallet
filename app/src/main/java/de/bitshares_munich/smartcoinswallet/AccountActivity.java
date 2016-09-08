@@ -263,15 +263,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 String socketText = getString(R.string.lookup_account_a);
                 String socketText2 = getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
                 myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);
-
-                /*
-                if (Application.webSocketG.isOpen())
-                {
-                    String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
-                    String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                    Application.webSocketG.send(socketText);
-                }
-                */
             }
             else
             {
@@ -303,9 +294,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             public void onClick(View v) {
                 finish();
                 System.exit(0);
-//                Intent intent =new Intent(getApplicationContext(),SplashActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
 
             }
         });
@@ -432,24 +420,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                                 {
                                 get_account_id(etAccountName.getText().toString(), "151");
                                 tvErrorAccountName.setVisibility(View.GONE);
-                                }
-//                                accountCreated = true;
-//                                etAccountName.setText(accountName);
+                                };
                             } catch (Exception e) {
 
                                 Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
-//                                accountCreated = true;
-//                                etAccountName.setText(accountName);
 
                             }
                         }
 
                     } else {
-
-
                         Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
-//                        accountCreated = true;
-//                        etAccountName.setText(accountName);
                     }
                 }
                 @Override
@@ -465,12 +445,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
-//    finish();
-//
-//
-//
-//        Boolean original = false;
-//        if(original) {
             if (checkingValidation) {
                 Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
             } else if (etAccountName.getText().toString().length() == 0) {
@@ -494,50 +468,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     if (validAccount) {
                         if (!checkingValidation) {
                             showDialog("", "");
-                            //accountCreated = false;
                             generateKeys();
                         }
                     }
                 }
             }
-    //    }
-
-//        }else {
-//                 Toast.makeText(getApplicationContext(), "Wait few mins", Toast.LENGTH_SHORT).show();
-//        }
-
-
-
-
-//        if (etPin.getText().length() < 5) {
-//
-//        }
-//            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-//        } else if (etPinConfirmation.getText().length() < 5) {
-//            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-//        } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-//            Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-//        } else {
-//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.sharePref_account_name), etAccountName.getText().toString());
-//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
-//        }*/
-/*        TinyDB tinydb = new TinyDB(getApplicationContext());
-        AccountDetails ad1 = new AccountDetails();
-        ad1.id=1;
-
-
-        ArrayList<AccountDetails> arrayList = new ArrayList<>();
-
-        arrayList.add(ad1);
-        arrayList.add(ad1);
-
-        tinydb.putListObject("allWinners",arrayList);
-
-
-        ArrayList<AccountDetails> ad = tinydb.getListObject("allWinners", AccountDetails.class);
-        ad.clear();*/
-
-
     }
 
     @OnClick(R.id.tvExistingAccount)
@@ -597,10 +532,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         tvErrorAccountName.setText(format);
                         tvErrorAccountName.setVisibility(View.VISIBLE);
                         checkingValidation = false;
-                       /* if (accountCreated) {
-                            get_account_id(etAccountName.getText().toString(), "151");
-                            tvErrorAccountName.setVisibility(View.GONE);
-                        }*/
                     }
                 });
             }
@@ -609,14 +540,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     @Override
                     public void run() {
                         validAccount = true;
-                      /*  if (accountCreated) {
-                            hideDialog();
-                            accountCreated = false;
-                            //  tvErrorAccountName.setText("account created");
-                            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
-                            tvErrorAccountName.setVisibility(View.GONE);
-                        }*/
-//                        tvErrorAccountName.setText("Validation Complete");
                         tvErrorAccountName.setVisibility(View.GONE);
                         checkingValidation = false;
                     }
@@ -628,9 +551,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     void addWallet(String account_id) {
-        //String name = etAccountName.getText().toString();
-        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        AccountDetails accountDetails = new AccountDetails();
+              AccountDetails accountDetails = new AccountDetails();
         accountDetails.pinCode=etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
         accountDetails.account_name = etAccountName.getText().toString();
@@ -642,21 +563,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails,brainPrivKey,etPin.getText().toString(),getApplicationContext(),this);
-
-
-        /*
-        for (int i = 0; i < accountDetailsList.size(); i++) {
-            accountDetailsList.get(i).isSelected = false;
-        }
-
-        accountDetailsList.add(accountDetails);
-
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
-
-
-        List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
-        */
 
         Intent intent;
 
@@ -685,32 +591,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         String getDetails2 = ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
         myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
 
-        /*
-        try {
-            final int db_id = Helper.fetchIntSharePref(context, getString(R.string.sharePref_database));
-            //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-
-            final Handler handler = new Handler();
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
-                        SupportMethods.testing("getLifetime", getDetails, "getDetails");
-                        Application.webSocketG.send(getDetails);
-                    } else {
-                        get_account_id(name_id, id);
-
-                    }
-                }
-            };
-
-            handler.postDelayed(updateTask, 1000);
-        } catch (Exception e) {
-
-        }
-        */
     }
 
     private void updateBlockNumberHead() {
@@ -722,15 +602,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             @Override
             public void run() {
                 if (Application.isConnected()) {
-                  //  if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-//                    } else {
-//                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-//                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-//                        ivSocketConnected.startAnimation(myFadeInAnimation);
-//                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -745,7 +619,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void accountId(String string) {
         myWebSocketHelper.cleanUpTransactionsHandler();
-        //addWallet(etAccountName.getText().toString());
         String result = SupportMethods.ParseJsonObject(string, "result");
         String id_account = SupportMethods.ParseJsonObject(result, "id");
         SupportMethods.testing("accountID", id_account, "getDetails");

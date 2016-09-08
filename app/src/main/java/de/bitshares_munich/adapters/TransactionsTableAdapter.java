@@ -86,8 +86,6 @@ Context context;
             imgView.setImageResource(R.drawable.receive);
         }
 
-
-        //MyCustomView vi = new MyCustomView(getContext(),null,transactiondetails.getDate());
         return v;
     }
 
@@ -132,7 +130,6 @@ Context context;
         String language;
         language = Helper.fetchStringSharePref(context, context.getString(R.string.pref_language));
         locale = new Locale(language);
-       // format = NumberFormat.getInstance(locale);
         Helper.setLocaleNumberFormat(locale, 1);
         if( transactiondetails.getSent() )
         {
@@ -151,11 +148,8 @@ Context context;
             {
                 TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
                 textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-                //amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getFaitAmount());
 
                 double faitAmount = transactiondetails.getFaitAmount();
-
-                //Double faitAmount = Double.parseDouble(faitFloat);
 
                 if ( faitAmount > 0.009 )
                 {
@@ -203,11 +197,8 @@ Context context;
             {
                 TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
                 textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
-                //amount = Helper.setLocaleNumberFormat(locale, transactiondetails.getFaitAmount());
 
                 double faitAmount = transactiondetails.getFaitAmount();
-
-                //Double faitAmount = Double.parseDouble(faitFloat);
 
                 if ( faitAmount > 0.009 )
                 {

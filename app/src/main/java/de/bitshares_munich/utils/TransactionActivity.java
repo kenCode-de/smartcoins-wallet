@@ -56,10 +56,8 @@ public class TransactionActivity implements IBalancesDelegate {
     {
         context = c;
         assetDelegate = instance;
-        //balancesDelegate = this;
         Application.registerBalancesDelegateTransaction(this);
         accountid = account_id;
-        //timestamp = new HashMap<>();
 
         handleHourlyTransactions = new Handler(Looper.getMainLooper());
         transactionsRecievedHm = new HashMap<>();
@@ -67,7 +65,6 @@ public class TransactionActivity implements IBalancesDelegate {
         headerTimings = new HashMap<>();
         namesToResolveHm = new HashMap<>();
         memosToDecodeHm = new HashMap<>();
-        //hourlyNumberOfTransactionsLoaded = 0;
         finalBlockRecieved = false;
 
         numberOfTransactionsLoaded = _numberOfTransactionsLoaded;
@@ -253,7 +250,6 @@ public class TransactionActivity implements IBalancesDelegate {
 
         if(id==8)
         {
-            //onFirstCall(s);
             transactionsReceived(s);
         }
         else if (id == 20)
@@ -329,7 +325,6 @@ public class TransactionActivity implements IBalancesDelegate {
                 memosToDecodeHm = new HashMap<>();
             }
 
-            //List<String> headersReceived = new ArrayList<>();
             headersTimeToFetch = new ArrayList<>();
 
             for (int i = 0 ; i < myJson.length(); i++)
@@ -442,7 +437,6 @@ public class TransactionActivity implements IBalancesDelegate {
             }
 
             hourlyNumberOfTransactionsLoaded += 100;
-            //assetDelegate.rawTransactionsLoaded(hourlyNumberOfTransactionsLoaded);
 
             if ( headersTimeToFetch.size() == 0 )
             {
@@ -510,7 +504,6 @@ public class TransactionActivity implements IBalancesDelegate {
                 memosToDecodeHm = new HashMap<>();
             }
 
-            //List<String> headersReceived = new ArrayList<>();
             headersTimeToFetch = new ArrayList<>();
 
             HashMap<String,String> alreadyLoadedIds = new HashMap<>();
@@ -536,14 +529,10 @@ public class TransactionActivity implements IBalancesDelegate {
                         && alreadyLoadedIds.containsKey(myJson.getJSONObject(i).getString("id"))
                    )
                 {
-                    //if (
-                    //        myJson.getJSONObject(i).has("block_num") &&
-                    //                myJson.getJSONObject(i).getString("block_num").equals( alreadyLoadedIds.get(myJson.getJSONObject(i).getString("id")) )
-                    //        )
-                    //{
+
                         Log.d("trx", "continue");
                         continue;
-                    //}
+
                 }
 
                 if ( myJson.getJSONObject(i).has("block_num")  && myJson.getJSONObject(i).has("id") && myJson.getJSONObject(i).has("op")  )
@@ -632,8 +621,7 @@ public class TransactionActivity implements IBalancesDelegate {
             }
 
             numberOfTransactionsLoaded += numberOfTransactionsToLoad;
-            //hourlyNumberOfTransactionsLoaded += 100;
-            //assetDelegate.rawTransactionsLoaded(hourlyNumberOfTransactionsLoaded);
+
 
             if ( headersTimeToFetch.size() == 0 )
             {
@@ -716,7 +704,6 @@ public class TransactionActivity implements IBalancesDelegate {
             }
             else
             {
-                //assetDelegate.transactionTimeLoaded(indexHeadersTimeToFetch + 1 + hourlyNumberOfTransactionsLoaded - 100 ,headersTimeToFetch.size() + hourlyNumberOfTransactionsLoaded - 100);
                 String msg = String.format("%d / %d",indexHeadersTimeToFetch + 1 + hourlyNumberOfTransactionsLoaded - 100,headersTimeToFetch.size() + hourlyNumberOfTransactionsLoaded - 100);
 
                 if (context == null) return;
@@ -831,7 +818,6 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 if ( context == null ) return;
                 getNamesInTransactionsRecieved();
-                //assetDelegate.transactionsLoadFailure(context.getString(R.string.no_assets_found));
             }
         }
         catch (Exception e)
@@ -972,7 +958,6 @@ public class TransactionActivity implements IBalancesDelegate {
                     DecodeMemo resp = response.body();
                     if (resp.status.equals("success"))
                     {
-                        //resp.msg
                         if ( memosToDecodeHm.containsKey(memo) )
                         {
                             memosToDecodeHm.put(memo,resp.msg);
@@ -1125,9 +1110,6 @@ public class TransactionActivity implements IBalancesDelegate {
             if ( memosToDecodeHm.size() > 0 )
             {
                 encryptedMemos = memosToDecodeHm.keySet().toArray(new JSONObject[memosToDecodeHm.size()]);
-                //String[] encryptedMemoObjectsEncoded = memosToDecodeHm.values().toArray(new String[memosToDecodeHm.size()]);
-                //indexEncryptedMemos = 0;
-                //loadMemoSListForDecoding();
                 List<JSONObject> memosList = new ArrayList<>();
                 for (JSONObject memoObj:Arrays.asList(encryptedMemos))
                 {
@@ -1271,57 +1253,6 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
-            // combine myTransactions with already Transactions
-
-            /*
-            HashMap<String,TransactionDetails> completeTransactions = new HashMap<>();
-            HashMap<String,Date> completeTransactionsTime = new HashMap<>();
-
-            for(TransactionDetails td:myTransactions)
-            {
-                completeTransactions.put(td.id,td);
-                completeTransactionsTime.put(td.id,td.Date);
-            }
-            for(TransactionDetails td:alreadyLoadedTransactions)
-            {
-                completeTransactions.put(td.id,td);
-                completeTransactionsTime.put(td.id,td.Date);
-            }
-            */
-
-            //String[] arrayOfIds = completeTransactions.keySet().toArray(new String[completeTransactions.size()]);
-            //List<String> listOfIds = Arrays.asList(arrayOfIds);
-
-            //Collections.sort(listOfIds);
-            //Collections.reverse(listOfIds);
-
-            //Date[] arrayOfDates = completeTransactionsTime.values().toArray(new Date[completeTransactionsTime.size()]);
-            //List<Date> listOfDates = Arrays.asList(arrayOfDates);
-
-            /*
-            List<Date> listOfDates = new ArrayList<>();
-            for(TransactionDetails td:myTransactions)
-            {
-                completeTransactions.put(td.id,td);
-                listOfDates.add(td.Date);
-            }
-            for(TransactionDetails td:alreadyLoadedTransactions)
-            {
-                completeTransactions.put(td.id,td);
-                listOfDates.add(td.Date);
-            }
-
-            Collections.sort(listOfDates);
-            Collections.reverse(listOfDates);
-
-            List<TransactionDetails> completeListOfTransactionsToDisplay = new ArrayList<>();
-
-            for (Date date:listOfDates)
-            {
-                completeListOfTransactionsToDisplay.add(completeTransactions.get(id));
-            }
-            */
-
             List<TransactionDetails> completeListOfTransactionsToDisplay = new ArrayList<>();
             completeListOfTransactionsToDisplay.addAll(myTransactions);
             completeListOfTransactionsToDisplay.addAll(alreadyLoadedTransactions);
@@ -1334,13 +1265,11 @@ public class TransactionActivity implements IBalancesDelegate {
                 finalHm.put(td.id,td);
             }
 
-            //hashSet.addAll(completeListOfTransactionsToDisplay.);
             completeListOfTransactionsToDisplay.clear();
             completeListOfTransactionsToDisplay.addAll(finalHm.values());
 
             Collections.sort(completeListOfTransactionsToDisplay, new transactionsDateComparator());
 
-            // return transactiondetails array
             if ( context == null ) return;
             assetDelegate.transactionsLoadComplete(completeListOfTransactionsToDisplay,myTransactions.size());
         }
@@ -1381,119 +1310,6 @@ public class TransactionActivity implements IBalancesDelegate {
         //myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
         equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
         decodeRecievedMemos();
-
-        /*
-        if ( context == null ) return;
-        assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.getting_equivalent_flat_exchange_rate));
-        equivalentRatesHm = new HashMap<>();
-
-        final List<String> pairs = new ArrayList<>();
-        String values = "";
-
-        for (JSONObject asset:assetsRecievedHm.values())
-        {
-            try
-            {
-                if ( !asset.getString("symbol").equals(faitCurrency) )
-                {
-                    values += asset.getString("symbol") + ":" + faitCurrency + ",";
-                    pairs.add(asset.getString("symbol") + ":" + faitCurrency);
-                }
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-        if ( values.isEmpty() )
-        {
-            if ( context == null ) return;
-            assetDelegate.transactionsLoadFailure(context.getString(R.string.invalid_input_for_fiat_conversion));
-            return;
-        }
-
-        values = values.substring(0, values.length() - 1);
-
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("method", "equivalent_component");
-        hashMap.put("values", values);
-
-        if ( context == null ) return;
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
-
-        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
-            @Override
-            public void onResponse(Response<EquivalentComponentResponse> response)
-            {
-                if (response.isSuccess())
-                {
-                    EquivalentComponentResponse resp = response.body();
-
-                    if (resp.status.equals("success"))
-                    {
-                        try
-                        {
-                            JSONObject rates = new JSONObject(resp.rates);
-                            Iterator<String> keys = rates.keys();
-                            equivalentRatesHm = new HashMap<>();
-
-
-
-                            while (keys.hasNext())
-                            {
-                                String key = keys.next();
-                                equivalentRatesHm.put(key.split(":")[0], rates.get(key).toString());
-
-                                if ( pairs.contains(key) )
-                                {
-                                    pairs.remove(key);
-                                }
-                            }
-
-                            if ( context == null ) return;
-                            EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-                            myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
-                            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
-
-                            if ( context == null ) return;
-                            assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
-
-                            if ( pairs.size() > 0 )
-                            {
-                                getIndirectEquivalentFiatRates(pairs,faitCurrency);
-                            }
-                            else
-                            {
-                                decodeRecievedMemos();
-                            }
-
-                        }
-                        catch (Exception e)
-                        {
-                            reTryGetEquivalentComponents(faitCurrency);
-                        }
-                    }
-                    else
-                    {
-                        reTryGetEquivalentComponents(faitCurrency);
-                    }
-                }
-                else
-                {
-                    reTryGetEquivalentComponents(faitCurrency);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t)
-            {
-                reTryGetEquivalentComponents(faitCurrency);
-            }
-        });
-        */
     }
 
     int retryGetIndirectEquivalentRates = 0 ;
@@ -1558,17 +1374,6 @@ public class TransactionActivity implements IBalancesDelegate {
                     {
                         try
                         {
-                            /*
-                            JSONObject rates = new JSONObject(resp.rates);
-                            Iterator<String> keys = rates.keys();
-                            equivalentRatesHm = new HashMap<>();
-
-                            while (keys.hasNext())
-                            {
-                                String key = keys.next();
-                                equivalentRatesHm.put(key.split(":")[0], rates.get(key).toString());
-                            }
-                            */
 
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
@@ -1583,8 +1388,6 @@ public class TransactionActivity implements IBalancesDelegate {
                                     break;
                                 }
                             }
-
-                            //HashMap hm = new HashMap();
 
                             if (!btsToFait.isEmpty())
                             {

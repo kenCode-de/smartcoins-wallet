@@ -49,7 +49,6 @@ import de.bitshares_munich.smartcoinswallet.R;
  */
 public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver {
 
-//    public static WebSocket webSocketG;
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
@@ -70,12 +69,10 @@ public class Application extends android.app.Application implements de.bitshares
                     "wss://de.blockpay.ch:8089",                // German node
                     "wss://fr.blockpay.ch:8089",               // France node
                     "wss://bitshares.openledger.info/ws",      // Openledger node
-           //         "wss://bitshares.dacplay.org:8089/ws"
+                    //"wss://bitshares.dacplay.org:8089/ws"
                     //,"https://dele-puppy.com/ws"
                     //,"https://valen-tin.fr:8090"
             };
-
-    //public static int counter = 0;
 
     public static String monitorAccountId;
 
@@ -95,9 +92,7 @@ public class Application extends android.app.Application implements de.bitshares
         super.onCreate();
         ButterKnife.setDebug(true);
         context = getApplicationContext();
-        //showDialogPin();
         blockHead = "";
-//        webSocketConnection();
         init();
         accountCreateInit();
     }
@@ -129,12 +124,6 @@ public class Application extends android.app.Application implements de.bitshares
     public static void registerExchangeRateCallback(IExchangeRate callbackClass) {
         iExchangeRate = callbackClass;
     }
-
-    /*
-    public void registerBalancesDelegate(IBalancesDelegate callbackClass) {
-        iBalancesDelegate = callbackClass;
-    }
-    */
 
     public static void registerBalancesDelegateTransaction(IBalancesDelegate callbackClass) {
         iBalancesDelegate_transactionActivity = callbackClass;
@@ -179,101 +168,6 @@ public class Application extends android.app.Application implements de.bitshares
         }
     }
 
-//    public static void webSocketConnection()
-//    {
-//        isReady = false;
-//        int nodeIndex = new Random().nextInt(urlsSocketConnection.length);
-//        final AsyncHttpGet get = new AsyncHttpGet(urlsSocketConnection[nodeIndex]);
-//        get.setTimeout(10 * 1000);
-//
-//        Log.d("Connecting to node", urlsSocketConnection[nodeIndex]);
-//        AsyncHttpClient.getDefaultInstance().websocket(get, null, new AsyncHttpClient.WebSocketConnectCallback() {
-//
-//            @Override
-//            public void onCompleted(final Exception ex, WebSocket webSocket) {
-//
-//                if (ex != null)
-//                {
-//                    isReady = false;
-//
-////                    if ( ++counter >= urlsSocketConnection.length )
-////                    {
-////                        counter = 0;
-////                    }
-//
-//                    Log.d("exception websocket", ex.toString());
-//                    final Exception myEx = ex;
-//                    Log.d("exception websocket", myEx.toString());
-//                    try {
-//                        final String exMessage = ex.getMessage();
-//                        if (ex != null && exMessage != null && !exMessage.isEmpty() && exMessage.contains("handshake_failure"))
-//                        {
-//                            Log.d("exception3 websocket", "inside");
-//
-//                            try {
-//
-//                                Runnable updateTask = new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        showWarningMessage(exMessage);
-//                                    }
-//                                };
-//                                warningHandler.postDelayed(updateTask, 1000);
-//                            }
-//                            catch (Exception e)
-//                            {
-//                                Log.d("exception websocket", e.getMessage());
-//                            }
-//                            //webSocketConnection();
-//                            Log.d("exception websocket", "showWarningMessagegetting out");
-//                        } else {
-//                            Log.d("exception websocket", "webbb socket");
-//                            if (webSocket != null) {
-//                                Log.d("exception websocket", "inside webbb socket");
-//                                if (webSocket.isOpen())
-//                                {
-//                                    Log.d("exception websocket", "is open");
-//                                    webSocket.close();
-//                                    Log.d("exception websocket", "closed");
-//                                    return;
-//                                }
-//                            }
-//                            webSocketConnection();
-//                        }
-//                    } catch (Exception e) {
-//                        Log.d("exception websocket", e.getMessage());
-//                    }
-//                    //ex.printStackTrace();
-//                    return;
-//                }
-//
-//                webSocket.setClosedCallback(new CompletedCallback() {
-//                    public void onCompleted(Exception ex) {
-//                        isReady = false;
-//                        webSocketConnection();
-//                    }
-//                });
-//
-//                webSocket.setEndCallback(new CompletedCallback() {
-//                    public void onCompleted(Exception ex) {
-//
-//                    }
-//                });
-//
-//                Log.d("exception websocket", "before making application.websocketg");
-//                Application.webSocketG = webSocket;
-//                Log.d("exception websocket", "sending initial socket");
-//                sendInitialSocket(context);
-//                Log.d("exception websocket", "completed");
-//            }
-//
-//
-//        });
-//
-//    }
-
-
-
 public static int nodeIndex = 0;
 
     private void webSocketConnection()
@@ -301,14 +195,8 @@ public static int nodeIndex = 0;
 
     public static void stringTextRecievedWs(String s) {
 
-//        if (Application.webSocketG.isOpen()) {
-//
-//            Application.webSocketG.send(context.getString(R.string.login_api));
-//            Application.webSocketG.setStringCallback(new WebSocket.StringCallback() {
-//                public void onStringAvailable(String s) {
 
                     try {
-                        //System.out.println("I got a string: " + s);
                         JSONObject jsonObject = new JSONObject(s);
 
                         if (jsonObject.has("id")) {
@@ -329,26 +217,7 @@ public static int nodeIndex = 0;
                             } else if (id == 4) {
                                 Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
                                 Application.send(context.getString(R.string.subscribe_callback));
-                                //Application.webSocketG.send(context.getString(R.string.subscribe_callback_full_account));
                                 isReady = true;
-
-                                /*
-                                Handler testHandler = new Handler();
-
-                                Runnable testRunnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (iAssetDelegate != null)
-                                        {
-                                            iAssetDelegate.loadAll();
-                                        }
-                                    }
-                                };
-
-                                testHandler.postDelayed(testRunnable,2000);
-                                */
-
-
                             } else if (id == 6) {
                                 if (iAccount != null) {
                                     iAccount.checkAccount(jsonObject);
@@ -446,7 +315,6 @@ public static int nodeIndex = 0;
                                     iRelativeHistory.relativeHistoryCallback(jsonObject);
                                 }
                             } else if (id == 17) {
-                                //Log.d("account_update", jsonObject.toString());
                             }
                             else if (id == 18) {
                                 if (iBalancesDelegate_ereceiptActivity != null) {
@@ -476,7 +344,6 @@ public static int nodeIndex = 0;
                                             }
                                             Log.d("Notice Update", values.toString());
                                         }
-                                        //headBlockNumber(s);
                                     }
                                     else {
                                         Log.d("other notice", values.toString());
@@ -491,11 +358,6 @@ public static int nodeIndex = 0;
 
                     }
                 }
-//            });
-//
-//
-//        }
-//    }
 
     private static void sendInitialSocket(final Context context)
     {

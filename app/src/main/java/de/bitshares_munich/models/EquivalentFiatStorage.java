@@ -11,8 +11,7 @@ import de.bitshares_munich.utils.TinyDB;
  */
 public class EquivalentFiatStorage
 {
-    //HashMap<String,String> equivalentHm = new HashMap<>();
-    //HashMap<String,HashMap<String,String>> equivalentHmFiat = new HashMap<>();
+
     TinyDB tinyDB;
 
     public EquivalentFiatStorage(Context _context)

@@ -26,15 +26,6 @@ public class ShareContact extends BaseActivity {
     }
 
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @OnClick(R.id.sharetofriend)
     public void ShareWithFriend(){
         try {
@@ -43,8 +34,6 @@ public class ShareContact extends BaseActivity {
 
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.putExtra(Intent.EXTRA_TEXT,Html.fromHtml(emailContent));
-            // sharingIntent.putExtra(Intent.EXTRA_TEXT,Html.fromHtml(getString(R.string.share_text)));
-            //sharingIntent.putExtra(Intent.EXTRA_HTML_TEXT, getString(R.string.share_text));
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.share_subject));
             sharingIntent.setType("text/html");
             startActivity(Intent.createChooser(sharingIntent,getString(R.string.share_heading)));

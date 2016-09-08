@@ -29,8 +29,6 @@ public class Gravatar
     public static String companyName; // name -> displayName
     public static String address; // aboutMe -> Address:
     public static String url; // urls -> first value
-
-    //private int tTLMiliseconds = 5*60000;
     private static String email;
     private static String logoThumbnailUrl;
     private static Bitmap companyLogo; // thumbnailUrl
@@ -53,10 +51,6 @@ public class Gravatar
     {
 
         //TODO: call the Gravatar web service and bring profile info using the 'email'
-        // param that is past to this method
-        //objGravatar.companyName = "KNYSYS, LLC";
-        //objGravatar.address = "123 Main Street, New York, NY 11239";
-        //objGravatar.url = "www.knysys.com";
 
         if ( _email == null || _email.isEmpty() )
         {

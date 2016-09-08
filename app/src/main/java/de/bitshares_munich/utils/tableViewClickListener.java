@@ -7,7 +7,6 @@ import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.eReceipt;
-import de.bitshares_munich.smartcoinswallet.eReceiptActivity;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 import android.content.Context;
@@ -31,9 +30,6 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
 
     @Override
     public void onDataClicked(int rowIndex, TransactionDetails td) {
-        //String clickedtdString = td.getDetailsFrom();
-        //Toast.makeText(myContext, clickedtdString, Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(Application.getCurrentActivity(), eReceiptActivity.class);
         if(!BalancesFragment.onClicked) {
             BalancesFragment.onClicked = true;
             Intent intent = new Intent(myContext, eReceipt.class);
@@ -47,6 +43,5 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
             intent.putExtra("Sent", td.Sent);
             myContext.startActivity(intent);
         }
-//        Application.getCurrentActivity().startActivity(intent);
     }
 }

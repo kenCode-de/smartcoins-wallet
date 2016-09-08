@@ -186,17 +186,6 @@ public class BrainkeyActivity extends BaseActivity {
                     if (accountDetails.status.equals("failure")) {
                         Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
                     } else {
-                        /*
-                        Crypt cr = new Crypt();
-                        try {
-                            String unenWif = cr.decrypt_string(accountDetails.wif_key);
-                            String unenBrn = cr.decrypt_string(accountDetails.brain_key);
-                        }
-                        catch (Exception e)
-                        {
-                            Log.d("decrypt",e.getMessage());
-                        }
-                        */
 
                         addWallet(accountDetails, brainKey, pinCode);
                     }
@@ -244,15 +233,9 @@ public class BrainkeyActivity extends BaseActivity {
             @Override
             public void run() {
                 if (Application.isConnected()) {
-   //                 if (Application.webSocketG.isOpen()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-//                    } else {
-//                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-//                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-//                        ivSocketConnected.startAnimation(myFadeInAnimation);
-//                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -263,10 +246,8 @@ public class BrainkeyActivity extends BaseActivity {
         };
         handler.postDelayed(updateTask, 1000);
     }
-    /////////////////
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
-        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         AccountDetails accountDetails = new AccountDetails();
         accountDetails.wif_key = accountDetail.wif_key;
         accountDetails.pinCode = pinCode;
@@ -280,25 +261,6 @@ public class BrainkeyActivity extends BaseActivity {
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails,brainKey,pinCode,getApplicationContext(),this);
 
-
-        /*
-        for (int i = 0; i < accountDetailsList.size(); i++) {
-
-            if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {
-                accountDetailsList.remove(i);
-            }
-        }
-        for (int i = 0; i < accountDetailsList.size(); i++) {
-            accountDetailsList.get(i).isSelected = false;
-        }
-
-        accountDetailsList.add(accountDetails);
-
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
-
-        List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions(this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
-        */
 
         Intent intent;
 

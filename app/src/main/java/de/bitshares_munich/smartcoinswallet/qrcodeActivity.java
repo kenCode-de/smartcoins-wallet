@@ -85,7 +85,6 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
 
         Intent intent = getIntent();
         id = intent.getIntExtra("id",-1);
-        //SupportMethods.testing("qrcode",id,"od");
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
 
@@ -114,9 +113,6 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
     @Override
     public void handleResult(final Result rawResult)
     {
-        //View myView = new View(getApplicationContext());
-        //myView.setBackgroundColor(getResources().getColor(R.color.whiteColor));
-        //setContentView(myView);
         showDialog("","");
 
         AsyncTask.execute(new Runnable() {

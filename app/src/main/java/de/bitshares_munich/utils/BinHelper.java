@@ -59,7 +59,6 @@ public class BinHelper {
     public ArrayList<Integer> getBytesFromBinFile(String filePath) {
         try {
             File file = new File(filePath);
-            //byte[] fileData = new byte[(int) file.length()];
             DataInputStream dis = new DataInputStream(new FileInputStream(file));
 
             ArrayList<Integer> result = new ArrayList<>();

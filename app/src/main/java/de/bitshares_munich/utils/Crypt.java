@@ -67,9 +67,7 @@ public class Crypt {
 
     public String decrypt_string(final String plain) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, ClassNotFoundException, IOException
     {
-        //byte[] encryptedBytes = decrypt(Base64.decode(plain, 0));
         byte[] encryptedBytes = decrypt(Base64.decode(plain, 0));
-        //return Base64.encodeToString( encryptedBytes, Base64.DEFAULT);
         return new String(encryptedBytes);
     }
 
@@ -77,7 +75,6 @@ public class Crypt {
     {
         key = _key;
         byte[] encryptedBytes = decrypt(Base64.decode(plain, 0));
-        //return Base64.encodeToString( encryptedBytes, Base64.DEFAULT);
         return new String(encryptedBytes);
     }
 
@@ -110,7 +107,6 @@ public class Crypt {
         random.nextBytes(Crypt.ivBytes);
 
         cipher.init(Cipher.ENCRYPT_MODE, newKey, random);
-//    cipher.init(Cipher.ENCRYPT_MODE, newKey, ivSpec);
         byte[] destination = new byte[ivBytes.length + mes.length];
         System.arraycopy(ivBytes, 0, destination, 0, ivBytes.length);
         System.arraycopy(mes, 0, destination, ivBytes.length, mes.length);

@@ -1,7 +1,5 @@
 package de.bitshares_munich.smartcoinswallet;
 
-//import android.app.Dialog;
-//import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,11 +19,6 @@ import java.util.Locale;
 
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
-//import de.bitshares_munich.utils.SupportMethods;
-
-//import com.crashlytics.android.Crashlytics;
-//import io.fabric.sdk.android.Fabric;
-
 /**
  * Created by qasim on 5/9/16.
  */
@@ -37,10 +30,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Fabric.with(this, new Crashlytics());
-
         String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-//                SupportMethods.setLocale(getApplicationContext(),language);
         if(!language.equals(""))
         Helper.setLocale(language,getResources());
         else {
@@ -116,18 +106,4 @@ public class BaseActivity extends AppCompatActivity {
         stopDisconnectTimer();
     }
 
-    /*
-    protected void setToolbarAndNavigationBar(String heading, Boolean navigationBar) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //
-        //        toolbar_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        //        // wb = (WebView) findViewById(R.id.wb);
-        //        toolbar_title.setText(heading);
-        //        //toolbar_title.setText(heading);
-        //        //toolbar.setTitle(heading);
-        //        //toolbar.setTitleTextColor(Color.WHITE);
-        //        setSupportActionBar(toolbar);
-
-    }
-    */
 }

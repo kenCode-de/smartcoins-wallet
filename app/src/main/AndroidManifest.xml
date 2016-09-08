@@ -77,13 +77,6 @@
             android:screenOrientation="portrait">
         </activity>
 
-
-        <activity
-            android:name=".eReceiptActivity"
-            android:label="@string/e_receipt_activity_name"
-            android:screenOrientation="portrait"
-            />
-
         <activity
             android:name=".eReceipt"
             android:label="@string/e_receipt_activity_name"

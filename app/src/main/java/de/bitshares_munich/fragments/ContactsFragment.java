@@ -50,38 +50,11 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-//        ArrayList<String> categories = new ArrayList<String>();
-//        categories.add("Automobile");
-//        categories.add("Business Services");
-//        categories.add("Computers");
-//        categories.add("Education");
-//        categories.add("Personal");
-//        categories.add("Travel");
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
         contactsDelegate=this;
-
-
         adapter = new ListViewActivity(getActivity());
         contactslist.setAdapter(adapter);
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-//                AlertDialog.Builder adb=new AlertDialog.Builder(getActivity());
-//                adb.setTitle("Delete?");
-//                adb.setMessage("Are you sure you want to delete " + position);
-//                final int positionToRemove = position;
-//                adb.setNegativeButton("Cancel", null);
-//                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        a.remove(positionToRemove);
-//                        adapter.notifyDataSetChanged();
-//                    }});
-//                adb.show();
-//            }
-//        });
-        //To have custom list view use this : you must define CustomeAdapter class
-        // listview.setadapter(new CustomeAdapter(getActivity()));
-        //getActivty is used instead of Context
         return view;
 
     }
