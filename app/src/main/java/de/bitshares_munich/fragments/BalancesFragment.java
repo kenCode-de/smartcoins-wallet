@@ -358,6 +358,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
         Boolean accountNameChange = checkIfAccountNameChange();
 
+        if(accountNameChange){
+            //firstTimeLoad = true;
+            if(pendingTransactionsLoad!=null)
+            pendingTransactionsLoad.removeCallbacksAndMessages(null);
+        }
+
         if(accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
             llBalances.removeAllViews();
 
@@ -2295,7 +2301,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadFailure(String reason)
     {
-        Log.d("LogTransactions",reason);
+        Log.d("LogTransactions","transactionsLoadFailure");
 
         sentCallForTransactions = false;
 
@@ -2305,14 +2311,40 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     Boolean isTransactionUpdating = false;
     @Override
     public void loadAgain() {
-        if(updateTriggerFromNetworkBroadcast){
+
+        Log.d("LogTransactions","loadAgain");
+
+        Log.d("LogTransactions",updateTriggerFromNetworkBroadcast+"");
+
+        if(updateTriggerFromNetworkBroadcast || myTransactions.size()<=0){
+
+            Log.d("LogTransactions","updateTriggerFromNetworkBroadcast");
+
             progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
             sentCallForTransactions = false;
+            pendingTransactionsLoad.removeCallbacksAndMessages(null);
+
+            final AssetDelegate assetDelegate = this;
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    loadTransactions(getContext(), accountId, assetDelegate , wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+
+                }
+            }, 5000);
+
         }else {
+            if ( myTransactionsTableAdapter == null )
+            {
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+            }else myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+            tableView.setDataAdapter(myTransactionsTableAdapter);
             load_more_values.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
@@ -2531,6 +2563,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         Application.monitorAccountId = accountId;
         tvAccountName.setText(to);
         isLifeTime(accountId, "15");
+
+        if(onResume && accountNameChanged)
+        {
+            loadBalancesFromSharedPref();
+            TransactionUpdateOnStartUp(to);
+        }
 
         loadViews(onResume,accountNameChanged, faitCurrencyChanged);
     }

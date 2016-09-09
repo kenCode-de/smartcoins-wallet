@@ -624,13 +624,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
             }
 
-            if(isNew) {
-                Log.d("LogTransactions","found");
+          //  if(isNew) {
+                Log.d("LogTransactions", "found");
 
                 numberOfTransactionsLoaded += numberOfTransactionsToLoad;
 
 
                 if (headersTimeToFetch.size() == 0) {
+                    Log.d("LogTransactions", "headersTimeToFetch.size()");
                     getAssetsInTransactionsReceived();
                     return;
                 }
@@ -645,13 +646,14 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
 
                 getTimeForTransactionsRecieved();
-            }else {
-                Log.d("LogTransactions","not found");
-                callInProgressForHourlyTransactions = false;
-                callReceivedForHourlyTransactions = true;
-                handleHourlyTransactions.removeCallbacksAndMessages(null);
-                assetDelegate.loadAgain();
-            }
+           // }
+//            }else {
+//                Log.d("LogTransactions","not found");
+//                callInProgressForHourlyTransactions = false;
+//                callReceivedForHourlyTransactions = true;
+//                handleHourlyTransactions.removeCallbacksAndMessages(null);
+//                assetDelegate.loadAgain();
+//            }
         }
         catch (Exception e)
         {

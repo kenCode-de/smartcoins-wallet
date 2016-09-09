@@ -231,6 +231,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnTextChanged(R.id.etAccountName)
     void onTextChanged(CharSequence text) {
         checkingValidation = true;
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (etAccountName.getText().length() > 0) {
             validAccount = true;
@@ -254,7 +255,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-
             if (etAccountName.getText().length() > 5)
             {
                 tvErrorAccountName.setText("");
@@ -580,6 +580,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         startActivity(intent);
 
         Application.timeStamp();
+
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         finish();
     }
