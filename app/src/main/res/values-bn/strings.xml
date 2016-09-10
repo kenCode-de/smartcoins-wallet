@@ -60,7 +60,6 @@
 <string name="checkbox_donate_old">2 বিটিএস Donate Bitshares মিউনিখে সাপোর্ট ডেভেলপারগণ</string>
 <string name="backup_brainkey">ব্যাকআপ BRAINKEY</string>
 <string name="imported_created_accounts">আমদানিকৃত / তৈরি হওয়া অ্যাকাউন্টগুলির</string>
-<string name="register_new_account">REGISTER নতুন অ্যাকাউন্ট</string>
 <string name="secure_pin">EDIT থেকে পিন</string>
 <string name="export">রপ্তানি</string>
     <string name="checkbox_donate">সাপোর্ট ডেভেলপারগণ 2 বিটিএস সংস্করণ এ</string>
@@ -224,6 +223,10 @@
 
     <string name="please_make_sure_your_bin_file">নিশ্চিত করুন যে আপনার পিন হয় সঠিক অথবা সঠিক বিন ফাইল নির্বাচন করা হয় দয়া করে</string>
 
-
+    <string name="register_new_account">নিবন্ধীকরণ করুন নতুন অ্যাকাউন্ট</string>
     <string name="change">পরিবর্তন...</string>
+
+    <string name="connected_to">এর সাথে সংযুক্ত</string>
+    <string name="account_create_msg">শুধুমাত্র একটি অ্যাকাউন্ট প্রতি 10 মিনিট নিবন্ধন করা যাবে</string>
+
 </resources>

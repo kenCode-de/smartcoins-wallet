@@ -91,7 +91,6 @@ public class RecieveActivity extends BaseActivity {
 
         setBackButton(true);
 
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(getResources().getString(R.string.rcv_screen_name));
 
         progressDialog = new ProgressDialog(this);
@@ -138,7 +137,6 @@ public class RecieveActivity extends BaseActivity {
         hm.put("fee", 0);
         hm.put("symbol", currency.replace("bit",""));
         hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId + "/");
-//        hm.put("note","merchant_email:\"abc@live.com\"");
         getQrHashKey(this, hm);
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
@@ -170,8 +168,6 @@ public class RecieveActivity extends BaseActivity {
         qrimage.buildDrawingCache();
         Bitmap bitmap = qrimage.getDrawingCache();
         File mFile = savebitmap(bitmap);
-        //Drawable loadImage = getDrawable(qrimage);
-//        String str = Helper.saveToInternalStorage(this,((BitmapDrawable) loadImage).getBitmap());
         try {
 
             String shareText = "";
@@ -249,7 +245,6 @@ public class RecieveActivity extends BaseActivity {
 
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.qr_hash_url));
         IWebService service = sg.getService(IWebService.class);
-//        final Call<QrHash> postingService = service.getQrHashWithNote(hashMap);
         final Call<QrHash> postingService = service.getQrHash(hashMap);
         postingService.enqueue(new Callback<QrHash>() {
             @Override
@@ -322,24 +317,17 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("trx", transactions[0].trx);
                         intent.putExtra("receiver_id", transactions[0].account_id);
                         intent.putExtra("sender_id", transactions[0].sender_id);
-                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
                     } else {
                         if (!isFinishing()) {
                             Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
-                            //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            //startActivity(intent);
                             finish();
                         }
                     }
 
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
-                    //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    //startActivity(intent);
                     finish();
                 }
             }
@@ -362,16 +350,10 @@ public class RecieveActivity extends BaseActivity {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.isConnected()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-                        ivSocketConnected.startAnimation(myFadeInAnimation);
-                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -388,7 +370,7 @@ public class RecieveActivity extends BaseActivity {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
-    ///////
+
 
 
 }

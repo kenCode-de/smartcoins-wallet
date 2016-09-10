@@ -86,7 +86,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String date_time = "date_time";
     Boolean isFirstTime = true;
     final String register_new_account = "register_new_account";
-    //String brainKey = "";
 
     @Bind(R.id.spCountry)
     Spinner spCountry;
@@ -149,8 +148,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //this.invalidateOptionsMenu();
-
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 
         setContentView(R.layout.activity_setting);
@@ -168,7 +165,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
 
-        //updateBrainKey();
     }
 
     public void init() {
@@ -196,8 +192,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 else Helper.storeBoolianSharePref(this, close_bitshare, false);
                 break;
             case R.id.always_donate:
-                //if (isCHecked(v)) Helper.storeBoolianSharePref(this, always_donate, true);
-                //else Helper.storeBoolianSharePref(this, always_donate, false);
                 Helper.storeBoolianSharePref(this, always_donate, false);
                 break;
             case R.id.hide_donations:
@@ -219,13 +213,11 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
         startActivity(intent);
-        //showDialogPinRequest();
     }
 
     public void onClickBackbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
-        //startActivity(intent);
     }
 
     Boolean isCHecked(View v) {
@@ -257,7 +249,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
         if (Helper.fetchBoolianSharePref(this, always_donate)) {
             checkBox = (CheckBox) findViewById(R.id.always_donate);
-            //checkBox.setChecked(true);
             checkBox.setChecked(false);
         }
         if (Helper.fetchBoolianSharePref(this, hide_donations)) {
@@ -352,7 +343,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-        //  Helper.setLocale(langCode, getResources());
         if (langCode != "")
         {
             for (int i = 0; i < langArray.size(); i++) {
@@ -488,7 +478,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
                 - TimeUnit.HOURS.toMinutes(hours);
         minutes = Math.abs(minutes);
-        //String temp= calendar.getTimeZone().getDisplayName(false, TimeZone.SHORT);
         String result = "";
         if (hours > 0) {
 
@@ -499,20 +488,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         return result;
     }
-
-    /*
-    private void updateBrainKey ()
-    {
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
-            if (accountDetails.get(i).isSelected)
-            {
-                brainKey = accountDetails.get(i).brain_key;
-            }
-        }
-    }
-    */
-
     private String getPin()
     {
         for (int i = 0; i < accountDetails.size(); i++)
@@ -561,7 +536,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
                 if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
                     accountDetails.get(i).isSelected = true;
-                    //brainKey = accountDetails.get(i).brain_key;
                     if (accountDetails.get(i).isLifeTime) {
                         ivLifeTime.setVisibility(View.VISIBLE);
                         btnUpgrade.setEnabled(false);
@@ -591,13 +565,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_country), countryCode);
     }
 
-    /*
-    @OnItemSelected(R.id.spCountry)
-    void onItemSelectedCountry(int position) {
-        //spCountryItemSelected(position);
-    }
-    */
-
     @OnItemSelected(R.id.spTimeZones)
     void onItemSelectedTimeZone(int position) {
         designMethod();
@@ -612,18 +579,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         }
     }
-
-//    @OnNothe
-//    ArrayList<String> arrayAccountAssets = new ArrayList<>();
-//    for (int j = 0; j < 10 ; j++) {
-//        arrayAccountAssets.add(String.valueOf(j));
-//    }
-//    ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
-//    adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//    spBackupAsset.setAdapter(adapterAccountAssets);
-
-
-
 
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
@@ -640,7 +595,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     }
                 }
                 tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-                // Helper.storeIntSharePref(getApplicationContext(), getString(R.string.pref_backup_asset), position);
             }
         else  if (position == 0)
             {
@@ -665,30 +619,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         LangCode langSelection = (LangCode) spLanguage.getSelectedItem();
         Helper.setLocale(langSelection.code, getResources());
 
-//        SupportMethods.setLocale(getApplicationContext(),langSelection.code);
-
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language), langSelection.code);
 
         if (inittLocale) {
 
             Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
 
-            //this.supportInvalidateOptionsMenu();
-            //this.invalidateOptionsMenu();
-
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
         inittLocale = true;
-//}
-//        Locale locale = new Locale(langSelection.code);
-//        Locale.setDefault(locale);
-//        Configuration config = new Configuration();
-//        config.locale = locale;
-//        getBaseContext().getResources().updateConfiguration(config,
-//                getBaseContext().getResources().getDisplayMetrics());
-
 
     }
 
@@ -705,7 +646,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
                 return;
-                //brainKey = accountDetails.get(0).brain_key;
             }
             else
             {
@@ -748,16 +688,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.isConnected()) {
+
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-                        ivSocketConnected.startAnimation(myFadeInAnimation);
-                    }
+
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -776,20 +712,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
-        Intent intent = new Intent(this, AccountActivity.class);
-        intent.putExtra("activity_name", "setting_screen");
-        intent.putExtra("activity_id", 919);
-        startActivity(intent);
+        if(Application.accountCanCreate()) {
+            Intent intent = new Intent(this, AccountActivity.class);
+            intent.putExtra("activity_name", "setting_screen");
+            intent.putExtra("activity_id", 919);
+            startActivity(intent);
+        }else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
+        }
     }
 
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         startActivity(intent);
-//        Intent intent = new Intent(this, BrainkeyActivity.class);
-//        intent.putExtra("activity_name", "setting_screen");
-//        intent.putExtra("activity_id", 919);
-//        startActivity(intent);
     }
 
     @OnClick(R.id.upgrade_account)
@@ -812,7 +748,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 //Check Balance
                 String ltmAmount = Helper.fetchStringSharePref(getApplicationContext(), "ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                   // alertMsg.setText("Upgrade to LTM now? " + ltmAmount + " BTS will be deducted from " + spAccounts.getSelectedItem().toString() + " account.");
                     alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + spAccounts.getSelectedItem().toString() + getString(R.string.account).toLowerCase()+".");
 
                     btnDone.setText(getString(R.string.txt_yes));
@@ -865,8 +800,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void showDialog() {
 
         final Dialog dialog = new Dialog(this);
-        //dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG);
-//                dialog.setTitle(R.string.pin_verification);
         dialog.setContentView(R.layout.alert_delete_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
@@ -896,8 +829,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 dialog.cancel();
             }
         });
-//                dialog.setCancelable(false);
-
         dialog.show();
 
 
@@ -933,14 +864,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
             populateDropDowns();
         }
-        /*
-        else
-        {
-            //tvAccounts.setText("");
-            //tvAccounts.setVisibility(View.GONE);
-            //clearApplicationData(getApplicationContext());
-        }
-        */
     }
 
     public void clearApplicationData(Context mContext) {
@@ -949,7 +872,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         editor.clear();
         editor.apply();
 
-        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
+        Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
 
         Intent k = getBaseContext().getPackageManager()
                 .getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -1051,189 +974,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
     }
 
-    /*
-    Handler createBackUp = new Handler();
-
-    private int convertDOubleToInt(Double value)
-    {
-        String valueString = Double.toString(value);
-
-        for ( int i = 0 ; i < valueString.length() ; i++ )
-        {
-            if ( valueString.charAt(i) == '.' )
-            {
-                valueString = valueString.substring(0,i);
-                break;
-            }
-        }
-
-        int valueInteger = Integer.parseInt(valueString);
-
-        return valueInteger;
-    }
-
-    public void saveBinContentToFile(List<Integer> content, String _accountName)
-    {
-        changeDialogMsg(getResources().getString(R.string.saving_bin_file_to) + " : " + getResources().getString(R.string.folder_name));
-
-        String folder = Environment.getExternalStorageDirectory() + File.separator + getResources().getString(R.string.folder_name);
-        String path =  folder + File.separator + _accountName + ".bin";
-
-        boolean success = new BinHelper(this,getApplicationContext()).saveBinFile(path,content,activitySettings);
-
-        hideDialog();
-
-        if ( success )
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.bin_file_saved_successfully_to) + " : " + path,Toast.LENGTH_LONG).show();
-        }
-        else
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_save_bin_file),Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName)
-    {
-        try
-        {
-            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-            IWebService service = sg.getService(IWebService.class);
-
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("method", "backup_bin");
-            hashMap.put("password", pin);
-            hashMap.put("brainkey", brnKey);
-
-            Call<ResponseBinFormat> postingService = service.getBytesFromBrainKey(hashMap);
-
-            postingService.enqueue(new Callback<ResponseBinFormat>() {
-                @Override
-                public void onResponse(Response<ResponseBinFormat> response) {
-
-                    if (response.isSuccess())
-                    {
-                        ResponseBinFormat responseContent = response.body();
-                        if (responseContent.status.equals("failure"))
-                        {
-                            Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                            hideDialog();
-                        }
-                        else
-                        {
-                            try
-                            {
-                                List<Object> abc = (List<Object>) responseContent.content;
-
-                                List<Integer> resultContent = new ArrayList<>();
-
-                                for (Object in: abc)
-                                {
-                                    int _in = convertDOubleToInt((Double)in);
-                                    resultContent.add(_in);
-                                }
-
-                                saveBinContentToFile(resultContent, _accountName);
-                            }
-                            catch (Exception e)
-                            {
-                                hideDialog();
-                                Toast.makeText(activitySettings, activitySettings.getString(R.string.unable_to_import_account_from_bin_file) + " : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        hideDialog();
-                        Log.d("bin","fail");
-                        Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    hideDialog();
-                    Log.d("bin","fail");
-                    Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            hideDialog();
-            Log.d("bin",e.getMessage());
-            Toast.makeText(activitySettings, getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode)
-    {
-        showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
-
-        if (_brnKey.isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
-            hideDialog();
-            return;
-        }
-
-        changeDialogMsg(getResources().getString(R.string.generating_bin_format));
-
-        Runnable getFormat = new Runnable() {
-            @Override
-            public void run()
-            {
-                //String pinCode = getPin();
-                if ( pinCode.isEmpty() )
-                {
-                    hideDialog();
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
-                }
-                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
-            }
-        };
-
-        createBackUp.postDelayed(getFormat,200);
-    }
-    */
-
     @OnClick(R.id.backup_ic)
     public void onClickBackupDotBin()
     {
-        /*
-        showDialog(getResources().getString(R.string.creating_backup_file),getResources().getString(R.string.fetching_key));
-
-        final String _brnKey = getBrainKey();
-
-        if (_brnKey.isEmpty())
-        {
-            Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
-            hideDialog();
-            return;
-        }
-
-        final String _accountName = getAccountName();
-
-        changeDialogMsg(getResources().getString(R.string.generating_bin_format));
-
-        Runnable getFormat = new Runnable() {
-            @Override
-            public void run()
-            {
-                String pinCode = getPin();
-                if ( pinCode.isEmpty() )
-                {
-                    hideDialog();
-                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
-                }
-                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
-            }
-        };
-
-        createBackUp.postDelayed(getFormat,200);
-        */
 
         String _brnKey = getBrainKey();
         String _accountName = getAccountName();
@@ -1301,12 +1044,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         public void onFileSelected(Dialog source, File file) {
             source.hide();
             onSuccess(file.getAbsolutePath(),file.getName());
-         //   tvFolderPath.setText(file.getAbsolutePath());
         }
 
         public void onFileSelected(Dialog source, File folder, String name) {
             source.hide();
-            //   Toast.makeText(getApplicationContext(), name +"::::1",Toast.LENGTH_LONG).show();
         }
     };
 
@@ -1318,30 +1059,15 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         audioFilePath.storeAudioEnabled(false);
         initAudioPath();
     }
-//    @OnClick(R.id.llFolderPath)
-//    public void llFolderSelect(View view){
-//        chooseAudioFile();
-//    }
-//    @OnClick(R.id.tvFolderPath)
-//    public void tvFolderSelect(View view){
-//        chooseAudioFile();
-//    }
     void setAudioFilePath(){
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         selected = audioFilePath.userAudioFileNameIfExist();
-     //   tvFolderPath.setText(path);
     }
 
     Boolean checkAudioStatus(){
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         return audioFilePath.fetchAudioEnabled();
     }
-
-//    @OnClick(R.id.spFolderPath)
-//    public void spFolderSelect(View view){
-//        chooseAudioFile();
-//    }
-
     void initAudioPath(){
 
         setAudioFilePath();

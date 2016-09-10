@@ -87,7 +87,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     Gson gson;
     ProgressDialog progressDialog;
-    Application application;
 
     @Bind(R.id.tvErrorAccountName)
     TextView tvErrorAccountName;
@@ -131,9 +130,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         validationAccountName();
         gson = new Gson();
-        application = new Application();
-        application.registerCallback(this);
-        application.registerCallbackIAccountID(this);
+        Application.registerCallback(this);
+        Application.registerCallbackIAccountID(this);
         progressDialog = new ProgressDialog(this);
         updateBlockNumberHead();
 
@@ -233,6 +231,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnTextChanged(R.id.etAccountName)
     void onTextChanged(CharSequence text) {
         checkingValidation = true;
+        myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (etAccountName.getText().length() > 0) {
             validAccount = true;
@@ -256,7 +255,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-
             if (etAccountName.getText().length() > 5)
             {
                 tvErrorAccountName.setText("");
@@ -265,15 +263,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 String socketText = getString(R.string.lookup_account_a);
                 String socketText2 = getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
                 myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);
-
-                /*
-                if (Application.webSocketG.isOpen())
-                {
-                    String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
-                    String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                    Application.webSocketG.send(socketText);
-                }
-                */
             }
             else
             {
@@ -286,7 +275,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void onStart() {
         super.onStart();
-        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.agreement))) {
+        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) {
             showDialogLiscence();
         }
     }
@@ -305,9 +294,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             public void onClick(View v) {
                 finish();
                 System.exit(0);
-//                Intent intent =new Intent(getApplicationContext(),SplashActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
 
             }
         });
@@ -315,7 +301,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.agreement), true);
+                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
                 dialog.cancel();
             }
         });
@@ -365,7 +351,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         postingService.enqueue(new Callback<GenerateKeys>() {
             @Override
             public void onResponse(Response<GenerateKeys> response) {
+
                 if (response.isSuccess()) {
+
+
                     GenerateKeys resp = response.body();
                     if (resp.status.equals("success")) {
                         try {
@@ -378,13 +367,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             registerdKeys(accountName, resp.keys.pub_key);
                         } catch (Exception e) {
 
+                            generateKeys();
+
                         }
 
                     } else if (resp.status.equals("failure")) {
-                        SupportMethods.testing("accountActivity", resp.toString(), "past_break");
+                        generateKeys();
 
                     }
                 } else {
+                    generateKeys();
                     Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
 
                 }
@@ -393,24 +385,29 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             @Override
             public void onFailure(Throwable t) {
                 SupportMethods.testing("accountActivity", t, "past_break");
+                generateKeys();
             }
         });
     }
 
     private void registerdKeys(final String accountName, String key) {
+
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("name", accountName);
-        hm.put("account_name", accountName);
         hm.put("owner_key", key);
         hm.put("active_key", key);
         hm.put("memo_key", key);
         hm.put("refcode", "bitshares-munich");
         hm.put("referrer", "bitshares-munich");
 
+        HashMap<String, HashMap> hashMap = new HashMap<>();
+        hashMap.put("account", hm);
+
+
         try {
             ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_create_url));
             IWebService service = sg.getService(IWebService.class);
-            final Call<RegisterAccount> postingService = service.getReg(hm);
+            final Call<RegisterAccount> postingService = service.getReg(hashMap);
             postingService.enqueue(new Callback<RegisterAccount>() {
                 @Override
                 public void onResponse(Response<RegisterAccount> response) {
@@ -418,112 +415,64 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         RegisterAccount resp = response.body();
                         if (resp.account != null) {
                             try {
-                                accountCreated = true;
-                                etAccountName.setText(accountName);
-//                            String pubKey = Crypt.getInstance().encrypt_string(resp.keys.pub_key);
-//                            String wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-//                            String brainPrivKey = Crypt.getInstance().encrypt_string(resp.keys.brain_priv_key);
-//                            String accountName = etAccountName.getText().toString();
 
+                                if(resp.account.name.equals(accountName))
+                                {
+                                get_account_id(etAccountName.getText().toString(), "151");
+                                tvErrorAccountName.setVisibility(View.GONE);
+                                };
                             } catch (Exception e) {
-                                accountCreated = true;
-                                etAccountName.setText(accountName);
-                                SupportMethods.testing("accountActivity", resp.toString(), "past_break");
+
+                                Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
 
                             }
-
                         }
-                    } else {
-                        accountCreated = true;
-                        etAccountName.setText(accountName);
-                        SupportMethods.testing("accountActivity","failed", "past_break");
 
+                    } else {
+                        Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onFailure(Throwable t) {
-                    SupportMethods.testing("accountActivity", t, "past_break");
+                    Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            SupportMethods.testing("accountActivity", e, "past_break");
-
+            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
         }
-        SupportMethods.testing("accountActivity", "1", "past");
     }
 
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
-//        if(canAccountCreate()) {
-
-        if (checkingValidation) {
-            Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
-        } else if (etAccountName.getText().toString().length() == 0) {
-            Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
-        } else if (etAccountName.getText().toString().length() <= 5) {
-            Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-        } else if (checkLastIndex()) {
-            tvErrorAccountName.setVisibility(View.VISIBLE);
-            tvErrorAccountName.setText(R.string.last_letter_cannot);
-        } else if (!checkHyphen()) {
-            tvErrorAccountName.setVisibility(View.VISIBLE);
-            tvErrorAccountName.setText(R.string.account_name_shoud_have);
-        } else {
-            if (etPin.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-            } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+            if (checkingValidation) {
+                Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
+            } else if (etAccountName.getText().toString().length() == 0) {
+                Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
+            } else if (etAccountName.getText().toString().length() <= 5) {
+                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+            } else if (checkLastIndex()) {
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                tvErrorAccountName.setText(R.string.last_letter_cannot);
+            } else if (!checkHyphen()) {
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                tvErrorAccountName.setText(R.string.account_name_shoud_have);
             } else {
-                if (validAccount) {
-                    if (!checkingValidation) {
-                        showDialog("", "");
-                        accountCreated = false;
-                        generateKeys();
+                if (etPin.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
+                } else if (etPinConfirmation.getText().length() < 5) {
+                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+                } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+                } else {
+                    if (validAccount) {
+                        if (!checkingValidation) {
+                            showDialog("", "");
+                            generateKeys();
+                        }
                     }
                 }
             }
-        }
-
-//        }else {
-//                 Toast.makeText(getApplicationContext(), "Wait few mins", Toast.LENGTH_SHORT).show();
-//        }
-
-
-
-
-//        if (etPin.getText().length() < 5) {
-//
-//        }
-//            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-//        } else if (etPinConfirmation.getText().length() < 5) {
-//            Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-//        } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-//            Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-//        } else {
-//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.sharePref_account_name), etAccountName.getText().toString());
-//            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.txt_pin), etPin.getText().toString());
-//        }*/
-/*        TinyDB tinydb = new TinyDB(getApplicationContext());
-        AccountDetails ad1 = new AccountDetails();
-        ad1.id=1;
-
-
-        ArrayList<AccountDetails> arrayList = new ArrayList<>();
-
-        arrayList.add(ad1);
-        arrayList.add(ad1);
-
-        tinydb.putListObject("allWinners",arrayList);
-
-
-        ArrayList<AccountDetails> ad = tinydb.getListObject("allWinners", AccountDetails.class);
-        ad.clear();*/
-
-
     }
 
     @OnClick(R.id.tvExistingAccount)
@@ -583,10 +532,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         tvErrorAccountName.setText(format);
                         tvErrorAccountName.setVisibility(View.VISIBLE);
                         checkingValidation = false;
-                        if (accountCreated) {
-                            get_account_id(etAccountName.getText().toString(), "151");
-                            tvErrorAccountName.setVisibility(View.GONE);
-                        }
                     }
                 });
             }
@@ -595,14 +540,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     @Override
                     public void run() {
                         validAccount = true;
-                        if (accountCreated) {
-                            hideDialog();
-                            accountCreated = false;
-                            //  tvErrorAccountName.setText("account created");
-                            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
-                            tvErrorAccountName.setVisibility(View.GONE);
-                        }
-//                        tvErrorAccountName.setText("Validation Complete");
                         tvErrorAccountName.setVisibility(View.GONE);
                         checkingValidation = false;
                     }
@@ -614,9 +551,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     void addWallet(String account_id) {
-        //String name = etAccountName.getText().toString();
-        //ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        AccountDetails accountDetails = new AccountDetails();
+              AccountDetails accountDetails = new AccountDetails();
         accountDetails.pinCode=etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
         accountDetails.account_name = etAccountName.getText().toString();
@@ -628,21 +563,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails,brainPrivKey,etPin.getText().toString(),getApplicationContext(),this);
-
-
-        /*
-        for (int i = 0; i < accountDetailsList.size(); i++) {
-            accountDetailsList.get(i).isSelected = false;
-        }
-
-        accountDetailsList.add(accountDetails);
-
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetailsList);
-
-
-        List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions( this, getApplicationContext(), getResources().getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions) );
-        */
 
         Intent intent;
 
@@ -658,6 +578,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+
+        Application.timeStamp();
+
+        myWebSocketHelper.cleanUpTransactionsHandler();
+
         finish();
     }
 
@@ -668,32 +593,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         String getDetails2 = ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
         myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
 
-        /*
-        try {
-            final int db_id = Helper.fetchIntSharePref(context, getString(R.string.sharePref_database));
-            //{"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-
-            final Handler handler = new Handler();
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen())) {
-                        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
-                        SupportMethods.testing("getLifetime", getDetails, "getDetails");
-                        Application.webSocketG.send(getDetails);
-                    } else {
-                        get_account_id(name_id, id);
-
-                    }
-                }
-            };
-
-            handler.postDelayed(updateTask, 1000);
-        } catch (Exception e) {
-
-        }
-        */
     }
 
     private void updateBlockNumberHead() {
@@ -704,16 +603,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if (Application.webSocketG != null) {
-                    if (Application.webSocketG.isOpen()) {
+                if (Application.isConnected()) {
                         ivSocketConnected.setImageResource(R.drawable.icon_connecting);
                         tvBlockNumberHead.setText(Application.blockHead);
                         ivSocketConnected.clearAnimation();
-                    } else {
-                        ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
-                        Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
-                        ivSocketConnected.startAnimation(myFadeInAnimation);
-                    }
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -728,12 +621,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void accountId(String string) {
         myWebSocketHelper.cleanUpTransactionsHandler();
-        //addWallet(etAccountName.getText().toString());
         String result = SupportMethods.ParseJsonObject(string, "result");
         String id_account = SupportMethods.ParseJsonObject(result, "id");
         SupportMethods.testing("accountID", id_account, "getDetails");
 
         addWallet(id_account);
     }
+
 
 }

@@ -230,4 +230,7 @@
     <string name="please_make_sure_your_bin_file">S\'il vous plaît assurez-vous que votre NIP est fichier correct ou de corriger bin est sélectionné</string>
     <string name="change">Changement...</string>
 
+    <string name="connected_to">Connecté à</string>
+    <string name="account_create_msg">Un seul compte toutes les 10 minutes peut être enregistré</string>
+
 </resources>

@@ -221,4 +221,8 @@
     <string name="audio_folder_path">音頻文件夾路徑</string>
     <string name="please_make_sure_your_bin_file">請確保您的密碼是否正確，或正確的bin文件被選中</string>
     <string name="change">更改...</string>
+
+    <string name="connected_to">連接到</string>
+    <string name="account_create_msg">只有一個帳戶每10分鐘可註冊</string>
+
 </resources>

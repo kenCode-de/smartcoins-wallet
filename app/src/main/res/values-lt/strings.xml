@@ -66,7 +66,6 @@
 <string name="checkbox_donate_old">Paaukok 2 BTS prie paramos kūrėjams ne Bitshares Miunchene</string>
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
 <string name="imported_created_accounts">Importuojamos / Sukūrė sąskaitos</string>
-<string name="register_new_account">Register new account</string>
 <string name="secure_pin">EDIT PIN kodą</string>
 <string name="export">eksportas</string>
 <string name="show_more">Rodyti daugiau</string>
@@ -159,7 +158,6 @@
     <string name="please_pay">Prašome atkreipti</string>
     <string name="transfer_funds">pervesti lėšas</string>
     <string name="unable_to_process">Nepavyko apdoroti</string>
-    <string name="cancel">CANCEL</string>
     <string formatted="false" name="help_message">Gauk 80% Cashback dėl mokesčių! Lifetime Nariai (LTM) gauti 80% Cashback kiekvieno sandorio mokestį jie moka, ir gali būti uždirbti kreipimosi pajamas iš vartotojų Registruodamiesi arba yra susiję su tinklu. Gyvenime Narystė yra dabar pagal 20000 BTS!</string>
     <string name="txt_yes">taip</string>
     <string name="txt_no">ne</string>
@@ -223,5 +221,10 @@
     <string name="please_make_sure_your_bin_file">Prašome įsitikinkite, kad jūsų PIN teisingas, ar teisingai bin failas yra pasirinktas</string>
 
     <string name="change">Keisti ...</string>
+    <string name="cancel">ATŠAUKT</string>
+    <string name="register_new_account">Registruotis naują paskyrą</string>
+
+    <string name="connected_to">Prijungtas prie</string>
+    <string name="account_create_msg">Tik viena sąskaita per 10 minučių gali būti registruojami</string>
 
 </resources>

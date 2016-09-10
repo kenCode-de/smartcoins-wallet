@@ -220,4 +220,7 @@
     <string name="please_make_sure_your_bin_file">Prosím, ujistěte se, že pin je správný nebo správný soubor přihrádka je vybrána</string>
     <string name="change">Přeměna...</string>
 
+    <string name="connected_to">Připojen k</string>
+    <string name="account_create_msg">Pouze jeden účet každých 10 minut lze registrovat</string>
+
 </resources>

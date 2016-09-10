@@ -227,4 +227,7 @@
     <string name="please_make_sure_your_bin_file">Моля, уверете се, че вашият пин се е избран правилно или правилен бин файл</string>
     <string name="change">Промяна на ...</string>
 
+    <string name="connected_to">Свързан с</string>
+    <string name="account_create_msg">Само един акаунт на всеки 10 минути могат да бъдат регистрирани</string>
+
 </resources>

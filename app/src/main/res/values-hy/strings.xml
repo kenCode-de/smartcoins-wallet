@@ -227,4 +227,7 @@
 
     <string name="change">Փոխեք ...</string>
 
+    <string name="connected_to">Կապված</string>
+    <string name="account_create_msg">Միայն մեկ հաշիվ յուրաքանչյուր 10 րոպե կարող է գրանցվել</string>
+
 </resources>

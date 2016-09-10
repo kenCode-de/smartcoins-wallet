@@ -224,4 +224,8 @@
 
     <string name="change">Cambio...</string>
 
+    <string name="connected_to">Conectado a</string>
+    <string name="account_create_msg">Sólo una cuenta cada 10 minutos se puede registrar</string>
+
+
 </resources>

@@ -224,5 +224,9 @@
     <string name="please_make_sure_your_bin_file">Lūdzu, pārliecinieties, ka jūsu pin ir pareizs vai pareiza bin fails ir izvēlēts</string>
     <string name="change">Mainīt ...</string>
 
+    <string name="connected_to">Savienots ar</string>
+    <string name="account_create_msg">Tikai viens konts ik pēc 10 minūtēm var reģistrēt</string>
+
+
 </resources>
 

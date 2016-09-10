@@ -15,7 +15,10 @@ public class webSocketCallHelper {
     private boolean callInProgressForTransactions = false;
     private boolean callReceivedForTransactions = true;
     Context context;
-    int time = 5000;
+
+    // 10 to 15 seconds are needed for the socket to connect
+    // so a timeout interval of 20 seconds is best suited for a stable connection
+    int time = 20000;
 
     public enum api_identifier {
         database,
@@ -47,7 +50,7 @@ public class webSocketCallHelper {
             {
                 if ( callInProgressForTransactions && !callReceivedForTransactions && Application.isReady) // if balances are not returned in one second
                 {
-                    Application.webSocketG.close();
+                    Application.disconnect();
                     make_websocket_call(call_string_before_identifier,call_string_after_identifier,identifer);
                 }
                 else if ( callInProgressForTransactions && !callReceivedForTransactions )
@@ -88,7 +91,7 @@ public class webSocketCallHelper {
 
                     callInProgressForTransactions = true;
                     callReceivedForTransactions = false;
-                    Application.webSocketG.send(call);
+                    Application.send(call);
                     transactionsHandler.postDelayed(checkifTransactionRecieved, time);
                 }
                 else

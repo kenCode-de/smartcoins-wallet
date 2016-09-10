@@ -83,7 +83,6 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     @OnClick(R.id.tvCancel)
     void cancel() {
         Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
-        //intent.putExtra(getString(R.string.price), "");
         intent.putExtra(getString(R.string.currency), popwin.getText().toString());
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
@@ -138,11 +137,9 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
                 e.printStackTrace();
 
             }
-            //;
         } else {
             forwardDisabling();
         }
-        // forwardEnabling();
     }
 
     public String method(String str) {

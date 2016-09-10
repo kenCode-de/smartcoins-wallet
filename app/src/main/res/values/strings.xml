@@ -29,6 +29,7 @@
     <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
     <string name="block_number" translatable="false">block# -------</string>
     <string name="agreement">Agreement</string>
+    <string name="pref_agreement">pref_agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
     <string name="kindly_create_account">Kindly create account</string>
@@ -205,7 +206,7 @@
 
     <string name="pref_desired_smart_coin">desired_smart_coin</string>
     <string name="pref_uia_coin">uia_coin</string>
-    <string name="url_bug">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
+    <string name="url_bug" translatable="false">https://github.com/kenCode-de/smartcoins-wallet/issues</string>
     <string name="str_total_status">(%1$s %2$s + %3$s %4$s = %5$s %6$s)</string>
     <string name="sharePref_database">database</string>
     <string name="sharePref_network_broadcast">network_broadcast</string>
@@ -258,7 +259,7 @@
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
     <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
     <string name="decode_memos_array_url">http://188.166.147.110:9004</string>
-    <string name="account_create_url">https://bitshares.openledger.info</string>
+    <string name="account_create_url">http://fr.blockpay.ch:5000</string>
     <string name="transfer_server_url">http://188.166.147.110:9000</string>
     <string name="qr_hash_url">http://188.166.147.110:8000</string>
     <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
@@ -383,4 +384,8 @@
     <string name="please_make_sure_your_bin_file">Please make sure your pin is correct or correct bin file is selected</string>
 
     <string name="change">Change...</string>
+
+    <string name="connected_to">Connected to</string>
+    <string name="account_create_msg">Only one account every 10 minutes can be registered</string>
+
 </resources>

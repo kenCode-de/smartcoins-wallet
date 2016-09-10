@@ -81,7 +81,7 @@ public interface IWebService {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/accounts")
-    Call<RegisterAccount> getReg(@Body Map<String, Object> params);
+    Call<RegisterAccount> getReg(@Body Map<String, HashMap> params);
 
     @GET
     Call<Void> sendCallback(@Url String urlSubString, @Query("block") String block, @Query("trx") String trx);
@@ -109,6 +109,7 @@ public interface IWebService {
     @POST("/")
     Call<LtmFee> getLtmFee(@Body Map<String, String> params);
 
-
+    @GET("/{md5Email}.json")
+    Call<Object> getGravatarProfile(@Path("md5Email") String md5Email);
 
 }

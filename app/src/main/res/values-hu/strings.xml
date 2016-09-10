@@ -224,4 +224,7 @@
     <string name="please_make_sure_your_bin_file">Kérjük, ellenőrizze, hogy a csap a helyes vagy a megfelelő bin fájl kiválasztva</string>
     <string name="change">Változás...</string>
 
+    <string name="connected_to">Csatlakozva valamihez</string>
+    <string name="account_create_msg">Csak egy számla 10 percenként lehet regisztrálni</string>
+
 </resources>

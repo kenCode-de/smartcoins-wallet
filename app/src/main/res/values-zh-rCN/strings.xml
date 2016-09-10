@@ -395,5 +395,7 @@
     <string name="please_make_sure_your_bin_file">请确保您的密码是否正确，或正确的bin文件被选中</string>
     <string name="change">更改...</string>
 
+    <string name="connected_to">连接到</string>
+    <string name="account_create_msg">只有一个帐户每10分钟可注册</string>
 
 </resources>

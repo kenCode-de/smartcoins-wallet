@@ -246,4 +246,8 @@
     <string name="audio_folder_path">Аудио Путања</string>
     <string name="please_make_sure_your_bin_file">Уверите се да је пин је изабран исправан или исправан бин фајл</string>
     <string name="change">Цханге ...</string>
+
+    <string name="connected_to">Повезан</string>
+    <string name="account_create_msg">Само један рачун сваких 10 минута може да се региструје</string>
+
 </resources>

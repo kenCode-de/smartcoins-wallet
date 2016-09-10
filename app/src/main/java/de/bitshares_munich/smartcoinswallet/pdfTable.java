@@ -93,7 +93,6 @@ public class pdfTable {
             FileWriter writer = new FileWriter(gpxfile);
             writer.flush();
             writer.close();
-            //Toast.makeText(myContext, myContext.getText(R.string.empty_file_created) + path, Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,13 +189,10 @@ public class pdfTable {
 
             document.add(table);
             document.close();
-//            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
-//            myActivity.runOnUiThread(new Runnable() {
-//                public void run() {
+
                     Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
                     Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
-//                }
-//            });
+
 
         }
         catch(Exception e){
@@ -267,9 +263,6 @@ public class pdfTable {
             document.close();
 
             Intent email = new Intent(Intent.ACTION_SEND);
-            //email.putExtra(Intent.EXTRA_EMAIL, "---");
-            //email.putExtra(Intent.EXTRA_SUBJECT, "---");
-            //email.putExtra(Intent.EXTRA_TEXT, "---");
             Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");

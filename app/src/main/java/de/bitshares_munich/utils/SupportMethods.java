@@ -64,12 +64,20 @@ public class SupportMethods {
         return  convertAssetAmountToFiat(amount,eR);
     }
 
-    public static String ParseJsonObject(String Json , String Req){
-        try {
-            if(Json.contains(Req)){
+    public static String ParseJsonObject(String Json , String Req)
+    {
+        try
+        {
+            if(Json.contains(Req))
+            {
                 JSONObject myJson = new JSONObject(Json);
-                return  myJson.getString(Req);}
-        }catch (Exception e){ testing("SupportMethods",e,"ParseJsonObject");}
+                return  myJson.getString(Req);
+            }
+        }
+        catch (Exception e)
+        {
+            testing("SupportMethods",e,"ParseJsonObject");
+        }
         return "";
     }
     public static String ParseObjectFromJsonArray(String Json , int position)

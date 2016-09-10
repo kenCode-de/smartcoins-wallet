@@ -226,4 +226,8 @@
     <string name="please_make_sure_your_bin_file">لطفا مطمئن شوید که PIN خود را صحیح یا صحیح فایل بن انتخاب شده است</string>
 
     <string name="change">تغییر دادن...</string>
+
+    <string name="connected_to">مرتبط با</string>
+    <string name="account_create_msg">فقط یک حساب در هر 10 دقیقه می تواند ثبت نام</string>
+
 </resources>

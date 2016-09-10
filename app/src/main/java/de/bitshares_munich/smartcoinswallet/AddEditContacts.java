@@ -62,7 +62,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     String emailtxt = "";
     String accountid = "";
     String note = "";
-    Application application = new Application();
 
     boolean validReceiver = false;
 
@@ -116,12 +115,11 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
         context = this;
         tinyDB = new TinyDB(context);
-        application.registerCallback(this);
+        Application.registerCallback(this);
 
         myWebSocketHelper = new webSocketCallHelper(this);
 
         contactsDelegate = ContactsFragment.contactsDelegate;
-        //loadWebView(39, Helper.hash("", Helper.MD5));
         loadWebView(39, Helper.hash("", Helper.SHA256));
 
         emailHead.setText(context.getString(R.string.email_name) + " :");
@@ -160,7 +158,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 setOnEmail();
             }
 
-            // if (res.containsKey("interface")) contactsDelegate =  (ContactsDelegate) res.getSerializable("interface");
         }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -169,7 +166,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 Boolean contactNameEnabled = false;
                 Boolean noteEnabled = false;
                 Boolean emailEnabled = false;
-                Boolean checkAccountid = false;
                 //Do something after 100ms
                 if (edit && validReceiver) {
                     if (Contactname.getText().toString().equals(contactname)) {
@@ -299,8 +295,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
                 validReceiver = false;
 
-                // loadWebView(39, Helper.md5(Accountname.getText().toString()));
-
                 loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
 
 
@@ -357,7 +351,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             imageEmail.setVisibility(View.GONE);
             web.setVisibility(View.VISIBLE);
             tvWarningEmail.setText("");
-            // setGravator(text.toString(), imageEmail);
         }
 
         if (edit) {
@@ -418,23 +411,11 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-            // warning.setText("");
-            //warning.setVisibility(View.GONE);
             if (Accountname.getText().length() > 2) {
                 if (!checkIfAlreadyAdded()) {
                     String socketText = getString(R.string.lookup_account_a);
                     String socketText2 = getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
                     myWebSocketHelper.make_websocket_call(socketText, socketText2, webSocketCallHelper.api_identifier.database);
-
-                    /*
-                    if (Application.webSocketG != null && (Application.webSocketG.isOpen()))
-                    {
-                        //String socketText = getString(R.string.lookup_account_a) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                        String databaseIdentifier = Integer.toString(Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database)));
-                        String socketText = getString(R.string.lookup_account_a) + databaseIdentifier + getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                        Application.webSocketG.send(socketText);
-                    }
-                    */
                 } else {
                     warning.setText(Accountname.getText().toString() + " " + getString(R.string.is_already_added));
                     warning.setTextColor(getColorWrapper(context, R.color.red));
@@ -442,7 +423,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-                // loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.MD5));
                 loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
                 warning.setText("");
                 SaveContact.setEnabled(false);

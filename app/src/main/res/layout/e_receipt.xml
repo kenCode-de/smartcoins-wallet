@@ -78,9 +78,8 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text=""
-                        android:textSize="35dp"
+                        android:textSize="20dp"
                         android:id="@+id/tvOtherCompany"
-                        android:visibility="gone"
                         />
                     <TextView
                         android:layout_width="match_parent"
@@ -106,9 +105,8 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text=""
-                        android:visibility="gone"
                         android:id="@+id/tvAddress"
-                        android:textSize="15dp"
+                        android:textSize="12dp"
                         />
                     <TextView
                         android:layout_width="match_parent"
@@ -117,8 +115,7 @@
                         android:textColor="@color/black"
                         android:text=""
                         android:id="@+id/tvContact"
-                        android:visibility="gone"
-                        android:textSize="15dp"
+                        android:textSize="12dp"
 
                         />
                 </LinearLayout>

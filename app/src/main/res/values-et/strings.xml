@@ -224,4 +224,8 @@
     <string name="please_make_sure_your_bin_file">Palun veenduge, et Teie pin on õige või korrektne bin fail on valitud</string>
 
     <string name="change">Muuda ...</string>
+
+    <string name="connected_to">ühendatud</string>
+    <string name="account_create_msg">Ainult üks konto iga 10 minuti järel saab registreerida</string>
+
 </resources>

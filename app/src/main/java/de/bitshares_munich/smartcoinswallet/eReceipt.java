@@ -57,9 +57,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.Interfaces.GravatarDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
+import de.bitshares_munich.models.Gravatar;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.TransactionIdResponse;
@@ -76,12 +78,14 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
-public class eReceipt extends BaseActivity implements IBalancesDelegate {
+public class eReceipt extends BaseActivity implements IBalancesDelegate,GravatarDelegate {
     Context context;
-    Application application = new Application();
 
     @Bind(R.id.ivOtherGravatar)
     ImageView ivOtherGravatar;
+
+    @Bind(R.id.tvOtherCompany)
+    TextView tvOtherCompany;
 
     @Bind(R.id.TvBlockNum)
     TextView TvBlockNum;
@@ -107,6 +111,13 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
     @Bind(R.id.tvAmount)
     TextView tvAmount;
+
+    @Bind(R.id.tvAddress)
+    TextView tvAddress;
+
+    @Bind(R.id.tvContact)
+    TextView tvContact;
+
 
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
@@ -153,9 +164,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Bind(R.id.llall)
     LinearLayout llall;
 
-
-    //int names_in_work;
-    //int names_total_size;
     int assets_id_in_work;
     int assets_id_total_size;
 
@@ -178,11 +186,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     String amountAmount = "";
     String time = "";
     String timeZone = "";
-    String emailOther = "";
-    String emailUser = "";
     ProgressDialog progressDialog;
     boolean loadComplete = false;
     boolean btnPress = false;
+
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -199,7 +206,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
         context = getApplicationContext();
         progressDialog = new ProgressDialog(this);
-        application.registerBalancesDelegateEReceipt(this);
+        Application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
         hideProgressBar();
         Intent intent = getIntent();
@@ -213,38 +220,33 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         if (intent.getBooleanExtra("Sent", false)) {
             userName = intent.getStringExtra("From");
             otherName = intent.getStringExtra("To");
-            //tvUserAccount.setText("Recieved From");
-            //tvOtherAccount.setText("Sent To");
             tvUserStatus.setText(getString(R.string.sender_account));
             isSent = true;
             ivImageTag.setImageResource(R.drawable.send);
-//            email = get_email(to);
         } else {
-            // tvOtherAccount.setText("Recieved From");
-            // tvUserAccount.setText("Sent To");
             tvUserStatus.setText(getString(R.string.receiver_account));
             userName = intent.getStringExtra("To");
             otherName = intent.getStringExtra("From");
             isSent = false;
             ivImageTag.setImageResource(R.drawable.receive);
-//            email = get_email(from);
         }
         tvOtherName.setText(otherName);
         tvUserName.setText(userName);
         TvBlockNum.setText(date);
         tvTime.setText(time + " " + timeZone);
-        //  emailOther = get_email(otherName);
-        //   emailOther = "fawaz_ahmed@live.com";
 
-//        Display display = getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        int width = size.x;
-//
-//        ivOtherGravatar.requestLayout();
-//
-//        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
-//        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        ivOtherGravatar.requestLayout();
+
+        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+
+
+        fetchGravatarInfo(get_email(otherName));
 
         init(eReciept);
 
@@ -254,8 +256,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     @Override
     public void OnUpdate(String s, int id) {
         if (id == 18) {
-            //String result = SupportMethods.ParseJsonObject(s,"result");
-            //String time = SupportMethods.ParseJsonObject(result,"timestamp");
             assets_id_in_work = 0;
             get_asset(Assetid.get(assets_id_in_work), "19");
         } else if (id == 19) {
@@ -314,30 +314,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
                                         checkifloadingComplete();
 
-//                                        if (btnPress)
-//                                        {
-//                                            try
-//                                            {
-//                                                Handler handlerStop = new Handler();
-//                                                handlerStop.postDelayed(new Runnable() {
-//                                                    public void run() {
-//                                                        //hideDialog();
-//                                                       // hideProgressBar();
-//                                                    }
-//                                                }, 1500);
-//                                            }
-//                                            catch (Exception e)
-//                                            {
-//
-//                                            }
-//                                            //generatePdf();
-//                                            generatepdfDoc();
-//                                        }
-
-
 
                                     } catch (Exception e) {
-                                        //e.printStackTrace();
                                         getTransactionId(block_num, trx_in_block);
                                     }
                                 } else {
@@ -367,7 +345,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     void init(String eRecipt) {
         eReciptmap.put("id", SupportMethods.ParseJsonObject(eRecipt, "id"));
         eReciptmap.put("op", SupportMethods.ParseJsonObject(eRecipt, "op"));
-        //eReciptmap.put("result", SupportMethods.ParseJsonObject(eRecipt, "result"));
         String block_num = SupportMethods.ParseJsonObject(eRecipt, "block_num");
         eReciptmap.put("block_num", block_num);
         String trx_in_block = SupportMethods.ParseJsonObject(eRecipt, "trx_in_block");
@@ -401,12 +378,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     void onLastCall() {
         this.runOnUiThread(new Runnable() {
             public void run() {
-
-                //   createEmail(emailOther, ivOtherGravatar);
-
-                // createEmail(emailUser,ivUserGravatar);
-
-
                 AssetsSymbols assetsSymbols = new AssetsSymbols(context);
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
@@ -434,11 +405,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
                 getEquivalentComponents(arrayList);
 
-//                if(faitAmount!=null && faitSymbol!=null) {
-//                    tvTotalEquivalent.setText(faitAmount + " " + faitSymbol);
-//                    tvPaymentEquivalent.setText(faitAmount + " " + faitSymbol);
-//                    ifEquivalentFailed();
-//                }
 
                 feeSymbol = assetsSymbols.updateString(sym_preFee.get("symbol"));
                 amountSymbol = assetsSymbols.updateString(sym_preAmount.get("symbol"));
@@ -461,12 +427,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
                     tvUserId.setText(OPmap.get("to"));
                 }
 
-
                 tvMemo.setText(memoMsg);
 
                 loadComplete = true;
                 checkifloadingComplete();
-               // hideProgressBar();
 
             }
         });
@@ -476,62 +440,60 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
         //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_names(String name_id, String id) {
         int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
         //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     void get_asset(String asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\"" + asset + "\"]]}";
-        Application.webSocketG.send(getDetails);
+        Application.send(getDetails);
     }
 
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
         btnPress = true;
         checkifloadingComplete();
-//        if(loadComplete) {
-//            showProgressBar();
-//            if (!transactionIdUpdated) {
-                //showDialog("", getResources().getString(R.string.updating_transaction_id));
-                //showProgressBar();
-//            } else {
-             //   showProgressBar();
-//                Handler handler = new HatransactionIdUpdatedndler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        //showDialog("", getResources().getString(R.string.updating_transaction_id));
-//                        showProgressBar();
-//                    }
-//                }, 0);
-//                Handler handlerStop = new Handler();
-//                handlerStop.postDelayed(new Runnable() {
-//                    public void run() {
-//                        //  hideDialog();
-//                        hideProgressBar();
-//
-//                    }
-//                }, 1500);
-                //generatePdf();
-//            }
-//
-//        }
-//        else{
-//            showProgressBar();
-//            Toast.makeText(context,getString(R.string.updating_transaction_id),Toast.LENGTH_LONG).show();
-//        }
-
     }
 
     String get_email(String accountName) {
         MerchantEmail merchantEmail = new MerchantEmail(context);
         return merchantEmail.getMerchantEmail(accountName);
+    }
+
+    @Override
+    public void updateProfile(Gravatar myGravatar) {
+        tvOtherCompany.setText(myGravatar.companyName);
+        tvAddress.setText(myGravatar.address);
+        tvContact.setText(myGravatar.url);
+    }
+
+    @Override
+    public void updateCompanyLogo(Bitmap logo) {
+        Bitmap bitmap = getRoundedCornerBitmap(logo);
+        ivOtherGravatar.setImageBitmap(bitmap);
+    }
+
+    @Override
+    public void failureUpdateProfile() {
+
+    }
+
+    @Override
+    public void failureUpdateLogo() {
+
+    }
+    GravatarDelegate instance(){
+        return this;
+    }
+    void fetchGravatarInfo(String email){
+        Gravatar.getInstance(instance()).fetch(email);
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -558,7 +520,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         protected void onPostExecute(Bitmap result) {
             if (result == null) bmImage.setVisibility(View.GONE);
             else {
-                // Bitmap corner = getRoundedCornerBitmap(result);
                 bmImage.setImageBitmap(result);
             }
         }
@@ -583,96 +544,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             return this.assetSymbol;
         }
     }
-
-//    private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
-//        String faitCurrency = Helper.getFadeCurrency(context);
-//
-//        if (faitCurrency.isEmpty()) {
-//            faitCurrency = "EUR";
-//        }
-//
-//        String values = "";
-//        for (int i = 0; i < equivalentComponentses.size(); i++) {
-//            EquivalentComponents transactionDetails = equivalentComponentses.get(i);
-//            if (!transactionDetails.assetSymbol.equals(faitCurrency)) {
-//                values += transactionDetails.assetSymbol + ":" + faitCurrency + ",";
-//            }
-//        }
-//
-//        if (values.isEmpty()) {
-//            return;
-//        }
-//
-//        HashMap<String, String> hashMap = new HashMap<>();
-//        hashMap.put("method", "equivalent_component");
-//        if (values.length() > 1)
-//            hashMap.put("values", values.substring(0, values.length() - 1));
-//        else hashMap.put("values", "");
-//        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-//        IWebService service = sg.getService(IWebService.class);
-//        final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
-//        finalFaitCurrency = faitCurrency;
-//
-//        postingService.enqueue(new Callback<EquivalentComponentResponse>() {
-//            @Override
-//            public void onResponse(Response<EquivalentComponentResponse> response) {
-//                if (response.isSuccess()) {
-//                    EquivalentComponentResponse resp = response.body();
-//                    if (resp.status.equals("success")) {
-//                        try {
-//                            JSONObject rates = new JSONObject(resp.rates);
-//                            Iterator<String> keys = rates.keys();
-//                            HashMap hm = new HashMap();
-//
-//                            while (keys.hasNext()) {
-//                                String key = keys.next();
-//                                hm.put(key.split(":")[0], rates.get(key));
-//                            }
-//
-//                            try {
-//                                for (int i = 0; i < equivalentComponentses.size(); i++) {
-//                                    String asset = equivalentComponentses.get(i).getAssetSymbol();
-//                                    String amount = String.valueOf(equivalentComponentses.get(i).getAmount());
-//                                    equivalentComponentses.get(i).available = false;
-//                                    if (!amount.isEmpty() && hm.containsKey(asset)) {
-//                                        equivalentComponentses.get(i).available = true;
-//                                        Currency currency = Currency.getInstance(finalFaitCurrency);
-//                                        Double eqAmount = Double.parseDouble(amount) * Double.parseDouble(hm.get(asset).toString());
-//                                        equivalentComponentses.get(i).faitAssetSymbol = currency.getSymbol();
-//                                        equivalentComponentses.get(i).faitAmount = Float.parseFloat(String.format("%.4f", eqAmount));
-//                                    }
-//                                }
-//                            } catch (Exception e) {
-//                                // ifEquivalentFailed();
-//                            }
-//
-//                            setEquivalentComponents(equivalentComponentses);
-//
-//                        } catch (JSONException e) {
-//                            ifEquivalentFailed();
-//                            //  testing("trasac",e, "found,found");
-//                        }
-////                        Toast.makeText(getActivity(), getString(R.string.upgrade_success), Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        ifEquivalentFailed();
-//                        //   testing("trasac","1", "found,found");
-////                        Toast.makeText(getActivity(), getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    ifEquivalentFailed();
-//                    //  testing("trasac","2", "found,found");
-//                    Toast.makeText(context, context.getString(R.string.upgrade_failed), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                ifEquivalentFailed();
-//                Toast.makeText(context, context.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-//            }
-//
-//        });
-//    }
 
 
     private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
@@ -719,8 +590,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         }
 
         setEquivalentComponents(equivalentComponentses);
-
-        // ifEquivalentFailed();
 
 
     }
@@ -844,20 +713,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         try
         {
             showProgressBar();
-         //   buttonSend.setVisibility(View.INVISIBLE);
             verifyStoragePermissions(this);
             final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped + ".pdf";
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
-//            buttonSend.setVisibility(View.INVISIBLE);
-//            hideProgressBar();
-
-//            Bitmap bitmap = Bitmap.createBitmap(
-//                    scrollView.getChildAt(0).getWidth(),
-//                    scrollView.getChildAt(0).getHeight(),
-//                    Bitmap.Config.ARGB_8888);
-
             Bitmap bitmap = Bitmap.createBitmap(
                     llall.getWidth(),
                     llall.getHeight(),
@@ -865,11 +725,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
 
 
             Canvas c = new Canvas(bitmap);
-           // scrollView.getChildAt(0).draw(c);
             llall.draw(c);
 
-          //  buttonSend.setVisibility(View.VISIBLE);
-         //   showProgressBar();
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] imageInByte = stream.toByteArray();
@@ -879,9 +736,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
             myImage.scaleToFit(documentWidth, documentHeight);
             myImage.setAlignment(Image.ALIGN_CENTER | Image.MIDDLE);
             document.add(myImage);
-
-            //hideDialog();
-
             document.close();
             this.runOnUiThread(new Runnable() {
                 public void run() {
@@ -898,7 +752,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
-        //    Toast.makeText(getApplicationContext(), getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -947,14 +800,12 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate {
     public void onBackPressed() {
         super.onBackPressed();
         checkifloadingComplete();
-      //  buttonSend.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         checkifloadingComplete();
-       // buttonSend.setVisibility(View.VISIBLE);
     }
     void generatepdfDoc(){
         Thread t = new Thread(new Runnable() {

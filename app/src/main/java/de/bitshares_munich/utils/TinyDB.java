@@ -345,13 +345,11 @@ public class TinyDB {
                 }
                 catch (Exception ex)
                 {
-                    //objects = new ArrayList<>();
                 }
             }
         }
         catch (Exception e)
         {
-            //objects = new ArrayList<>();
         }
 
 

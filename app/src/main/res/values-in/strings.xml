@@ -222,4 +222,7 @@
  <string name="please_make_sure_your_bin_file">Pastikan pin Anda benar atau benar file bin dipilih</string>
  <string name="change">Perubahan...</string>
 
+ <string name="connected_to">Terhubung dengan</string>
+ <string name="account_create_msg">Hanya satu akun setiap 10 menit dapat didaftarkan</string>
+
 </resources>

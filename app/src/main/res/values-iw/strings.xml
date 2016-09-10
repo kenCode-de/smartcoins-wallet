@@ -222,5 +222,7 @@
     <string name="thankyou_string">תודה על השימוש בארנק Smartcoins</string>
     <string name="audio_folder_path">נתיב תיקיית אודיו</string>
 
+    <string name="account_create_msg">רק חשבון אחד כל 10 דקות ניתן לרשום</string>
+    <string name="connected_to">מחובר ל</string>
 
 </resources>

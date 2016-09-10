@@ -223,4 +223,7 @@
     <string name="audio_folder_path">Аудіо Шлях до папки</string>
     <string name="please_make_sure_your_bin_file">Будь ласка, переконайтеся, що ваш контакт обрано правильний або правильний файл бен</string>
 
+    <string name="connected_to">Пов\'язаний з</string>
+    <string name="account_create_msg">Тільки один рахунок кожні 10 хвилин може бути зареєстровано</string>
+
 </resources>

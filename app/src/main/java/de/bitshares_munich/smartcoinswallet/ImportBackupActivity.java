@@ -148,14 +148,11 @@ public class ImportBackupActivity extends BaseActivity {
         public void onFileSelected(Dialog source, File file) {
             source.hide();
             onSuccess(file.getAbsolutePath());
-          //  file.getAbsolutePath();
             tvFileChoosenBin.setText(file.getName());
         }
 
         public void onFileSelected(Dialog source, File folder, String name) {
             source.hide();
-         //   Toast.makeText(getApplicationContext(), name +"::::1",Toast.LENGTH_LONG).show();
-
         }
     };
 
@@ -184,7 +181,6 @@ public class ImportBackupActivity extends BaseActivity {
             List<NameValuePair> nameValuePairs = new ArrayList<>();
             nameValuePairs.add(new BasicNameValuePair("method", method));
             nameValuePairs.add(new BasicNameValuePair("pin", pin));
-            //nameValuePairs.add(new );
 
             UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8);
             httpPost.setEntity(formEntity);
@@ -202,15 +198,6 @@ public class ImportBackupActivity extends BaseActivity {
 
             Log.e("result", result);
 
-
-            //HttpEntity resEntity = response.getEntity();
-
-
-            //if (resEntity != null) {
-
-            //String responseStr = EntityUtils.toString(resEntity).trim();
-
-            //}
 
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -270,7 +257,6 @@ public class ImportBackupActivity extends BaseActivity {
                         {
                             try
                             {
-                                //Crypt cr = new Crypt();
                                 String brn = "";
                                 try
                                 {
@@ -308,7 +294,6 @@ public class ImportBackupActivity extends BaseActivity {
                     }
                     else
                     {
-                        // hideDialog();
                         Log.d("bin","fail");
                         Toast.makeText(myActivity, myActivity.getString(R.string.unable_to_import_account_from_bin_file), Toast.LENGTH_LONG).show();
                     }

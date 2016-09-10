@@ -19,19 +19,11 @@ import de.bitshares_munich.utils.TinyDB;
  */
 public class SplashActivity extends Activity {
 
-    // Splash screen timer
-    //private int SPLASH_TIME_OUT = 1000;
-    //TinyDB tinyDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        //String myLocale = Locale.getDefault().getDisplayLanguage();
-        //supportInvalidateOptionsMenu();
-        //this.invalidateOptionsMenu();
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -58,18 +50,7 @@ public class SplashActivity extends Activity {
     }
 
     private void moveToMainScreen(TinyDB tinyDB) {
-        /*
-        new Handler().postDelayed(new Runnable() {
 
-            @Override
-            public void run() {
-
-                Intent i = new Intent(SplashActivity.this, TabActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
-        */
         String pin = "";
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         for (int i = 0; i < accountDetails.size(); i++) {
@@ -91,17 +72,6 @@ public class SplashActivity extends Activity {
     }
 
     private void moveToAccountScreen() {
-
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashActivity.this, AccountActivity.class);
-                startActivity(i);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
-        */
 
         Intent i = new Intent(SplashActivity.this, AccountActivity.class);
         startActivity(i);

@@ -179,6 +179,19 @@ public class Helper {
         return preferences.getBoolean(key, false);
     }
 
+    public static void storeLongSharePref(Context context, String key, long value) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(key, value);
+        editor.apply();
+    }
+
+    public static long fetchLongSharePref(Context context, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor prefsEditor = preferences.edit();
+        return preferences.getLong(key, -1);
+    }
+
     public static Boolean containKeySharePref(Context context, String key) {
         Boolean isContainer = false;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -193,7 +206,6 @@ public class Helper {
 
     public static String saveToInternalStorage(Context context, Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(context);
-        // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
         File mypath = new File(directory, "gravatar.jpg");
@@ -226,10 +238,7 @@ public class Helper {
 
 
     public static void initImageLoader(Context context) {
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
+
         ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
         config.threadPriority(Thread.NORM_PRIORITY - 2);
         config.denyCacheImageMultipleSizesInMemory();
@@ -487,19 +496,29 @@ public class Helper {
             return true;
         }
 
-        /*
-        final int directionality = Character.getDirectionality(String.format(locale,"%s",locale.getDisplayLanguage(locale)).charAt(0));
-
-        if ( (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT) ||
-                (directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC) )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        */
     }
+    public static final String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
 
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 }

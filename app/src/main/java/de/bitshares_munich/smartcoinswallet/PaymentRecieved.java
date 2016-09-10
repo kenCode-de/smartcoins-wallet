@@ -41,7 +41,6 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
 public class PaymentRecieved extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
-    Application application = new Application();
     String receiver_id;
     String sender_id;
     JSONObject amountObj;
@@ -84,15 +83,14 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         locale = new Locale(language);
         playSound();
-        application.registerTransactionObject(this);
-        application.registerAccountObjectCallback(this);
-        application.registerAssetObjectCallback(this);
+        Application.registerTransactionObject(this);
+        Application.registerAccountObjectCallback(this);
+        Application.registerAssetObjectCallback(this);
         block = getIntent().getStringExtra("block");
         trx = getIntent().getStringExtra("trx");
         receiver_id = getIntent().getStringExtra("receiver_id");
         sender_id = getIntent().getStringExtra("sender_id");
         getAccountObject();
-       // getTransactionObject(block,trx);
 
 
 
@@ -104,9 +102,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     }
     @OnClick(R.id.btnOk)
     void onOkPressed(){
-        //Intent intent = new Intent(getApplicationContext(), TabActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //startActivity(intent);
+
         finish();
     }
     public void getAccountObject()
@@ -115,40 +111,18 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         String params2 = ",\"get_objects\",[[\""+sender_id+"\",\""+receiver_id+"\"],0]]}";
         myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
 
-        /*
-        if (Application.webSocketG.isOpen()) {
-            int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
-            String params = "{\"id\":13,\"method\":\"call\",\"params\":["+db_identifier+",\"get_objects\",[[\""+sender_id+"\",\""+receiver_id+"\"],0]]}";
-            Application.webSocketG.send(params);
-        }
-        */
     }
     public void getTransactionObject(String block, String trx)
     {
         String params = "{\"id\":12,\"method\":\"call\",\"params\":[";
         String params2 = ",\"get_transaction\",[\""+block+"\","+trx+"]]}";
         myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
-        /*
-        if (Application.webSocketG.isOpen()) {
-            int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
-            String params = "{\"id\":12,\"method\":\"call\",\"params\":["+db_identifier+",\"get_transaction\",[\""+block+"\","+trx+"]]}";
-            Application.webSocketG.send(params);
-        }
-        */
     }
     public void getAssetObject(String amountAsset, String feeAsset)
     {
         String params = "{\"id\":14,\"method\":\"call\",\"params\":[";
         String params2 = ",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
         myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
-
-        /*
-        if (Application.webSocketG.isOpen()) {
-            int db_identifier = Helper.fetchIntSharePref(getApplicationContext(),getString(R.string.database_indentifier));
-            String params = "{\"id\":14,\"method\":\"call\",\"params\":["+db_identifier+",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
-            Application.webSocketG.send(params);
-        }
-        */
     }
     public void playSound() {
         try {

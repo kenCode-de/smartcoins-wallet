@@ -151,8 +151,6 @@ public class popUpwindow {
 
             // get the text and set it as the button text
             String selectedItemText = ((TextView) v).getText().toString();
-//
-           //SendScreen.popShow(selectedItemText);
             textView.setText(selectedItemText);
         }
     }
@@ -161,10 +159,8 @@ public class popUpwindow {
     }
 
 
-
     //inialize in other activity like this
 //    popupwindow(v,selectBTSAmount);
-
 
 //    public void popupwindow(View v,TextView textview){
 //        popUpwindow p =new popUpwindow(this,textview);
