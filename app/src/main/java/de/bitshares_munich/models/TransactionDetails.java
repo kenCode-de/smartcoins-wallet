@@ -90,7 +90,7 @@ public class TransactionDetails
        /* //SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
         //String formattedDate = df.format(this.Date);
         return "UTC";//Calendar.getInstance().getTime();*/
-        return Helper.convertTimeZoneToGMT(this.Date,context);
+        return Helper.convertTimeZoneToRegion(this.Date,context);
     }
 
     public Boolean getSent ()

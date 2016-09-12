@@ -364,10 +364,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             pendingTransactionsLoad.removeCallbacksAndMessages(null);
         }
 
+        if(isCheckedTimeZone && !accountNameChange){
+            TransactionUpdateOnStartUp(to);
+        }
+
         if(accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
             llBalances.removeAllViews();
 
-        if (isCheckedTimeZone || isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
+        if (isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
         {
             if (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency) )
             {

@@ -66,9 +66,9 @@ Context context;
         TextView textView = (TextView) v.findViewById(R.id.transactiondate);
         textView.setText(transactiondetails.getDateString());
         TextView textView2 = (TextView) v.findViewById(R.id.transactiontime);
-        textView2.setText(transactiondetails.getTimeString());
+        textView2.setText(transactiondetails.getTimeString() + " " + transactiondetails.getTimeZone());
         TextView textView3 = (TextView) v.findViewById(R.id.transactionttimezone);
-        textView3.setText(transactiondetails.getTimeZone());
+        textView3.setVisibility(View.GONE);
         return v;
     }
 

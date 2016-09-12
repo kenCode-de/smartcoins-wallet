@@ -434,6 +434,27 @@ public class Helper {
         }
     }
 
+    public static String convertTimeZoneToRegion(Date date, Context context) {
+
+        if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
+            String dtz = Helper.fetchStringSharePref(context, context.getString(R.string.date_time_zone));
+            TimeZone tz = TimeZone.getTimeZone(dtz);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeZone(tz);
+            String region = calendar.getTimeZone().getID();
+            String[] arr = region.split("/");
+            for ( String ss : arr) {
+                if (ss.equals("Europe")){
+                    region = "CET";
+                }
+            }
+            return region;
+
+        } else {
+            return "UTC";
+        }
+    }
+
     public static String getFadeCurrency(Context context) {
         Boolean isFade = Helper.containKeySharePref(context, context.getString(R.string.pref_fade_currency));
         if (isFade) {
