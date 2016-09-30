@@ -227,5 +227,6 @@
 
     <string name="connected_to">에 연결</string>
     <string name="account_create_msg">하나의 계정이 10 분마다 등록 할 수 있습니다</string>
+    <string name="names_must_include_a_number">이름은 숫자를 포함해야</string>
 
 </resources>

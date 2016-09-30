@@ -225,5 +225,6 @@
 
     <string name="connected_to">Пов\'язаний з</string>
     <string name="account_create_msg">Тільки один рахунок кожні 10 хвилин може бути зареєстровано</string>
+    <string name="names_must_include_a_number">Імена повинні включати в себе ряд</string>
 
 </resources>

@@ -224,5 +224,6 @@
 
     <string name="connected_to">متصلا</string>
     <string name="account_create_msg">حساب واحد فقط كل 10 دقائق يمكن تسجيلها</string>
+    <string name="names_must_include_a_number">ويجب أن يتضمن أسماء عدد</string>
 
 </resources>

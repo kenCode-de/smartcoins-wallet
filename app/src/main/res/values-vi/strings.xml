@@ -224,5 +224,6 @@
 
     <string name="connected_to">Kết nối với</string>
     <string name="account_create_msg">Chỉ có một tài khoản mỗi 10 phút có thể được đăng ký</string>
+    <string name="names_must_include_a_number">Tên phải bao gồm một số</string>
 
 </resources>

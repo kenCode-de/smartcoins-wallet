@@ -226,6 +226,7 @@
 
     <string name="connected_to">Savienots ar</string>
     <string name="account_create_msg">Tikai viens konts ik pēc 10 minūtēm var reģistrēt</string>
+    <string name="names_must_include_a_number">Nosaukumi ir jāiekļauj vairāki</string>
 
 
 </resources>

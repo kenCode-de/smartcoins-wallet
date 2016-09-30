@@ -222,5 +222,6 @@
 
     <string name="connected_to">Připojen k</string>
     <string name="account_create_msg">Pouze jeden účet každých 10 minut lze registrovat</string>
+    <string name="names_must_include_a_number">Názvy musí zahrnovat řadu</string>
 
 </resources>

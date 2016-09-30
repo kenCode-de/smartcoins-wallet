@@ -226,5 +226,6 @@
 
     <string name="connected_to">Prijungtas prie</string>
     <string name="account_create_msg">Tik viena sąskaita per 10 minučių gali būti registruojami</string>
+    <string name="names_must_include_a_number">Vardai turi būti numerį</string>
 
 </resources>

@@ -224,5 +224,6 @@
 
     <string name="connected_to">連接到</string>
     <string name="account_create_msg">只有一個帳戶每10分鐘可註冊</string>
+    <string name="names_must_include_a_number">名稱必須包括一些</string>
 
 </resources>
