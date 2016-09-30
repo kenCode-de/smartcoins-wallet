@@ -44,7 +44,7 @@
                     android:text=""
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-light"
-                    android:textSize="7.2pt"
+                    android:textSize="7.9pt"
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
 
@@ -62,7 +62,7 @@
                         android:paddingLeft="5dp"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-light"
-                        android:textSize="7.2pt"
+                        android:textSize="7.9pt"
                         android:textColor="@color/recieveamount"
 
                         android:text=""/>
@@ -76,7 +76,7 @@
                         android:ellipsize="end"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-light"
-                        android:textSize="6pt"
+                        android:textSize="6.7pt"
                         android:paddingLeft="5dp"
                         android:textColor="@color/recieveamount"
                         android:text=""/>
@@ -112,7 +112,7 @@
                     android:textColor="@color/recieveamount"
                     android:text=""
                     android:fontFamily="sans-serif-light"
-                    android:textSize="7.2pt"
+                    android:textSize="7.9pt"
                     android:textStyle="bold"
                     android:paddingRight="5dp"
                     android:paddingEnd="5dp"/>
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="sans-serif-light"
-                    android:textSize="7.2pt"
+                    android:textSize="7.9pt"
                     android:paddingLeft="5dp"
                     android:textStyle="bold"
                     android:textColor="@color/recieveamount"/>
@@ -144,7 +144,7 @@
                       android:ellipsize="end"
                       android:textStyle="bold"
                       android:fontFamily="sans-serif-light"
-                      android:textSize="6pt"
+                      android:textSize="6.7pt"
                       android:paddingLeft="5dp"
                       android:textColor="@color/recieveamount"
                       android:text=""/>
