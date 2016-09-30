@@ -225,6 +225,8 @@
 
     <string name="connected_to">Połączony z</string>
     <string name="account_create_msg">Tylko jedno konto co 10 minut mogą być rejestrowane</string>
+    <string name="names_must_include_a_number">Nazwy muszą zawierać numer</string>
+
 
 
 </resources>

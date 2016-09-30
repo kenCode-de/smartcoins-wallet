@@ -230,5 +230,6 @@
 
     <string name="connected_to">Lidhur me</string>
     <string name="account_create_msg">Vetëm një llogari çdo 10 minuta mund të regjistrohet</string>
+    <string name="names_must_include_a_number">Emrat duhet të përfshijë një numër të</string>
 
 </resources>

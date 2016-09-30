@@ -240,5 +240,6 @@
 
     <string name="connected_to">Συνδεδεμένος με</string>
     <string name="account_create_msg">Μόνο ένας λογαριασμός ανά 10 λεπτά μπορεί να καταχωρηθεί</string>
+    <string name="names_must_include_a_number">Τα ονόματα πρέπει να περιλαμβάνει έναν αριθμό</string>
 
 </resources>

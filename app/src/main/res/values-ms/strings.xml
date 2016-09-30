@@ -225,5 +225,6 @@
 
     <string name="connected_to">Berhubung dengan</string>
     <string name="account_create_msg">Hanya satu akaun setiap 10 minit boleh didaftarkan</string>
+    <string name="names_must_include_a_number">Nama mesti termasuk sebilangan</string>
 
 </resources>

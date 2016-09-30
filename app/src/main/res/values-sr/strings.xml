@@ -249,5 +249,6 @@
 
     <string name="connected_to">Повезан</string>
     <string name="account_create_msg">Само један рачун сваких 10 минута може да се региструје</string>
+    <string name="names_must_include_a_number">Имена мора да садржи број</string>
 
 </resources>

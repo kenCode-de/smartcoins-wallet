@@ -387,5 +387,6 @@
 
     <string name="connected_to">Connected to</string>
     <string name="account_create_msg">Only one account every 10 minutes can be registered</string>
+    <string name="names_must_include_a_number">Names must include a number</string>
 
 </resources>

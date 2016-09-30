@@ -228,5 +228,6 @@
 
     <string name="connected_to">に接続されています</string>
     <string name="account_create_msg">唯一のアカウントごとに10分を登録することができます</string>
+    <string name="names_must_include_a_number">名前には、番号を含める必要があります</string>
 
 </resources>

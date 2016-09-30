@@ -227,5 +227,6 @@
 
     <string name="connected_to">ühendatud</string>
     <string name="account_create_msg">Ainult üks konto iga 10 minuti järel saab registreerida</string>
+    <string name="names_must_include_a_number">Nimed peavad olema ka number</string>
 
 </resources>

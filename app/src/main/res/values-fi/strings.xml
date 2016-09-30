@@ -341,6 +341,7 @@
 
     <string name="connected_to">Yhdistetty</string>
     <string name="account_create_msg">Vain yksi tili 10 minuutin välein voidaan rekisteröidä</string>
+    <string name="names_must_include_a_number">Nimet on oltava numero</string>
 
 
 </resources>

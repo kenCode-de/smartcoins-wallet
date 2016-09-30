@@ -224,5 +224,6 @@
 
  <string name="connected_to">Terhubung dengan</string>
  <string name="account_create_msg">Hanya satu akun setiap 10 menit dapat didaftarkan</string>
+ <string name="names_must_include_a_number">Nama harus menyertakan nomor</string>
 
 </resources>

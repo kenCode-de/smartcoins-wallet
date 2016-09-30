@@ -229,5 +229,6 @@
 
     <string name="connected_to">مرتبط با</string>
     <string name="account_create_msg">فقط یک حساب در هر 10 دقیقه می تواند ثبت نام</string>
+    <string name="names_must_include_a_number">نام ها باید شامل تعدادی</string>
 
 </resources>

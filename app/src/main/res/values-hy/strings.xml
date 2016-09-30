@@ -229,5 +229,6 @@
 
     <string name="connected_to">Կապված</string>
     <string name="account_create_msg">Միայն մեկ հաշիվ յուրաքանչյուր 10 րոպե կարող է գրանցվել</string>
+    <string name="names_must_include_a_number">Անուններ պետք է ներառի մի շարք</string>
 
 </resources>

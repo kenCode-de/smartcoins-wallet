@@ -224,5 +224,6 @@
 
     <string name="account_create_msg">רק חשבון אחד כל 10 דקות ניתן לרשום</string>
     <string name="connected_to">מחובר ל</string>
+    <string name="names_must_include_a_number">שמות חייבים לכלול מספר</string>
 
 </resources>

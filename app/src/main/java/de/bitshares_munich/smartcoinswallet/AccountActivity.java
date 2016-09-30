@@ -40,6 +40,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
@@ -110,6 +111,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     String pubKey;
     String wifPrivKey;
     String brainPrivKey;
+    Boolean hasNumber;
 
     // icon_setting
 
@@ -154,6 +156,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 }
             }
         }
+        hasNumber = true;
     }
 
 
@@ -257,9 +260,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         if (!focused) {
             if (etAccountName.getText().length() > 5)
             {
-                tvErrorAccountName.setText("");
-                tvErrorAccountName.setVisibility(View.GONE);
-
+                if (hasNumber) {
+                    tvErrorAccountName.setText("");
+                    tvErrorAccountName.setVisibility(View.GONE);
+                }
                 String socketText = getString(R.string.lookup_account_a);
                 String socketText2 = getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
                 myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);
@@ -442,6 +446,24 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         }
     }
 
+    @OnFocusChange(R.id.etAccountName)
+    void onFocusChanged(boolean hasFocus){
+        if(!hasFocus) {
+            if (etAccountName.getText().length() <= 5) {
+                checkingValidation = false;
+                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+            } else if (!etAccountName.getText().toString().matches(".*\\d+.*")) {
+                tvErrorAccountName.setText(getString(R.string.names_must_include_a_number));
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                hasNumber = false;
+                checkingValidation = false;
+            } else {
+                hasNumber = true;
+                checkingValidation = true;
+            }
+        }
+    }
+
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
 
@@ -457,6 +479,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             } else if (!checkHyphen()) {
                 tvErrorAccountName.setVisibility(View.VISIBLE);
                 tvErrorAccountName.setText(R.string.account_name_shoud_have);
+            } else if (!etAccountName.getText().toString().matches(".*\\d+.*")) {
+                tvErrorAccountName.setVisibility(View.VISIBLE);
+                tvErrorAccountName.setText(R.string.names_must_include_a_number);
             } else {
                 if (etPin.getText().length() < 5) {
                     Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();

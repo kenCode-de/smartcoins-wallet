@@ -234,5 +234,6 @@
 
     <string name="connected_to">Spojen na</string>
     <string name="account_create_msg">Samo jedan račun svakih 10 minuta možete se registrovati</string>
+    <string name="names_must_include_a_number">Imena mora sadržavati broj</string>
 
 </resources>
