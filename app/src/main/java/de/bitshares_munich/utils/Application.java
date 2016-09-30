@@ -421,7 +421,7 @@ public static int nodeIndex = 0;
     {
         Log.i("internetBlockpay", "open internet");
         mIsConnected = true;
-        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
         sendInitialSocket(context);
     }
 
