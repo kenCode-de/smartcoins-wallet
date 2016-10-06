@@ -13,7 +13,7 @@
 <string name="payment_received">Zahlung erhalten</string>
 <string name="import_brainkey">Import von BrainKey</string>
 <string name="import_backup_old">Import-Backup</string>
-<string name="choose_backup">wählen Sie Sichern</string>
+<string name="choose_backup">Wählen Sie die Datei</string>
 <string name="choose_file">Datei wählen</string>
 <string name="no_file_chosen">Keine Datei ausgewählt</string>
 <string name="account_label">Datei wählen</string>
@@ -200,7 +200,7 @@
 
     <string name="please_backup_your_brainkey">Bitte sichern Sie Ihren Brainkey</string>
     <string name="backup_brainkey_msg">Speichern Sie Ihre .bin-Datei an einem sicheren Ort ansonsten könnten Sie Ihr Geld verlieren!</string>
-    <string name="unable_to_trade_bAssets">Fehler, Das Backup-Assets konnte nicht gehandelt werden</string>
+    <string name="unable_to_trade_bAssets">Fehler, Das Backup-Assets konnte nicht verwendet werden</string>
     <string name="unable_to_send_amount">Der Betrag konnte nicht gesendet werden.</string>
     <string name="unable_to_decode_QR">Der QR-Code konnte nich gelesen werden.</string>
 
@@ -218,14 +218,14 @@
     <string name="payment_method">Bezahlverfahren</string>
     <string name="thankyou_string">Vielen Dank für die Verwendung von Smartcoins Wallet</string>
     <string name="audio_folder_path">Audio Ordnerpfad</string>
-    <string name="please_make_sure_your_bin_file">Bitte stellen Sie sicher, dass Ihr Stift ist richtig oder nicht vollständig entsprechen bin-Datei ausgewählt ist,</string>
+    <string name="please_make_sure_your_bin_file">Bitte stellen Sie sicher, dass Ihr PIN richtig ist oder dass die richtige bin-Datei ausgewählt haben,</string>
     <string name="change">Veränderung...</string>
 
-    <string name="register_new_account">Neuer Konto</string>
-    <string name="import_new_account">EINFUHR KONTO</string>
+    <string name="register_new_account">NEUES KONTO</string>
+    <string name="import_new_account">KONTO IMPORTIEREN</string>
     <string name="upgrade_account">UPGRADE KONTO</string>
 
-    <string name="connected_to">Angeschlossen</string>
-    <string name="account_create_msg">Nur ein Konto kann alle 10 Minuten registriert werden</string>
+    <string name="connected_to">Verbunden mit</string>
+    <string name="account_create_msg">Es kann nur alle 10 Minuten ein Konto registriert werden</string>
 
 </resources>
