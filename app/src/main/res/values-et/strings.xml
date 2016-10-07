@@ -229,4 +229,5 @@
     <string name="account_create_msg">Ainult üks konto iga 10 minuti järel saab registreerida</string>
     <string name="names_must_include_a_number">Nimed peavad olema ka number</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Nimed peavad sisaldama sidekriips (-) ja mitmed</string>
 </resources>

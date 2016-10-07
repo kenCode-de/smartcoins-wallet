@@ -233,10 +233,13 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @OnTextChanged(R.id.etAccountName)
     void onTextChanged(CharSequence text) {
-        checkingValidation = true;
+
+        hasNumber = false;
         myWebSocketHelper.cleanUpTransactionsHandler();
 
-        if (etAccountName.getText().length() > 0) {
+        if (etAccountName.getText().length() > 5 && containsDigit(etAccountName.getText().toString()) && etAccountName.getText().toString().contains("-")) {
+            checkingValidation = true;
+            hasNumber = true;
             validAccount = true;
             myLowerCaseTimer.cancel();
             myAccountNameValidationTimer.cancel();
@@ -452,10 +455,14 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             if (etAccountName.getText().length() <= 5) {
                 checkingValidation = false;
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-            } else if (!etAccountName.getText().toString().matches(".*\\d+.*")) {
-                tvErrorAccountName.setText(getString(R.string.names_must_include_a_number));
+            } else if (etAccountName.getText().length() > 5 && !containsDigit(etAccountName.getText().toString())) {
+                tvErrorAccountName.setText(getString(R.string.account_name_must_include_dash_and_a_number));
                 tvErrorAccountName.setVisibility(View.VISIBLE);
                 hasNumber = false;
+                checkingValidation = false;
+            } else if (etAccountName.getText().length() > 5 && !etAccountName.getText().toString().contains("-")) {
+                tvErrorAccountName.setText(getString(R.string.account_name_must_include_dash_and_a_number));
+                tvErrorAccountName.setVisibility(View.VISIBLE);
                 checkingValidation = false;
             } else {
                 hasNumber = true;
@@ -478,10 +485,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 tvErrorAccountName.setText(R.string.last_letter_cannot);
             } else if (!checkHyphen()) {
                 tvErrorAccountName.setVisibility(View.VISIBLE);
-                tvErrorAccountName.setText(R.string.account_name_shoud_have);
-            } else if (!etAccountName.getText().toString().matches(".*\\d+.*")) {
+                tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
+            } else if (!containsDigit(etAccountName.getText().toString())) {
                 tvErrorAccountName.setVisibility(View.VISIBLE);
-                tvErrorAccountName.setText(R.string.names_must_include_a_number);
+                tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
             } else {
                 if (etPin.getText().length() < 5) {
                     Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
@@ -653,5 +660,20 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         addWallet(id_account);
     }
 
+    public boolean containsDigit(String s)
+    {
+        if (s != null && !s.isEmpty())
+        {
+            for (char c : s.toCharArray())
+            {
+                if (Character.isDigit(c))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 }

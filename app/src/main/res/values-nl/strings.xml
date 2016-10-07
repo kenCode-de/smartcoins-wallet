@@ -227,5 +227,6 @@
     <string name="account_create_msg">Slechts één account elke 10 minuten kunnen worden geregistreerd</string>
     <string name="names_must_include_a_number">Namen moet een nummer bevatten</string>
 
+    <string name="account_name_must_include_dash_and_a_number">(-) En een aantal namen moeten een streepje bevatten</string>
 </resources>
 

@@ -229,4 +229,5 @@
     <string name="account_create_msg">Bare én konto hvert 10. minutt kan registreres</string>
     <string name="names_must_include_a_number">Navn må inkludere en rekke</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Navn må inneholde en bindestrek (-) og en rekke</string>
 </resources>

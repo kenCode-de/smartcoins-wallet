@@ -227,4 +227,5 @@
     <string name="account_create_msg">Kun én konto hver 10 minutter kan registreres</string>
     <string name="names_must_include_a_number">Navne skal indeholde en række</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Navne skal indeholde en bindestreg (-) og en række</string>
 </resources>

@@ -230,5 +230,5 @@
     <string name="account_create_msg">Le en račun vsakih 10 minut, se lahko registrirajo</string>
     <string name="names_must_include_a_number">Imena morajo vsebovati številko</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">Imena morajo vsebovati pomišljaj (-) in število</string>
 </resources>

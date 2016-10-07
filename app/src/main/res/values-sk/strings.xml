@@ -227,4 +227,5 @@
     <string name="change">Zmeniť ...</string>
     <string name="names_must_include_a_number">Názvy musia zahŕňať rad</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Názvy musí obsahovať pomlčku (-) a číslo</string>
 </resources>

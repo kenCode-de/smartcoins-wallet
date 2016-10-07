@@ -226,4 +226,5 @@
     <string name="connected_to">מחובר ל</string>
     <string name="names_must_include_a_number">שמות חייבים לכלול מספר</string>
 
+    <string name="account_name_must_include_dash_and_a_number">שמות חייבים לכלול מקף (-) ומספר</string>
 </resources>

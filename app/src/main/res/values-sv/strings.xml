@@ -227,4 +227,5 @@
     <string name="account_create_msg">Endast ett konto var 10 minuter kan registreras</string>
     <string name="names_must_include_a_number">Namn måste innehålla ett antal</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Namn måste innehålla ett streck (-) och ett antal</string>
 </resources>

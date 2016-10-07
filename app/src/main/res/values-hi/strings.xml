@@ -231,4 +231,5 @@
     <string name="account_create_msg">केवल एक खाते हर 10 मिनट में पंजीकृत किया जा सकता</string>
     <string name="names_must_include_a_number">अनेक नामों से शामिल करना चाहिए</string>
 
+    <string name="account_name_must_include_dash_and_a_number">(-) और एक नंबर के नाम एक पानी का छींटा शामिल करना चाहिए</string>
 </resources>

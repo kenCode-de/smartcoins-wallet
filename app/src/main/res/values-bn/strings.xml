@@ -230,4 +230,5 @@
     <string name="account_create_msg">শুধুমাত্র একটি অ্যাকাউন্ট প্রতি 10 মিনিট নিবন্ধন করা যাবে</string>
     <string name="names_must_include_a_number">নাম একটি সংখ্যা অন্তর্ভুক্ত করা আবশ্যক</string>
 
+    <string name="account_name_must_include_dash_and_a_number">(-) এবং একটি সংখ্যা নাম একটি ড্যাশ অন্তর্ভুক্ত করা আবশ্যক</string>
 </resources>

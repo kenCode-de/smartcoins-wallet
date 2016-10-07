@@ -228,6 +228,6 @@
     <string name="account_create_msg">Tikai viens konts ik pēc 10 minūtēm var reģistrēt</string>
     <string name="names_must_include_a_number">Nosaukumi ir jāiekļauj vairāki</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">Nosaukumi jāiekļauj domuzīme (-) un vairākas</string>
 </resources>
 

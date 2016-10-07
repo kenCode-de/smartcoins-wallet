@@ -343,5 +343,5 @@
     <string name="account_create_msg">Vain yksi tili 10 minuutin välein voidaan rekisteröidä</string>
     <string name="names_must_include_a_number">Nimet on oltava numero</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">Nimet on oltava viiva (-) ja useita</string>
 </resources>

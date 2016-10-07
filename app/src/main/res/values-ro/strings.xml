@@ -227,4 +227,5 @@
     <string name="account_create_msg">Doar un singur cont la fiecare 10 minute poate fi înregistrat</string>
     <string name="names_must_include_a_number">Alte denumiri trebuie să includă un număr</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Alte denumiri trebuie să includă o liniuță (-) și un număr</string>
 </resources>

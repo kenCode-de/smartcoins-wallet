@@ -224,4 +224,5 @@
     <string name="account_create_msg">Pouze jeden účet každých 10 minut lze registrovat</string>
     <string name="names_must_include_a_number">Názvy musí zahrnovat řadu</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Názvy musí obsahovat pomlčku (-) a číslo</string>
 </resources>

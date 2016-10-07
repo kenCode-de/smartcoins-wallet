@@ -228,4 +228,5 @@
     <string name="account_create_msg">Apenas uma conta a cada 10 minutos podem ser registrados</string>
     <string name="names_must_include_a_number">Os nomes devem incluir um número</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Os nomes devem incluir um traço (-) e um número</string>
 </resources>

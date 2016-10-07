@@ -228,4 +228,5 @@
     <string name="account_create_msg">Tik viena sąskaita per 10 minučių gali būti registruojami</string>
     <string name="names_must_include_a_number">Vardai turi būti numerį</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Vardai turi būti brūkšnelį (-) ir numerį</string>
 </resources>

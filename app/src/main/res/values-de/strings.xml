@@ -229,4 +229,5 @@
     <string name="account_create_msg">Nur ein Konto kann alle 10 Minuten registriert werden</string>
     <string name="names_must_include_a_number">Namen müssen eine Reihe enthalten</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Namen müssen einen Bindestrich (-) und eine Reihe</string>
 </resources>

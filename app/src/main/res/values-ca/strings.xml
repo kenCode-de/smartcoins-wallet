@@ -230,4 +230,5 @@
     <string name="account_create_msg">Només un compte cada 10 minuts es pot registrar</string>
     <string name="names_must_include_a_number">Els noms han d\'incloure un nombre</string>
 
+    <string name="account_name_must_include_dash_and_a_number">"Els noms han d'incloure un guió (-) i un nombre"</string>
 </resources>

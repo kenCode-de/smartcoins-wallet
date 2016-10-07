@@ -229,4 +229,5 @@
     <string name="account_create_msg">Только один счет каждые 10 минут может быть зарегистрировано</string>
     <string name="names_must_include_a_number">Имена должны включать в себя ряд</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Имена должны включать в тире (-) и номер</string>
 </resources>

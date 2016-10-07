@@ -232,4 +232,5 @@
     <string name="account_create_msg">Vetëm një llogari çdo 10 minuta mund të regjistrohet</string>
     <string name="names_must_include_a_number">Emrat duhet të përfshijë një numër të</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Emrat duhet të përfshijë një dash (-) dhe një numër</string>
 </resources>

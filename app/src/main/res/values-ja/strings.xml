@@ -230,4 +230,5 @@
     <string name="account_create_msg">唯一のアカウントごとに10分を登録することができます</string>
     <string name="names_must_include_a_number">名前には、番号を含める必要があります</string>
 
+    <string name="account_name_must_include_dash_and_a_number">（ - ）と数名にダッシュを含める必要があります</string>
 </resources>

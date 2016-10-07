@@ -226,4 +226,5 @@
     <string name="account_create_msg">حساب واحد فقط كل 10 دقائق يمكن تسجيلها</string>
     <string name="names_must_include_a_number">ويجب أن يتضمن أسماء عدد</string>
 
+    <string name="account_name_must_include_dash_and_a_number">ويجب أن يتضمن أسماء شرطة (-) وعدد</string>
 </resources>

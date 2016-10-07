@@ -227,4 +227,5 @@
     <string name="account_create_msg">Hanya satu akaun setiap 10 minit boleh didaftarkan</string>
     <string name="names_must_include_a_number">Nama mesti termasuk sebilangan</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Nama mesti termasuk sengkang (-) dan sebilangan</string>
 </resources>

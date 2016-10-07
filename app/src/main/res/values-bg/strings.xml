@@ -231,4 +231,5 @@
     <string name="account_create_msg">Само един акаунт на всеки 10 минути могат да бъдат регистрирани</string>
     <string name="names_must_include_a_number">Имената трябва да включват редица</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Имената трябва да включват тире (-) и редица</string>
 </resources>

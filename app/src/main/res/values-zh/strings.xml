@@ -399,5 +399,5 @@
     <string name="account_create_msg">只有一个帐户每10分钟可注册</string>
     <string name="names_must_include_a_number">名称必须包括一些</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">名称必须包括一个破折号（ - ）和一个数字</string>
 </resources>
