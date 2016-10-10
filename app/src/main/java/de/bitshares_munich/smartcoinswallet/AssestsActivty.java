@@ -165,6 +165,9 @@ public class AssestsActivty  implements IBalancesDelegate {
                 {
                     convert = jsonObject.getString("result");
                     getJson(convert);
+                    if(convert.contains("[]")){
+                        assetDelegate.isAssets();
+                    }
                 }
             }
         }
