@@ -390,4 +390,10 @@
     <string name="names_must_include_a_number">Names must include a number</string>
 
     <string name="account_name_must_include_dash_and_a_number">Names must include a dash (-) and a number</string>
+
+    <string name="import_gravatar">Import Gravatar</string>
+    <string name="please_import_the_correct_file">Please import the correct file</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email has been imported successfully</string>
+
+
 </resources>

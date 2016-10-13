@@ -119,7 +119,7 @@ public class Gravatar
                                 {
                                     Object urls = (((ArrayList<LinkedTreeMap>) entry).get(0)).get("urls");
 
-                                    if ( urls instanceof ArrayList )
+                                    if ( urls instanceof ArrayList && ((ArrayList) urls).size()>0)
                                     {
                                         Object urlsObject = ((ArrayList) urls).get(0);
 
