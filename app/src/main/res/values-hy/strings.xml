@@ -232,4 +232,8 @@
     <string name="names_must_include_a_number">Անուններ պետք է ներառի մի շարք</string>
 
     <string name="account_name_must_include_dash_and_a_number">Անուններ պետք է ներառի Dash (-) եւ մի շարք</string>
+    <string name="import_gravatar">Ներմուծում Gravatar</string>
+    <string name="please_import_the_correct_file">Խնդրում ենք ներմուծել ճիշտ ֆայլը</string>
+    <string name="merchant_email_has_been_imported_successfully">Առեւտրականների նամակ է ներմուծվել հաջողությամբ</string>
+
 </resources>

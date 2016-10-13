@@ -231,4 +231,7 @@
     <string name="names_must_include_a_number">名前には、番号を含める必要があります</string>
 
     <string name="account_name_must_include_dash_and_a_number">（ - ）と数名にダッシュを含める必要があります</string>
+    <string name="import_gravatar">インポートグラバター</string>
+    <string name="please_import_the_correct_file">正しいファイルをインポートしてください。</string>
+    <string name="merchant_email_has_been_imported_successfully">マーチャントのメールが正常にインポートされました</string>
 </resources>

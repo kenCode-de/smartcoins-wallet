@@ -232,4 +232,7 @@
     <string name="names_must_include_a_number">अनेक नामों से शामिल करना चाहिए</string>
 
     <string name="account_name_must_include_dash_and_a_number">(-) और एक नंबर के नाम एक पानी का छींटा शामिल करना चाहिए</string>
+    <string name="import_gravatar">आयात Gravatar</string>
+    <string name="please_import_the_correct_file">सही फ़ाइल आयात करें</string>
+    <string name="merchant_email_has_been_imported_successfully">व्यापारी ईमेल सफलतापूर्वक आयात किया गया है</string>
 </resources>

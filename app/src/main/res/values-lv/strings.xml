@@ -229,5 +229,8 @@
     <string name="names_must_include_a_number">Nosaukumi ir jāiekļauj vairāki</string>
 
     <string name="account_name_must_include_dash_and_a_number">Nosaukumi jāiekļauj domuzīme (-) un vairākas</string>
+    <string name="import_gravatar">Import Gravatar</string>
+    <string name="please_import_the_correct_file">Lūdzu importēt pareizo failu</string>
+    <string name="merchant_email_has_been_imported_successfully">Komersants e-pasts ir veiksmīgi importēts</string>
 </resources>
 

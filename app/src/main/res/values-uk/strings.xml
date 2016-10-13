@@ -228,4 +228,7 @@
     <string name="names_must_include_a_number">Імена повинні включати в себе ряд</string>
 
     <string name="account_name_must_include_dash_and_a_number">Імена повинні включати в тире (-) і номер</string>
+    <string name="import_gravatar">імпорт Gravatar</string>
+    <string name="please_import_the_correct_file">Будь ласка, імпортувати потрібний файл</string>
+    <string name="merchant_email_has_been_imported_successfully">Торговець електронної пошти був успішно імпортовано</string>
 </resources>

@@ -232,4 +232,8 @@
     <string name="names_must_include_a_number">Имената трябва да включват редица</string>
 
     <string name="account_name_must_include_dash_and_a_number">Имената трябва да включват тире (-) и редица</string>
+    <string name="import_gravatar">внос Gravatar</string>
+    <string name="please_import_the_correct_file">Моля внасят правилния файл</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant имейл е внесен успешно</string>
+
 </resources>

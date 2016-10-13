@@ -252,4 +252,7 @@
     <string name="names_must_include_a_number">Имена мора да садржи број</string>
 
     <string name="account_name_must_include_dash_and_a_number">Имена морају садржати цртицу (-) и број</string>
+    <string name="import_gravatar">импорт Граватар</string>
+    <string name="please_import_the_correct_file">Молимо Вас да увезете исправан фајл</string>
+    <string name="merchant_email_has_been_imported_successfully">Трговац-маил је успешно увезено</string>
 </resources>

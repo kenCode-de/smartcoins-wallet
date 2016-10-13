@@ -227,4 +227,8 @@
     <string name="names_must_include_a_number">名稱必須包括一些</string>
 
     <string name="account_name_must_include_dash_and_a_number">名稱必須包括一個破折號（ - ）和一個數字</string>
+    <string name="import_gravatar">進口的Gravatar</string>
+    <string name="please_import_the_correct_file">請輸入正確的文件</string>
+    <string name="merchant_email_has_been_imported_successfully">商家電子郵件已成功導入</string>
+
 </resources>

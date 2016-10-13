@@ -230,4 +230,7 @@
     <string name="names_must_include_a_number">이름은 숫자를 포함해야</string>
 
     <string name="account_name_must_include_dash_and_a_number">(-) 및 다수의 이름은 대시를 포함해야</string>
+    <string name="import_gravatar">가져 오기 Gravatar에</string>
+    <string name="please_import_the_correct_file">올바른 파일을 가져주세요</string>
+    <string name="merchant_email_has_been_imported_successfully">판매자 이메일이 성공적으로 가져온</string>
 </resources>

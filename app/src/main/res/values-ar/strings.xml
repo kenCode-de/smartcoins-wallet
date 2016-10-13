@@ -227,4 +227,8 @@
     <string name="names_must_include_a_number">ويجب أن يتضمن أسماء عدد</string>
 
     <string name="account_name_must_include_dash_and_a_number">ويجب أن يتضمن أسماء شرطة (-) وعدد</string>
+    <string name="import_gravatar">استيراد غرفتر</string>
+    <string name="please_import_the_correct_file">يرجى استيراد الملف الصحيح</string>
+    <string name="merchant_email_has_been_imported_successfully">تم استيراد التاجر البريد الإلكتروني بنجاح</string>
+
 </resources>

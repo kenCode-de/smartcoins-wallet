@@ -228,4 +228,7 @@
     <string name="names_must_include_a_number">Nama mesti termasuk sebilangan</string>
 
     <string name="account_name_must_include_dash_and_a_number">Nama mesti termasuk sengkang (-) dan sebilangan</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Sila mengimport fail yang betul</string>
+    <string name="merchant_email_has_been_imported_successfully">e-mel Merchant telah diimport berjaya</string>
 </resources>

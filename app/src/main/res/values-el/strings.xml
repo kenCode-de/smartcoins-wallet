@@ -243,4 +243,7 @@
     <string name="names_must_include_a_number">Τα ονόματα πρέπει να περιλαμβάνει έναν αριθμό</string>
 
     <string name="account_name_must_include_dash_and_a_number">Τα ονόματα πρέπει να περιλαμβάνει μια παύλα (-) και έναν αριθμό</string>
+    <string name="import_gravatar">εισαγωγής Gravatar</string>
+    <string name="please_import_the_correct_file">Παρακαλώ εισάγετε το σωστό αρχείο</string>
+    <string name="merchant_email_has_been_imported_successfully">Έμπορος ηλεκτρονικού ταχυδρομείου έχει εισαχθεί με επιτυχία</string>
 </resources>

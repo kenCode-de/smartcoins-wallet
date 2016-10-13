@@ -237,4 +237,8 @@
     <string name="names_must_include_a_number">Imena mora sadržavati broj</string>
 
     <string name="account_name_must_include_dash_and_a_number">Imena mora sadržavati crtica (-) i broj</string>
+    <string name="import_gravatar">uvoz Gravatar</string>
+    <string name="please_import_the_correct_file">Molimo vas uvesti ispravnu datoteku</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email je uspješno uvezena</string>
+
 </resources>

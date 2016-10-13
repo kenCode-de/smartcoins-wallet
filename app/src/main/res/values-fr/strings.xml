@@ -235,4 +235,7 @@
     <string name="names_must_include_a_number">Les noms doivent inclure un numéro</string>
 
     <string name="account_name_must_include_dash_and_a_number">Les noms doivent inclure un tiret (-) et un certain nombre</string>
+    <string name="import_gravatar">importation Gravatar</string>
+    <string name="please_import_the_correct_file">S\'il vous plaît importer le fichier correct</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email a été importé avec succès</string>
 </resources>

@@ -231,4 +231,8 @@
     <string name="names_must_include_a_number">নাম একটি সংখ্যা অন্তর্ভুক্ত করা আবশ্যক</string>
 
     <string name="account_name_must_include_dash_and_a_number">(-) এবং একটি সংখ্যা নাম একটি ড্যাশ অন্তর্ভুক্ত করা আবশ্যক</string>
+    <string name="import_gravatar">আমদানি Gravatar</string>
+    <string name="please_import_the_correct_file">সঠিক ফাইল ইম্পোর্ট অনুগ্রহ</string>
+    <string name="merchant_email_has_been_imported_successfully">মার্চেন্ট ইমেইল সফলভাবে আমদানি করা হয়েছে</string>
+
 </resources>

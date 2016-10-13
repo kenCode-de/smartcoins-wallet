@@ -227,4 +227,7 @@
     <string name="names_must_include_a_number">שמות חייבים לכלול מספר</string>
 
     <string name="account_name_must_include_dash_and_a_number">שמות חייבים לכלול מקף (-) ומספר</string>
+    <string name="import_gravatar">Gravatar היבוא</string>
+    <string name="please_import_the_correct_file">אנא לייבא את הקובץ הנכון</string>
+    <string name="merchant_email_has_been_imported_successfully">דוא"ל סוחר יובא בהצלחה</string>
 </resources>

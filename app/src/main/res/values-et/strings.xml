@@ -230,4 +230,8 @@
     <string name="names_must_include_a_number">Nimed peavad olema ka number</string>
 
     <string name="account_name_must_include_dash_and_a_number">Nimed peavad sisaldama sidekriips (-) ja mitmed</string>
+    <string name="import_gravatar">Import Gravatar</string>
+    <string name="please_import_the_correct_file">Palun importida õige faili</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email on edukalt imporditud</string>
+
 </resources>

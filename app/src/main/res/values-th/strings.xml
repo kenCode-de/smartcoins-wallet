@@ -229,4 +229,7 @@
     <string name="names_must_include_a_number">ชื่อจะต้องมีหมายเลข</string>
 
     <string name="account_name_must_include_dash_and_a_number">ชื่อจะต้องมีขีด (-) และหมายเลข</string>
+    <string name="import_gravatar">นำเข้า Gravatar</string>
+    <string name="please_import_the_correct_file">กรุณานำเข้าไฟล์ที่ถูกต้อง</string>
+    <string name="merchant_email_has_been_imported_successfully">อีเมลผู้ประกอบการค้าที่ได้รับการประสบความสำเร็จในการนำเข้า</string>
 </resources>

@@ -232,4 +232,8 @@
     <string name="names_must_include_a_number">نام ها باید شامل تعدادی</string>
 
     <string name="account_name_must_include_dash_and_a_number">اسامی باید شامل یک خط تیره (-) و یک شماره</string>
+    <string name="import_gravatar">واردات از Gravatar</string>
+    <string name="please_import_the_correct_file">لطفا فایل درست وارد</string>
+    <string name="merchant_email_has_been_imported_successfully">ایمیل های تجاری با موفقیت وارد شده است</string>
+
 </resources>
