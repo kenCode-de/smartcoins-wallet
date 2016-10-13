@@ -2886,6 +2886,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
 
     }
+    public void isAssets(){
+        progressBar.setVisibility(View.GONE);
+        progressBar1.setVisibility(View.GONE);
+    }
 }
 
 
