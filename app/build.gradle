@@ -14,9 +14,9 @@ android {
         targetSdkVersion 23
 
 
-        versionCode 187
+        versionCode 188
 
-        versionName '1.0.6'
+        versionName '1.0.7'
     }
     buildTypes {
         release {
