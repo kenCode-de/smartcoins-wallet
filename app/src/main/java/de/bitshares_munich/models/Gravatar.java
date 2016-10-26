@@ -168,7 +168,7 @@ public class Gravatar
     private void getGravatarImageFromServer(String imageUri)
     {
 
-        ImageLoader.getInstance().loadImage(imageUri, new SimpleImageLoadingListener()
+        ImageLoader.getInstance().loadImage(imageUri+"?s=200", new SimpleImageLoadingListener()
         {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)
