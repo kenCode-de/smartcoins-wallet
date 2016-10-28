@@ -119,7 +119,7 @@ public class Gravatar
                                 {
                                     Object urls = (((ArrayList<LinkedTreeMap>) entry).get(0)).get("urls");
 
-                                    if ( urls instanceof ArrayList )
+                                    if ( urls instanceof ArrayList && ((ArrayList) urls).size()>0)
                                     {
                                         Object urlsObject = ((ArrayList) urls).get(0);
 
@@ -168,7 +168,7 @@ public class Gravatar
     private void getGravatarImageFromServer(String imageUri)
     {
 
-        ImageLoader.getInstance().loadImage(imageUri, new SimpleImageLoadingListener()
+        ImageLoader.getInstance().loadImage(imageUri+"?s=200", new SimpleImageLoadingListener()
         {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage)

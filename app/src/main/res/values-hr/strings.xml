@@ -233,5 +233,11 @@
 
     <string name="connected_to">Spojen na</string>
     <string name="account_create_msg">Samo jedan račun svakih 10 minuta može se registrirati</string>
+    <string name="names_must_include_a_number">Imena moraju sadržavati broj</string>
+
+    <string name="account_name_must_include_dash_and_a_number">Imena moraju uključivati ​​crticu (-) i broj</string>
+    <string name="import_gravatar">Uvoz Gravatar</string>
+    <string name="please_import_the_correct_file">Molimo uvesti ispravnu datoteku</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant e-mail je uspješno uvezena</string>
 
 </resources>

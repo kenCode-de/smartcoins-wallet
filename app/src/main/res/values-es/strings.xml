@@ -226,6 +226,10 @@
 
     <string name="connected_to">Conectado a</string>
     <string name="account_create_msg">Sólo una cuenta cada 10 minutos se puede registrar</string>
+    <string name="names_must_include_a_number">Los nombres deben incluir un número</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">Los nombres deben incluir un guión (-) y un número</string>
+    <string name="import_gravatar">importación Gravatar</string>
+    <string name="please_import_the_correct_file">Por favor, importar el archivo correcto</string>
+    <string name="merchant_email_has_been_imported_successfully">email comercio se ha importado con éxito</string>
 </resources>

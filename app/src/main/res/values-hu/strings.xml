@@ -226,5 +226,11 @@
 
     <string name="connected_to">Csatlakozva valamihez</string>
     <string name="account_create_msg">Csak egy számla 10 percenként lehet regisztrálni</string>
+    <string name="names_must_include_a_number">A nevek között számos</string>
+
+    <string name="account_name_must_include_dash_and_a_number">Nevek tartalmaznia kell egy kötőjelet (-), és számos</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Importálja a megfelelő fájlt</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant e-mailt sikeresen importálva</string>
 
 </resources>

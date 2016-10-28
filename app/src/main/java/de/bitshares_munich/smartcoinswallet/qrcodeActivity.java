@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import cz.msebera.android.httpclient.*;
-import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.utils.SupportMethods;
 import me.dm7.barcodescanner.core.DisplayUtils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;

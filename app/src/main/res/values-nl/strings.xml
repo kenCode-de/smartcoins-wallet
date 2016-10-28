@@ -225,6 +225,12 @@
 
     <string name="connected_to">Verbonden met</string>
     <string name="account_create_msg">Slechts één account elke 10 minuten kunnen worden geregistreerd</string>
+    <string name="names_must_include_a_number">Namen moet een nummer bevatten</string>
+
+    <string name="account_name_must_include_dash_and_a_number">(-) En een aantal namen moeten een streepje bevatten</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Gelieve importeren het juiste bestand</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant e-mail is met succes geïmporteerd</string>
 
 </resources>
 

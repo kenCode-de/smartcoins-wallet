@@ -60,6 +60,7 @@ import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.LangCode;
+import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
@@ -118,6 +119,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @Bind(R.id.tvAccounts)
     TextView tvAccounts;
 
+    @Bind(R.id.tvMerchantPath)
+    TextView tvMerchantPath;
+
     @Bind(R.id.spFolderPath)
     Spinner spFolderPath;
 
@@ -163,6 +167,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         init();
         populateDropDowns();
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
+        tvMerchantPath.setText(MerchantEmail.getPath());
         updateBlockNumberHead();
 
     }
@@ -1113,5 +1118,14 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     }
 
-
+    @OnClick(R.id.backup_emails)
+    public void onClickBackupEmails() {
+        final Activity activity = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new MerchantEmailActivity(activity);
+            }
+        });
+    }
 }

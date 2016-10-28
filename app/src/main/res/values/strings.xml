@@ -257,14 +257,16 @@
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
-    <string name="account_from_brainkey_url">http://188.166.147.110:9003</string>
-    <string name="decode_memos_array_url">http://188.166.147.110:9004</string>
     <string name="account_create_url">http://fr.blockpay.ch:5000</string>
-    <string name="transfer_server_url">http://188.166.147.110:9000</string>
-    <string name="qr_hash_url">http://188.166.147.110:8000</string>
-    <string name="qr_callback_url">http://188.166.147.110:8000/transaction/</string>
-    <string name="node_server_url">http://188.166.147.110:8000</string>
-    <string name="hash_server_url">http://188.166.147.110:9002</string>
+
+    <string name="account_from_brainkey_url">http://fr.blockpay.ch:9003</string>
+    <string name="decode_memos_array_url">http://fr.blockpay.ch:9004</string>
+    <string name="transfer_server_url">http://fr.blockpay.ch:9000</string>
+    <string name="qr_hash_url">http://fr.blockpay.ch:8000</string>
+    <string name="qr_callback_url">http://fr.blockpay.ch:8000/transaction/</string>
+    <string name="node_server_url">http://fr.blockpay.ch:8000</string>
+    <string name="hash_server_url">http://fr.blockpay.ch:9002</string>
+
     <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 
     <string name="test_brain_key">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
@@ -387,5 +389,13 @@
 
     <string name="connected_to">Connected to</string>
     <string name="account_create_msg">Only one account every 10 minutes can be registered</string>
+    <string name="names_must_include_a_number">Names must include a number</string>
+
+    <string name="account_name_must_include_dash_and_a_number">Names must include a dash (-) and a number</string>
+
+    <string name="import_gravatar">Import Gravatar</string>
+    <string name="please_import_the_correct_file">Please import the correct file</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email has been imported successfully</string>
+
 
 </resources>

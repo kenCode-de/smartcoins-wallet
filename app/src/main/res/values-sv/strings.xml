@@ -225,5 +225,10 @@
 
     <string name="connected_to">Ansluten till</string>
     <string name="account_create_msg">Endast ett konto var 10 minuter kan registreras</string>
+    <string name="names_must_include_a_number">Namn måste innehålla ett antal</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Namn måste innehålla ett streck (-) och ett antal</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Vänligen importera rätt fil</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant e-post har importerats</string>
 </resources>

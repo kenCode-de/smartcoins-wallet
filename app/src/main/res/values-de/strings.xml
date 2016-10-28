@@ -228,4 +228,8 @@
     <string name="connected_to">Verbunden mit</string>
     <string name="account_create_msg">Es kann nur alle 10 Minuten ein Konto registriert werden</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Namen müssen einen Bindestrich (-) und eine Reihe</string>
+    <string name="import_gravatar">Import Gravatar</string>
+    <string name="please_import_the_correct_file">Importieren Sie die richtige Datei</string>
+    <string name="merchant_email_has_been_imported_successfully">Händler E-Mail wurde erfolgreich importiert</string>
 </resources>

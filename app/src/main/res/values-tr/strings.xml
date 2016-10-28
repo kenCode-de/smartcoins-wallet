@@ -225,5 +225,10 @@
 
     <string name="connected_to">Bağlı</string>
     <string name="account_create_msg">Sadece bir hesap her 10 dakikada kaydedilebilir</string>
+    <string name="names_must_include_a_number">İsimler bir sayı içermelidir</string>
 
+    <string name="account_name_must_include_dash_and_a_number">(-) Ve bir numara Adları tire içermelidir</string>
+    <string name="import_gravatar">İthalat Gravatar</string>
+    <string name="please_import_the_correct_file">Doğru dosyasını içe Lütfen</string>
+    <string name="merchant_email_has_been_imported_successfully">Tüccar e-posta başarıyla ithal edilmiş</string>
 </resources>

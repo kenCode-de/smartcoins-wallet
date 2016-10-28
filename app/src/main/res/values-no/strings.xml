@@ -227,5 +227,10 @@
 
     <string name="connected_to">Koblet til</string>
     <string name="account_create_msg">Bare én konto hvert 10. minutt kan registreres</string>
+    <string name="names_must_include_a_number">Navn må inkludere en rekke</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Navn må inneholde en bindestrek (-) og en rekke</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Vennligst importere riktig fil</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant e-post har blitt importert</string>
 </resources>

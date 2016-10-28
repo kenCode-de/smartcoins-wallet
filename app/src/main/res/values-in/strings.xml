@@ -224,5 +224,10 @@
 
  <string name="connected_to">Terhubung dengan</string>
  <string name="account_create_msg">Hanya satu akun setiap 10 menit dapat didaftarkan</string>
+ <string name="names_must_include_a_number">Nama harus menyertakan nomor</string>
 
+ <string name="account_name_must_include_dash_and_a_number">Nama harus menyertakan tanda hubung (-) dan nomor</string>
+ <string name="import_gravatar">impor Gravatar</string>
+ <string name="please_import_the_correct_file">Silakan mengimpor file yang benar</string>
+ <string name="merchant_email_has_been_imported_successfully">email pedagang telah berhasil diimpor</string>
 </resources>

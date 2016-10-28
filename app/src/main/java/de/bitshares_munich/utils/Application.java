@@ -69,6 +69,12 @@ public class Application extends android.app.Application implements de.bitshares
                     "wss://de.blockpay.ch:8089",                // German node
                     "wss://fr.blockpay.ch:8089",               // France node
                     "wss://bitshares.openledger.info/ws",      // Openledger node
+//                    "wss://bit.btsabc.org/ws",
+//                    "wss://bts.transwiser.com/ws",
+//                    "wss://freedom.bts123.cc:15138",
+//                    "wss://okbtc.org:8089/ws",
+//                    "wss://ratebts.com:8089",
+//                    "wss://webber.tech:8089/ws",
                     //"wss://bitshares.dacplay.org:8089/ws"
                     //,"https://dele-puppy.com/ws"
                     //,"https://valen-tin.fr:8090"
@@ -415,7 +421,7 @@ public static int nodeIndex = 0;
     {
         Log.i("internetBlockpay", "open internet");
         mIsConnected = true;
-        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
         sendInitialSocket(context);
     }
 

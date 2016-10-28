@@ -556,11 +556,64 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvEmptyl6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/l6"
+            android:layout_marginTop="10dp"
+            android:text="@string/large_text"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/l7"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@+id/tvEmptyl6"
+            android:layout_marginTop="10dp"
+            android:background="@color/whiteColor"
+            android:orientation="horizontal"
+            android:elevation="5dp"
+            >
+        <LinearLayout
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/backup_emails"
+            android:clickable="true"
+            >
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:background="@drawable/default_gravatar_image"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/import_gravatar"
+                android:layout_gravity="left"
+                android:gravity="center"
+                android:lines="3"
+                />
+        </LinearLayout>
+            <TextView
+                android:paddingLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/tvMerchantPath"
+                android:gravity="left|center"
+                />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tvEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/l6"
+            android:layout_below="@+id/l7"
             android:layout_marginTop="10dp"
             android:text="@string/large_text"
             android:visibility="gone"

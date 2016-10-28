@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
     TextView tvFee;
     @Bind(R.id.tvMemo)
     TextView tvMemo;
+    @Bind(R.id.llMemo)
+    LinearLayout llMemo;
 
     Locale locale;
     String language;
@@ -175,6 +179,8 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
             getAssetObject(amountObj.get("asset_id").toString(),feeObj.get("asset_id").toString());
             if (resultObj.has("memo")){
                 decodeMemo(resultObj.get("memo").toString(),resultObj.get("to").toString());
+            }else {
+                llMemo.setVisibility(View.GONE);
             }
         }catch (Exception e){
             e.printStackTrace();

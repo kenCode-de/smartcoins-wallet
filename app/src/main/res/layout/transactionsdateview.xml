@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:text="29 Apr"
         android:fontFamily="sans-serif-light"
-        android:textSize="10pt"
+        android:textSize="6pt"
         android:textColor="@color/blackColor"
-        android:textAlignment="center"/>
+        android:textAlignment="viewStart"/>
     <TextView
         android:paddingLeft="10dp"
         android:paddingRight="0dp"
@@ -29,7 +29,7 @@
         android:fontFamily="sans-serif"
         android:textSize="6pt"
         android:textColor="@color/blackColor"
-        android:textAlignment="center"/>
+        android:textAlignment="viewStart"/>
     <TextView
         android:paddingLeft="10dp"
         android:paddingRight="0dp"
@@ -42,6 +42,6 @@
         android:fontFamily="sans-serif"
         android:textSize="6pt"
         android:textColor="@color/blackColor"
-        android:textAlignment="center"/>
+        android:textAlignment="viewStart"/>
 
 </LinearLayout>

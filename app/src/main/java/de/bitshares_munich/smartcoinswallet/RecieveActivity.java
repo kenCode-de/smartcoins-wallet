@@ -132,7 +132,7 @@ public class RecieveActivity extends BaseActivity {
 
         HashMap hm = new HashMap();
         hm.put("account_name", to);
-        hm.put("memo", "Order: " + orderId);
+//        hm.put("memo", "Order: " + orderId);
         hm.put("amount", price);
         hm.put("fee", 0);
         hm.put("symbol", currency.replace("bit",""));

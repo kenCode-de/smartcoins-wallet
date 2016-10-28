@@ -66,9 +66,9 @@ Context context;
         TextView textView = (TextView) v.findViewById(R.id.transactiondate);
         textView.setText(transactiondetails.getDateString());
         TextView textView2 = (TextView) v.findViewById(R.id.transactiontime);
-        textView2.setText(transactiondetails.getTimeString());
+        textView2.setText(transactiondetails.getTimeString() + " " + transactiondetails.getTimeZone());
         TextView textView3 = (TextView) v.findViewById(R.id.transactionttimezone);
-        textView3.setText(transactiondetails.getTimeZone());
+        textView3.setVisibility(View.GONE);
         return v;
     }
 
@@ -111,7 +111,10 @@ Context context;
         }
         else
         {
-            tString = context.getText(R.string.memo_capital) + " : " + transactiondetails.getDetailsMemo();
+            tString = transactiondetails.getDetailsMemo();
+            tString = tString.substring(0, Math.min(tString.length(), 53));
+            tString = abbreviateString(tString, 50);
+            tString = context.getText(R.string.memo_capital) + " : " + tString;
             TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
             textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setText(tString);
@@ -231,6 +234,12 @@ Context context;
             }
         }
         return v;
+    }
+    public static String abbreviateString(String input, int maxLength) {
+        if (input.length() <= maxLength)
+            return input;
+        else
+            return input.substring(0, maxLength-3) + "...";
     }
 }
 

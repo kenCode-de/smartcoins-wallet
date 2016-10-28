@@ -225,5 +225,10 @@
 
     <string name="connected_to">Conectat la</string>
     <string name="account_create_msg">Doar un singur cont la fiecare 10 minute poate fi înregistrat</string>
+    <string name="names_must_include_a_number">Alte denumiri trebuie să includă un număr</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Alte denumiri trebuie să includă o liniuță (-) și un număr</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Vă rugăm să importați fișierul corect</string>
+    <string name="merchant_email_has_been_imported_successfully">e-mail comerciant a fost importat cu succes</string>
 </resources>

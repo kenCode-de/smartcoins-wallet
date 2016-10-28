@@ -226,5 +226,10 @@
 
     <string name="connected_to">Prijungtas prie</string>
     <string name="account_create_msg">Tik viena sąskaita per 10 minučių gali būti registruojami</string>
+    <string name="names_must_include_a_number">Vardai turi būti numerį</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Vardai turi būti brūkšnelį (-) ir numerį</string>
+    <string name="import_gravatar">importas Gravatar</string>
+    <string name="please_import_the_correct_file">Prašome importuoti teisingą failą</string>
+    <string name="merchant_email_has_been_imported_successfully">Prekybinės siųsti sėkmingai importuotas</string>
 </resources>

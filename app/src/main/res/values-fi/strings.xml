@@ -341,6 +341,11 @@
 
     <string name="connected_to">Yhdistetty</string>
     <string name="account_create_msg">Vain yksi tili 10 minuutin välein voidaan rekisteröidä</string>
+    <string name="names_must_include_a_number">Nimet on oltava numero</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Nimet on oltava viiva (-) ja useita</string>
+    <string name="import_gravatar">Tuo Gravatar</string>
+    <string name="please_import_the_correct_file">Ole hyvä tuoda oikea tiedosto</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant sähköposti on tuotu onnistuneesti</string>
 
 </resources>

@@ -228,6 +228,10 @@
 
     <string name="connected_to">Povezan z</string>
     <string name="account_create_msg">Le en račun vsakih 10 minut, se lahko registrirajo</string>
+    <string name="names_must_include_a_number">Imena morajo vsebovati številko</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">Imena morajo vsebovati pomišljaj (-) in število</string>
+    <string name="import_gravatar">Uvoz Gravatar</string>
+    <string name="please_import_the_correct_file">Prosimo uvoziti ustrezno datoteko</string>
+    <string name="merchant_email_has_been_imported_successfully">Merchant email je bil uspešno uvožen</string>
 </resources>

@@ -224,5 +224,10 @@
 
     <string name="connected_to">Kết nối với</string>
     <string name="account_create_msg">Chỉ có một tài khoản mỗi 10 phút có thể được đăng ký</string>
+    <string name="names_must_include_a_number">Tên phải bao gồm một số</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Tên phải bao gồm một dấu gạch ngang (-) và một số</string>
+    <string name="import_gravatar">nhập Gravatar</string>
+    <string name="please_import_the_correct_file">Xin hãy nhập các tập tin chính xác</string>
+    <string name="merchant_email_has_been_imported_successfully">email thương đã được nhập thành công</string>
 </resources>

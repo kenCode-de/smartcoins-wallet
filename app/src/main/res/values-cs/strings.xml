@@ -222,5 +222,10 @@
 
     <string name="connected_to">Připojen k</string>
     <string name="account_create_msg">Pouze jeden účet každých 10 minut lze registrovat</string>
+    <string name="names_must_include_a_number">Názvy musí zahrnovat řadu</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Názvy musí obsahovat pomlčku (-) a číslo</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Prosím importovat správný soubor</string>
+    <string name="merchant_email_has_been_imported_successfully">Obchodník e-mail byl úspěšně importován</string>
 </resources>

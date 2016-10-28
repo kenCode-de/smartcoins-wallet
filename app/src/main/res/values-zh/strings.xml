@@ -397,6 +397,10 @@
 
     <string name="connected_to">连接到</string>
     <string name="account_create_msg">只有一个帐户每10分钟可注册</string>
+    <string name="names_must_include_a_number">名称必须包括一些</string>
 
-
+    <string name="account_name_must_include_dash_and_a_number">名称必须包括一个破折号（ - ）和一个数字</string>
+    <string name="import_gravatar">进口的Gravatar</string>
+    <string name="please_import_the_correct_file">请输入正确的文件</string>
+    <string name="merchant_email_has_been_imported_successfully">商家电子邮件已成功导入</string>
 </resources>

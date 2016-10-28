@@ -225,5 +225,10 @@
     <string name="audio_folder_path">Audio Cesta zložky</string>
     <string name="please_make_sure_your_bin_file">Prosím, uistite sa, že pin je správny alebo správny súbor priehradka je vybraná</string>
     <string name="change">Zmeniť ...</string>
+    <string name="names_must_include_a_number">Názvy musia zahŕňať rad</string>
 
+    <string name="account_name_must_include_dash_and_a_number">Názvy musí obsahovať pomlčku (-) a číslo</string>
+    <string name="import_gravatar">import Gravatar</string>
+    <string name="please_import_the_correct_file">Prosím importovať správny súbor</string>
+    <string name="merchant_email_has_been_imported_successfully">Obchodník e-mail bol úspešne importovaný</string>
 </resources>
