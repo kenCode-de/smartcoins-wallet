@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'io.fabric'
 
-//repositories {
-//    maven { url 'https://maven.fabric.io/public' }
-//}
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion 23
@@ -17,6 +17,7 @@ android {
         versionCode 188
 
         versionName '1.0.7'
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -40,6 +41,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile supportLibraryDependency
     compile 'com.google.code.gson:gson:2.2.4'
@@ -55,6 +57,8 @@ dependencies {
     compile 'com.itextpdf:itextpdf:5.5.9'
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.github.premnirmal:TextCounter:1.1.0'
+    compile 'org.bitcoinj:bitcoinj-core:0.14.3'
+    compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
 }

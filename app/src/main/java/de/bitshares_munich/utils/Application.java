@@ -7,16 +7,9 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.multidex.MultiDex;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.widget.Toast;
-
-import com.itextpdf.text.ExceptionConverter;
-import com.koushikdutta.async.callback.CompletedCallback;
-import com.koushikdutta.async.http.AsyncHttpClient;
-import com.koushikdutta.async.http.AsyncHttpGet;
-import com.koushikdutta.async.http.Headers;
-import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,10 +17,10 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -48,7 +41,7 @@ import de.bitshares_munich.smartcoinswallet.R;
  * Created by qasim on 5/9/16.
  */
 public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver {
-
+    private static String TAG = "Application";
     public static Context context;
     static IAccount iAccount;
     static IExchangeRate iExchangeRate;
@@ -62,6 +55,9 @@ public class Application extends android.app.Application implements de.bitshares
     static IAssetObject iAssetObject;
     static IRelativeHistory iRelativeHistory;
     public static String blockHead = "";
+    public static int refBlockNum;
+    public static long refBlockPrefix;
+    public static long blockTime;
     private static Activity currentActivity;
 
     public static String urlsSocketConnection[] =
@@ -96,6 +92,7 @@ public class Application extends android.app.Application implements de.bitshares
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         ButterKnife.setDebug(true);
         context = getApplicationContext();
         blockHead = "";
@@ -178,16 +175,16 @@ public static int nodeIndex = 0;
 
     private void webSocketConnection()
     {
-        Log.i("internetBlockpay", "in Application webSocketConnection");
+        Log.i(TAG, "in Application webSocketConnection");
 
-        Log.i("Connect", "in Application webSocketConnection");
+        Log.i(TAG, "in Application webSocketConnection");
         isReady = false;
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 nodeIndex = nodeIndex % urlsSocketConnection.length;
 
-                Log.i("internetBlockpay", "preparing to connect to:" + urlsSocketConnection[nodeIndex]);
+                Log.i(TAG, "preparing to connect to:" + urlsSocketConnection[nodeIndex]);
 
                 connect(urlsSocketConnection[nodeIndex]);
                 nodeIndex++;
@@ -200,8 +197,6 @@ public static int nodeIndex = 0;
     public static Boolean isReady = false;
 
     public static void stringTextRecievedWs(String s) {
-
-
                     try {
                         JSONObject jsonObject = new JSONObject(s);
 
@@ -375,24 +370,62 @@ public static int nodeIndex = 0;
     }
 
     private static String headBlockNumber(String json) {
-
-        String result = "";
-        if (json.contains(context.getString(R.string.head_block_number))) {
-            int start = json.lastIndexOf(context.getString(R.string.head_block_number));
-            int length = 19;
-            start = start + length;
-            int end = start;
-            for (; end < json.length(); end++) {
-                if (json.substring(end, end + 1).equals(",")) {
-                    break;
+        final String BLOCK_REFERENCE_ID = "head_block_id";
+        final String HEAD_BLOCK_NUMBER = "head_block_number";
+        final String TIME = "time";
+        try {
+            JSONArray array = new JSONArray(json);
+            String rawBlockId = "";
+            String blockNumber = "";
+            if(array.length() == 1){
+                JSONArray subArray = array.getJSONArray(0);
+                for(int i = 0; i < subArray.length(); i++){
+                    if(subArray.get(i) instanceof JSONObject){
+                        JSONObject element = (JSONObject) subArray.get(i);
+                        if(element.has(BLOCK_REFERENCE_ID)){
+                            rawBlockId = element.getString(BLOCK_REFERENCE_ID);
+                        }
+                        if(element.has(HEAD_BLOCK_NUMBER)){
+                            blockNumber = element.getString(HEAD_BLOCK_NUMBER);
+                        }
+                        if(element.has(TIME)){
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            try {
+                                String time = element.getString(TIME);
+                                time = time.replace('T', ' ');
+                                Date date = simpleDateFormat.parse(time);
+                                blockTime = date.getTime() / 1000;
+                            } catch (ParseException e) {
+                                Log.e(TAG, "ParseException while trying to parse time. time string: "+element.getString(TIME));
+                            }
+                        }
+                    }else{
+                        String element = (String) subArray.get(i);
+                        Log.d(TAG, "Could not cast string: "+element);
+                    }
                 }
-            }
-            result = "block# " + json.substring(start, end);
-        } else {
-            result = Application.blockHead;
-        }
+                if(rawBlockId.equals("")) {
+                    Log.w(TAG,"Could not process data");
+                    return blockHead;
+                }
+                // Setting block number
+                blockHead = "block# " + blockNumber;
 
-        return blockHead = result;
+                // Setting reference block number (lower 16 bits of block number)
+                refBlockNum = Integer.valueOf(blockNumber) & 0xffff;
+
+                // Setting block prefix
+                String hashData = rawBlockId.substring(8, 16);
+                StringBuilder builder = new StringBuilder();
+                for(int i = 0; i < 8; i = i + 2){
+                    builder.append(hashData.substring(6 - i, 8 - i));
+                }
+                refBlockPrefix = Long.parseLong(builder.toString(), 16);
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "JSONException at headBlockNumber");
+        }
+        return blockHead;
     }
 
 
