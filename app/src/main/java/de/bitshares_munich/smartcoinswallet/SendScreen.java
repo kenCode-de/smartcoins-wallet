@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -39,21 +38,33 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.primitives.UnsignedLong;
+import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.BaseOperation;
+import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.Transaction;
+import com.luminiasoft.bitshares.Transfer;
+import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.Util;
+
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Sha256Hash;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import ar.com.daidalos.afiledialog.FileChooserDialog;
-import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
@@ -70,13 +81,10 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
-import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
-import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -89,6 +97,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
+    private String TAG = "SendScreen";
     Context context;
 
     TinyDB tinyDB;
@@ -512,7 +521,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     void validatingComplete() {
+        Log.d(TAG, "validatingComplete");
         if (validateSend()) {
+            Log.d(TAG,"send validated");
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
                 if (Helper.fetchBoolianSharePref(this, "require_pin")) {
@@ -997,6 +1008,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
+        Log.d(TAG,"transferAmount. amount: "+amount+", symbol: "+symbol+", to: "+toAccount);
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String privateKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
@@ -1022,42 +1034,81 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("asset_symbol", symbol);
         hm.put("memo", memo);
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<TransferResponse> postingService = service.getTransferResponse(hm);
-        postingService.enqueue(new Callback<TransferResponse>() {
-            @Override
-            public void onResponse(Response<TransferResponse> response) {
-                if (response.isSuccess()) {
-                    TransferResponse resp = response.body();
-                    if (resp.status.equals("success")) {
-                        if (callbackURL != null) {
-                            final Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getTrxBlock("160");
-                                }
-                            }, 5000);
-                        }
-                        if (!isFinishing()) {
-                            finish();
-                        }
-                    } else {
-                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, getString(R.string.unable_to_send_amount).toLowerCase() + "..", Toast.LENGTH_SHORT).show();
-                }
-                hideDialog();
-            }
+        Log.d(TAG, "wif: "+privateKey);
+        Log.d(TAG, "from_account: "+spinnerFrom.getSelectedItem().toString());
+        Log.d(TAG, "to_account: "+toAccount);
+        Log.d(TAG, "amount: "+amount);
+        Log.d(TAG, "asset_symbol: "+symbol);
+        Log.d(TAG, "memo: "+memo);
+        long expirationPosixTime = (Application.blockTime * 1000) + 30000;
+        Date expirationDate = new Date(expirationPosixTime);
 
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
-            }
-        });
+        BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationPosixTime);
+        ArrayList<BaseOperation> operations = new ArrayList<BaseOperation>();
+        UserAccount from = new UserAccount("1.2.138632");
+        UserAccount to = new UserAccount("1.2.129848");
+        AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120"));
+        AssetAmount fee = new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0"));
+        operations.add(new Transfer(from, to, assetAmount, fee));
+        Transaction transaction = new Transaction(privateKey, blockData, operations);
+        byte[] serializedTransaction = transaction.toBytes();
+        Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
+        ECKey sk = transaction.getPrivateKey();
+        ECKey.ECDSASignature signature = null;
+        boolean isCanonical = false;
+        while(!isCanonical){
+            signature = sk.sign(hash);
+            isCanonical = signature.isCanonical();
+        }
+
+        String stringSignature = Util.bytesToHex(signature.encodeToDER());
+        Log.d(TAG, "Transaction signature: "+stringSignature);
+
+        // This is experimental, and will definitely have some changes
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        String expirationString = dateFormat.format(expirationDate);
+        String jsonTransaction = String.format("{'expiration': '%s','extensions': [],'operations': [[0,{'amount': {'amount': %d, 'asset_id': '1.3.120'},'extensions': [],'fee': {'amount': 264174, 'asset_id': '1.3.0'},'from': '1.2.138632','to': '1.2.129848'}]],'ref_block_num': %d,'ref_block_prefix': %d,'signatures': ['%s']}\n", expirationString, 100, Application.refBlockNum, Application.refBlockPrefix, Util.bytesToHex(signature.encodeToDER()));
+        Log.d(TAG, "jsonTransaction");
+        Log.d(TAG, jsonTransaction);
+        WebsocketAPI.sendData(jsonTransaction);
+
+        // Commenting all code below to deactivate current functionality
+//        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+//        IWebService service = sg.getService(IWebService.class);
+//        final Call<TransferResponse> postingService = service.getTransferResponse(hm);
+//        postingService.enqueue(new Callback<TransferResponse>() {
+//            @Override
+//            public void onResponse(Response<TransferResponse> response) {
+//                if (response.isSuccess()) {
+//                    TransferResponse resp = response.body();
+//                    if (resp.status.equals("success")) {
+//                        if (callbackURL != null) {
+//                            final Handler handler = new Handler();
+//                            handler.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getTrxBlock("160");
+//                                }
+//                            }, 5000);
+//                        }
+//                        if (!isFinishing()) {
+//                            finish();
+//                        }
+//                    } else {
+//                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(context, getString(R.string.unable_to_send_amount).toLowerCase() + "..", Toast.LENGTH_SHORT).show();
+//                }
+//                hideDialog();
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                hideDialog();
+//                Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
@@ -1359,6 +1410,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void relativeHistoryCallback(JSONObject msg) {
+        Log.d(TAG,"relativeHistoryCallback: "+msg.toString());
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = (JSONArray) msg.get("result");
@@ -1404,6 +1456,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             e.printStackTrace();
         }
     }
+
 
     private void tradeAsset() {
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
