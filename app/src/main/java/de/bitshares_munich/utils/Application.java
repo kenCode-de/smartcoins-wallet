@@ -389,11 +389,9 @@ public static int nodeIndex = 0;
                             blockNumber = element.getString(HEAD_BLOCK_NUMBER);
                         }
                         if(element.has(TIME)){
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                             try {
-                                String time = element.getString(TIME);
-                                time = time.replace('T', ' ');
-                                Date date = simpleDateFormat.parse(time);
+                                Date date = simpleDateFormat.parse(element.getString(TIME));
                                 blockTime = date.getTime() / 1000;
                             } catch (ParseException e) {
                                 Log.e(TAG, "ParseException while trying to parse time. time string: "+element.getString(TIME));
