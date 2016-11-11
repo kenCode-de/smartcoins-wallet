@@ -58,6 +58,7 @@ dependencies {
     compile 'com.weiwangcn.betterspinner:library-material:1.1.0'
     compile 'com.github.premnirmal:TextCounter:1.1.0'
     compile 'org.bitcoinj:bitcoinj-core:0.14.3'
+    compile 'com.neovisionaries:nv-websocket-client:1.30'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
