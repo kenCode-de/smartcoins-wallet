@@ -1060,7 +1060,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             Log.d(TAG,"expiration time: "+expirationTime);
             Transaction transaction = new TransferTransactionBuilder()
                     .setSource(new UserAccount("1.2.138632"))
-                    .setDestination(new UserAccount("1.2.129848"))
+                    .setDestination(new UserAccount(receiverID))
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset("1.3.120")))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0")))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
@@ -1170,7 +1170,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
-
         myWebSocketHelper.cleanUpTransactionsHandler();
 
         try {
@@ -1192,6 +1191,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     });
                     sendBtnPressed = false;
                     validating = false;
+                    break;
                 }
             }
             if (!found) {
