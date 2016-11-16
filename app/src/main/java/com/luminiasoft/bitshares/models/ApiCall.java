@@ -1,12 +1,16 @@
 package com.luminiasoft.bitshares.models;
 
-import com.google.gson.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -65,7 +69,7 @@ public class ApiCall implements JsonSerializable {
             if(this.params.get(i) instanceof JsonSerializable){
                 // Sometimes the parameters are objects
                 methodParams.add(((JsonSerializable) this.params.get(i)).toJsonObject());
-            }else if(this.params.get(i) instanceof String){
+            }else if(this.params.get(i) instanceof String || this.params.get(i) == null){
                 // Other times they are plain strings
                 methodParams.add((String) this.params.get(i));
             }else if(this.params.get(i) instanceof ArrayList){
@@ -78,8 +82,7 @@ public class ApiCall implements JsonSerializable {
                 }
                 methodParams.add(array);
             }
-        }
-        paramsArray.add(methodParams);
+        }        paramsArray.add(methodParams);
         obj.add(KEY_PARAMS, paramsArray);
         obj.addProperty(KEY_JSON_RPC, this.jsonrpc);
         return obj;

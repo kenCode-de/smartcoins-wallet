@@ -1,11 +1,16 @@
 package com.luminiasoft.bitshares.ws;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.*;
+import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.Transaction;
+import com.luminiasoft.bitshares.TransferTransactionBuilder;
+import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 import com.luminiasoft.bitshares.interfaces.TransactionBroadcastListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -15,17 +20,23 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
+
 import org.bitcoinj.core.DumpedPrivateKey;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Class that will handle the transaction publication procedure.
  */
 public class TransactionBroadcastSequence extends WebSocketAdapter {
+    private final String TAG = this.getClass().getName();
 
     private final static int LOGIN_ID = 1;
     private final static int GET_NETWORK_BROADCAST_ID = 2;
@@ -39,6 +50,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     private UserAccount destination;
     private AssetAmount transferred;
     private AssetAmount fee;
+    private Transaction transaction;
     private TransactionBroadcastListener mListener;
 
     private int currentId = 1;
@@ -69,18 +81,24 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
         this.fee = fee;
     }
 
+    public TransactionBroadcastSequence(Transaction transaction, TransactionBroadcastListener listener){
+        this.transaction = transaction;
+        this.mListener = listener;
+    }
+
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> loginParams = new ArrayList<>();
         loginParams.add(null);
         loginParams.add(null);
-        ApiCall loginCall = new ApiCall(1, "login", loginParams, "2.0", currentId);
+        ApiCall loginCall = new ApiCall(1, RPC.CALL_LOGIN, loginParams, "2.0", currentId);
         websocket.sendText(loginCall.toJsonString());
     }
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
+        Log.d(TAG, "<< "+response);
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
         if(baseResponse.error != null){
@@ -90,14 +108,14 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
             currentId++;
             ArrayList<Serializable> emptyParams = new ArrayList<>();
             if(baseResponse.id == LOGIN_ID){
-                ApiCall networkApiIdCall = new ApiCall(1, "network_broadcast", emptyParams, "2.0", currentId);
+                ApiCall networkApiIdCall = new ApiCall(1, RPC.CALL_NETWORK_BROADCAST, emptyParams, "2.0", currentId);
                 websocket.sendText(networkApiIdCall.toJsonString());
             }else if(baseResponse.id == GET_NETWORK_BROADCAST_ID){
-                Type WitnessResponseType = new TypeToken<Integer>(){}.getType();
-                WitnessResponse<Integer> witnessResponse = gson.fromJson(response, WitnessResponseType);
+                Type ApiIdResponse = new TypeToken<WitnessResponse<Integer>>() {}.getType();
+                WitnessResponse<Integer> witnessResponse = gson.fromJson(response, ApiIdResponse);
                 broadcastApiId = witnessResponse.result;
 
-                ApiCall getDynamicParametersCall = new ApiCall(0, "get_dynamic_global_properties", emptyParams, "2.0", currentId);
+                ApiCall getDynamicParametersCall = new ApiCall(0, RPC.CALL_GET_DYNAMIC_GLOBAL_PROPERTIES, emptyParams, "2.0", currentId);
                 websocket.sendText(getDynamicParametersCall.toJsonString());
             }else if(baseResponse.id == GET_NETWORK_DYNAMIC_PARAMETERS){
                 Type DynamicGlobalPropertiesResponse = new TypeToken<WitnessResponse<DynamicGlobalProperties>>(){}.getType();
@@ -114,20 +132,21 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 long headBlockNumber = dynamicProperties.head_block_number;
 
                 try{
-                    Transaction transaction = new TransferTransactionBuilder()
-                            .setSource(this.source)
-                            .setDestination(this.destination)
-                            .setAmount(this.transferred)
-                            .setFee(this.fee)
-                            .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime))
-                            .setPrivateKey(DumpedPrivateKey.fromBase58(null, this.wif).getKey())
-                            .build();
+                    if(this.transaction == null){
+                        transaction = new TransferTransactionBuilder()
+                                .setSource(this.source)
+                                .setDestination(this.destination)
+                                .setAmount(this.transferred)
+                                .setFee(this.fee)
+                                .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime))
+                                .setPrivateKey(DumpedPrivateKey.fromBase58(null, this.wif).getKey())
+                                .build();
+                    }
 
                     ArrayList<Serializable> transactionList = new ArrayList<>();
                     transactionList.add(transaction);
                     ApiCall call = new ApiCall(broadcastApiId,
-                            "call",
-                            "broadcast_transaction",
+                            RPC.CALL_BROADCAST_TRANSACTION,
                             transactionList,
                             "2.0",
                             currentId);
@@ -163,53 +182,8 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
         websocket.disconnect();
     }
 
-    /**
-     * User name login parameter
-     */
-    public class User implements JsonSerializable {
-
-        private String username;
-
-        public User(){
-        }
-
-        public User(String username){
-            this.username = username;
-        }
-
-        @Override
-        public String toJsonString() {
-            return this.username;
-        }
-
-        @Override
-        public JsonElement toJsonObject() {
-            return null;
-        }
-    }
-
-    /**
-     * Password login parameter
-     */
-    public class Password implements JsonSerializable {
-
-        private String password;
-
-        public Password(){
-        }
-
-        public Password(String username){
-            this.password = username;
-        }
-
-        @Override
-        public String toJsonString() {
-            return this.password;
-        }
-
-        @Override
-        public JsonElement toJsonObject() {
-            return null;
-        }
+    @Override
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        Log.d(TAG, ">> "+frame.getPayloadText());
     }
 }

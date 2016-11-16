@@ -49,7 +49,13 @@ import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
+import com.luminiasoft.bitshares.interfaces.TransactionBroadcastListener;
 import com.luminiasoft.bitshares.models.ApiCall;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
+import com.neovisionaries.ws.client.WebSocket;
+import com.neovisionaries.ws.client.WebSocketException;
+import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -101,7 +107,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, TransactionBroadcastListener {
     private String TAG = "SendScreen";
     Context context;
 
@@ -205,6 +211,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
+    private WebSocket mWebSocket;
+
     private void startupTasks() {
         runningSpinerForFirstTime = true;
         init();
@@ -289,7 +297,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 100);
             }
         }, 100);
-
     }
 
     void init() {
@@ -564,8 +571,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String mainAsset = spAssets.getSelectedItem().toString();
             mainAsset = mainAsset.replace("bit", "");
             String mainAmount;
+            Log.d(TAG,"selectedAccountAsset.precision: "+selectedAccountAsset.precision);
             if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
-                mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
+                mainAmount = String.format(Locale.ENGLISH, "%d", Long.parseLong(etAmount.getText().toString()));
             } else {
                 mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
             }
@@ -1048,52 +1056,29 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Log.d(TAG, "memo: "+memo);
 
         try{
+            long expirationTime = Application.blockTime + 30;
+            Log.d(TAG,"expiration time: "+expirationTime);
             Transaction transaction = new TransferTransactionBuilder()
                     .setSource(new UserAccount("1.2.138632"))
                     .setDestination(new UserAccount("1.2.129848"))
-                    .setAmount(new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120")))
+                    .setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset("1.3.120")))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0")))
-                    .setBlockData(new BlockData(43408, 1430521623, 1479231969))
+                    .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
                     .build();
 
-            ArrayList<Serializable> transactionList = new ArrayList<>();
-            transactionList.add(transaction);
-            ApiCall call = new ApiCall(4, "call", "broadcast_transaction", transactionList, "2.0", 1);
-            String jsonCall = call.toJsonString();
-            System.out.println("json call");
-            System.out.println(jsonCall);
+            WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
+            // Create a WebSocket. The timeout value set above is used.
+            try {
+                mWebSocket = factory.createSocket(Application.urlsSocketConnection[0]);
+                mWebSocket.addListener(new TransactionBroadcastSequence(transaction, this));
+                WebsocketAPI.sendData(mWebSocket);
+            } catch (IOException e) {
+                Log.e(TAG, "IOExcetpion. Msg: "+e.getMessage());
+            }
         }catch(MalformedTransactionException e){
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
         }
-
-//        long expirationPosixTime = (Application.blockTime * 1000) + 30000;
-//        Date expirationDate = new Date(expirationPosixTime);
-//        BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationPosixTime);
-//        ArrayList<BaseOperation> operations = new ArrayList<BaseOperation>();
-//        UserAccount from = new UserAccount("1.2.138632");
-//        UserAccount to = new UserAccount("1.2.129848");
-//        AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120"));
-//        AssetAmount fee = new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0"));
-//        operations.add(new Transfer(from, to, assetAmount, fee));
-//        Transaction transaction = new Transaction(privateKey, blockData, operations);
-//        byte[] serializedTransaction = transaction.toBytes();
-//        Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
-//        ECKey sk = transaction.getPrivateKey();
-//        ECKey.ECDSASignature signature = null;
-//        boolean isCanonical = false;
-//        while(!isCanonical){
-//            signature = sk.sign(hash);
-//            isCanonical = signature.isCanonical();
-//        }
-
-//        String stringSignature = Util.bytesToHex(signature.encodeToDER());
-//
-//        // This is experimental, and will definitely have some changes
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-//        String expirationString = dateFormat.format(expirationDate);
-//        String jsonTransaction = String.format("{'expiration': '%s','extensions': [],'operations': [[0,{'amount': {'amount': %d, 'asset_id': '1.3.120'},'extensions': [],'fee': {'amount': 264174, 'asset_id': '1.3.0'},'from': '1.2.138632','to': '1.2.129848'}]],'ref_block_num': %d,'ref_block_prefix': %d,'signatures': ['%s']}\n", expirationString, 100, Application.refBlockNum, Application.refBlockPrefix, Util.bytesToHex(signature.encodeToDER()));
-//        WebsocketAPI.sendData(jsonTransaction);
 
         // Commenting all code below to deactivate current functionality
 //        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
@@ -1784,4 +1769,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
 
+    @Override
+    public void onSuccess() {
+        Log.d(TAG, "onSuccess");
+    }
+
+    @Override
+    public void onError(BaseResponse.Error error) {
+        Log.e(TAG, "onError");
+    }
 }
