@@ -571,9 +571,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String mainAsset = spAssets.getSelectedItem().toString();
             mainAsset = mainAsset.replace("bit", "");
             String mainAmount;
-            Log.d(TAG,"selectedAccountAsset.precision: "+selectedAccountAsset.precision);
             if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
-                mainAmount = String.format(Locale.ENGLISH, "%d", Long.parseLong(etAmount.getText().toString()));
+                mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
             } else {
                 mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
             }
@@ -892,7 +891,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void populateAccountsSpinner() {
         List<String> spinnerArray = new ArrayList<String>();
-
         String accountname = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
@@ -1021,18 +1019,19 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
-        String fromAccount = spinnerFrom.getSelectedItem().toString();
-        Log.d(TAG,"transferAmount. amount: "+amount+", symbol: "+symbol+", from: "+fromAccount+", to: "+toAccount);
+        String senderID = null;
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String privateKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             if (accountDetail.account_name.equals(selectedAccount)) {
+                senderID = accountDetail.account_id;
                 try {
                     privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
             }
         }
         String memo = etMemo.getText().toString();
@@ -1048,20 +1047,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("asset_symbol", symbol);
         hm.put("memo", memo);
 
-        Log.d(TAG, "wif: "+privateKey);
         Log.d(TAG, "from_account: "+spinnerFrom.getSelectedItem().toString());
         Log.d(TAG, "to_account: "+toAccount);
         Log.d(TAG, "amount: "+amount);
         Log.d(TAG, "asset_symbol: "+symbol);
         Log.d(TAG, "memo: "+memo);
-
+        Log.d(TAG, "sender id: '"+senderID+"', does this equal hardcoded: "+senderID.equals("1.2.138632"));
+        Log.d(TAG, "receiver id: '"+receiverID+"', does this equal hardcoded: "+receiverID.equals("1.2.129848"));
         try{
+            long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
+            String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
-            Log.d(TAG,"expiration time: "+expirationTime);
             Transaction transaction = new TransferTransactionBuilder()
-                    .setSource(new UserAccount("1.2.138632"))
+                    .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
-                    .setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset("1.3.120")))
+                    .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0")))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
@@ -1768,14 +1768,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setTextColor(Color.BLACK);
     }
 
-
     @Override
     public void onSuccess() {
         Log.d(TAG, "onSuccess");
+        hideDialog();
     }
 
     @Override
     public void onError(BaseResponse.Error error) {
-        Log.e(TAG, "onError");
+        Log.e(TAG, "onError. msg: "+error.message);
+        hideDialog();
     }
 }

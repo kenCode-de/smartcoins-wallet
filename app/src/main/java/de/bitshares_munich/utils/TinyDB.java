@@ -20,11 +20,9 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.bitshares_munich.models.AccountDetails;
@@ -34,7 +32,7 @@ import de.bitshares_munich.smartcoinswallet.ListViewActivity;
 
 
 public class TinyDB {
-
+    private final String TAG = "TinyDB";
     private SharedPreferences preferences;
     private String DEFAULT_APP_IMAGEDATA_DIRECTORY;
     private String lastImagePath = "";
