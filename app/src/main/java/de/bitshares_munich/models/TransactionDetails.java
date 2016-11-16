@@ -2,11 +2,8 @@ package de.bitshares_munich.models;
 
 import android.content.Context;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.bitshares_munich.smartcoinswallet.BaseActivity;
 import de.bitshares_munich.utils.Helper;
 
 /**

@@ -1,10 +1,7 @@
 package com.luminiasoft.bitshares.ws;
 
-import com.google.common.primitives.UnsignedLong;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.*;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
@@ -37,6 +34,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
 
     public final static int EXPIRATION_TIME = 30;
 
+    private String wif;
     private UserAccount source;
     private UserAccount destination;
     private AssetAmount transferred;
@@ -57,12 +55,14 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
      *                be implemented by the party interested in being notified about the success/failure
      *                of the transaction broadcast operation.
      */
-    public TransactionBroadcastSequence(UserAccount source,
+    public TransactionBroadcastSequence(String wif,
+                                        UserAccount source,
                                         UserAccount destination,
                                         AssetAmount transferred,
                                         AssetAmount fee,
                                         TransactionBroadcastListener listener){
         this.mListener = listener;
+        this.wif = wif;
         this.source = source;
         this.destination = destination;
         this.transferred = transferred;
@@ -96,7 +96,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 Type WitnessResponseType = new TypeToken<Integer>(){}.getType();
                 WitnessResponse<Integer> witnessResponse = gson.fromJson(response, WitnessResponseType);
                 broadcastApiId = witnessResponse.result;
-                
+
                 ApiCall getDynamicParametersCall = new ApiCall(0, "get_dynamic_global_properties", emptyParams, "2.0", currentId);
                 websocket.sendText(getDynamicParametersCall.toJsonString());
             }else if(baseResponse.id == GET_NETWORK_DYNAMIC_PARAMETERS){
@@ -120,7 +120,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                             .setAmount(this.transferred)
                             .setFee(this.fee)
                             .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime))
-                            .setPrivateKey(DumpedPrivateKey.fromBase58(null, Main.WIF).getKey())
+                            .setPrivateKey(DumpedPrivateKey.fromBase58(null, this.wif).getKey())
                             .build();
 
                     ArrayList<Serializable> transactionList = new ArrayList<>();

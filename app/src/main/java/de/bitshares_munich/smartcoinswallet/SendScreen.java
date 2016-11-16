@@ -45,9 +45,13 @@ import com.luminiasoft.bitshares.BaseOperation;
 import com.luminiasoft.bitshares.BlockData;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.Transfer;
+import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
+import com.luminiasoft.bitshares.errors.MalformedTransactionException;
+import com.luminiasoft.bitshares.models.ApiCall;
 
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
 import org.json.JSONArray;
@@ -55,6 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -1008,7 +1013,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
-        Log.d(TAG,"transferAmount. amount: "+amount+", symbol: "+symbol+", to: "+toAccount);
+        String fromAccount = spinnerFrom.getSelectedItem().toString();
+        Log.d(TAG,"transferAmount. amount: "+amount+", symbol: "+symbol+", from: "+fromAccount+", to: "+toAccount);
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String privateKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
@@ -1040,37 +1046,54 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Log.d(TAG, "amount: "+amount);
         Log.d(TAG, "asset_symbol: "+symbol);
         Log.d(TAG, "memo: "+memo);
-        long expirationPosixTime = (Application.blockTime * 1000) + 30000;
-        Date expirationDate = new Date(expirationPosixTime);
 
-        BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationPosixTime);
-        ArrayList<BaseOperation> operations = new ArrayList<BaseOperation>();
-        UserAccount from = new UserAccount("1.2.138632");
-        UserAccount to = new UserAccount("1.2.129848");
-        AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120"));
-        AssetAmount fee = new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0"));
-        operations.add(new Transfer(from, to, assetAmount, fee));
-        Transaction transaction = new Transaction(privateKey, blockData, operations);
-        byte[] serializedTransaction = transaction.toBytes();
-        Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
-        ECKey sk = transaction.getPrivateKey();
-        ECKey.ECDSASignature signature = null;
-        boolean isCanonical = false;
-        while(!isCanonical){
-            signature = sk.sign(hash);
-            isCanonical = signature.isCanonical();
+        try{
+            Transaction transaction = new TransferTransactionBuilder()
+                    .setSource(new UserAccount("1.2.138632"))
+                    .setDestination(new UserAccount("1.2.129848"))
+                    .setAmount(new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120")))
+                    .setFee(new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0")))
+                    .setBlockData(new BlockData(43408, 1430521623, 1479231969))
+                    .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
+                    .build();
+
+            ArrayList<Serializable> transactionList = new ArrayList<>();
+            transactionList.add(transaction);
+            ApiCall call = new ApiCall(4, "call", "broadcast_transaction", transactionList, "2.0", 1);
+            String jsonCall = call.toJsonString();
+            System.out.println("json call");
+            System.out.println(jsonCall);
+        }catch(MalformedTransactionException e){
+            Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
         }
 
-        String stringSignature = Util.bytesToHex(signature.encodeToDER());
-        Log.d(TAG, "Transaction signature: "+stringSignature);
+//        long expirationPosixTime = (Application.blockTime * 1000) + 30000;
+//        Date expirationDate = new Date(expirationPosixTime);
+//        BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationPosixTime);
+//        ArrayList<BaseOperation> operations = new ArrayList<BaseOperation>();
+//        UserAccount from = new UserAccount("1.2.138632");
+//        UserAccount to = new UserAccount("1.2.129848");
+//        AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(100), new Asset("1.3.120"));
+//        AssetAmount fee = new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0"));
+//        operations.add(new Transfer(from, to, assetAmount, fee));
+//        Transaction transaction = new Transaction(privateKey, blockData, operations);
+//        byte[] serializedTransaction = transaction.toBytes();
+//        Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
+//        ECKey sk = transaction.getPrivateKey();
+//        ECKey.ECDSASignature signature = null;
+//        boolean isCanonical = false;
+//        while(!isCanonical){
+//            signature = sk.sign(hash);
+//            isCanonical = signature.isCanonical();
+//        }
 
-        // This is experimental, and will definitely have some changes
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-        String expirationString = dateFormat.format(expirationDate);
-        String jsonTransaction = String.format("{'expiration': '%s','extensions': [],'operations': [[0,{'amount': {'amount': %d, 'asset_id': '1.3.120'},'extensions': [],'fee': {'amount': 264174, 'asset_id': '1.3.0'},'from': '1.2.138632','to': '1.2.129848'}]],'ref_block_num': %d,'ref_block_prefix': %d,'signatures': ['%s']}\n", expirationString, 100, Application.refBlockNum, Application.refBlockPrefix, Util.bytesToHex(signature.encodeToDER()));
-        Log.d(TAG, "jsonTransaction");
-        Log.d(TAG, jsonTransaction);
-        WebsocketAPI.sendData(jsonTransaction);
+//        String stringSignature = Util.bytesToHex(signature.encodeToDER());
+//
+//        // This is experimental, and will definitely have some changes
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+//        String expirationString = dateFormat.format(expirationDate);
+//        String jsonTransaction = String.format("{'expiration': '%s','extensions': [],'operations': [[0,{'amount': {'amount': %d, 'asset_id': '1.3.120'},'extensions': [],'fee': {'amount': 264174, 'asset_id': '1.3.0'},'from': '1.2.138632','to': '1.2.129848'}]],'ref_block_num': %d,'ref_block_prefix': %d,'signatures': ['%s']}\n", expirationString, 100, Application.refBlockNum, Application.refBlockPrefix, Util.bytesToHex(signature.encodeToDER()));
+//        WebsocketAPI.sendData(jsonTransaction);
 
         // Commenting all code below to deactivate current functionality
 //        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
