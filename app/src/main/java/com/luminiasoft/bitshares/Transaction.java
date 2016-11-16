@@ -154,7 +154,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         JsonObject obj = new JsonObject();
 
         // Formatting expiration time
-        Date expirationTime = new Date(blockData.getRelativeExpiration());
+        Date expirationTime = new Date(blockData.getRelativeExpiration() * 1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
