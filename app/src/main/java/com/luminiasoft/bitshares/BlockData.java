@@ -1,7 +1,13 @@
 package com.luminiasoft.bitshares;
 
+import com.luminiasoft.bitshares.interfaces.ByteSerializable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
- * Created by nelson on 11/5/16.
+ * This class encapsulates all block-related information needed in order to build a valid transaction.
  */
 public class BlockData implements ByteSerializable {
     private final int REF_BLOCK_NUM_BYTES = 2;
@@ -13,7 +19,7 @@ public class BlockData implements ByteSerializable {
     private long relativeExpiration;
 
     /**
-     * Block data class
+     * Block data constructor
      * @param ref_block_num: Least significant 16 bits from the reference block number.
      *                     If "relative_expiration" is zero, this field must be zero as well.
      * @param ref_block_prefix: The first non-block-number 32-bits of the reference block ID.
@@ -30,6 +36,48 @@ public class BlockData implements ByteSerializable {
         this.refBlockPrefix = ref_block_prefix;
         this.relativeExpiration = relative_expiration;
     }
+
+    /**
+     * Block data constructor that takes in raw blockchain information.
+     * @param head_block_number: The last block number.
+     * @param head_block_id: The last block apiId.
+     * @param relative_expiration: The relative expiration
+     */
+    public BlockData(long head_block_number, String head_block_id, long relative_expiration){
+        String hashData = head_block_id.substring(8, 16);
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < 8; i = i + 2){
+            builder.append(hashData.substring(6 - i, 8 - i));
+        }
+        this.refBlockNum = ((int) head_block_number ) & 0xFFFF;
+        this.refBlockPrefix = Long.parseLong(builder.toString(), 16);
+        this.relativeExpiration = relative_expiration;
+    }
+
+    public int getRefBlockNum() {
+        return refBlockNum;
+    }
+
+    public void setRefBlockNum(int refBlockNum) {
+        this.refBlockNum = refBlockNum;
+    }
+
+    public long getRefBlockPrefix() {
+        return refBlockPrefix;
+    }
+
+    public void setRefBlockPrefix(long refBlockPrefix) {
+        this.refBlockPrefix = refBlockPrefix;
+    }
+
+    public long getRelativeExpiration() {
+        return relativeExpiration;
+    }
+
+    public void setRelativeExpiration(long relativeExpiration) {
+        this.relativeExpiration = relativeExpiration;
+    }
+
 
     @Override
     public byte[] toBytes() {

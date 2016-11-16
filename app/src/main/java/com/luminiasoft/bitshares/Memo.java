@@ -1,5 +1,7 @@
 package com.luminiasoft.bitshares;
 
+import com.luminiasoft.bitshares.interfaces.ByteSerializable;
+
 /**
  * Created by nelson on 11/9/16.
  */

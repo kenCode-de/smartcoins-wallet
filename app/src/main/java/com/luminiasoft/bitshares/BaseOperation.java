@@ -1,9 +1,12 @@
 package com.luminiasoft.bitshares;
 
+import com.luminiasoft.bitshares.interfaces.ByteSerializable;
+import com.luminiasoft.bitshares.interfaces.JsonSerializable;
+
 /**
  * Created by nelson on 11/5/16.
  */
-public abstract class BaseOperation implements ByteSerializable {
+public abstract class BaseOperation implements ByteSerializable, JsonSerializable{
 
     protected OperationType type;
 

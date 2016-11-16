@@ -13,7 +13,6 @@ public class GrapheneObject {
     protected int space;
     protected int type;
     protected long instance;
-    protected String id;
 
     public GrapheneObject(String id){
         String[] parts = id.split("\\.");
@@ -22,6 +21,13 @@ public class GrapheneObject {
             this.type = Integer.parseInt(parts[1]);
             this.instance = Long.parseLong(parts[2]);
         }
-        this.id = id;
+    }
+
+    /**
+     *
+     * @return: A String containing the full object apiId in the form {space}.{type}.{instance}
+     */
+    public String getObjectId(){
+        return String.format("%d.%d.%d", space, type, instance);
     }
 }
