@@ -158,8 +158,8 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                     mListener.onError(new BaseResponse.Error(e.getMessage()));
                 }
             }else if(baseResponse.id == BROADCAST_TRANSACTION){
-                Type WitnessResponseType = new TypeToken<String>(){}.getType();
-                WitnessResponse<String> witnessResponse = gson.fromJson(response, WitnessResponseType);
+                Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();
+                WitnessResponse<WitnessResponse<String>> witnessResponse = gson.fromJson(response, WitnessResponseType);
                 if(witnessResponse.result == null){
                     mListener.onSuccess();
                 }else{
@@ -172,12 +172,14 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
 
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
+        Log.d(TAG,"onError");
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
+        Log.d(TAG,"handleCallbackError");
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
