@@ -1,9 +1,17 @@
 package com.luminiasoft.bitshares;
 
+import android.util.Log;
+
 import com.google.common.primitives.Bytes;
-import com.google.gson.*;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.luminiasoft.bitshares.interfaces.ByteSerializable;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
+
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
@@ -20,6 +28,8 @@ import java.util.TimeZone;
  * Class used to represent a generic graphene transaction.
  */
 public class Transaction implements ByteSerializable, JsonSerializable {
+    private final String TAG = this.getClass().getName();
+
     public static final String KEY_EXPIRATION = "expiration";
     public static final String KEY_SIGNATURES = "signatures";
     public static final String KEY_OPERATIONS = "operations";
@@ -74,6 +84,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         ECKey.ECDSASignature sig = null;
         while(!isCanonical) {
             sig = privateKey.sign(hash);
+            Log.d(TAG,"signature is canonical: "+sig.isCanonical());
             if(!sig.isCanonical()){
                 // Signature was not canonical, retrying
                 continue;
@@ -89,10 +100,10 @@ public class Transaction implements ByteSerializable, JsonSerializable {
                     break;
                 }else{
                     if(k == null){
-                        System.out.println("Recovered key was null");
+                        Log.d(TAG, "Recovered key was null");
                     }
                     if(k.getPubKeyPoint().equals(privateKey.getPubKeyPoint())){
-                        System.out.println("Recovered pub point is not equal to sk pub point");
+                        Log.d(TAG, "Recovered pub point is not equal to sk pub point");
                     }
                 }
             }

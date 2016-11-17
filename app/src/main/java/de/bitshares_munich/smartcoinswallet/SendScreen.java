@@ -49,9 +49,10 @@ import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.TransactionBroadcastListener;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -107,7 +108,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, TransactionBroadcastListener {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, WitnessResponseListener {
     private String TAG = "SendScreen";
     Context context;
 
@@ -115,7 +116,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
     AccountAssets loyaltyAsset;
-
     AccountAssets backupAssets;
 
     boolean validReceiver = false;
@@ -124,11 +124,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     boolean alwaysDonate = false;
     boolean validating = false;
 
-
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
-
     String backupAsset, receiverID, callbackURL;
+
+    private WebsocketWorkerThread mWebsocketThread;
 
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
@@ -1067,15 +1067,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
                     .build();
 
-            WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
-            // Create a WebSocket. The timeout value set above is used.
-            try {
-                mWebSocket = factory.createSocket(Application.urlsSocketConnection[0]);
-                mWebSocket.addListener(new TransactionBroadcastSequence(transaction, this));
-                WebsocketAPI.sendData(mWebSocket);
-            } catch (IOException e) {
-                Log.e(TAG, "IOExcetpion. Msg: "+e.getMessage());
-            }
+            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, this));
+            mWebsocketThread.start();
         }catch(MalformedTransactionException e){
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
         }
@@ -1769,7 +1762,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(WitnessResponse response) {
         Log.d(TAG, "onSuccess");
         hideDialog();
     }

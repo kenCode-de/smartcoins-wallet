@@ -11,7 +11,7 @@ import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.TransactionBroadcastListener;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.DynamicGlobalProperties;
@@ -51,7 +51,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     private AssetAmount transferred;
     private AssetAmount fee;
     private Transaction transaction;
-    private TransactionBroadcastListener mListener;
+    private WitnessResponseListener mListener;
 
     private int currentId = 1;
     private int broadcastApiId = -1;
@@ -72,7 +72,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                                         UserAccount destination,
                                         AssetAmount transferred,
                                         AssetAmount fee,
-                                        TransactionBroadcastListener listener){
+                                        WitnessResponseListener listener){
         this.mListener = listener;
         this.wif = wif;
         this.source = source;
@@ -81,7 +81,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
         this.fee = fee;
     }
 
-    public TransactionBroadcastSequence(Transaction transaction, TransactionBroadcastListener listener){
+    public TransactionBroadcastSequence(Transaction transaction, WitnessResponseListener listener){
         this.transaction = transaction;
         this.mListener = listener;
     }
@@ -161,7 +161,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();
                 WitnessResponse<WitnessResponse<String>> witnessResponse = gson.fromJson(response, WitnessResponseType);
                 if(witnessResponse.result == null){
-                    mListener.onSuccess();
+                    mListener.onSuccess(witnessResponse);
                 }else{
                     mListener.onError(witnessResponse.error);
                 }

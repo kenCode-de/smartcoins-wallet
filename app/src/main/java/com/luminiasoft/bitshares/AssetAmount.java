@@ -33,6 +33,7 @@ public class AssetAmount implements ByteSerializable, JsonSerializable{
         return this.amount;
     }
 
+    public Asset getAsset(){ return this.asset; }
     @Override
     public byte[] toBytes() {
         byte[] serialized = new byte[8 + 1];

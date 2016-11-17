@@ -12,7 +12,7 @@ public class BaseResponse {
         public int code;
         public String message;
         public Error(String message){
-            this.data = new ErrorData(message);
+            this.message = message;
         }
     }
 

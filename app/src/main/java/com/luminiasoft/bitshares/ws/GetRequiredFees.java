@@ -6,8 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BaseOperation;
-import com.luminiasoft.bitshares.interfaces.OnDatabaseQueryListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
+import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
@@ -27,11 +27,11 @@ import java.util.Map;
  */
 public class GetRequiredFees extends WebSocketAdapter {
 
-    private OnDatabaseQueryListener mListener;
+    private WitnessResponseListener mListener;
     private List<BaseOperation> operations;
     private Asset asset;
 
-    public GetRequiredFees(List<BaseOperation> operations, Asset asset, OnDatabaseQueryListener listener){
+    public GetRequiredFees(List<BaseOperation> operations, Asset asset, WitnessResponseListener listener){
         this.operations = operations;
         this.asset = asset;
         this.mListener = listener;
@@ -40,9 +40,9 @@ public class GetRequiredFees extends WebSocketAdapter {
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList<>();
-        accountParams.addAll(this.operations);
+        accountParams.add((Serializable) this.operations);
         accountParams.add(this.asset.getObjectId());
-        ApiCall getRequiredFees = new ApiCall(0, "get_required_fees", accountParams, "2.0", 1);
+        ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_REQUIRED_FEES, accountParams, "2.0", 1);
         websocket.sendText(getRequiredFees.toJsonString());
     }
 
@@ -50,28 +50,28 @@ public class GetRequiredFees extends WebSocketAdapter {
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
         Gson gson = new Gson();
-        BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
-        if(baseResponse.error != null){
-            mListener.onResult(response);
-        }else{
-            mListener.onError(response);
-        }
 
-        //TODO: Maybe it would be better if the OnDatabaseQueryListener could take parsed objects instead of a raw String
+        Type GetRequiredFeesResponse = new TypeToken<WitnessResponse<List<AssetAmount>>>(){}.getType();
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetDeserializer());
-        AssetAmount assetAmount = gsonBuilder.create().fromJson(response, AssetAmount.class);
+        WitnessResponse<List<AssetAmount>> witnessResponse = gsonBuilder.create().fromJson(response, GetRequiredFeesResponse);
+
+        if(witnessResponse.error != null){
+            mListener.onError(witnessResponse.error);
+        }else{
+            mListener.onSuccess(witnessResponse);
+        }
     }
 
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        mListener.onError(cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        mListener.onError(cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 }

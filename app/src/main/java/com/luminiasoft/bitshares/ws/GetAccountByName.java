@@ -2,8 +2,8 @@ package com.luminiasoft.bitshares.ws;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.interfaces.JsonSerializable;
-import com.luminiasoft.bitshares.interfaces.OnDatabaseQueryListener;
+import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -25,9 +25,9 @@ import java.util.Map;
 public class GetAccountByName extends WebSocketAdapter {
 
     private String accountName;
-    private OnDatabaseQueryListener mListener;
+    private WitnessResponseListener mListener;
 
-    public GetAccountByName(String accountName, OnDatabaseQueryListener listener){
+    public GetAccountByName(String accountName, WitnessResponseListener listener){
         this.accountName = accountName;
         this.mListener = listener;
     }
@@ -36,7 +36,7 @@ public class GetAccountByName extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList<>();
         accountParams.add(this.accountName);
-        ApiCall getAccountByName = new ApiCall(0, "get_account_by_name", accountParams, "2.0", 1);
+        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_ACCOUNT_BY_NAME, accountParams, "2.0", 1);
         websocket.sendText(getAccountByName.toJsonString());
     }
 
@@ -45,26 +45,27 @@ public class GetAccountByName extends WebSocketAdapter {
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
-        Type WitnessResponseType = new TypeToken<AccountProperties>(){}.getType();
-        WitnessResponse<AccountProperties> witnessResponse = gson.fromJson(response, WitnessResponseType);
+        Type GetAccountByNameResponse = new TypeToken<WitnessResponse<AccountProperties>>(){}.getType();
+        WitnessResponse<WitnessResponse<AccountProperties>> witnessResponse = gson.fromJson(response, GetAccountByNameResponse);
 
         if(witnessResponse.error != null){
-            this.mListener.onError(witnessResponse.error.data.message);
+            this.mListener.onError(witnessResponse.error);
         }else{
-            this.mListener.onResult(witnessResponse.result.id);
+            this.mListener.onSuccess(witnessResponse);
         }
+
         websocket.disconnect();
     }
 
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        mListener.onError(cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        mListener.onError(cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 }

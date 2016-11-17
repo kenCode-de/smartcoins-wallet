@@ -21,8 +21,8 @@ public class AccountProperties {
     public String[] blacklisting_accounts;
     public String[] whitelisted_accounts;
     public String[] blacklisted_accounts;
-    public String[] owner_special_authority;
-    public String[] active_special_authority;
+    public Object[] owner_special_authority;
+    public Object[] active_special_authority;
     public long top_n_control_flags;
 
     class User {

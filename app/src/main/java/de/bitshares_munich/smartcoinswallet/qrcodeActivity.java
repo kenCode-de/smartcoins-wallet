@@ -4,47 +4,22 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.view.View;
-
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.PlanarYUVLuminanceSource;
-import com.google.zxing.ReaderException;
-import com.google.zxing.common.HybridBinarizer;
-import com.loopj.android.http.*;
 
 import com.google.zxing.Result;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-
-import cz.msebera.android.httpclient.*;
 import de.bitshares_munich.utils.SupportMethods;
-import me.dm7.barcodescanner.core.DisplayUtils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
 public class qrcodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
+    private static String TAG = "qrcodeActivity";
     private ZXingScannerView mScannerView;
     int id;
     /**
@@ -162,6 +137,8 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         finish();
     }
     private void StartWithfinishWithResult(String parseddata) {
+        Log.d(TAG, "StartWithfinishWithResult");
+        Log.d(TAG, "parsed data: "+parseddata);
         Bundle conData = new Bundle();
         SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
