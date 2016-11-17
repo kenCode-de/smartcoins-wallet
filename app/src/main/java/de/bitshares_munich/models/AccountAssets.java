@@ -11,7 +11,6 @@ public class AccountAssets {
     public String account_id;
     public String symbol;
     public String account;
-    public String asset_id;
     public String ammount;
 
 }
