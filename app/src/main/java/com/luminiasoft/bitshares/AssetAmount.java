@@ -78,11 +78,9 @@ public class AssetAmount implements ByteSerializable, JsonSerializable{
 
         @Override
         public AssetAmount deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject object = json.getAsJsonObject();
-            JsonArray array  = object.getAsJsonArray("result");
-            JsonObject jsonObject = (JsonObject) array.get(0);
-            AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(jsonObject.get(KEY_AMOUNT).toString()),
-                    new Asset(jsonObject.get(KEY_ASSET_ID).getAsString()));
+            Long amount = json.getAsJsonObject().get(KEY_AMOUNT).getAsLong();
+            String assetId = json.getAsJsonObject().get(KEY_ASSET_ID).getAsString();
+            AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId));
             return assetAmount;
         }
     }
