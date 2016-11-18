@@ -211,8 +211,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
-    private WebSocket mWebSocket;
-
     private void startupTasks() {
         runningSpinerForFirstTime = true;
         init();
@@ -265,7 +263,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
         cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
-
 
         startupTasks();
 
@@ -1764,7 +1761,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Override
     public void onSuccess(WitnessResponse response) {
         Log.d(TAG, "onSuccess");
-        hideDialog();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideDialog();
+                etAmount.setText("");
+                Toast.makeText(SendScreen.this, "Success!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
