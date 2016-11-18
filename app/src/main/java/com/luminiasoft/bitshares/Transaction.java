@@ -72,11 +72,14 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         return this.privateKey;
     }
 
+    public List<BaseOperation> getOperations(){ return this.operations; }
+
     /**
      * Obtains a signature of this transaction.
      * @return: A valid signature of the current transaction.
      */
     public byte[] getSignature(){
+        Log.d(TAG,"getSignature");
         byte[] serializedTransaction = this.toBytes();
         Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
         boolean isCanonical = false;
@@ -113,6 +116,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         sigData[0] = (byte)headerByte;
         System.arraycopy(Utils.bigIntegerToBytes(sig.r, 32), 0, sigData, 1, 32);
         System.arraycopy(Utils.bigIntegerToBytes(sig.s, 32), 0, sigData, 33, 32);
+        Log.d(TAG, "Signature: "+Util.bytesToHex(sigData));
         return sigData;
     }
 
