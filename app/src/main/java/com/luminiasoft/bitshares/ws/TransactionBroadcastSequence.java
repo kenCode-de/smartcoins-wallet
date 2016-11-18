@@ -4,13 +4,12 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.BaseOperation;
 import com.luminiasoft.bitshares.BlockData;
 import com.luminiasoft.bitshares.RPC;
 import com.luminiasoft.bitshares.Transaction;
+import com.luminiasoft.bitshares.Transfer;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -20,8 +19,6 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
-
-import org.bitcoinj.core.DumpedPrivateKey;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -42,45 +39,25 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     private final static int GET_NETWORK_BROADCAST_ID = 2;
     private final static int GET_NETWORK_DYNAMIC_PARAMETERS = 3;
     private final static int BROADCAST_TRANSACTION = 4;
-
     public final static int EXPIRATION_TIME = 30;
 
-    private String wif;
-    private UserAccount source;
-    private UserAccount destination;
-    private AssetAmount transferred;
-    private AssetAmount fee;
     private Transaction transaction;
+    private long expirationTime;
+    private String headBlockId;
+    private long headBlockNumber;
     private WitnessResponseListener mListener;
 
     private int currentId = 1;
     private int broadcastApiId = -1;
-
+    private int retries = 0;
 
     /**
      * Constructor of this class. The ids required
-     * @param source: The source user account.
-     * @param destination: The destination account.
-     * @param transferred: The asset being transferred.
-     * @param fee: The fee that is being charged.
-     * @param listener: A class implementing the TransactionBroadcastListener interface. This should
+     * @param transaction: The transaction to be broadcasted.
+     * @param listener: A class implementing the WitnessResponseListener interface. This should
      *                be implemented by the party interested in being notified about the success/failure
      *                of the transaction broadcast operation.
      */
-    public TransactionBroadcastSequence(String wif,
-                                        UserAccount source,
-                                        UserAccount destination,
-                                        AssetAmount transferred,
-                                        AssetAmount fee,
-                                        WitnessResponseListener listener){
-        this.mListener = listener;
-        this.wif = wif;
-        this.source = source;
-        this.destination = destination;
-        this.transferred = transferred;
-        this.fee = fee;
-    }
-
     public TransactionBroadcastSequence(Transaction transaction, WitnessResponseListener listener){
         this.transaction = transaction;
         this.mListener = listener;
@@ -101,7 +78,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
         Log.d(TAG, "<< "+response);
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
-        if(baseResponse.error != null){
+        if(baseResponse.error != null && baseResponse.error.message.indexOf("is_canonical") == -1){
             mListener.onError(baseResponse.error);
             websocket.disconnect();
         }else{
@@ -127,45 +104,65 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 Date date = dateFormat.parse(dynamicProperties.time);
 
                 // Obtained block data
-                long expirationTime = (date.getTime() / 1000) + EXPIRATION_TIME;
-                String headBlockId = dynamicProperties.head_block_id;
-                long headBlockNumber = dynamicProperties.head_block_number;
+                expirationTime = (date.getTime() / 1000) + EXPIRATION_TIME;
+                headBlockId = dynamicProperties.head_block_id;
+                headBlockNumber = dynamicProperties.head_block_number;
 
-                try{
-                    if(this.transaction == null){
-                        transaction = new TransferTransactionBuilder()
-                                .setSource(this.source)
-                                .setDestination(this.destination)
-                                .setAmount(this.transferred)
-                                .setFee(this.fee)
-                                .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime))
-                                .setPrivateKey(DumpedPrivateKey.fromBase58(null, this.wif).getKey())
-                                .build();
-                    }
+                ArrayList<Serializable> transactionList = new ArrayList<>();
+                transactionList.add(transaction);
+                ApiCall call = new ApiCall(broadcastApiId,
+                        RPC.CALL_BROADCAST_TRANSACTION,
+                        transactionList,
+                        "2.0",
+                        currentId);
 
-                    ArrayList<Serializable> transactionList = new ArrayList<>();
-                    transactionList.add(transaction);
-                    ApiCall call = new ApiCall(broadcastApiId,
-                            RPC.CALL_BROADCAST_TRANSACTION,
-                            transactionList,
-                            "2.0",
-                            currentId);
-                    String jsonCall = call.toJsonString();
-
-                    // Finally sending transaction
-                    websocket.sendText(jsonCall);
-                }catch(MalformedTransactionException e){
-                    mListener.onError(new BaseResponse.Error(e.getMessage()));
-                }
-            }else if(baseResponse.id == BROADCAST_TRANSACTION){
+                // Finally sending transaction
+                websocket.sendText(call.toJsonString());
+            }else if(baseResponse.id >= BROADCAST_TRANSACTION){
                 Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();
                 WitnessResponse<WitnessResponse<String>> witnessResponse = gson.fromJson(response, WitnessResponseType);
-                if(witnessResponse.result == null){
+                if(witnessResponse.error == null){
                     mListener.onSuccess(witnessResponse);
+                    websocket.disconnect();
                 }else{
-                    mListener.onError(witnessResponse.error);
+                    if(witnessResponse.error.message.indexOf("is_canonical") != -1 && retries < 10){
+                        /*
+                        * This is a very ugly hack, but it will do for now.
+                        *
+                        * The issue is that the witness is complaining about the signature not
+                        * being canonical even though the bitcoinj ECKey.ECDSASignature.isCanonical()
+                        * method says it is! We'll have to dive deeper into this issue and avoid
+                        * this error altogether
+                        *
+                        * But this MUST BE FIXED! Since this hack will only work for transactions
+                        * with ONE transfer operation.
+                        */
+                        retries++;
+                        Log.e(TAG, "Got signature not canonical error, retying");
+                        List<BaseOperation> operations = this.transaction.getOperations();
+                        Transfer transfer = (Transfer) operations.get(0);
+                        transaction = new TransferTransactionBuilder()
+                                .setSource(transfer.getFrom())
+                                .setDestination(transfer.getTo())
+                                .setAmount(transfer.getAmount())
+                                .setFee(transfer.getFee())
+                                .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime + EXPIRATION_TIME))
+                                .setPrivateKey(transaction.getPrivateKey())
+                                .build();
+                        ArrayList<Serializable> transactionList = new ArrayList<>();
+                        transactionList.add(transaction);
+                        ApiCall call = new ApiCall(broadcastApiId,
+                                RPC.CALL_BROADCAST_TRANSACTION,
+                                transactionList,
+                                "2.0",
+                                currentId);
+                        websocket.sendText(call.toJsonString());
+                    }else{
+                        Log.e(TAG,"Other error");
+                        mListener.onError(witnessResponse.error);
+                        websocket.disconnect();
+                    }
                 }
-                websocket.disconnect();
             }
         }
     }
@@ -186,6 +183,8 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
 
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        Log.d(TAG, ">> "+frame.getPayloadText());
+        if(frame.isTextFrame()){
+            Log.d(TAG, ">> "+frame.getPayloadText());
+        }
     }
 }
