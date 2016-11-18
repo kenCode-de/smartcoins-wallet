@@ -1,8 +1,12 @@
 package com.luminiasoft.bitshares;
 
 import com.google.common.primitives.Bytes;
-import com.google.gson.*;
-import com.luminiasoft.bitshares.interfaces.JsonSerializable;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
@@ -47,6 +51,22 @@ public class Transfer extends BaseOperation {
     @Override
     public byte getId() {
         return (byte) this.type.ordinal();
+    }
+
+    public UserAccount getFrom(){
+        return this.from;
+    }
+
+    public UserAccount getTo(){
+        return this.to;
+    }
+
+    public AssetAmount getAmount(){
+        return this.amount;
+    }
+
+    public AssetAmount getFee(){
+        return this.fee;
     }
 
     @Override
