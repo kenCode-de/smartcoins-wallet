@@ -82,7 +82,8 @@ public class ApiCall implements JsonSerializable {
                 }
                 methodParams.add(array);
             }
-        }        paramsArray.add(methodParams);
+        }
+        paramsArray.add(methodParams);
         obj.add(KEY_PARAMS, paramsArray);
         obj.addProperty(KEY_JSON_RPC, this.jsonrpc);
         return obj;

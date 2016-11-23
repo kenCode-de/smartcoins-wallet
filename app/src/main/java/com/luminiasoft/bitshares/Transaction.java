@@ -1,7 +1,5 @@
 package com.luminiasoft.bitshares;
 
-import android.util.Log;
-
 import com.google.common.primitives.Bytes;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -79,7 +77,6 @@ public class Transaction implements ByteSerializable, JsonSerializable {
      * @return: A valid signature of the current transaction.
      */
     public byte[] getSignature(){
-        Log.d(TAG,"getSignature");
         byte[] serializedTransaction = this.toBytes();
         Sha256Hash hash = Sha256Hash.wrap(Sha256Hash.hash(serializedTransaction));
         boolean isCanonical = false;
@@ -87,7 +84,6 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         ECKey.ECDSASignature sig = null;
         while(!isCanonical) {
             sig = privateKey.sign(hash);
-            Log.d(TAG,"signature is canonical: "+sig.isCanonical());
             if(!sig.isCanonical()){
                 // Signature was not canonical, retrying
                 continue;
@@ -101,13 +97,6 @@ public class Transaction implements ByteSerializable, JsonSerializable {
                 if (k != null && k.getPubKeyPoint().equals(privateKey.getPubKeyPoint())) {
                     recId = i;
                     break;
-                }else{
-                    if(k == null){
-                        Log.d(TAG, "Recovered key was null");
-                    }
-                    if(k.getPubKeyPoint().equals(privateKey.getPubKeyPoint())){
-                        Log.d(TAG, "Recovered pub point is not equal to sk pub point");
-                    }
                 }
             }
         }
@@ -116,7 +105,6 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         sigData[0] = (byte)headerByte;
         System.arraycopy(Utils.bigIntegerToBytes(sig.r, 32), 0, sigData, 1, 32);
         System.arraycopy(Utils.bigIntegerToBytes(sig.s, 32), 0, sigData, 33, 32);
-        Log.d(TAG, "Signature: "+Util.bytesToHex(sigData));
         return sigData;
     }
 

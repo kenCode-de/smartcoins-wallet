@@ -1,7 +1,5 @@
 package com.luminiasoft.bitshares.ws;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.BaseOperation;
@@ -75,7 +73,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
-        Log.d(TAG, "<< "+response);
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
         if(baseResponse.error != null && baseResponse.error.message.indexOf("is_canonical") == -1){
@@ -138,7 +135,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                         * with ONE transfer operation.
                         */
                         retries++;
-                        Log.e(TAG, "Got signature not canonical error, retying");
                         List<BaseOperation> operations = this.transaction.getOperations();
                         Transfer transfer = (Transfer) operations.get(0);
                         transaction = new TransferTransactionBuilder()
@@ -158,7 +154,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                                 currentId);
                         websocket.sendText(call.toJsonString());
                     }else{
-                        Log.e(TAG,"Other error");
                         mListener.onError(witnessResponse.error);
                         websocket.disconnect();
                     }
@@ -169,22 +164,13 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
 
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        Log.d(TAG,"onError");
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        Log.d(TAG,"handleCallbackError");
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
-    }
-
-    @Override
-    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame()){
-            Log.d(TAG, ">> "+frame.getPayloadText());
-        }
     }
 }
