@@ -2,23 +2,21 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
  * Created by qasim on 5/19/16.
  */
 public class SplashActivity extends Activity {
-
+    private String TAG = "SplashActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +34,18 @@ public class SplashActivity extends Activity {
         TinyDB tinyDB = new TinyDB(getApplicationContext());
 
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-
+        for(AccountDetails account : arrayList){
+            Log.d(TAG, "account: "+account.toString());
+        }
         if (arrayList != null && arrayList.size() > 0) {
+            Log.d(TAG, "we have at least one account!");
             if (Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist))) {
+                Log.d(TAG,"backup bin exists");
                 moveToMainScreen(tinyDB);
             } else {
+                Log.d(TAG,"backup bin does not exist");
                 moveToBackupBrainKey();
             }
-
         } else {
             moveToAccountScreen();
         }
@@ -84,6 +86,4 @@ public class SplashActivity extends Activity {
         startActivity(i);
         finish();
     }
-
-
 }

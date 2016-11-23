@@ -4,29 +4,22 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,12 +29,10 @@ import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
-import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 public class TabActivity extends BaseActivity {
-
+    private String TAG = this.getClass().getName();
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -148,8 +139,11 @@ public class TabActivity extends BaseActivity {
                 for (int i = 0; i < accountDetails.size(); i++) {
                     if (accountDetails.get(i).isSelected) {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            Log.d(TAG, "pin code matches");
                             dialog.cancel();
                             break;
+                        }else{
+                            Log.d(TAG, "pin code doesn't match");
                         }
                     }
                 }

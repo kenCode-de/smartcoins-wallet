@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.luminiasoft.bitshares.BrainKey;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,9 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +46,6 @@ import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.GenerateKeys;
 import de.bitshares_munich.models.RegisterAccount;
-import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
@@ -64,7 +62,7 @@ import retrofit2.Response;
 
 
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
-
+    private final String TAG = this.getClass().getName();
     Context context;
     TinyDB tinyDB;
 
@@ -349,52 +347,58 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
     private void generateKeys() {
-        HashMap hm = new HashMap();
-        hm.put("method", "generate_keys");
+        //TODO: Read brainkey dictionary from assets or resources
+        BrainKey brainKey = new BrainKey();
 
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<GenerateKeys> postingService = service.getGeneratedKeys(hm);
-        postingService.enqueue(new Callback<GenerateKeys>() {
-            @Override
-            public void onResponse(Response<GenerateKeys> response) {
-
-                if (response.isSuccess()) {
-
-
-                    GenerateKeys resp = response.body();
-                    if (resp.status.equals("success")) {
-                        try {
-
-                            pubKey = resp.keys.pub_key;
-                            wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-                            brainPrivKey = resp.keys.brain_priv_key;
-                            String accountName = etAccountName.getText().toString();
-
-                            registerdKeys(accountName, resp.keys.pub_key);
-                        } catch (Exception e) {
-
-                            generateKeys();
-
-                        }
-
-                    } else if (resp.status.equals("failure")) {
-                        generateKeys();
-
-                    }
-                } else {
-                    generateKeys();
-                    Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                SupportMethods.testing("accountActivity", t, "past_break");
-                generateKeys();
-            }
-        });
+        //TODO: Generate keys locally and call method registerdKeys
+//        HashMap hm = new HashMap();
+//        hm.put("method", "generate_keys");
+//        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+//        ServiceGenerator sg = new ServiceGenerator("http://54.165.40.16:9003");
+//        IWebService service = sg.getService(IWebService.class);
+//        final Call<GenerateKeys> postingService = service.getGeneratedKeys(hm);
+//        postingService.enqueue(new Callback<GenerateKeys>() {
+//            @Override
+//            public void onResponse(Response<GenerateKeys> response) {
+//                Log.d(TAG, "onResponse");
+//                Log.d(TAG, "isSuccess: "+response.isSuccess());
+//                if (response.isSuccess()) {
+//
+//
+//                    GenerateKeys resp = response.body();
+//                    Log.d(TAG, "private key wif: "+resp.keys.wif_priv_key);
+//                    if (resp.status.equals("success")) {
+//                        try {
+//
+//                            pubKey = resp.keys.pub_key;
+//                            wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
+//                            brainPrivKey = resp.keys.brain_priv_key;
+//                            String accountName = etAccountName.getText().toString();
+//
+//                            registerdKeys(accountName, resp.keys.pub_key);
+//                        } catch (Exception e) {
+//
+//                            generateKeys();
+//
+//                        }
+//
+//                    } else if (resp.status.equals("failure")) {
+//                        generateKeys();
+//
+//                    }
+//                } else {
+//                    generateKeys();
+//                    Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                SupportMethods.testing("accountActivity", t, "past_break");
+//                generateKeys();
+//            }
+//        });
     }
 
     private void registerdKeys(final String accountName, String key) {
