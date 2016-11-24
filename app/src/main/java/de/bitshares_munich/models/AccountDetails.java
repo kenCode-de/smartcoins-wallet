@@ -78,13 +78,15 @@ public class AccountDetails {
             Log.e(TAG, "JSONException while trying to serialize posBackupAsset");
         }
         JSONArray array = new JSONArray();
-        for(AccountAssets asset : AccountAssets){
-            array.put(asset);
-        }
-        try {
-            obj.put("AccountAssets", array);
-        } catch (JSONException e) {
-            Log.e(TAG, "JSONException while trying to serialize AccountAssets");
+        if(AccountAssets != null){
+            for(AccountAssets asset : AccountAssets){
+                array.put(asset);
+            }
+            try {
+                obj.put("AccountAssets", array);
+            } catch (JSONException e) {
+                Log.e(TAG, "JSONException while trying to serialize AccountAssets");
+            }
         }
         try {
             obj.put("isSelected", isSelected);
