@@ -36,4 +36,6 @@ public class Address {
         byte[] pubKeyChecksummed = Bytes.concat(pubKey, Arrays.copyOfRange(checksum, 0, 4));
         return this.prefix + Base58.encode(pubKeyChecksummed);
     }
+
+
 }

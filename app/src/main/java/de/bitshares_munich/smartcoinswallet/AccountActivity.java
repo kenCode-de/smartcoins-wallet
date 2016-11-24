@@ -24,16 +24,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.BrainKey;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -348,7 +351,25 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     private void generateKeys() {
         //TODO: Read brainkey dictionary from assets or resources
-        BrainKey brainKey = new BrainKey();
+        try {
+            InputStream is = getResources().getAssets().open("brainkeydict.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String possible = reader.readLine();
+
+        String suggested = BrainKey.suggest(possible);
+        BrainKey brainKey = new BrainKey(suggested,0);
+
+        Address address = new Address(brainKey.getPrivateKey());
+
+        pubKey = address.toString();
+        //wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
+        //brainPrivKey = resp.keys.brain_priv_key;
+        String accountName = etAccountName.getText().toString();
+
+        registerdKeys(accountName, pubKey);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //TODO: Generate keys locally and call method registerdKeys
 //        HashMap hm = new HashMap();
