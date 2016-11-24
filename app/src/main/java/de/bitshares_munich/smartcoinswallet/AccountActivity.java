@@ -360,8 +360,23 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         try {
             reader = new BufferedReader(new InputStreamReader(getAssets().open(BRAINKEY_FILE), "UTF-8"));
             dictionary = reader.readLine();
+
+            String brainKeySuggestion = BrainKey.suggest(dictionary);
+            BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
+            Address address = new Address(brainKey.getPrivateKey());
+            Log.d(TAG,"brain key suggestion");
+            Log.d(TAG, brainKeySuggestion);
+
+            mAddress = address.toString();
+            brainPrivKey = brainKeySuggestion;
+            try {
+                wifPrivKey = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
+                createAccount();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(),R.string.error_wif , Toast.LENGTH_SHORT).show();
+            }
         } catch (IOException e) {
-            Log.e(TAG,"IOException while reading brainkey dictionary file. Msg: "+e.getMessage());
+            Toast.makeText(getApplicationContext(),R.string.error_read_dict_file , Toast.LENGTH_SHORT).show();
         } finally {
             if (reader != null) {
                 try {
@@ -370,20 +385,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     Log.e(TAG, "IOException while trying to close BufferedReader. Msg: "+e.getMessage());
                 }
             }
-        }
-        String brainKeySuggestion = BrainKey.suggest(dictionary);
-        BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
-        Address address = new Address(brainKey.getPrivateKey());
-        Log.d(TAG,"brain key suggestion");
-        Log.d(TAG, brainKeySuggestion);
-
-        mAddress = address.toString();
-        brainPrivKey = brainKeySuggestion;
-        try {
-            wifPrivKey = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
-            createAccount();
-        } catch (Exception e) {
-            Log.e(TAG,"Exception while encrypting WIF. Msg : "+e.getMessage());
         }
     }
 
