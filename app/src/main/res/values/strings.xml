@@ -337,6 +337,9 @@
     <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
     <string name="txt_alertmsg_la">account from this wallet?</string>
 
+    <string name="error_wif">Error creating WIF key</string>
+    <string name="error_read_dict_file">Error reading dictionary file</string>
+
     <string name="try_again">Please try again after 5 minutes</string>
     <string name="warning_msg_same_account">You can\'t send amount into the same account</string>
     <string name="bugs_or_errors">Bugs or Errors?</string>
