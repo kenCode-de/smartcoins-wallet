@@ -2,26 +2,16 @@ package com.luminiasoft.bitshares;
 
 import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
+
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Base64;
-import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.BitcoinSerializer;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.utils.MonetaryFormat;
-import org.spongycastle.crypto.digests.RIPEMD160Digest;
-import org.spongycastle.crypto.digests.SHA512Digest;
 
 /**
  * Class used to encapsulate all BrainKey-related operations.
@@ -39,8 +29,7 @@ public class BrainKey {
     /**
      * Method that will generate a random brain key
      *
-     * @param words The list of words from the graphene specification
-     * dictionary.
+     * @param words The list of words from the graphene specification dictionary.
      * @return A random sequence of words
      */
     public static String suggest(String words) {
@@ -55,11 +44,13 @@ public class BrainKey {
             index = secureRandom.nextInt(DICT_WORD_COUNT - 1);
             suggestedBrainKey.add(wordArray[index].toUpperCase());
         }
-        String result = String.join(" ", suggestedBrainKey.toArray(new String[suggestedBrainKey.size()]));
-        System.out.println("result: '" + result + "'");
-        return result;
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String word : suggestedBrainKey){
+            stringBuilder.append(word);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString().trim();
     }
-
     /**
      * BrainKey constructor that takes as argument a specific brain key word
      * sequence and generates the private key and address from that.
@@ -82,11 +73,30 @@ public class BrainKey {
             System.out.println("UnsupportedEncodingException. Msg: " + e.getMessage());
         }
     }
+
+    /**
+     * Gets the array of bytes representing the public key.
+     * @return
+     */
     public byte[] getPublicKey() {
         return mPrivateKey.getPubKey();
     }
 
+    /**
+     * Returns the private key as an instance of the ECKey class.
+     * @return
+     */
     public ECKey getPrivateKey() {
         return mPrivateKey;
+    }
+
+    /**
+     * Returns the private key in the Wallet Import Format for the uncompressed private key.
+     * @see <a href="https://en.bitcoin.it/wiki/Wallet_import_format">WIF</a>
+     * @return
+     */
+    public String getWalletImportFormat(){
+        DumpedPrivateKey wif = this.mPrivateKey.decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+        return wif.toString();
     }
 }
