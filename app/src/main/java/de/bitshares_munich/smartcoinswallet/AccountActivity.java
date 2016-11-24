@@ -363,7 +363,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         pubKey = address.toString();
         //wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-        //brainPrivKey = resp.keys.brain_priv_key;
+        brainPrivKey = suggested;
         String accountName = etAccountName.getText().toString();
 
         registerdKeys(accountName, pubKey);
