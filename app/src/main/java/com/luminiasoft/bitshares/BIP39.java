@@ -1,13 +1,13 @@
 package com.luminiasoft.bitshares;
 
-import java.util.Arrays;
-import java.util.Base64;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.crypto.MnemonicCode;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 import org.spongycastle.crypto.digests.SHA512Digest;
+
+import java.util.Arrays;
 
 /**
  *

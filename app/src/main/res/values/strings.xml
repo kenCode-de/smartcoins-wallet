@@ -37,6 +37,7 @@
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="mismatch_pin">mismatch pin</string>
+    <string name="error_invalid_account">Invalid account</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
     <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>
@@ -257,7 +258,7 @@
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
-    <string name="account_create_url">http://fr.blockpay.ch:5000</string>
+    <string name="account_create_url">http://fr.blockpay.ch:5001</string>
 
     <string name="account_from_brainkey_url">http://fr.blockpay.ch:9003</string>
     <string name="decode_memos_array_url">http://fr.blockpay.ch:9004</string>

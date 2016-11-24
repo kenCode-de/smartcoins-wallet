@@ -47,7 +47,6 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.GenerateKeys;
 import de.bitshares_munich.models.RegisterAccount;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
@@ -66,6 +65,9 @@ import retrofit2.Response;
 
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
     private final String TAG = this.getClass().getName();
+
+    private final String BRAINKEY_FILE = "brainkeydict.txt";
+
     Context context;
     TinyDB tinyDB;
 
@@ -109,7 +111,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     ImageView ivSocketConnected;
 
 
-    String pubKey;
+    String mAddress;
     String wifPrivKey;
     String brainPrivKey;
     Boolean hasNumber;
@@ -348,93 +350,59 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         return name.contains("-");
     }
 
-
+    /**
+     * Method that generates a fresh brainkey.
+     */
     private void generateKeys() {
-        //TODO: Read brainkey dictionary from assets or resources
+        Log.d(TAG,"generateKeys");
+        BufferedReader reader = null;
+        String dictionary = null;
         try {
-            InputStream is = getResources().getAssets().open("brainkeydict.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-            String possible = reader.readLine();
-
-        String suggested = BrainKey.suggest(possible);
-        BrainKey brainKey = new BrainKey(suggested,0);
-
-        Address address = new Address(brainKey.getPrivateKey());
-
-        pubKey = address.toString();
-        //wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-        brainPrivKey = suggested;
-        String accountName = etAccountName.getText().toString();
-
-        registerdKeys(accountName, pubKey);
+            reader = new BufferedReader(new InputStreamReader(getAssets().open(BRAINKEY_FILE), "UTF-8"));
+            dictionary = reader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG,"IOException while reading brainkey dictionary file. Msg: "+e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "IOException while trying to close BufferedReader. Msg: "+e.getMessage());
+                }
+            }
         }
+        String brainKeySuggestion = BrainKey.suggest(dictionary);
+        BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
+        Address address = new Address(brainKey.getPrivateKey());
+        Log.d(TAG,"brain key suggestion");
+        Log.d(TAG, brainKeySuggestion);
 
-        //TODO: Generate keys locally and call method registerdKeys
-//        HashMap hm = new HashMap();
-//        hm.put("method", "generate_keys");
-//        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-//        ServiceGenerator sg = new ServiceGenerator("http://54.165.40.16:9003");
-//        IWebService service = sg.getService(IWebService.class);
-//        final Call<GenerateKeys> postingService = service.getGeneratedKeys(hm);
-//        postingService.enqueue(new Callback<GenerateKeys>() {
-//            @Override
-//            public void onResponse(Response<GenerateKeys> response) {
-//                Log.d(TAG, "onResponse");
-//                Log.d(TAG, "isSuccess: "+response.isSuccess());
-//                if (response.isSuccess()) {
-//
-//
-//                    GenerateKeys resp = response.body();
-//                    Log.d(TAG, "private key wif: "+resp.keys.wif_priv_key);
-//                    if (resp.status.equals("success")) {
-//                        try {
-//
-//                            pubKey = resp.keys.pub_key;
-//                            wifPrivKey = Crypt.getInstance().encrypt_string(resp.keys.wif_priv_key);
-//                            brainPrivKey = resp.keys.brain_priv_key;
-//                            String accountName = etAccountName.getText().toString();
-//
-//                            registerdKeys(accountName, resp.keys.pub_key);
-//                        } catch (Exception e) {
-//
-//                            generateKeys();
-//
-//                        }
-//
-//                    } else if (resp.status.equals("failure")) {
-//                        generateKeys();
-//
-//                    }
-//                } else {
-//                    generateKeys();
-//                    Toast.makeText(context, R.string.txt_no_internet_connection , Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                SupportMethods.testing("accountActivity", t, "past_break");
-//                generateKeys();
-//            }
-//        });
+        mAddress = address.toString();
+        brainPrivKey = brainKeySuggestion;
+        try {
+            wifPrivKey = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
+            createAccount();
+        } catch (Exception e) {
+            Log.e(TAG,"Exception while encrypting WIF. Msg : "+e.getMessage());
+        }
     }
 
-    private void registerdKeys(final String accountName, String key) {
-
+    /**
+     * Method that sends the account-creation request to the faucet server.
+     * Only account name and public address is sent here.
+     */
+    private void createAccount() {
+        final String accountName = etAccountName.getText().toString();
         HashMap<String, Object> hm = new HashMap<>();
         hm.put("name", accountName);
-        hm.put("owner_key", key);
-        hm.put("active_key", key);
-        hm.put("memo_key", key);
+        hm.put("owner_key", mAddress);
+        hm.put("active_key", mAddress);
+        hm.put("memo_key", mAddress);
         hm.put("refcode", "bitshares-munich");
         hm.put("referrer", "bitshares-munich");
 
         HashMap<String, HashMap> hashMap = new HashMap<>();
         hashMap.put("account", hm);
-
 
         try {
             ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_create_url));
@@ -447,20 +415,15 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         RegisterAccount resp = response.body();
                         if (resp.account != null) {
                             try {
-
-                                if(resp.account.name.equals(accountName))
-                                {
-                                get_account_id(etAccountName.getText().toString(), "151");
-                                tvErrorAccountName.setVisibility(View.GONE);
+                                if(resp.account.name.equals(accountName)) {
+                                    get_account_id(etAccountName.getText().toString(), "151");
+                                    tvErrorAccountName.setVisibility(View.GONE);
                                 };
                             } catch (Exception e) {
-
                                 Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
-
                             }
                         }
-
-                    } else {
+                    }else{
                         Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -498,7 +461,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
-
             if (checkingValidation) {
                 Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
             } else if (etAccountName.getText().toString().length() == 0) {
@@ -527,6 +489,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             showDialog("", "");
                             generateKeys();
                         }
+                    }else{
+                        Log.d(TAG, "Not a valid account");
+                        Toast.makeText(this, getResources().getString(R.string.error_invalid_account), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -612,7 +577,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.pinCode=etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
         accountDetails.account_name = etAccountName.getText().toString();
-        accountDetails.pub_key = pubKey;
+        accountDetails.pub_key = mAddress;
         accountDetails.brain_key = brainPrivKey;
         accountDetails.isSelected = true;
         accountDetails.status = "success";
