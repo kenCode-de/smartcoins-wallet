@@ -1035,22 +1035,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
         }
-        HashMap<String, String> hm = new HashMap<>();
-        hm.put("method", "transfer");
-        hm.put("wifkey", privateKey);
-        hm.put("from_account", spinnerFrom.getSelectedItem().toString());
-        hm.put("to_account", toAccount);
-        hm.put("amount", amount);
-        hm.put("asset_symbol", symbol);
-        hm.put("memo", memo);
-
-        Log.d(TAG, "from_account: "+spinnerFrom.getSelectedItem().toString());
-        Log.d(TAG, "to_account: "+toAccount);
-        Log.d(TAG, "amount: "+amount);
-        Log.d(TAG, "asset_symbol: "+symbol);
-        Log.d(TAG, "memo: "+memo);
-        Log.d(TAG, "sender id: '"+senderID+"', does this equal hardcoded: "+senderID.equals("1.2.138632"));
-        Log.d(TAG, "receiver id: '"+receiverID+"', does this equal hardcoded: "+receiverID.equals("1.2.129848"));
         try{
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
@@ -1069,44 +1053,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }catch(MalformedTransactionException e){
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
         }
-
-        // Commenting all code below to deactivate current functionality
-//        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-//        IWebService service = sg.getService(IWebService.class);
-//        final Call<TransferResponse> postingService = service.getTransferResponse(hm);
-//        postingService.enqueue(new Callback<TransferResponse>() {
-//            @Override
-//            public void onResponse(Response<TransferResponse> response) {
-//                if (response.isSuccess()) {
-//                    TransferResponse resp = response.body();
-//                    if (resp.status.equals("success")) {
-//                        if (callbackURL != null) {
-//                            final Handler handler = new Handler();
-//                            handler.postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    getTrxBlock("160");
-//                                }
-//                            }, 5000);
-//                        }
-//                        if (!isFinishing()) {
-//                            finish();
-//                        }
-//                    } else {
-//                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(context, getString(R.string.unable_to_send_amount).toLowerCase() + "..", Toast.LENGTH_SHORT).show();
-//                }
-//                hideDialog();
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                hideDialog();
-//                Toast.makeText(context, getString(R.string.unable_to_send_amount), Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
