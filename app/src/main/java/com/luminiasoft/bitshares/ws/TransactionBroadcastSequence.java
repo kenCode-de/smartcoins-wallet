@@ -1,7 +1,5 @@
 package com.luminiasoft.bitshares.ws;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.RPC;
@@ -71,7 +69,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
-        Log.d(TAG,"<<< "+response.toString());
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
         if(baseResponse.error != null){
@@ -121,12 +118,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 websocket.disconnect();
             }
         }
-    }
-
-    @Override
-    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            Log.d(TAG,">>> "+frame.getPayloadText());
     }
 
     @Override

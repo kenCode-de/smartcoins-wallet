@@ -60,12 +60,6 @@ public class GetAccountNameById extends WebSocketAdapter {
     }
 
     @Override
-    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            System.out.println(">>> "+frame.getPayloadText());
-    }
-
-    @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
         System.out.println("onError");
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
