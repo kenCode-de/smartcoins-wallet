@@ -15,8 +15,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.BrainKey;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,12 +41,8 @@ import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
-import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BrainkeyActivity extends BaseActivity {
 
@@ -89,14 +102,7 @@ public class BrainkeyActivity extends BaseActivity {
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
-//            String s = editable.toString();
-//            if (!s.equals(s.toLowerCase())) {
-//                s = s.toLowerCase();
-//                etBrainKey.setText(s);
-//                etBrainKey.setSelection(etBrainKey.getText().toString().length());
-//            }
-        }
+        public void afterTextChanged(Editable editable) {        }
     };
 
     @OnClick(R.id.btnCancel)
@@ -129,7 +135,7 @@ public class BrainkeyActivity extends BaseActivity {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
-            if (arr.length == 16) {
+            if (arr.length == 12 || arr.length == 16) {
 
                 if (checkBrainKeyExist(temp)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
@@ -156,7 +162,7 @@ public class BrainkeyActivity extends BaseActivity {
                     isBrainKey = true;
                     break;
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return isBrainKey;
@@ -164,38 +170,100 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     public void get_account_from_brainkey(final Activity activity, final String brainKey, final String pinCode) {
+        try {
+            BrainKey bKey = new BrainKey(brainKey, 0);
+            Address address = new Address(bKey.getPrivateKey());
+            final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
+            final String pubkey = address.toString();
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("method", "get_account_from_brainkey");
-        hashMap.put("brainkey", brainKey);
-        final Call<AccountDetails> postingService = service.getAccount(hashMap);
-        postingService.enqueue(new Callback<AccountDetails>() {
-            @Override
-            public void onResponse(Response<AccountDetails> response) {
-                if (response.isSuccess()) {
-                    hideDialog();
-                    AccountDetails accountDetails = response.body();
-                    if (accountDetails.status.equals("failure")) {
-                        Toast.makeText(activity, accountDetails.msg, Toast.LENGTH_SHORT).show();
+            new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == ArrayList.class) {
+                                List sl = (List) list.get(0);
+                                if (sl.size() > 0) {
+                                    String accountId = (String) sl.get(0);
+                                    getAccountById(accountId, privkey, pubkey, brainKey,pinCode);
+                                }else{
+                                    hideDialog();
+                                    Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-
-                        addWallet(accountDetails, brainKey, pinCode);
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
                     }
-
-                } else {
-                    hideDialog();
-                    Toast.makeText(activity, activity.getString(R.string.unable_to_create_account_from_brainkey), Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    hideDialog();
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                }
+            })).start();
+        } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | InvalidAlgorithmParameterException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (NoSuchPaddingException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
+        try {
+            //WebSocket mWebSocket = new WebSocketFactory().createSocket(context.getString(R.string.url_bitshares_openledger));
+            new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == AccountProperties.class) {
+                                AccountProperties accountProperties = (AccountProperties) list.get(0);
+                                AccountDetails accountDetails = new AccountDetails();
+                                accountDetails.account_name = accountProperties.name;
+                                accountDetails.account_id = accountProperties.id;
+                                accountDetails.wif_key = privaKey;
+                                accountDetails.pub_key = pubKey;
+                                accountDetails.brain_key = brainkey;
+                                addWallet(accountDetails, brainkey, pinCode);
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                }
+            }))).start();
+            //mWebSocket.connect();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     private void showDialog(String title, String msg) {
@@ -209,13 +277,11 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     private void hideDialog() {
-
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();
             }
         }
-
     }
 
     private void updateBlockNumberHead() {
@@ -257,7 +323,6 @@ public class BrainkeyActivity extends BaseActivity {
 
 
         Intent intent;
-
         if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
         {
             intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
@@ -266,7 +331,6 @@ public class BrainkeyActivity extends BaseActivity {
         {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
-
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

@@ -1,28 +1,11 @@
 package com.luminiasoft.bitshares;
 
 import com.google.common.primitives.Bytes;
-import com.google.gson.internal.LinkedTreeMap;
-import static com.luminiasoft.bitshares.Test.OPENLEDGER_WITNESS_URL;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.test.NaiveSSLContext;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
-import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
 import java.util.Arrays;
-import java.util.List;
-import javafx.util.Pair;
-import javax.net.ssl.SSLContext;
 
 /**
  * Class used to encapsulate address-related operations.
