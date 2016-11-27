@@ -66,19 +66,26 @@ public class ApiCall implements JsonSerializable {
         JsonArray methodParams = new JsonArray();
 
         for(int i = 0; i < this.params.size(); i++){
-            if(this.params.get(i) instanceof JsonSerializable){
+            if(this.params.get(i) instanceof JsonSerializable) {
                 // Sometimes the parameters are objects
                 methodParams.add(((JsonSerializable) this.params.get(i)).toJsonObject());
+            }else if (Number.class.isInstance(this.params.get(i))){
+                // Other times they are numbers
+                methodParams.add( (Number) this.params.get(i));
             }else if(this.params.get(i) instanceof String || this.params.get(i) == null){
                 // Other times they are plain strings
                 methodParams.add((String) this.params.get(i));
             }else if(this.params.get(i) instanceof ArrayList){
                 // Other times it might be an array
                 JsonArray array = new JsonArray();
-                ArrayList<JsonSerializable> listArgument = (ArrayList<JsonSerializable>) this.params.get(i);
+                ArrayList<Serializable> listArgument = (ArrayList<Serializable>) this.params.get(i);
                 for(int l = 0; l < listArgument.size(); l++){
-                    JsonSerializable s = listArgument.get(l);
-                    array.add(s.toJsonObject());
+                    Serializable element = listArgument.get(l);
+                    if(element instanceof JsonSerializable)
+                        array.add(((JsonSerializable) element).toJsonObject());
+                    else if(element instanceof String){
+                        array.add((String) element);
+                    }
                 }
                 methodParams.add(array);
             }
