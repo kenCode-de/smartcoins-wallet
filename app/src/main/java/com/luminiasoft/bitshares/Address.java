@@ -1,7 +1,6 @@
 package com.luminiasoft.bitshares;
 
 import com.google.common.primitives.Bytes;
-
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;

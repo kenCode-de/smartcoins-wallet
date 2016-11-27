@@ -1,5 +1,7 @@
 package com.luminiasoft.bitshares.ws;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -39,7 +41,17 @@ public class GetAccountNameById extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList();
         ArrayList<Serializable> paramAddress = new ArrayList();
-        paramAddress.add(accountID);
+        paramAddress.add(new JsonSerializable() {
+            @Override
+            public String toJsonString() {
+                return accountID;
+            }
+
+            @Override
+            public JsonElement toJsonObject() {
+                return new JsonParser().parse(accountID);
+            }
+        });
         accountParams.add(paramAddress);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_ACCOUNTS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByAddress.toJsonString());
@@ -47,7 +59,6 @@ public class GetAccountNameById extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        System.out.println("<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
