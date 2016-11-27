@@ -1,13 +1,8 @@
 package com.luminiasoft.bitshares.ws;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.RPC;
-import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
@@ -17,6 +12,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -41,17 +37,7 @@ public class GetAccountNameById extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList();
         ArrayList<Serializable> paramAddress = new ArrayList();
-        paramAddress.add(new JsonSerializable() {
-            @Override
-            public String toJsonString() {
-                return accountID;
-            }
-
-            @Override
-            public JsonElement toJsonObject() {
-                return new JsonParser().parse(accountID);
-            }
-        });
+        paramAddress.add(accountID);
         accountParams.add(paramAddress);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_ACCOUNTS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByAddress.toJsonString());
