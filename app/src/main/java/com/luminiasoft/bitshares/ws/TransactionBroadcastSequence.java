@@ -1,13 +1,11 @@
 package com.luminiasoft.bitshares.ws;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.BaseOperation;
-import com.luminiasoft.bitshares.BlockData;
 import com.luminiasoft.bitshares.RPC;
 import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.Transfer;
-import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -73,9 +71,10 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
+        Log.d(TAG,"<<< "+response.toString());
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
-        if(baseResponse.error != null && baseResponse.error.message.indexOf("is_canonical") == -1){
+        if(baseResponse.error != null){
             mListener.onError(baseResponse.error);
             websocket.disconnect();
         }else{
@@ -118,48 +117,16 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
             }else if(baseResponse.id >= BROADCAST_TRANSACTION){
                 Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();
                 WitnessResponse<WitnessResponse<String>> witnessResponse = gson.fromJson(response, WitnessResponseType);
-                if(witnessResponse.error == null){
-                    mListener.onSuccess(witnessResponse);
-                    websocket.disconnect();
-                }else{
-                    if(witnessResponse.error.message.indexOf("is_canonical") != -1 && retries < 10){
-                        /*
-                        * This is a very ugly hack, but it will do for now.
-                        *
-                        * The issue is that the witness is complaining about the signature not
-                        * being canonical even though the bitcoinj ECKey.ECDSASignature.isCanonical()
-                        * method says it is! We'll have to dive deeper into this issue and avoid
-                        * this error altogether
-                        *
-                        * But this MUST BE FIXED! Since this hack will only work for transactions
-                        * with ONE transfer operation.
-                        */
-                        retries++;
-                        List<BaseOperation> operations = this.transaction.getOperations();
-                        Transfer transfer = (Transfer) operations.get(0);
-                        transaction = new TransferTransactionBuilder()
-                                .setSource(transfer.getFrom())
-                                .setDestination(transfer.getTo())
-                                .setAmount(transfer.getAmount())
-                                .setFee(transfer.getFee())
-                                .setBlockData(new BlockData(headBlockNumber, headBlockId, expirationTime + EXPIRATION_TIME))
-                                .setPrivateKey(transaction.getPrivateKey())
-                                .build();
-                        ArrayList<Serializable> transactionList = new ArrayList<>();
-                        transactionList.add(transaction);
-                        ApiCall call = new ApiCall(broadcastApiId,
-                                RPC.CALL_BROADCAST_TRANSACTION,
-                                transactionList,
-                                "2.0",
-                                currentId);
-                        websocket.sendText(call.toJsonString());
-                    }else{
-                        mListener.onError(witnessResponse.error);
-                        websocket.disconnect();
-                    }
-                }
+                mListener.onSuccess(witnessResponse);
+                websocket.disconnect();
             }
         }
+    }
+
+    @Override
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame())
+            Log.d(TAG,">>> "+frame.getPayloadText());
     }
 
     @Override
