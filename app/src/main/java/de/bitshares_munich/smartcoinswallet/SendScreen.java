@@ -41,38 +41,26 @@ import android.widget.Toast;
 import com.google.common.primitives.UnsignedLong;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.BaseOperation;
 import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.Invoice;
 import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.Transfer;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
 
 import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Sha256Hash;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -91,7 +79,6 @@ import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.QrJson;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -219,7 +206,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (res != null) {
             if (res.containsKey("sResult") && res.containsKey("id")) {
                 if (res.getInt("id") == 5) {
-                    getJsonFromHash(res.getString("sResult"));
+                    decodeInvoiceData(res.getString("sResult"));
                 }
             }
         }
@@ -806,17 +793,22 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             case 90:
                 if (resultCode == RESULT_OK) {
                     Bundle res = data.getExtras();
-                    getJsonFromHash(res.getString("sResult"));
+                    decodeInvoiceData(res.getString("sResult"));
                 }
                 break;
         }
     }
 
-    void onScanResult(String result) {
+    /**
+     * Setups the correct fields with invoice data obtained from the QR-Code reader.
+     * //TODO: Update this method to work with the Invoice
+     * @param qrCodeData: Invoice data read from the QR-Code in the JSON format.
+     */
+    void onScanResult(String qrCodeData) {
         try {
-            JSONObject resJson = new JSONObject(result);
+            JSONObject resJson = new JSONObject(qrCodeData);
             callbackURL = resJson.get("callback").toString();
-            if (!callbackURL.substring(callbackURL.length() - 1).equals("/")) {
+            if(!callbackURL.equals("") && !callbackURL.endsWith("/")){
                 callbackURL = callbackURL + "/";
             }
             etReceiverAccount.setText(resJson.get("to").toString());
@@ -874,13 +866,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 tvLoyaltyStatus.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Exception. Msg: "+e.getMessage());
         }
     }
 
     public void createSpinner(List<String> spinnerArray, Spinner spinner) {
-
-
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.spinner_black, spinnerArray);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -1464,32 +1454,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         });
     }
 
-    private void getJsonFromHash(String hash) {
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.hash_server_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<QrJson> postingService = service.getJson(hash);
-        postingService.enqueue(new Callback<QrJson>() {
-            @Override
-            public void onResponse(Response<QrJson> response) {
-                if (response.isSuccess()) {
-                    QrJson resp = response.body();
-                    if (resp.status.equals("success")) {
-                        saveMerchantEmail(resp.json);
-                        onScanResult(resp.json);
-                    } else {
-                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, getString(R.string.unable_to_decode_QR), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                Toast.makeText(context, getString(R.string.unable_to_decode_QR), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void decodeInvoiceData(String encoded) {
+        Invoice invoice = Invoice.fromQrCode(encoded);
+        saveMerchantEmail(invoice.toJsonString());
+        onScanResult(invoice.toJsonString());
     }
 
     public void saveMerchantEmail(String string) {

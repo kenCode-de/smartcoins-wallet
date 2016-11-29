@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.luminiasoft.bitshares.Invoice;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,7 +36,6 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.models.QrHash;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;
@@ -47,6 +48,7 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/16/16.
  */
 public class RecieveActivity extends BaseActivity {
+    private String TAG = this.getClass().getName();
 
     @Bind(R.id.username)
     TextView tvUsername;
@@ -75,6 +77,8 @@ public class RecieveActivity extends BaseActivity {
     String account_id = "";
     String orderId = "";
 
+    Call<TransactionSmartCoin[]> transactionSmartcoinService;
+
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -94,7 +98,7 @@ public class RecieveActivity extends BaseActivity {
         setTitle(getResources().getString(R.string.rcv_screen_name));
 
         progressDialog = new ProgressDialog(this);
-        showDialog("", this.getString(R.string.loading));
+//        showDialog("", this.getString(R.string.loading));
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
@@ -129,18 +133,23 @@ public class RecieveActivity extends BaseActivity {
 
         }
 
-
-        HashMap hm = new HashMap();
-        hm.put("account_name", to);
-//        hm.put("memo", "Order: " + orderId);
-        hm.put("amount", price);
-        hm.put("fee", 0);
-        hm.put("symbol", currency.replace("bit",""));
-        hm.put("callback", getString(R.string.node_server_url) + "/transaction/" + account_id + "/" + orderId + "/");
-        getQrHashKey(this, hm);
-
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(!price.equals("0") && !price.equals("")){
+            Invoice.LineItem[] items = new Invoice.LineItem[]{ new Invoice.LineItem("transfer", 1, "%f".format(price))};
+            Invoice invoice = new Invoice(to, "", "", currency.replace("bit",""), items, "", "");
+            try {
+                Bitmap bitmap = encodeAsBitmap(Invoice.toQrCode(invoice), "#006500");
+                qrimage.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                Log.e(TAG, "WriterException while trying to encode QR-code data. Msg: "+e.getMessage());
+            }
+        }
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -241,38 +250,6 @@ public class RecieveActivity extends BaseActivity {
         return bitmap;
     }
 
-    public void getQrHashKey(final Activity activity, HashMap hashMap) {
-
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.qr_hash_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<QrHash> postingService = service.getQrHash(hashMap);
-        postingService.enqueue(new Callback<QrHash>() {
-            @Override
-            public void onResponse(Response<QrHash> response) {
-                if (response.isSuccess()) {
-                    hideDialog();
-                    QrHash qrHash = response.body();
-                    try {
-                        Bitmap bitmap = encodeAsBitmap(qrHash.hash, "#006500");
-                        qrimage.setImageBitmap(bitmap);
-                        callIPNSmartCoins(activity);
-                    } catch (Exception e) {
-                    }
-
-                } else {
-                    Toast.makeText(activity, activity.getString(R.string.unable_to_create_qr_code), Toast.LENGTH_SHORT).show();
-                    hideDialog();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void showDialog(String title, String msg) {
         if (progressDialog != null) {
             if (!progressDialog.isShowing()) {
@@ -303,10 +280,11 @@ public class RecieveActivity extends BaseActivity {
     }
 
     public void callIPNSmartCoins(final Activity activity) {
+        Log.d(TAG, "callIPNSmartCoins. account id: "+account_id+", order id: "+orderId);
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.node_server_url));
         IWebService service = sg.getService(IWebService.class);
-        final Call<TransactionSmartCoin[]> postingService = service.getTransactionSmartCoin(account_id, orderId);
-        postingService.enqueue(new Callback<TransactionSmartCoin[]>() {
+        transactionSmartcoinService = service.getTransactionSmartCoin(account_id, orderId);
+        transactionSmartcoinService.enqueue(new Callback<TransactionSmartCoin[]>() {
             @Override
             public void onResponse(Response<TransactionSmartCoin[]> response) {
                 if (response.isSuccess()) {
@@ -334,7 +312,6 @@ public class RecieveActivity extends BaseActivity {
 
             @Override
             public void onFailure(Throwable t) {
-
                 if (!isFinishing()) {
                     Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
                 }
@@ -370,7 +347,4 @@ public class RecieveActivity extends BaseActivity {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
-
-
-
 }
