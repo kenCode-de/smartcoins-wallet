@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.FileBin;
+
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -145,67 +147,12 @@ public class BinHelper {
     {
         try
         {
-            ServiceGenerator sg = new ServiceGenerator(myContext.getString(R.string.account_from_brainkey_url));
-            IWebService service = sg.getService(IWebService.class);
-
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("method", "backup_bin");
-            hashMap.put("password", pin);
-            hashMap.put("brainkey", brnKey);
-
-            Call<ResponseBinFormat> postingService = service.getBytesFromBrainKey(hashMap);
-
-            postingService.enqueue(new Callback<ResponseBinFormat>() {
-                @Override
-                public void onResponse(Response<ResponseBinFormat> response) {
-
-                    if (response.isSuccess())
-                    {
-                        ResponseBinFormat responseContent = response.body();
-                        if (responseContent.status.equals("failure"))
-                        {
-                            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                            hideDialog(false);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                List<Object> abc = (List<Object>) responseContent.content;
-
-                                List<Integer> resultContent = new ArrayList<>();
-
-                                for (Object in: abc)
-                                {
-                                    int _in = Helper.convertDOubleToInt((Double)in);
-                                    resultContent.add(_in);
-                                }
-
-                                saveBinContentToFile(resultContent, _accountName);
-                            }
-                            catch (Exception e)
-                            {
-                                hideDialog(false);
-                                Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_import_account_from_bin_file) + " : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        hideDialog(false);
-                        Log.d("bin","fail");
-                        Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    hideDialog(false);
-                    Log.d("bin","fail");
-                    Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
-                }
-            });
+            byte[] results = FileBin.getBytesFromBrainKey(brnKey,pin,_accountName);
+            List<Integer> resultFile = new ArrayList<>();
+            for(byte result: results){
+                resultFile.add(result&0xff);
+            }
+            saveBinContentToFile(resultFile,_accountName);
         }
         catch (Exception e)
         {

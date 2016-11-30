@@ -17,6 +17,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.BrainKey;
+import com.luminiasoft.bitshares.FileBin;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -232,6 +242,48 @@ public class ImportBackupActivity extends BaseActivity {
 
         try
         {
+            byte[] inputFile = new byte[bytes.size()];
+            for(int i = 0 ; i < bytes.size();i++){
+                inputFile[i] = bytes.get(i).byteValue();
+            }
+            final String BrainKey = FileBin.getBrainkeyFromByte(inputFile,pin);
+            com.luminiasoft.bitshares.BrainKey bKey = new BrainKey(BrainKey, 0);
+            Address address = new Address(bKey.getPrivateKey());
+            final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
+            final String pubkey = address.toString();
+
+            new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == ArrayList.class) {
+                                List sl = (List) list.get(0);
+                                if (sl.size() > 0) {
+                                    String accountId = (String) sl.get(0);
+                                    getAccountById(accountId, privkey, pubkey, BrainKey,pin);
+                                }else{
+                                    hideDialog();
+                                    Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    hideDialog();
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                }
+            })).start();
             ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
             IWebService service = sg.getService(IWebService.class);
 
@@ -313,6 +365,66 @@ public class ImportBackupActivity extends BaseActivity {
             Log.d("bin",e.getMessage());
             Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
+        try {
+            //WebSocket mWebSocket = new WebSocketFactory().createSocket(context.getString(R.string.url_bitshares_openledger));
+            new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == AccountProperties.class) {
+                                AccountProperties accountProperties = (AccountProperties) list.get(0);
+                                AccountDetails accountDetails = new AccountDetails();
+                                accountDetails.account_name = accountProperties.name;
+                                accountDetails.account_id = accountProperties.id;
+                                accountDetails.wif_key = privaKey;
+                                accountDetails.pub_key = pubKey;
+                                accountDetails.brain_key = brainkey;
+
+                                BinHelper myBinHelper = new BinHelper();
+
+                                Intent intent;
+
+                                if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
+                                {
+                                    intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
+                                }
+                                else
+                                {
+                                    intent = new Intent(getApplicationContext(), TabActivity.class);
+                                }
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                }
+            }))).start();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
