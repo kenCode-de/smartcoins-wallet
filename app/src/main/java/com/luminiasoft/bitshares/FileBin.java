@@ -5,16 +5,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.crypto.DataLengthException;
 import org.spongycastle.crypto.InvalidCipherTextException;
@@ -23,9 +18,7 @@ import org.spongycastle.crypto.modes.CBCBlockCipher;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.spongycastle.crypto.params.KeyParameter;
 import org.spongycastle.crypto.params.ParametersWithIV;
-import org.tukaani.xz.LZMA2Options;
-import org.tukaani.xz.LZMAInputStream;
-import org.tukaani.xz.LZMAOutputStream;
+
 
 /**
  * Class to manage the Bin Files
@@ -68,6 +61,9 @@ public abstract class FileBin {
             byte[] encKey_enc = encryptAES(encKey, password.getBytes("UTF-8"));
             byte[] encBrain = encryptAES(BrainKey.getBytes("ASCII"), encKey);
 
+            /**
+             * Data to Store
+             */
             JsonObject wallet = new JsonObject();
             wallet.add("encryption_key", new JsonParser().parse(byteToString(encKey_enc)));
             wallet.add("encrypted_brainkey", new JsonParser().parse(byteToString(encBrain)));
@@ -78,7 +74,6 @@ public abstract class FileBin {
             jsonAccountName.add("name", new JsonParser().parse(accountName));
             accountNames.add(jsonAccountName);
             wallet_object.add("linked_accounts", accountNames);
-
             byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"));
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] checksum = md.digest(compressedData);
@@ -92,40 +87,15 @@ public abstract class FileBin {
             byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
-            rawData = encryptAES(rawData, finalKey);
+            rawData = encryptAES(rawData, byteToString(finalKey).getBytes());
             byte[] result = new byte[rawData.length + randPubKey.length];
             System.arraycopy(randPubKey, 0, result, 0, randPubKey.length);
             System.arraycopy(rawData, 0, result, randPubKey.length, rawData.length);
+
             return result;
 
         } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public static byte[] compressDataLZMA(byte[] inputBytes) {
-        LZMAOutputStream out = null;
-        try {
-            ByteArrayInputStream input = new ByteArrayInputStream(inputBytes);
-            ByteArrayOutputStream output = new ByteArrayOutputStream(2048);
-            LZMA2Options options = new LZMA2Options();
-            out = new LZMAOutputStream(output, options, -1);
-            byte[] buf = new byte[inputBytes.length];
-            int size;
-            while ((size = input.read(buf)) != -1) {
-                out.write(buf, 0, size);
-            }
-            out.finish();
-            return output.toByteArray();
-        } catch (IOException ex) {
-            Logger.getLogger(FileBin.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                out.close();
-            } catch (IOException ex) {
-                Logger.getLogger(FileBin.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return null;
     }
@@ -159,30 +129,6 @@ public abstract class FileBin {
             ex.printStackTrace();
         } catch (InvalidCipherTextException ex) {
             ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public static byte[] decompressDataLZMA(byte[] inputBytes) {
-        LZMAInputStream in = null;
-        try {
-            ByteArrayInputStream input = new ByteArrayInputStream(inputBytes);
-            ByteArrayOutputStream output = new ByteArrayOutputStream(2048);
-            in = new LZMAInputStream(input);
-            int size;
-            while ((size = in.read()) != -1) {
-                output.write(size);
-            }
-            in.close();
-            return output.toByteArray();
-        } catch (IOException ex) {
-            Logger.getLogger(FileBin.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(FileBin.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         return null;
     }

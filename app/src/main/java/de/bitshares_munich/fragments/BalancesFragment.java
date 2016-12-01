@@ -669,15 +669,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         hashMap.put("method", "equivalent_component");
         hashMap.put("values", values.substring(0, values.length() - 1));
 
-        String url;
-        try
+        String url = null;
+        //TODO evaluate removal
+        /*try
         {
             url = String.format(Locale.ENGLISH,"%s",getString(R.string.account_from_brainkey_url));
         }
         catch (Exception e)
         {
             return;
-        }
+        }*/
 
         if ( url == null || url.isEmpty() )
         {
@@ -854,15 +855,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             hashMap.put("method", "equivalent_component");
             hashMap.put("values", values);
 
-            String url;
-            try
+            String url=null;
+            //TODO evaluate removal
+            /*try
             {
                 url = String.format(Locale.ENGLISH,"%s",getString(R.string.account_from_brainkey_url));
             }
             catch (Exception e)
             {
                 return;
-            }
+            }*/
 
             if ( url == null || url.isEmpty() )
             {
@@ -2663,7 +2665,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
+        //TODO evaluate removal
+
+        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");
@@ -2699,12 +2704,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 hideDialog();
                 Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     public void getLtmPrice(final Activity activity, final String accountName) {
-
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
+        //TODO implement
+        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account_fees");
@@ -2741,7 +2747,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 hideDialog();
                 Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void hideDialog() {

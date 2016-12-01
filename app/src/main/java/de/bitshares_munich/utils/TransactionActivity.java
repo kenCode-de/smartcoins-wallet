@@ -964,7 +964,8 @@ public class TransactionActivity implements IBalancesDelegate {
         hm.put("memo", memo.toString());
 
         if ( context == null ) return;
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+        //TODO implement
+        /*ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
         postingService.enqueue(new Callback<DecodeMemo>() {
@@ -999,7 +1000,7 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 loadMemoSListForDecoding();
             }
-        });
+        });*/
     }
 
 
@@ -1376,7 +1377,8 @@ public class TransactionActivity implements IBalancesDelegate {
         hashMap.put("values", values);
 
         if ( context == null ) return;
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
+        //TODO evaluate removal
+        /*ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<EquivalentComponentResponse> postingService = service.getEquivalentComponent(hashMap);
 
@@ -1465,7 +1467,7 @@ public class TransactionActivity implements IBalancesDelegate {
             {
                 reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
             }
-        });
+        });*/
     }
 
     private double convertLocalizeStringToDouble(String text) {

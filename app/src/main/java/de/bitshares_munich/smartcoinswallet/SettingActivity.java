@@ -887,8 +887,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     }
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
-
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+        //Todo evaluate removal
+        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("method", "upgrade_account");
@@ -927,7 +928,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 hideDialog();
                 Toast.makeText(activity, activity.getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void hideDialog() {

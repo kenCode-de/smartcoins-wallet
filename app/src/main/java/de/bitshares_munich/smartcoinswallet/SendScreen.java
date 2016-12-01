@@ -1421,7 +1421,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         hm.put("sell_symbol", backupAsset);
         hm.put("buy_amount", String.format(Locale.ENGLISH, "%.4f", buyAmount));
         hm.put("buy_symbol", selectedAccountAsset.symbol);
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        Toast.makeText(context, R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        //TODO evaluate removal
+        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<TradeResponse> postingService = service.getTradeResponse(hm);
         postingService.enqueue(new Callback<TradeResponse>() {
@@ -1451,7 +1453,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 hideDialog();
                 Toast.makeText(context, getString(R.string.unable_to_trade_bAssets), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void decodeInvoiceData(String encoded) {

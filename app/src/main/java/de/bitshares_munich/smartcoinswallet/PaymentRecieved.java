@@ -205,7 +205,9 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         hm.put("method","decode_memo");
         hm.put("wifkey",privateKey);
         hm.put("memo", memo);
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+        Toast.makeText(getApplicationContext(),getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+        //TODO evaluate removal
+        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);
         final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
         postingService.enqueue(new Callback<DecodeMemo>() {
@@ -224,7 +226,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
             @Override
             public void onFailure(Throwable t) {
             }
-        });
+        });*/
     }
 
     @Override

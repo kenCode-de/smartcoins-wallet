@@ -173,7 +173,7 @@ public class ImportBackupActivity extends BaseActivity {
         bytes = new BinHelper().getBytesFromBinFile(filepath);
     }
 
-    private void postData(String method,String pin, ArrayList<Integer> _bytes){
+    /*private void postData(String method,String pin, ArrayList<Integer> _bytes){
         try{
             String postReceiverUrl = getString(R.string.account_from_brainkey_url);
 
@@ -214,7 +214,7 @@ public class ImportBackupActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
     ProgressDialog progressDialog;
@@ -284,7 +284,7 @@ public class ImportBackupActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
             })).start();
-            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+            /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
             IWebService service = sg.getService(IWebService.class);
 
             HashMap<String, Object> hashMap = new HashMap<>();
@@ -357,7 +357,7 @@ public class ImportBackupActivity extends BaseActivity {
                     Log.d("bin","fail");
                     Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_pin), Toast.LENGTH_LONG).show();
                 }
-            });
+            });*/
         }
         catch (Exception e)
         {

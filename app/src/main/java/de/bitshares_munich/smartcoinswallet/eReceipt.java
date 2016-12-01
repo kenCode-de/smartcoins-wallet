@@ -294,8 +294,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                     hashMap.put("method", "get_transaction_id");
                     hashMap.put("block_num", block_num);
                     hashMap.put("trx_in_block", trx_in_block);
+                    //TODO evaluate removal
 
-                    ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
+                    /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
                     IWebService service = sg.getService(IWebService.class);
                     final Call<TransactionIdResponse> postingService = service.getTransactionIdComponent(hashMap);
 
@@ -331,7 +332,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                         public void onFailure(Throwable t) {
                             getTransactionId(block_num, trx_in_block);
                         }
-                    });
+                    });*/
                 }
             };
             handler.postDelayed(updateTask, 100);

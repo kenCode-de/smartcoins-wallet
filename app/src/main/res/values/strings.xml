@@ -100,6 +100,8 @@
     <string name="unable_to_send_amount">Unable to send the Amount.</string>
     <string name="unable_to_decode_QR">Unable to decode the QR code.</string>
 
+    <string name="feature_unavaible">Current Feature is Unavaible</string>
+
 
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
