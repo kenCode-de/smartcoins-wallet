@@ -59,7 +59,7 @@ public class Util {
             if(which == Util.LZMA) {
                 out = new LZMAOutputStream(output, options, -1);
             }else if(which == Util.XZ){
-                out = new XZOutputStream(output, options, -1);
+                out = new XZOutputStream(output, options);
             }
             byte[] buf = new byte[inputBytes.length];
             int size;
