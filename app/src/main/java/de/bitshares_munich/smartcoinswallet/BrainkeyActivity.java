@@ -223,7 +223,6 @@ public class BrainkeyActivity extends BaseActivity {
 
     private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
         try {
-            //WebSocket mWebSocket = new WebSocketFactory().createSocket(context.getString(R.string.url_bitshares_openledger));
             new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
