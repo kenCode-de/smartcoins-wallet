@@ -3,8 +3,8 @@ package com.luminiasoft.bitshares;
 import android.util.Log;
 
 import org.tukaani.xz.LZMA2Options;
-import org.tukaani.xz.LZMAInputStream;
-import org.tukaani.xz.LZMAOutputStream;
+import org.tukaani.xz.XZInputStream;
+import org.tukaani.xz.XZOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,12 +44,12 @@ public class Util {
      * @author Henry Varona
      */
     public static byte[] compress(byte[] inputBytes) {
-        LZMAOutputStream out = null;
+        XZOutputStream out = null;
         try {
             ByteArrayInputStream input = new ByteArrayInputStream(inputBytes);
             ByteArrayOutputStream output = new ByteArrayOutputStream(2048);
             LZMA2Options options = new LZMA2Options();
-            out = new LZMAOutputStream(output, options,-1);
+            out = new XZOutputStream(output, options,-1);
             byte[] buf = new byte[inputBytes.length];
             int size;
             while ((size = input.read(buf)) != -1) {
@@ -77,11 +77,11 @@ public class Util {
      * @author Henry Varona
      */
     public static byte[] decompress(byte[] inputBytes) {
-        LZMAInputStream in = null;
+        XZInputStream in = null;
         try {
             ByteArrayInputStream input = new ByteArrayInputStream(inputBytes);
             ByteArrayOutputStream output = new ByteArrayOutputStream(2048);
-            in = new LZMAInputStream(input);
+            in = new XZInputStream(input);
             int size;
             while ((size = in.read()) != -1) {
                 output.write(size);

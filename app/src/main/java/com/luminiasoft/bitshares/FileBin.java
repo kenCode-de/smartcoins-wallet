@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -36,9 +37,53 @@ public abstract class FileBin {
      * incorrect
      */
     public static String getBrainkeyFromByte(byte[] input, String password) {
+        try {
+            byte[] publicKey = new byte[33];
+            byte[] rawData = new byte[input.length - 33];
 
-        //Creates cypher AES with password
-        //Uncrypt 
+            System.arraycopy(input, 0, publicKey, 0, publicKey.length);
+            System.arraycopy(input, 33, rawData, 0, rawData.length);
+
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+            ECKey randomECKey = ECKey.fromPublicOnly(publicKey);
+            byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
+            MessageDigest md1 = MessageDigest.getInstance("SHA-512");
+            finalKey = md1.digest(finalKey);
+            rawData = decryptAES(rawData, byteToString(finalKey).getBytes());
+
+            byte[] checksum = new byte[4];
+            System.arraycopy(rawData, 0, checksum, 0, 4);
+            byte[] compressedData = new byte[rawData.length - 4];
+            System.arraycopy(rawData, 4, compressedData, 0, compressedData.length);
+            byte[] wallet_object_bytes = Util.decompress(compressedData);
+            String wallet_string = new String(wallet_object_bytes, "UTF-8");
+            JsonObject wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
+            if (wallet.get("wallet").isJsonArray()) {
+                wallet = wallet.get("wallet").getAsJsonArray().get(0).getAsJsonObject();
+            } else {
+                wallet = wallet.get("wallet").getAsJsonObject();
+            }
+            byte[] encKey_enc = new BigInteger(wallet.get("encryption_key").getAsString(), 16).toByteArray();
+            byte[] temp = new byte[encKey_enc.length - (encKey_enc[0] == 0 ? 1 : 0)];
+            System.arraycopy(encKey_enc, (encKey_enc[0] == 0 ? 1 : 0), temp, 0, temp.length);
+            byte[] encKey = decryptAES(temp, password.getBytes("UTF-8"));
+            temp = new byte[encKey.length - 16];
+            System.arraycopy(encKey, 0, temp, 0, temp.length);
+
+            byte[] encBrain = new BigInteger(wallet.get("encrypted_brainkey").getAsString(), 16).toByteArray();
+            while(encBrain[0] == 0){
+                byte[]temp2 = new byte[encBrain.length-1];
+                System.arraycopy(encBrain, 1, temp2, 0, temp2.length);
+                encBrain = temp2;
+            }
+            String BrainKey = new String((decryptAES(encBrain, temp)), "UTF-8");
+
+            return BrainKey;
+
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
+
+        }
         return null;
     }
 
@@ -142,5 +187,37 @@ public abstract class FileBin {
             result.append(Integer.toHexString(in & 0xff));
         }
         return result.toString();
+    }
+
+    private static byte[] decryptAES(byte[] input, byte[] key) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            byte[] result = md.digest(key);
+            byte[] ivBytes = new byte[16];
+            System.arraycopy(result, 32, ivBytes, 0, 16);
+            byte[] sksBytes = new byte[32];
+            System.arraycopy(result, 0, sksBytes, 0, 32);
+            PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(new AESFastEngine()));
+            cipher.init(false, new ParametersWithIV(new KeyParameter(sksBytes), ivBytes));
+            byte[] out = new byte[cipher.getOutputSize(input.length)];
+            int proc = cipher.processBytes(input, 0, input.length, out, 0);
+            cipher.doFinal(out, proc);
+
+            //Unpadding
+            int count = out[out.length-1];
+            byte[] temp = new byte[count];
+            System.arraycopy(out, out.length-count, temp, 0, temp.length);
+            byte[] temp2 = new byte[count];
+            Arrays.fill(temp2, (byte)count);
+            if (Arrays.equals(temp, temp2)){
+                temp = new byte[out.length-count];
+                System.arraycopy(out, 0, temp, 0, out.length-count);
+                return temp;
+            } else {
+                return out;
+            }
+        } catch (NoSuchAlgorithmException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
+        }
+        return null;
     }
 }
