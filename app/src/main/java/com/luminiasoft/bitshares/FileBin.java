@@ -5,12 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
+
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.crypto.DataLengthException;
 import org.spongycastle.crypto.InvalidCipherTextException;
@@ -19,6 +14,13 @@ import org.spongycastle.crypto.modes.CBCBlockCipher;
 import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.spongycastle.crypto.params.KeyParameter;
 import org.spongycastle.crypto.params.ParametersWithIV;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 
 /**
@@ -56,7 +58,7 @@ public abstract class FileBin {
             System.arraycopy(rawData, 0, checksum, 0, 4);
             byte[] compressedData = new byte[rawData.length - 4];
             System.arraycopy(rawData, 4, compressedData, 0, compressedData.length);
-            byte[] wallet_object_bytes = Util.decompress(compressedData);
+            byte[] wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
             String wallet_string = new String(wallet_object_bytes, "UTF-8");
             JsonObject wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
             if (wallet.get("wallet").isJsonArray()) {
@@ -119,7 +121,7 @@ public abstract class FileBin {
             jsonAccountName.add("name", new JsonParser().parse(accountName));
             accountNames.add(jsonAccountName);
             wallet_object.add("linked_accounts", accountNames);
-            byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"));
+            byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"), Util.XZ);
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] checksum = md.digest(compressedData);
             byte[] rawData = new byte[compressedData.length + 4];
