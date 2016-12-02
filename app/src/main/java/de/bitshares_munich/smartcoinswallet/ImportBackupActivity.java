@@ -284,93 +284,18 @@ public class ImportBackupActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
             })).start();
-            /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-            IWebService service = sg.getService(IWebService.class);
-
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("method", "import_bin");
-            hashMap.put("password", pin);
-            hashMap.put("content", bytes.toArray());
-
-            Call<AccountDetails> postingService = service.getAccountFromBin(hashMap);
-
-            postingService.enqueue(new Callback<AccountDetails>() {
-                @Override
-                public void onResponse(Response<AccountDetails> response) {
-                    hideDialog();
-                    if (response.isSuccess())
-                    {
-                        AccountDetails accountDetails = response.body();
-                        if (accountDetails.status.equals("failure"))
-                        {
-                            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
-                            try
-                            {
-                                String brn = "";
-                                try
-                                {
-                                    brn = Crypt.getInstance().decrypt_string(accountDetails.brain_key);
-                                }
-                                catch (Exception e)
-                                {
-                                    brn = "";
-                                }
-
-                                BinHelper myBinHelper = new BinHelper();
-                                myBinHelper.addWallet(accountDetails, brn, pin, getApplicationContext(),myActivity);
-
-                                Intent intent;
-
-                                if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
-                                {
-                                    intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
-                                }
-                                else
-                                {
-                                    intent = new Intent(getApplicationContext(), TabActivity.class);
-                                }
-
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                            catch (Exception e)
-                            {
-                                Toast.makeText(myActivity, myActivity.getString(R.string.unable_to_import_account_from_bin_file) + " : " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        Log.d("bin","fail");
-                        Toast.makeText(myActivity, myActivity.getString(R.string.unable_to_import_account_from_bin_file), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    hideDialog();
-                    Log.d("bin","fail");
-                    Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_pin), Toast.LENGTH_LONG).show();
-                }
-            });*/
         }
         catch (Exception e)
         {
             hideDialog();
-            Log.d("bin",e.getMessage());
+            Log.d("henry",e.getMessage());
             Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
         }
 
     }
 
-    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
+    private void getAccountById(final String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
         try {
-            //WebSocket mWebSocket = new WebSocketFactory().createSocket(context.getString(R.string.url_bitshares_openledger));
             new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
@@ -380,6 +305,7 @@ public class ImportBackupActivity extends BaseActivity {
                             if (list.get(0).getClass() == AccountProperties.class) {
                                 AccountProperties accountProperties = (AccountProperties) list.get(0);
                                 AccountDetails accountDetails = new AccountDetails();
+                                Log.d("henry","Account name " + accountProperties.name);
                                 accountDetails.account_name = accountProperties.name;
                                 accountDetails.account_id = accountProperties.id;
                                 accountDetails.wif_key = privaKey;
