@@ -28,6 +28,7 @@ public class AccountDetails {
     public Boolean isSelected;
     public Boolean isLifeTime=false;
     public String account_name;
+    public Boolean isPostSecurityUpdate;
 
     @Override
     public String toString(){

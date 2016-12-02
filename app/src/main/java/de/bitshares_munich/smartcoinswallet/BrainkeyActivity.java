@@ -319,7 +319,7 @@ public class BrainkeyActivity extends BaseActivity {
         accountDetails.account_id = accountDetail.account_id;
 
         BinHelper myBinHelper = new BinHelper();
-        myBinHelper.addWallet(accountDetails,brainKey,pinCode,getApplicationContext(),this);
+        myBinHelper.addWallet(accountDetails, getApplicationContext(),this);
 
 
         Intent intent;

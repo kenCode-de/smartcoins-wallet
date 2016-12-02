@@ -3,7 +3,6 @@ package de.bitshares_munich.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
@@ -17,18 +16,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.TabActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by developer on 6/28/16.
@@ -79,19 +72,9 @@ public class BinHelper {
         }
     }
 
-    public void addWallet(AccountDetails accountDetail, String brainKey, String pinCode, Context context, Activity activity) {
+    public void addWallet(AccountDetails accountDetails, Context context, Activity activity) {
         TinyDB tinyDB = new TinyDB(context);
         ArrayList<AccountDetails> accountDetailsList = tinyDB.getListObject(context.getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        AccountDetails accountDetails = new AccountDetails();
-        accountDetails.wif_key = accountDetail.wif_key;
-        accountDetails.pinCode = pinCode;
-        accountDetails.account_name = accountDetail.account_name;
-        accountDetails.pub_key = accountDetail.pub_key;
-        accountDetails.brain_key = brainKey;
-        accountDetails.isSelected = true;
-        accountDetails.status = "success";
-        accountDetails.account_id = accountDetail.account_id;
-
 
         for (int i = 0; i < accountDetailsList.size(); i++) {
             if (accountDetailsList.get(i).account_name.equals(accountDetails.account_name)) {

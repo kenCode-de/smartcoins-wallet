@@ -2,7 +2,7 @@ package com.luminiasoft.bitshares;
 
 import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
-import org.bitcoinj.core.Base58;
+
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.ECPoint;
 import java.util.ArrayList;
 
 /**
@@ -51,7 +50,6 @@ public class BrainKey {
             stringBuilder.append(word);
             stringBuilder.append(" ");
         }
-        System.out.println("Suggestion: '"+stringBuilder.toString().trim()+"'");
         return stringBuilder.toString().trim();
     }
     /**

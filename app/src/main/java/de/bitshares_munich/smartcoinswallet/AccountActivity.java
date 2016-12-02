@@ -241,6 +241,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (etAccountName.getText().length() > 5 && containsDigit(etAccountName.getText().toString()) && etAccountName.getText().toString().contains("-")) {
+            Log.d(TAG,"Starting validation check..");
             checkingValidation = true;
             hasNumber = true;
             validAccount = true;
@@ -263,6 +264,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
     public void createBitShareAN(boolean focused) {
+        Log.d(TAG, "createBitShareAN");
         if (!focused) {
             if (etAccountName.getText().length() > 5)
             {
@@ -354,7 +356,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
      * Method that generates a fresh brainkey.
      */
     private void generateKeys() {
-        Log.d(TAG,"generateKeys");
         BufferedReader reader = null;
         String dictionary = null;
         try {
@@ -364,8 +365,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             String brainKeySuggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
             Address address = new Address(brainKey.getPrivateKey());
-            Log.d(TAG,"brain key suggestion");
-            Log.d(TAG, brainKeySuggestion);
 
             mAddress = address.toString();
             brainPrivKey = brainKeySuggestion;
@@ -376,7 +375,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 Toast.makeText(getApplicationContext(),R.string.error_wif , Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
+            Log.e(TAG, "IOException while trying to generate key. Msg: "+e.getMessage());
             Toast.makeText(getApplicationContext(),R.string.error_read_dict_file , Toast.LENGTH_SHORT).show();
+            this.hideDialog();
         } finally {
             if (reader != null) {
                 try {
@@ -442,20 +443,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     void onFocusChanged(boolean hasFocus){
         if(!hasFocus) {
             if (etAccountName.getText().length() <= 5) {
-                checkingValidation = false;
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
             } else if (etAccountName.getText().length() > 5 && !containsDigit(etAccountName.getText().toString())) {
                 tvErrorAccountName.setText(getString(R.string.account_name_must_include_dash_and_a_number));
                 tvErrorAccountName.setVisibility(View.VISIBLE);
                 hasNumber = false;
-                checkingValidation = false;
             } else if (etAccountName.getText().length() > 5 && !etAccountName.getText().toString().contains("-")) {
                 tvErrorAccountName.setText(getString(R.string.account_name_must_include_dash_and_a_number));
                 tvErrorAccountName.setVisibility(View.VISIBLE);
-                checkingValidation = false;
             } else {
                 hasNumber = true;
-                checkingValidation = true;
             }
         }
     }
@@ -527,6 +524,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
+        Log.d(TAG,"checkAccount");
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -554,7 +552,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         String format = String.format(acName.toString(), etAccountName.getText().toString());
                         tvErrorAccountName.setText(format);
                         tvErrorAccountName.setVisibility(View.VISIBLE);
-                        checkingValidation = false;
                     }
                 });
             }
@@ -564,18 +561,18 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     public void run() {
                         validAccount = true;
                         tvErrorAccountName.setVisibility(View.GONE);
-                        checkingValidation = false;
                     }
                 });
             }
         } catch (Exception e) {
 
         }
+        checkingValidation = false;
     }
 
     void addWallet(String account_id) {
-              AccountDetails accountDetails = new AccountDetails();
-        accountDetails.pinCode=etPin.getText().toString();
+        AccountDetails accountDetails = new AccountDetails();
+        accountDetails.pinCode = etPin.getText().toString();
         accountDetails.wif_key = wifPrivKey;
         accountDetails.account_name = etAccountName.getText().toString();
         accountDetails.pub_key = mAddress;
@@ -583,9 +580,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.isSelected = true;
         accountDetails.status = "success";
         accountDetails.account_id = account_id;
+        accountDetails.isPostSecurityUpdate = true;
 
         BinHelper myBinHelper = new BinHelper();
-        myBinHelper.addWallet(accountDetails,brainPrivKey,etPin.getText().toString(),getApplicationContext(),this);
+        myBinHelper.addWallet(accountDetails, getApplicationContext(), this);
 
         Intent intent;
 
@@ -642,12 +640,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void accountId(String string) {
+    public void accountId(String response) {
+        Log.d(TAG,"accountId. response: "+response);
         myWebSocketHelper.cleanUpTransactionsHandler();
-        String result = SupportMethods.ParseJsonObject(string, "result");
+        String result = SupportMethods.ParseJsonObject(response, "result");
         String id_account = SupportMethods.ParseJsonObject(result, "id");
-        SupportMethods.testing("accountID", id_account, "getDetails");
-
+        Log.d(TAG, "id_account: "+id_account);
         addWallet(id_account);
     }
 
