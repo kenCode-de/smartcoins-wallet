@@ -3,7 +3,6 @@ package com.luminiasoft.bitshares;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
-
 import org.bitcoinj.core.Base58;
 
 /**
@@ -12,7 +11,6 @@ import org.bitcoinj.core.Base58;
  * @author Nelson R. Pérez
  */
 public class Invoice implements JsonSerializable {
-    public final static String TAG = "Invoice";
     public static class LineItem {
         private String label;
         private int quantity;

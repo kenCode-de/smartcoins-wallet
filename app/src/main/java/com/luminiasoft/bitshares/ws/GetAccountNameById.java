@@ -1,8 +1,11 @@
 package com.luminiasoft.bitshares.ws;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
@@ -12,7 +15,6 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
-
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +39,17 @@ public class GetAccountNameById extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList();
         ArrayList<Serializable> paramAddress = new ArrayList();
-        paramAddress.add(accountID);
+        paramAddress.add(new JsonSerializable() {
+            @Override
+            public String toJsonString() {
+                return accountID;
+            }
+
+            @Override
+            public JsonElement toJsonObject() {
+                return new JsonParser().parse(accountID);
+            }
+        });
         accountParams.add(paramAddress);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_ACCOUNTS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByAddress.toJsonString());
@@ -45,6 +57,7 @@ public class GetAccountNameById extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        System.out.println("<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
@@ -57,6 +70,12 @@ public class GetAccountNameById extends WebSocketAdapter {
             this.mListener.onSuccess(witnessResponse);
         }
         websocket.disconnect();
+    }
+
+    @Override
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame())
+            System.out.println(">>> "+frame.getPayloadText());
     }
 
     @Override

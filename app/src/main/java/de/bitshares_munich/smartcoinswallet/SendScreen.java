@@ -97,6 +97,9 @@ import retrofit2.Response;
  */
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, WitnessResponseListener {
     private String TAG = "SendScreen";
+
+    private final Asset FEE_ASSET = new Asset("1.3.0");
+
     Context context;
 
     TinyDB tinyDB;
@@ -1033,12 +1036,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
-                    .setFee(new AssetAmount(UnsignedLong.valueOf(264174), new Asset("1.3.0")))
+                    .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
                     .build();
 
-            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, this));
+            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
             mWebsocketThread.start();
         }catch(MalformedTransactionException e){
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());

@@ -1,10 +1,14 @@
 package com.luminiasoft.bitshares.ws;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
@@ -36,7 +40,17 @@ public class GetAccountsByAddress extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList();
         ArrayList<Serializable> paramAddress = new ArrayList();
-        paramAddress.add(address.toString());
+        paramAddress.add(new JsonSerializable() {
+            @Override
+            public String toJsonString() {
+                return address.toString();
+            }
+
+            @Override
+            public JsonElement toJsonObject() {
+                return new JsonParser().parse(address.toString());
+            }
+        });
         accountParams.add(paramAddress);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_KEY_REFERENCES, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByAddress.toJsonString());
@@ -44,8 +58,10 @@ public class GetAccountsByAddress extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        System.out.println("<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         Gson gson = new Gson();
+
         Type GetAccountByAddressResponse = new TypeToken<WitnessResponse<List<List<String>>>>(){}.getType();
         WitnessResponse<WitnessResponse<List<List<String>>>> witnessResponse = gson.fromJson(response, GetAccountByAddressResponse);
         if (witnessResponse.error != null) {
@@ -54,6 +70,12 @@ public class GetAccountsByAddress extends WebSocketAdapter {
             this.mListener.onSuccess(witnessResponse);
         }
         websocket.disconnect();
+    }
+
+    @Override
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame())
+            System.out.println(">>> "+frame.getPayloadText());
     }
 
     @Override
