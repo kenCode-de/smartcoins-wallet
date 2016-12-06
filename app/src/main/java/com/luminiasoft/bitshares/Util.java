@@ -93,25 +93,23 @@ public class Util {
         InputStream in = null;
         try {
             ByteArrayInputStream input = new ByteArrayInputStream(inputBytes);
-            ByteArrayOutputStream output = new ByteArrayOutputStream(2048);
+            ByteArrayOutputStream output = new ByteArrayOutputStream(4096);
             if(which == XZ) {
                 in = new XZInputStream(input);
             }else if(which == LZMA){
                 in = new LZMAInputStream(input);
             }
             int size;
-            while ((size = in.read()) != -1) {
-                output.write(size);
+            try {
+                while ((size = in.read()) != -1) {
+                    output.write(size);
+                }
+            }catch(Exception e){
             }
             in.close();
             return output.toByteArray();
         } catch (IOException ex) {
             Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);            }
         }
         return null;
     }

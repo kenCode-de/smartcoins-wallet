@@ -32,6 +32,8 @@ import java.util.Arrays;
  */
 public abstract class FileBin {
 
+    private static final int COMPRESS_TYPE = Util.LZMA;
+
     /**
      * Method to get the brainkey fron an input of bytes
      *
@@ -59,8 +61,20 @@ public abstract class FileBin {
             byte[] compressedData = new byte[rawData.length - 4];
             System.arraycopy(rawData, 4, compressedData, 0, compressedData.length);
             byte[] wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
+            if(wallet_object_bytes == null) {
+                wallet_object_bytes = Util.decompress(compressedData, Util.LZMA);
+            }
+            if(wallet_object_bytes == null) {
+                return null;
+            }
             String wallet_string = new String(wallet_object_bytes, "UTF-8");
-            JsonObject wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
+            JsonObject wallet;
+            try{
+                wallet=new JsonParser().parse(wallet_string).getAsJsonObject();
+            }catch(Exception e){
+                wallet_string = wallet_string + "}";
+                wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
+            }
             if (wallet.get("wallet").isJsonArray()) {
                 wallet = wallet.get("wallet").getAsJsonArray().get(0).getAsJsonObject();
             } else {
@@ -72,7 +86,6 @@ public abstract class FileBin {
             byte[] encKey = decryptAES(temp, password.getBytes("UTF-8"));
             temp = new byte[encKey.length];
             System.arraycopy(encKey, 0, temp, 0, temp.length);
-
 
             byte[] encBrain = new BigInteger(wallet.get("encrypted_brainkey").getAsString(), 16).toByteArray();
             while(encBrain[0] == 0){
@@ -113,14 +126,16 @@ public abstract class FileBin {
             JsonObject wallet = new JsonObject();
             wallet.add("encryption_key", new JsonParser().parse(byteToString(encKey_enc)));
             wallet.add("encrypted_brainkey", new JsonParser().parse(byteToString(encBrain)));
+            JsonArray wallets = new JsonArray();
+            wallets.add(wallet);
             JsonObject wallet_object = new JsonObject();
-            wallet_object.add("wallet", wallet);
+            wallet_object.add("wallet", wallets);
             JsonArray accountNames = new JsonArray();
             JsonObject jsonAccountName = new JsonObject();
             jsonAccountName.add("name", new JsonParser().parse(accountName));
             accountNames.add(jsonAccountName);
             wallet_object.add("linked_accounts", accountNames);
-            byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"), Util.XZ);
+            byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"), COMPRESS_TYPE);
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] checksum = md.digest(compressedData);
             byte[] rawData = new byte[compressedData.length + 4];
@@ -203,17 +218,18 @@ public abstract class FileBin {
 
             byte[] pre_out = new byte[cipher.getOutputSize(input.length)];
             int proc = cipher.processBytes(input, 0, input.length, pre_out, 0);
-            int proc2  = cipher.doFinal(pre_out, proc);
-            byte[] out = new byte[proc+proc2];
+            int proc2 = cipher.doFinal(pre_out, proc);
+            byte[] out = new byte[proc + proc2];
             System.arraycopy(pre_out, 0, out, 0, proc + proc2);
+
             //Unpadding
-            int count = out[out.length-1];
-            if(count > 15|| count <0){
-                count = 0;
-            }
-            if(count == 0){
+            byte countByte = (byte) ((byte) out[out.length - 1] % 16);
+            int count = countByte & 0xFF;
+
+            if ((count > 15) || (count <= 0)) {
                 return out;
             }
+
             byte[] temp = new byte[count];
             System.arraycopy(out, out.length - count, temp, 0, temp.length);
             byte[] temp2 = new byte[count];
@@ -225,7 +241,6 @@ public abstract class FileBin {
             } else {
                 return out;
             }
-
         } catch (NoSuchAlgorithmException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
         }
         return null;
