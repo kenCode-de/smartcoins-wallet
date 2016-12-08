@@ -24,16 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.BrainKey;
+import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
-import com.luminiasoft.bitshares.ws.LookupAccount;
+import com.luminiasoft.bitshares.ws.LookupAccounts;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -89,7 +88,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     TextView tvExistingAccount;
 
     Boolean settingScreen = false;
-    Boolean validAccount = true;
+    Boolean validAccount = false;
     Boolean checkingValidation = false;
 
     Boolean accountCreated = false;
@@ -239,34 +238,22 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @OnTextChanged(R.id.etAccountName)
     void onTextChanged(CharSequence text) {
-
+        Log.d(TAG, "onTextChanged. text: "+text);
+        etAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         hasNumber = false;
-
-        if (etAccountName.getText().length() > 5 && containsDigit(etAccountName.getText().toString()) && etAccountName.getText().toString().contains("-")) {
+        validAccount = true;
+        if (text.length() > 5 && containsDigit(text.toString()) && text.toString().contains("-")) {
             Log.d(TAG,"Starting validation check..");
             checkingValidation = true;
             hasNumber = true;
-            validAccount = true;
             myLowerCaseTimer.cancel();
-            myAccountNameValidationTimer.cancel();
             myLowerCaseTimer.start();
-            myAccountNameValidationTimer.start();
+            createBitShareAN(false);
         }
 
     }
 
-    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(10000, 10000) {
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            createBitShareAN(false);
-        }
-    };
-
-
     public void createBitShareAN(boolean focused) {
-        Log.d(TAG, "createBitShareAN");
         if (!focused) {
             if (etAccountName.getText().length() > 5)
             {
@@ -274,11 +261,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     tvErrorAccountName.setText("");
                     tvErrorAccountName.setVisibility(View.GONE);
                 }
-                new WebsocketWorkerThread(new LookupAccount(etAccountName.getText().toString(), new WitnessResponseListener() {
+                new WebsocketWorkerThread(new LookupAccounts(etAccountName.getText().toString(), new WitnessResponseListener() {
                     @Override
                     public void onSuccess(WitnessResponse response) {
-                        if (response.result.getClass() == JsonArray.class) {
-                            checkAccountwithArray((JsonArray) response.result);
+                        WitnessResponse<List<UserAccount>> accountLookupResponse = response;
+                        if (accountLookupResponse.result.size() > 0) {
+                            checkAccount(accountLookupResponse.result);
                         } else {
                             hideDialog();
                             Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
@@ -541,47 +529,38 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void checkAccount(JSONObject jsonObject) {}
 
-    public void checkAccountwithArray(JsonArray jsonObject) {
-        try {
-            JsonArray jsonArray = jsonObject;
-            boolean found = false;
-            for (int i = 0; i < jsonArray.size(); i++) {
-                final String temp = jsonArray.get(i).getAsJsonArray().get(0).getAsString();
-                if (temp.equals(etAccountName.getText().toString())) {
-                    found = true;
+    /**
+     * Checks if the proposed account name is valid.
+     * @param existingAccounts
+     */
+    public void checkAccount(List<UserAccount> existingAccounts){
+        boolean found = false;
+        for(UserAccount existingAccount : existingAccounts){
+            if(existingAccount.getAccountName().equals(etAccountName.getText().toString())){
+                found = true;
+                break;
+            }
+        }
+        if(found){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     validAccount = false;
+                    String acName = getString(R.string.account_name_already_exist);
+                    String format = String.format(acName.toString(), etAccountName.getText().toString());
+                    tvErrorAccountName.setText(format);
+                    tvErrorAccountName.setVisibility(View.VISIBLE);
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvErrorAccountName.setText(R.string.validation_in_progress);
-                        tvErrorAccountName.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-            if (found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        String acName = getString(R.string.account_name_already_exist);
-                        String format = String.format(acName.toString(), etAccountName.getText().toString());
-                        tvErrorAccountName.setText(format);
-                        tvErrorAccountName.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-            if (!found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        validAccount = true;
-                        tvErrorAccountName.setVisibility(View.GONE);
-                    }
-                });
-            }
-        } catch (Exception e) {
-
+            });
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    validAccount = true;
+                    tvErrorAccountName.setVisibility(View.GONE);
+                    etAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_done_24dp, 0);
+                }
+            });
         }
         checkingValidation = false;
     }
@@ -690,19 +669,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         addWallet(id_account);
     }
 
-    public boolean containsDigit(String s)
-    {
-        if (s != null && !s.isEmpty())
-        {
-            for (char c : s.toCharArray())
-            {
-                if (Character.isDigit(c))
-                {
-                    return true;
-                }
-            }
+    public boolean containsDigit(String s) {
+        if (s != null && !s.isEmpty()) {
+            return s.matches(".*\\d+.*");
         }
-
         return false;
     }
 
