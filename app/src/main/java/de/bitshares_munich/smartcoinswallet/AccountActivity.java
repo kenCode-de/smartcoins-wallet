@@ -241,7 +241,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     void onTextChanged(CharSequence text) {
 
         hasNumber = false;
-        //myWebSocketHelper.cleanUpTransactionsHandler();
 
         if (etAccountName.getText().length() > 5 && containsDigit(etAccountName.getText().toString()) && etAccountName.getText().toString().contains("-")) {
             Log.d(TAG,"Starting validation check..");
@@ -275,15 +274,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     tvErrorAccountName.setText("");
                     tvErrorAccountName.setVisibility(View.GONE);
                 }
-                /*String socketText = getString(R.string.lookup_account_a);
-                String socketText2 = getString(R.string.lookup_account_b) + "\"" + etAccountName.getText().toString() + "\"" + ",50]],\"id\": 6}";
-                myWebSocketHelper.make_websocket_call(socketText,socketText2, webSocketCallHelper.api_identifier.database);*/
                 new WebsocketWorkerThread(new LookupAccount(etAccountName.getText().toString(), new WitnessResponseListener() {
                     @Override
                     public void onSuccess(WitnessResponse response) {
                         if (response.result.getClass() == JsonArray.class) {
-                            Log.d("henry","Es un array");
-                            checkAccount((JSONArray) response.result);
+                            checkAccountwithArray((JsonArray) response.result);
                         } else {
                             hideDialog();
                             Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
@@ -439,7 +434,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         if (resp.account != null) {
                             try {
                                 if(resp.account.name.equals(accountName)) {
-                                    //get_account_id(etAccountName.getText().toString(), "151");
                                     get_account_id(address);
                                     tvErrorAccountName.setVisibility(View.GONE);
                                 };
@@ -545,65 +539,14 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void checkAccount(JSONObject jsonObject) {  myWebSocketHelper.cleanUpTransactionsHandler();
-        Log.d("henry","checkAccount");
+    public void checkAccount(JSONObject jsonObject) {}
+
+    public void checkAccountwithArray(JsonArray jsonObject) {
         try {
-            JSONArray jsonArray = jsonObject.getJSONArray("result");
-
-
+            JsonArray jsonArray = jsonObject;
             boolean found = false;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                final String temp = jsonArray.getJSONArray(i).getString(0);
-                Log.d("henry",temp);
-                if (temp.equals(etAccountName.getText().toString())) {
-                    found = true;
-                    validAccount = false;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        tvErrorAccountName.setText(R.string.validation_in_progress);
-                        tvErrorAccountName.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-            if (found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        String acName = getString(R.string.account_name_already_exist);
-                        String format = String.format(acName.toString(), etAccountName.getText().toString());
-                        tvErrorAccountName.setText(format);
-                        tvErrorAccountName.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-            if (!found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        validAccount = true;
-                        tvErrorAccountName.setVisibility(View.GONE);
-                    }
-                });
-            }
-        } catch (Exception e) {
-
-        }
-        checkingValidation = false;
-    }
-
-    public void checkAccount(JSONArray jsonObject) {
-        Log.d("henry","checkAccount");
-        //myWebSocketHelper.cleanUpTransactionsHandler();
-        try {
-            //JSONArray jsonArray = jsonObject.getJSONArray("result");
-            JSONArray jsonArray = jsonObject;
-            boolean found = false;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                final String temp = jsonArray.getJSONArray(i).getString(0);
-                Log.d("henry",temp);
+            for (int i = 0; i < jsonArray.size(); i++) {
+                final String temp = jsonArray.get(i).getAsJsonArray().get(0).getAsString();
                 if (temp.equals(etAccountName.getText().toString())) {
                     found = true;
                     validAccount = false;
@@ -715,10 +658,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
             }
         })).start();
-        /*String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
-        String getDetails2 = ",\"get_account_by_name\",[\"" + name_id + "\"]]}";
-        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);*/
-
     }
 
     private void updateBlockNumberHead() {
@@ -746,11 +685,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @Override
     public void accountId(String response) {
-        Log.d(TAG,"accountId. response: "+response);
-        //myWebSocketHelper.cleanUpTransactionsHandler();
         String result = SupportMethods.ParseJsonObject(response, "result");
         String id_account = SupportMethods.ParseJsonObject(result, "id");
-        Log.d(TAG, "id_account: "+id_account);
         addWallet(id_account);
     }
 
