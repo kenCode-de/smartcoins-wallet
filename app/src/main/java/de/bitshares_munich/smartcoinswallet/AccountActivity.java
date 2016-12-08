@@ -66,7 +66,7 @@ import retrofit2.Response;
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
     private final String TAG = this.getClass().getName();
 
-    private final String BRAINKEY_FILE = "brainkeydict.txt";
+    public final static String BRAINKEY_FILE = "brainkeydict.txt";
 
     Context context;
     TinyDB tinyDB;
