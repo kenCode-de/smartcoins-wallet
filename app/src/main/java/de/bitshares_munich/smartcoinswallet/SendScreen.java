@@ -398,13 +398,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             Double loyaltyAmount = Double.parseDouble(text.toString());
             Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
             if (loyaltyAmount > loyaltyBalance) {
-                //tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
-                tvLoyaltyStatus.setText(R.string.str_warning_only_available);
-
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_warning_only_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
             } else {
                 String remainingBalance = String.format(Locale.ENGLISH, "%.4f", (loyaltyBalance - loyaltyAmount));
-                //tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
-                tvLoyaltyStatus.setText(getString(R.string.str_balance_available));
+                tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, loyaltyAsset.symbol));
             }
 
             setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
@@ -454,12 +451,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             backupAssetSym = assetsSymbols.updateString(backupAssets.symbol);
 
             if (backupAssetAmount > backupAssetBalance) {
-                //tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
-                tvBackupAssetBalanceValidate.setText(getString(R.string.str_warning_only_available));
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_warning_only_available), backupAssetBalance.toString(), backupAssetSym));
             } else {
                 String remainingBalance = String.format(Locale.ENGLISH, "%.5f", (backupAssetBalance - backupAssetAmount));
-                //tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
-                tvBackupAssetBalanceValidate.setText(getString(R.string.str_balance_available));
+                tvBackupAssetBalanceValidate.setText(String.format(getString(R.string.str_balance_available), remainingBalance, backupAssetSym));
             }
 
             setHyperlinkText(tvBackupAssetBalanceValidate, backupAssetBalance.toString(), etBackupAsset, 0, backupAssetSym, Color.BLACK);
@@ -612,14 +607,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     if (enteredAmount > selectedBalance | enteredAmount < 0) {
                         validAmount = false;
                         tvAmountStatus.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_dark));
-                        //tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
-                        tvAmountStatus.setText(getString(R.string.str_warning_only_available));
+                        tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
                     } else {
                         validAmount = true;
 
                         remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
-                        //tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
-                        tvAmountStatus.setText(getString(R.string.str_balance_available));
+                        tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
                         setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
                         updateTotalStatus(); // shayan
                     }
@@ -628,16 +621,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     if (!etLoyalty.getText().toString().equals("")) {
                         validAmount = true;
                     }
-                    //tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-                    tvAmountStatus.setText(getString(R.string.str_balance_available));
+                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 }
-
-
             } else {
                 etBackupAsset.setText(""); //shayan
                 validAmount = false;
-                //tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-                tvAmountStatus.setText(getString(R.string.str_balance_available));
+                tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
                 setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
             }
 
@@ -708,14 +697,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnCheckedChanged(R.id.cbAlwaysDonate)
     public void cbAlwaysDonate() {
-
         alwaysDonate = cbAlwaysDonate.isChecked();
         String text = etMemo.getText().toString();
         text = text.replaceAll("\\s+", " ").trim();
         etMemo.setText(text);
         etMemo.setSelection(etMemo.getText().length());
-
-
     }
 
     @OnFocusChange(R.id.etMemo)
@@ -1170,8 +1156,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         validating = false;
                         // This code works correct, donot edit if it shows red underline
                         try {
-                            //String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                            String format = getResources().getString(R.string.account_name_not_exist);
+                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
                             format = format.replaceAll("\\s+", " ").trim();
                             tvErrorRecieverAccount.setText(format);
                         } catch (Exception e) {
