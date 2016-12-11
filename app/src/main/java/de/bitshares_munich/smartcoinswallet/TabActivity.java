@@ -109,6 +109,7 @@ public class TabActivity extends BaseActivity {
                         if(accountDetail.account_id.equals(updatedAccount.account_id)){
                             accountDetail.wif_key = updatedAccount.wif_key;
                             accountDetail.brain_key = updatedAccount.brain_key;
+                            accountDetail.isPostSecurityUpdate = true;
                             Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
                         }
                         break;
@@ -259,7 +260,6 @@ public class TabActivity extends BaseActivity {
             updatedAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
             updatedAccount.brain_key = suggestion;
             updatedAccount.pub_key = address.toString();
-            updatedAccount.isPostSecurityUpdate = true;
 
             // Building a transaction that will be used to update the account key
             HashMap<PublicKey, Integer> authMap = new HashMap<>();
