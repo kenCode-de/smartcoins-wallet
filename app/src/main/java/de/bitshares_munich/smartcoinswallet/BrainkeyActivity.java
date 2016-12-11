@@ -207,7 +207,7 @@ public class BrainkeyActivity extends BaseActivity {
                     hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
-            })).start();
+            }), 0).start();
         } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | InvalidAlgorithmParameterException e) {
             hideDialog();
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
@@ -256,7 +256,7 @@ public class BrainkeyActivity extends BaseActivity {
                 public void onError(BaseResponse.Error error) {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
-            }))).start();
+            })),0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();

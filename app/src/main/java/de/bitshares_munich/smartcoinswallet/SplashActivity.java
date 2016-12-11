@@ -32,20 +32,7 @@ public class SplashActivity extends Activity {
 
     private void checkWhereToGo() {
         TinyDB tinyDB = new TinyDB(getApplicationContext());
-
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        for(AccountDetails account : arrayList){
-            Log.d(TAG, "account: "+account.toString());
-            try {
-                if(account.isPostSecurityUpdate){
-                    Log.d(TAG, "Account creation is post security update: " + account.isPostSecurityUpdate);
-                }else{
-                    Log.d(TAG, "Account creation is previous to the security update");
-                }
-            }catch(NullPointerException e){
-                Log.e(TAG, "NullPointerException. Account creation is previous to the security update");
-            }
-        }
         if (arrayList != null && arrayList.size() > 0) {
             Log.d(TAG, "we have at least one account!");
             if (Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist))) {

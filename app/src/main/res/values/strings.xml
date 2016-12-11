@@ -68,6 +68,16 @@
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
+    <string name="refresh_keys">REFRESH ACCOUNT KEYS</string>
+    <string name="refresh_keys_title">Update account keys</string>
+    <string name="refresh_keys_summary">This procedure will update you currently active account keys. You\'ll be required to backup the new keys after the procedure is done and discard your last backup, since it will no longer be valid.\n\nPlease handle this operation with care and don\'t forget to keep your new brain key in a safe and accessible place.</string>
+    <string name="dialog_proceed">Proceed</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_later">Later</string>
+    <string name="security_update_title">Security update</string>
+    <string name="security_update_summary">There has been a security update to this app. Your currently active account is outdated and needs to have its key switched. It is advisable that you do this procedure as soon as you can, but we understand this might not be the best moment. In case you decide to do it later, you can click on the settings (gear icon below) and look for the \'refresh account keys\' option.</string>
+    <string name="refresh_keys_fail">It was not possible to update your account key this time</string>
+    <string name="refresh_keys_success">Success! your account key was updated</string>
     <string name="secure_pin">EDIT PIN</string>
     <string name="export">Export</string>
     <string name="show_more">Show more</string>

@@ -73,7 +73,7 @@ import retrofit2.Response;
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
     private final String TAG = this.getClass().getName();
 
-    private final String BRAINKEY_FILE = "brainkeydict.txt";
+    public final static String BRAINKEY_FILE = "brainkeydict.txt";
 
     Context context;
     TinyDB tinyDB;
@@ -278,7 +278,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         hideDialog();
                         Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                     }
-                })).start();
+                }), 0).start();
             }
             else
             {
@@ -636,7 +636,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 hideDialog();
                 Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
             }
-        })).start();
+        }), 0).start();
     }
 
     private void updateBlockNumberHead() {
