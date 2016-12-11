@@ -17,14 +17,12 @@ import de.bitshares_munich.utils.Application;
 public class WebsocketWorkerThread extends Thread {
     private final String TAG = this.getClass().getName();
     private WebSocket mWebSocket;
-    private WebSocketListener mWebSocketListner;
 
-    public WebsocketWorkerThread(WebSocketListener webSocketListener){
-        mWebSocketListner = webSocketListener;
+    public WebsocketWorkerThread(WebSocketListener webSocketListener, int socketIndex){
 
         WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
         try {
-            mWebSocket = factory.createSocket(Application.urlsSocketConnection[0]);
+            mWebSocket = factory.createSocket(Application.urlsSocketConnection[socketIndex]);
             mWebSocket.addListener(webSocketListener);
         } catch (IOException e) {
             Log.e(TAG, "IOException. Msg: "+e.getMessage());

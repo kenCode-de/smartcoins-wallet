@@ -269,9 +269,9 @@ public class TabActivity extends BaseActivity {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
                             dialog.cancel();
-                            if(updatedAccounts.size() > 0){
-                                displayBrainKeyBackup();
-                            }
+//                            if(updatedAccounts.size() > 0){
+//                                displayBrainKeyBackup();
+//                            }
                             break;
                         }else{
                             Log.d(TAG, "pin code doesn't match");

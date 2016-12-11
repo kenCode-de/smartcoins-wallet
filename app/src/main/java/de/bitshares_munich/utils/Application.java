@@ -63,8 +63,8 @@ public class Application extends android.app.Application implements de.bitshares
     public static String urlsSocketConnection[] =
             {
 //                    "ws://api.devling.xyz:8088",
-//                    "wss://de.blockpay.ch:8089",                // German node
-//                    "wss://fr.blockpay.ch:8089",               // France node
+                    "wss://de.blockpay.ch:8089",                // German node
+                    "wss://fr.blockpay.ch:8089",               // France node
                     "wss://bitshares.openledger.info/ws",      // Openledger node
 
 //                    "wss://bit.btsabc.org/ws",
