@@ -834,8 +834,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     getExchangeRate(100);
                     Double loyaltyBalance = Double.parseDouble(loyaltyAsset.ammount) / Math.pow(10, Integer.parseInt(loyaltyAsset.precision));
                     tvLoyalty.setText(loyaltyAsset.symbol);
-                    //tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
-                    tvLoyaltyStatus.setText(getString(R.string.str_balance_available));
+                    tvLoyaltyStatus.setText(String.format(getString(R.string.str_balance_available), loyaltyBalance.toString(), loyaltyAsset.symbol));
                     setHyperlinkText(tvLoyaltyStatus, loyaltyBalance.toString(), etLoyalty, 0, loyaltyAsset.symbol, Color.BLACK);
                     llLoyalty.setVisibility(View.VISIBLE);
                     tvLoyaltyStatus.setVisibility(View.VISIBLE);
@@ -1049,6 +1048,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                                     } catch (MalformedTransactionException e) {
                                         Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
                                     }
+                                    hideDialog();
                                 }
                             }
                         }
@@ -1056,6 +1056,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                     @Override
                     public void onError(BaseResponse.Error error) {
+                        hideDialog();
                         Log.e(TAG, "Couldn't get key from receiver");
                     }
                 })));
@@ -1065,8 +1066,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                 mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
                 mWebsocketThread.start();
+                hideDialog();
             }
         } catch (MalformedTransactionException e) {
+            hideDialog();
             e.printStackTrace();
             Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         }
