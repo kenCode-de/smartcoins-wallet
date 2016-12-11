@@ -39,20 +39,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
+import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BlockData;
 import com.luminiasoft.bitshares.Invoice;
+import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.objects.Memo;
+import com.luminiasoft.bitshares.objects.MemoBuilder;
+import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1024,27 +1032,74 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 break;
             }
         }
-        String memo = etMemo.getText().toString();
+        final String memo;
         if (toAccount.equals("bitshares-munich")) {
             memo = "Donation";
+        }else if (etMemo.getText()!= null || !etMemo.getText().toString().isEmpty()){
+            memo = etMemo.getText().toString();
+        }else{
+            memo = null;
         }
         try{
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
-            Transaction transaction = new TransferTransactionBuilder()
+            final ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, privateKey).getKey();
+            final TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                    .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
-                    .build();
+                    .setPrivateKey(currentPrivKey);
+            if (memo != null || !memo.isEmpty()) {
+                mWebsocketThread = new WebsocketWorkerThread((new GetAccountNameById(receiverID, new WitnessResponseListener() {
+                    @Override
+                    public void onSuccess(WitnessResponse response) {
+                        if (response.result.getClass() == ArrayList.class) {
+                            List list = (List) response.result;
+                            if (list.size() > 0) {
+                                if (list.get(0).getClass() == AccountProperties.class) {
+                                    AccountProperties prop = (AccountProperties)list.get(0);
+                                    Memo memoObject = null;
+                                    try {
+                                        memoObject = new MemoBuilder()
+                                         .setFromKey(new PublicKey(currentPrivKey))
+                                         .setToKey(new Address(prop.active.address_auths[0]).getPublicKey())
+                                         .setMessage(memo)
+                                         .build();
+                                    } catch (MalformedAddressException e) {
+                                        e.printStackTrace();
+                                    }
+                                    builder.setMemo(memoObject);
+                                    Transaction transaction = null;
+                                    try {
+                                        transaction = builder.build();
 
-            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
-            mWebsocketThread.start();
-        }catch(MalformedTransactionException e){
-            Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
+                                        mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
+                                        mWebsocketThread.start();
+                                    } catch (MalformedTransactionException e) {
+                                        Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(BaseResponse.Error error) {
+                        Log.e(TAG, "Couldn't get key from receiver");
+                    }
+                })));
+                mWebsocketThread.start();
+            } else {
+                Transaction transaction = builder.build();
+
+                mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
+                mWebsocketThread.start();
+            }
+        } catch (MalformedTransactionException e) {
+            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         }
     }
 

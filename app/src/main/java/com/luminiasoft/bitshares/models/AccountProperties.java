@@ -25,14 +25,14 @@ public class AccountProperties {
     public Object[] active_special_authority;
     public long top_n_control_flags;
 
-    class User {
+    public class User {
         public long weight_threshold;
         public String[] account_auths; //TODO: Check this type
         public String[][] key_auths; //TODO: Check how to deserialize this
         public String[] address_auths;
     }
 
-    class Options {
+    public class Options {
         public String memo_key;
         public String voting_account;
         public long num_witness;

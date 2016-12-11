@@ -2,6 +2,7 @@ package com.luminiasoft.bitshares;
 
 import com.google.common.primitives.Bytes;
 import com.google.gson.*;
+import com.luminiasoft.bitshares.objects.Memo;
 
 import java.lang.reflect.Type;
 
@@ -15,6 +16,7 @@ public class TransferOperation extends BaseOperation {
     public static final String KEY_EXTENSIONS = "extensions";
     public static final String KEY_FROM = "from";
     public static final String KEY_TO = "to";
+    public static final String KEY_MEMO = "memo";
 
     private AssetAmount fee;
     private AssetAmount amount;
@@ -85,12 +87,17 @@ public class TransferOperation extends BaseOperation {
         array.add(this.getId());
         JsonObject jsonObject = new JsonObject();
         jsonObject.add(KEY_FEE, fee.toJsonObject());
-        jsonObject.add(KEY_AMOUNT, amount.toJsonObject());
-        jsonObject.add(KEY_EXTENSIONS, new JsonArray());
         jsonObject.addProperty(KEY_FROM, from.toJsonString());
         jsonObject.addProperty(KEY_TO, to.toJsonString());
+        jsonObject.add(KEY_AMOUNT, amount.toJsonObject());
+        jsonObject.add(KEY_MEMO, memo.toJsonObject());
+        jsonObject.add(KEY_EXTENSIONS, new JsonArray());
         array.add(jsonObject);
         return array;
+    }
+
+    public void setMemo(Memo memo) {
+        this.memo = memo;
     }
 
     public static class TransferSerializer implements JsonSerializer<TransferOperation> {

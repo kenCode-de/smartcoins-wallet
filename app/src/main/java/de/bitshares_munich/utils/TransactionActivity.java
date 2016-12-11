@@ -4,10 +4,24 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.PublicKey;
+import com.luminiasoft.bitshares.errors.MalformedAddressException;
+import com.luminiasoft.bitshares.objects.Memo;
+
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +36,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
@@ -956,104 +974,57 @@ public class TransactionActivity implements IBalancesDelegate {
         }
     }
 
-    private void decodeMemoTransactionsRecieved(final JSONObject memo)
+    private void decodeMemoTransactionsRecieved(final JSONObject memoObject)
     {
-        HashMap<String,String> hm = new HashMap<>();
-        hm.put("method","decode_memo");
-        hm.put("wifkey",wifkey);
-        hm.put("memo", memo.toString());
+        PublicKey toKey;
+        try {
+            toKey = new PublicKey(DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey());
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
+                IllegalBlockSizeException | BadPaddingException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        if (context == null) return;
+        try {
+            String message = memoObject.get("message").toString();
+            PublicKey fromKey = new Address(memoObject.get("from").toString()).getPublicKey();
+            String nonce = memoObject.get("nonce").toString();
 
-        if ( context == null ) return;
-        //TODO implement
-        /*ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
-        postingService.enqueue(new Callback<DecodeMemo>() {
-            @Override
-            public void onResponse(Response<DecodeMemo> response)
-            {
-                if (response.isSuccess())
-                {
-                    DecodeMemo resp = response.body();
-                    if (resp.status.equals("success"))
-                    {
-                        if ( memosToDecodeHm.containsKey(memo) )
-                        {
-                            memosToDecodeHm.put(memo,resp.msg);
-                        }
-
-                        loadMemoSListForDecoding();
-                    }
-                    else
-                    {
-                        loadMemoSListForDecoding();
-                    }
-                }
-                else
-                {
-                    loadMemoSListForDecoding();
-                }
+            if (memosToDecodeHm.containsKey(memoObject)) {
+                memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
             }
+            loadMemoSListForDecoding();
 
-            @Override
-            public void onFailure(Throwable t)
-            {
-                loadMemoSListForDecoding();
-            }
-        });*/
+        } catch (JSONException | MalformedAddressException e) {
+            e.printStackTrace();
+        }
     }
 
 
     private void decodeAllMemosInTransactionsRecieved(final List<JSONObject> memosArray)
     {
-        HashMap<String,String> hm = new HashMap<>();
-        hm.put("method","decode_memos_array");
-        hm.put("wifkey",wifkey);
-        hm.put("memos_array", memosArray.toString());
-
-        if ( context == null ) return;
-        ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.decode_memos_array_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<DecodeMemosArray> postingService = service.getDecodedMemosArray(hm);
-        postingService.enqueue(new Callback<DecodeMemosArray>() {
-            @Override
-            public void onResponse(Response<DecodeMemosArray> response)
-            {
-                if (response.isSuccess())
-                {
-                    DecodeMemosArray resp = response.body();
-                    if (resp.status.equals("success"))
-                    {
-                        int index = 0;
-                        for(JSONObject memoFetched:memosArray)
-                        {
-                            if ( memosToDecodeHm.containsKey(memoFetched) )
-                            {
-                                memosToDecodeHm.put(memoFetched,resp.memos.get(index));
-                            }
-
-                            index++;
-                        }
-
-                        decodingMemosComplete();
-                    }
-                    else
-                    {
-                        decodingMemosComplete();
-                    }
+        PublicKey toKey;
+        try {
+            toKey = new PublicKey(DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey());
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
+                IllegalBlockSizeException | BadPaddingException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        for(JSONObject memoObject : memosArray){
+            try {
+                String message = memoObject.get("message").toString();
+                PublicKey fromKey = new Address(memoObject.get("from").toString()).getPublicKey();
+                String nonce = memoObject.get("nonce").toString();
+                if ( memosToDecodeHm.containsKey(memoObject) ){
+                    memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
                 }
-                else
-                {
-                    decodingMemosComplete();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t)
-            {
                 decodingMemosComplete();
+
+            } catch (JSONException | MalformedAddressException e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
     JSONObject[] encryptedMemos;
