@@ -1,9 +1,15 @@
 package com.luminiasoft.bitshares.ws;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.*;
+import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.RPC;
+import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -17,7 +23,11 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Class that will handle the transaction publication procedure.
@@ -63,7 +73,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame())
-            System.out.println("<<< "+frame.getPayloadText());
+            Log.d(TAG, "<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
@@ -144,7 +154,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame()){
-            System.out.println(">>> "+frame.getPayloadText());
+            Log.d(TAG, ">>> "+frame.getPayloadText());
         }
     }
 

@@ -15,10 +15,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.IntegerRes;
 import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
 import android.util.Log;
@@ -36,18 +34,42 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.DataInputStream;
+import com.luminiasoft.bitshares.AccountOptions;
+import com.luminiasoft.bitshares.AccountUpdateTransactionBuilder;
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.Authority;
+import com.luminiasoft.bitshares.BrainKey;
+import com.luminiasoft.bitshares.PublicKey;
+import com.luminiasoft.bitshares.Transaction;
+import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.errors.MalformedTransactionException;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
+
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
+
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserLabels;
@@ -58,25 +80,17 @@ import butterknife.OnItemSelected;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.LangCode;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.PermissionManager;
-import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
-
+    private final String TAG = this.getClass().getName();
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";
     final String require_pin = "require_pin";
@@ -147,6 +161,60 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     Activity activitySettings;
 
     String wifKey = "";
+    private AccountDetails updatedAccount;
+    private int UPDATE_KEY_MAX_RETRIES = 3;
+    private int updateKeyRetryCount = 0;
+    private int nodeIndex = 0;
+    private WebsocketWorkerThread refreshKeyWorker;
+    private WitnessResponseListener mListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG,"onSuccess");
+                    Toast.makeText(SettingActivity.this, R.string.refresh_keys_success, Toast.LENGTH_LONG).show();
+                    for(AccountDetails accountDetail : accountDetails){
+                        if(accountDetail.account_id.equals(updatedAccount.account_id)){
+                            accountDetail.wif_key = updatedAccount.wif_key;
+                            accountDetail.brain_key = updatedAccount.brain_key;
+                            Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
+                        }
+                        break;
+                    }
+                    tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+                    showDialogCopyBrainKey();
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.d(TAG, "onError. Msg: "+error.message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updatedAccount = null;
+                    if(updateKeyRetryCount < UPDATE_KEY_MAX_RETRIES){
+                        Log.d(TAG, "Retrying. count: "+ updateKeyRetryCount +", max: "+ UPDATE_KEY_MAX_RETRIES);
+                        ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                        for(AccountDetails accountDetails : arrayList){
+                            nodeIndex = (nodeIndex + 1) % Application.urlsSocketConnection.length;
+                            Log.d(TAG,"account id: '"+accountDetails.account_id+"', name: "+accountDetails.account_name+", wif: "+accountDetails.wif_key);
+                            if(accountDetails.isSelected){
+                                updateAccountAuthorities(accountDetails);
+                                updateKeyRetryCount++;
+                                break;
+                            }
+                        }
+                    }else{
+                        Toast.makeText(SettingActivity.this, R.string.refresh_keys_fail, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -713,6 +781,93 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     void designMethod() {
         if (android.os.Build.VERSION.SDK_INT > 21)
             getWindow().setExitTransition(new Explode());
+    }
+
+    @OnClick(R.id.refresh_account_keys)
+    void onRefreshAccountKeysPressed(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+            .setTitle(getResources().getString(R.string.refresh_keys_title))
+            .setMessage(getResources().getString(R.string.refresh_keys_summary))
+            .setPositiveButton(getResources().getString(R.string.refresh_keys_proceed), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.d(TAG, "onClick");
+                    ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    for(AccountDetails accountDetails : arrayList){
+                        if(accountDetails.isSelected){
+                            updateAccountAuthorities(accountDetails);
+                            break;
+                        }
+                    }
+                }
+            }).setNegativeButton(getResources().getString(R.string.refresh_keys_dismiss), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+        builder.create().show();
+    }
+
+    /**
+     * Method that will actually perform a call to the full node and update the key currently
+     * controlling the account passed as a parameter.
+     *
+     * @param accountDetails: The account whose key we want to update.
+     */
+    private void updateAccountAuthorities(AccountDetails accountDetails) {
+        Log.d(TAG,"account to update. current brain key: "+accountDetails.brain_key);
+        updatedAccount = accountDetails;
+        try {
+            String currentWif = Crypt.getInstance().decrypt_string(updatedAccount.wif_key);
+
+            // Coming up with a new brainkey suggestion
+            BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(AccountActivity.BRAINKEY_FILE), "UTF-8"));
+            String dictionary = reader.readLine();
+            String suggestion = BrainKey.suggest(dictionary);
+            BrainKey brainKey = new BrainKey(suggestion, 0);
+            Log.d(TAG,"new brain key: "+suggestion);
+
+            // Keeping a reference of the account to be changed, with the updated values
+            Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
+            updatedAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
+            updatedAccount.brain_key = suggestion;
+            updatedAccount.pub_key = address.toString();
+            updatedAccount.isPostSecurityUpdate = true;
+
+            // Building a transaction that will be used to update the account key
+            HashMap<PublicKey, Integer> authMap = new HashMap<>();
+            authMap.put(address.getPublicKey(), 1);
+            Authority authority = new Authority(1, authMap, null);
+            AccountOptions options = new AccountOptions(address.getPublicKey());
+            Transaction transaction = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
+                    .setAccont(new UserAccount(accountDetails.account_id))
+                    .setOwner(authority)
+                    .setActive(authority)
+                    .setOptions(options)
+                    .build();
+
+            refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mListener), nodeIndex);
+            refreshKeyWorker.start();
+        } catch (MalformedTransactionException e) {
+            Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException. Msg: "+e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
+        } catch (InvalidKeyException e) {
+            Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
+        } catch (InvalidAlgorithmParameterException e) {
+            Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
+        } catch (BadPaddingException e) {
+            Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
+        }
     }
 
     @OnClick(R.id.register_new_account)

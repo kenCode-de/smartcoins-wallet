@@ -1041,7 +1041,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setPrivateKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey())
                     .build();
 
-            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
+            mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this), 0);
             mWebsocketThread.start();
         }catch(MalformedTransactionException e){
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());

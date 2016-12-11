@@ -3,6 +3,9 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +21,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.BrainKey;
+
+import org.bitcoinj.core.ECKey;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,10 +48,14 @@ import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
 
 public class TabActivity extends BaseActivity {
     private String TAG = this.getClass().getName();
+
+    private ArrayList<AccountDetails> updatedAccounts;
+    private Handler mHandler;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -85,7 +108,112 @@ public class TabActivity extends BaseActivity {
             }
         }
 
+        boolean isAccountOld = false;
+        ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for(AccountDetails account : arrayList){
+            Log.d(TAG, "account: "+account.toString());
+            try {
+                if(account.isPostSecurityUpdate){
+                    Log.d(TAG, "Account creation is post security update: " + account.isPostSecurityUpdate);
+                }else{
+                    Log.d(TAG, "Account creation is previous to the security update");
+                    isAccountOld = true;
+                }
+            }catch(NullPointerException e){
+                Log.e(TAG, "NullPointerException. Account creation is previous to the security update");
+                isAccountOld = true;
+            }
+            if(isAccountOld){
+                try {
+                    updateAccountAuthorities(account);
+                } catch (IOException e) {
+                    Log.e(TAG,"IOException while trying to open brainkey dictionary");
+                } catch (NoSuchAlgorithmException e) {
+                    Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
+                } catch (BadPaddingException e) {
+                    Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
+                } catch (InvalidKeyException e) {
+                    Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
+                } catch (InvalidAlgorithmParameterException e) {
+                    Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
+                } catch (NoSuchPaddingException e) {
+                    Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
+                } catch (IllegalBlockSizeException e) {
+                    Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
+                } catch (ClassNotFoundException e) {
+                    Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
+                }
+            }
+        }
+    }
 
+    /**
+     * Will display a dialog prompting the user to make a backup of the brain key.
+     */
+    private void displayBrainKeyBackup() {
+
+        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        dialog.setTitle(getString(R.string.backup_brainkey));
+        dialog.setContentView(R.layout.activity_copybrainkey);
+        final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
+        try
+        {
+            String brainKey = "";
+            for(AccountDetails accountDetails : updatedAccounts){
+                if(accountDetails.isSelected){
+                    brainKey = accountDetails.brain_key;
+                }
+            }
+            if (brainKey.isEmpty())
+            {
+                Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+                return;
+            }
+            else
+            {
+                etBrainKey.setText(brainKey);
+            }
+        }
+        catch (Exception e) {
+
+        }
+
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        Button btnCopy = (Button) dialog.findViewById(R.id.btnCopy);
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TabActivity.this, R.string.copied_to_clipboard , Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                dialog.cancel();
+            }
+        });
+        dialog.setCancelable(false);
+
+        dialog.show();
+    }
+
+    private void updateAccountAuthorities(AccountDetails accountDetails) throws IOException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(AccountActivity.BRAINKEY_FILE), "UTF-8"));
+        String dictionary = reader.readLine();
+        String suggestion = BrainKey.suggest(dictionary);
+        BrainKey brainKey = new BrainKey(suggestion, 0);
+        Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
+        accountDetails.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
+        accountDetails.brain_key = suggestion;
+        accountDetails.pub_key = address.toString();
+        accountDetails.isPostSecurityUpdate = true;
+        if(updatedAccounts == null)
+            updatedAccounts = new ArrayList<AccountDetails>();
+        updatedAccounts.add(accountDetails);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -141,6 +269,9 @@ public class TabActivity extends BaseActivity {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
                             dialog.cancel();
+//                            if(updatedAccounts.size() > 0){
+//                                displayBrainKeyBackup();
+//                            }
                             break;
                         }else{
                             Log.d(TAG, "pin code doesn't match");

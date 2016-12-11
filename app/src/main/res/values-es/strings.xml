@@ -140,7 +140,7 @@
 <string name="create_pin">crear PIN</string>
 <string name="pin_changed_successfully">PIN cambiado correctamente</string>
 <string name="incorrect_old_pin">PIN anterior incorrecta</string>
-<string name="copy">Dupdo</string>
+<string name="copy">Copiar</string>
 <string name="pin_verification">ABIERTO</string>
 <string name="send_screen_name">Enviar</string>
 <string name="rcv_screen_name">Recibir</string>
@@ -232,4 +232,5 @@
     <string name="import_gravatar">importación Gravatar</string>
     <string name="please_import_the_correct_file">Por favor, importar el archivo correcto</string>
     <string name="merchant_email_has_been_imported_successfully">email comercio se ha importado con éxito</string>
+    <string name="refresh_keys">Actualizar llaves</string>
 </resources>

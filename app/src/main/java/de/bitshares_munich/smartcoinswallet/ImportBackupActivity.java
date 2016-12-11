@@ -1,17 +1,11 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,16 +21,8 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import ar.com.daidalos.afiledialog.FileChooserDialog;
@@ -44,29 +30,10 @@ import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.HttpVersion;
-import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.client.ClientProtocolException;
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-import cz.msebera.android.httpclient.params.BasicHttpParams;
-import cz.msebera.android.httpclient.params.HttpParams;
-import cz.msebera.android.httpclient.protocol.HTTP;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
-import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.PermissionManager;
-import de.bitshares_munich.utils.ServiceGenerator;
-import de.bitshares_munich.utils.SupportMethods;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ImportBackupActivity extends BaseActivity {
     @Bind(R.id.tvFileChoosenBin)
@@ -283,7 +250,7 @@ public class ImportBackupActivity extends BaseActivity {
                     hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
-            })).start();
+            }), 0).start();
         }
         catch (Exception e)
         {
@@ -347,7 +314,7 @@ public class ImportBackupActivity extends BaseActivity {
                 public void onError(BaseResponse.Error error) {
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
-            }))).start();
+            })), 0).start();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }

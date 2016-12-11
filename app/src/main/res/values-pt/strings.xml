@@ -232,4 +232,5 @@
     <string name="import_gravatar">Import Gravatar</string>
     <string name="please_import_the_correct_file">Por favor, importar o arquivo correto</string>
     <string name="merchant_email_has_been_imported_successfully">Merchant e-mail foi importada com sucesso</string>
+    <string name="refresh_keys">Atualizar chaves</string>
 </resources>
