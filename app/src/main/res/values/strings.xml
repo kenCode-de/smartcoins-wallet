@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Smartcoins Wallet</string>
-
+    <string name="dialog_positive">Ok</string>
     <string name="send_capital">Send</string>
 
     <string name="account_create_register_or_import">ACCOUNT CREATE/REGISTER OR IMPORT</string>
@@ -75,7 +75,10 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_later">Later</string>
     <string name="security_update_title">Security update</string>
-    <string name="security_update_summary">There has been a security update to this app. Your currently active account is outdated and needs to have its key switched. It is advisable that you do this procedure as soon as you can, but we understand this might not be the best moment. In case you decide to do it later, you can click on the settings (gear icon below) and look for the \'refresh account keys\' option.</string>
+    <string name="security_update_summary_positive">All the accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups\n\n</string>
+    <string name="security_update_summary_partial">Some accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups.\n\n</string>
+    <string name="security_update_summary_mixed">Some accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups.\n\nFor the ones that couldn\'t be updated the most probable reason of failure is the lack of funds. Please check that your accounts have a minimal balance and try to update the keys manually in the settings.</string>
+    <string name="security_update_summary_negative">There has been a security update, however the app was not able to update the keys for your accounts. The most probable reason for this is the lack of funds. Please check that your accounts have a minimal balance and try to update the keys manually in the settings.</string>
     <string name="refresh_keys_fail">It was not possible to update your account key this time</string>
     <string name="refresh_keys_success">Success! your account key was updated</string>
     <string name="secure_pin">EDIT PIN</string>

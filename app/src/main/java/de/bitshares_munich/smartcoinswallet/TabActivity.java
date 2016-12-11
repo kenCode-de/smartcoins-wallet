@@ -51,6 +51,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -90,8 +91,21 @@ public class TabActivity extends BaseActivity {
 
     TinyDB tinyDB;
 
-    ArrayList<AccountDetails> accountDetails;
-    private AccountDetails updatedAccount;
+    /* In memory reference to all accounts present in this wallet */
+    private ArrayList<AccountDetails> accountDetails;
+
+    /* List of accounts to be updated */
+    private LinkedList<AccountDetails> accountsToUpdate;
+
+    /* List of accounts successfully updated */
+    private LinkedList<AccountDetails> accountsUpdated;
+
+    /* List of accounts that failed to be updated */
+    private LinkedList<AccountDetails> accountsNotUpdated;
+
+    /* Account currently being updated */
+    private AccountDetails updatingAccount;
+
     private int UPDATE_KEY_MAX_RETRIES = 3;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
@@ -104,18 +118,19 @@ public class TabActivity extends BaseActivity {
                 @Override
                 public void run() {
                     Log.d(TAG,"onSuccess");
-                    Toast.makeText(TabActivity.this, R.string.refresh_keys_success, Toast.LENGTH_LONG).show();
                     for(AccountDetails accountDetail : accountDetails){
-                        if(accountDetail.account_id.equals(updatedAccount.account_id)){
-                            accountDetail.wif_key = updatedAccount.wif_key;
-                            accountDetail.brain_key = updatedAccount.brain_key;
+                        if(accountDetail.account_id.equals(updatingAccount.account_id)){
+                            accountDetail.wif_key = updatingAccount.wif_key;
+                            accountDetail.brain_key = updatingAccount.brain_key;
                             accountDetail.isPostSecurityUpdate = true;
                             Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
                         }
                         break;
                     }
                     tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-                    displayBrainKeyBackup();
+                    accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    accountsUpdated.add(updatingAccount);
+                    checkAccountUpdate();
                 }
             });
         }
@@ -126,7 +141,6 @@ public class TabActivity extends BaseActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updatedAccount = null;
                     if(updateKeyRetryCount < UPDATE_KEY_MAX_RETRIES){
                         Log.d(TAG, "Retrying. count: "+ updateKeyRetryCount +", max: "+ UPDATE_KEY_MAX_RETRIES);
                         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -134,13 +148,15 @@ public class TabActivity extends BaseActivity {
                             nodeIndex = (nodeIndex + 1) % Application.urlsSocketConnection.length;
                             Log.d(TAG,"account id: '"+accountDetails.account_id+"', name: "+accountDetails.account_name+", wif: "+accountDetails.wif_key);
                             if(accountDetails.isSelected){
-                                updateAccountAuthorities(accountDetails);
+                                updateAccountAuthorities();
                                 updateKeyRetryCount++;
                                 break;
                             }
                         }
                     }else{
-                        Toast.makeText(TabActivity.this, R.string.refresh_keys_fail, Toast.LENGTH_LONG).show();
+                        accountsNotUpdated.add(updatingAccount);
+                        updateKeyRetryCount = 0;
+                        checkAccountUpdate();
                     }
                 }
             });
@@ -235,18 +251,65 @@ public class TabActivity extends BaseActivity {
         return "";
     }
 
+    /**
+     * Checks if we still have accounts to update, and act accordingly.
+     * If we don't have any account left to update, we notify the user.
+     * If we never had any, all 3 accountsToUpdate, accountsUpdated and
+     * accountsNotUpdated linked lists must be empty.
+     */
+    private void checkAccountUpdate(){
+        if(accountsToUpdate.size() == 0){
+            if(accountsUpdated.size() == 0 && accountsNotUpdated.size() == 0){
+                // Nothing to update
+                return;
+            }else{
+                // Account update is finished
+                displayUpdateSummary();
+            }
+        } else {
+            // Update next account
+            updatingAccount = accountsToUpdate.poll();
+            updateAccountAuthorities();
+        }
+    }
 
     /**
-     * Method that will actually perform a call to the full node and update the key currently
-     * controlling the account passed as a parameter.
-     *
-     * @param accountDetails: The account whose key we want to update.
+     * Displays a summary of the update procedure.
      */
-    private void updateAccountAuthorities(AccountDetails accountDetails) {
-        Log.d(TAG,"account to update. current brain key: "+accountDetails.brain_key);
-        updatedAccount = accountDetails;
+    private void displayUpdateSummary(){
+        Log.d(TAG, "displayUpdateSummary. accountDetails: "+accountDetails.size()+", updated: "+accountsUpdated.size()+", not updated: "+accountsNotUpdated.size());
+        String message;
+        if(accountsNotUpdated.size() == accountDetails.size()){
+            message = getResources().getString(R.string.security_update_summary_negative);
+        } else if(accountsUpdated.size() == accountDetails.size()){
+            message = getResources().getString(R.string.security_update_summary_positive);
+        } else if(accountsNotUpdated.size() == 0 && accountsUpdated.size() > 0){
+            message = getResources().getString(R.string.security_update_summary_partial);
+        } else {
+            message = getResources().getString(R.string.security_update_summary_mixed);
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle(getResources().getString(R.string.security_update_title))
+                .setMessage(message)
+                .setPositiveButton(getString(R.string.dialog_positive), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    /**
+     * Method that will actually perform a call to the full node and update the key controlling
+     * the account specified at the private field called 'updatingAccount'.
+     */
+    private void updateAccountAuthorities() {
+        Log.d(TAG,"account to update: "+updatingAccount.account_name+", id: "+updatingAccount.account_id);
+        Log.d(TAG,"current brain key: "+updatingAccount.brain_key);
+        //TODO: Store old keys?
         try {
-            String currentWif = Crypt.getInstance().decrypt_string(updatedAccount.wif_key);
+            String currentWif = Crypt.getInstance().decrypt_string(updatingAccount.wif_key);
 
             // Coming up with a new brainkey suggestion
             BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(AccountActivity.BRAINKEY_FILE), "UTF-8"));
@@ -257,9 +320,9 @@ public class TabActivity extends BaseActivity {
 
             // Keeping a reference of the account to be changed, with the updated values
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
-            updatedAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
-            updatedAccount.brain_key = suggestion;
-            updatedAccount.pub_key = address.toString();
+            updatingAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
+            updatingAccount.brain_key = suggestion;
+            updatingAccount.pub_key = address.toString();
 
             // Building a transaction that will be used to update the account key
             HashMap<PublicKey, Integer> authMap = new HashMap<>();
@@ -267,13 +330,14 @@ public class TabActivity extends BaseActivity {
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
             Transaction transaction = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
-                    .setAccont(new UserAccount(accountDetails.account_id))
+                    .setAccont(new UserAccount(updatingAccount.account_id))
                     .setOwner(authority)
                     .setActive(authority)
                     .setOptions(options)
                     .build();
 
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mListener), nodeIndex);
+            Log.d(TAG,"starting websocket thread");
             refreshKeyWorker.start();
         } catch (MalformedTransactionException e) {
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
@@ -356,53 +420,41 @@ public class TabActivity extends BaseActivity {
                         }
                     }
                 }
-
             }
         });
         dialog.setCancelable(false);
         dialog.show();
     }
 
+    /**
+     * Checks all accounts and decides whether any of them needs a security update.
+     */
     private void checkSecurityUpdate(){
-        boolean isActiveAccountOld = false;
+        this.accountsToUpdate = new LinkedList<>();
+        this.accountsUpdated = new LinkedList<>();
+        this.accountsNotUpdated = new LinkedList<>();
+
         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        AccountDetails activeAccount = null;
         for(AccountDetails account : arrayList){
+            boolean isOld = true;
             Log.d(TAG, "account: "+account.toString());
-            if(account.isSelected){
-                activeAccount = account;
-                try {
-                    if(account.isPostSecurityUpdate){
-                        Log.d(TAG, "Account creation is post security update: " + account.isPostSecurityUpdate);
-                    }else{
-                        Log.d(TAG, "Account creation is previous to the security update");
-                        isActiveAccountOld = true;
-                    }
-                }catch(NullPointerException e){
-                    Log.e(TAG, "NullPointerException. Account creation is previous to the security update");
-                    isActiveAccountOld = true;
+            try {
+                if(account.isPostSecurityUpdate){
+                    Log.d(TAG, "Account creation is post security update: " + account.isPostSecurityUpdate);
+                    isOld = false;
+                }else{
+                    Log.d(TAG, "Account creation is previous to the security update");
                 }
-                break;
+            }catch(NullPointerException e){
+                Log.e(TAG, "NullPointerException. Account creation is previous to the security update");
+            }
+            if(isOld){
+                this.accountsToUpdate.add(account);
             }
         }
-        if(isActiveAccountOld){
-            final AccountDetails oldActiveAccount = activeAccount;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(getResources().getString(R.string.security_update_title))
-                    .setMessage(getResources().getString(R.string.security_update_summary))
-                    .setPositiveButton(getResources().getString(R.string.dialog_proceed), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            updateAccountAuthorities(oldActiveAccount);
-                            dialog.dismiss();
-                        }
-                    }).setNegativeButton(getResources().getString(R.string.dialog_later), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            builder.create().show();
+        if(accountsToUpdate.size() > 0){
+            updatingAccount = accountsToUpdate.poll();
+            updateAccountAuthorities();
         }
     }
 
