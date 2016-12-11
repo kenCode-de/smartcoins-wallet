@@ -184,7 +184,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                         break;
                     }
                     tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-                    showDialogCopyBrainKey();
+                    displayBrainKeyBackup();
                 }
             });
         }
@@ -279,7 +279,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     public void onClickBackupBrainkeybtn(View v) {
         designMethod();
-        showDialogCopyBrainKey();
+        displayBrainKeyBackup();
     }
 
     public void onClickSecurePinbtn(View v) {
@@ -706,26 +706,23 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     }
 
-    private void showDialogCopyBrainKey() {
-
+    /**
+     * Will display a dialog prompting the user to make a backup of the brain key.
+     */
+    private void displayBrainKeyBackup() {
         final Dialog dialog = new Dialog(this, R.style.stylishDialog);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
-        try
-        {
+        try {
             String brainKey = getBrainKey();
-            if (brainKey.isEmpty())
-            {
+            if (brainKey.isEmpty()) {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
                 return;
-            }
-            else
-            {
+            } else {
                 etBrainKey.setText(brainKey);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
         }
 
@@ -748,7 +745,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             }
         });
         dialog.setCancelable(false);
-
         dialog.show();
     }
 
@@ -788,7 +784,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
             .setTitle(getResources().getString(R.string.refresh_keys_title))
             .setMessage(getResources().getString(R.string.refresh_keys_summary))
-            .setPositiveButton(getResources().getString(R.string.refresh_keys_proceed), new DialogInterface.OnClickListener() {
+            .setPositiveButton(getResources().getString(R.string.dialog_proceed), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Log.d(TAG, "onClick");
@@ -800,7 +796,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                         }
                     }
                 }
-            }).setNegativeButton(getResources().getString(R.string.refresh_keys_dismiss), new DialogInterface.OnClickListener() {
+            }).setNegativeButton(getResources().getString(R.string.dialog_later), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
