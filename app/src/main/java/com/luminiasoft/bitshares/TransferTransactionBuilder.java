@@ -1,6 +1,8 @@
 package com.luminiasoft.bitshares;
 
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
+import com.luminiasoft.bitshares.objects.Memo;
+
 import org.bitcoinj.core.ECKey;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public class TransferTransactionBuilder extends TransactionBuilder {
     private UserAccount destinationAccount;
     private AssetAmount transferAmount;
     private AssetAmount feeAmount;
+    private Memo memo;
 
     public TransferTransactionBuilder(){}
 
@@ -52,6 +55,11 @@ public class TransferTransactionBuilder extends TransactionBuilder {
         return this;
     }
 
+    public TransferTransactionBuilder setMemo(Memo memo){
+        this.memo = memo;
+        return this;
+    }
+
     //TODO: Add support for multiple transfer operations in a single transaction
     public TransferTransactionBuilder addOperation(TransferOperation transferOperation){
         if(operations == null){
@@ -83,6 +91,9 @@ public class TransferTransactionBuilder extends TransactionBuilder {
                 transferOperation = new TransferOperation(sourceAccount, destinationAccount, transferAmount);
             }else{
                 transferOperation = new TransferOperation(sourceAccount, destinationAccount, transferAmount, feeAmount);
+            }
+            if(memo != null){
+                transferOperation.setMemo(this.memo);
             }
             operations.add(transferOperation);
         }

@@ -18,6 +18,10 @@ public class WebsocketWorkerThread extends Thread {
     private final String TAG = this.getClass().getName();
     private WebSocket mWebSocket;
 
+    public WebsocketWorkerThread(WebSocketListener webSocketListener){
+        this(webSocketListener,0);
+    }
+
     public WebsocketWorkerThread(WebSocketListener webSocketListener, int socketIndex){
 
         WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);

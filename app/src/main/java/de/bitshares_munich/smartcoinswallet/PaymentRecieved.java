@@ -1,7 +1,5 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -10,13 +8,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.PublicKey;
+import com.luminiasoft.bitshares.errors.MalformedAddressException;
+import com.luminiasoft.bitshares.objects.Memo;
+
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -26,18 +30,11 @@ import de.bitshares_munich.Interfaces.IAccountObject;
 import de.bitshares_munich.Interfaces.IAssetObject;
 import de.bitshares_munich.Interfaces.ITransactionObject;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.DecodeMemo;
-import de.bitshares_munich.models.TransferResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
@@ -197,36 +194,22 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
                 try {
                     privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
                 } catch (Exception e) {
+                    //TOOD change exception
                     e.printStackTrace();
+                    return;
                 }
             }
         }
-        HashMap hm = new HashMap();
-        hm.put("method","decode_memo");
-        hm.put("wifkey",privateKey);
-        hm.put("memo", memo);
-        Toast.makeText(getApplicationContext(),getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-        //TODO evaluate removal
-        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<DecodeMemo> postingService = service.getDecodedMemo(hm);
-        postingService.enqueue(new Callback<DecodeMemo>() {
-            @Override
-            public void onResponse(Response<DecodeMemo> response) {
-                if (response.isSuccess()) {
-                    DecodeMemo resp = response.body();
-                    if (resp.status.equals("success")){
-                        tvMemo.setText(resp.msg);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });*/
+        JsonObject memoObject = new JsonParser().parse(memo).getAsJsonObject();
+        try {
+            tvMemo.setText(Memo.decodeMessage(new Address(memoObject.get("from").getAsString()).getPublicKey(),
+                    new PublicKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey()),
+                    memoObject.get("message").getAsString(),
+                    memoObject.get("nonce").getAsString()));
+        } catch (MalformedAddressException e) {
+            //TODO change exception
+            Toast.makeText(getApplicationContext(),getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
