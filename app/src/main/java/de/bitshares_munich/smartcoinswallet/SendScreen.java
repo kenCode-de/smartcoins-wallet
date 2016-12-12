@@ -44,6 +44,7 @@ import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.BrainKey;
 import com.luminiasoft.bitshares.Invoice;
 import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
@@ -1037,12 +1038,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         String senderID = null;
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String wifKey = "";
+        String brainKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             if (accountDetail.account_name.equals(selectedAccount)) {
                 senderID = accountDetail.account_id;
                 try {
                     wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                    brainKey = accountDetail.brain_key;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1067,22 +1070,24 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             Log.d(TAG,"private key: "+ Util.bytesToHex(currentPrivKey.getSecretBytes()));
 
             Log.d(TAG, "Building");
-            Log.d(TAG, "from: "+new PublicKey(currentPrivKey).getAddress());
-            Log.d(TAG, "to: "+destination.getAddress());
-            Memo memo = new MemoBuilder()
-                    .setFromKey(new PublicKey(currentPrivKey))
-                    .setToKey(destination)
-                    .setMessage(memoMessage)
-                    .build();
-
             TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                    .setPrivateKey(currentPrivKey)
-                    .setMemo(memo);
+                    .setPrivateKey(currentPrivKey);
+            if(memoMessage != null) {
+                Log.d(TAG, "from: "+new PublicKey(currentPrivKey).getAddress());
+                Log.d(TAG, "fromBR: "+new PublicKey(new BrainKey(brainKey,0).getPrivateKey()).getAddress());
+                Log.d(TAG, "to: " + destination.getAddress());
+                Memo memo = new MemoBuilder()
+                        .setFromKey(new PublicKey(new BrainKey(brainKey,0).getPrivateKey()))
+                        .setToKey(destination)
+                        .setMessage(memoMessage)
+                        .build();
+                builder.setMemo(memo);
+            }
 
             Transaction transaction = builder.build();
 
