@@ -2665,7 +2665,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     public void getAccountUpgradeInfo(final Activity activity, final String accountName) {
 
-        Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
         //TODO evaluate removal
 
         /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
@@ -2708,7 +2708,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     public void getLtmPrice(final Activity activity, final String accountName) {
-        Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity, activity.getString(R.string.feature_unavaible), Toast.LENGTH_SHORT).show();
         //TODO implement
         /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
         IWebService service = sg.getService(IWebService.class);

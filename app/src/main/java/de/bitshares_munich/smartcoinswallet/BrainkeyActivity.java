@@ -24,6 +24,8 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 
+import org.bitcoinj.core.ECKey;
+
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -172,7 +174,7 @@ public class BrainkeyActivity extends BaseActivity {
     public void get_account_from_brainkey(final Activity activity, final String brainKey, final String pinCode) {
         try {
             BrainKey bKey = new BrainKey(brainKey, 0);
-            Address address = new Address(bKey.getPrivateKey());
+            Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
 

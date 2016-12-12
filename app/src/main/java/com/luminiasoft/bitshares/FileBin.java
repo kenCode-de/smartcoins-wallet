@@ -60,7 +60,12 @@ public abstract class FileBin {
             System.arraycopy(rawData, 0, checksum, 0, 4);
             byte[] compressedData = new byte[rawData.length - 4];
             System.arraycopy(rawData, 4, compressedData, 0, compressedData.length);
-            byte[] wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
+            byte[] wallet_object_bytes = null;
+            try {
+                wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
+            } catch (Exception e) {
+
+            }
             if(wallet_object_bytes == null) {
                 wallet_object_bytes = Util.decompress(compressedData, Util.LZMA);
             }

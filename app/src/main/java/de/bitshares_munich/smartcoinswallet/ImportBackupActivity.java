@@ -21,6 +21,8 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 
+import org.bitcoinj.core.ECKey;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +217,7 @@ public class ImportBackupActivity extends BaseActivity {
             }
             final String BrainKey = FileBin.getBrainkeyFromByte(inputFile,pin);
             com.luminiasoft.bitshares.BrainKey bKey = new BrainKey(BrainKey, 0);
-            Address address = new Address(bKey.getPrivateKey());
+            Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
 
