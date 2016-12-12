@@ -1,5 +1,7 @@
 package com.luminiasoft.bitshares.objects;
 
+import android.util.Log;
+
 import com.google.common.primitives.Bytes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -9,6 +11,7 @@ import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
 import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
 import com.luminiasoft.bitshares.interfaces.ByteSerializable;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,7 +21,7 @@ import java.security.SecureRandom;
  * Created by nelson on 11/9/16.
  */
 public class Memo implements ByteSerializable, JsonSerializable {
-
+    public final static String TAG = "Memo";
     public static final String KEY_FROM = "from";
     public static final String KEY_TO = "to";
     public static final String KEY_NONCE = "nonce";
@@ -101,7 +104,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
                     custom_nonce = custom_nonce / 0x100;
                 }
             }
-
+            Log.d(TAG, "from: "+fromKey+", to: "+toKey);
             byte[] secret = toKey.getKey().getPubKeyPoint().multiply(fromKey.getKey().getPrivKey()).normalize().getXCoord().getEncoded();
             byte[] finalKey = new byte[secret.length + memo.nonce.length];
             System.arraycopy(secret, 0, finalKey, 0, secret.length);

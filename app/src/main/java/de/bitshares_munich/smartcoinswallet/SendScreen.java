@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
+import com.google.gson.GsonBuilder;
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
@@ -48,6 +49,7 @@ import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
@@ -56,6 +58,7 @@ import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.objects.Memo;
 import com.luminiasoft.bitshares.objects.MemoBuilder;
+import com.luminiasoft.bitshares.ws.GetAccountByName;
 import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
@@ -103,7 +106,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, WitnessResponseListener {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
     private String TAG = "SendScreen";
 
     private final Asset FEE_ASSET = new Asset("1.3.0");
@@ -126,7 +129,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, receiverID, callbackURL;
 
-    private WebsocketWorkerThread mWebsocketThread;
+    private WebsocketWorkerThread broadcastTransaction;
+    private WebsocketWorkerThread getAccountByName;
+
+    /* This is one of the of the recipient account's public key, it will be used for memo encoding */
+    private PublicKey destination;
 
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
@@ -208,6 +215,49 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+
+    /**
+     * Callback that obtains the response from the get_account_by_name API call.
+     * Here we're just interested in get one of the public keys from the recipient account
+     * in order to use it for memo encryption.
+     */
+    private WitnessResponseListener accountByNameListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG,"accountByNameListener. onSuccess");
+            AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
+            destination = accountProperties.active.getKeyAuths().get(0);
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.d(TAG,"accountByNameListener.onError. Msg: "+error.message);
+        }
+    };
+
+    /**
+     * Callback that is fired when we get a response from a transaction broadcast sequence.
+     */
+    private WitnessResponseListener broadcastTransactionListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG, "onSuccess");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideDialog();
+                    etAmount.setText("");
+                    Toast.makeText(SendScreen.this, "Success!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "onError. msg: "+error.message);
+            hideDialog();
+        }
+    };
 
     private void startupTasks() {
         runningSpinerForFirstTime = true;
@@ -672,6 +722,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
         myWebSocketHelper.make_websocket_call(socketText, scketText2, webSocketCallHelper.api_identifier.database);
 
+        this.getAccountByName = new WebsocketWorkerThread(new GetAccountByName(etReceiverAccount.getText().toString(), accountByNameListener), 0);
+        this.getAccountByName.start();
     }
 
     Handler reloadToAccountValidation = new Handler();
@@ -681,9 +733,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (etReceiverAccount.getText().length() > 2) {
                 tvErrorRecieverAccount.setText("");
                 tvErrorRecieverAccount.setVisibility(View.GONE);
-
                 lookupAccounts();
-
             } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
             }
@@ -986,88 +1036,58 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void transferAmount(String amount, String symbol, String toAccount) {
         String senderID = null;
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        String privateKey = "";
+        String wifKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             if (accountDetail.account_name.equals(selectedAccount)) {
                 senderID = accountDetail.account_id;
                 try {
-                    privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                    wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             }
         }
-        final String memo;
+        final String memoMessage;
         if (toAccount.equals("bitshares-munich")) {
-            memo = "Donation";
+            memoMessage = "Donation";
         }else if (etMemo.getText()!= null || !etMemo.getText().toString().isEmpty()){
-            memo = etMemo.getText().toString();
+            memoMessage = etMemo.getText().toString();
         }else{
-            memo = null;
+            memoMessage = null;
         }
+
         try{
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
-            final ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, privateKey).getKey();
-            final TransferTransactionBuilder builder = new TransferTransactionBuilder()
+            ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, wifKey).getKey();
+            Log.d(TAG,"is private key compressed: "+currentPrivKey.isCompressed());
+            Log.d(TAG,"private key: "+ Util.bytesToHex(currentPrivKey.getSecretBytes()));
+
+            Log.d(TAG, "Building");
+            Log.d(TAG, "from: "+new PublicKey(currentPrivKey).getAddress());
+            Log.d(TAG, "to: "+destination.getAddress());
+            Memo memo = new MemoBuilder()
+                    .setFromKey(new PublicKey(currentPrivKey))
+                    .setToKey(destination)
+                    .setMessage(memoMessage)
+                    .build();
+
+            TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
                     .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                    .setPrivateKey(currentPrivKey);
-            if (memo != null || !memo.isEmpty()) {
-                mWebsocketThread = new WebsocketWorkerThread((new GetAccountNameById(receiverID, new WitnessResponseListener() {
-                    @Override
-                    public void onSuccess(WitnessResponse response) {
-                        if (response.result.getClass() == ArrayList.class) {
-                            List list = (List) response.result;
-                            if (list.size() > 0) {
-                                if (list.get(0).getClass() == AccountProperties.class) {
-                                    AccountProperties prop = (AccountProperties)list.get(0);
-                                    Memo memoObject = null;
-                                    try {
-                                        memoObject = new MemoBuilder()
-                                         .setFromKey(new PublicKey(currentPrivKey))
-                                         .setToKey(new Address(prop.active.address_auths[0]).getPublicKey())
-                                         .setMessage(memo)
-                                         .build();
-                                    } catch (MalformedAddressException e) {
-                                        e.printStackTrace();
-                                    }
-                                    builder.setMemo(memoObject);
-                                    Transaction transaction = null;
-                                    try {
-                                        transaction = builder.build();
+                    .setPrivateKey(currentPrivKey)
+                    .setMemo(memo);
 
-                                        mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
-                                        mWebsocketThread.start();
-                                    } catch (MalformedTransactionException e) {
-                                        Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
-                                    }
-                                    hideDialog();
-                                }
-                            }
-                        }
-                    }
+            Transaction transaction = builder.build();
 
-                    @Override
-                    public void onError(BaseResponse.Error error) {
-                        hideDialog();
-                        Log.e(TAG, "Couldn't get key from receiver");
-                    }
-                })));
-                mWebsocketThread.start();
-            } else {
-                Transaction transaction = builder.build();
-
-                mWebsocketThread = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, this));
-                mWebsocketThread.start();
-                hideDialog();
-            }
+            broadcastTransaction = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
+            broadcastTransaction.start();
         } catch (MalformedTransactionException e) {
             hideDialog();
             e.printStackTrace();
@@ -1132,8 +1152,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             boolean found = false;
             for (int i = 0; i < jsonArray.length(); i++) {
-                final String temp = jsonArray.getJSONArray(i).getString(0);
-                if (temp.equals(etReceiverAccount.getText().toString())) {
+                final String accountName = jsonArray.getJSONArray(i).getString(0);
+                String accountId = jsonArray.getJSONArray(i).getString(1);
+                if (accountName.equals(etReceiverAccount.getText().toString())) {
+                    Log.d(TAG, "valid account name: "+accountName+", account id: "+accountId);
                     found = true;
                     validReceiver = true;
                     receiverID = jsonArray.getJSONArray(i).getString(1);
@@ -1147,6 +1169,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     });
                     sendBtnPressed = false;
                     validating = false;
+//                    destination = new UserAccount(accountId, accountName);
                     break;
                 }
             }
@@ -1702,24 +1725,5 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setHighlightColor(Color.TRANSPARENT);
         textView.setTextColor(Color.BLACK);
-    }
-
-    @Override
-    public void onSuccess(WitnessResponse response) {
-        Log.d(TAG, "onSuccess");
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                hideDialog();
-                etAmount.setText("");
-                Toast.makeText(SendScreen.this, "Success!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    public void onError(BaseResponse.Error error) {
-        Log.e(TAG, "onError. msg: "+error.message);
-        hideDialog();
     }
 }

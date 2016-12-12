@@ -1,7 +1,9 @@
 package com.luminiasoft.bitshares.ws;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.luminiasoft.bitshares.AccountOptions;
+import com.luminiasoft.bitshares.Authority;
 import com.luminiasoft.bitshares.RPC;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
@@ -36,17 +38,19 @@ public class GetAccountByName extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList<>();
         accountParams.add(this.accountName);
-        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_ACCOUNT_BY_NAME, accountParams, "2.0", 1);
+        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_ACCOUNT_BY_NAME, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByName.toJsonString());
     }
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
-        Gson gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
 
         Type GetAccountByNameResponse = new TypeToken<WitnessResponse<AccountProperties>>(){}.getType();
-        WitnessResponse<WitnessResponse<AccountProperties>> witnessResponse = gson.fromJson(response, GetAccountByNameResponse);
+        builder.registerTypeAdapter(Authority.class, new Authority.AuthorityDeserializer());
+        builder.registerTypeAdapter(AccountOptions.class, new AccountOptions.AccountOptionsDeserializer());
+        WitnessResponse<AccountProperties> witnessResponse = builder.create().fromJson(response, GetAccountByNameResponse);
 
         if(witnessResponse.error != null){
             this.mListener.onError(witnessResponse.error);
