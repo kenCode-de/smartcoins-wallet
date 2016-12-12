@@ -39,8 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
-import com.google.gson.GsonBuilder;
-import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BlockData;
@@ -51,7 +49,6 @@ import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
-import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
@@ -60,7 +57,6 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.objects.Memo;
 import com.luminiasoft.bitshares.objects.MemoBuilder;
 import com.luminiasoft.bitshares.ws.GetAccountByName;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
@@ -91,7 +87,6 @@ import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
@@ -1045,7 +1040,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 senderID = accountDetail.account_id;
                 try {
                     wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
-                    brainKey = accountDetail.brain_key;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1076,7 +1070,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
                 Memo memo = new MemoBuilder()
-                        .setFromKey(new PublicKey(currentPrivKey))
+                        .setFromKey(currentPrivKey)
                         .setToKey(destination)
                         .setMessage(memoMessage)
                         .build();

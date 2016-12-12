@@ -4,16 +4,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.objects.Memo;
 
 import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -43,15 +39,9 @@ import javax.crypto.NoSuchPaddingException;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
-import de.bitshares_munich.models.DecodeMemo;
-import de.bitshares_munich.models.DecodeMemosArray;
-import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -976,9 +966,9 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void decodeMemoTransactionsRecieved(final JSONObject memoObject)
     {
-        PublicKey toKey;
+        ECKey toKey;
         try {
-            toKey = new PublicKey(DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey());
+            toKey = DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey();
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -1003,9 +993,9 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void decodeAllMemosInTransactionsRecieved(final List<JSONObject> memosArray)
     {
-        PublicKey toKey;
+        ECKey toKey;
         try {
-            toKey = new PublicKey(DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey());
+            toKey = DumpedPrivateKey.fromBase58(null, Crypt.getInstance().decrypt_string(wifkey)).getKey();
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException |
                 IllegalBlockSizeException | BadPaddingException | ClassNotFoundException | IOException e) {
             e.printStackTrace();

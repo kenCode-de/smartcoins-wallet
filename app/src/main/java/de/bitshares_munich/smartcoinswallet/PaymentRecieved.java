@@ -11,7 +11,6 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.objects.Memo;
 
@@ -203,7 +202,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         JsonObject memoObject = new JsonParser().parse(memo).getAsJsonObject();
         try {
             tvMemo.setText(Memo.decodeMessage(new Address(memoObject.get("from").getAsString()).getPublicKey(),
-                    new PublicKey(DumpedPrivateKey.fromBase58(null, privateKey).getKey()),
+                    DumpedPrivateKey.fromBase58(null, privateKey).getKey(),
                     memoObject.get("message").getAsString(),
                     memoObject.get("nonce").getAsString()));
         } catch (MalformedAddressException e) {

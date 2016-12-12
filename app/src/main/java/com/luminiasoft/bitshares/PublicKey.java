@@ -9,11 +9,12 @@ import org.spongycastle.math.ec.ECPoint;
  * Created by nelson on 11/30/16.
  */
 public class PublicKey implements ByteSerializable {
-    private final String TAG = this.getClass().getName();
-    //TODO: Make this class throw an error if a private key is passed
     private ECKey publicKey;
 
     public PublicKey(ECKey key) {
+        if(key.hasPrivKey()){
+            throw new IllegalStateException("Passing a private key to PublicKey constructor");
+        }
         this.publicKey = key;
     }
 
