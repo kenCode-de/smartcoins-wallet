@@ -33,6 +33,7 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 import com.luminiasoft.bitshares.ws.LookupAccounts;
 
+import org.bitcoinj.core.ECKey;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -368,8 +369,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             String brainKeySuggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
-            Address address = new Address(brainKey.getPrivateKey());
-
+            Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
+            Log.d(TAG, "address would be: "+address.toString());
             mAddress = address.toString();
             brainPrivKey = brainKeySuggestion;
             try {
