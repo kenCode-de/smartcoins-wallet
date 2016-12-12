@@ -370,6 +370,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             String brainKeySuggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
+            Log.d(TAG, "brain key: "+brainKeySuggestion);
             Log.d(TAG, "address would be: "+address.toString());
             mAddress = address.toString();
             brainPrivKey = brainKeySuggestion;

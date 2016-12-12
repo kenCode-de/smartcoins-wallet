@@ -201,7 +201,7 @@ public static int nodeIndex = 0;
 
                         if (jsonObject.has("id")) {
                             int id = jsonObject.getInt("id");
-
+                            Log.d(TAG, "Got response. id: "+id);
                             if (id == 1) {
                                 if (s.contains("true")) {
                                     Application.send(context.getString(R.string.database_indentifier));

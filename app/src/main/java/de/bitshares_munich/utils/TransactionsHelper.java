@@ -47,7 +47,8 @@ import de.bitshares_munich.smartcoinswallet.R;
 /**
  * Created by Syed Muhammad Muzzammil on 5/20/16.
  */
-public class TransactionActivity implements IBalancesDelegate {
+public class TransactionsHelper implements IBalancesDelegate {
+    private String TAG = this.getClass().getName();
     public Context context;
     AssetDelegate assetDelegate;
 
@@ -60,7 +61,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     ArrayList<TransactionDetails> alreadyLoadedTransactions;
 
-    public TransactionActivity(Context c, final String account_id , AssetDelegate instance , String wif_key , final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions)
+    public TransactionsHelper(Context c, final String account_id , AssetDelegate instance , String wif_key , final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions)
     {
         context = c;
         assetDelegate = instance;
@@ -89,13 +90,13 @@ public class TransactionActivity implements IBalancesDelegate {
             wifkey = "";
         }
 
-        if(account_id!=null)
+        if(account_id != null)
         {
             get_relative_account_history(account_id, "8", _numberOfTransactionsLoaded,_numberOfTransactionsToLoad );
         }
     }
 
-    public TransactionActivity(Context c, final String account_id , AssetDelegate instance , String wif_key , final Date _transactionsTimeSpan)
+    public TransactionsHelper(Context c, final String account_id , AssetDelegate instance , String wif_key , final Date _transactionsTimeSpan)
     {
         context = c;
         assetDelegate = instance;
@@ -221,6 +222,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     void get_relative_account_history(final String account_id, final String id,final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad)
     {
+        Log.d(TAG, "get_relative_account_history. account id: "+account_id+", id: "+id+", _numberOfTransactionsLoaded: "+_numberOfTransactionsLoaded+", _numberOfTransactionsToLoad: "+_numberOfTransactionsToLoad);
         handleHourlyTransactions.removeCallbacksAndMessages(null);
         hourlyTransactionsAccountId = account_id;
 
@@ -250,8 +252,10 @@ public class TransactionActivity implements IBalancesDelegate {
     }
 
     @Override
-    public void OnUpdate(String s,int id)
+    public void OnUpdate(String s, int id)
     {
+        if(id == 8)
+            Log.d(TAG,"OnUpdate. id: "+id+", s: "+s);
         callInProgressForHourlyTransactions = false;
         callReceivedForHourlyTransactions = true;
         handleHourlyTransactions.removeCallbacksAndMessages(null);
@@ -468,12 +472,13 @@ public class TransactionActivity implements IBalancesDelegate {
         {
             if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
-            Log.d("Loading Transactions",e.getMessage());
+            Log.e(TAG, "Caught exception at hourlyTransactionsReceived. Msg: "+e.getMessage());
         }
     }
 
     void transactionsReceived (String result)
     {
+        Log.d(TAG,"transactionsReceived");
         try
         {
             JSONArray myJson = new JSONObject(result).getJSONArray("result");
@@ -628,12 +633,12 @@ public class TransactionActivity implements IBalancesDelegate {
                 }
                 else
                 {
-                    Log.d("Loading Transactions","duplication");
+                    Log.d(TAG,"duplication");
                 }
             }
 
           //  if(isNew) {
-                Log.d("LogTransactions", "found");
+                Log.d(TAG, "found");
 
                 numberOfTransactionsLoaded += numberOfTransactionsToLoad;
 
@@ -693,6 +698,7 @@ public class TransactionActivity implements IBalancesDelegate {
     HashMap<String,Date> headerTimings;
     void blockNumberTimeReceivedHourly(String result)
     {
+        Log.d(TAG,"blockNumberTimeReceivedHourly. result: "+result);
         try
         {
             // get time from result
@@ -752,7 +758,7 @@ public class TransactionActivity implements IBalancesDelegate {
         {
             if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
-            Log.d("Transactions Time",e.getMessage());
+            Log.e(TAG, "Exception caught in blockNumberTimeReceivedHourly. Msg: "+e.getMessage());
         }
     }
 
@@ -1110,6 +1116,7 @@ public class TransactionActivity implements IBalancesDelegate {
 
     private void generateTransactionsDetailArray()
     {
+        Log.d(TAG, "generateTransactionsDetailArray");
         try
         {
             String[] blocks = headerTimings.keySet().toArray(new String[headerTimings.size()]);
@@ -1255,6 +1262,7 @@ public class TransactionActivity implements IBalancesDelegate {
         }
         catch (Exception e)
         {
+            Log.e(TAG, "Exception in generateTransactionsDetailArray. Msg: "+e.getMessage());
             if ( context == null ) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
