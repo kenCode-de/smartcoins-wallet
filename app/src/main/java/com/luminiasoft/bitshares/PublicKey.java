@@ -10,6 +10,9 @@ public class PublicKey implements ByteSerializable {
     private ECKey publicKey;
 
     public PublicKey(ECKey key) {
+//        if(!key.isPubKeyOnly()){
+//            throw new IllegalStateException("Passing a private key to PublicKey constructor");
+//        }
         this.publicKey = key;
     }
 

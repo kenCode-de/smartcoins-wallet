@@ -39,18 +39,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
-import com.google.gson.GsonBuilder;
-import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BlockData;
+import com.luminiasoft.bitshares.BrainKey;
 import com.luminiasoft.bitshares.Invoice;
 import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
-import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
@@ -59,7 +57,6 @@ import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.objects.Memo;
 import com.luminiasoft.bitshares.objects.MemoBuilder;
 import com.luminiasoft.bitshares.ws.GetAccountByName;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
@@ -90,7 +87,6 @@ import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
@@ -1042,7 +1038,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (accountDetail.account_name.equals(selectedAccount)) {
                 senderID = accountDetail.account_id;
                 try {
+                    String brainKeyWords = accountDetail.brain_key;
+                    BrainKey brainKey = new BrainKey(brainKeyWords, 0);
                     wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                    Log.d(TAG, "Private key from brainkey: "+Util.bytesToHex(brainKey.getPrivateKey().getPrivKeyBytes()));
+                    Log.d(TAG, "Private key from wif: "+Util.bytesToHex(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1063,14 +1063,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
             ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, wifKey).getKey();
-            Log.d(TAG,"is private key compressed: "+currentPrivKey.isCompressed());
-            Log.d(TAG,"private key: "+ Util.bytesToHex(currentPrivKey.getSecretBytes()));
 
             Log.d(TAG, "Building");
-            Log.d(TAG, "from: "+new PublicKey(currentPrivKey).getAddress());
+            Log.d(TAG, "from: "+new PublicKey(ECKey.fromPublicOnly(currentPrivKey.getPubKey())).getAddress());
             Log.d(TAG, "to: "+destination.getAddress());
             Memo memo = new MemoBuilder()
-                    .setFromKey(new PublicKey(currentPrivKey))
+                    .setFromKey(currentPrivKey)
                     .setToKey(destination)
                     .setMessage(memoMessage)
                     .build();

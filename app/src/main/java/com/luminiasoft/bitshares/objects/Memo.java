@@ -12,6 +12,8 @@ import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
 import com.luminiasoft.bitshares.interfaces.ByteSerializable;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 
+import org.bitcoinj.core.ECKey;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,7 +29,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
     public static final String KEY_NONCE = "nonce";
     public static final String KEY_MESSAGE = "message";
 
-    private PublicKey from;
+    private ECKey from;
     private PublicKey to;
     private final byte[] nonce = new byte[8];
     private byte[] message;
@@ -54,7 +56,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
             for (int i = 0; i < nonceformat.length; i++) {
                 nonceformat[i] = nonce[nonce.length - i - 1];
             }
-            return Bytes.concat(new byte[]{1}, this.from.toBytes(), this.to.toBytes(), nonceformat, new byte[]{(byte) this.message.length}, this.message);
+            Log.d(TAG, "Memo.toBytes");
+            Log.d(TAG, Util.bytesToHex(Bytes.concat(new byte[]{1}, this.from.getPrivKeyBytes(), this.to.toBytes(), nonceformat, new byte[]{(byte) this.message.length}, this.message)));
+            return Bytes.concat(new byte[]{1}, this.from.getPrivKeyBytes(), this.to.toBytes(), nonceformat, new byte[]{(byte) this.message.length}, this.message);
         }
     }
 
@@ -65,7 +69,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
      * @param msg The message in bytes
      * @return a Memo corresponding with the message encoding
      */
-    public static Memo encodeMessage(PublicKey fromKey, PublicKey toKey, byte[] msg) {
+    public static Memo encodeMessage(ECKey fromKey, PublicKey toKey, byte[] msg) {
         return encodeMessage(fromKey, toKey, msg, 0);
     }
 
@@ -78,7 +82,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
      * @param custom_nonce the custom nonce to be use or 0 to create a new one
      * @return a Memo corresponding with the message encoding
      */
-    public static Memo encodeMessage(PublicKey fromKey, PublicKey toKey, byte[] msg, long custom_nonce) {
+    public static Memo encodeMessage(ECKey fromKey, PublicKey toKey, byte[] msg, long custom_nonce) {
         Memo memo = new Memo();
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -104,8 +108,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
                     custom_nonce = custom_nonce / 0x100;
                 }
             }
-            Log.d(TAG, "from: "+fromKey+", to: "+toKey);
-            byte[] secret = toKey.getKey().getPubKeyPoint().multiply(fromKey.getKey().getPrivKey()).normalize().getXCoord().getEncoded();
+            Log.d(TAG, "from: "+Util.bytesToHex(fromKey.getSecretBytes()));
+            Log.d(TAG, "to: "+Util.bytesToHex(toKey.toBytes()));
+            byte[] secret = toKey.getKey().getPubKeyPoint().multiply(fromKey.getPrivKey()).normalize().getXCoord().getEncoded();
             byte[] finalKey = new byte[secret.length + memo.nonce.length];
             System.arraycopy(secret, 0, finalKey, 0, secret.length);
             System.arraycopy(memo.nonce, 0, finalKey, secret.length, memo.nonce.length);
@@ -131,9 +136,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
      * @param nonce The nonce used in the decoded message
      * @return The message
      */
-    public static String decodeMessage(PublicKey fromKey, PublicKey toKey, byte[] msg, byte[] nonce) {
+    public static String decodeMessage(PublicKey fromKey, ECKey toKey, byte[] msg, byte[] nonce) {
 
-        byte[] secret = fromKey.getKey().getPubKeyPoint().multiply(toKey.getKey().getPrivKey()).normalize().getXCoord().getEncoded();
+        byte[] secret = fromKey.getKey().getPubKeyPoint().multiply(toKey.getPrivKey()).normalize().getXCoord().getEncoded();
         byte[] finalKey = new byte[secret.length + nonce.length];
         System.arraycopy(secret, 0, finalKey, 0, secret.length);
         System.arraycopy(nonce, 0, finalKey, secret.length, nonce.length);
@@ -146,15 +151,15 @@ public class Memo implements ByteSerializable, JsonSerializable {
     }
 
     /**
-     * returns the string coreesponding a encode memo
+     * returns the string corresponding a encode memo
      *
-     * @param fromKey The soruce key, need to have public key only
+     * @param fromKey The source key, need to have public key only
      * @param toKey The destination key, need to have private key access
      * @param message The message to be decoded
      * @param nonce The nonce used in the decoded message
      * @return The message
      */
-    public static String decodeMessage(PublicKey fromKey, PublicKey toKey, String message, String nonce) {
+    public static String decodeMessage(PublicKey fromKey, ECKey toKey, String message, String nonce) {
         byte[] msg = new BigInteger(message, 16).toByteArray();
         if (msg[0] == 0) {
             byte[] temp = new byte[msg.length - 1];
@@ -177,8 +182,12 @@ public class Memo implements ByteSerializable, JsonSerializable {
         if ((this.from == null) || (this.to == null) || (this.nonce == null) || (this.message == null)) {
             return null;
         }
+        Log.d(TAG,"toJsonObject");
+        org.spongycastle.math.ec.ECPoint point = ECKey.compressPoint(from.getPubKeyPoint());
+        PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(point));
+
         JsonObject memoObject = new JsonObject();
-        memoObject.addProperty(KEY_FROM, this.from.getAddress());
+        memoObject.addProperty(KEY_FROM, publicKey.getAddress());
         memoObject.addProperty(KEY_TO, this.to.getAddress());
         memoObject.addProperty(KEY_NONCE, new BigInteger(1, this.nonce).toString(10));
         memoObject.addProperty(KEY_MESSAGE, new BigInteger(1, this.message).toString(16));

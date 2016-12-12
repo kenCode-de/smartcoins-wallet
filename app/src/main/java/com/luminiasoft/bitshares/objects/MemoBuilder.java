@@ -2,13 +2,15 @@ package com.luminiasoft.bitshares.objects;
 
 import com.luminiasoft.bitshares.PublicKey;
 
+import org.bitcoinj.core.ECKey;
+
 /**
  * Class to build a Memo Object
  * @author henry 10/12/2016
  */
 public class MemoBuilder {
 
-    private PublicKey fromKey;
+    private ECKey fromKey;
     private PublicKey toKey;
     private String message;
     private long nonce = 0;
@@ -24,7 +26,7 @@ public class MemoBuilder {
      * @param fromKey The Public Key of the sender
      * @return The MemoBuilder
      */
-    public MemoBuilder setFromKey(PublicKey fromKey) {
+    public MemoBuilder setFromKey(ECKey fromKey) {
         this.fromKey = fromKey;
         return this;
     }
