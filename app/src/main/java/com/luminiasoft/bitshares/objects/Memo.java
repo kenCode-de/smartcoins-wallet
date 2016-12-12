@@ -1,7 +1,5 @@
 package com.luminiasoft.bitshares.objects;
 
-import android.util.Log;
-
 import com.google.common.primitives.Bytes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -104,7 +102,6 @@ public class Memo implements ByteSerializable, JsonSerializable {
                     custom_nonce = custom_nonce / 0x100;
                 }
             }
-            Log.d(TAG, "from: "+fromKey+", to: "+toKey);
             byte[] secret = toKey.getKey().getPubKeyPoint().multiply(fromKey.getKey().getPrivKey()).normalize().getXCoord().getEncoded();
             byte[] finalKey = new byte[secret.length + memo.nonce.length];
             System.arraycopy(secret, 0, finalKey, 0, secret.length);

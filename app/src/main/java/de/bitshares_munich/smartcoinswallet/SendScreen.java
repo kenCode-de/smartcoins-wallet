@@ -1066,10 +1066,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
             ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, wifKey).getKey();
-            Log.d(TAG,"is private key compressed: "+currentPrivKey.isCompressed());
-            Log.d(TAG,"private key: "+ Util.bytesToHex(currentPrivKey.getSecretBytes()));
 
-            Log.d(TAG, "Building");
             TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
@@ -1078,11 +1075,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
-                Log.d(TAG, "from: "+new PublicKey(currentPrivKey).getAddress());
-                Log.d(TAG, "fromBR: "+new PublicKey(new BrainKey(brainKey,0).getPrivateKey()).getAddress());
-                Log.d(TAG, "to: " + destination.getAddress());
                 Memo memo = new MemoBuilder()
-                        .setFromKey(new PublicKey(new BrainKey(brainKey,0).getPrivateKey()))
+                        .setFromKey(new PublicKey(currentPrivKey))
                         .setToKey(destination)
                         .setMessage(memoMessage)
                         .build();
