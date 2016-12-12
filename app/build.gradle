@@ -16,7 +16,7 @@ android {
 
         versionCode 188
 
-        versionName '1.0.7'
+        versionName '1.5.0'
         multiDexEnabled true
     }
     buildTypes {
