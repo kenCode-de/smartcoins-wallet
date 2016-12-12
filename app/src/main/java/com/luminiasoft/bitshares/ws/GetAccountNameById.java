@@ -1,10 +1,11 @@
 package com.luminiasoft.bitshares.ws;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.luminiasoft.bitshares.AccountOptions;
+import com.luminiasoft.bitshares.Authority;
 import com.luminiasoft.bitshares.RPC;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
@@ -16,6 +17,7 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
+
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
