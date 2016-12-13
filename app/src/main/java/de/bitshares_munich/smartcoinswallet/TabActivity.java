@@ -266,23 +266,18 @@ public class TabActivity extends BaseActivity {
      * accountsNotUpdated linked lists must be empty.
      */
     private void checkAccountUpdate(){
-
-        if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE)){
-            if(accountsToUpdate.size() == 0){
-                if(accountsUpdated.size() == 0 && accountsNotUpdated.size() == 0){
-                    // Nothing to update
-                    return;
-                }else{
-                    // Account update is finished
-                    displayUpdateSummary();
-                }
-            } else {
-                // Update next account
-                updatingAccount = accountsToUpdate.poll();
-                updateAccountAuthorities();
+        if(accountsToUpdate.size() == 0){
+            if(accountsUpdated.size() == 0 && accountsNotUpdated.size() == 0){
+                // Nothing to update
+                return;
+            }else{
+                // Account update is finished
+                displayUpdateSummary();
             }
-        }else{
-            Log.d(TAG, "Security update already performed");
+        } else {
+            // Update next account
+            updatingAccount = accountsToUpdate.poll();
+            updateAccountAuthorities();
         }
     }
 
@@ -429,10 +424,14 @@ public class TabActivity extends BaseActivity {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
                             dialog.cancel();
-                            checkSecurityUpdate();
+                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE)){
+                                checkSecurityUpdate();
+                            }else{
+                                Log.d(TAG, "Security update already performed");
+                            }
                             break;
                         }else{
-                            Log.d(TAG, "pin code doesn't match");
+                            Toast.makeText(TabActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
