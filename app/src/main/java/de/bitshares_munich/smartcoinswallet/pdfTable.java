@@ -39,7 +39,7 @@ import de.bitshares_munich.models.TransactionDetails;
 /**
  * Created by developer on 5/23/16.
  */
-public class PdfTable {
+public class pdfTable {
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -73,7 +73,7 @@ public class PdfTable {
     private Activity myActivity;
     private String filename;
 
-    public PdfTable(Context context, Activity activity, String filename) {
+    public pdfTable(Context context, Activity activity, String filename) {
         verifyStoragePermissions(activity);
         this.myContext = context;
         this.myActivity = activity;

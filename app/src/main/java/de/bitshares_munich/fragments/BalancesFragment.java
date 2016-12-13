@@ -42,7 +42,7 @@ import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAssets;
-import com.luminiasoft.bitshares.ws.GetLimitOrders;
+import com.luminiasoft.bitshares.ws.getLimitOrders;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,6 +82,7 @@ import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
+import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
@@ -450,7 +451,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             @SuppressLint("StringFormatInvalid")
             @Override
             public void onClick(View v) {
-                String ltmAmount=Helper.fetchStringSharePref(getActivity(),"ltmAmount");
+                String ltmAmount = Helper.fetchStringSharePref(getActivity(), "ltmAmount");
                 //Check Balance
                 if (btnDone.getText().equals(getString(R.string.next))) {
                     alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + tvAccountName.getText().toString() + getString(R.string.account));
@@ -534,7 +535,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         if (isLoading) {
             TableDataAdapter myAdapter = tableView.getDataAdapter();
             List<TransactionDetails> det = myAdapter.getData();
-            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
+            pdfTable myTable = new pdfTable(getContext(), getActivity(), "Transactions-scwall");
             myTable.createTable(det);
         } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
     }
@@ -667,7 +668,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                     for(final String base : currencies.keySet()){
                         for(final String quote : currencies.get(base)){
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new getLimitOrders(base, quote, 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
                                     if (response.result.getClass() == ArrayList.class) {
@@ -2336,7 +2337,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref(accountName);
 
-        Log.d(TAG,"Got a list of "+localTransactionDetails.size()+" transactions");
+        Log.d(TAG, "Got a list of " + localTransactionDetails.size() + " transactions");
 
         if (localTransactionDetails != null && localTransactionDetails.size() > 0) {
 
