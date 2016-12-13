@@ -89,6 +89,7 @@ public class GetRelativeAccountHistory extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+
         String response = frame.getPayloadText();
         System.out.println("<<< "+response);
         Gson gson = new Gson();

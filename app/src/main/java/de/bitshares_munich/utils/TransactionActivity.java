@@ -6,9 +6,16 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.luminiasoft.bitshares.Address;
+import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.errors.MalformedAddressException;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.Market;
+import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.objects.Memo;
+import com.luminiasoft.bitshares.ws.GetAssets;
+import com.luminiasoft.bitshares.ws.GetLimitOrders;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -42,6 +49,7 @@ import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 
 
 /**
@@ -1323,6 +1331,23 @@ public class TransactionActivity implements IBalancesDelegate {
             newPairs.add(firstHalf + ":" + "BTS");
         }
 
+        HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
+        for (String pair : leftOvers) {
+            String firstHalf = pair.split(":")[0];
+            if (!currenciesChange.containsKey(firstHalf)) {
+                currenciesChange.put(firstHalf, new ArrayList());
+            }
+            currenciesChange.get(firstHalf).add("BTS");
+        }
+
+        if (!currenciesChange.containsKey("BTS")) {
+            currenciesChange.put("BTS", new ArrayList());
+        }
+        currenciesChange.get("BTS").add(faitCurrency);
+
+        this.getEquivalentComponent(currenciesChange,faitCurrency);
+
+
         newPairs.add("BTS" + ":" + faitCurrency);
 
         String values = "";
@@ -1429,6 +1454,128 @@ public class TransactionActivity implements IBalancesDelegate {
                 reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
             }
         });*/
+    }
+
+    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String faitCurrency) {
+        ArrayList<String> assetList = new ArrayList();
+        for (String key : currencies.keySet()) {
+            if (!assetList.contains(key)) {
+                assetList.add(key);
+            }
+            for (String values : currencies.get(key)) {
+                if (!assetList.contains(values)) {
+                    assetList.add(values);
+                }
+            }
+        }
+
+        WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
+            @Override
+            public void onSuccess(WitnessResponse response) {
+                if (response.result.getClass() == ArrayList.class) {
+                    ArrayList list = (ArrayList) response.result;
+                    final HashMap<String, Asset> assets = new HashMap();
+                    for (Object listObject : list) {
+                        if (listObject.getClass() == Asset.class) {
+                            Asset asset = (Asset) listObject;
+                            assets.put(asset.symbol, asset);
+                        }
+                    }
+                    final HashMap<String,HashMap<String,Double>> rates = new HashMap();
+                    List<WebsocketWorkerThread> threads = new ArrayList();
+                    for(final String base : currencies.keySet()){
+                        if(!rates.containsKey(base)){
+                            rates.put(base,new HashMap());
+                        }
+                        for(final String quote : currencies.get(base)){
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
+                                @Override
+                                public void onSuccess(WitnessResponse response) {
+                                    if (response.result.getClass() == ArrayList.class) {
+                                        ArrayList list = (ArrayList) response.result;
+                                        for (Object listObject : list) {
+                                            if (listObject.getClass() == Market.class) {
+                                                Market market = ((Market) listObject);
+                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).id)) {
+                                                    double price = market.sell_price.quote.amount / market.sell_price.base.amount;
+                                                    int exp = assets.get(quote).precision - assets.get(base).precision;
+                                                    price = price * Math.pow(10, exp);
+                                                    rates.get(base).put(quote,price);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(BaseResponse.Error error) {
+
+                                }
+                            }));
+                            glo.start();
+                            threads.add(glo);
+                        }
+                    }
+                    for(WebsocketWorkerThread thread :threads){
+                        try {
+                            thread.join();
+                        } catch (InterruptedException e) {}
+                    }
+
+                    String btsToFait = "";
+
+                    for(String key : rates.keySet()){
+                        if(key.equals("BTS")) {
+                            for (String keypair : rates.get(key).keySet()) {
+                                if (faitCurrency.equals(keypair)) {
+                                    btsToFait = rates.get(key).get(keypair).toString();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!btsToFait.isEmpty()) {
+                        for (String asset : rates.keySet()) {
+                            for (String keypair : rates.get(asset).keySet()) {
+                                if (!asset.equals("BTS") && !keypair.equals(faitCurrency)) {
+                                    String assetConversionToBTS = rates.get(asset).get(keypair).toString();
+
+                                    double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+
+                                    String assetToFaitConversion = Double.toString(newConversionRate);
+
+                                    equivalentRatesHm.put(asset, assetToFaitConversion);
+                                }
+                            }
+                        }
+                        if (context == null) return;
+                        EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+                        myFiatStorage.saveEqHM(faitCurrency, equivalentRatesHm);
+                    }
+
+                    if ( context == null ) return;
+                    EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
+                    equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+
+                    if ( context == null ) return;
+                    assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
+
+                    decodeRecievedMemos();
+                }
+            }
+
+            @Override
+            public void onError(BaseResponse.Error error) {
+                //TODO error
+            }
+        }));
+        wwThread.start();
+
+        try {
+            wwThread.join();
+        } catch (InterruptedException e) {        }
+
     }
 
     private double convertLocalizeStringToDouble(String text) {

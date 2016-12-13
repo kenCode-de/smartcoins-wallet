@@ -58,7 +58,7 @@ public class GetAccountsByAddress extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        System.out.println("<<< "+frame.getPayloadText());
+        try{
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
@@ -69,13 +69,12 @@ public class GetAccountsByAddress extends WebSocketAdapter {
         } else {
             this.mListener.onSuccess(witnessResponse);
         }
+        }catch(Exception e){}
         websocket.disconnect();
     }
 
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            System.out.println(">>> "+frame.getPayloadText());
     }
 
     @Override

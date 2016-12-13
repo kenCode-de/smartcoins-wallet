@@ -60,6 +60,7 @@ public class GetAccountNameById extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        try{
         System.out.println("<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         GsonBuilder builder = new GsonBuilder();
@@ -74,6 +75,7 @@ public class GetAccountNameById extends WebSocketAdapter {
         } else {
             this.mListener.onSuccess(witnessResponse);
         }
+    }catch(Exception e){}
         websocket.disconnect();
     }
 

@@ -36,6 +36,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.models.Market;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetAssets;
+import com.luminiasoft.bitshares.ws.GetLimitOrders;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,6 +84,7 @@ import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
+import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
@@ -635,6 +644,151 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     }
 
+    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies) {
+        ArrayList<String> assetList = new ArrayList();
+        for (String key : currencies.keySet()) {
+            if (!assetList.contains(key)) {
+                assetList.add(key);
+            }
+            for (String values : currencies.get(key)) {
+                if (!assetList.contains(values)) {
+                    assetList.add(values);
+                }
+            }
+        }
+
+        WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
+            @Override
+            public void onSuccess(WitnessResponse response) {
+                if (response.result.getClass() == ArrayList.class) {
+                    ArrayList list = (ArrayList) response.result;
+                    final HashMap<String, Asset> assets = new HashMap();
+                    for (Object listObject : list) {
+                        if (listObject.getClass() == Asset.class) {
+                            Asset asset = (Asset) listObject;
+                            assets.put(asset.symbol, asset);
+                        }
+                    }
+                    for(final String base : currencies.keySet()){
+                        for(final String quote : currencies.get(base)){
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
+                                @Override
+                                public void onSuccess(WitnessResponse response) {
+                                    if (response.result.getClass() == ArrayList.class) {
+                                        ArrayList list = (ArrayList) response.result;
+                                        for (Object listObject : list) {
+                                            if (listObject.getClass() == Market.class) {
+                                                Market market = ((Market) listObject);
+                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).id)) {
+                                                    double price = market.sell_price.quote.amount / market.sell_price.base.amount;
+                                                    int exp = assets.get(quote).precision - assets.get(base).precision;
+                                                    price = price * Math.pow(10, exp);
+                                                    updateEquivalentValue(quote,Double.toString(price));
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(BaseResponse.Error error) {
+
+                                }
+                            }));
+                            glo.start();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseResponse.Error error) {
+                    //TODO error
+            }
+        }));
+        wwThread.start();
+
+        try {
+            wwThread.join();
+        } catch (InterruptedException e) {        }
+
+    }
+
+    private void updateEquivalentValue(String assetName, String value){
+        Log.d("henry","en equivalentValue");
+        for (int i = 0; i < llBalances.getChildCount(); i++)
+        {
+            LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
+
+            for (int j = 1; j <= 2; j++) {
+
+                TextView tvAsset;
+                TextView tvAmount;
+                TextView tvFaitAmount;
+
+                if (j == 1)
+                {
+                    tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
+                    tvAmount = (TextView) llRow.findViewById(R.id.amount_child_one);
+                    tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_one);
+                }
+                else
+                {
+                    tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_two);
+                    tvAmount = (TextView) llRow.findViewById(R.id.amount_child_two);
+                    tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
+                }
+
+                if (tvAsset == null || tvAmount == null || tvFaitAmount == null)
+                {
+                    //TODO
+                    //updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                    return;
+                }
+                String asset = tvAsset.getText().toString();
+                String amount = tvAmount.getText().toString();
+                asset = asset.replace("bit","");
+
+                if (amount.isEmpty())
+                {
+                    amount = "0.0";
+                }
+
+                if (!amount.isEmpty() && assetName.equals(asset))
+                {
+                    Currency currency = Currency.getInstance(finalFaitCurrency);
+
+                    try
+                    {
+                        double d = convertLocalizeStringToDouble(amount);
+                        Double eqAmount = d * convertLocalizeStringToDouble(value);
+
+                        if ( Helper.isRTL(locale,currency.getSymbol()) )
+                        {
+                            tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
+                        }
+                        else
+                        {
+                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
+                        }
+
+                        tvFaitAmount.setVisibility(View.VISIBLE);
+
+                    }
+                    catch (Exception e)
+                    {
+                        tvFaitAmount.setVisibility(View.GONE);
+                    }
+                }
+                else
+                {
+                    tvFaitAmount.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
     {
 
@@ -651,6 +805,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         {
             faitCurrency = "EUR";
         }
+
+        HashMap<String,ArrayList<String>> currenciesChange = new HashMap();
+        for (int i = 0; i < accountAssets.size(); i++) {
+            AccountAssets accountAsset = accountAssets.get(i);
+            if (!accountAsset.symbol.equals(faitCurrency)) {
+                if(!currenciesChange.containsKey(accountAsset.symbol)){
+                    currenciesChange.put(accountAsset.symbol,new ArrayList());
+                }
+                currenciesChange.get(accountAsset.symbol).add(faitCurrency);
+            }
+        }
+
+        this.getEquivalentComponent(currenciesChange);
 
         final String fc = faitCurrency;
 

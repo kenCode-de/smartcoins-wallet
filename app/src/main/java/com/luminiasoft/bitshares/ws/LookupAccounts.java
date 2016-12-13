@@ -52,7 +52,9 @@ public class LookupAccounts extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        String response = frame.getPayloadText();
+        try{
+            String response = frame.getPayloadText();
+
 
         Type LookupAccountsResponse = new TypeToken<WitnessResponse<List<UserAccount>>>(){}.getType();
         GsonBuilder builder = new GsonBuilder();
@@ -63,7 +65,7 @@ public class LookupAccounts extends WebSocketAdapter {
         }else{
             this.mListener.onSuccess(witnessResponse);
         }
-
+        }catch(Exception e){}
         websocket.disconnect();
     }
 

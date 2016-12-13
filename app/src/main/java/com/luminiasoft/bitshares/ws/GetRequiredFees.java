@@ -48,6 +48,7 @@ public class GetRequiredFees extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        try{
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
@@ -61,6 +62,8 @@ public class GetRequiredFees extends WebSocketAdapter {
         }else{
             mListener.onSuccess(witnessResponse);
         }
+        }catch(Exception e){}
+        websocket.disconnect();
     }
 
     @Override

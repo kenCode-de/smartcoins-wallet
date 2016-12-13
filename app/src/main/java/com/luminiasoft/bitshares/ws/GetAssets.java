@@ -1,12 +1,10 @@
 package com.luminiasoft.bitshares.ws;
 
-import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.luminiasoft.bitshares.AccountOptions;
-import com.luminiasoft.bitshares.Authority;
+import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.RPC;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
@@ -22,44 +20,44 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by nelson on 11/15/16.
+ * Created by hvarona on 12/12/16.
  */
-public class GetAccountByName extends WebSocketAdapter {
+public class GetAssets extends WebSocketAdapter {
 
-    private String accountName;
+    private ArrayList<String> assetName;
     private WitnessResponseListener mListener;
 
-    public GetAccountByName(String accountName, WitnessResponseListener listener){
-        this.accountName = accountName;
+    public GetAssets(ArrayList<String> assetName, WitnessResponseListener listener) {
+        this.assetName = assetName;
         this.mListener = listener;
     }
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList<>();
-        accountParams.add(this.accountName);
-        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_ACCOUNT_BY_NAME, accountParams, RPC.VERSION, 1);
-        websocket.sendText(getAccountByName.toJsonString());
+        accountParams.add(assetName);
+        ApiCall getAssetCall = new ApiCall(0, RPC.CALL_GET_ASSET, accountParams, "2.0", 1);
+        websocket.sendText(getAssetCall.toJsonString());
     }
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         try {
             String response = frame.getPayloadText();
-            GsonBuilder builder = new GsonBuilder();
+            Gson gson = new Gson();
 
-            Type GetAccountByNameResponse = new TypeToken<WitnessResponse<AccountProperties>>() {
+            Type getAssetResponse = new TypeToken<WitnessResponse<ArrayList<Asset>>>() {
             }.getType();
-            builder.registerTypeAdapter(Authority.class, new Authority.AuthorityDeserializer());
-            builder.registerTypeAdapter(AccountOptions.class, new AccountOptions.AccountOptionsDeserializer());
-            WitnessResponse<AccountProperties> witnessResponse = builder.create().fromJson(response, GetAccountByNameResponse);
+            WitnessResponse<ArrayList<Asset>> witnessResponse = gson.fromJson(response, getAssetResponse);
 
             if (witnessResponse.error != null) {
                 this.mListener.onError(witnessResponse.error);
             } else {
                 this.mListener.onSuccess(witnessResponse);
             }
-        }catch(Exception e){}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         websocket.disconnect();
     }
