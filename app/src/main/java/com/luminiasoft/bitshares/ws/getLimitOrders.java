@@ -22,14 +22,14 @@ import java.util.Map;
 /**
  * Created by hvarona on 12/12/16.
  */
-public class getLimitOrders extends WebSocketAdapter {
+public class GetLimitOrders extends WebSocketAdapter {
 
     private String a;
     private String b;
     private int limit;
     private WitnessResponseListener mListener;
 
-    public getLimitOrders(String a, String b, int limit, WitnessResponseListener mListener) {
+    public GetLimitOrders(String a, String b, int limit, WitnessResponseListener mListener) {
         this.a = a;
         this.b = b;
         this.limit = limit;

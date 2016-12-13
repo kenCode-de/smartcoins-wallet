@@ -42,7 +42,7 @@ import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAssets;
-import com.luminiasoft.bitshares.ws.getLimitOrders;
+import com.luminiasoft.bitshares.ws.GetLimitOrders;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -668,7 +668,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                     for(final String base : currencies.keySet()){
                         for(final String quote : currencies.get(base)){
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new getLimitOrders(base, quote, 20, new WitnessResponseListener() {
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
                                     if (response.result.getClass() == ArrayList.class) {
