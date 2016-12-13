@@ -90,7 +90,7 @@ public class BinHelper {
         tinyDB.putListObject(context.getString(R.string.pref_wallet_accounts), accountDetailsList);
 
         List<TransactionDetails> emptyTransactions = new ArrayList<>();
-        tinyDB.putTransactions(activity, context, context.getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
+        tinyDB.putTransactions(context.getString(R.string.pref_local_transactions), new ArrayList<>(emptyTransactions));
 
     }
 

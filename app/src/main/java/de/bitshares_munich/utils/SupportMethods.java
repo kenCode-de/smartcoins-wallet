@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 public class SupportMethods {
     public static String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static File extStorageFile = new File(extStorage);
+
     public static String ConvertValueintoPrecision(String precision,String number){
         Double ok = 1.0;
         Double pre = Double.valueOf(precision);

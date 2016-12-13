@@ -349,13 +349,10 @@ public class TinyDB {
         catch (Exception e)
         {
         }
-
-
         return objects;
     }
 
-    public void putTransactions(Activity activity,Context context,String key, ArrayList<TransactionDetails> objArray) {
-
+    public void putTransactions(String key, ArrayList<TransactionDetails> objArray) {
         ArrayList<transactionsJsonSerializable> a = new ArrayList<>();
         for (TransactionDetails abc : objArray)
         {
@@ -384,11 +381,9 @@ public class TinyDB {
             objStrings.add(gson.toJson(obj));
         }
         putListString(key, objStrings);
-
     }
 
     public ArrayList<TransactionDetails> getTransactions(String key, Class<?> mClass) {
-
         Gson gson = new Gson();
 
         ArrayList<String> objStrings = getListString(key);
@@ -409,7 +404,6 @@ public class TinyDB {
         {
             objects = new ArrayList<>();
         }
-
         return objects;
     }
 

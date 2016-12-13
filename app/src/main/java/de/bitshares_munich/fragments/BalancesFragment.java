@@ -36,6 +36,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.BaseResponse;
+import com.luminiasoft.bitshares.models.HistoricalTransfer;
+import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetRelativeAccountHistory;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,10 +78,11 @@ import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.MediaService;
+import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
-import de.bitshares_munich.smartcoinswallet.PdfTable;
+import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
@@ -94,13 +102,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by qasim on 5/10/16.
  */
 public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
-
+    private final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
     static Boolean audioSevice = false;
@@ -189,6 +196,39 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     webSocketCallHelper myWebSocketHelper;
+
+    private WebsocketWorkerThread transferHistoryThread;
+    private WitnessResponseListener mTransferHistoryListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            WitnessResponse<List<HistoricalTransfer>> resp = response;
+            ArrayList<TransactionDetails> transactions = getTransactions(accountId);
+            for(HistoricalTransfer transfer : resp.result){
+                if(transfer.op != null){
+                    Log.d(TAG, "Transfer. "+transfer.op.getFrom().getObjectId()+" -> "+transfer.op.getTo()+", amount: "+transfer.op.getAssetAmount().getAmount());
+                    boolean found = false;
+                    for(TransactionDetails pastTransaction : transactions){
+                        if(transfer.id.equals(pastTransaction.id)){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found){
+                        TransactionDetails newTransaction = new TransactionDetails();
+                        newTransaction.Amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(String.format("%d", transfer.op.getAssetAmount().getAmount()), "6"));
+                        newTransaction.blockNumber = String.format("%d", transfer.block_num);
+                        newTransaction.From = transfer.op.getFrom().getAccountName();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "onError. Msg: "+error.message);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -333,6 +373,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
@@ -373,6 +414,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 loadBasic(true,accountNameChange,false);
             }
 
+        }
+
+        if(!accountId.equals("")) {
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), mTransferHistoryListener));
+            transferHistoryThread.start();
+        }else{
+            Log.d(TAG, "account id is empty");
         }
     }
 
@@ -2145,12 +2193,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
 
-    private void saveTransactions(List<TransactionDetails> transactionDetails, String accountName) {
-        Log.d(TAG,"saveTransactions. account name: "+accountName+", number of tx: "+transactionDetails.size());
-        tinyDB.putTransactions(getActivity(), getContext(), getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
+    /**
+     * Saves transaction list into the shared preferences storage.
+     * @param transactionDetails: List of TransactionDetails to store
+     * @param accountName: Account name.
+     */
+    private void putTransactions(List<TransactionDetails> transactionDetails, String accountName) {
+        Log.d(TAG,"putTransactions. account name: "+accountName+", number of tx: "+transactionDetails.size());
+        tinyDB.putTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
     }
 
-    private ArrayList<TransactionDetails> getTransactionsFromSharedPref(String accountName)
+    /**
+     * Retrieves the transaction list from the shared preferences storage.
+     * @param accountName: Account name.
+     * @return: List of transactions from a given account.
+     */
+    private ArrayList<TransactionDetails> getTransactions(String accountName)
     {
         ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, TransactionDetails.class);
 
@@ -2168,7 +2226,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void TransactionUpdateOnStartUp(String accountName) {
         Log.d(TAG, "TransactionUpdateOnStartUp. account name: "+accountName);
 
-        final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref(accountName);
+        final List<TransactionDetails> localTransactionDetails = getTransactions(accountName);
 
         Log.d(TAG,"Got a list of "+localTransactionDetails.size()+" transactions");
 
@@ -2239,7 +2297,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
 
-            saveTransactions(myTransactions,to);
+            putTransactions(myTransactions,to);
 
             number_of_transactions_loaded += number_of_transactions_to_load;
 
@@ -2514,7 +2572,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         // get transactions from sharedPref
 
 
-        myTransactions = getTransactionsFromSharedPref(to);
+        myTransactions = getTransactions(to);
 
         if ( !onResume || accountNameChanged || faitCurrencyChanged )
         {
