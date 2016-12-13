@@ -28,17 +28,19 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_TRANSFERS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Transfers.TABLE_NAME + " (" +
             SCWallDatabaseContract.Transfers.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_FROM + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TO + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT + TYPE_INTEGER + ", " +
-            SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_SYMBOL + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE + TYPE_INTEGER + ", " +
-            "FOREIGN KEY (" + SCWallDatabaseContract.AssetsTable.COLUMN_ID + ") REFERENCES " + SCWallDatabaseContract.AssetsTable.TABLE_NAME +
-            "(" + SCWallDatabaseContract.AssetsTable.COLUMN_ID +"))";
+            SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE + TYPE_INTEGER + ")";
+//            ", " +
+//            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID + ") REFERENCES " +
+//            SCWallDatabaseContract.AssetsTable.TABLE_NAME + "(" + SCWallDatabaseContract.AssetsTable.COLUMN_ID +"))";
 
 
     public SCWallSQLiteOpenHelper(Context context) {

@@ -69,6 +69,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.EquivalentComponentResponse;
@@ -158,6 +159,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     LinearLayout whiteSpaceAfterBalances;
 
     private SortableTableView<TransactionDetails> tableView;
+//    private SortableTableView<HistoricalTransfer> transfersView;
     private ArrayList<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
@@ -197,36 +199,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     webSocketCallHelper myWebSocketHelper;
 
+    private SCWallDatabase database;
     private WebsocketWorkerThread transferHistoryThread;
     private WitnessResponseListener mTransferHistoryListener = new WitnessResponseListener() {
 
         @Override
         public void onSuccess(WitnessResponse response) {
+            Log.d(TAG, "mTransferHistoryListener. onSuccess");
             WitnessResponse<List<HistoricalTransfer>> resp = response;
-            ArrayList<TransactionDetails> transactions = getTransactions(accountId);
-            for(HistoricalTransfer transfer : resp.result){
-                if(transfer.op != null){
-                    Log.d(TAG, "Transfer. "+transfer.op.getFrom().getObjectId()+" -> "+transfer.op.getTo()+", amount: "+transfer.op.getAssetAmount().getAmount());
-                    boolean found = false;
-                    for(TransactionDetails pastTransaction : transactions){
-                        if(transfer.id.equals(pastTransaction.id)){
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found){
-                        TransactionDetails newTransaction = new TransactionDetails();
-                        newTransaction.Amount = Double.valueOf(SupportMethods.ConvertValueintoPrecision(String.format("%d", transfer.op.getAssetAmount().getAmount()), "6"));
-                        newTransaction.blockNumber = String.format("%d", transfer.block_num);
-                        newTransaction.From = transfer.op.getFrom().getAccountName();
-                    }
-                }
+            try {
+                database.putTransactions(resp.result);
+                database.getTransactions();
+            }catch(Exception e){
+                Log.e(TAG,"Exception. Msg: "+e.getMessage());
             }
         }
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "onError. Msg: "+error.message);
+            Log.e(TAG, "mTransferHistoryListener. onError. Msg: "+error.message);
         }
     };
 
@@ -238,6 +229,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         iSound=this;
         updateEquivalentAmount = new Handler();
         myWebSocketHelper = new webSocketCallHelper(getContext());
+        database = new SCWallDatabase(getContext());
     }
 
 

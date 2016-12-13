@@ -27,12 +27,13 @@ public class SCWallDatabaseContract {
     public static class Transfers extends BaseTable {
         public static final String TABLE_NAME = "transfers";
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_FEE_AMOUNT = "fee_amount";
         public static final String COLUMN_FEE_ASSET_ID = "fee_asset_id";
-        public static final String COLUMN_FROM = "from";
-        public static final String COLUMN_TO = "to";
+        public static final String COLUMN_FROM = "source";
+        public static final String COLUMN_TO = "destination";
         public static final String COLUMN_TRANSFER_AMOUNT = "transfer_amount";
-        public static final String COLUMN_TRANSFER_ASSET = "transfer_asset";
+        public static final String COLUMN_TRANSFER_ASSET_ID = "transfer_asset_id";
         public static final String COLUMN_BLOCK_NUM = "block_num";
         public static final String COLUMN_EQUIVALENT_VALUE_ASSET_SYMBOL = "equivalent_value_asset_id";
         public static final String COLUMN_EQUIVALENT_VALUE = "equivalent_value";
