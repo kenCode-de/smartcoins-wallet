@@ -72,10 +72,8 @@ import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.AccountUpgrade;
 import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
-import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
@@ -84,18 +82,16 @@ import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
-import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
-import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
-import de.bitshares_munich.utils.TransactionActivity;
+import de.bitshares_munich.utils.TransactionsHelper;
 import de.bitshares_munich.utils.tableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
@@ -105,6 +101,8 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by qasim on 5/10/16.
@@ -235,8 +233,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         setSortableTableViewHeight(rootView, handler, this);
                     }
                 });
-
-
             }
         };
 
@@ -538,7 +534,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         if (isLoading) {
             TableDataAdapter myAdapter = tableView.getDataAdapter();
             List<TransactionDetails> det = myAdapter.getData();
-            pdfTable myTable = new pdfTable(getContext(), getActivity(), "Transactions-scwall");
+            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
             myTable.createTable(det);
         } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
     }
@@ -2316,6 +2312,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
 
     private void saveTransactions(List<TransactionDetails> transactionDetails, String accountName) {
+        Log.d(TAG,"saveTransactions. account name: "+accountName+", number of tx: "+transactionDetails.size());
         tinyDB.putTransactions(getActivity(), getContext(), getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
     }
 
@@ -2334,24 +2331,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     TransactionsTableAdapter myTransactionsTableAdapter;
-    public void TransactionUpdateOnStartUp(String accountName)
-    {
+    public void TransactionUpdateOnStartUp(String accountName) {
+        Log.d(TAG, "TransactionUpdateOnStartUp. account name: "+accountName);
+
         final List<TransactionDetails> localTransactionDetails = getTransactionsFromSharedPref(accountName);
 
-        if (localTransactionDetails != null && localTransactionDetails.size() > 0)
-        {
+        Log.d(TAG,"Got a list of "+localTransactionDetails.size()+" transactions");
+
+        if (localTransactionDetails != null && localTransactionDetails.size() > 0) {
 
             getActivity().runOnUiThread(new Runnable()
             {
                 public void run()
                 {
                     //isSavedTransactions = true;
-                    if ( myTransactionsTableAdapter == null )
-                    {
+                    if ( myTransactionsTableAdapter == null ) {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), localTransactionDetails);
-                    }
-                    else
-                    {
+                    } else {
                         myTransactionsTableAdapter.clear();
                         myTransactionsTableAdapter.addAll(localTransactionDetails);
                     }
@@ -2374,6 +2370,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Override
     public void transactionsLoadComplete(List<TransactionDetails> transactionDetails,int newTransactionsLoaded)
     {
+        Log.d(TAG,"transactionLoadComplete. new tx: "+newTransactionsLoaded);
         try
         {
             if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 15) )
@@ -3018,7 +3015,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         return txtAmount_d;
     }
 
-    TransactionActivity myTransactionActivity;
+    TransactionsHelper myTransactionActivity;
     Handler pendingTransactionsLoad;
     void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions)
     {
@@ -3045,10 +3042,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             sentCallForTransactions = true;
 
             if (myTransactionActivity == null) {
-                myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
+                myTransactionActivity = new TransactionsHelper(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
             } else {
                 myTransactionActivity.context = null;
-                myTransactionActivity = new TransactionActivity(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
+                myTransactionActivity = new TransactionsHelper(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
             }
         }
 

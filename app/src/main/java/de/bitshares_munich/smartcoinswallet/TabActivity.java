@@ -106,6 +106,9 @@ public class TabActivity extends BaseActivity {
     /* Account currently being updated */
     private AccountDetails updatingAccount;
 
+    /* Storing old key here and then in preferences*/
+    private String oldKey;
+
     private int UPDATE_KEY_MAX_RETRIES = 3;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
@@ -131,6 +134,11 @@ public class TabActivity extends BaseActivity {
                     accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                     accountsUpdated.add(updatingAccount);
                     checkAccountUpdate();
+
+                    /* Updating store of old keys*/
+                    ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
+                    oldKeys.add(oldKey);
+                    tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
                 }
             });
         }
@@ -298,6 +306,9 @@ public class TabActivity extends BaseActivity {
                     }
                 });
         builder.create().show();
+
+        // Saving updated status
+        tinyDB.putBoolean(Constants.KEY_UPDATE_DONE, true);
     }
 
     /**
@@ -307,9 +318,9 @@ public class TabActivity extends BaseActivity {
     private void updateAccountAuthorities() {
         Log.d(TAG,"account to update: "+updatingAccount.account_name+", id: "+updatingAccount.account_id);
         Log.d(TAG,"current brain key: "+updatingAccount.brain_key);
-        //TODO: Store old keys?
         try {
             String currentWif = Crypt.getInstance().decrypt_string(updatingAccount.wif_key);
+            oldKey = String.format("%s:%s", updatingAccount.account_name, currentWif);
 
             // Coming up with a new brainkey suggestion
             BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(AccountActivity.BRAINKEY_FILE), "UTF-8"));
@@ -413,10 +424,14 @@ public class TabActivity extends BaseActivity {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
                             dialog.cancel();
-                            checkSecurityUpdate();
+                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE)){
+                                checkSecurityUpdate();
+                            }else{
+                                Log.d(TAG, "Security update already performed");
+                            }
                             break;
                         }else{
-                            Log.d(TAG, "pin code doesn't match");
+                            Toast.makeText(TabActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

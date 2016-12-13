@@ -161,6 +161,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     Activity activitySettings;
 
     String wifKey = "";
+    private String oldKey;
     private AccountDetails updatedAccount;
     private int UPDATE_KEY_MAX_RETRIES = 3;
     private int updateKeyRetryCount = 0;
@@ -185,6 +186,11 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     }
                     tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
                     displayBrainKeyBackup();
+
+                    /* Updating store of old keys*/
+                    ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
+                    oldKeys.add(oldKey);
+                    tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
                 }
             });
         }
@@ -816,6 +822,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         updatedAccount = accountDetails;
         try {
             String currentWif = Crypt.getInstance().decrypt_string(updatedAccount.wif_key);
+            oldKey = String.format("%s:%s", updatedAccount.account_name, currentWif);
 
             // Coming up with a new brainkey suggestion
             BufferedReader reader = new BufferedReader(new InputStreamReader(getAssets().open(AccountActivity.BRAINKEY_FILE), "UTF-8"));

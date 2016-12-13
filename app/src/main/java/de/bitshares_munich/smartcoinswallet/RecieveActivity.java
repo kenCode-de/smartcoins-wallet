@@ -140,15 +140,13 @@ public class RecieveActivity extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(!price.equals("0") && !price.equals("")){
-            Invoice.LineItem[] items = new Invoice.LineItem[]{ new Invoice.LineItem("transfer", 1, "%f".format(price))};
-            Invoice invoice = new Invoice(to, "", "", currency.replace("bit",""), items, "", "");
-            try {
-                Bitmap bitmap = encodeAsBitmap(Invoice.toQrCode(invoice), "#006500");
-                qrimage.setImageBitmap(bitmap);
-            } catch (WriterException e) {
-                Log.e(TAG, "WriterException while trying to encode QR-code data. Msg: "+e.getMessage());
-            }
+        Invoice.LineItem[] items = new Invoice.LineItem[]{ new Invoice.LineItem("transfer", 1, "%f".format(price))};
+        Invoice invoice = new Invoice(to, "", "", currency.replace("bit",""), items, "", "");
+        try {
+            Bitmap bitmap = encodeAsBitmap(Invoice.toQrCode(invoice), "#006500");
+            qrimage.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            Log.e(TAG, "WriterException while trying to encode QR-code data. Msg: "+e.getMessage());
         }
     }
 
