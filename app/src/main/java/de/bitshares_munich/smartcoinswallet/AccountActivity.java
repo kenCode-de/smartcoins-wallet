@@ -238,7 +238,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @OnTextChanged(R.id.etAccountName)
     void onTextChanged(CharSequence text) {
-        Log.d(TAG, "onTextChanged. text: "+text);
         etAccountName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         hasNumber = false;
         validAccount = true;
@@ -418,7 +417,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             postingService.enqueue(new Callback<RegisterAccount>() {
                 @Override
                 public void onResponse(Response<RegisterAccount> response) {
+                    Log.d(TAG,"onResponse");
                     if (response.isSuccess()) {
+                        Log.d(TAG,"success");
                         RegisterAccount resp = response.body();
                         if (resp.account != null) {
                             try {
@@ -427,8 +428,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                                     tvErrorAccountName.setVisibility(View.GONE);
                                 };
                             } catch (Exception e) {
+                                Log.e(TAG, "Exception. Msg: "+e.getMessage());
                                 Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                             }
+                        }else{
+                            Log.e(TAG, "account response is null");
+                            Log.e(TAG, "resp: "+resp.toString());
                         }
                     }else{
                         Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
@@ -436,10 +441,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 }
                 @Override
                 public void onFailure(Throwable t) {
+                    Log.e(TAG, "onFailure. Msg: "+t.getMessage());
                     Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
+            Log.e(TAG, "Exception. Msg: "+e.getMessage());
             Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
         }
     }
@@ -609,22 +616,22 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
+                Log.d(TAG, "onSuccess");
                 List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
                 if(resp.size() > 0){
                     List<UserAccount> accounts = resp.get(0);
                     if(accounts.size() > 0){
-                        if(accounts.size() != 1){
+                        if(accounts.size() > 2){
                             Log.w(TAG, "More than one account with the same controlling keys");
                         }
                         addWallet(accounts.get(0).getObjectId());
                     }else{
-                        hideDialog();
                         Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                 }
+                hideDialog();
             }
 
             @Override
