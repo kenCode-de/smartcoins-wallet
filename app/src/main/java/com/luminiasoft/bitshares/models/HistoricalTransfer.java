@@ -18,6 +18,9 @@ public class HistoricalTransfer {
     private long op_in_trx;
     private long virtual_op;
 
+    // Extra field
+    private long timestamp;
+
     public String getId() {
         return id;
     }
@@ -64,5 +67,13 @@ public class HistoricalTransfer {
 
     public void setVirtualOp(long virtual_op) {
         this.virtual_op = virtual_op;
+    }
+
+    public void setTimestamp(long timestamp){
+        this.timestamp = timestamp;
+    }
+
+    public long getTimestamp(){
+        return this.timestamp;
     }
 }

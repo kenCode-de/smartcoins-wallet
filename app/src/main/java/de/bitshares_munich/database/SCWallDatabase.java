@@ -13,11 +13,17 @@ import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.models.AccountProperties;
+import com.luminiasoft.bitshares.models.BlockHeader;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import de.bitshares_munich.models.TransactionDetails;
 
@@ -55,7 +61,7 @@ public class SCWallDatabase {
             if(operation == null) continue;
 
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_ID, transfer.getId());
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0); //TODO: Obtain the transaction timestamp from the block number later
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0);
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT, operation.getFee().getAmount().longValue());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID, operation.getFee().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FROM, operation.getFrom().getObjectId());
@@ -122,6 +128,7 @@ public class SCWallDatabase {
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
                 historicalTransfer.setOperation(transferOperation);
                 historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
+                historicalTransfer.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
 
                 // Adding historical transfer to array
                 transfers.add(historicalTransfer);
@@ -277,6 +284,56 @@ public class SCWallDatabase {
     }
 
     /**
+     * This method is used to obtain the list of transfer operations stored in the database
+     * with the date and time information missing.
+     * @return: A list of block numbers.
+     */
+    public LinkedList<Long> getMissingTransferTimes(){
+        LinkedList<Long> missingTimes = new LinkedList<>();
+        String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String[] columns = { SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM };
+        String selection = SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + "= ?";
+        String[] selectionArgs = {"0"};
+        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                missingTimes.add(new Long(cursor.getLong(0)));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        Log.d(TAG, String.format("Got %d missing times", missingTimes.size()));
+        return missingTimes;
+    }
+
+    /**
+     * Sets a missing block time information.
+     * @param blockHeader: The block header data of this transaction.
+     * @param blockNum: The block number, which is not included in the block header
+     *                and has to be passed separately.
+     * @return: True if there was one transfer entry being updated, false otherwise.
+     */
+    public boolean setBlockTime(BlockHeader blockHeader, long blockNum){
+        boolean updated = false;
+        ContentValues values = new ContentValues();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        try {
+            Date date = dateFormat.parse(blockHeader.timestamp);
+            values.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, date.getTime() / 1000);
+
+            String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+            String whereClause = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + "=?";
+            String[] whereArgs = { String.format("%d", blockNum) };
+            int count = db.update(table, values, whereClause, whereArgs);
+            if(count == 1)
+                updated = true;
+        } catch (ParseException e) {
+            Log.e(TAG, "ParseException. Msg: "+e.getMessage());
+        }
+        return updated;
+    }
+
+    /**
      * Retrieves the full list of assets.
      * @return
      */
@@ -308,5 +365,15 @@ public class SCWallDatabase {
             }
         }
         return count;
+    }
+
+    /**
+     * DEBUG ONLY
+     */
+    public void clearTimestamps(){
+        ContentValues values = new ContentValues();
+        values.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0);
+        int count = db.update(SCWallDatabaseContract.Transfers.TABLE_NAME, values, null, null);
+        Log.d(TAG, String.format("%d timestamps where deleted", count));
     }
 }

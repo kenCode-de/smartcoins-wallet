@@ -2,6 +2,7 @@ package de.bitshares_munich.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,20 @@ import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.codecrafters.tableview.TableDataAdapter;
 
+
 /**
  * Created by nelson on 12/13/16.
  */
 public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> {
+    private String TAG = this.getClass().getName();
 
     private UserAccount userAccount;
 
@@ -57,14 +62,21 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
     private View renderDateView(HistoricalTransfer historicalTransfer) {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionsdateview, null);
-        TextView date = (TextView) v.findViewById(R.id.transactiondate);
-        TextView time = (TextView) v.findViewById(R.id.transactiontime);
-        TextView timeZone = (TextView) v.findViewById(R.id.transactionttimezone);
+        TextView dateTextView = (TextView) v.findViewById(R.id.transactiondate);
+        TextView timeTextView = (TextView) v.findViewById(R.id.transactiontime);
+        TextView timeZoneTextView = (TextView) v.findViewById(R.id.transactionttimezone);
 
-//        date.setText(transactiondetails.getDateString());
-//        time.setText(transactiondetails.getTimeString() + " " + transactiondetails.getTimeZone());
-//        timeZone.setVisibility(View.GONE);
-        date.setText(String.format("%d", historicalTransfer.getBlockNum()));
+        if(historicalTransfer.getTimestamp() > 0){
+            Log.d(TAG, "Got timestamp: "+historicalTransfer.getTimestamp());
+
+            Date date = new Date(historicalTransfer.getTimestamp() * 1000);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+
+            dateTextView.setText(dateFormat.format(date));
+            timeTextView.setText(timeFormat.format(date));
+        }
         return v;
     }
 
