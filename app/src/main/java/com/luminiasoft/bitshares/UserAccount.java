@@ -93,4 +93,18 @@ public class UserAccount extends GrapheneObject implements ByteSerializable, Jso
             return new UserAccount(id, name);
         }
     }
+
+    /**
+     * Custom deserializer used to deserialize user accounts as provided by the response of the 'get_key_references' api call.
+     * This response contains serialized user accounts in the form [["id1","id2"]]
+     */
+    public static class UserAccountSimpleDeserializer implements JsonDeserializer<UserAccount> {
+
+        @Override
+        public UserAccount deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String id = json.getAsString();
+            System.out.println("id: "+id);
+            return new UserAccount(id);
+        }
+    }
 }
