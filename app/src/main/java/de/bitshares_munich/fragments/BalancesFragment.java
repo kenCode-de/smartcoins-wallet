@@ -669,17 +669,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             }
                         }
                     }
-                    if(assets.containsKey(finalFaitCurrency == null || finalFaitCurrency.isEmpty())){
-                        String faitCurrency = Helper.getFadeCurrency(getContext());
-
-                        if (faitCurrency.isEmpty())
-                        {
-                            faitCurrency = "EUR";
-                        }
-                        if(assets.containsKey(faitCurrency)){
-                            finalFaitCurrency = assets.get(faitCurrency).id;
-                        }
-                    }
                     List<WebsocketWorkerThread> threads = new ArrayList();
                     for(final String base : currencies.keySet()) {
                         if (assets.containsKey(base)) {
@@ -802,6 +791,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
                         }
 
+
                         getActivity().runOnUiThread(
                                 new Runnable() {
                                     @Override
@@ -855,6 +845,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         {
             faitCurrency = "EUR";
         }
+        finalFaitCurrency = faitCurrency;
 
         HashMap<String,ArrayList<String>> currenciesChange = new HashMap();
         for (int i = 0; i < accountAssets.size(); i++) {
@@ -881,6 +872,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 }
             }
         }
+        finalFaitCurrency = faitCurrency;
 
         WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
             @Override
