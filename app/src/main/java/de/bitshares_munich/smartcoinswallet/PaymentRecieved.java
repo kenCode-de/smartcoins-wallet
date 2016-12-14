@@ -15,6 +15,7 @@ import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.objects.Memo;
 
 import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -202,7 +203,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         JsonObject memoObject = new JsonParser().parse(memo).getAsJsonObject();
         try {
             tvMemo.setText(Memo.decodeMessage(new Address(memoObject.get("from").getAsString()).getPublicKey(),
-                    DumpedPrivateKey.fromBase58(null, privateKey).getKey(),
+                    ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, privateKey).getKey().getPrivKeyBytes()),
                     memoObject.get("message").getAsString(),
                     memoObject.get("nonce").getAsString()));
         } catch (MalformedAddressException e) {

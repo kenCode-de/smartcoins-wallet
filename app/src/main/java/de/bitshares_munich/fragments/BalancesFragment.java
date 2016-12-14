@@ -642,6 +642,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies,final Runnable getEquivalentCompRunnable) {
+        Log.d("henry","en equivalent component direct");
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -661,59 +662,88 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     ArrayList list = (ArrayList) response.result;
                     final HashMap<String, Asset> assets = new HashMap();
                     for (Object listObject : list) {
-                        if (listObject.getClass() == Asset.class) {
-                            Asset asset = (Asset) listObject;
-                            assets.put(asset.symbol, asset);
+                        if(listObject != null) {
+                            if (listObject.getClass() == Asset.class) {
+                                Asset asset = (Asset) listObject;
+                                assets.put(asset.symbol, asset);
+                            }
                         }
                     }
-                    for(final String base : currencies.keySet()){
-                        for(final String quote : currencies.get(base)){
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
-                                @Override
-                                public void onSuccess(WitnessResponse response) {
-                                    if (response.result.getClass() == ArrayList.class) {
-                                        ArrayList list = (ArrayList) response.result;
-                                        for (Object listObject : list) {
-                                            if (listObject.getClass() == Market.class) {
-                                                Market market = ((Market) listObject);
-                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).id)) {
-                                                    double price = market.sell_price.quote.amount / market.sell_price.base.amount;
-                                                    int exp = assets.get(quote).precision - assets.get(base).precision;
-                                                    price = price * Math.pow(10, exp);
-                                                    updateEquivalentValue(quote,Double.toString(price),getEquivalentCompRunnable);
-                                                    return;
+                    if(assets.containsKey(finalFaitCurrency == null || finalFaitCurrency.isEmpty())){
+                        String faitCurrency = Helper.getFadeCurrency(getContext());
+
+                        if (faitCurrency.isEmpty())
+                        {
+                            faitCurrency = "EUR";
+                        }
+                        if(assets.containsKey(faitCurrency)){
+                            finalFaitCurrency = assets.get(faitCurrency).id;
+                        }
+                    }
+                    List<WebsocketWorkerThread> threads = new ArrayList();
+                    for(final String base : currencies.keySet()) {
+                        if (assets.containsKey(base)) {
+                            for (final String quote : currencies.get(base)) {
+                                if(assets.containsKey(quote)) {
+                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).id, assets.get(quote).id, 20, new WitnessResponseListener() {
+                                        @Override
+                                        public void onSuccess(WitnessResponse response) {
+                                            if (response.result.getClass() == ArrayList.class) {
+                                                ArrayList list = (ArrayList) response.result;
+                                                for (Object listObject : list) {
+                                                    if (listObject.getClass() == Market.class) {
+                                                        Market market = ((Market) listObject);
+                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).id)) {
+                                                            double price = market.sell_price.quote.amount / market.sell_price.base.amount;
+                                                            int exp = assets.get(quote).precision - assets.get(base).precision;
+                                                            price = price * Math.pow(10, exp);
+                                                            updateEquivalentValue(base, Double.toString(price), getEquivalentCompRunnable);
+                                                            return;
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                }
 
-                                @Override
-                                public void onError(BaseResponse.Error error) {
-
+                                        @Override
+                                        public void onError(BaseResponse.Error error) {
+                                            Log.e(TAG,"Error getLimitOrder " + error.message);
+                                            //TODO handle limitOrder error
+                                        }
+                                    }));
+                                    threads.add(glo);
+                                    glo.start();
+                                }else {
+                                    //TODO handle quote null error
                                 }
-                            }));
-                            glo.start();
+                            }
+                        }else{
+                            //TODO handle base error
                         }
+                    }
+                    for(Thread thread : threads){
+                        try {
+                            thread.join();
+                        }catch(Exception e){}
                     }
                 }
             }
 
             @Override
             public void onError(BaseResponse.Error error) {
-                    //TODO error
+                    //TODO error handle getasset errror
             }
         }));
         wwThread.start();
 
         try {
             wwThread.join();
-        } catch (InterruptedException e) {        }
+        } catch (InterruptedException e) {}
 
     }
 
     private void updateEquivalentValue(String assetName, String value,Runnable getEquivalentCompRunnable){
-        Log.d("henry","en equivalentValue");
+        Log.i(TAG,"en updateEquivalentValue " + assetName + " value " + value);
         for (int i = 0; i < llBalances.getChildCount(); i++)
         {
             LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
@@ -722,7 +752,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                 TextView tvAsset;
                 TextView tvAmount;
-                TextView tvFaitAmount;
+                final TextView tvFaitAmount;
 
                 if (j == 1)
                 {
@@ -739,6 +769,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                 if (tvAsset == null || tvAmount == null || tvFaitAmount == null)
                 {
+                    Log.i(TAG,"tvAsset tv Amount tvFaitAmount nulls");
                     //TODO
                     updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
                     return;
@@ -751,9 +782,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 {
                     amount = "0.0";
                 }
-
+                Log.i(TAG,"asset " + asset);
                 if (!amount.isEmpty() && assetName.equals(asset))
                 {
+                    Log.i(TAG,"found asset " + assetName);
                     Currency currency = Currency.getInstance(finalFaitCurrency);
 
                     try
@@ -770,17 +802,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
                         }
 
-                        tvFaitAmount.setVisibility(View.VISIBLE);
+                        getActivity().runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvFaitAmount.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                        );
 
                     }
                     catch (Exception e)
                     {
-                        tvFaitAmount.setVisibility(View.GONE);
+                        getActivity().runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvFaitAmount.setVisibility(View.GONE);
+                                    }
+                                }
+                        );
                     }
                 }
                 else
                 {
-                    tvFaitAmount.setVisibility(View.GONE);
+                    /*getActivity().runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    tvFaitAmount.setVisibility(View.GONE);
+                                }
+                            }
+                    );*/
                 }
             }
         }
@@ -848,7 +901,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             rates.put(base,new HashMap());
                         }
                         for(final String quote : currencies.get(base)){
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base, quote, 20, new WitnessResponseListener() {
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).id, assets.get(quote).id, 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
                                     if (response.result.getClass() == ArrayList.class) {

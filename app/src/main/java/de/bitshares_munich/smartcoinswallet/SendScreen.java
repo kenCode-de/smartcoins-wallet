@@ -1059,7 +1059,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
             long expirationTime = Application.blockTime + 30;
-            ECKey currentPrivKey = DumpedPrivateKey.fromBase58(null, wifKey).getKey();
+            ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
 
             TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))

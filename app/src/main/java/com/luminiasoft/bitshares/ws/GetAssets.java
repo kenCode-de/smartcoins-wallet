@@ -1,5 +1,7 @@
 package com.luminiasoft.bitshares.ws;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.Asset;
@@ -56,6 +58,7 @@ public class GetAssets extends WebSocketAdapter {
                 this.mListener.onSuccess(witnessResponse);
             }
         } catch (Exception e) {
+            Log.d("henry", "exception e " + e.getMessage());
             e.printStackTrace();
         }
 
