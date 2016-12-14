@@ -36,12 +36,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetAccountNameById;
 import com.luminiasoft.bitshares.ws.GetRelativeAccountHistory;
+import com.luminiasoft.bitshares.ws.LookupAssetSymbols;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,6 +73,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
+import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -78,8 +83,8 @@ import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
+import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
-import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
@@ -93,10 +98,8 @@ import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
-import de.bitshares_munich.utils.tableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 import retrofit2.Call;
@@ -108,7 +111,7 @@ import retrofit2.Response;
  * Created by qasim on 5/10/16.
  */
 public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
-    private final String TAG = this.getClass().getName();
+    public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
     static Boolean audioSevice = false;
@@ -158,8 +161,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Bind(R.id.whiteSpaceAfterBalances)
     LinearLayout whiteSpaceAfterBalances;
 
-    private SortableTableView<TransactionDetails> tableView;
-//    private SortableTableView<HistoricalTransfer> transfersView;
+//    private SortableTableView<TransactionDetails> tableView;
+    private SortableTableView<HistoricalTransfer> transfersView;
     private ArrayList<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
@@ -199,20 +202,109 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     webSocketCallHelper myWebSocketHelper;
 
+    /* Smarcoins Wallet database instance */
     private SCWallDatabase database;
+
+    /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
+    private WebsocketWorkerThread getMissingAccountsThread;
+    private WebsocketWorkerThread getMissingAssets;
+
+    /**
+     * Callback activated once we get a response back from the network informing us about some
+     * missing asset details.
+     */
+    private WitnessResponseListener mLookupAssetsSymbolsListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "assetsUpdater.onSuccess");
+                    List<Asset> assets = (List<Asset>) response.result;
+                    int count = database.putAssets(assets);
+                    if(count > 0){
+                        // Assets updated, refresh table adapter.
+                        UserAccount account = new UserAccount(accountId);
+                        List<HistoricalTransfer> transfers = database.getTransactions();
+                        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "assetsUpdater.onError");
+        }
+    };
+
+    /**
+     * Callback activated once we get a response back from the full node telling us about missing
+     * user account data we previously requested.
+     */
+    private WitnessResponseListener mGetmissingAccountsListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            getActivity().runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    List<AccountProperties> missingAccounts = (List<AccountProperties>) response.result;
+                    int count = database.putUserAccounts(missingAccounts);
+                    if(count > 0){
+                        // User accounts updated, refresh table adapter.
+                        UserAccount account = new UserAccount(accountId);
+                        List<HistoricalTransfer> transfers = database.getTransactions();
+                        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.d(TAG, "missing accounts. onError");
+        }
+    };
+
+    /**
+     * Callback activated once we get a response back from the full node telling us about the
+     * transfer history of the current account.
+     */
     private WitnessResponseListener mTransferHistoryListener = new WitnessResponseListener() {
 
         @Override
-        public void onSuccess(WitnessResponse response) {
+        public void onSuccess(final WitnessResponse response) {
             Log.d(TAG, "mTransferHistoryListener. onSuccess");
-            WitnessResponse<List<HistoricalTransfer>> resp = response;
-            try {
-                database.putTransactions(resp.result);
-                database.getTransactions();
-            }catch(Exception e){
-                Log.e(TAG,"Exception. Msg: "+e.getMessage());
-            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    WitnessResponse<List<HistoricalTransfer>> resp = response;
+                    try {
+                        database.putTransactions(resp.result);
+                    }catch(Exception e){
+                        Log.e(TAG,"Exception. Msg: "+e.getMessage());
+                    }
+                    if(!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)){
+                        migrateTransactionData();
+                    }
+                    List<UserAccount> missingAccountNames = database.getMissingAccountNames();
+                    if(missingAccountNames.size() > 0){
+                        // Got some missing user names, so we request them to the network.
+                        getMissingAccountsThread = new WebsocketWorkerThread(new GetAccountNameById(missingAccountNames, mGetmissingAccountsListener));
+                        getMissingAccountsThread.start();
+                    }
+
+                    List<Asset> missingAssets = database.getMissingAssets();
+                    if(missingAssets.size() > 0){
+                        // Got some missing asset symbols, so we request them to the network.
+                        getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
+                        getMissingAssets.start();
+                    }
+                }
+            });
         }
 
         @Override
@@ -244,7 +336,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         format = NumberFormat.getInstance(locale);
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
-        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
+
+//        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
+        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(R.id.tableView);
+
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
         final Handler handler = new Handler();
@@ -296,7 +391,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
             int height2 = transactionsExportHeader.getHeight();
             Log.d("setSortableHeight", "Scroll Header Heght : " + Long.toString(height2));
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tableView.getLayoutParams();
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) transfersView.getLayoutParams();
             params.height = height1 - height2;
             Log.d("setSortableHeight", "View Heght : " + Long.toString(params.height));
             tableViewparent.setLayoutParams(params);
@@ -564,10 +659,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @OnClick(R.id.exportButton)
     public void onExportButton() {
         if (isLoading) {
-            TableDataAdapter myAdapter = tableView.getDataAdapter();
-            List<TransactionDetails> det = myAdapter.getData();
-            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
-            myTable.createTable(det);
+            //TODO: Implement this
+//            TableDataAdapter myAdapter = tableView.getDataAdapter();
+//            List<TransactionDetails> det = myAdapter.getData();
+//            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
+//            myTable.createTable(det);
         } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
     }
 
@@ -2235,7 +2331,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         myTransactionsTableAdapter.clear();
                         myTransactionsTableAdapter.addAll(localTransactionDetails);
                     }
-                    tableView.setDataAdapter(myTransactionsTableAdapter);
+//                    tableView.setDataAdapter(myTransactionsTableAdapter);
                     tableViewparent.setVisibility(View.VISIBLE);
                 }
             });
@@ -2305,12 +2401,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     if ( myTransactionsTableAdapter == null )
                     {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                        tableView.setDataAdapter(myTransactionsTableAdapter);
+//                        tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
                     else
                     {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-                        tableView.setDataAdapter(myTransactionsTableAdapter);
+//                        tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
 
                     if (myTransactionActivity.finalBlockRecieved)
@@ -2392,7 +2488,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             {
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
             }else myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-            tableView.setDataAdapter(myTransactionsTableAdapter);
+//            tableView.setDataAdapter(myTransactionsTableAdapter);
             load_more_values.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
@@ -2543,9 +2639,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
             tableViewparent.setVisibility(View.GONE);
             myTransactions = new ArrayList<>();
-            updateSortTableView(tableView, myTransactions);
+            //TODO: Implement this
+//            updateSortTableView(tableView, myTransactions);
 
-            tableView.addDataClickListener(new tableViewClickListener(getContext()));
+            //TODO: Implement this
+//            tableView.addDataClickListener(new tableViewClickListener(getContext()));
             progressBar.setVisibility(View.VISIBLE);
 
             load_more_values.setVisibility(View.GONE);
@@ -2617,6 +2715,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             loadBalancesFromSharedPref();
             TransactionUpdateOnStartUp(to);
         }
+
+        // Loading transfers from database
+        List<HistoricalTransfer> transfers = database.getTransactions();
+        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), new UserAccount(accountId), transfers.toArray(new HistoricalTransfer[transfers.size()])));
 
         loadViews(onResume,accountNameChanged, faitCurrencyChanged);
     }
@@ -2937,6 +3039,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     public void isAssets(){
         progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
+    }
+
+    /**
+     * Private method used for migration purposes only. Since the past equivalent value data
+     * is only available in the shared preferences, we should migrate that data into our new
+     * database-backed scheme now.
+     *
+     * This migration is only done once.
+     *
+     * @author: Nelson R. Pérez
+     */
+    private void migrateTransactionData(){
+        //TODO: Implement data migration
     }
 }
 

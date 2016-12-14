@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
  * Created by nelson on 11/9/16.
  */
 public class Asset extends GrapheneObject {
+    private final String TAG = this.getClass().getName();
     public static final String KEY_ID = "id";
     public static final String KEY_SYMBOL = "symbol";
     public static final String KEY_PRECISION = "precision";

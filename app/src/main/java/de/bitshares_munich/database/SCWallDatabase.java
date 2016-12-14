@@ -12,9 +12,11 @@ import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.models.TransactionDetails;
@@ -63,7 +65,7 @@ public class SCWallDatabase {
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, transfer.getBlockNum());
 
             //TODO: Add equivalent value data
-//            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_SYMBOL, "");
+//            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, "");
 //            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, 0);
 
             try{
@@ -83,29 +85,50 @@ public class SCWallDatabase {
      */
     public List<HistoricalTransfer> getTransactions(){
         long before = System.currentTimeMillis();
-        Cursor cursor = db.query(SCWallDatabaseContract.Transfers.TABLE_NAME, null, null, null, null, null, SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, null);
+        HashMap<String, String> userMap = this.getUserMap();
+        HashMap<String, Asset> assetMap = this.getAssetMap();
+
+        String tableName = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
+        Cursor cursor = db.query(tableName, null, null, null, null, null, orderBy, null);
         ArrayList<HistoricalTransfer> transfers = new ArrayList<>();
-        cursor.moveToFirst();
-        do{
-            HistoricalTransfer historicalTransfer = new HistoricalTransfer();
+        if(cursor.moveToFirst()){
+            do{
+                HistoricalTransfer historicalTransfer = new HistoricalTransfer();
 
-            // Building a TransferOperation
-            UserAccount from = new UserAccount(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FROM)));
-            UserAccount to = new UserAccount(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO)));
-            Asset transferAsset = new Asset(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID)));
-            Asset feeAsset = new Asset(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID)));
-            AssetAmount tranferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
-            AssetAmount feeAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT))), feeAsset);
-            TransferOperation transferOperation = new TransferOperation(from, to, tranferAmount, feeAmount);
+                // Getting origin and destination user account ids
+                String fromId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FROM));
+                String toId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO));
 
-            // Adding other historical transfer data
-            historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
-            historicalTransfer.setOperation(transferOperation);
-            historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
+                // Building UserAccount instances
+                UserAccount from = new UserAccount(fromId, userMap.get(fromId));
+                UserAccount to = new UserAccount(toId, userMap.get(toId));
 
-            // Adding historical transfer to array
-            transfers.add(historicalTransfer);
-        }while(cursor.moveToNext());
+                String transferAssetId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID));
+                String feeAssetId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID));
+
+                // Transfer and fee assets
+                Asset transferAsset = assetMap.get(transferAssetId);
+                Asset feeAsset = assetMap.get(feeAssetId);
+
+                // Transfer and fee amounts
+                AssetAmount tranferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
+                AssetAmount feeAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT))), feeAsset);
+
+                // Building a TransferOperation
+                TransferOperation transferOperation = new TransferOperation(from, to, tranferAmount, feeAmount);
+
+                // Adding other historical transfer data
+                historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
+                historicalTransfer.setOperation(transferOperation);
+                historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
+
+                // Adding historical transfer to array
+                transfers.add(historicalTransfer);
+            }while(cursor.moveToNext());
+        }else{
+            Log.w(TAG, "No historical transactions");
+        }
         cursor.close();
         long after = System.currentTimeMillis();
         Log.d(TAG, String.format("getTransactions took %d ms with %d transactions", (after - before), transfers.size()));
@@ -113,19 +136,144 @@ public class SCWallDatabase {
     }
 
     /**
+     * Making a query to fetch all unknown account names. That would be missing entries in the
+     * user_accounts table.
+     * @return: List of all accounts with missing names.
+     */
+    public List<UserAccount> getMissingAccountNames(){
+        String sql = "SELECT DISTINCT %s FROM %s WHERE %s NOT IN (SELECT %s FROM %s)";
+
+        String firstReplacedSql = String.format(sql,
+                SCWallDatabaseContract.Transfers.COLUMN_TO,
+                SCWallDatabaseContract.Transfers.TABLE_NAME,
+                SCWallDatabaseContract.Transfers.COLUMN_TO,
+                SCWallDatabaseContract.UserAccounts.COLUMN_ID,
+                SCWallDatabaseContract.UserAccounts.TABLE_NAME);
+
+        String secondReplacedSql = String.format(sql,
+                SCWallDatabaseContract.Transfers.COLUMN_FROM,
+                SCWallDatabaseContract.Transfers.TABLE_NAME,
+                SCWallDatabaseContract.Transfers.COLUMN_FROM,
+                SCWallDatabaseContract.UserAccounts.COLUMN_ID,
+                SCWallDatabaseContract.UserAccounts.TABLE_NAME);
+
+
+        String[] firstSelectionArgs = {
+                SCWallDatabaseContract.Transfers.COLUMN_FROM,
+                SCWallDatabaseContract.Transfers.COLUMN_FROM
+        };
+
+        String[] secondSelectionArgs = {
+                SCWallDatabaseContract.Transfers.COLUMN_TO,
+                SCWallDatabaseContract.Transfers.COLUMN_TO
+        };
+
+        Cursor firstCursor = db.rawQuery(firstReplacedSql, null);
+        Cursor secondCursor = db.rawQuery(secondReplacedSql, null);
+
+        ArrayList<UserAccount> accounts = new ArrayList<>();
+        if(firstCursor.moveToFirst()){
+            do{
+                accounts.add(new UserAccount(firstCursor.getString(0)));
+            }while(firstCursor.moveToNext());
+        }
+
+        if(secondCursor.moveToFirst()){
+            do{
+                accounts.add(new UserAccount(secondCursor.getString(0)));
+            }while(secondCursor.moveToNext());
+        }
+
+        firstCursor.close();
+        secondCursor.close();
+        return accounts;
+    }
+
+    /**
+     * @return: A HashMap connecting account ids to account names.
+     */
+    public HashMap<String, String> getUserMap(){
+        HashMap<String, String> userMap = new HashMap<>();
+        String[] columns = { SCWallDatabaseContract.UserAccounts.COLUMN_ID, SCWallDatabaseContract.UserAccounts.COLUMN_NAME };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.UserAccounts.TABLE_NAME, columns, null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                userMap.put(cursor.getString(0), cursor.getString(1));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return userMap;
+    }
+
+    /**
+     * @return: A hashmap connecting asset ids to asset symbols.
+     */
+    public HashMap<String, Asset> getAssetMap(){
+        HashMap<String, Asset> assetMap = new HashMap<>();
+        String[] columns = {
+                SCWallDatabaseContract.Assets.COLUMN_ID,
+                SCWallDatabaseContract.Assets.COLUMN_SYMBOL,
+                SCWallDatabaseContract.Assets.COLUMN_PRECISION
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Assets.TABLE_NAME, columns, null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                String symbol = cursor.getString(1);
+                int precision = cursor.getInt(2);
+                assetMap.put(cursor.getString(0), new Asset(id, symbol, precision));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return assetMap;
+    }
+
+    /**
+     * Returns all missing asset references from the transfers table.
+     * @return: List of Asset instances.
+     */
+    public List<Asset> getMissingAssets(){
+        String sql = "SELECT DISTINCT %s from %s where %s not in (select %s from %s)";
+        String finalSql = String.format(sql,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
+                SCWallDatabaseContract.Transfers.TABLE_NAME,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
+                SCWallDatabaseContract.Assets.COLUMN_ID,
+                SCWallDatabaseContract.Assets.TABLE_NAME);
+
+        ArrayList<Asset> missingAssets = new ArrayList<>();
+        Cursor cursor = db.rawQuery(finalSql, null);
+        if(cursor.moveToFirst()){
+            do{
+                missingAssets.add(new Asset(cursor.getString(0)));
+            }while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        return missingAssets;
+    }
+
+    /**
      * Stores a list of assets
      * @param assets: Assets to store
      */
-    public void putAssets(List<Asset> assets){
+    public int putAssets(List<Asset> assets){
         ContentValues contentValues = new ContentValues();
+        int count = 0;
         for(Asset asset : assets){
-            contentValues.put(SCWallDatabaseContract.AssetsTable.COLUMN_ID, asset.getObjectId());
-            contentValues.put(SCWallDatabaseContract.AssetsTable.COLUMN_PRECISION, asset.getPrecision());
-            contentValues.put(SCWallDatabaseContract.AssetsTable.COLUMN_SYMBOL, asset.getSymbol());
-            contentValues.put(SCWallDatabaseContract.AssetsTable.COLUMN_ISSUER, asset.getIssuer());
+            contentValues.put(SCWallDatabaseContract.Assets.COLUMN_ID, asset.getObjectId());
+            contentValues.put(SCWallDatabaseContract.Assets.COLUMN_PRECISION, asset.getPrecision());
+            contentValues.put(SCWallDatabaseContract.Assets.COLUMN_SYMBOL, asset.getSymbol());
+            contentValues.put(SCWallDatabaseContract.Assets.COLUMN_ISSUER, asset.getIssuer());
 
-            db.insertWithOnConflict(SCWallDatabaseContract.AssetsTable.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+            try {
+                db.insertOrThrow(SCWallDatabaseContract.Assets.TABLE_NAME, null, contentValues);
+                count++;
+            } catch(SQLException e){
+
+            }
         }
+        return count;
     }
 
     /**
@@ -143,5 +291,22 @@ public class SCWallDatabase {
      */
     public List<TransactionDetails> getTransactionDetails(){
         return null;
+    }
+
+    public int putUserAccounts(List<AccountProperties> accountProperties){
+        ContentValues contentValues = new ContentValues();
+        int count = 0;
+        for(AccountProperties properties : accountProperties){
+            contentValues.put(SCWallDatabaseContract.UserAccounts.COLUMN_ID, properties.id);
+            contentValues.put(SCWallDatabaseContract.UserAccounts.COLUMN_NAME, properties.name);
+
+            try {
+                db.insertOrThrow(SCWallDatabaseContract.UserAccounts.TABLE_NAME, null, contentValues);
+                count++;
+            }catch(SQLException e){
+
+            }
+        }
+        return count;
     }
 }

@@ -7,4 +7,5 @@ package de.bitshares_munich.smartcoinswallet;
 public class Constants {
     public static final String KEY_UPDATE_DONE = "key_update_done";
     public static final String KEY_OLD_KEYS = "key_old_keys";
+    public static final String KEY_MIGRATED_OLD_TRANSACTIONS = "key_updated_old_transactions";
 }

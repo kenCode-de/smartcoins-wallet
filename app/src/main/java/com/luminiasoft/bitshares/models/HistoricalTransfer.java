@@ -42,27 +42,27 @@ public class HistoricalTransfer {
         this.block_num = block_num;
     }
 
-    public long getTrx_in_block() {
+    public long getTransactionsInBlock() {
         return trx_in_block;
     }
 
-    public void setTrx_in_block(long trx_in_block) {
+    public void setTransactionsInBlock(long trx_in_block) {
         this.trx_in_block = trx_in_block;
     }
 
-    public long getOp_in_trx() {
+    public long getOperationsInTrx() {
         return op_in_trx;
     }
 
-    public void setOp_in_trx(long op_in_trx) {
+    public void setOperationsInTrx(long op_in_trx) {
         this.op_in_trx = op_in_trx;
     }
 
-    public long getVirtual_op() {
+    public long getVirtualOp() {
         return virtual_op;
     }
 
-    public void setVirtual_op(long virtual_op) {
+    public void setVirtualOp(long virtual_op) {
         this.virtual_op = virtual_op;
     }
 }

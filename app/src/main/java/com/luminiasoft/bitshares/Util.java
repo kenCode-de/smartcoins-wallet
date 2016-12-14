@@ -1,5 +1,12 @@
 package com.luminiasoft.bitshares;
 
+import org.spongycastle.crypto.DataLengthException;
+import org.spongycastle.crypto.InvalidCipherTextException;
+import org.spongycastle.crypto.engines.AESFastEngine;
+import org.spongycastle.crypto.modes.CBCBlockCipher;
+import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
+import org.spongycastle.crypto.params.KeyParameter;
+import org.spongycastle.crypto.params.ParametersWithIV;
 import org.tukaani.xz.FinishableOutputStream;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.LZMAInputStream;
@@ -17,14 +24,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.spongycastle.crypto.DataLengthException;
-import org.spongycastle.crypto.InvalidCipherTextException;
-import org.spongycastle.crypto.engines.AESFastEngine;
-import org.spongycastle.crypto.modes.CBCBlockCipher;
-import org.spongycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.spongycastle.crypto.params.KeyParameter;
-import org.spongycastle.crypto.params.ParametersWithIV;
 
 /**
  * Class used to encapsulate common utility methods
@@ -233,18 +232,26 @@ public class Util {
     }
 
     /**
-     * Transform an array of bytes to an hex String representation
-     * @param input array of bytes to transform as a string
-     * @return Input as a String
+     * Converts a base value to an adjusted one considering the precision of the asset.
+     * @param assetAmount: The asset amount instance.
+     * @return: Converts the base
      */
-    public static String byteToString(byte[] input) {
-        StringBuilder result = new StringBuilder();
-        for (byte in : input) {
-            if ((in & 0xff) < 0x10) {
-                result.append("0");
-            }
-            result.append(Integer.toHexString(in & 0xff));
-        }
-        return result.toString();
+    public static float fromBase(AssetAmount assetAmount){
+        long value = assetAmount.getAmount().longValue();
+        int precision = assetAmount.getAsset().getPrecision();
+        if(precision != 0)
+            return (float) (value / Math.pow(10, precision));
+        else
+            return 0;
+    }
+
+    /**
+     * Converts a value and its corresponding precision to a base value.
+     * @param value
+     * @param precision
+     * @return
+     */
+    public static long toBase(long value, int precision){
+        return (long) (value * Math.pow(10, precision));
     }
 }

@@ -32,5 +32,6 @@
         android:textColor="@color/sendamount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
+        android:visibility="invisible"
         android:textStyle="bold"/>
 </LinearLayout>
