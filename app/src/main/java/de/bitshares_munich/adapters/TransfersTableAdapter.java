@@ -2,7 +2,6 @@ package de.bitshares_munich.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,15 +66,16 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
         TextView timeZoneTextView = (TextView) v.findViewById(R.id.transactionttimezone);
 
         if(historicalTransfer.getTimestamp() > 0){
-            Log.d(TAG, "Got timestamp: "+historicalTransfer.getTimestamp());
 
             Date date = new Date(historicalTransfer.getTimestamp() * 1000);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat timeZone = new SimpleDateFormat("z");
 
             dateTextView.setText(dateFormat.format(date));
             timeTextView.setText(timeFormat.format(date));
+            timeZoneTextView.setText(timeZone.format(date));
         }
         return v;
     }

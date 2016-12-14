@@ -337,11 +337,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 @Override
                 public void run() {
                     WitnessResponse<List<HistoricalTransfer>> resp = response;
-                    try {
-                        database.putTransactions(resp.result);
-                    }catch(Exception e){
-                        Log.e(TAG,"Exception. Msg: "+e.getMessage());
-                    }
+
+                    Log.d(TAG, String.format("Got %d transactions from network request", resp.result.size()));
+                    int inserted = database.putTransactions(resp.result);
+                    Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
+
                     if(!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)){
                         migrateTransactionData();
                     }
@@ -351,6 +351,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         // Got some missing user names, so we request them to the network.
                         getMissingAccountsThread = new WebsocketWorkerThread(new GetAccountNameById(missingAccountNames, mGetmissingAccountsListener));
                         getMissingAccountsThread.start();
+                        Log.d(TAG, "Requesting missing account names");
                     }
 
                     List<Asset> missingAssets = database.getMissingAssets();
@@ -358,6 +359,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         // Got some missing asset symbols, so we request them to the network.
                         getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
                         getMissingAssets.start();
+                        Log.d(TAG, "Requesting missing assets");
                     }
 
                     missingTimes = database.getMissingTransferTimes();
@@ -365,6 +367,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         Long blockNum = missingTimes.peek();
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
+                        Log.d(TAG, "Requesting missing block times");
                     }
                 }
             });
@@ -453,17 +456,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 return;
             }
 
-            Log.d("setSortableHeight", "Scroll Heght : " + Long.toString(height1));
+            Log.d(TAG, "Scroll Heght : " + Long.toString(height1));
             View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
             int height2 = transactionsExportHeader.getHeight();
-            Log.d("setSortableHeight", "Scroll Header Heght : " + Long.toString(height2));
+            Log.d(TAG, "Scroll Header Heght : " + Long.toString(height2));
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) transfersView.getLayoutParams();
             params.height = height1 - height2;
-            Log.d("setSortableHeight", "View Heght : " + Long.toString(params.height));
+            Log.d(TAG, "View Heght : " + Long.toString(params.height));
             tableViewparent.setLayoutParams(params);
-            Log.d("setSortableHeight", "View Heght Set");
+            Log.d(TAG, "View Heght Set");
         } catch (Exception e) {
-            Log.d("List Height", e.getMessage());
+            Log.d(TAG, e.getMessage());
             handler.postDelayed(task, 2000);
         }
     }
@@ -2297,15 +2300,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
      * Updating the sort strategy
      */
     private void updateSortTable(){
+        Log.d(TAG, "updateSortTable");
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         transfersView.setHeaderAdapter(simpleTableHeaderAdapter);
 
         transfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-        transfersView.setColumnWeight(0, 10);
-        transfersView.setColumnWeight(1, 8);
-        transfersView.setColumnWeight(2, 10);
-        transfersView.setColumnWeight(3, 12);
+        transfersView.setColumnWeight(0, 17);
+        transfersView.setColumnWeight(1, 12);
+        transfersView.setColumnWeight(2, 30);
+        transfersView.setColumnWeight(3, 22);
         transfersView.setColumnComparator(0, new TransferDateComparator());
         transfersView.setColumnComparator(1, new TransferSendReceiveComparator(new UserAccount(accountId)));
         transfersView.setColumnComparator(3, new TransferAmountComparator());
@@ -2403,8 +2407,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         Log.d(TAG, "TransactionUpdateOnStartUp. account name: "+accountName);
 
         final List<TransactionDetails> localTransactionDetails = getTransactions(accountName);
-
-        Log.d(TAG,"Got a list of "+localTransactionDetails.size()+" transactions");
 
         if (localTransactionDetails != null && localTransactionDetails.size() > 0) {
 
@@ -2725,7 +2727,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         if ( firstTimeLoad )
         {
 
-            tableViewparent.setVisibility(View.GONE);
+//            tableViewparent.setVisibility(View.GONE);
             myTransactions = new ArrayList<>();
             //TODO: Implement this
 //            updateSortTableView(tableView, myTransactions);
@@ -3145,6 +3147,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     private void updateTableView(){
         UserAccount account = new UserAccount(accountId);
         List<HistoricalTransfer> transfers = database.getTransactions();
+        Log.d(TAG, String.format("Updating the table view with %d transactions", transfers.size()));
         transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
 
         if(transfersView.getColumnComparator(0) == null){
