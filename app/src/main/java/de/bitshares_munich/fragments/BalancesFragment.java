@@ -2552,7 +2552,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
             Log.d("LogTransactions","updateTriggerFromNetworkBroadcast");
 
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
@@ -2732,7 +2732,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
             //TODO: Implement this
 //            tableView.addDataClickListener(new tableViewClickListener(getContext()));
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
 
             load_more_values.setVisibility(View.GONE);
 
@@ -2754,10 +2754,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         if ( !onResume || accountNameChanged || faitCurrencyChanged )
         {
-//            progressBar1.setVisibility(View.VISIBLE);
+            progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
 
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
