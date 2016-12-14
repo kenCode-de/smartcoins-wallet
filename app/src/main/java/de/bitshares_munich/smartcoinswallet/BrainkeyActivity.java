@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.BrainKey;
+import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -143,7 +144,7 @@ public class BrainkeyActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));
-                    get_account_from_brainkey(this, temp, pinCode);
+                    get_account_from_brainkey(temp, pinCode);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
@@ -171,7 +172,7 @@ public class BrainkeyActivity extends BaseActivity {
 
     }
 
-    public void get_account_from_brainkey(final Activity activity, final String brainKey, final String pinCode) {
+    public void get_account_from_brainkey(final String brainKey, final String pinCode) {
         try {
             BrainKey bKey = new BrainKey(brainKey, 0);
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
@@ -181,26 +182,20 @@ public class BrainkeyActivity extends BaseActivity {
             new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
-                    if (response.result.getClass() == ArrayList.class) {
-                        List list = (List) response.result;
-                        if (list.size() > 0) {
-                            if (list.get(0).getClass() == ArrayList.class) {
-                                List sl = (List) list.get(0);
-                                if (sl.size() > 0) {
-                                    String accountId = (String) sl.get(0);
-                                    getAccountById(accountId, privkey, pubkey, brainKey,pinCode);
-                                }else{
-                                    hideDialog();
-                                    Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
-                                }
+                    List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
+                    if(resp.size() > 0){
+                        List<UserAccount> accounts = resp.get(0);
+                        if(accounts.size() > 0){
+                            for(UserAccount account : accounts) {
+                                getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pinCode);
                             }
-                        } else {
+                        }else{
                             hideDialog();
                             Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                         }
-                    } else {
+                    }else{
                         hideDialog();
-                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                     }
                 }
 

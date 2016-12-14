@@ -43,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -610,26 +609,21 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
-                if (response.result.getClass() == ArrayList.class) {
-                    List list = (List) response.result;
-                    if (list.size() > 0) {
-                        if (list.get(0).getClass() == ArrayList.class) {
-                            List sl = (List) list.get(0);
-                            if (sl.size() > 0) {
-                                String accountId = (String) sl.get(0);
-                                addWallet(accountId);
-                            }else{
-                                hideDialog();
-                                Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
-                            }
+                List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
+                if(resp.size() > 0){
+                    List<UserAccount> accounts = resp.get(0);
+                    if(accounts.size() > 0){
+                        if(accounts.size() != 1){
+                            Log.w(TAG, "More than one account with the same controlling keys");
                         }
-                    } else {
+                        addWallet(accounts.get(0).getObjectId());
+                    }else{
                         hideDialog();
                         Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                     }
-                } else {
+                }else{
                     hideDialog();
-                    Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                 }
             }
 

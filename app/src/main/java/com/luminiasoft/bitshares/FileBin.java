@@ -31,6 +31,7 @@ import java.util.Arrays;
  * @author Henry Varona
  */
 public abstract class FileBin {
+    private static final String TAG = "FileBin";
 
     private static final int COMPRESS_TYPE = Util.LZMA;
 
@@ -64,19 +65,23 @@ public abstract class FileBin {
             try {
                 wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
             } catch (Exception e) {
-
+                Log.e(TAG, "Exception while trying to decompress data using XZ");
             }
             if(wallet_object_bytes == null) {
                 wallet_object_bytes = Util.decompress(compressedData, Util.LZMA);
             }
             if(wallet_object_bytes == null) {
+                Log.e(TAG, "Bin file could not be decompressed");
                 return null;
             }
             String wallet_string = new String(wallet_object_bytes, "UTF-8");
             JsonObject wallet;
+            Log.d(TAG, "Trying to parse wallet_string: "+wallet_string);
             try{
                 wallet=new JsonParser().parse(wallet_string).getAsJsonObject();
             }catch(Exception e){
+                Log.e(TAG, "Exception while trying to parse wallet_string. Msg: "+e.getMessage());
+                Log.e(TAG, "wallet_string: "+wallet_string);
                 wallet_string = wallet_string + "}";
                 wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
             }
@@ -115,7 +120,7 @@ public abstract class FileBin {
      * @return The array byte of the file, or null if an error ocurred
      */
     public static byte[] getBytesFromBrainKey(String BrainKey, String password, String accountName) {
-
+        byte[] result = null;
         try {
             byte[] encKey = new byte[32];
             SecureRandomStrengthener randomStrengthener = SecureRandomStrengthener.getInstance();
@@ -154,16 +159,16 @@ public abstract class FileBin {
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
             rawData = encryptAES(rawData, byteToString(finalKey).getBytes());
-            byte[] result = new byte[rawData.length + randPubKey.length];
+            result = new byte[rawData.length + randPubKey.length];
             System.arraycopy(randPubKey, 0, result, 0, randPubKey.length);
             System.arraycopy(rawData, 0, result, randPubKey.length, rawData.length);
 
-            return result;
-
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            Log.e(TAG, "UnsupportedEncodingException. Msg: "+e.getMessage());
+        } catch (NoSuchAlgorithmException ex){
+            Log.e(TAG, "NoSuchAlgorithmException. Msg: "+ ex.getMessage());
         }
-        return null;
+        return result;
     }
 
     private static byte[] encryptAES(byte[] input, byte[] key) {

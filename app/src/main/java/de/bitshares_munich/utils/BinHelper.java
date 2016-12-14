@@ -27,7 +27,7 @@ import de.bitshares_munich.smartcoinswallet.R;
  * Created by developer on 6/28/16.
  */
 public class BinHelper {
-
+    private String TAG = this.getClass().getName();
     private Activity myActivity;
     private Context myContext;
     Handler createBackUp;
@@ -128,8 +128,9 @@ public class BinHelper {
 
     public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName)
     {
-        try
-        {
+        Log.d(TAG, "get_bin_bytes_from_brainkey. pin: "+pin+", brnKey: "+brnKey);
+        Log.d(TAG, "account name: "+_accountName);
+        try {
             byte[] results = FileBin.getBytesFromBrainKey(brnKey,pin,_accountName);
             List<Integer> resultFile = new ArrayList<>();
             for(byte result: results){
@@ -137,10 +138,9 @@ public class BinHelper {
             }
             saveBinContentToFile(resultFile,_accountName);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             hideDialog(false);
-            Log.d("bin",e.getMessage());
+            Log.e(TAG, "Exception. Msg: "+e.getMessage());
             Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
         }
 
