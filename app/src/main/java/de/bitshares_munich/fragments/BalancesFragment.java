@@ -37,26 +37,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.models.Market;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAssets;
-import com.luminiasoft.bitshares.ws.GetLimitOrders;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.BlockHeader;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
+import com.luminiasoft.bitshares.models.Market;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAssets;
 import com.luminiasoft.bitshares.ws.GetBlockHeader;
+import com.luminiasoft.bitshares.ws.GetLimitOrders;
 import com.luminiasoft.bitshares.ws.GetRelativeAccountHistory;
 import com.luminiasoft.bitshares.ws.LookupAssetSymbols;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,7 +65,6 @@ import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -89,7 +82,6 @@ import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
@@ -101,13 +93,10 @@ import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
-import de.bitshares_munich.smartcoinswallet.pdfTable;
 import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.PermissionManager;
-import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
@@ -115,9 +104,6 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -422,12 +408,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        setSortableTableViewHeight(rootView, handler, this);
-                    }
-                });
+                if(getActivity() != null){
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            setSortableTableViewHeight(rootView, handler, this);
+                        }
+                    });
+                }
             }
         };
 
@@ -3203,3 +3190,5 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 }
+
+
