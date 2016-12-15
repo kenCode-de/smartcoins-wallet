@@ -3181,7 +3181,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
      */
     private void updateTableView(){
         UserAccount account = new UserAccount(accountId);
-        List<HistoricalTransfer> transfers = database.getTransactions();
+        List<HistoricalTransfer> transfers = database.getTransactions(account);
         Log.d(TAG, String.format("Updating the table view with %d transactions", transfers.size()));
         transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
 

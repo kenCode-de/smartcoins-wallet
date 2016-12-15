@@ -92,14 +92,16 @@ public class SCWallDatabase {
      * Retrieves the list of historical transfers.
      * @return: The list of historical transfer transactions.
      */
-    public List<HistoricalTransfer> getTransactions(){
+    public List<HistoricalTransfer> getTransactions(UserAccount userAccount){
         long before = System.currentTimeMillis();
         HashMap<String, String> userMap = this.getUserMap();
         HashMap<String, Asset> assetMap = this.getAssetMap();
 
         String tableName = SCWallDatabaseContract.Transfers.TABLE_NAME;
         String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
-        Cursor cursor = db.query(tableName, null, null, null, null, null, orderBy, null);
+        String selection = SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
+        String[] selectionArgs = { userAccount.getObjectId(), userAccount.getObjectId() };
+        Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, null);
         ArrayList<HistoricalTransfer> transfers = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
