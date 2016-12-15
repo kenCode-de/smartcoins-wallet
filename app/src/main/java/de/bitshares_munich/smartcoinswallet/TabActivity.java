@@ -60,15 +60,17 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
 
-public class TabActivity extends BaseActivity {
+public class TabActivity extends BaseActivity implements BackupBinDelegate {
     private String TAG = this.getClass().getName();
 
     @Bind(R.id.toolbar)
@@ -127,6 +129,10 @@ public class TabActivity extends BaseActivity {
                             accountDetail.brain_key = updatingAccount.brain_key;
                             accountDetail.isPostSecurityUpdate = true;
                             Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
+
+                            /* Creating automatic bin backup */
+                            BinHelper myBinHelper = new BinHelper(TabActivity.this, TabActivity.this);
+                            myBinHelper.createBackupBinFile(accountDetail.brain_key, accountDetail.account_name, accountDetail.pinCode);
                         }
                         break;
                     }
@@ -480,5 +486,10 @@ public class TabActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void backupComplete(boolean success) {
+        Log.d(TAG, "bin backup complete. success: "+success);
     }
 }

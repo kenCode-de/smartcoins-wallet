@@ -29,7 +29,6 @@ import de.bitshares_munich.smartcoinswallet.R;
 public class BinHelper {
     private String TAG = this.getClass().getName();
     private Activity myActivity;
-    private Context myContext;
     Handler createBackUp;
     ProgressDialog progressDialog;
     BackupBinDelegate backupBinDelegate;
@@ -38,10 +37,9 @@ public class BinHelper {
     {
     }
 
-    public BinHelper(Activity activity,Context context, BackupBinDelegate _backupBinDelegate)
+    public BinHelper(Activity activity, BackupBinDelegate _backupBinDelegate)
     {
         myActivity = activity;
-        myContext = context;
         createBackUp = new Handler();
         progressDialog = new ProgressDialog(activity);
         backupBinDelegate = _backupBinDelegate;
@@ -141,7 +139,7 @@ public class BinHelper {
         catch (Exception e) {
             hideDialog(false);
             Log.e(TAG, "Exception. Msg: "+e.getMessage());
-            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -149,9 +147,9 @@ public class BinHelper {
 
     public void saveBinContentToFile(List<Integer> content, String _accountName)
     {
-        changeDialogMsg(myContext.getResources().getString(R.string.saving_bin_file_to) + " : " + myContext.getResources().getString(R.string.folder_name));
+        changeDialogMsg(myActivity.getResources().getString(R.string.saving_bin_file_to) + " : " + myActivity.getResources().getString(R.string.folder_name));
 
-        String folder = Environment.getExternalStorageDirectory() + File.separator + myContext.getResources().getString(R.string.folder_name);
+        String folder = Environment.getExternalStorageDirectory() + File.separator + myActivity.getResources().getString(R.string.folder_name);
         String path =  folder + File.separator + _accountName + ".bin";
 
         boolean success = saveBinFile(path,content,myActivity);
@@ -160,11 +158,11 @@ public class BinHelper {
 
         if ( success )
         {
-            Toast.makeText(myActivity, myContext.getResources().getString(R.string.bin_file_saved_successfully_to) + " : " + path,Toast.LENGTH_LONG).show();
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.bin_file_saved_successfully_to) + " : " + path,Toast.LENGTH_LONG).show();
         }
         else
         {
-            Toast.makeText(myActivity, myContext.getResources().getString(R.string.unable_to_save_bin_file),Toast.LENGTH_LONG).show();
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.unable_to_save_bin_file),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -206,11 +204,11 @@ public class BinHelper {
 
     public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode)
     {
-        showDialog(myContext.getResources().getString(R.string.creating_backup_file),myContext.getResources().getString(R.string.fetching_key));
+        showDialog(myActivity.getResources().getString(R.string.creating_backup_file), myActivity.getResources().getString(R.string.fetching_key));
 
         if (_brnKey.isEmpty())
         {
-            Toast.makeText(myActivity,myContext.getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
             hideDialog(false);
             return;
         }
@@ -218,11 +216,11 @@ public class BinHelper {
         if ( pinCode.isEmpty() )
         {
             hideDialog(false);
-            Toast.makeText(myActivity,myContext.getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.invalid_pin),Toast.LENGTH_LONG).show();
             return;
         }
 
-        changeDialogMsg(myContext.getResources().getString(R.string.generating_bin_format));
+        changeDialogMsg(myActivity.getResources().getString(R.string.generating_bin_format));
 
         Runnable getFormat = new Runnable() {
             @Override
@@ -276,8 +274,8 @@ public class BinHelper {
 
     public void createBackupBinFile()
     {
-        TinyDB tinyDB = new TinyDB(myContext);
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(myContext.getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        TinyDB tinyDB = new TinyDB(myActivity);
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(myActivity.getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
         String _brnKey = getBrainKey(accountDetails);
         String _accountName = getAccountName(accountDetails);
         String _pinCode = getPin(accountDetails);

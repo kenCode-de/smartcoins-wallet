@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,7 +44,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         setContentView(R.layout.activity_backup_brainkey);
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
-        BinHelper myBinHelper = new BinHelper(this, getApplicationContext(), this);
+        BinHelper myBinHelper = new BinHelper(this, this);
         myBinHelper.createBackupBinFile();
 
     }

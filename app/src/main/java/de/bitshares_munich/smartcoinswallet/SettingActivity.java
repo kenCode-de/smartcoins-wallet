@@ -1146,9 +1146,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         String _accountName = getAccountName();
         String _pinCode = getPin();
 
-        BinHelper myBinHelper = new BinHelper(this,getApplicationContext(),this);
+        BinHelper myBinHelper = new BinHelper(this, this);
         myBinHelper.createBackupBinFile(_brnKey,_accountName,_pinCode);
-
     }
 
     @Override
