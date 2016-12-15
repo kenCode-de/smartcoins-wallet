@@ -29,7 +29,7 @@ import de.bitshares_munich.smartcoinswallet.R;
 public class BinHelper {
     private String TAG = this.getClass().getName();
     private Activity myActivity;
-    Handler createBackUp;
+    Handler mHandler;
     ProgressDialog progressDialog;
     BackupBinDelegate backupBinDelegate;
 
@@ -40,7 +40,7 @@ public class BinHelper {
     public BinHelper(Activity activity, BackupBinDelegate _backupBinDelegate)
     {
         myActivity = activity;
-        createBackUp = new Handler();
+        mHandler = new Handler();
         progressDialog = new ProgressDialog(activity);
         backupBinDelegate = _backupBinDelegate;
     }
@@ -230,7 +230,7 @@ public class BinHelper {
             }
         };
 
-        createBackUp.postDelayed(getFormat,200);
+        mHandler.postDelayed(getFormat, 200);
     }
 
     private String getPin(ArrayList<AccountDetails> accountDetails)
@@ -280,7 +280,7 @@ public class BinHelper {
         String _accountName = getAccountName(accountDetails);
         String _pinCode = getPin(accountDetails);
 
-        createBackupBinFile(_brnKey,_accountName,_pinCode);
+        get_bin_bytes_from_brainkey(_pinCode, _brnKey, _accountName);
     }
 
     public int numberOfWalletAccounts(Context _context)

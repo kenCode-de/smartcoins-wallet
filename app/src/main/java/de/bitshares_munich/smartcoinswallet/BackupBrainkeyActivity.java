@@ -4,10 +4,12 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +32,7 @@ import de.bitshares_munich.utils.TinyDB;
  * Created by qasim on 7/13/16.
  */
 public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDelegate {
+    private String TAG = this.getClass().getName();
 
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
@@ -77,7 +80,15 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
                 btnDone.setBackground(getResources().getDrawable(R.drawable.button_border));
                 btnDone.setEnabled(true);
             }
-        }, 7000);
+        }, 2000);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Log.d(TAG, "onCancel");
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 

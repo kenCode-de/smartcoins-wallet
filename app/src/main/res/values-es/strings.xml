@@ -41,7 +41,7 @@
 <string name="mismatch_pin">pin desajuste</string>
 <string name="txt_brain_key">Brainkey</string>
 <string name="txt_brain_key_info">Imprima esto, o anótelo. Cualquier persona con acceso a la clave de recuperación tendrá acceso a los fondos dentro de esta cartera.</string>
-<string name="create_wallet">CREAR CARPETA</string>
+<string name="create_wallet">IMPORTAR BILLETERA</string>
 <string name="cance">CANCELAR</string>
 <string name="save">SALVAR</string>
 <string name="next">SIGUIENTE</string>
@@ -204,7 +204,7 @@
     <string name="warning_msg_same_account">No se puede enviar la cantidad en la misma cuenta</string>
 
     <string name="please_backup_your_brainkey">Por favor respalde sus brainkey</string>
-    <string name="backup_brainkey_msg">Copia de seguridad de su archivo .bin en un lugar seguro o sus fondos podrían perderse!</string>
+    <string name="backup_brainkey_msg">Haz una copia de seguridad de tu archivo .bin de respaldo en un lugar seguro o sus fondos podrían perderse!</string>
     <string name="unable_to_trade_bAssets">No es posible negociar los elementos de backup</string>
     <string name="unable_to_send_amount">No se puede enviar la cantidad.</string>
     <string name="unable_to_decode_QR">No es posible decodificar el código QR.</string>
