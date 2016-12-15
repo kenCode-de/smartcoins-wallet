@@ -209,7 +209,8 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:indeterminateDrawable="@drawable/loader_homescreen">
+                android:indeterminateDrawable="@drawable/loader_homescreen"
+                android:visibility="gone">
             </ProgressBar>
             <Button
                 android:stateListAnimator="@animator/my_animated_button"

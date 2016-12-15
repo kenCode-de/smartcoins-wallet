@@ -1,13 +1,11 @@
 package com.luminiasoft.bitshares.ws;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.luminiasoft.bitshares.AccountOptions;
 import com.luminiasoft.bitshares.Authority;
 import com.luminiasoft.bitshares.RPC;
-import com.luminiasoft.bitshares.interfaces.JsonSerializable;
+import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.ApiCall;
@@ -30,11 +28,17 @@ import java.util.Map;
  */
 public class GetAccountNameById extends WebSocketAdapter {
 
-    private String accountID;
+    private String accountId;
+    private List<UserAccount> userAccounts;
     private WitnessResponseListener mListener;
 
-    public GetAccountNameById(String accountID, WitnessResponseListener listener) {
-        this.accountID = accountID;
+    public GetAccountNameById(String accountId, WitnessResponseListener listener){
+        this.accountId = accountId;
+        this.mListener = listener;
+    }
+
+    public GetAccountNameById(List<UserAccount> accounts, WitnessResponseListener listener){
+        this.userAccounts = accounts;
         this.mListener = listener;
     }
 
@@ -42,17 +46,13 @@ public class GetAccountNameById extends WebSocketAdapter {
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList();
         ArrayList<Serializable> paramAddress = new ArrayList();
-        paramAddress.add(new JsonSerializable() {
-            @Override
-            public String toJsonString() {
-                return accountID;
+        if(accountId == null){
+            for(UserAccount account : userAccounts) {
+                paramAddress.add(account.getObjectId());
             }
-
-            @Override
-            public JsonElement toJsonObject() {
-                return new JsonParser().parse(accountID);
-            }
-        });
+        }else{
+            paramAddress.add(accountId);
+        }
         accountParams.add(paramAddress);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_ACCOUNTS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByAddress.toJsonString());
@@ -94,7 +94,7 @@ public class GetAccountNameById extends WebSocketAdapter {
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        System.out.println("handleCallbackError");
+        System.out.println("handleCallbackError. Msg: "+cause.getMessage());
         StackTraceElement[] stack = cause.getStackTrace();
         for(StackTraceElement element : stack) {
             System.out.println("> "+element.getClassName()+"."+element.getMethodName()+" : "+element.getLineNumber());

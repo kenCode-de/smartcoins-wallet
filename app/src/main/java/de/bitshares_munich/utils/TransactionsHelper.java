@@ -23,10 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,10 +35,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
@@ -1236,7 +1228,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                     for (Object listObject : list) {
                         if (listObject.getClass() == Asset.class) {
                             Asset asset = (Asset) listObject;
-                            assets.put(asset.symbol, asset);
+                            assets.put(asset.getSymbol(), asset);
                         }
                     }
                     final HashMap<String, HashMap<String, Double>> rates = new HashMap();
@@ -1246,7 +1238,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                             rates.put(base, new HashMap());
                         }
                         for (final String quote : currencies.get(base)) {
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).id, assets.get(quote).id, 20, new WitnessResponseListener() {
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
                                     if (response.result.getClass() == ArrayList.class) {
@@ -1254,9 +1246,9 @@ public class TransactionsHelper implements IBalancesDelegate {
                                         for (Object listObject : list) {
                                             if (listObject.getClass() == Market.class) {
                                                 Market market = ((Market) listObject);
-                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).id)) {
+                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
                                                     double price = market.sell_price.quote.amount / market.sell_price.base.amount;
-                                                    int exp = assets.get(quote).precision - assets.get(base).precision;
+                                                    int exp = assets.get(quote).getPrecision() - assets.get(base).getPrecision();
                                                     price = price * Math.pow(10, exp);
                                                     rates.get(base).put(quote, price);
                                                 }

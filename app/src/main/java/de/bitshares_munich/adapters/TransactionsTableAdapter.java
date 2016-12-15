@@ -2,19 +2,14 @@ package de.bitshares_munich.adapters;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -63,12 +58,13 @@ Context context;
     {
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactionsdateview, null);
-        TextView textView = (TextView) v.findViewById(R.id.transactiondate);
-        textView.setText(transactiondetails.getDateString());
-        TextView textView2 = (TextView) v.findViewById(R.id.transactiontime);
-        textView2.setText(transactiondetails.getTimeString() + " " + transactiondetails.getTimeZone());
-        TextView textView3 = (TextView) v.findViewById(R.id.transactionttimezone);
-        textView3.setVisibility(View.GONE);
+        TextView dateTextView = (TextView) v.findViewById(R.id.transactiondate);
+        TextView timeTextView = (TextView) v.findViewById(R.id.transactiontime);
+        TextView timeZoneTextView = (TextView) v.findViewById(R.id.transactionttimezone);
+
+        dateTextView.setText(transactiondetails.getDateString());
+        timeTextView.setText(transactiondetails.getTimeString() + " " + transactiondetails.getTimeZone());
+        timeZoneTextView.setVisibility(View.GONE);
         return v;
     }
 
