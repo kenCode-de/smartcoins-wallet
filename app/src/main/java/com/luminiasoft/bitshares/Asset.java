@@ -73,6 +73,8 @@ public class Asset extends GrapheneObject {
 
     public String getIssuer() { return this.issuer; }
 
+    public String getId() { return this.id; }
+
     /**
      * Custom deserializer used to instantiate a simple version of the Asset class from the response of the
      * 'lookup_asset_symbols' API call.

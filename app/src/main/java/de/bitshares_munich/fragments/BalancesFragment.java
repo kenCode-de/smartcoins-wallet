@@ -835,7 +835,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies,final Runnable getEquivalentCompRunnable) {
-        Log.d("henry","en equivalent component direct");
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -867,7 +866,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         if (assets.containsKey(base)) {
                             for (final String quote : currencies.get(base)) {
                                 if(assets.containsKey(quote)) {
-                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
+                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getId(), assets.get(quote).getId(), 20, new WitnessResponseListener() {
                                         @Override
                                         public void onSuccess(WitnessResponse response) {
                                             if (response.result.getClass() == ArrayList.class) {
@@ -875,10 +874,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 for (Object listObject : list) {
                                                     if (listObject.getClass() == Market.class) {
                                                         Market market = ((Market) listObject);
-                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
+                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getId())) {
                                                             double price = market.sell_price.quote.amount / market.sell_price.base.amount;
                                                             int exp = assets.get(quote).getPrecision() - assets.get(base).getPrecision();
-                                                            price = price * Math.pow(10, exp);
+                                                            price = 1/(price * Math.pow(10, exp));
                                                             updateEquivalentValue(base, Double.toString(price), getEquivalentCompRunnable);
                                                             return;
                                                         }
@@ -896,10 +895,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     threads.add(glo);
                                     glo.start();
                                 }else {
+                                    Log.e(TAG,"Quote is not in assetlist");
                                     //TODO handle quote null error
                                 }
                             }
                         }else{
+                            Log.e(TAG,"Base is not in assetlist");
                             //TODO handle base error
                         }
                     }
@@ -925,7 +926,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     private void updateEquivalentValue(String assetName, String value,Runnable getEquivalentCompRunnable){
-        Log.i(TAG,"en updateEquivalentValue " + assetName + " value " + value);
+        Log.i(TAG,"entering updateEquivalentValue");
         for (int i = 0; i < llBalances.getChildCount(); i++)
         {
             LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
@@ -969,7 +970,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 {
                     Log.i(TAG,"found asset " + assetName);
                     Currency currency = Currency.getInstance(finalFaitCurrency);
-
+                    Log.i(TAG,"currency " + currency.getDisplayName());
                     try
                     {
                         double d = convertLocalizeStringToDouble(amount);
@@ -984,15 +985,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
                         }
 
-
-                        getActivity().runOnUiThread(
-                                new Runnable() {
+                        Log.i(TAG,"se va a hacer visible con amount " + eqAmount +" amount " + d + " value " + value);
+                        getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         tvFaitAmount.setVisibility(View.VISIBLE);
+                                        tvFaitAmount.refreshDrawableState();
                                     }
-                                }
-                        );
+                                });
 
                     }
                     catch (Exception e)
@@ -1002,6 +1002,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     @Override
                                     public void run() {
                                         tvFaitAmount.setVisibility(View.GONE);
+                                        tvFaitAmount.refreshDrawableState();
                                     }
                                 }
                         );
