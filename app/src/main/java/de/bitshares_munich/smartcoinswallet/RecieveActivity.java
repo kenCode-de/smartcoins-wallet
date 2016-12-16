@@ -283,9 +283,10 @@ public class RecieveActivity extends BaseActivity {
         IWebService service = sg.getService(IWebService.class);
         transactionSmartcoinService = service.getTransactionSmartCoin(account_id, orderId);
         transactionSmartcoinService.enqueue(new Callback<TransactionSmartCoin[]>() {
+
             @Override
-            public void onResponse(Response<TransactionSmartCoin[]> response) {
-                if (response.isSuccess()) {
+            public void onResponse(Call<TransactionSmartCoin[]> call, Response<TransactionSmartCoin[]> response) {
+                if (response.isSuccessful()) {
                     if (response.body().length > 0) {
                         TransactionSmartCoin[] transactions = response.body();
                         Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
@@ -309,7 +310,7 @@ public class RecieveActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<TransactionSmartCoin[]> call, Throwable t) {
                 if (!isFinishing()) {
                     Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
                 }

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Locale;
 
 import de.bitshares_munich.models.CCAssets;
 import de.bitshares_munich.models.Smartcoin;
@@ -38,9 +37,10 @@ public class AssetsSymbols {
         IWebService service = sg.getService(IWebService.class);
         final Call<CCAssets> postingService = service.getAssets();
         postingService.enqueue(new Callback<CCAssets>() {
+
             @Override
-            public void onResponse(Response<CCAssets> response) {
-                if (response.isSuccess()) {
+            public void onResponse(Call<CCAssets> call, Response<CCAssets> response) {
+                if (response.isSuccessful()) {
                     CCAssets ccAssets;
                     ccAssets = response.body();
                     saveAssetsSymbols(ccAssets);
@@ -48,7 +48,7 @@ public class AssetsSymbols {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<CCAssets> call, Throwable t) {
 
             }
         });

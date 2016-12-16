@@ -1359,9 +1359,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
                         final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
                         postingService.enqueue(new Callback<Void>() {
+
                             @Override
-                            public void onResponse(Response<Void> response) {
-                                if (response.isSuccess()) {
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.isSuccessful()) {
 
                                 } else {
                                     reTryGetTrxBlock.postDelayed(reTry, 100);
@@ -1369,7 +1370,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                             }
 
                             @Override
-                            public void onFailure(Throwable t) {
+                            public void onFailure(Call<Void> call, Throwable t) {
                                 reTryGetTrxBlock.postDelayed(reTry, 100);
                             }
                         });

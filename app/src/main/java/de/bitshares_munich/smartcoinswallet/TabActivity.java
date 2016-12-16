@@ -93,6 +93,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
 
     TinyDB tinyDB;
 
+    /* Pin pinDialog */
+    private Dialog pinDialog;
+
     /* In memory reference to all accounts present in this wallet */
     private ArrayList<AccountDetails> accountDetails;
 
@@ -209,8 +212,16 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(pinDialog != null && pinDialog.isShowing()){
+            pinDialog.dismiss();
+        }
+    }
+
     /**
-     * Will display a dialog prompting the user to make a backup of the brain key.
+     * Will display a pinDialog prompting the user to make a backup of the brain key.
      */
     private void displayBrainKeyBackup() {
 
@@ -415,13 +426,12 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
 
     // Block for pin
     private void showDialogPin() {
-
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        final Dialog dialog = new Dialog(TabActivity.this);
-        dialog.setTitle(R.string.pin_verification);
-        dialog.setContentView(R.layout.activity_alert_pin_dialog);
-        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-        final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
+        pinDialog = new Dialog(TabActivity.this);
+        pinDialog.setTitle(R.string.pin_verification);
+        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -429,7 +439,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
                     if (accountDetails.get(i).isSelected) {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
-                            dialog.cancel();
+                            pinDialog.cancel();
                             if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE)){
                                 checkSecurityUpdate();
                             }else{
@@ -443,8 +453,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
                 }
             }
         });
-        dialog.setCancelable(false);
-        dialog.show();
+        pinDialog.setCancelable(false);
+        pinDialog.show();
     }
 
     /**

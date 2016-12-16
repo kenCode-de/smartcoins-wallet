@@ -415,10 +415,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             IWebService service = sg.getService(IWebService.class);
             final Call<RegisterAccount> postingService = service.getReg(hashMap);
             postingService.enqueue(new Callback<RegisterAccount>() {
+
                 @Override
-                public void onResponse(Response<RegisterAccount> response) {
+                public void onResponse(Call<RegisterAccount> call, Response<RegisterAccount> response) {
                     Log.d(TAG,"onResponse");
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         Log.d(TAG,"success");
                         RegisterAccount resp = response.body();
                         if (resp.account != null) {
@@ -440,8 +441,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     }
                 }
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call<RegisterAccount> call, Throwable t) {
                     Log.e(TAG, "onFailure. Msg: "+t.getMessage());
+                    hideDialog();
+                    for(StackTraceElement element : t.getStackTrace()){
+                        Log.e(TAG, "at "+element.getClassName()+":"+element.getMethodName()+":"+element.getLineNumber());
+                    }
                     Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
                 }
             });

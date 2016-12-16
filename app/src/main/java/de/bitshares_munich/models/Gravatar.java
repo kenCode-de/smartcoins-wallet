@@ -90,9 +90,9 @@ public class Gravatar
         postingService.enqueue(new Callback<Object>()
         {
             @Override
-            public void onResponse(Response<Object> response)
+            public void onResponse(Call<Object> call, Response<Object> response)
             {
-                if (response.isSuccess())
+                if (response.isSuccessful())
                 {
                     if ( response.body() instanceof LinkedTreeMap)
                     {
@@ -158,7 +158,7 @@ public class Gravatar
             }
 
             @Override
-            public void onFailure(Throwable t)
+            public void onFailure(Call<Object> call, Throwable t)
             {
                 myDelegate.failureUpdateProfile();
             }
