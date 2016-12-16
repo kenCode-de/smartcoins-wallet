@@ -968,45 +968,50 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 Log.i(TAG,"asset " + asset);
                 if (!amount.isEmpty() && assetName.equals(asset))
                 {
-                    Log.i(TAG,"found asset " + assetName);
-                    Currency currency = Currency.getInstance(finalFaitCurrency);
+                    final Currency currency = Currency.getInstance(finalFaitCurrency);
                     Log.i(TAG,"currency " + currency.getDisplayName());
                     try
                     {
                         double d = convertLocalizeStringToDouble(amount);
-                        Double eqAmount = d * convertLocalizeStringToDouble(value);
+                        final Double eqAmount = d * convertLocalizeStringToDouble(value);
 
-                        if ( Helper.isRTL(locale,currency.getSymbol()) )
-                        {
-                            tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount,currency.getSymbol()));
+                        if (Helper.isRTL(locale, currency.getSymbol())) {
+                            getActivity().runOnUiThread(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
+                                        }
+                                    });
+                        } else {
+                            getActivity().runOnUiThread(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
+                                        }
+                                    });
                         }
-                        else
-                        {
-                            tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(),eqAmount));
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvFaitAmount.setVisibility(View.VISIBLE);
                         }
+                    });
 
-                        Log.i(TAG,"se va a hacer visible con amount " + eqAmount +" amount " + d + " value " + value);
-                        getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tvFaitAmount.setVisibility(View.VISIBLE);
-                                        tvFaitAmount.refreshDrawableState();
-                                    }
-                                });
-
-                    }
-                    catch (Exception e)
-                    {
-                        getActivity().runOnUiThread(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tvFaitAmount.setVisibility(View.GONE);
-                                        tvFaitAmount.refreshDrawableState();
-                                    }
+                }
+                catch(Exception e)
+                {
+                    getActivity().runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    tvFaitAmount.setVisibility(View.GONE);
                                 }
-                        );
-                    }
+                            }
+                    );
+                }
                 }
                 else
                 {
