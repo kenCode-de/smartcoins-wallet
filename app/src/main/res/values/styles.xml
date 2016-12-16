@@ -47,5 +47,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DialogText" parent="Theme.AppCompat.Light.Dialog.Alert"></style>
 
 </resources>

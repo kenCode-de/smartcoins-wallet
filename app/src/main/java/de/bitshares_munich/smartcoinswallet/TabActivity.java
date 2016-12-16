@@ -73,6 +73,8 @@ import de.bitshares_munich.utils.TinyDB;
 public class TabActivity extends BaseActivity implements BackupBinDelegate {
     private String TAG = this.getClass().getName();
 
+    private boolean DEBUG_ACCOUNT_UPDATE = true;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
@@ -440,7 +442,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
                         if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
                             Log.d(TAG, "pin code matches");
                             pinDialog.cancel();
-                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE)){
+                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
                                 checkSecurityUpdate();
                             }else{
                                 Log.d(TAG, "Security update already performed");
@@ -470,7 +472,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
             boolean isOld = true;
             Log.d(TAG, "account: "+account.toString());
             try {
-                if(account.isPostSecurityUpdate){
+                if(account.isPostSecurityUpdate || DEBUG_ACCOUNT_UPDATE){
                     Log.d(TAG, "Account creation is post security update: " + account.isPostSecurityUpdate);
                     isOld = false;
                 }else{
@@ -484,8 +486,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
             }
         }
         if(accountsToUpdate.size() > 0){
-            updatingAccount = accountsToUpdate.poll();
-            updateAccountAuthorities();
+//            updatingAccount = accountsToUpdate.poll();
+//            updateAccountAuthorities();
+
         }
     }
 
