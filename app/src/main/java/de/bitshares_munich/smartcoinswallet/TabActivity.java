@@ -485,7 +485,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate {
         }
         if(accountsToUpdate.size() > 0){
             updatingAccount = accountsToUpdate.poll();
-            updateAccountAuthorities();
+//            updateAccountAuthorities();
         }
     }
 
