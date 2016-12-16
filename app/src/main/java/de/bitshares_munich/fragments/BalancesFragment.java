@@ -109,7 +109,7 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
+public class BalancesFragment extends Fragment implements AssetDelegate, ISound {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
@@ -163,7 +163,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     @Bind(R.id.whiteSpaceAfterBalances)
     LinearLayout whiteSpaceAfterBalances;
 
-//    private SortableTableView<TransactionDetails> tableView;
+    //    private SortableTableView<TransactionDetails> tableView;
     private SortableTableView<HistoricalTransfer> transfersView;
     private ArrayList<TransactionDetails> myTransactions;
 
@@ -229,15 +229,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 public void run() {
                     BlockHeader blockHeader = (BlockHeader) response.result;
                     boolean updated = database.setBlockTime(blockHeader, missingTimes.peek());
-                    if(updated){
-                        Log.d(TAG, "Block time updated in transaction at block: "+missingTimes.peek());
-                    }else{
-                        Log.w(TAG, "Failed to update time from transaction at block: "+missingTimes.peek());
+                    if (updated) {
+                        Log.d(TAG, "Block time updated in transaction at block: " + missingTimes.peek());
+                    } else {
+                        Log.w(TAG, "Failed to update time from transaction at block: " + missingTimes.peek());
                     }
                     missingTimes.poll();
 
                     // If we still have missing times in the queue, work on them
-                    if(missingTimes.size() > 0){
+                    if (missingTimes.size() > 0) {
                         long blockNum = missingTimes.peek();
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
@@ -254,7 +254,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             missingTimes.poll();
 
             // If we still have missing times in the queue, work on them
-            if(missingTimes.size() > 0){
+            if (missingTimes.size() > 0) {
                 long blockNum = missingTimes.peek();
                 getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                 getMissingTimes.start();
@@ -276,7 +276,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     Log.d(TAG, "assetsUpdater.onSuccess");
                     List<Asset> assets = (List<Asset>) response.result;
                     int count = database.putAssets(assets);
-                    if(count > 0){
+                    if (count > 0) {
                         // Assets updated, refresh table adapter.
                         updateTableView();
                     }
@@ -297,13 +297,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     private WitnessResponseListener mGetmissingAccountsListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(final WitnessResponse response) {
-            getActivity().runOnUiThread(new Runnable(){
+            getActivity().runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
                     List<AccountProperties> missingAccounts = (List<AccountProperties>) response.result;
                     int count = database.putUserAccounts(missingAccounts);
-                    if(count > 0){
+                    if (count > 0) {
                         // User accounts updated, refresh table adapter.
                         updateTableView();
                     }
@@ -335,12 +335,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     int inserted = database.putTransactions(resp.result);
                     Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
 
-                    if(!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)){
+                    if (!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)) {
                         migrateTransactionData();
                     }
 
                     List<UserAccount> missingAccountNames = database.getMissingAccountNames();
-                    if(missingAccountNames.size() > 0){
+                    if (missingAccountNames.size() > 0) {
                         // Got some missing user names, so we request them to the network.
                         getMissingAccountsThread = new WebsocketWorkerThread(new GetAccountNameById(missingAccountNames, mGetmissingAccountsListener));
                         getMissingAccountsThread.start();
@@ -348,7 +348,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
 
                     List<Asset> missingAssets = database.getMissingAssets();
-                    if(missingAssets.size() > 0){
+                    if (missingAssets.size() > 0) {
                         // Got some missing asset symbols, so we request them to the network.
                         getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
                         getMissingAssets.start();
@@ -356,7 +356,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
 
                     missingTimes = database.getMissingTransferTimes();
-                    if(missingTimes.size() > 0){
+                    if (missingTimes.size() > 0) {
                         Long blockNum = missingTimes.peek();
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
@@ -368,7 +368,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "mTransferHistoryListener. onError. Msg: "+error.message);
+            Log.e(TAG, "mTransferHistoryListener. onError. Msg: " + error.message);
         }
     };
 
@@ -377,11 +377,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
         Application.registerAssetDelegate(this);
-        iSound=this;
+        iSound = this;
         updateEquivalentAmount = new Handler();
         myWebSocketHelper = new webSocketCallHelper(getContext());
         database = new SCWallDatabase(getContext());
-        if(DEBUG_DATE_LOADING){
+        if (DEBUG_DATE_LOADING) {
             database.clearTimestamps();
         }
     }
@@ -408,7 +408,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         final Runnable updateTask = new Runnable() {
             @Override
             public void run() {
-                if(getActivity() != null){
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             setSortableTableViewHeight(rootView, handler, this);
@@ -426,7 +426,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         };
 
 
-        loadBasic(false,true,false);
+        loadBasic(false, true, false);
         loadBalancesFromSharedPref();
         TransactionUpdateOnStartUp(to);
 
@@ -517,13 +517,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                 }
             });
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
+        Log.d(TAG, "onResume");
 
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
@@ -537,40 +538,36 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
             }
         }
-        Boolean isCheckedTimeZone=false;
-        isCheckedTimeZone=Helper.fetchBoolianSharePref(getActivity(),getString(R.string.pre_ischecked_timezone));
+        Boolean isCheckedTimeZone = false;
+        isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
         Boolean accountNameChange = checkIfAccountNameChange();
 
-        if(accountNameChange){
+        if (accountNameChange) {
             //firstTimeLoad = true;
-            if(pendingTransactionsLoad!=null)
-            pendingTransactionsLoad.removeCallbacksAndMessages(null);
+            if (pendingTransactionsLoad != null)
+                pendingTransactionsLoad.removeCallbacksAndMessages(null);
         }
 
-        if(isCheckedTimeZone && !accountNameChange){
+        if (isCheckedTimeZone && !accountNameChange) {
             TransactionUpdateOnStartUp(to);
         }
 
-        if(accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
+        if (accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)))
             llBalances.removeAllViews();
 
-        if (isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) )
-        {
-            if (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency) )
-            {
-                loadBasic(true,accountNameChange,true);
-            }
-            else
-            {
-                loadBasic(true,accountNameChange,false);
+        if (isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+            if (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) {
+                loadBasic(true, accountNameChange, true);
+            } else {
+                loadBasic(true, accountNameChange, false);
             }
 
         }
 
-        if(!accountId.equals("")) {
+        if (!accountId.equals("")) {
             transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), mTransferHistoryListener));
             transferHistoryThread.start();
-        }else{
+        } else {
             Log.d(TAG, "account id is empty");
         }
 
@@ -745,8 +742,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
 
             for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected)
-                {
+                if (accountDetails.get(i).isSelected) {
                     ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
 
                     if ((accountAsset != null) && (accountAsset.size() > 0)) {
@@ -780,12 +776,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         ArrayList<AccountAssets> accountAssets = new ArrayList<>();
 
-        for (int i = 0; i < ids.size(); i++)
-        {
+        for (int i = 0; i < ids.size(); i++) {
             long amount = Long.parseLong(am.get(i));
 
-            if ( amount != 0 )
-            {
+            if (amount != 0) {
                 AccountAssets accountAsset = new AccountAssets();
 
                 accountAsset.id = ids.get(i);
@@ -797,8 +791,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             }
         }
 
-        try
-        {
+        try {
             for (int i = 0; i < accountDetails.size(); i++) {
                 if (accountDetails.get(i).isSelected) {
                     accountDetails.get(i).AccountAssets = accountAssets;
@@ -806,9 +799,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     break;
                 }
             }
-        }
-        catch (Exception w)
-        {
+        } catch (Exception w) {
             SupportMethods.testing("Assets", w, "Asset Activity");
         }
 
@@ -834,7 +825,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     }
 
-    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies,final Runnable getEquivalentCompRunnable) {
+    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final Runnable getEquivalentCompRunnable) {
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -854,7 +845,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     ArrayList list = (ArrayList) response.result;
                     final HashMap<String, Asset> assets = new HashMap();
                     for (Object listObject : list) {
-                        if(listObject != null) {
+                        if (listObject != null) {
                             if (listObject.getClass() == Asset.class) {
                                 Asset asset = (Asset) listObject;
                                 assets.put(asset.getSymbol(), asset);
@@ -862,10 +853,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         }
                     }
                     List<WebsocketWorkerThread> threads = new ArrayList();
-                    for(final String base : currencies.keySet()) {
+                    for (final String base : currencies.keySet()) {
                         if (assets.containsKey(base)) {
                             for (final String quote : currencies.get(base)) {
-                                if(assets.containsKey(quote)) {
+                                if (assets.containsKey(quote)) {
                                     WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getId(), assets.get(quote).getId(), 20, new WitnessResponseListener() {
                                         @Override
                                         public void onSuccess(WitnessResponse response) {
@@ -877,7 +868,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                         if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getId())) {
                                                             double price = market.sell_price.quote.amount / market.sell_price.base.amount;
                                                             int exp = assets.get(quote).getPrecision() - assets.get(base).getPrecision();
-                                                            price = 1/(price * Math.pow(10, exp));
+                                                            price = 1 / (price * Math.pow(10, exp));
                                                             updateEquivalentValue(base, Double.toString(price), getEquivalentCompRunnable);
                                                             return;
                                                         }
@@ -888,47 +879,48 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                         @Override
                                         public void onError(BaseResponse.Error error) {
-                                            Log.e(TAG,"Error getLimitOrder " + error.message);
+                                            Log.e(TAG, "Error getLimitOrder " + error.message);
                                             //TODO handle limitOrder error
                                         }
                                     }));
                                     threads.add(glo);
                                     glo.start();
-                                }else {
-                                    Log.e(TAG,"Quote is not in assetlist");
+                                } else {
+                                    Log.e(TAG, "Quote is not in assetlist");
                                     //TODO handle quote null error
                                 }
                             }
-                        }else{
-                            Log.e(TAG,"Base is not in assetlist");
+                        } else {
+                            Log.e(TAG, "Base is not in assetlist");
                             //TODO handle base error
                         }
                     }
-                    for(Thread thread : threads){
+                    for (Thread thread : threads) {
                         try {
                             thread.join();
-                        }catch(Exception e){}
+                        } catch (Exception e) {
+                        }
                     }
                 }
             }
 
             @Override
             public void onError(BaseResponse.Error error) {
-                    //TODO error handle getasset errror
+                //TODO error handle getasset errror
             }
         }));
         wwThread.start();
 
         try {
             wwThread.join();
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
 
     }
 
-    private void updateEquivalentValue(String assetName, String value,Runnable getEquivalentCompRunnable){
-        Log.i(TAG,"entering updateEquivalentValue");
-        for (int i = 0; i < llBalances.getChildCount(); i++)
-        {
+    private void updateEquivalentValue(String assetName, String value, Runnable getEquivalentCompRunnable) {
+        Log.i(TAG, "entering updateEquivalentValue");
+        for (int i = 0; i < llBalances.getChildCount(); i++) {
             LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
 
             for (int j = 1; j <= 2; j++) {
@@ -937,41 +929,34 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 TextView tvAmount;
                 final TextView tvFaitAmount;
 
-                if (j == 1)
-                {
+                if (j == 1) {
                     tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
                     tvAmount = (TextView) llRow.findViewById(R.id.amount_child_one);
                     tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_one);
-                }
-                else
-                {
+                } else {
                     tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_two);
                     tvAmount = (TextView) llRow.findViewById(R.id.amount_child_two);
                     tvFaitAmount = (TextView) llRow.findViewById(R.id.fait_child_two);
                 }
 
-                if (tvAsset == null || tvAmount == null || tvFaitAmount == null)
-                {
-                    Log.i(TAG,"tvAsset tv Amount tvFaitAmount nulls");
+                if (tvAsset == null || tvAmount == null || tvFaitAmount == null) {
+                    Log.i(TAG, "tvAsset tv Amount tvFaitAmount nulls");
                     //TODO
-                    updateEquivalentAmount.postDelayed(getEquivalentCompRunnable,500);
+                    updateEquivalentAmount.postDelayed(getEquivalentCompRunnable, 500);
                     return;
                 }
                 String asset = tvAsset.getText().toString();
                 String amount = tvAmount.getText().toString();
-                asset = asset.replace("bit","");
+                asset = asset.replace("bit", "");
 
-                if (amount.isEmpty())
-                {
+                if (amount.isEmpty()) {
                     amount = "0.0";
                 }
-                Log.i(TAG,"asset " + asset);
-                if (!amount.isEmpty() && assetName.equals(asset))
-                {
+                Log.i(TAG, "asset " + asset);
+                if (!amount.isEmpty() && assetName.equals(asset)) {
                     final Currency currency = Currency.getInstance(finalFaitCurrency);
-                    Log.i(TAG,"currency " + currency.getDisplayName());
-                    try
-                    {
+                    Log.i(TAG, "currency " + currency.getDisplayName());
+                    try {
                         double d = convertLocalizeStringToDouble(amount);
                         final Double eqAmount = d * convertLocalizeStringToDouble(value);
 
@@ -993,28 +978,28 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     });
                         }
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvFaitAmount.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-                }
-                catch(Exception e)
-                {
-                    getActivity().runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    tvFaitAmount.setVisibility(View.GONE);
-                                }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tvFaitAmount.setVisibility(View.VISIBLE);
                             }
-                    );
-                }
-                }
-                else
-                {
+                        });
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
+                        for (StackTraceElement element : e.getStackTrace()) {
+                            Log.e(TAG, element.toString());
+                        }
+                        getActivity().runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvFaitAmount.setVisibility(View.GONE);
+                                    }
+                                }
+                        );
+                    }
+                } else {
                     /*getActivity().runOnUiThread(
                             new Runnable() {
                                 @Override
@@ -1028,8 +1013,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
-    private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets)
-    {
+    private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
 
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
@@ -1040,26 +1024,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         String faitCurrency = Helper.getFadeCurrency(getContext());
 
-        if (faitCurrency.isEmpty())
-        {
+        if (faitCurrency.isEmpty()) {
             faitCurrency = "EUR";
         }
         finalFaitCurrency = faitCurrency;
 
-        HashMap<String,ArrayList<String>> currenciesChange = new HashMap();
+        HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
             if (!accountAsset.symbol.equals(faitCurrency)) {
-                if(!currenciesChange.containsKey(accountAsset.symbol)){
-                    currenciesChange.put(accountAsset.symbol,new ArrayList());
+                if (!currenciesChange.containsKey(accountAsset.symbol)) {
+                    currenciesChange.put(accountAsset.symbol, new ArrayList());
                 }
                 currenciesChange.get(accountAsset.symbol).add(faitCurrency);
             }
         }
-        this.getEquivalentComponent(currenciesChange,getEquivalentCompRunnable);
+        this.getEquivalentComponent(currenciesChange, getEquivalentCompRunnable);
     }
 
-    private void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String faitCurrency,final Runnable getEquivalentCompIndirectRunnable) {
+    private void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String faitCurrency, final Runnable getEquivalentCompIndirectRunnable) {
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -1085,13 +1068,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             assets.put(asset.getSymbol(), asset);
                         }
                     }
-                    final HashMap<String,HashMap<String,Double>> rates = new HashMap();
+                    final HashMap<String, HashMap<String, Double>> rates = new HashMap();
                     List<WebsocketWorkerThread> threads = new ArrayList();
-                    for(final String base : currencies.keySet()){
-                        if(!rates.containsKey(base)){
-                            rates.put(base,new HashMap());
+                    for (final String base : currencies.keySet()) {
+                        if (!rates.containsKey(base)) {
+                            rates.put(base, new HashMap());
                         }
-                        for(final String quote : currencies.get(base)){
+                        for (final String quote : currencies.get(base)) {
                             WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
@@ -1104,7 +1087,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                     double price = market.sell_price.quote.amount / market.sell_price.base.amount;
                                                     int exp = assets.get(quote).getPrecision() - assets.get(base).getPrecision();
                                                     price = price * Math.pow(10, exp);
-                                                    rates.get(base).put(quote,price);
+                                                    rates.get(base).put(quote, price);
                                                 }
                                             }
                                         }
@@ -1120,16 +1103,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             threads.add(glo);
                         }
                     }
-                    for(WebsocketWorkerThread thread :threads){
+                    for (WebsocketWorkerThread thread : threads) {
                         try {
                             thread.join();
-                        } catch (InterruptedException e) {}
+                        } catch (InterruptedException e) {
+                        }
                     }
 
                     String btsToFait = "";
 
-                    for(String key : rates.keySet()){
-                        if(key.equals("BTS")) {
+                    for (String key : rates.keySet()) {
+                        if (key.equals("BTS")) {
                             for (String keypair : rates.get(key).keySet()) {
                                 if (faitCurrency.equals(keypair)) {
                                     btsToFait = rates.get(key).get(keypair).toString();
@@ -1139,14 +1123,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         }
                     }
 
-                    HashMap<String,String> hm = new HashMap<>();
+                    HashMap<String, String> hm = new HashMap<>();
 
-                    if (!btsToFait.isEmpty())
-                    {
-                        for(String asset : rates.keySet())
-                        {
-                            for(String pairKey : rates.get(asset).keySet()) {
-                                if (!(asset.equals("BTS") && pairKey.equals(faitCurrency))){
+                    if (!btsToFait.isEmpty()) {
+                        for (String asset : rates.keySet()) {
+                            for (String pairKey : rates.get(asset).keySet()) {
+                                if (!(asset.equals("BTS") && pairKey.equals(faitCurrency))) {
                                     String assetConversionToBTS = rates.get(asset).get(pairKey).toString();
 
                                     double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
@@ -1158,12 +1140,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             }
                         }
 
-                        if ( getContext() == null ) return;
+                        if (getContext() == null) return;
                         EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
-                        myFiatStorage.saveEqHM(faitCurrency,hm);
+                        myFiatStorage.saveEqHM(faitCurrency, hm);
                     }
 
-                    if ( getContext() == null ) return;
+                    if (getContext() == null) return;
                     EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(getContext());
                     hm = myFiatStorage.getEqHM(faitCurrency);
 
@@ -1194,7 +1176,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             String asset = tvAsset.getText().toString();
                             String amount = tvAmount.getText().toString();
-                            asset = asset.replace("bit","");
+                            asset = asset.replace("bit", "");
 
                             if (!amount.isEmpty() && hm.containsKey(asset)) {
                                 Currency currency = Currency.getInstance(faitCurrency);
@@ -1203,7 +1185,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                     double d = convertLocalizeStringToDouble(amount);
                                     Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
-                                    if (Helper.isRTL(locale,currency.getSymbol())) {
+                                    if (Helper.isRTL(locale, currency.getSymbol())) {
                                         tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
                                     } else {
                                         tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
@@ -1229,12 +1211,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         try {
             wwThread.join();
-        } catch (InterruptedException e) {        }
+        } catch (InterruptedException e) {
+        }
 
     }
 
-    private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency)
-    {
+    private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency) {
         final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
             @Override
             public void run() {
@@ -1242,49 +1224,43 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             }
         };
 
-        HashMap<String,ArrayList<String>> currenciesChange = new HashMap();
+        HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
         for (String pair : leftOvers) {
             String firstHalf = pair.split(":")[0];
-            if(!currenciesChange.containsKey(firstHalf)){
-                currenciesChange.put(firstHalf,new ArrayList());
+            if (!currenciesChange.containsKey(firstHalf)) {
+                currenciesChange.put(firstHalf, new ArrayList());
             }
             currenciesChange.get(firstHalf).add("BTS");
         }
 
-        if(!currenciesChange.containsKey("BTS")){
-            currenciesChange.put("BTS",new ArrayList());
+        if (!currenciesChange.containsKey("BTS")) {
+            currenciesChange.put("BTS", new ArrayList());
         }
         currenciesChange.get("BTS").add(faitCurrency);
-        getEquivalentComponent(currenciesChange,faitCurrency,getEquivalentCompIndirectRunnable);
+        getEquivalentComponent(currenciesChange, faitCurrency, getEquivalentCompIndirectRunnable);
     }
 
     ArrayList<String> symbolsArray;
     ArrayList<String> precisionsArray;
     ArrayList<String> amountsArray;
 
-    private void updateBalanceArrays (final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
-    {
-        try
-        {
+    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+        try {
             symbolsArray = new ArrayList<>();
             precisionsArray = new ArrayList<>();
             amountsArray = new ArrayList<>();
 
-            for( int i = 0 ; i < sym.size() ; i++ )
-            {
+            for (int i = 0; i < sym.size(); i++) {
                 Long _amount = Long.parseLong(am.get(i));
 
                 // remove balances which are zero
-                if ( _amount != 0 )
-                {
+                if (_amount != 0) {
                     amountsArray.add(am.get(i));
                     precisionsArray.add(pre.get(i));
                     symbolsArray.add(sym.get(i));
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }
@@ -1294,7 +1270,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
 
-        updateBalanceArrays( sym,pre,am );
+        updateBalanceArrays(sym, pre, am);
 
         sym.clear();
         sym.addAll(symbolsArray);
@@ -1306,64 +1282,59 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         am.addAll(amountsArray);
 
 
-        getActivity().runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
                 SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 llBalances.removeAllViews();
 
-                for (int i = 0; i < sym.size(); i += 2)
-                {
+                for (int i = 0; i < sym.size(); i += 2) {
                     int counter = 1;
                     int op = sym.size();
                     int pr;
 
-                    if ((op - i) > 2)
-                    {
+                    if ((op - i) > 2) {
                         pr = 2;
-                    }
-                    else
-                    {
+                    } else {
                         pr = op - i;
                     }
 
                     View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                    for (int l = i; l < i + pr; l++)
-                    {
-                        if (counter == 1)
-                        {
+                    for (int l = i; l < i + pr; l++) {
+                        if (counter == 1) {
                             TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                            assetsSymbols.displaySpannable(textView,sym.get(l));
+                            assetsSymbols.displaySpannable(textView, sym.get(l));
 
                             TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                             float b = powerInFloat(pre.get(l), am.get(i));
 
-                            if(assetsSymbols.isUiaSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.4f", b));
-                            else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView1.setText(String.format(locale, "%.2f", b));
+                            if (assetsSymbols.isUiaSymbol(sym.get(l)))
+                                textView1.setText(String.format(locale, "%.4f", b));
+                            else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
+                                textView1.setText(String.format(locale, "%.2f", b));
                             else textView1.setText(String.format(locale, "%.4f", b));
 
                         }
 
-                        if (counter == 2)
-                        {
+                        if (counter == 2) {
                             TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            assetsSymbols.displaySpannable(textView2,sym.get(l));
+                            assetsSymbols.displaySpannable(textView2, sym.get(l));
 
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             String r = returnFromPower(pre.get(l), am.get(l));
 
-                            if(assetsSymbols.isUiaSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.4f",Float.parseFloat(r)));
-                            else if(assetsSymbols.isSmartCoinSymbol(sym.get(l))) textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
-                            else textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
+                            if (assetsSymbols.isUiaSymbol(sym.get(l)))
+                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
+                            else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
+                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
+                            else
+                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
 
                             llBalances.addView(customView);
                         }
 
-                        if (counter == 1 && i == sym.size() - 1)
-                        {
+                        if (counter == 1 && i == sym.size() - 1) {
                             TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
                             textView2.setText("");
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
@@ -1371,28 +1342,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             llBalances.addView(customView);
                         }
 
-                        if (counter == 1)
-                        {
+                        if (counter == 1) {
                             counter = 2;
-                        }
-                        else counter = 1;
+                        } else counter = 1;
                     }
                 }
 
-                if (!onStartUp)
-                {
+                if (!onStartUp) {
                     progressBar1.setVisibility(View.GONE);
                     isLoading = true;
-                }
-                else
-                {
-                    try
-                    {
+                } else {
+                    try {
                         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                        for (int i = 0; i < accountDetails.size(); i++)
-                        {
-                            if (accountDetails.get(i).isSelected)
-                            {
+                        for (int i = 0; i < accountDetails.size(); i++) {
+                            if (accountDetails.get(i).isSelected) {
                                 getEquivalentComponents(accountDetails.get(i).AccountAssets);
                                 break;
                             }
@@ -1417,8 +1380,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         try {
             AudioFilePath audioFilePath = new AudioFilePath(getContext());
             MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
-            if(mediaPlayer != null)
-            mediaPlayer.start();
+            if (mediaPlayer != null)
+                mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1443,15 +1406,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         animator.start();
     }
 
-    public void removeZeroedBalanceViews ()
-    {
+    public void removeZeroedBalanceViews() {
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 try {
 
-                    for (int i = 0; i < llBalances.getChildCount(); i++)
-                    {
+                    for (int i = 0; i < llBalances.getChildCount(); i++) {
 
                         View row = llBalances.getChildAt(i);
 
@@ -1473,8 +1434,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             // Get next non-zero balance
                             if (tvSymtwo.getText().toString().isEmpty()) {
                                 // if second balance in row is also empty then get next non-zero balance
-                                for (int j = i+1; j < llBalances.getChildCount(); j++)
-                                {
+                                for (int j = i + 1; j < llBalances.getChildCount(); j++) {
                                     View nextrow = llBalances.getChildAt(j);
 
                                     TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
@@ -1505,9 +1465,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         break;
                                     }
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 // if second balance is row is non-empty then move it to first balance
                                 symbol = tvSymtwo.getText().toString();
                                 amount = tvAmtwo.getText().toString();
@@ -1519,19 +1477,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                             // update first balance amount
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(assetsSymbols.isUiaSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
-                            else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
+                            if (assetsSymbols.isUiaSymbol(symbol))
+                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
+                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
+                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            else
+                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
 
-                            assetsSymbols.displaySpannable(tvSymOne,symbol);
+                            assetsSymbols.displaySpannable(tvSymOne, symbol);
                             tvfaitOne.setText(fait);
 
-                            if (fait.isEmpty())
-                            {
+                            if (fait.isEmpty()) {
                                 tvfaitOne.setVisibility(View.GONE);
-                            }
-                            else
-                            {
+                            } else {
                                 tvfaitOne.setVisibility(View.VISIBLE);
                             }
                         }
@@ -1542,7 +1500,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             String fait = "";
 
                             // Get next non-zero balance
-                            for (int j = i+1; j < llBalances.getChildCount(); j++) {
+                            for (int j = i + 1; j < llBalances.getChildCount(); j++) {
                                 View nextrow = llBalances.getChildAt(j);
 
                                 TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
@@ -1575,19 +1533,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             }
 
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(assetsSymbols.isUiaSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.4f",Float.parseFloat(amount)));
-                            else if(assetsSymbols.isSmartCoinSymbol(symbol)) tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
+                            if (assetsSymbols.isUiaSymbol(symbol))
+                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
+                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
+                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            else
+                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
 
-                            assetsSymbols.displaySpannable(tvSymtwo,symbol);
+                            assetsSymbols.displaySpannable(tvSymtwo, symbol);
                             tvFaitTwo.setText(fait);
 
-                            if (fait.isEmpty())
-                            {
+                            if (fait.isEmpty()) {
                                 tvFaitTwo.setVisibility(View.GONE);
-                            }
-                            else
-                            {
+                            } else {
                                 tvFaitTwo.setVisibility(View.VISIBLE);
                             }
                         }
@@ -1610,17 +1568,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     if (llBalances.getChildCount() == 0) {
                         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
                     }
+                } catch (Exception e) {
                 }
-                catch (Exception e)
-                {}
             }
         });
     }
 
     Handler animateNsoundHandler = new Handler();
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am)
-    {
+    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         final Runnable reloadBalances = new Runnable() {
             @Override
             public void run() {
@@ -1631,21 +1587,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
 
-                try
-                {
+                try {
                     // remove zero balances not in previously loaded balances
                     List<Integer> indexesToRemove = new ArrayList<>();
 
-                    for( int i = 0 ; i < sym.size() ; i++ )
-                    {
+                    for (int i = 0; i < sym.size(); i++) {
                         Long _amount = Long.parseLong(am.get(i));
 
-                        if ( _amount == 0 )
-                        {
+                        if (_amount == 0) {
                             Boolean matchFound = symbolsArray.contains(sym.get(i));
 
-                            if ( !matchFound )
-                            {
+                            if (!matchFound) {
                                 indexesToRemove.add(i);
                                 sym.remove(i);
                                 am.remove(i);
@@ -1659,9 +1611,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
 
                 }
 
@@ -1677,8 +1627,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                         Log.d("Balances Update", "Start");
                         Boolean animateOnce = true;
 
-                        for (int i = 0; i < count; i++)
-                        {
+                        for (int i = 0; i < count; i++) {
 
                             // count == number of row
                             // m == number of child in the row
@@ -1693,8 +1642,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                             TextView tvFaitTwo = (TextView) linearLayout.findViewById(R.id.fait_child_two);
 
                             // First child updation
-                            if (sym.size() > m)
-                            {
+                            if (sym.size() > m) {
 
                                 Log.d("Balances Update", "sym size 1 : " + Long.toString(m));
 
@@ -1727,17 +1675,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 Log.d("Balances Update", "old amount : " + txtAmount);
 
-                                if (!symbol.equals(txtSymbol))
-                                {
+                                if (!symbol.equals(txtSymbol)) {
                                     AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                                    assetsSymbols.displaySpannable(tvSymOne,symbol);
+                                    assetsSymbols.displaySpannable(tvSymOne, symbol);
                                 }
 
                                 if (!amountInInt.equals(txtAmount)) {
                                     // previous amount
 
-                                    if ( txtAmount.isEmpty() )
-                                    {
+                                    if (txtAmount.isEmpty()) {
                                         txtAmount = "0";
                                     }
 
@@ -1767,9 +1713,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                     cView.setTextColor(getResources().getColor(R.color.recieveamount));
-                                                }
-                                                catch (Exception e)
-                                                {
+                                                } catch (Exception e) {
 
                                                 }
                                             }
@@ -1784,9 +1728,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                         cView.setText("");
                                                         aView.setText("");
                                                         bView.setText("");
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -1809,7 +1751,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         // run animation
                                         if (animateOnce) {
                                             AudioFilePath audioFilePath = new AudioFilePath(getContext());
-                                            if(!audioFilePath.fetchAudioEnabled()) {
+                                            if (!audioFilePath.fetchAudioEnabled()) {
                                                 audioSevice = true;
                                                 getActivity().startService(new Intent(getActivity(), MediaService.class));
                                             }
@@ -1850,9 +1792,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                     cView.setTextColor(getResources().getColor(R.color.recieveamount));
-                                                }
-                                                catch (Exception e)
-                                                {
+                                                } catch (Exception e) {
 
                                                 }
                                             }
@@ -1867,9 +1807,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                         cView.setText("");
                                                         aView.setText("");
                                                         bView.setText("");
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -1883,16 +1821,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 }
                                 m++;
                                 Log.d("Balances Update", "m++");
-                            }
-                            else
-                            {
+                            } else {
                                 Log.d("Balances Update", "linearLayout.removeAllViews");
                                 linearLayout.removeAllViews();
                             }
 
                             // Second child updation
-                            if (sym.size() > m)
-                            {
+                            if (sym.size() > m) {
                                 Log.d("Balances Update", "sym size 2 : " + Long.toString(m));
 
                                 String symbol = sym.get(m);
@@ -1920,8 +1855,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 Log.d("Balances Update", "old symbol : " + txtSymbol);
                                 Log.d("Balances Update", "old amount : " + txtAmount);
 
-                                if ( txtAmount.isEmpty() )
-                                {
+                                if (txtAmount.isEmpty()) {
                                     txtAmount = "0";
                                 }
 
@@ -1931,17 +1865,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                                 if (!symbol.equals(txtSymbol)) {
                                     AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                                    assetsSymbols.displaySpannable(tvSymtwo,symbol);
+                                    assetsSymbols.displaySpannable(tvSymtwo, symbol);
 
                                 }
 
-                                if (!amountInInt.equals(txtAmount))
-                                {
+                                if (!amountInInt.equals(txtAmount)) {
                                     tvAmtwo.setVisibility(View.VISIBLE);
 
                                     // balance is sent
-                                    if (txtAmount_d > amount_d)
-                                    {
+                                    if (txtAmount_d > amount_d) {
                                         Log.d("Balances Update", "Balance sent");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.red));
                                         tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
@@ -1958,9 +1890,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             public void run() {
                                                 try {
                                                     cView.setTextColor(getResources().getColor(R.color.recieveamount));
-                                                }
-                                                catch (Exception e)
-                                                {
+                                                } catch (Exception e) {
 
                                                 }
                                             }
@@ -1972,14 +1902,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable zeroAmount = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    try
-                                                    {
+                                                    try {
                                                         cView.setText("");
                                                         aView.setText("");
                                                         bView.setText("");
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -1989,13 +1916,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
 
-                                        Log.d("Balances Update","Animation done");
+                                        Log.d("Balances Update", "Animation done");
 
                                     }
                                     // Balance is recieved
-                                    else if (amount_d > txtAmount_d)
-                                    {
-                                        Log.d("Balances Update","Balance is received");
+                                    else if (amount_d > txtAmount_d) {
+                                        Log.d("Balances Update", "Balance is received");
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
@@ -2004,12 +1930,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             final Runnable playSOund = new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    try
-                                                    {
+                                                    try {
                                                         playSound();
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -2021,12 +1944,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                     try {
                                                         getActivity().runOnUiThread(new Runnable() {
                                                             public void run() {
-                                                                try
-                                                                {
+                                                                try {
                                                                     rotateRecieveButton();
-                                                                }
-                                                                catch (Exception e)
-                                                                {
+                                                                } catch (Exception e) {
 
                                                                 }
                                                             }
@@ -2047,7 +1967,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         }
 
                                         animateText(tvAmtwo, convertLocalizeStringToFloat(tvAmtwo.getText().toString()), convertLocalizeStringToFloat(amount));
-                                        Log.d("Balances Update","Text animated");
+                                        Log.d("Balances Update", "Text animated");
 
                                         final TextView cView = tvAmtwo;
                                         final TextView aView = tvSymtwo;
@@ -2058,12 +1978,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         final Runnable updateTask = new Runnable() {
                                             @Override
                                             public void run() {
-                                                try
-                                                {
+                                                try {
                                                     cView.setTextColor(getResources().getColor(R.color.recieveamount));
-                                                }
-                                                catch (Exception e)
-                                                {
+                                                } catch (Exception e) {
 
                                                 }
                                             }
@@ -2079,9 +1996,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                         cView.setText("");
                                                         aView.setText("");
                                                         bView.setText("");
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -2090,17 +2005,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                             animateNsoundHandler.postDelayed(zeroAmount, 4200);
                                             animateNsoundHandler.postDelayed(reloadBalances, 5000);
                                         }
-                                        Log.d("Balances Update","rcv done");
+                                        Log.d("Balances Update", "rcv done");
                                     }
                                 }
                                 m++;
-                                Log.d("Balances Update","m updated");
-                            }
-                            else
-                            {
-                                Log.d("Balances Update","else when sym > m");
+                                Log.d("Balances Update", "m updated");
+                            } else {
+                                Log.d("Balances Update", "else when sym > m");
                                 // i == number of row
-                                if (i == (count - 1) ) // if its the last row
+                                if (i == (count - 1)) // if its the last row
                                 {
                                     if (sym.size() > m) // if number of balances is more than traversed
                                         m--;            // then minus 1 from m
@@ -2111,79 +2024,65 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
                         // Calculate m : number of balances loaded in ui
                         m = 0;
-                        for ( int i = 0 ; i < llBalances.getChildCount(); i++ )
-                        {
+                        for (int i = 0; i < llBalances.getChildCount(); i++) {
                             LinearLayout linearLayout = (LinearLayout) llBalances.getChildAt(i);
                             TextView tvSymOne = (TextView) linearLayout.findViewById(R.id.symbol_child_one);
                             TextView tvSymtwo = (TextView) linearLayout.findViewById(R.id.symbol_child_two);
 
-                            if ( !tvSymOne.getText().toString().isEmpty() )
-                            {
+                            if (!tvSymOne.getText().toString().isEmpty()) {
                                 m++;
                             }
 
-                            if ( !tvSymtwo.getText().toString().isEmpty() )
-                            {
+                            if (!tvSymtwo.getText().toString().isEmpty()) {
                                 m++;
                             }
                         }
 
 
-                        Log.d("Balances Update","Number of balances loaded : " + Long.toString(m));
+                        Log.d("Balances Update", "Number of balances loaded : " + Long.toString(m));
 
                         // Insert/remove balance objects if updated
-                        Log.d("Balances Update","Insert or remove balance objects if needed");
+                        Log.d("Balances Update", "Insert or remove balance objects if needed");
                         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
                         int loop = sym.size() - m; // number of extra balances to be loaded
 
-                        if (loop > 0)
-                        {
-                            Log.d("Balances Update","Yes updation required : " + Long.toString(loop));
+                        if (loop > 0) {
+                            Log.d("Balances Update", "Yes updation required : " + Long.toString(loop));
 
-                            for (int i = m; i < sym.size(); i += 2)
-                            {
+                            for (int i = m; i < sym.size(); i += 2) {
                                 int counter = 1;
                                 int totalNumberOfBalances = sym.size(); // total number of balances 6
                                 int pr;
 
-                                if ( (totalNumberOfBalances - i) > 2 )
-                                {
+                                if ((totalNumberOfBalances - i) > 2) {
                                     pr = 2;
-                                }
-                                else
-                                {
+                                } else {
                                     pr = totalNumberOfBalances - i;
                                 }
 
                                 View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
 
-                                for (int l = i; l < (i + pr); l++)
-                                {
-                                    if (counter == 1)
-                                    {
+                                for (int l = i; l < (i + pr); l++) {
+                                    if (counter == 1) {
                                         TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                                        assetsSymbols.displaySpannable(textView,sym.get(l));
+                                        assetsSymbols.displaySpannable(textView, sym.get(l));
 
                                         TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
-                                        if ( (pre.size() > l) && (am.size() > i) )
-                                        {
+                                        if ((pre.size() > l) && (am.size() > i)) {
                                             String r = returnFromPower(pre.get(l), am.get(i));
                                             textView1.setText(r);
                                             textView1.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
-                                        }
-                                        else textView1.setText("");
+                                        } else textView1.setText("");
                                     }
 
-                                    if (counter == 2)
-                                    {
+                                    if (counter == 2) {
                                         TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                                      //  textView2.setText(sym.get(l));
-                                        assetsSymbols.displaySpannable(textView2,sym.get(l));
+                                        //  textView2.setText(sym.get(l));
+                                        assetsSymbols.displaySpannable(textView2, sym.get(l));
 
                                         TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                                        if ( (pre.size() > l) && (am.size() > l) )
-                                        {
+                                        if ((pre.size() > l) && (am.size() > l)) {
                                             String r = returnFromPower(pre.get(l), am.get(l));
                                             textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                                         }
@@ -2197,9 +2096,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 public void run() {
                                                     try {
                                                         playSound();
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -2230,8 +2127,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         }
                                     }
 
-                                    if ( (counter == 1) && ( i == (sym.size() - 1) ) )
-                                    {
+                                    if ((counter == 1) && (i == (sym.size() - 1))) {
                                         llBalances.addView(customView);
 
                                         // run animation
@@ -2241,9 +2137,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                                 public void run() {
                                                     try {
                                                         playSound();
-                                                    }
-                                                    catch (Exception e)
-                                                    {
+                                                    } catch (Exception e) {
 
                                                     }
                                                 }
@@ -2274,22 +2168,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                         }
                                     }
 
-                                    if (counter == 1)
-                                    {
+                                    if (counter == 1) {
                                         counter = 2;
-                                    }
-                                    else counter = 1;
+                                    } else counter = 1;
                                 }
                             }
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         Log.d("Balances Update", e.getMessage());
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     Log.d("Balances Load", e.getMessage());
                 }
 
@@ -2297,7 +2185,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
                 isLoading = true;
 
-                updateBalanceArrays( sym,pre,am );
+                updateBalanceArrays(sym, pre, am);
             }
         });
     }
@@ -2340,7 +2228,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     /**
      * Updating the sort strategy
      */
-    private void updateSortTable(){
+    private void updateSortTable() {
         Log.d(TAG, "updateSortTable");
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
@@ -2358,30 +2246,27 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     @Override
     public void soundFinish() {
-        if(audioSevice) {
+        if (audioSevice) {
             getActivity().stopService(new Intent(getActivity(), MediaService.class));
         }
         audioSevice = false;
     }
 
-    private static class TransactionsDateComparator implements Comparator<TransactionDetails>
-    {
+    private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
             return one.getDate().compareTo(two.getDate());
         }
     }
 
-    private static class TransactionsSendRecieveComparator implements Comparator<TransactionDetails>
-    {
+    private static class TransactionsSendRecieveComparator implements Comparator<TransactionDetails> {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
             return one.getSent().compareTo(two.getSent());
         }
     }
 
-    private static int compareFloats(float change1, float change2)
-    {
+    private static int compareFloats(float change1, float change2) {
         if (change1 < change2) {
             return -1;
         } else if (change1 == change2) {
@@ -2393,8 +2278,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
-    private static int compareDoubles(double change1, double change2)
-    {
+    private static int compareDoubles(double change1, double change2) {
         if (change1 < change2) {
             return -1;
         } else if (change1 == change2) {
@@ -2416,21 +2300,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     /**
      * Saves transaction list into the shared preferences storage.
+     *
      * @param transactionDetails: List of TransactionDetails to store
-     * @param accountName: Account name.
+     * @param accountName:        Account name.
      */
     private void putTransactions(List<TransactionDetails> transactionDetails, String accountName) {
-        Log.d(TAG,"putTransactions. account name: "+accountName+", number of tx: "+transactionDetails.size());
+        Log.d(TAG, "putTransactions. account name: " + accountName + ", number of tx: " + transactionDetails.size());
         tinyDB.putTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
     }
 
     /**
      * Retrieves the transaction list from the shared preferences storage.
+     *
      * @param accountName: Account name.
      * @return: List of transactions from a given account.
      */
-    private ArrayList<TransactionDetails> getTransactions(String accountName)
-    {
+    private ArrayList<TransactionDetails> getTransactions(String accountName) {
         ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, TransactionDetails.class);
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -2444,19 +2329,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     TransactionsTableAdapter myTransactionsTableAdapter;
+
     public void TransactionUpdateOnStartUp(String accountName) {
-        Log.d(TAG, "TransactionUpdateOnStartUp. account name: "+accountName);
+        Log.d(TAG, "TransactionUpdateOnStartUp. account name: " + accountName);
 
         final List<TransactionDetails> localTransactionDetails = getTransactions(accountName);
 
         if (localTransactionDetails != null && localTransactionDetails.size() > 0) {
 
-            getActivity().runOnUiThread(new Runnable()
-            {
-                public void run()
-                {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
                     //isSavedTransactions = true;
-                    if ( myTransactionsTableAdapter == null ) {
+                    if (myTransactionsTableAdapter == null) {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), localTransactionDetails);
                     } else {
                         myTransactionsTableAdapter.clear();
@@ -2472,22 +2356,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     Handler updateTransactionsList;
 
     @Override
-    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue)
-    {
+    public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
 
     }
 
     int counterRepeatTransactionLoad = 0;
+
     @Override
-    public void transactionsLoadComplete(List<TransactionDetails> transactionDetails,int newTransactionsLoaded)
-    {
-        Log.d(TAG,"transactionLoadComplete. new tx: "+newTransactionsLoaded);
-        try
-        {
-            if ( updateTriggerFromNetworkBroadcast && ( newTransactionsLoaded == 0 ) && (counterRepeatTransactionLoad++ < 15) )
-            {
-                if (Application.isReady)
-                {
+    public void transactionsLoadComplete(List<TransactionDetails> transactionDetails, int newTransactionsLoaded) {
+        Log.d(TAG, "transactionLoadComplete. new tx: " + newTransactionsLoaded);
+        try {
+            if (updateTriggerFromNetworkBroadcast && (newTransactionsLoaded == 0) && (counterRepeatTransactionLoad++ < 15)) {
+                if (Application.isReady) {
                     Application.disconnect();
                 }
 
@@ -2503,8 +2383,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
             Context context = getContext();
             // update context
-            for(TransactionDetails td:transactionDetails)
-            {
+            for (TransactionDetails td : transactionDetails) {
                 td.updateContext(context);
             }
 
@@ -2512,55 +2391,44 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             myTransactions.addAll(transactionDetails);
 
 
-
             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
 
-            putTransactions(myTransactions,to);
+            putTransactions(myTransactions, to);
 
             number_of_transactions_loaded += number_of_transactions_to_load;
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
-                public void run()
-                {
-                    if ( updateTransactionsList == null )
-                    {
+                public void run() {
+                    if (updateTransactionsList == null) {
                         updateTransactionsList = new Handler();
                     }
 
-                    if ( myTransactionsTableAdapter == null )
-                    {
+                    if (myTransactionsTableAdapter == null) {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
 //                        tableView.setDataAdapter(myTransactionsTableAdapter);
-                    }
-                    else
-                    {
+                    } else {
                         myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
 //                        tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
 
-                    if (myTransactionActivity.finalBlockRecieved)
-                    {
+                    if (myTransactionActivity.finalBlockRecieved) {
                         load_more_values.setVisibility(View.GONE);
-                    }
-                    else
-                    {
+                    } else {
                         load_more_values.setVisibility(View.VISIBLE);
                         load_more_values.setEnabled(true);
                     }
 
-                    if ( progressBar.getVisibility() != View.GONE )
+                    if (progressBar.getVisibility() != View.GONE)
                         progressBar.setVisibility(View.GONE);
 
-                    if ( tableViewparent.getVisibility() != View.VISIBLE )
+                    if (tableViewparent.getVisibility() != View.VISIBLE)
                         tableViewparent.setVisibility(View.VISIBLE);
                 }
             });
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             SupportMethods.testing("TransactionUpdate", e, "try/catch");
         }
 
@@ -2568,32 +2436,32 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     @Override
-    public void transactionsLoadMessageStatus(String message)
-    {
+    public void transactionsLoadMessageStatus(String message) {
 
     }
 
     @Override
-    public void transactionsLoadFailure(String reason)
-    {
-        Log.d("LogTransactions","transactionsLoadFailure");
+    public void transactionsLoadFailure(String reason) {
+        Log.d("LogTransactions", "transactionsLoadFailure");
 
         sentCallForTransactions = false;
 
-            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load,myTransactions);
+        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
 
     }
+
     Boolean isTransactionUpdating = false;
+
     @Override
     public void loadAgain() {
 
-        Log.d("LogTransactions","loadAgain");
+        Log.d("LogTransactions", "loadAgain");
 
-        Log.d("LogTransactions",updateTriggerFromNetworkBroadcast+"");
+        Log.d("LogTransactions", updateTriggerFromNetworkBroadcast + "");
 
-        if(updateTriggerFromNetworkBroadcast || myTransactions.size()<=0){
+        if (updateTriggerFromNetworkBroadcast || myTransactions.size() <= 0) {
 
-            Log.d("LogTransactions","updateTriggerFromNetworkBroadcast");
+            Log.d("LogTransactions", "updateTriggerFromNetworkBroadcast");
 
 //            progressBar.setVisibility(View.VISIBLE);
             load_more_values.setVisibility(View.GONE);
@@ -2609,16 +2477,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                 @Override
                 public void run() {
 
-                    loadTransactions(getContext(), accountId, assetDelegate , wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+                    loadTransactions(getContext(), accountId, assetDelegate, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
 
                 }
             }, 5000);
 
-        }else {
-            if ( myTransactionsTableAdapter == null )
-            {
+        } else {
+            if (myTransactionsTableAdapter == null) {
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-            }else myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
+            } else
+                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
 //            tableView.setDataAdapter(myTransactionsTableAdapter);
             load_more_values.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -2630,14 +2498,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         load_more_values.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         number_of_transactions_to_load = 20;
-        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load,myTransactions);
+        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
     }
 
     void isLifeTime(final String name_id, final String id) {
 
         String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
         String getDetails2 = ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        myWebSocketHelper.make_websocket_call(getDetails,getDetails2, webSocketCallHelper.api_identifier.database);
+        myWebSocketHelper.make_websocket_call(getDetails, getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
     @Override
@@ -2724,8 +2592,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     Handler loadOndemand = new Handler();
 
-    private void loadOnDemand(final Activity _activity)
-    {
+    private void loadOnDemand(final Activity _activity) {
         try {
             loadOndemand.removeCallbacksAndMessages(null);
 
@@ -2739,23 +2606,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                                 loadViews(false, true, false);
                             }
                         });
+                    } catch (Exception e) {
                     }
-                    catch (Exception e){}
                 }
             };
             loadOndemand.postDelayed(loadOnDemandRunnable, 1000);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
 
     boolean updateTriggerFromNetworkBroadcast = false;
 
     @Override
-    public void loadAll()
-    {
-    updateTriggerFromNetworkBroadcast = true;
-    loadOnDemand(getActivity());
+    public void loadAll() {
+        updateTriggerFromNetworkBroadcast = true;
+        loadOnDemand(getActivity());
     }
 
     AssestsActivty myAssetsActivity;
@@ -2763,10 +2629,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     boolean firstTimeLoad = true;
     String transactionsLoadedAccountName = "";
 
-    void loadViews(Boolean onResume,Boolean accountNameChanged,boolean faitCurrencyChanged) {
+    void loadViews(Boolean onResume, Boolean accountNameChanged, boolean faitCurrencyChanged) {
 
-        if ( firstTimeLoad )
-        {
+        if (firstTimeLoad) {
 
 //            tableViewparent.setVisibility(View.GONE);
             myTransactions = new ArrayList<>();
@@ -2784,8 +2649,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        if (myAssetsActivity == null)
-        {
+        if (myAssetsActivity == null) {
             myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
             myAssetsActivity.registerDelegate();
         }
@@ -2795,8 +2659,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
         myTransactions = getTransactions(to);
 
-        if ( !onResume || accountNameChanged || faitCurrencyChanged )
-        {
+        if (!onResume || accountNameChanged || faitCurrencyChanged) {
             progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
 
@@ -2808,10 +2671,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
     }
 
-    void loadBasic(boolean onResume,boolean accountNameChanged, boolean faitCurrencyChanged) {
+    void loadBasic(boolean onResume, boolean accountNameChanged, boolean faitCurrencyChanged) {
 
-        if ( !onResume )
-        {
+        if (!onResume) {
             isLoading = false;
         }
 
@@ -2841,13 +2703,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         tvAccountName.setText(to);
         isLifeTime(accountId, "15");
 
-        if(onResume && accountNameChanged)
-        {
+        if (onResume && accountNameChanged) {
             loadBalancesFromSharedPref();
             TransactionUpdateOnStartUp(to);
         }
 
-        loadViews(onResume,accountNameChanged, faitCurrencyChanged);
+        loadViews(onResume, accountNameChanged, faitCurrencyChanged);
     }
 
     Boolean checkIfAccountNameChange() {
@@ -2868,7 +2729,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         return !checkAccountName.equals(to);
     }
 
-    void onChangedAccount(){
+    void onChangedAccount() {
         final ArrayList<AccountDetails> accountDetailsList;
 
         accountDetailsList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -2914,12 +2775,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
     }
 
     @OnClick(R.id.ivMultiAccArrow)
-    public void ivOnChangedAccount(View view){
+    public void ivOnChangedAccount(View view) {
         onChangedAccount();
     }
 
     @OnClick(R.id.account_name)
-    public void tvOnChangedAccount(View view){
+    public void tvOnChangedAccount(View view) {
         onChangedAccount();
     }
 
@@ -3040,9 +2901,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
                     }
                 }
             });
+        } catch (Exception e) {
         }
-        catch (Exception e)
-        {}
     }
 
     private void showDialog(String title, String msg) {
@@ -3130,12 +2990,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
 
     TransactionsHelper myTransactionActivity;
     Handler pendingTransactionsLoad;
-    void loadTransactions(final Context context,final String id,final AssetDelegate in ,final String wkey,final int loaded,final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions)
-    {
-        if ( sentCallForTransactions )
-        {
-            if ( pendingTransactionsLoad == null )
-            {
+
+    void loadTransactions(final Context context, final String id, final AssetDelegate in, final String wkey, final int loaded, final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions) {
+        if (sentCallForTransactions) {
+            if (pendingTransactionsLoad == null) {
                 pendingTransactionsLoad = new Handler(Looper.getMainLooper());
             }
 
@@ -3144,14 +3002,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
             pendingTransactionsLoad.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if ( context != null )
-                    loadTransactions( context,id,in,wkey,loaded,toLoad,alreadyLoadedTransactions );
+                    if (context != null)
+                        loadTransactions(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
                 }
-            },500);
+            }, 500);
 
-        }
-        else
-        {
+        } else {
             sentCallForTransactions = true;
 
             if (myTransactionActivity == null) {
@@ -3163,7 +3019,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
         }
 
     }
-    public void isAssets(){
+
+    public void isAssets() {
         progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
     }
@@ -3172,12 +3029,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
      * Private method used for migration purposes only. Since the past equivalent value data
      * is only available in the shared preferences, we should migrate that data into our new
      * database-backed scheme now.
-     *
+     * <p>
      * This migration is only done once.
      *
      * @author: Nelson R. Pérez
      */
-    private void migrateTransactionData(){
+    private void migrateTransactionData() {
         //TODO: Implement data migration
     }
 
@@ -3185,13 +3042,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate ,ISound{
      * Refreshes table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
      */
-    private void updateTableView(){
+    private void updateTableView() {
         UserAccount account = new UserAccount(accountId);
         List<HistoricalTransfer> transfers = database.getTransactions(account);
         Log.d(TAG, String.format("Updating the table view with %d transactions", transfers.size()));
         transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
 
-        if(transfersView.getColumnComparator(0) == null){
+        if (transfersView.getColumnComparator(0) == null) {
             updateSortTable();
         }
     }
