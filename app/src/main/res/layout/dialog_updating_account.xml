@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:padding="20dp">
+    <TextView
+        android:text="@string/updating_account_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/account_list"
+        android:layout_margin="10dp"
+        android:layout_below="@id/dialog_message"
+        android:layout_above="@+id/buttons_holder"/>
+
+    <Button
+        android:id="@+id/done_button"
+        android:text="@string/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"/>
+</LinearLayout>

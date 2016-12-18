@@ -15,6 +15,9 @@ import java.util.ArrayList;
  */
 public class AccountDetails {
     private final String TAG = "AccountDetails";
+    public static final int PRE_SECURITY_UPDATE = 0;
+    public static final int POST_SECURITY_UPDATE = 1;
+
     public String status;
     public String brain_key;
     public String address;
@@ -28,7 +31,7 @@ public class AccountDetails {
     public Boolean isSelected;
     public Boolean isLifeTime=false;
     public String account_name;
-    public Boolean isPostSecurityUpdate;
+    public int securityUpdateFlag;
 
     @Override
     public String toString(){

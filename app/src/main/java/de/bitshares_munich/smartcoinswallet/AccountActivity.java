@@ -588,7 +588,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.isSelected = true;
         accountDetails.status = "success";
         accountDetails.account_id = account_id;
-        accountDetails.isPostSecurityUpdate = true;
+        accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails, getApplicationContext(), this);

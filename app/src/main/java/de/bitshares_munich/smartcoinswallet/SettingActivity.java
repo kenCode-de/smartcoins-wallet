@@ -836,7 +836,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             updatedAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
             updatedAccount.brain_key = suggestion;
             updatedAccount.pub_key = address.toString();
-            updatedAccount.isPostSecurityUpdate = true;
+            updatedAccount.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
             // Building a transaction that will be used to update the account key
             HashMap<PublicKey, Integer> authMap = new HashMap<>();

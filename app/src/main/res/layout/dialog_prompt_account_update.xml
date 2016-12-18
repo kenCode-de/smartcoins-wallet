@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="dialog_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:layout_margin="5dp"
+        android:layout_margin="15dp"
+        android:text="@string/security_update_notice"
         android:id="@+id/dialog_message" />
 
     <ListView
@@ -30,12 +30,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="@string/dialog_later"/>
+            android:text="@string/dialog_later"
+            style="@style/Widget.AppCompat.Button.Borderless" />
         <Button
             android:id="@+id/proceed"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:text="@string/dialog_proceed"/>
+            android:text="@string/dialog_proceed"
+            style="@style/Widget.AppCompat.Button.Colored" />
     </LinearLayout>
 </RelativeLayout>
