@@ -151,7 +151,11 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                             }
                         }
                         boolean updateOwner = accountProperty.owner.equals(accountProperty.active);
-                        updateQueue.add(new UpdateAccountTask(new UserAccount(accountProperty.id, accountProperty.name), brainKey, updateOwner));
+                        boolean updateMemo = accountProperty.options.equals(accountProperty.active);
+                        UpdateAccountTask updateTask = new UpdateAccountTask(new UserAccount(accountProperty.id, accountProperty.name), brainKey);
+                        updateTask.setUpdateOwner(updateOwner);
+                        updateTask.setUpdateMemo(updateMemo);
+                        updateQueue.add(updateTask);
                     }
 
                     /* Updating the UI status of the first account from the list */
@@ -422,13 +426,17 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             AccountOptions options = new AccountOptions(address.getPublicKey());
             AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, brainKey.getWalletImportFormat()).getKey())
                     .setAccont(currentTask.getAccount())
-                    .setActive(authority)
-                    .setOptions(options);
+                    .setActive(authority);
 
             if(currentTask.isUpdateOwner()){
-                // Only changing the owner authority in some cases
+                // Only changing the "owner" authority in some cases.
                 builder.setOwner(authority);
             }
+            if(currentTask.isUpdateMemo()){
+                // Only changing the "memo" authority if it is the same as the active.
+                builder.setOptions(options);
+            }
+
             Transaction transaction = builder.build();
 
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), refreshKeysListener), nodeIndex);

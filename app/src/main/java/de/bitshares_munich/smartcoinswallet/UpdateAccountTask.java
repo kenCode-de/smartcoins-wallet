@@ -10,11 +10,11 @@ public class UpdateAccountTask {
     private BrainKey brainKey;
     private UserAccount account;
     private boolean updateOwner;
+    private boolean updateMemo;
 
-    UpdateAccountTask(UserAccount account, BrainKey brainKey, boolean updateOwner){
+    UpdateAccountTask(UserAccount account, BrainKey brainKey){
         this.account = account;
         this.brainKey = brainKey;
-        this.updateOwner = updateOwner;
     }
 
     public UserAccount getAccount() {
@@ -31,6 +31,12 @@ public class UpdateAccountTask {
 
     public void setUpdateOwner(boolean updateOwner) {
         this.updateOwner = updateOwner;
+    }
+
+    public boolean isUpdateMemo(){ return updateMemo; }
+
+    public void setUpdateMemo(boolean updateMemo){
+        this.updateMemo = updateMemo;
     }
 
     public BrainKey getBrainKey(){
