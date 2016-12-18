@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.net.wifi.ScanResult;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,10 +20,12 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfIndirectReference;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.Util;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.io.ByteArrayOutputStream;
@@ -32,15 +33,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.utils.Helper;
 
 /**
  * Created by developer on 5/23/16.
  */
 public class PdfTable {
+    private final String TAG = this.getClass().getName();
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -100,11 +103,9 @@ public class PdfTable {
 
     }
 
-    public void createTable (List<HistoricalTransfer> myTransactions,Context context)
-    {
+    public void createTable(Context context, List<HistoricalTransfer> myTransactions, UserAccount me) {
 
         Document document = new Document();
-
         try {
             String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.folder_name);
             final String filePath = combinePath(extStorage, filename + ".pdf");
@@ -128,20 +129,20 @@ public class PdfTable {
             for ( int i = 0 ; i < myTransactions.size() ; i++ )
             {
                 table.completeRow();
-
                 HistoricalTransfer td = myTransactions.get(i);
+                long timestamp = td.getTimestamp();
+                String date = Helper.convertDateToGMT(new Date(timestamp), context);
+                String time = Helper.convertDateToGMTWithYear(new Date(timestamp), context);
+                String timeZone = Helper.convertTimeToGMT(new Date(timestamp),context);
 
-                String dateText = String.format("%s\n%s\n%s",td.getDateStringWithYear(context),td.getTimeString(context),td.getTimeZone(context));
+                String dateText = String.format("%s\n%s\n%s", date, time, timeZone);
                 PdfPCell dateCell = new PdfPCell(new Paragraph(dateText));
                 table.addCell(dateCell);
 
                 Drawable d;
-                if (td.getSent())
-                {
+                if (td.getOperation().getFrom().getAccountName().equals(me.getAccountName())) {
                     d = ContextCompat.getDrawable(myContext,R.drawable.sendicon);
-                }
-                else
-                {
+                } else {
                     d = ContextCompat.getDrawable(myContext,R.drawable.rcvicon);
                 }
 
@@ -173,32 +174,27 @@ public class PdfTable {
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);
 
-                String amountText;
-                if ( td.getSent() )
-                {
-                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
-                }
-                else
-                {
-                    amountText = String.format("+ %s %s\n+ %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
+                String amountText = "";
+                AssetAmount assetAmount = td.getOperation().getTransferAmount();
+                if ( td.getOperation().getFrom().getAccountName().equals(me.getAccountName())) {
+//                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
+                    amountText = String.format("- %f %s", Util.fromBase(assetAmount), assetAmount.getAsset().getSymbol());
+                } else {
+//                    amountText = String.format("+ %s %s\n+ %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
+                    amountText = String.format("+ %f %s", Util.fromBase(assetAmount), assetAmount.getAsset().getSymbol());
                 }
                 PdfPCell amountsCell = new PdfPCell(new Paragraph(amountText));
                 amountsCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table.addCell(amountsCell);
 
             }
-
             document.add(table);
             document.close();
-
-                    Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
-                    Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
-
-
+            Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg) + filePath, Toast.LENGTH_LONG).show();
         }
         catch(Exception e){
+            Log.e(TAG, "Exception while trying to generate a PDF. Msg: "+e.getMessage());
             Toast.makeText(myContext, myContext.getText(R.string.pdf_generated_msg_error) + e.getMessage(), Toast.LENGTH_LONG).show();
-
         }
     }
     public void createTransactionpdf (HashMap<String,String> map, ImageView imageView)

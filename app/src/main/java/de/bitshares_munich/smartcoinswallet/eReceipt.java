@@ -17,32 +17,24 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-
 import android.view.ViewGroup;
-
 import android.widget.ImageButton;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,7 +43,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -59,20 +50,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.GravatarDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
-import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.Gravatar;
 import de.bitshares_munich.models.MerchantEmail;
-import de.bitshares_munich.models.TransactionDetails;
-import de.bitshares_munich.models.TransactionIdResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
@@ -382,11 +365,15 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                 AssetsSymbols assetsSymbols = new AssetsSymbols(context);
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
-                feeAmount = SupportMethods.ConvertValueintoPrecision(sym_preFee.get("precision"), Freemap.get("amount"));
+//                feeAmount = SupportMethods.ConvertValueintoPrecision(sym_preFee.get("precision"), Freemap.get("amount"));
+                //TODO: Fix this!
+                feeAmount = "0";
                 feeSymbol = sym_preFee.get("symbol");
 
                 HashMap<String, String> sym_preAmount = SymbolsPrecisions.get(Amountmap.get("asset_id"));
-                amountAmount = SupportMethods.ConvertValueintoPrecision(sym_preAmount.get("precision"), Amountmap.get("amount"));
+                //TODO: Fix this
+//                amountAmount = SupportMethods.ConvertValueintoPrecision(sym_preAmount.get("precision"), Amountmap.get("amount"));
+                amountAmount = "0.0";
                 amountSymbol = sym_preAmount.get("symbol");
 
 

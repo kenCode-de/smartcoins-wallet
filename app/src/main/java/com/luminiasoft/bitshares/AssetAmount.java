@@ -20,9 +20,6 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
     private UnsignedLong amount;
     private Asset asset;
 
-    private double faitPrice;
-    private Asset faitAsset;
-
     public AssetAmount(UnsignedLong amount, Asset asset) {
         this.amount = amount;
         this.asset = asset;
@@ -35,11 +32,6 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
     public UnsignedLong getAmount() {
         return this.amount;
     }
-
-    public double getAmountDouble() {
-        return this.amount.doubleValue() * Math.pow(10, this.asset.getPrecision());
-    }
-
 
     public Asset getAsset() {
         return this.asset;
@@ -95,37 +87,5 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
             AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId));
             return assetAmount;
         }
-    }
-
-    //TODO fait Amount
-    public double getFaitAmount(){
-        if(faitAsset == null || faitPrice <= 0) {
-            return 0;
-        }
-        return faitPrice * amount.doubleValue() * Math.pow(10,faitAsset.getPrecision()-asset.getPrecision());
-
-    }
-
-    public String getFaitAssetSymbol(){
-        if(faitAsset == null) {
-            return "";
-        }
-        return faitAsset.getSymbol();
-    }
-
-    public void setFaitPrice(double faitPrice) {
-        this.faitPrice = faitPrice;
-    }
-
-    public void setFaitAsset(Asset faitAsset) {
-        this.faitAsset = faitAsset;
-    }
-
-    public double getFaitPrice() {
-        return faitPrice;
-    }
-
-    public Asset getFaitAsset() {
-        return faitAsset;
     }
 }

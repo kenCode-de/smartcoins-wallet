@@ -63,6 +63,14 @@ public class TransferOperation extends BaseOperation {
         return this.fee;
     }
 
+    public void setMemo(Memo memo) {
+        this.memo = memo;
+    }
+
+    public Memo getMemo() {
+        return this.memo;
+    }
+
     @Override
     public byte[] toBytes() {
         byte[] feeBytes = fee.toBytes();
@@ -94,13 +102,6 @@ public class TransferOperation extends BaseOperation {
         jsonObject.add(KEY_EXTENSIONS, new JsonArray());
         array.add(jsonObject);
         return array;
-    }
-
-    public void setMemo(Memo memo) {
-        this.memo = memo;
-    }
-    public Memo getMemo() {
-        return this.memo;
     }
 
     public static class TransferSerializer implements JsonSerializer<TransferOperation> {

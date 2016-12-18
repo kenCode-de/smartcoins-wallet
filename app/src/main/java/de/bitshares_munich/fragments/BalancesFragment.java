@@ -101,14 +101,12 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
-import de.bitshares_munich.utils.tableViewClickListener;
+import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
-
-import static de.bitshares_munich.smartcoinswallet.R.id.tableView;
 
 
 /**
@@ -405,8 +403,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         progressDialog = new ProgressDialog(getActivity());
 
 //        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
-        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(tableView);
-        transfersView.addDataClickListener(new tableViewClickListener(getContext()));
+        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(R.id.tableView);
+        transfersView.addDataClickListener(new TableViewClickListener(getContext()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -732,8 +730,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
             TableDataAdapter myAdapter = transfersView.getDataAdapter();
             List<HistoricalTransfer> det = myAdapter.getData();
             PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
-            myTable.createTable(det, getContext());
-        } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
+            myTable.createTable(getContext(), det, new UserAccount(accountId));
+        } else {
+            Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void loadBalancesFromSharedPref() {
@@ -2645,7 +2645,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 //            updateSortTableView(tableView, myTransactions);
 
             //TODO: Implement this
-//            tableView.addDataClickListener(new tableViewClickListener(getContext()));
+//            tableView.addDataClickListener(new TableViewClickListener(getContext()));
 //            progressBar.setVisibility(View.VISIBLE);
 
 
