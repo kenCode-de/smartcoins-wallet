@@ -99,6 +99,9 @@ public class TransferOperation extends BaseOperation {
     public void setMemo(Memo memo) {
         this.memo = memo;
     }
+    public Memo getMemo() {
+        return this.memo;
+    }
 
     public static class TransferSerializer implements JsonSerializer<TransferOperation> {
 

@@ -89,6 +89,7 @@ import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
+import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
@@ -102,8 +103,11 @@ import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
+import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
+
+import static de.bitshares_munich.smartcoinswallet.R.id.tableView;
 
 
 /**
@@ -400,7 +404,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         progressDialog = new ProgressDialog(getActivity());
 
 //        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
-        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(R.id.tableView);
+        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(tableView);
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -723,10 +727,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     @OnClick(R.id.exportButton)
     public void onExportButton() {
         if (isLoading) {
-//            TableDataAdapter myAdapter = tableView.getDataAdapter();
-//            List<TransactionDetails> det = myAdapter.getData();
-//            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
-//            myTable.createTable(det);
+            TableDataAdapter myAdapter = transfersView.getDataAdapter();
+            List<HistoricalTransfer> det = myAdapter.getData();
+            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
+            myTable.createTable(det, getContext());
         } else Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
     }
 

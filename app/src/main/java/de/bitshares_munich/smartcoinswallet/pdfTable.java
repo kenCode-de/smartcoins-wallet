@@ -25,6 +25,7 @@ import com.itextpdf.text.pdf.PdfIndirectReference;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -39,7 +40,7 @@ import de.bitshares_munich.models.TransactionDetails;
 /**
  * Created by developer on 5/23/16.
  */
-public class pdfTable {
+public class PdfTable {
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -73,7 +74,7 @@ public class pdfTable {
     private Activity myActivity;
     private String filename;
 
-    public pdfTable(Context context, Activity activity, String filename) {
+    public PdfTable(Context context, Activity activity, String filename) {
         verifyStoragePermissions(activity);
         this.myContext = context;
         this.myActivity = activity;
@@ -99,7 +100,7 @@ public class pdfTable {
 
     }
 
-    public void createTable (List<TransactionDetails> myTransactions)
+    public void createTable (List<HistoricalTransfer> myTransactions,Context context)
     {
 
         Document document = new Document();
@@ -128,9 +129,9 @@ public class pdfTable {
             {
                 table.completeRow();
 
-                TransactionDetails td = myTransactions.get(i);
+                HistoricalTransfer td = myTransactions.get(i);
 
-                String dateText = String.format("%s\n%s\n%s",td.getDateStringWithYear(),td.getTimeString(),td.getTimeZone());
+                String dateText = String.format("%s\n%s\n%s",td.getDateStringWithYear(context),td.getTimeString(context),td.getTimeZone(context));
                 PdfPCell dateCell = new PdfPCell(new Paragraph(dateText));
                 table.addCell(dateCell);
 
@@ -167,7 +168,7 @@ public class pdfTable {
                 String memo = myContext.getString(R.string.memo_capital);
 
 
-                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s",td.getDetailsTo(),td.getDetailsFrom(),td.getDetailsMemo());
+                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s",td.getOperation().getTo().getAccountName(),td.getOperation().getFrom().getAccountName(),td.getOperation().getMemo().toString());
 
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);
@@ -175,11 +176,11 @@ public class pdfTable {
                 String amountText;
                 if ( td.getSent() )
                 {
-                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getAmount()),td.getAssetSymbol(),getAmount(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
                 }
                 else
                 {
-                    amountText = String.format("+ %s %s\n+ %s %s",getAmount(td.getAmount()),td.getAssetSymbol(),getAmount(td.getFaitAmount()),td.getFaitAssetSymbol());
+                    amountText = String.format("+ %s %s\n+ %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
                 }
                 PdfPCell amountsCell = new PdfPCell(new Paragraph(amountText));
                 amountsCell.setHorizontalAlignment(Element.ALIGN_RIGHT);

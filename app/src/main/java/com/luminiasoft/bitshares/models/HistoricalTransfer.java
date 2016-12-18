@@ -1,6 +1,12 @@
 package com.luminiasoft.bitshares.models;
 
+import android.content.Context;
+
 import com.luminiasoft.bitshares.TransferOperation;
+
+import java.util.Date;
+
+import de.bitshares_munich.utils.Helper;
 
 /**
  * This class offers support to deserialization of transfer operations received by the API
@@ -75,5 +81,31 @@ public class HistoricalTransfer {
 
     public long getTimestamp(){
         return this.timestamp;
+    }
+
+    public String getDateString(Context context)
+    {
+        return Helper.convertDateToGMT(new Date(timestamp),context);
+
+    }
+
+    public String getDateStringWithYear(Context context)
+    {
+        return Helper.convertDateToGMTWithYear(new Date(timestamp),context);
+
+    }
+
+    public String getTimeString(Context context)
+    {
+        return Helper.convertTimeToGMT(new Date(timestamp),context);
+    }
+
+    public String getTimeZone(Context context)
+    {
+        return Helper.convertTimeZoneToRegion(new Date(timestamp),context);
+    }
+
+    public boolean getSent(){
+        return true;
     }
 }
