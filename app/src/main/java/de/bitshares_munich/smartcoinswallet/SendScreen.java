@@ -222,7 +222,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         public void onSuccess(WitnessResponse response) {
             Log.d(TAG,"accountByNameListener. onSuccess");
             AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
-            destination = accountProperties.active.getKeyAuths().get(0);
+            destination = accountProperties.active.getKeyAuths().keySet().iterator().next();
         }
 
         @Override
@@ -237,21 +237,26 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private WitnessResponseListener broadcastTransactionListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(WitnessResponse response) {
-            Log.d(TAG, "onSuccess");
+            Log.d(TAG, "send.onSuccess");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     hideDialog();
                     etAmount.setText("");
-                    Toast.makeText(SendScreen.this, "Success!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SendScreen.this, getResources().getString(R.string.send_success), Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "onError. msg: "+error.message);
-            hideDialog();
+            Log.e(TAG, "send.onError. msg: "+error.message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideDialog();
+                }
+            });
         }
     };
 
@@ -1030,6 +1035,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
+        Log.d(TAG, "transferAmount");
         String senderID = null;
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String wifKey = "";
@@ -1081,6 +1087,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             broadcastTransaction = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
             broadcastTransaction.start();
+            Log.d(TAG, "started broadcast transaction procedure");
         } catch (MalformedTransactionException e) {
             hideDialog();
             e.printStackTrace();

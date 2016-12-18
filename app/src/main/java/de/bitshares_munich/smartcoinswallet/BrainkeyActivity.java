@@ -22,7 +22,7 @@ import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAccounts;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 
 import org.bitcoinj.core.ECKey;
@@ -220,7 +220,7 @@ public class BrainkeyActivity extends BaseActivity {
 
     private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
         try {
-            new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
+            new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
                     if (response.result.getClass() == ArrayList.class) {

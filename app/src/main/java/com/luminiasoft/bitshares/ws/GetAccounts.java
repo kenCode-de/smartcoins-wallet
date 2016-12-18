@@ -26,18 +26,18 @@ import java.util.Map;
  *
  * @author henry
  */
-public class GetAccountNameById extends WebSocketAdapter {
+public class GetAccounts extends WebSocketAdapter {
 
     private String accountId;
     private List<UserAccount> userAccounts;
     private WitnessResponseListener mListener;
 
-    public GetAccountNameById(String accountId, WitnessResponseListener listener){
+    public GetAccounts(String accountId, WitnessResponseListener listener){
         this.accountId = accountId;
         this.mListener = listener;
     }
 
-    public GetAccountNameById(List<UserAccount> accounts, WitnessResponseListener listener){
+    public GetAccounts(List<UserAccount> accounts, WitnessResponseListener listener){
         this.userAccounts = accounts;
         this.mListener = listener;
     }

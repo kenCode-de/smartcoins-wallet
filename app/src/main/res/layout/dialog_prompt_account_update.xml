@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_margin="15dp"
+        android:text="@string/security_update_notice"
+        android:id="@+id/dialog_message" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/account_list"
+        android:layout_below="@id/dialog_message"
+        android:layout_above="@+id/buttons_holder"/>
+
+    <LinearLayout
+        android:id="@id/buttons_holder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/later"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/dialog_later"
+            style="@style/Widget.AppCompat.Button.Borderless" />
+        <Button
+            android:id="@+id/proceed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="@string/dialog_proceed"
+            style="@style/Widget.AppCompat.Button.Colored" />
+    </LinearLayout>
+</RelativeLayout>

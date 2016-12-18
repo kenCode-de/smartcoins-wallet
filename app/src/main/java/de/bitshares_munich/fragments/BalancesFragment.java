@@ -45,7 +45,7 @@ import com.luminiasoft.bitshares.models.BlockHeader;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 import com.luminiasoft.bitshares.models.Market;
 import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAccounts;
 import com.luminiasoft.bitshares.ws.GetAssets;
 import com.luminiasoft.bitshares.ws.GetBlockHeader;
 import com.luminiasoft.bitshares.ws.GetLimitOrders;
@@ -342,7 +342,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     List<UserAccount> missingAccountNames = database.getMissingAccountNames();
                     if (missingAccountNames.size() > 0) {
                         // Got some missing user names, so we request them to the network.
-                        getMissingAccountsThread = new WebsocketWorkerThread(new GetAccountNameById(missingAccountNames, mGetmissingAccountsListener));
+                        getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
                         getMissingAccountsThread.start();
                         Log.d(TAG, "Requesting missing account names");
                     }

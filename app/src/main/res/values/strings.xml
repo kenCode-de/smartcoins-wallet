@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Smartcoins Wallet</string>
     <string name="dialog_positive">Ok</string>
     <string name="send_capital">Send</string>
+    <string name="send_success">Success!</string>
 
     <string name="account_create_register_or_import">ACCOUNT CREATE/REGISTER OR IMPORT</string>
     <string name="txt_account_name">Account Name</string>
@@ -74,11 +75,15 @@
     <string name="dialog_proceed">Proceed</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_later">Later</string>
-    <string name="security_update_title">Security update</string>
+    <string name="security_update_title">Security update notice</string>
+    <string name="security_update_notice">There has been an update to fix a previously undetected security issue. It is unlikely that your account has been affected, but we still strongly urge you to manually update your account keys and replace your old backups.\n\nThe following is a list of accounts we suggest you to update. Please select them and click on the proceed button if you want to do the update now.\n</string>
     <string name="security_update_summary_positive">All the accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups\n\n</string>
     <string name="security_update_summary_partial">Some accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups.\n\n</string>
     <string name="security_update_summary_mixed">Some accounts currently managed by this app had their keys updated for your security. You are urged to update all your key backups.\n\nFor the ones that couldn\'t be updated the most probable reason of failure is the lack of funds. Please check that your accounts have a minimal balance and try to update the keys manually in the settings.</string>
     <string name="security_update_summary_negative">There has been a security update, however the app was not able to update the keys for your accounts. The most probable reason for this is the lack of funds. Please check that your accounts have a minimal balance and try to update the keys manually in the settings.</string>
+    <string name="updating_account_title">Updating accounts</string>
+    <string name="updating_account_message">Please wait while the followng accounts have their keys updated.\n\nIn case of error please check the account balance, you must have a minimal amount of funds in order to perform this operation.</string>
+    <string name="toast_update_done">Security update done</string>
     <string name="refresh_keys_fail">It was not possible to update your account key this time</string>
     <string name="refresh_keys_success">Success! your account key was updated</string>
     <string name="secure_pin">EDIT PIN</string>

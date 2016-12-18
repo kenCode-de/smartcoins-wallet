@@ -19,7 +19,7 @@ import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccountNameById;
+import com.luminiasoft.bitshares.ws.GetAccounts;
 import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
 
 import org.bitcoinj.core.ECKey;
@@ -209,7 +209,7 @@ public class ImportBackupActivity extends BaseActivity {
     private void getAccountById(final String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
         Log.d(TAG, "getAccountById");
         try {
-            new WebsocketWorkerThread((new GetAccountNameById(accountId, new WitnessResponseListener() {
+            new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
                     hideDialog();
@@ -227,7 +227,7 @@ public class ImportBackupActivity extends BaseActivity {
                                 accountDetails.status = "success";
                                 accountDetails.brain_key = brainkey;
                                 accountDetails.pinCode = pinCode;
-                                accountDetails.isPostSecurityUpdate = true;
+                                accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(),myActivity);
