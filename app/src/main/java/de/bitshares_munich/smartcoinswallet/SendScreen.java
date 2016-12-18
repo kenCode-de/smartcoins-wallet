@@ -255,6 +255,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 @Override
                 public void run() {
                     hideDialog();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_insufficient_balance), Toast.LENGTH_SHORT).show();
                 }
             });
         }

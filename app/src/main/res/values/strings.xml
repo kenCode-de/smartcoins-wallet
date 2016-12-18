@@ -84,7 +84,7 @@
     <string name="updating_account_title">Updating accounts</string>
     <string name="updating_account_message">Please wait while the followng accounts have their keys updated.\n\nIn case of error please check the account balance, you must have a minimal amount of funds in order to perform this operation.</string>
     <string name="toast_update_done">Security update done</string>
-    <string name="refresh_keys_fail">It was not possible to update your account key this time</string>
+    <string name="refresh_keys_fail">It was not possible to update your account key this time, please check your balance.</string>
     <string name="refresh_keys_success">Success! your account key was updated</string>
     <string name="secure_pin">EDIT PIN</string>
     <string name="export">Export</string>
@@ -187,6 +187,7 @@
     <string name="str_transaction_failed">Transaction Failed</string>
     <string name="please_enter_valid_amount">Please enter valid amount</string>
     <string name="insufficient_amount">Insufficient Amount</string>
+    <string name="error_insufficient_balance">Insufficient balance for this operation</string>
 
     <string name="select_timezone">Select TimeZone</string>
 

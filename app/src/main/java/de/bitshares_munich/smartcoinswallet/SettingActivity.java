@@ -45,8 +45,10 @@ import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
+import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.ws.GetAccounts;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
@@ -63,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -161,13 +164,63 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     Activity activitySettings;
 
     String wifKey = "";
+
+    /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
+    private boolean updateAllRoles;
     private String oldKey;
     private AccountDetails updatedAccount;
-    private int UPDATE_KEY_MAX_RETRIES = 3;
+    private int UPDATE_KEY_MAX_RETRIES = 2;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
+
+    /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
-    private WitnessResponseListener mListener = new WitnessResponseListener() {
+    private WebsocketWorkerThread getAccountsWorker;
+
+    /**
+     * Listener called with the account data. This is done before the account authorities update
+     * just to know what keys to update for each account.
+     */
+    private WitnessResponseListener getAccountsListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "getAccounts. onSuccess");
+                    ArrayList<AccountDetails> details = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    AccountDetails currentAccount = null;
+                    for(AccountDetails accountDetails : details){
+                        if(accountDetails.isSelected){
+                            currentAccount = accountDetails;
+                            break;
+                        }
+                    }
+                    List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
+                    for(AccountProperties properties : accountProperties){
+                        if(properties.name.equals(currentAccount.account_name)){
+                            if(properties.active.equals(properties.owner)){
+                                updateAllRoles = true;
+                            }
+                        }
+                    }
+                    Log.d(TAG, "Update all roles: "+updateAllRoles);
+                    updateAccountAuthorities(currentAccount);
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "getAccounts.onError. Msg: "+error.message);
+        }
+    };
+
+    /**
+     * Listener called upon the 'account_update_operation' response.
+     */
+    private WitnessResponseListener mAuthorityChangeListener = new WitnessResponseListener() {
 
         @Override
         public void onSuccess(WitnessResponse response) {
@@ -797,7 +850,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                     for(AccountDetails accountDetails : arrayList){
                         if(accountDetails.isSelected){
-                            updateAccountAuthorities(accountDetails);
+                            checkAccountPermissions(accountDetails.account_id);
                             break;
                         }
                     }
@@ -809,6 +862,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 }
             });
         builder.create().show();
+    }
+
+    private void checkAccountPermissions(String accountId){
+        /* Asking for all account details */
+        getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountId, this.getAccountsListener));
+        getAccountsWorker.start();
     }
 
     /**
@@ -843,14 +902,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             authMap.put(address.getPublicKey(), 1);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
-            Transaction transaction = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
+            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
                     .setAccont(new UserAccount(accountDetails.account_id))
-                    .setOwner(authority)
                     .setActive(authority)
-                    .setOptions(options)
-                    .build();
+                    .setOptions(options);
 
-            refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mListener), nodeIndex);
+            if(updateAllRoles){
+                builder.setOwner(authority);
+            }
+
+            Transaction transaction = builder.build();
+            refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mAuthorityChangeListener), nodeIndex);
             refreshKeyWorker.start();
         } catch (MalformedTransactionException e) {
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
