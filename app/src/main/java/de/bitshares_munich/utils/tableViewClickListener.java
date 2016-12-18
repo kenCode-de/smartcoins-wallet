@@ -11,10 +11,12 @@ import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 import android.content.Context;
 
+import com.luminiasoft.bitshares.models.HistoricalTransfer;
+
 /**
  * Created by developer on 5/26/16.
  */
-public class tableViewClickListener implements TableDataClickListener<TransactionDetails> {
+public class tableViewClickListener implements TableDataClickListener<HistoricalTransfer> {
 
     private Context myContext;
 
@@ -29,18 +31,18 @@ public class tableViewClickListener implements TableDataClickListener<Transactio
     }
 
     @Override
-    public void onDataClicked(int rowIndex, TransactionDetails td) {
+    public void onDataClicked(int rowIndex, HistoricalTransfer td) {
         if(!BalancesFragment.onClicked) {
             BalancesFragment.onClicked = true;
             Intent intent = new Intent(myContext, eReceipt.class);
-            intent.putExtra(myContext.getResources().getString(R.string.e_receipt), td.eReceipt);
-            intent.putExtra("Memo", td.Memo);
-            intent.putExtra("Date", td.getDateStringWithYear());
-            intent.putExtra("Time", td.getTimeString());
-            intent.putExtra("TimeZone", td.getTimeZone());
-            intent.putExtra("To", td.To);
-            intent.putExtra("From", td.From);
-            intent.putExtra("Sent", td.Sent);
+            intent.putExtra(myContext.getResources().getString(R.string.e_receipt), td.toString());
+            intent.putExtra("Memo", td.getOperation().getMemo().toString());
+            intent.putExtra("Date", td.getDateStringWithYear(this.myContext));
+            intent.putExtra("Time", td.getTimeString(this.myContext));
+            intent.putExtra("TimeZone", td.getTimeZone(this.myContext));
+            intent.putExtra("To", td.getOperation().getTo().getAccountName());
+            intent.putExtra("From", td.getOperation().getFrom().getAccountName());
+            intent.putExtra("Sent", td.getSent());
             myContext.startActivity(intent);
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.luminiasoft.bitshares.TransferOperation;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.bitshares_munich.utils.Helper;
@@ -108,4 +109,5 @@ public class HistoricalTransfer {
     public boolean getSent(){
         return true;
     }
+
 }

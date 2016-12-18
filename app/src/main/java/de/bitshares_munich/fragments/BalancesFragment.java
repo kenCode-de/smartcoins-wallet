@@ -101,6 +101,7 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
+import de.bitshares_munich.utils.tableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
@@ -405,6 +406,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
 //        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(tableView);
+        transfersView.addDataClickListener(new tableViewClickListener(getContext()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -2645,6 +2647,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
             //TODO: Implement this
 //            tableView.addDataClickListener(new tableViewClickListener(getContext()));
 //            progressBar.setVisibility(View.VISIBLE);
+
 
             load_more_values.setVisibility(View.GONE);
 
