@@ -155,8 +155,11 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                                 brainKey = new BrainKey(detail.brain_key, BrainKey.DEFAULT_SEQUENCE_NUMBER);
                             }
                         }
+                        Log.d(TAG,"account: "+accountProperty.name);
                         boolean updateOwner = accountProperty.owner.equals(accountProperty.active);
                         boolean updateMemo = accountProperty.options.equals(accountProperty.active);
+                        Log.d(TAG, "owner equals active: "+updateOwner);
+                        Log.d(TAG, "memo equals active: "+updateMemo);
                         UpdateAccountTask updateTask = new UpdateAccountTask(new UserAccount(accountProperty.id, accountProperty.name), brainKey);
                         updateTask.setUpdateOwner(updateOwner);
                         updateTask.setUpdateMemo(updateMemo);
@@ -190,27 +193,28 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                 @Override
                 public void run() {
                     Log.d(TAG,"update.onSuccess");
-                    for(AccountDetails accountDetail : accountDetails){
+                    ArrayList<AccountDetails> currentAccountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    for(AccountDetails localAccountDetail : currentAccountDetails){
                         UserAccount account = currentTask.getAccount();
-                        BrainKey brainKey = currentTask.getBrainKey();
-                        if(accountDetail.account_id.equals(account.getObjectId())){
+                        if(localAccountDetail.account_id.equals(account.getObjectId())){
                             try{
-                                accountDetail.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
-                                accountDetail.brain_key = brainKey.getBrainKey();
-                                accountDetail.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
-                                Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
+                                localAccountDetail.wif_key = Crypt.getInstance().encrypt_string(newBrainKey.getWalletImportFormat());
+                                localAccountDetail.brain_key = newBrainKey.getBrainKey();
+                                localAccountDetail.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
+                                Log.d(TAG,"updating account with name: "+localAccountDetail.account_name+", id: "+localAccountDetail.account_id+", key: "+localAccountDetail.brain_key);
 
                                 /* Creating automatic bin backup */
                                 BinHelper myBinHelper = new BinHelper(TabActivity.this, TabActivity.this);
-                                myBinHelper.createBackupBinFile(accountDetail.brain_key, accountDetail.account_name, accountDetail.pinCode);
+                                myBinHelper.get_bin_bytes_from_brainkey(localAccountDetail.brain_key, localAccountDetail.account_name, localAccountDetail.pinCode);
                             }catch(Exception e){
-                                Log.e(TAG, String.format("Exception while trying to update local copy of authority keys from account %s. Msg: %s", accountDetail.account_name, e.getMessage()));
+                                Log.e(TAG, String.format("Exception while trying to update local copy of authority keys from account %s. Msg: %s", localAccountDetail.account_name, e.getMessage()));
                             }
+                        }else{
+                            Log.d(TAG,"Not touching account with name: "+localAccountDetail.account_name);
                         }
-                        break;
                     }
                     /* Storing the updated account list */
-                    tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+                    tinyDB.putListObject(getString(R.string.pref_wallet_accounts), currentAccountDetails);
                     accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
                     /* Updating the UI */
@@ -435,16 +439,17 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             AccountOptions options = new AccountOptions(address.getPublicKey());
             AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, brainKey.getWalletImportFormat()).getKey())
                     .setAccont(currentTask.getAccount())
-                    .setActive(authority);
+                    .setActive(authority)
+                    .setOptions(options);
 
             if(currentTask.isUpdateOwner()){
                 // Only changing the "owner" authority in some cases.
                 builder.setOwner(authority);
             }
-            if(currentTask.isUpdateMemo()){
-                // Only changing the "memo" authority if it is the same as the active.
-                builder.setOptions(options);
-            }
+//            if(currentTask.isUpdateMemo()){
+//                // Only changing the "memo" authority if it is the same as the active.
+//                builder.setOptions(options);
+//            }
 
             Transaction transaction = builder.build();
 
@@ -501,7 +506,6 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     private void showDialogPin() {
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         pinDialog = new Dialog(TabActivity.this);
-//        pinDialog.setTitle(R.string.pin_verification);
         pinDialog.setTitle(R.string.txt_6_digits_pin);
         pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
         Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
@@ -517,6 +521,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                             if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
                                 Log.d(TAG, "starting security update");
                                 startSecurityUpdate();
+                                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
                             }else{
                                 Log.v(TAG, "Security update already performed");
                             }
@@ -593,21 +598,26 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @Override
     public void onAccountList(List<UserAccount> accountList) {
-        for(UserAccount account : accountList){
-            Log.d(TAG, String.format("Account to update: %s", account.getAccountName()));
-        }
+        if(accountList.size() == 0){
+            Log.d(TAG, "Not updating account this time");
+            return;
+        }else{
+            for(UserAccount account : accountList){
+                Log.d(TAG, String.format("Account to update: %s", account.getAccountName()));
+            }
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(TAG_DIALOG_UPDATING_ACCOUNTS);
-        if(prev != null){
-            ft.remove(prev);
-        }
-        updatingAccountsDialog = UpdatingAccountsDialog.newInstance(accountList);
-        updatingAccountsDialog.show(ft, TAG_DIALOG_UPDATING_ACCOUNTS);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag(TAG_DIALOG_UPDATING_ACCOUNTS);
+            if(prev != null){
+                ft.remove(prev);
+            }
+            updatingAccountsDialog = UpdatingAccountsDialog.newInstance(accountList);
+            updatingAccountsDialog.show(ft, TAG_DIALOG_UPDATING_ACCOUNTS);
 
-        /* Asking for all account details */
-        getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, this.getAccountsListener));
-        getAccountsWorker.start();
+            /* Asking for all account details */
+            getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, this.getAccountsListener));
+            getAccountsWorker.start();
+        }
     }
 
     /**

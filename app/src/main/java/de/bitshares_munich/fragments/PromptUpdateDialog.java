@@ -95,7 +95,6 @@ public class PromptUpdateDialog extends DialogFragment {
         accountList = gson.fromJson(jsonAccounts, AccountDetails[].class);
         Log.d(TAG, "onCreate. accountList: "+accountList);
         accountListView.setAdapter(new AccountListAdapter(getActivity(), R.layout.account_update_prompt_item, accountList));
-
         return view;
     }
 

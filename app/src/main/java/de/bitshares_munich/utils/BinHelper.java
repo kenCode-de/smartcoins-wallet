@@ -134,7 +134,7 @@ public class BinHelper {
             for(byte result: results){
                 resultFile.add(result&0xff);
             }
-            saveBinContentToFile(resultFile,_accountName);
+            saveBinContentToFile(resultFile, _accountName);
         }
         catch (Exception e) {
             hideDialog(false);
