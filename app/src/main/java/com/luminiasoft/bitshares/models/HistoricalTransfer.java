@@ -4,7 +4,7 @@ import com.luminiasoft.bitshares.TransferOperation;
 
 /**
  * This class offers support to deserialization of transfer operations received by the API
- * method get_relative_account_history.
+ * method 'get_relative_account_history'.
  *
  * More operations types might be listed in the response of that method, but by using this class
  * those will be filtered out of the parsed result.

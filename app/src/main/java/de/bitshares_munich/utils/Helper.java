@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +42,7 @@ import de.bitshares_munich.smartcoinswallet.R;
  */
 public class Helper {
     Gson gson;
+    private final static String TAG = "Helper";
     public static final String MD5 = "MD5";
     public static final String SHA256 = "SHA-256";
     public static final ArrayList<String> languages = new ArrayList<>();

@@ -855,6 +855,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 }
             }
         }
+        Log.d(TAG,"getEquivalentComponent. asset list");
+        for(String assetString : assetList) Log.d(TAG, "asset: "+assetString);
 
         WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
             @Override
@@ -1017,7 +1019,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
-
+        Log.d(TAG, "getEquivalentComponents");
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
             public void run() {
@@ -1040,6 +1042,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 if (!currenciesChange.containsKey(accountAsset.symbol)) {
                     currenciesChange.put(accountAsset.symbol, new ArrayList());
                 }
+                Log.d(TAG,"Creating mapping: "+accountAsset.symbol+" -> "+faitCurrency);
                 currenciesChange.get(accountAsset.symbol).add(faitCurrency);
             }
         }

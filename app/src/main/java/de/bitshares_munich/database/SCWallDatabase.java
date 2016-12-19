@@ -343,7 +343,6 @@ public class SCWallDatabase {
      * @return
      */
     public List<Asset> getAssets(){
-
         return null;
     }
 
