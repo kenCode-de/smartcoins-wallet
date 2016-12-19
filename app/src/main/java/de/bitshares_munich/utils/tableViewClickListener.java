@@ -43,7 +43,7 @@ public class TableViewClickListener implements TableDataClickListener<Historical
             //TODO: Fix this!
             intent.putExtra("Sent", true);
             mListener.onInternalAppMove();
-            myContext.startActivity(intent);
+//            myContext.startActivity(intent);
         }
     }
 }
