@@ -13,7 +13,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
 
-        versionCode 188
+        versionCode 189
 
         versionName '1.5.0'
         multiDexEnabled true
