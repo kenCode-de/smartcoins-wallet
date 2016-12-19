@@ -405,7 +405,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
 //        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(R.id.tableView);
-        transfersView.addDataClickListener(new TableViewClickListener(getContext()));
+        transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
