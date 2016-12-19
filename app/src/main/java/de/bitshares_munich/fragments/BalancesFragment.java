@@ -731,11 +731,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     @OnClick(R.id.exportButton)
     public void onExportButton() {
         if (isLoading) {
+            Log.i(TAG,"Exporting");
             TableDataAdapter myAdapter = transfersView.getDataAdapter();
             List<HistoricalTransfer> det = myAdapter.getData();
+            Log.i(TAG,"Constructor");
             PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
             myTable.createTable(getContext(), det, new UserAccount(accountId));
         } else {
+            Log.i(TAG,"else is loading");
             Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
         }
     }

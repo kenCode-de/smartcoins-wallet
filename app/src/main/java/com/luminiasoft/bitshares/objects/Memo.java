@@ -44,6 +44,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
 
     /**
      * Implement metod, serialized this Object
+     *
      * @return the byte array of this object serialized
      */
     @Override
@@ -64,9 +65,10 @@ public class Memo implements ByteSerializable, JsonSerializable {
 
     /**
      * Encode a memo message using the input source key and destination key
+     *
      * @param fromKey The source destination, need to have a private key accesss
-     * @param toKey The destination, needs only the public key access
-     * @param msg The message in bytes
+     * @param toKey   The destination, needs only the public key access
+     * @param msg     The message in bytes
      * @return a Memo corresponding with the message encoding
      */
     public static Memo encodeMessage(ECKey fromKey, PublicKey toKey, byte[] msg) {
@@ -76,9 +78,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
     /**
      * Encode a message a return a memo with that message encoded
      *
-     * @param fromKey The source destination, need to have a private key accesss
-     * @param toKey The destination, needs only the public key access
-     * @param msg The message in bytes
+     * @param fromKey      The source destination, need to have a private key accesss
+     * @param toKey        The destination, needs only the public key access
+     * @param msg          The message in bytes
      * @param custom_nonce the custom nonce to be use or 0 to create a new one
      * @return a Memo corresponding with the message encoding
      */
@@ -129,9 +131,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
      * returns the string coreesponding a encode memo
      *
      * @param fromKey The soruce key, need to have public key only
-     * @param toKey The destination key, need to have private key access
-     * @param msg The message to be decoded
-     * @param nonce The nonce used in the decoded message
+     * @param toKey   The destination key, need to have private key access
+     * @param msg     The message to be decoded
+     * @param nonce   The nonce used in the decoded message
      * @return The message
      */
     public static String decodeMessage(PublicKey fromKey, ECKey toKey, byte[] msg, byte[] nonce) {
@@ -152,9 +154,9 @@ public class Memo implements ByteSerializable, JsonSerializable {
      * returns the string corresponding a encode memo
      *
      * @param fromKey The source key, need to have public key only
-     * @param toKey The destination key, need to have private key access
+     * @param toKey   The destination key, need to have private key access
      * @param message The message to be decoded
-     * @param nonce The nonce used in the decoded message
+     * @param nonce   The nonce used in the decoded message
      * @return The message
      */
     public static String decodeMessage(PublicKey fromKey, ECKey toKey, String message, String nonce) {
@@ -189,5 +191,13 @@ public class Memo implements ByteSerializable, JsonSerializable {
         memoObject.addProperty(KEY_NONCE, new BigInteger(1, this.nonce).toString(10));
         memoObject.addProperty(KEY_MESSAGE, new BigInteger(1, this.message).toString(16));
         return memoObject;
+    }
+
+    @Override
+    public String toString() {
+        if (this.message == null || this.message.length <= 0) {
+            return "";
+        }
+        return decodeMessage(this.to, this.from, this.message, this.nonce);
     }
 }
