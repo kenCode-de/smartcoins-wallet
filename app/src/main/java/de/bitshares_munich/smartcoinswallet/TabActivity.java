@@ -57,10 +57,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.Interfaces.UpdatedAccountListener;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
-import de.bitshares_munich.fragments.BalancesFragment;
-import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.fragments.PromptUpdateDialog;
 import de.bitshares_munich.fragments.UpdatingAccountsDialog;
 import de.bitshares_munich.models.AccountDetails;
@@ -69,7 +68,7 @@ import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
 
-public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener {
+public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, InternalMovementListener {
     private String TAG = this.getClass().getName();
 
     private boolean DEBUG_ACCOUNT_UPDATE = false;
@@ -96,6 +95,12 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     ImageView ivSocketConnected;
 
     TinyDB tinyDB;
+
+    /* Internal attribute used to keep track of the activity state */
+    private boolean mRestarting;
+
+    /* Internal attribute used to keep track of the activity state */
+    private boolean mInternalMove = false;
 
     /* Dialog displayed to the user only once after the security update */
     private UpdatingAccountsDialog updatingAccountsDialog;
@@ -236,19 +241,6 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                         nodeIndex = (nodeIndex + 1) % Application.urlsSocketConnection.length;
                         updateKeyRetryCount++;
                         updateAccountAuthorities();
-
-//                        ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-//                        for(AccountDetails accountDetails : arrayList){
-//                            nodeIndex = (nodeIndex + 1) % Application.urlsSocketConnection.length;
-//                            Log.d(TAG,"account id: '"+accountDetails.account_id+"', name: "+accountDetails.account_name+", wif: "+accountDetails.wif_key);
-//
-//                            /* Retrying */
-//                            if(accountDetails.isSelected){
-//                                updateAccountAuthorities();
-//                                updateKeyRetryCount++;
-//                                break;
-//                            }
-//                        }
                     }else{
                         failedQueue.add(currentTask);
                         updateKeyRetryCount = 0;
@@ -284,16 +276,33 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
+    }
 
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("ask_for_pin")) {
-                if (res.getBoolean("ask_for_pin")) {
-                    showDialogPin();
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mRestarting = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        /*
+        * Ask for pin number if this is not a restart (first time) or
+        * if this is not we coming back from an internal move.
+        */
+        if(!mRestarting || !mInternalMove){
+            Bundle res = getIntent().getExtras();
+            if (res != null) {
+                if (res.containsKey("ask_for_pin")) {
+                    if (res.getBoolean("ask_for_pin")) {
+                        showDialogPin();
+                    }
                 }
             }
         }
+        mInternalMove = false;
     }
 
     @Override
@@ -449,9 +458,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new BalancesFragment(), getString(R.string.balances));
-        adapter.addFragment(new ContactsFragment(), getString(R.string.contacts));
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
     }
 
@@ -480,6 +487,12 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @OnClick(R.id.OnClickSettings_TabActivity)
     void OnClickSettings() {
+        this.onInternalAppMove();
+        ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+        Fragment currentFragment = adapter.getRegisteredFragment(viewPager.getCurrentItem());
+        if(currentFragment instanceof  InternalMovementListener){
+            ((InternalMovementListener) currentFragment).onInternalAppMove();
+        }
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
@@ -505,7 +518,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                                 Log.d(TAG, "starting security update");
                                 startSecurityUpdate();
                             }else{
-                                Log.d(TAG, "Security update already performed");
+                                Log.v(TAG, "Security update already performed");
                             }
                             break;
                         }else{
@@ -595,5 +608,14 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         /* Asking for all account details */
         getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, this.getAccountsListener));
         getAccountsWorker.start();
+    }
+
+    /**
+     * Method used to keep state of this activity and prevent the pin dialog from showing up
+     * once the user comes back to it from internal activity moves.
+     */
+    @Override
+    public void onInternalAppMove(){
+        mInternalMove = true;
     }
 }

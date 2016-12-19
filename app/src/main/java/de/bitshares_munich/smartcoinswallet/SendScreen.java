@@ -83,6 +83,7 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -211,6 +212,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+
+    /* Internal attribute used to keep track of the fragment state */
+    private boolean mInternalMove = false;
 
     /**
      * Callback that obtains the response from the get_account_by_name API call.
@@ -1511,6 +1515,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         });*/
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(!mInternalMove){
+            this.finish();
+        }else{
+            mInternalMove = false;
+        }
+    }
+
     private void decodeInvoiceData(String encoded) {
         Invoice invoice = Invoice.fromQrCode(encoded);
         saveMerchantEmail(invoice.toJsonString());
@@ -1560,6 +1574,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.OnClickSettings_send_screen_activity)
     void OnClickSettings() {
+        this.mInternalMove = true;
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
