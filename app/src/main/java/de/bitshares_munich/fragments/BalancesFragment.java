@@ -74,6 +74,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
@@ -99,9 +100,9 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
-import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
@@ -589,6 +590,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -612,6 +614,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    ((InternalMovementListener) getActivity()).onInternalAppMove();
                     startActivity(intent);
                 }
 
@@ -709,6 +712,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    ((InternalMovementListener)getActivity()).onInternalAppMove();
                     startActivity(intent);
                 }
 
