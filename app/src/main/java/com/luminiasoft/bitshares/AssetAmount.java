@@ -1,10 +1,15 @@
 package com.luminiasoft.bitshares;
 
+import com.google.common.primitives.Bytes;
 import com.google.common.primitives.UnsignedLong;
 import com.google.gson.*;
 import com.luminiasoft.bitshares.interfaces.ByteSerializable;
 import com.luminiasoft.bitshares.interfaces.JsonSerializable;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -39,16 +44,18 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
 
     @Override
     public byte[] toBytes() {
-        byte[] serialized = new byte[8 + 1];
-        byte[] amountBytes = this.amount.bigIntegerValue().toByteArray();
-        serialized[serialized.length - 1] = (byte) asset.instance;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutput out = new DataOutputStream(byteArrayOutputStream);
+        try {
+            Varint.writeUnsignedVarLong(asset.instance, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] assetId = byteArrayOutputStream.toByteArray();
+        byte[] value = Util.revertLong(this.amount.longValue());
 
-        for (int i = 0; i < amountBytes.length; i++)
-            serialized[i] = amountBytes[amountBytes.length - 1 - i];
-
-        return serialized;
+        return Bytes.concat(value, assetId);
     }
-
     @Override
     public String toJsonString() {
         GsonBuilder gsonBuilder = new GsonBuilder();
