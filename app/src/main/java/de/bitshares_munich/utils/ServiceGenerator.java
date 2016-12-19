@@ -1,10 +1,9 @@
 package de.bitshares_munich.utils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
-import okhttp3.ConnectionSpec;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -52,18 +51,14 @@ public class ServiceGenerator{
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 okhttp3.Request original = chain.request();
-                // Request customization: add request headers
                 okhttp3.Request.Builder requestBuilder = original.newBuilder().method(original.method(), original.body());
 
                 okhttp3.Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
         });
-
-        ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT).build();
-        clientBuilder.connectionSpecs(Collections.singletonList(spec));
-//        clientBuilder.readTimeout(5, TimeUnit.MINUTES);
-//        clientBuilder.connectTimeout(5, TimeUnit.MINUTES);
+        clientBuilder.readTimeout(5, TimeUnit.MINUTES);
+        clientBuilder.connectTimeout(5, TimeUnit.MINUTES);
         OkHttpClient client = clientBuilder.build();
         Retrofit retrofit = builder.client(client).build();
         return retrofit.create(serviceClass);
