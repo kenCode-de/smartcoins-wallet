@@ -1060,7 +1060,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         final String memoMessage;
         if (toAccount.equals("bitshares-munich")) {
             memoMessage = "Donation";
-        }else if (etMemo.getText()!= null || !etMemo.getText().toString().isEmpty()){
+        }else if (!etMemo.getText().toString().isEmpty()){
             memoMessage = etMemo.getText().toString();
         }else{
             memoMessage = null;

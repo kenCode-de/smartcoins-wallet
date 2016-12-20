@@ -94,6 +94,8 @@ public class TransferTransactionBuilder extends TransactionBuilder {
             }
             if(memo != null){
                 transferOperation.setMemo(this.memo);
+            }else{
+                transferOperation.setMemo(new Memo());
             }
             operations.add(transferOperation);
         }
