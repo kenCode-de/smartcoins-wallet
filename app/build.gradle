@@ -35,6 +35,12 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
+    android.packagingOptions {
+        exclude 'lib/x86_64/darwin/libscrypt.dylib'
+        exclude 'lib/x86_64/freebsd/libscrypt.so'
+        exclude 'lib/x86_64/linux/libscrypt.so'
+    }
 }
 
 dependencies {
@@ -60,7 +66,6 @@ dependencies {
     compile 'com.neovisionaries:nv-websocket-client:1.30'
     compile 'org.tukaani:xz:1.6'
     compile group: 'com.google.guava', name: 'guava', version: '19.0'
-    compile group: "org.tukaani", name: "xz", version: "1.6"
     compile project(':zxing')
     compile project(':aFileDialog')
 }
