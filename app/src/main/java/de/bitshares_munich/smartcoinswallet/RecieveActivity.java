@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,8 +14,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +33,7 @@ import com.luminiasoft.bitshares.Invoice;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -36,10 +41,12 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitshares_munich.utils.TinyDB;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +83,13 @@ public class RecieveActivity extends BaseActivity {
     String to = "";
     String account_id = "";
     String orderId = "";
+
+    private boolean mInternalMove;
+
+    private TinyDB tinyDB;
+
+    /* Pin pinDialog */
+    private Dialog pinDialog;
 
     Call<TransactionSmartCoin[]> transactionSmartcoinService;
 
@@ -135,6 +149,51 @@ public class RecieveActivity extends BaseActivity {
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
+
+        tinyDB = new TinyDB(getApplicationContext());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG,"onRestart");
+        if(!mInternalMove){
+            showDialogPin();
+        }
+        mInternalMove = false;
+    }
+
+    // Block for pin
+    private void showDialogPin() {
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        pinDialog = new Dialog(RecieveActivity.this);
+        pinDialog.setTitle(R.string.txt_6_digits_pin);
+        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            Log.d(TAG, "pin code matches");
+                            pinDialog.cancel();
+                            break;
+                        }else{
+                            Toast.makeText(RecieveActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+        pinDialog.setCancelable(false);
+        pinDialog.show();
     }
 
     @Override
@@ -259,13 +318,11 @@ public class RecieveActivity extends BaseActivity {
     }
 
     private void hideDialog() {
-
         if (progressDialog != null) {
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();
             }
         }
-
     }
 
     @OnClick(R.id.ivGotoKeypad)

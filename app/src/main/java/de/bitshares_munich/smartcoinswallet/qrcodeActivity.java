@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,24 +10,37 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+import java.util.ArrayList;
+
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.utils.TinyDB;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
-public class qrcodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
-    private static String TAG = "qrcodeActivity";
+public class QRCodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
+    private static String TAG = "QRCodeActivity";
     private ZXingScannerView mScannerView;
+
+    /* Pin pinDialog */
+    private Dialog pinDialog;
+
+    /* Internal attribute used to keep track of the activity state */
+    private boolean mRestarting;
+
+    /* TinyDB instance */
+    private TinyDB tinyDB;
+
     int id;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-   // private GoogleApiClient client;
 
     // Camera Permissions
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -63,9 +77,54 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         setContentView(mScannerView);                // Set the scanner view as the content view
 
         progressDialog = new ProgressDialog(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-     //   client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        tinyDB = new TinyDB(getApplicationContext());
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mRestarting = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        /*
+        * Ask for pin number if this is not a restart (first time) or
+        * if this is not we coming back from an internal move.
+        */
+        if(mRestarting){
+            showDialogPin();
+        }
+    }
+
+    // Block for pin
+    private void showDialogPin() {
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        pinDialog = new Dialog(QRCodeActivity.this);
+        pinDialog.setTitle(R.string.txt_6_digits_pin);
+        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            pinDialog.cancel();
+                            break;
+                        }else{
+                            Toast.makeText(QRCodeActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+        pinDialog.setCancelable(false);
+        pinDialog.show();
     }
 
 
@@ -93,18 +152,13 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
             @Override
             public void run() {
                 mScannerView.stopCamera();
-                if (id==0)
-                {
+                if (id==0) {
                     finishWithResult(rawResult.toString());
-                }
-                else if(id==1)
-                {
+                } else if(id==1) {
                     StartWithfinishWithResult(rawResult.toString());
                 }
             }
         });
-
-
     }
 
     private void showDialog(String title, String msg) {
@@ -142,7 +196,7 @@ public class qrcodeActivity extends BaseActivity implements ZXingScannerView.Res
         Bundle conData = new Bundle();
         SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
-        Intent intent = new Intent(qrcodeActivity.this, SendScreen.class);
+        Intent intent = new Intent(QRCodeActivity.this, SendScreen.class);
         intent.putExtras(conData);
         intent.putExtra("id",5);
         startActivity(intent);

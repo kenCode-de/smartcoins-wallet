@@ -218,6 +218,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
 
+    /* Pin pinDialog */
+    private Dialog pinDialog;
+
     /* Internal attribute used to keep track of the fragment state */
     private boolean mInternalMove = false;
 
@@ -835,7 +838,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.scanning)
     void OnScanning() {
-        Intent intent = new Intent(context, qrcodeActivity.class);
+        Intent intent = new Intent(context, QRCodeActivity.class);
         intent.putExtra("id", 0);
         startActivityForResult(intent, 90);
         this.onInternalAppMove();
@@ -843,6 +846,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult");
+        mInternalMove = true;
         switch (requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
@@ -1550,11 +1554,39 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.d(TAG,"onRestart");
         if(!mInternalMove){
-            this.finish();
-        }else{
-            mInternalMove = false;
+            showDialogPin();
         }
+        mInternalMove = false;
+    }
+
+    // Block for pin
+    private void showDialogPin() {
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        pinDialog = new Dialog(SendScreen.this);
+        pinDialog.setTitle(R.string.txt_6_digits_pin);
+        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            Log.d(TAG, "pin code matches");
+                            pinDialog.cancel();
+                            break;
+                        }else{
+                            Toast.makeText(SendScreen.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+        pinDialog.setCancelable(false);
+        pinDialog.show();
     }
 
     private void decodeInvoiceData(String encoded) {

@@ -95,7 +95,7 @@ import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
-import de.bitshares_munich.smartcoinswallet.qrcodeActivity;
+import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PermissionManager;
@@ -705,7 +705,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     @OnClick(R.id.qrCamera)
     public void QrCodeActivity() {
         if (isLoading) {
-            final Intent intent = new Intent(getContext(), qrcodeActivity.class);
+            final Intent intent = new Intent(getContext(), QRCodeActivity.class);
             intent.putExtra("id", 1);
             Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
             coinAnimation.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
