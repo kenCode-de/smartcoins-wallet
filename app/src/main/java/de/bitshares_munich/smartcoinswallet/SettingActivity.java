@@ -304,6 +304,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         initAudioPath();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.finish();
+    }
+
     public void onCheck(View v) {
         designMethod();
         switch (v.getId()) {
