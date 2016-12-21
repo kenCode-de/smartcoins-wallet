@@ -165,6 +165,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     String wifKey = "";
 
+    /* Pin pinDialog */
+    private Dialog pinDialog;
+
+    /* Internal attribute used to keep track of the activity state */
+    private boolean mRestarting = false;
+
     /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
     private boolean updateAllRoles;
     private String oldKey;
@@ -303,6 +309,55 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         setCheckedButtons();
         initAudioPath();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+        mRestarting = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG,"onStart");
+        /*
+        * Ask for pin number if this is not a restart (first time) or
+        * if this is not we coming back from an internal move.
+        */
+        if(mRestarting){
+            showDialogPin();
+        }
+    }
+
+    // Block for pin
+    private void showDialogPin() {
+        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        pinDialog = new Dialog(SettingActivity.this);
+        pinDialog.setTitle(R.string.txt_6_digits_pin);
+        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                            Log.d(TAG, "pin code matches");
+                            pinDialog.cancel();
+                            break;
+                        }else{
+                            Toast.makeText(SettingActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+        pinDialog.setCancelable(false);
+        pinDialog.show();
+    }
+
 
     public void onCheck(View v) {
         designMethod();

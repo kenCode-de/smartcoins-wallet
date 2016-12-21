@@ -2,20 +2,15 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.errors.MalformedAddressException;
-import com.luminiasoft.bitshares.objects.Memo;
 
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +35,7 @@ import de.bitshares_munich.utils.webSocketCallHelper;
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
 public class PaymentRecieved extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
+    private final String TAG = this.getClass().getName();
     String receiver_id;
     String sender_id;
     JSONObject amountObj;
@@ -163,6 +159,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
 
         getTransactionObject(block,trx);
     }
+
     @Override
     public void checkTransactionObject(JSONObject jsonObject){
         myWebSocketHelper.cleanUpTransactionsHandler();
@@ -184,7 +181,7 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
         }
     }
 
-    private void decodeMemo(String memo,String accountId) {
+    private void decodeMemo(String memo, String accountId) {
         String privateKey = "";
         TinyDB tinyDB = new TinyDB(getApplicationContext());
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -194,22 +191,23 @@ public class PaymentRecieved extends BaseActivity implements ITransactionObject,
                 try {
                     privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
                 } catch (Exception e) {
-                    //TOOD change exception
-                    e.printStackTrace();
+                    Log.e(TAG, "Exception while trying to get private key from shared pref. Msg: "+e.getMessage());
                     return;
                 }
             }
         }
         JsonObject memoObject = new JsonParser().parse(memo).getAsJsonObject();
-        try {
-            tvMemo.setText(Memo.decodeMessage(new Address(memoObject.get("from").getAsString()).getPublicKey(),
-                    ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, privateKey).getKey().getPrivKeyBytes()),
-                    memoObject.get("message").getAsString(),
-                    memoObject.get("nonce").getAsString()));
-        } catch (MalformedAddressException e) {
-            //TODO change exception
-            Toast.makeText(getApplicationContext(),getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
-        }
+        //TODO: This activity doesn't seem to be used right now, remove it if needed.
+//        try {
+//            tvMemo.setText(Memo.decodeMessage(new Address(memoObject.get("from").getAsString()).getPublicKey(),
+//                    ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, privateKey).getKey().getPrivKeyBytes()),
+//                    memoObject.get("message").getAsString(),
+//                    memoObject.get("nonce").getAsString()));
+//
+//        } catch (MalformedAddressException e) {
+//            //TODO change exception
+//            Toast.makeText(getApplicationContext(),getString(R.string.txt_no_internet_connection), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override

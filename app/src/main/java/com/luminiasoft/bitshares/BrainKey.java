@@ -1,7 +1,6 @@
 package com.luminiasoft.bitshares;
 
-import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
-import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
+import com.luminiasoft.bitshares.crypto.Random;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -45,9 +44,7 @@ public class BrainKey {
         String[] wordArray = words.split(",");
         ArrayList<String> suggestedBrainKey = new ArrayList<String>();
         assert (wordArray.length == DICT_WORD_COUNT);
-        SecureRandomStrengthener randomStrengthener = SecureRandomStrengthener.getInstance();
-        randomStrengthener.addEntropySource(new AndroidRandomSource());
-        SecureRandom secureRandom = randomStrengthener.generateAndSeedRandomNumberGenerator();
+        SecureRandom secureRandom = Random.getSecureRandom();
         int index;
         for (int i = 0; i < BRAINKEY_WORD_COUNT; i++) {
             index = secureRandom.nextInt(DICT_WORD_COUNT - 1);
@@ -60,6 +57,7 @@ public class BrainKey {
         }
         return stringBuilder.toString().trim();
     }
+
     /**
      * BrainKey constructor that takes as argument a specific brain key word
      * sequence and generates the private key and address from that.

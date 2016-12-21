@@ -63,7 +63,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".qrcodeActivity"
+            android:name=".QRCodeActivity"
             android:label="@string/qr_code_activity_name"
             android:screenOrientation="portrait"/>
         <activity
