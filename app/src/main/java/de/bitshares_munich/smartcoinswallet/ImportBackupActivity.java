@@ -72,25 +72,13 @@ public class ImportBackupActivity extends BaseActivity {
     {
         String pinText = etPinBin.getText().toString();
 
-        if (pinText.length() == 0)
-        {
-            Toast.makeText(getApplicationContext(), R.string.please_enter_brainkey, Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            if (pinText.length() < 5)
-            {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            }
-            else if (pinText.length() < 5)
-            {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                showDialog("",getString(R.string.importing_keys_from_bin_file));
-                recoverAccountFromBackup(pinText);
-            }
+        if(pinText.length() == 0){
+            Toast.makeText(this, getResources().getString(R.string.pin_number_request), Toast.LENGTH_SHORT).show();
+        }else if(pinText.length() < 6){
+            Toast.makeText(this, getResources().getString(R.string.pin_number_warning), Toast.LENGTH_SHORT).show();
+        }else{
+            showDialog("",getString(R.string.importing_keys_from_bin_file));
+            recoverAccountFromBackup(pinText);
         }
     }
 
@@ -177,26 +165,45 @@ public class ImportBackupActivity extends BaseActivity {
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
-
+            Log.d(TAG, "Got brain key: "+brainKey);
+            Log.d(TAG, "Looking up keys for address: "+address.toString());
             new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
                 @Override
-                public void onSuccess(WitnessResponse response) {
-                    List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
-                    if(resp.size() > 0){
-                        List<UserAccount> accounts = resp.get(0);
-                        for(UserAccount account : accounts){
-                            getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pin);
+                public void onSuccess(final WitnessResponse response) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "getAccountByAddress.onSuccess");
+                            List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
+                            if(resp.size() > 0){
+                                List<UserAccount> accounts = resp.get(0);
+                                if(accounts.size() == 0){
+                                    Log.w(TAG, "Found no account using the key given by backup.");
+                                    Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
+                                }else{
+                                    for(UserAccount account : accounts){
+                                        getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pin);
+                                    }
+                                }
+                            }else{
+                                Log.w(TAG, "Invalid address");
+                                Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
+                            }
+                            hideDialog();
                         }
-                    }else{
-                        Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
-                    }
-                    hideDialog();
+                    });
                 }
 
                 @Override
-                public void onError(BaseResponse.Error error) {
-                    hideDialog();
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                public void onError(final BaseResponse.Error error) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(TAG,"onError. Msg: "+error.message);
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }), 0).start();
         } catch (Exception e) {

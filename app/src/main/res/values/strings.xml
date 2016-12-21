@@ -37,6 +37,8 @@
     <string name="please_enter_old_6_digit_pin">Please enter old 6-digit pin</string>
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
+    <string name="pin_number_request">Please enter the pin number used to encode this backup file</string>
+    <string name="pin_number_warning">The pin number must be at least 6 digits</string>
     <string name="mismatch_pin">mismatch pin</string>
     <string name="error_invalid_account">Invalid account</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
@@ -67,6 +69,7 @@
     <string name="backup">BACKUP .bin</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
+    <string name="backup_no_keys_found_error">No account using this key was found, please make sure you are using an updated backup file.</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
     <string name="refresh_keys">REFRESH ACCOUNT KEYS</string>
