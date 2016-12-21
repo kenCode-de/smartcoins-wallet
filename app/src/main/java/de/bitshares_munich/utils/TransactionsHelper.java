@@ -13,7 +13,6 @@ import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.Market;
 import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.objects.Memo;
 import com.luminiasoft.bitshares.ws.GetAssets;
 import com.luminiasoft.bitshares.ws.GetLimitOrders;
 
@@ -806,9 +805,9 @@ public class TransactionsHelper implements IBalancesDelegate {
             PublicKey fromKey = new Address(memoObject.get("from").toString()).getPublicKey();
             String nonce = memoObject.get("nonce").toString();
 
-            if (memosToDecodeHm.containsKey(memoObject)) {
-                memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
-            }
+//            if (memosToDecodeHm.containsKey(memoObject)) {
+//                memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
+//            }
             loadMemoSListForDecoding();
 
         } catch (JSONException | MalformedAddressException e) {
@@ -826,9 +825,9 @@ public class TransactionsHelper implements IBalancesDelegate {
                 String message = memoObject.get("message").toString();
                 PublicKey fromKey = new Address(memoObject.get("from").toString()).getPublicKey();
                 String nonce = memoObject.get("nonce").toString();
-                if (memosToDecodeHm.containsKey(memoObject)) {
-                    memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
-                }
+//                if (memosToDecodeHm.containsKey(memoObject)) {
+//                    memosToDecodeHm.put(memoObject, Memo.decodeMessage(fromKey, toKey, message, nonce));
+//                }
                 decodingMemosComplete();
 
             } catch (JSONException | MalformedAddressException e) {

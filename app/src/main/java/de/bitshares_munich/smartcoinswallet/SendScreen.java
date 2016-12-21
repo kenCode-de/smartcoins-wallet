@@ -39,23 +39,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
+import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
 import com.luminiasoft.bitshares.AssetAmount;
 import com.luminiasoft.bitshares.BlockData;
-import com.luminiasoft.bitshares.BrainKey;
 import com.luminiasoft.bitshares.Invoice;
 import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.Util;
+import com.luminiasoft.bitshares.crypto.Random;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
 import com.luminiasoft.bitshares.models.WitnessResponse;
 import com.luminiasoft.bitshares.objects.Memo;
-import com.luminiasoft.bitshares.objects.MemoBuilder;
 import com.luminiasoft.bitshares.ws.GetAccountByName;
 import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
 
@@ -66,6 +65,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -83,7 +83,6 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -1080,11 +1079,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
-                Memo memo = new MemoBuilder()
-                        .setFromKey(currentPrivKey)
-                        .setToKey(destination)
-                        .setMessage(memoMessage)
-                        .build();
+                SecureRandom secureRandom = Random.getSecureRandom();
+                long nonce = secureRandom.nextLong();
+                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
+                Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                Address to = new Address(destination.getKey());
+                Memo memo = new Memo(from, to, nonce, encryptedMemo);
                 builder.setMemo(memo);
             }
 
