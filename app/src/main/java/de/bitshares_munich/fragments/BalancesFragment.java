@@ -865,14 +865,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             }
                         }
                     }
+                    final List<String> leftOvers = new ArrayList();
                     List<WebsocketWorkerThread> threads = new ArrayList();
                     for (final String base : currencies.keySet()) {
                         if (assets.containsKey(base)) {
                             for (final String quote : currencies.get(base)) {
                                 if (assets.containsKey(quote)) {
+                                    Log.i(TAG, "Base"+ base+" Quote " + quote);
                                     WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getId(), assets.get(quote).getId(), 20, new WitnessResponseListener() {
                                         @Override
                                         public void onSuccess(WitnessResponse response) {
+                                            if(response.result == null)leftOvers.add(base);
                                             if (response.result.getClass() == ArrayList.class) {
                                                 ArrayList list = (ArrayList) response.result;
                                                 for (Object listObject : list) {
@@ -888,6 +891,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                                     }
                                                 }
                                             }
+                                            leftOvers.add(base);
                                         }
 
                                         @Override
@@ -914,11 +918,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         } catch (Exception e) {
                         }
                     }
+                    if(leftOvers.size() > 0){
+                        getEquivalentComponentsIndirect(leftOvers,finalFaitCurrency);
+                    }
                 }
             }
 
             @Override
             public void onError(BaseResponse.Error error) {
+                Log.e(TAG, "Error in GetAssets " + error.message);
                 //TODO error handle getasset errror
             }
         }));
@@ -965,7 +973,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 if (amount.isEmpty()) {
                     amount = "0.0";
                 }
-                Log.i(TAG, "asset " + asset);
+                Log.i(TAG, "asset " + asset + " assetName " + assetName);
                 if (!amount.isEmpty() && assetName.equals(asset)) {
                     final Currency currency = Currency.getInstance(finalFaitCurrency);
                     Log.i(TAG, "currency " + currency.getDisplayName());
@@ -1043,6 +1051,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         finalFaitCurrency = faitCurrency;
 
         HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
+
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
             if (!accountAsset.symbol.equals(faitCurrency)) {
@@ -1088,7 +1097,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             rates.put(base, new HashMap());
                         }
                         for (final String quote : currencies.get(base)) {
-                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
+                            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getId(), assets.get(quote).getId(), 20, new WitnessResponseListener() {
                                 @Override
                                 public void onSuccess(WitnessResponse response) {
                                     if (response.result.getClass() == ArrayList.class) {
@@ -1096,11 +1105,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                         for (Object listObject : list) {
                                             if (listObject.getClass() == Market.class) {
                                                 Market market = ((Market) listObject);
-                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
-                                                    double price = market.sell_price.quote.amount / market.sell_price.base.amount;
-                                                    int exp = assets.get(quote).getPrecision() - assets.get(base).getPrecision();
-                                                    price = price * Math.pow(10, exp);
+                                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getId())) {
+
+                                                    double price = market.sell_price.base.amount / market.sell_price.quote.amount;
+                                                    int exp = assets.get(base).getPrecision() - assets.get(quote).getPrecision();
+                                                    price = price * Math.pow(10,exp);
                                                     rates.get(base).put(quote, price);
+                                                    return;
                                                 }
                                             }
                                         }
@@ -1135,7 +1146,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             }
                         }
                     }
-
+                    Log.i(TAG,"btsToFait " + btsToFait);
                     HashMap<String, String> hm = new HashMap<>();
 
                     if (!btsToFait.isEmpty()) {
@@ -1170,7 +1181,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                             TextView tvAsset;
                             TextView tvAmount;
-                            TextView tvFaitAmount;
+                            final TextView tvFaitAmount;
 
                             if (j == 1) {
                                 tvAsset = (TextView) llRow.findViewById(R.id.symbol_child_one);
@@ -1192,22 +1203,46 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             asset = asset.replace("bit", "");
 
                             if (!amount.isEmpty() && hm.containsKey(asset)) {
-                                Currency currency = Currency.getInstance(faitCurrency);
+                                final Currency currency = Currency.getInstance(faitCurrency);
 
                                 try {
                                     double d = convertLocalizeStringToDouble(amount);
-                                    Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
+                                    final Double eqAmount = d * convertLocalizeStringToDouble(hm.get(asset).toString());
 
                                     if (Helper.isRTL(locale, currency.getSymbol())) {
-                                        tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                tvFaitAmount.setText(String.format(locale, "%.2f %s", eqAmount, currency.getSymbol()));
+                                            }
+                                        });
+
                                     } else {
-                                        tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                tvFaitAmount.setText(String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount));
+                                            }
+                                        });
+
                                     }
 
-                                    tvFaitAmount.setVisibility(View.VISIBLE);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tvFaitAmount.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+
 
                                 } catch (Exception e) {
-                                    tvFaitAmount.setVisibility(View.GONE);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            tvFaitAmount.setVisibility(View.GONE);
+                                        }
+                                    });
+
                                 }
                             }
                         }
@@ -1229,7 +1264,73 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     }
 
+    private void getEquivalentValueIndirect(List<Asset> indirectAsset, final Asset faitCurrency, final Asset quote){
+        final HashMap<String, HashMap<String, Double>> rates = new HashMap();
+        List<WebsocketWorkerThread> threads = new ArrayList();
+        WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(quote.getId(), faitCurrency.getId(), 20, new WitnessResponseListener() {
+            @Override
+            public void onSuccess(WitnessResponse response) {
+                if (response.result.getClass() == ArrayList.class) {
+                    ArrayList list = (ArrayList) response.result;
+                    for (Object listObject : list) {
+                        if (listObject.getClass() == Market.class) {
+                            Market market = ((Market) listObject);
+                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(quote.getId())) {
+                                double price = market.sell_price.base.amount / market.sell_price.quote.amount;
+                                int exp = quote.getPrecision() - faitCurrency.getPrecision();
+                                price = price * Math.pow(10,exp);
+                                rates.get(quote).put(faitCurrency.getSymbol(), price);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(BaseResponse.Error error) {
+            }
+        }));
+        middle.start();
+
+        for (final Asset base : indirectAsset) {
+            WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(base.getId(), quote.getId(), 20, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        ArrayList list = (ArrayList) response.result;
+                        for (Object listObject : list) {
+                            if (listObject.getClass() == Market.class) {
+                                Market market = ((Market) listObject);
+                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(base.getId())) {
+                                    double price = market.sell_price.base.amount / market.sell_price.quote.amount;
+                                    int exp = base.getPrecision() - quote.getPrecision();
+                                    price = price * Math.pow(10,exp);
+                                    rates.get(base).put(quote.getSymbol(), price);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+
+                }
+            }));
+            glo.start();
+            threads.add(glo);
+        }
+        try {middle.join();} catch (InterruptedException e) {}
+        for(Thread thread : threads){
+            try {thread.join();} catch (InterruptedException e) {}
+        }
+
+    }
+
     private void getEquivalentComponentsIndirect(final List<String> leftOvers, final String faitCurrency) {
+        Log.i(TAG,"indirect " + leftOvers.size() + " " + faitCurrency);
         final Runnable getEquivalentCompIndirectRunnable = new Runnable() {
             @Override
             public void run() {
@@ -1238,12 +1339,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         };
 
         HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
-        for (String pair : leftOvers) {
-            String firstHalf = pair.split(":")[0];
-            if (!currenciesChange.containsKey(firstHalf)) {
-                currenciesChange.put(firstHalf, new ArrayList());
+        for (String currency : leftOvers) {
+            Log.i(TAG,"Indirect simbol : " + currency);
+            if (!currenciesChange.containsKey(currency)) {
+                currenciesChange.put(currency, new ArrayList());
             }
-            currenciesChange.get(firstHalf).add("BTS");
+            currenciesChange.get(currency).add("BTS");
         }
 
         if (!currenciesChange.containsKey("BTS")) {
