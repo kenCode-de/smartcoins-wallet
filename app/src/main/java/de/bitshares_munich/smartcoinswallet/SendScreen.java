@@ -83,6 +83,7 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -102,7 +103,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, InternalMovementListener {
     private String TAG = "SendScreen";
 
     private final Asset FEE_ASSET = new Asset("1.3.0");
@@ -125,7 +126,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, receiverID, callbackURL;
 
-    private WebsocketWorkerThread broadcastTransaction;
+    /* Donation account and amount */
+    private UserAccount bitsharesMunich = new UserAccount("1.2.90200");
+    private AssetAmount donationAmount = new AssetAmount(UnsignedLong.valueOf(200000), new Asset("1.3.0"));
+
+    private WebsocketWorkerThread donationBroadcaster;
+    private WebsocketWorkerThread transferBroadcaster;
     private WebsocketWorkerThread getAccountByName;
 
     /* This is one of the of the recipient account's public key, it will be used for memo encoding */
@@ -235,6 +241,22 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     };
 
     /**
+     * Callback fired when we get a response from the transaction broadcast
+     * sequence for the donation button.
+     */
+    private WitnessResponseListener donationTransactionListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG, "donation.onSuccess");
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "donation.onError. Msg: "+error.message);
+        }
+    };
+
+    /**
      * Callback that is fired when we get a response from a transaction broadcast sequence.
      */
     private WitnessResponseListener broadcastTransactionListener = new WitnessResponseListener() {
@@ -258,7 +280,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 @Override
                 public void run() {
                     hideDialog();
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_insufficient_balance), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_transfer_funds), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -578,7 +600,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void sendFunds(boolean isTrade) {
-
+        Log.d(TAG, "sendFunds: "+isTrade);
         String transferFunds = this.getString(R.string.transfer_funds) + "...";
         showDialog("", transferFunds);
         if (isTrade) {
@@ -610,9 +632,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
 
             transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
-        }
-        if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-            transferAmount("2", "BTS", "bitshares-munich");
         }
     }
 
@@ -819,9 +838,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Intent intent = new Intent(context, qrcodeActivity.class);
         intent.putExtra("id", 0);
         startActivityForResult(intent, 90);
+        this.onInternalAppMove();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"onActivityResult");
         switch (requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
@@ -1043,7 +1064,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         String senderID = null;
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
         String wifKey = "";
-        String brainKey = "";
         for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
             if (accountDetail.account_name.equals(selectedAccount)) {
@@ -1056,10 +1076,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 break;
             }
         }
-        final String memoMessage;
-        if (toAccount.equals("bitshares-munich")) {
-            memoMessage = "Donation";
-        }else if (!etMemo.getText().toString().isEmpty()){
+        String memoMessage = null;
+        if (!etMemo.getText().toString().isEmpty()){
             memoMessage = etMemo.getText().toString();
         }else{
             memoMessage = null;
@@ -1090,9 +1108,24 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             Transaction transaction = builder.build();
 
-            broadcastTransaction = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
-            broadcastTransaction.start();
-            Log.d(TAG, "started broadcast transaction procedure");
+            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
+            transferBroadcaster.start();
+            Log.d(TAG, "started a funds transfer donation broadcast");
+
+            if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+                        .setSource(new UserAccount(senderID))
+                        .setDestination(bitsharesMunich)
+                        .setAmount(donationAmount)
+                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+                        .setPrivateKey(currentPrivKey);
+
+                Transaction donationTransaction = donationBuilder.build();
+                donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
+                donationBroadcaster.start();
+                Log.d(TAG, "started a donation message broadcast");
+            }
         } catch (MalformedTransactionException e) {
             hideDialog();
             e.printStackTrace();
@@ -1152,7 +1185,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Override
     public void checkAccount(JSONObject jsonObject) {
         myWebSocketHelper.cleanUpTransactionsHandler();
-
         try {
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             boolean found = false;
@@ -1167,9 +1199,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (sendBtnPressed) {
-                                validatingComplete();
-                            }
+//                            if (sendBtnPressed) {
+////                                validatingComplete();
+//                            }
                         }
                     });
                     sendBtnPressed = false;
@@ -1742,5 +1774,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setHighlightColor(Color.TRANSPARENT);
         textView.setTextColor(Color.BLACK);
+    }
+
+    /**
+     * Method used to keep state of this activity and prevent that we kill it when coming back
+     * from the camera intent.
+     */
+    @Override
+    public void onInternalAppMove(){
+        mInternalMove = true;
     }
 }

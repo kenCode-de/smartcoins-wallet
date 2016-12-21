@@ -223,10 +223,12 @@ public class Memo implements ByteSerializable, JsonSerializable {
         JsonObject memoObject = new JsonObject();
         if ((this.from == null) && (this.to == null)) {
             // Public memo
-            memoObject.addProperty(KEY_FROM, "");
-            memoObject.addProperty(KEY_TO, "");
-            memoObject.addProperty(KEY_NONCE, "");
-            memoObject.addProperty(KEY_MESSAGE, Util.bytesToHex(this.message));
+            // TODO: Add public memo support
+//            memoObject.addProperty(KEY_FROM, "");
+//            memoObject.addProperty(KEY_TO, "");
+//            memoObject.addProperty(KEY_NONCE, "");
+//            memoObject.addProperty(KEY_MESSAGE, Util.bytesToHex(this.message));
+            return null;
         }else{
             memoObject.addProperty(KEY_FROM, this.from.toString());
             memoObject.addProperty(KEY_TO, this.to.toString());
