@@ -83,7 +83,7 @@ public class GetRelativeAccountHistory extends WebSocketAdapter {
         ArrayList<Serializable> loginParams = new ArrayList<>();
         loginParams.add(null);
         loginParams.add(null);
-        ApiCall loginCall = new ApiCall(1, RPC.CALL_LOGIN, loginParams, "2.0", currentId);
+        ApiCall loginCall = new ApiCall(1, RPC.CALL_LOGIN, loginParams, RPC.VERSION, currentId);
         websocket.sendText(loginCall.toJsonString());
     }
 
@@ -138,10 +138,14 @@ public class GetRelativeAccountHistory extends WebSocketAdapter {
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
         System.out.println("onError. Msg: "+cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
+        websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
         System.out.println("handleCallbackError. Msg: "+cause.getMessage());
+        mListener.onError(new BaseResponse.Error(cause.getMessage()));
+        websocket.disconnect();
     }
 }

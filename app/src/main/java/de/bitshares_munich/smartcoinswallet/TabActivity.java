@@ -461,41 +461,6 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         startActivity(intent);
     }
 
-    // Block for pin
-//    private void showDialogPin() {
-//        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-//        pinDialog = new Dialog(TabActivity.this);
-//        pinDialog.setTitle(R.string.txt_6_digits_pin);
-//        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
-//        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
-//        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
-//        btnDone.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                for (int i = 0; i < accountDetails.size(); i++) {
-//                    if (accountDetails.get(i).isSelected) {
-//                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
-//                            Log.d(TAG, "pin code matches");
-//                            pinDialog.cancel();
-//                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
-//                                Log.d(TAG, "starting security update");
-//                                startSecurityUpdate();
-//                                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-//                            }else{
-//                                Log.v(TAG, "Security update already performed");
-//                            }
-//                            break;
-//                        }else{
-//                            Toast.makeText(TabActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//        pinDialog.setCancelable(false);
-//        pinDialog.show();
-//    }
-
     /**
      * Starts the security update procedure. It does this by first checking
      * all accounts and deciding whether any of them needs a security update.

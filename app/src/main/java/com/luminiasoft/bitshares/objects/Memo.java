@@ -64,6 +64,29 @@ public class Memo implements ByteSerializable, JsonSerializable {
         this.message = message.getBytes();
     }
 
+    public Address getSource(){
+        return this.from;
+    }
+
+    public Address getDestination(){
+        return this.to;
+    }
+
+    public long getNonce(){
+        return this.nonce;
+    }
+
+    public byte[] getByteMessage(){
+        return this.message;
+    }
+
+    public String getStringMessage(){
+        if(this.message != null)
+            return new String(this.message);
+        else
+            return "";
+    }
+
     /**
      * Method used to decrypt memo data.
      * @param privateKey: Private key of the sender.

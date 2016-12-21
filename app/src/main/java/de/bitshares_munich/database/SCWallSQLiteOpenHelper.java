@@ -9,10 +9,9 @@ import android.util.Log;
 /**
  * Created by nelson on 12/13/16.
  */
-
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -36,12 +35,18 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Transfers.COLUMN_TO + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE + TYPE_INTEGER + ")";
-//            ", " +
-//            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID + ") REFERENCES " +
-//            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID +"))";
+            SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE + TYPE_INTEGER + ", " +
+            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID + ") REFERENCES " +
+            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID +"), " +
+            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + ") REFERENCES " +
+            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "), " +
+            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + ") REFERENCES "+
+            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "))";
 
     private static final String SQL_CREATE_USER_ACCOUNTS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.UserAccounts.TABLE_NAME + "(" +
             SCWallDatabaseContract.UserAccounts.COLUMN_ID + " TEXT PRIMARY KEY, " +
@@ -70,7 +75,6 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Transfers.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.UserAccounts.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Assets.TABLE_NAME);
-
         onCreate(db);
     }
 }

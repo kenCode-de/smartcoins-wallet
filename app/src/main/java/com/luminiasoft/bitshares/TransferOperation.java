@@ -1,7 +1,17 @@
 package com.luminiasoft.bitshares;
 
 import com.google.common.primitives.Bytes;
-import com.google.gson.*;
+import com.google.common.primitives.UnsignedLong;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.luminiasoft.bitshares.errors.MalformedAddressException;
 import com.luminiasoft.bitshares.objects.Memo;
 
 import java.lang.reflect.Type;
@@ -11,6 +21,7 @@ import java.lang.reflect.Type;
  * TODO: Add extensions support
  */
 public class TransferOperation extends BaseOperation {
+    private static final String TAG = "TransferOperation";
     public static final String KEY_FEE = "fee";
     public static final String KEY_AMOUNT = "amount";
     public static final String KEY_EXTENSIONS = "extensions";
@@ -169,6 +180,21 @@ public class TransferOperation extends BaseOperation {
                 UserAccount from = new UserAccount(jsonObject.get(KEY_FROM).getAsString());
                 UserAccount to = new UserAccount(jsonObject.get(KEY_TO).getAsString());
                 TransferOperation transfer = new TransferOperation(from, to, amount, fee);
+
+                // Deserializing Memo if it exists
+                if(jsonObject.get(KEY_MEMO) != null){
+                    JsonObject memoObj = jsonObject.get(KEY_MEMO).getAsJsonObject();
+                    try{
+                        Address memoFrom = new Address(memoObj.get(Memo.KEY_FROM).getAsString());
+                        Address memoTo = new Address(memoObj.get(KEY_TO).getAsString());
+                        long nonce = UnsignedLong.valueOf(memoObj.get(Memo.KEY_NONCE).getAsString()).longValue();
+                        byte[] message = Util.hexToBytes(memoObj.get(Memo.KEY_MESSAGE).getAsString());
+                        Memo memo = new Memo(memoFrom, memoTo, nonce, message);
+                        transfer.setMemo(memo);
+                    }catch(MalformedAddressException e){
+                        System.out.println("MalformedAddressException. Msg: "+e.getMessage());
+                    }
+                }
                 return transfer;
             }
         }

@@ -34,6 +34,9 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_TO = "destination";
         public static final String COLUMN_TRANSFER_AMOUNT = "transfer_amount";
         public static final String COLUMN_TRANSFER_ASSET_ID = "transfer_asset_id";
+        public static final String COLUMN_MEMO_MESSAGE = "memo";
+        public static final String COLUMN_MEMO_FROM = "memo_from_key";
+        public static final String COLUMN_MEMO_TO = "memo_to_key";
         public static final String COLUMN_BLOCK_NUM = "block_num";
         public static final String COLUMN_EQUIVALENT_VALUE_ASSET_ID = "equivalent_value_asset_id";
         public static final String COLUMN_EQUIVALENT_VALUE = "equivalent_value";

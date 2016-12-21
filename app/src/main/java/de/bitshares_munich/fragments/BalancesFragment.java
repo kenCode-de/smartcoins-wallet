@@ -45,6 +45,7 @@ import com.luminiasoft.bitshares.models.BlockHeader;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
 import com.luminiasoft.bitshares.models.Market;
 import com.luminiasoft.bitshares.models.WitnessResponse;
+import com.luminiasoft.bitshares.objects.Memo;
 import com.luminiasoft.bitshares.ws.GetAccounts;
 import com.luminiasoft.bitshares.ws.GetAssets;
 import com.luminiasoft.bitshares.ws.GetBlockHeader;
@@ -83,7 +84,6 @@ import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
@@ -91,11 +91,11 @@ import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.PdfTable;
+import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
-import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PermissionManager;
@@ -338,7 +338,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     Log.d(TAG, String.format("Got %d transactions from network request", resp.result.size()));
                     int inserted = database.putTransactions(resp.result);
                     Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
+                    for(HistoricalTransfer historical : resp.result){
+                        if(historical.getOperation() != null){
+                            Memo memo = historical.getOperation().getMemo();
 
+                        }
+                    }
                     if (!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)) {
                         migrateTransactionData();
                     }
