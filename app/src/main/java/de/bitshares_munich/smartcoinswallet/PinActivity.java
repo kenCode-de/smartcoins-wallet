@@ -1,23 +1,16 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -57,13 +50,11 @@ public class PinActivity extends BaseActivity {
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         String pin = "";
         for (int i = 0; i < accountDetails.size(); i++) {
-
             if (accountDetails.get(i).isSelected) {
                 pin = accountDetails.get(i).pinCode;
                 accountDetails.get(i).pinCode = etPin.getText().toString();
                 break;
             }
-
         }
         if (etOldPin.getText().length() < 5) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_old_6_digit_pin, Toast.LENGTH_SHORT).show();
@@ -80,7 +71,5 @@ public class PinActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), R.string.pin_changed_successfully, Toast.LENGTH_SHORT).show();
             finish();
         }
-
-
     }
 }

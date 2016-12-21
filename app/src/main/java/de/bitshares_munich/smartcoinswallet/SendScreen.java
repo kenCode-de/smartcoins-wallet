@@ -83,7 +83,6 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.Interfaces.OnClickListView;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -103,7 +102,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView, InternalMovementListener {
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
     private String TAG = "SendScreen";
 
     private final Asset FEE_ASSET = new Asset("1.3.0");
@@ -217,12 +216,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
-
-    /* Pin pinDialog */
-    private Dialog pinDialog;
-
-    /* Internal attribute used to keep track of the fragment state */
-    private boolean mInternalMove = false;
 
     /**
      * Callback that obtains the response from the get_account_by_name API call.
@@ -456,7 +449,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (backupAsset != null && !backupAsset.isEmpty()) {
             getExchangeRate(200);
         }
-
     }
 
     @Override
@@ -846,7 +838,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG,"onActivityResult");
-        mInternalMove = true;
         switch (requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
@@ -1551,44 +1542,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         });*/
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d(TAG,"onRestart");
-        if(!mInternalMove){
-            showDialogPin();
-        }
-        mInternalMove = false;
-    }
-
-    // Block for pin
-    private void showDialogPin() {
-        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        pinDialog = new Dialog(SendScreen.this);
-        pinDialog.setTitle(R.string.txt_6_digits_pin);
-        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
-        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
-        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < accountDetails.size(); i++) {
-                    if (accountDetails.get(i).isSelected) {
-                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
-                            Log.d(TAG, "pin code matches");
-                            pinDialog.cancel();
-                            break;
-                        }else{
-                            Toast.makeText(SendScreen.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-        });
-        pinDialog.setCancelable(false);
-        pinDialog.show();
-    }
-
     private void decodeInvoiceData(String encoded) {
         Invoice invoice = Invoice.fromQrCode(encoded);
         saveMerchantEmail(invoice.toJsonString());
@@ -1638,7 +1591,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.OnClickSettings_send_screen_activity)
     void OnClickSettings() {
-        this.mInternalMove = true;
+        this.onInternalAppMove();
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
@@ -1664,7 +1617,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnClick(R.id.contactActivity)
     void OnClickContactBtn(View view) {
 
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
 
         if (contacts.size() > 0) {
             contactListDialog = new Dialog(SendScreen.this);
@@ -1806,14 +1759,5 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         textView.setHighlightColor(Color.TRANSPARENT);
         textView.setTextColor(Color.BLACK);
-    }
-
-    /**
-     * Method used to keep state of this activity and prevent that we kill it when coming back
-     * from the camera intent.
-     */
-    @Override
-    public void onInternalAppMove(){
-        mInternalMove = true;
     }
 }

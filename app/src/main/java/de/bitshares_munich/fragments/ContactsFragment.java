@@ -16,8 +16,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.ContactsDelegate;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.smartcoinswallet.AddEditContacts;
-import de.bitshares_munich.smartcoinswallet.ListViewActivity;
+import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.ShareContact;
 
@@ -29,7 +30,7 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
 
     @Bind(R.id.contactslist)
     ListView contactslist;
-    ListViewActivity adapter;
+    ContactListAdapter adapter;
 
     @Bind(R.id.sharecontact)
     ImageView sharecontact;
@@ -53,13 +54,14 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
         contactsDelegate=this;
-        adapter = new ListViewActivity(getActivity());
+        adapter = new ContactListAdapter(getActivity());
         contactslist.setAdapter(adapter);
         return view;
 
     }
     @OnClick(R.id.addcontact)
     public void AddContact(){
+        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), AddEditContacts.class);
         intent.putExtra("activity",99999);
         startActivity(intent);
@@ -67,11 +69,12 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     @Override
     public void OnUpdate(String s,int id){
         adapter.loadmore();
-        adapter = new ListViewActivity(getActivity());
+        adapter = new ContactListAdapter(getActivity());
         contactslist.setAdapter(adapter);
     }
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
+        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), ShareContact.class);
         startActivity(intent);
     }

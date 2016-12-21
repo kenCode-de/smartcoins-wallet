@@ -1,24 +1,15 @@
 package de.bitshares_munich.smartcoinswallet;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,15 +21,18 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
@@ -46,28 +40,23 @@ import de.bitshares_munich.utils.TinyDB;
 /**
  * Created by Syed Muhammad Muzzammil on 5/18/16.
  */
-public class ListViewActivity extends BaseAdapter {
-        ArrayList<ListviewContactItem> listContact;
-        HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
-    HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
-    ImageLoader imageLoader = ImageLoader.getInstance();
+public class ContactListAdapter extends BaseAdapter {
+    private ArrayList<ListviewContactItem> listContact;
+    private HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
+    private HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private int pos = 0;
+    private Context context;
+    private LayoutInflater mInflater;
+    private TinyDB tinyDB;
 
-
-    int pos = 0;
-    Context context;
-
-
-        private LayoutInflater mInflater;
-        TinyDB tinyDB;
-        public ListViewActivity(Context _context) {
-            context = _context;
-            tinyDB = new TinyDB(context);
-            mInflater = LayoutInflater.from(context);
-            listContact = GetlistContact();
-            imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-
-
-        }
+    public ContactListAdapter(Context _context) {
+        context = _context;
+        tinyDB = new TinyDB(context);
+        mInflater = LayoutInflater.from(context);
+        listContact = GetlistContact();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
+    }
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
@@ -89,11 +78,11 @@ public class ListViewActivity extends BaseAdapter {
 
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
-            if(listContact.get(position).isImage) {
-                convertView = mInflater.inflate(R.layout.list_view_contacts_imageview, null);
-            }else {
-                convertView = mInflater.inflate(R.layout.list_view_contacts_webview, null);
-            }
+        if(listContact.get(position).isImage) {
+            convertView = mInflater.inflate(R.layout.list_view_contacts_imageview, null);
+        }else {
+            convertView = mInflater.inflate(R.layout.list_view_contacts_webview, null);
+        }
 
         TextView username = (TextView) convertView.findViewById(R.id.username);
         TextView txtaccount = (TextView) convertView.findViewById(R.id.accountname);
@@ -106,15 +95,14 @@ public class ListViewActivity extends BaseAdapter {
         txtnote.setText(listContact.get(position).GetNote());
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 showDialog(position);
-
             }
         });
 
         ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
         ibEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                ((InternalMovementListener)context).onInternalAppMove();
                 int index = position;
                 Intent intent = new Intent(context, AddEditContacts.class);
                 intent.putExtra("id", index);
@@ -207,7 +195,7 @@ public class ListViewActivity extends BaseAdapter {
 
 
     void removeFromlist(int id){
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         contacts.remove(id);
         tinyDB.putContactsObject("Contacts", contacts);
     }
@@ -248,9 +236,9 @@ public class ListViewActivity extends BaseAdapter {
 
     }
 
-    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
+    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem>
     {
-        public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
+        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
             return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }

@@ -18,6 +18,14 @@ import de.bitshares_munich.utils.TinyDB;
 public class SplashActivity extends Activity {
     private String TAG = "SplashActivity";
 
+    /*
+    * Key used to store a flag value in the Bundle passed with the Intent that will open
+    * up the TabActivity. This activity is the main entry point for this app, and since it
+    * is an instance of LockableActivity, it will look for this flag in order to decide
+    * wheter or not to display the pin dialog at the onStart life-cycle method.
+    */
+    public static final String KEY_ASK_FOR_PIN = "ask_for_pin";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +56,6 @@ public class SplashActivity extends Activity {
     }
 
     private void moveToMainScreen(TinyDB tinyDB) {
-
         String pin = "";
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         for (int i = 0; i < accountDetails.size(); i++) {
@@ -58,11 +65,10 @@ public class SplashActivity extends Activity {
             }
         }
         Intent i = new Intent(SplashActivity.this, TabActivity.class);
-
         if (pin != null && !pin.isEmpty()) {
-            i.putExtra("ask_for_pin", true);
+            i.putExtra(KEY_ASK_FOR_PIN, true);
         } else {
-            i.putExtra("ask_for_pin", false);
+            i.putExtra(KEY_ASK_FOR_PIN, false);
         }
 
         startActivity(i);

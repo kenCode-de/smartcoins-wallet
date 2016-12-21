@@ -58,6 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
 import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.Interfaces.LockListener;
 import de.bitshares_munich.Interfaces.UpdatedAccountListener;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
 import de.bitshares_munich.fragments.PromptUpdateDialog;
@@ -68,7 +69,7 @@ import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
 
-public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, InternalMovementListener {
+public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, LockListener {
     private String TAG = this.getClass().getName();
 
     private boolean DEBUG_ACCOUNT_UPDATE = false;
@@ -94,19 +95,10 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     @Bind(R.id.ivSocketConnected_TabActivity)
     ImageView ivSocketConnected;
 
-    TinyDB tinyDB;
-
-    /* Internal attribute used to keep track of the activity state */
-    private boolean mRestarting;
-
-    /* Internal attribute used to keep track of the activity state */
-    private boolean mInternalMove = false;
+    private TinyDB tinyDB;
 
     /* Dialog displayed to the user only once after the security update */
     private UpdatingAccountsDialog updatingAccountsDialog;
-
-    /* Pin pinDialog */
-    private Dialog pinDialog;
 
     /* In memory reference to all accounts present in this wallet */
     private ArrayList<AccountDetails> accountDetails;
@@ -280,41 +272,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
-    }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        mRestarting = true;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        /*
-        * Ask for pin number if this is not a restart (first time) or
-        * if this is not we coming back from an internal move.
-        */
-        if(!mRestarting || !mInternalMove){
-            Bundle res = getIntent().getExtras();
-            if (res != null) {
-                if (res.containsKey("ask_for_pin")) {
-                    if (res.getBoolean("ask_for_pin")) {
-                        showDialogPin();
-                    }
-                }
-            }
-        }
-        mInternalMove = false;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if(pinDialog != null && pinDialog.isShowing()){
-            pinDialog.dismiss();
-        }
+        this.setLockListener(this);
     }
 
     /**
@@ -503,39 +462,39 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     }
 
     // Block for pin
-    private void showDialogPin() {
-        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        pinDialog = new Dialog(TabActivity.this);
-        pinDialog.setTitle(R.string.txt_6_digits_pin);
-        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
-        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
-        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < accountDetails.size(); i++) {
-                    if (accountDetails.get(i).isSelected) {
-                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
-                            Log.d(TAG, "pin code matches");
-                            pinDialog.cancel();
-                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
-                                Log.d(TAG, "starting security update");
-                                startSecurityUpdate();
-                                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-                            }else{
-                                Log.v(TAG, "Security update already performed");
-                            }
-                            break;
-                        }else{
-                            Toast.makeText(TabActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            }
-        });
-        pinDialog.setCancelable(false);
-        pinDialog.show();
-    }
+//    private void showDialogPin() {
+//        final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+//        pinDialog = new Dialog(TabActivity.this);
+//        pinDialog.setTitle(R.string.txt_6_digits_pin);
+//        pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
+//        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
+//        final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
+//        btnDone.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                for (int i = 0; i < accountDetails.size(); i++) {
+//                    if (accountDetails.get(i).isSelected) {
+//                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+//                            Log.d(TAG, "pin code matches");
+//                            pinDialog.cancel();
+//                            if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
+//                                Log.d(TAG, "starting security update");
+//                                startSecurityUpdate();
+//                                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+//                            }else{
+//                                Log.v(TAG, "Security update already performed");
+//                            }
+//                            break;
+//                        }else{
+//                            Toast.makeText(TabActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        pinDialog.setCancelable(false);
+//        pinDialog.show();
+//    }
 
     /**
      * Starts the security update procedure. It does this by first checking
@@ -620,12 +579,15 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         }
     }
 
-    /**
-     * Method used to keep state of this activity and prevent the pin dialog from showing up
-     * once the user comes back to it from internal activity moves.
-     */
     @Override
-    public void onInternalAppMove(){
-        mInternalMove = true;
+    public void onLockReleased() {
+        Log.d(TAG, "onLockReleased");
+        if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
+            Log.d(TAG, "starting security update");
+            startSecurityUpdate();
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+        }else{
+            Log.v(TAG, "Security update already performed");
+        }
     }
 }

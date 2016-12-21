@@ -1,7 +1,6 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,10 +17,8 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ import de.bitshares_munich.utils.TinyDB;
  * Created by afnan on 7/5/16.
  */
 public class SendScreenListViewActivity extends BaseAdapter {
-    ArrayList<ListViewActivity.ListviewContactItem> listContact;
+    ArrayList<ContactListAdapter.ListviewContactItem> listContact;
     Context context;
     OnClickListView onClickListView;
 
@@ -70,14 +67,14 @@ public class SendScreenListViewActivity extends BaseAdapter {
         return arg0;
     }
 
-    private ArrayList<ListViewActivity.ListviewContactItem> GetlistContact(){
-        ArrayList<ListViewActivity.ListviewContactItem> contactlist = new ArrayList<ListViewActivity.ListviewContactItem>();
+    private ArrayList<ContactListAdapter.ListviewContactItem> GetlistContact(){
+        ArrayList<ContactListAdapter.ListviewContactItem> contactlist = new ArrayList<ContactListAdapter.ListviewContactItem>();
 
-        ListViewActivity.ListviewContactItem contact = new ListViewActivity.ListviewContactItem();
+        ContactListAdapter.ListviewContactItem contact = new ContactListAdapter.ListviewContactItem();
 
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         for (int i = 0; i < contacts.size(); i++) {
-            contact = new ListViewActivity.ListviewContactItem();
+            contact = new ContactListAdapter.ListviewContactItem();
             contact.SetName(contacts.get(i).name);
             contact.SetAccount(contacts.get(i).account);
             contact.SaveNote(contacts.get(i).note);
@@ -91,9 +88,9 @@ public class SendScreenListViewActivity extends BaseAdapter {
 
         return contactlist;
     }
-    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem>
+    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem>
     {
-        public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
+        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
             return left.account.toLowerCase().compareTo(right.account.toLowerCase());
         }
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -222,8 +220,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     @OnClick(R.id.SaveContact)
     public void AddContatcs() {
-        ListViewActivity.ListviewContactItem contact = new ListViewActivity.ListviewContactItem();
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        ContactListAdapter.ListviewContactItem contact = new ContactListAdapter.ListviewContactItem();
+        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         String _contactname = Contactname.getText().toString();
         String _accountid = Accountname.getText().toString();
         String _note = Note.getText().toString();
@@ -256,7 +254,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     }
 
     Boolean checkIfAlreadyAdded() {
-        ArrayList<ListViewActivity.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListViewActivity.ListviewContactItem.class);
+        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         String _accountid = Accountname.getText().toString();
 
         for (int i = 0; i < contacts.size(); i++) {
@@ -536,8 +534,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 .execute(emailGravatarUrl);
     }
 
-    public static class ContactNameComparator implements Comparator<ListViewActivity.ListviewContactItem> {
-        public int compare(ListViewActivity.ListviewContactItem left, ListViewActivity.ListviewContactItem right) {
+    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem> {
+        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
             return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }

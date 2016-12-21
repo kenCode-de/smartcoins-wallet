@@ -4,25 +4,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-//import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-//import android.view.View;
-//import android.webkit.WebView;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.TextView;
-//import android.widget.Toast;
 
 import java.util.Locale;
 
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+
 /**
  * Created by qasim on 5/9/16.
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends LockableActivity {
 
     public static final long DISCONNECT_TIMEOUT = (3*60*1000);
 
@@ -38,8 +30,6 @@ public class BaseActivity extends AppCompatActivity {
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language) , language);
             Helper.setLocale(language,getResources());
         }
-
-
     }
 
     public void setBackButton(Boolean isBackButton) {
