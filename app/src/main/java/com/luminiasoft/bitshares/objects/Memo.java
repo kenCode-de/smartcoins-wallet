@@ -33,6 +33,19 @@ public class Memo implements ByteSerializable, JsonSerializable {
     private long nonce;
     private byte[] message;
 
+    public String getPlaintextMessage() {
+        if(plaintextMessage == null)
+            return "";
+        else
+            return plaintextMessage;
+    }
+
+    public void setPlaintextMessage(String plaintextMessage) {
+        this.plaintextMessage = plaintextMessage;
+    }
+
+    private String plaintextMessage;
+
     /**
      * Empty Constructor
      */
@@ -185,7 +198,6 @@ public class Memo implements ByteSerializable, JsonSerializable {
         } catch (NoSuchAlgorithmException e) {
             System.out.println("NoSuchAlgotithmException. Msg:"+ e.getMessage());
         }
-
         return plaintext;
     }
 

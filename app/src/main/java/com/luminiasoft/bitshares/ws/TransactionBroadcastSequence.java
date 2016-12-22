@@ -133,7 +133,6 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 transaction.setFees(requiredFeesResponse.result);
                 ArrayList<Serializable> transactions = new ArrayList<>();
                 transactions.add(transaction);
-
                 ApiCall call = new ApiCall(broadcastApiId,
                         RPC.CALL_BROADCAST_TRANSACTION,
                         transactions,

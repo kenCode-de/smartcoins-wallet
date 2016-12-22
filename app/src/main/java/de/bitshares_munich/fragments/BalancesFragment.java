@@ -36,8 +36,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
+import com.luminiasoft.bitshares.errors.ChecksumException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BaseResponse;
@@ -53,11 +56,17 @@ import com.luminiasoft.bitshares.ws.GetLimitOrders;
 import com.luminiasoft.bitshares.ws.GetRelativeAccountHistory;
 import com.luminiasoft.bitshares.ws.LookupAssetSymbols;
 
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -70,6 +79,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -81,6 +94,7 @@ import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
 import de.bitshares_munich.adapters.TransferSendReceiveComparator;
 import de.bitshares_munich.adapters.TransfersTableAdapter;
+import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -97,6 +111,7 @@ import de.bitshares_munich.smartcoinswallet.RecieveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
@@ -168,7 +183,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     LinearLayout whiteSpaceAfterBalances;
 
     //    private SortableTableView<TransactionDetails> tableView;
-    private SortableTableView<HistoricalTransfer> transfersView;
+    private SortableTableView<HistoricalTransferEntry> transfersView;
     private ArrayList<TransactionDetails> myTransactions;
 
     TinyDB tinyDB;
@@ -334,9 +349,49 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 @Override
                 public void run() {
                     WitnessResponse<List<HistoricalTransfer>> resp = response;
+                    List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
+                    for(HistoricalTransfer historicalTransfer : resp.result){
+                        HistoricalTransferEntry entry = new HistoricalTransferEntry();
+                        TransferOperation op = historicalTransfer.getOperation();
+                        if(op != null){
+                            Memo memo = op.getMemo();
+                            if(memo.getByteMessage() != null){
+                                Address myAddress = memo.getDestination();
+                                try {
+                                    String wif = Crypt.getInstance().decrypt_string(wifkey);
+                                    ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
+                                    Log.d(TAG, String.format("Trying to decrypt message from %s -> %s", memo.getSource().toString(), memo.getDestination().toString()));
+                                    String decryptedMessage = Memo.decryptMessage(privateKey, myAddress, memo.getNonce(), memo.getByteMessage());
+                                    Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
+                                    memo.setPlaintextMessage(decryptedMessage);
+                                } catch (InvalidKeyException e) {
+                                    e.printStackTrace();
+                                } catch (NoSuchAlgorithmException e) {
+                                    e.printStackTrace();
+                                } catch (NoSuchPaddingException e) {
+                                    e.printStackTrace();
+                                } catch (InvalidAlgorithmParameterException e) {
+                                    e.printStackTrace();
+                                } catch (IllegalBlockSizeException e) {
+                                    e.printStackTrace();
+                                } catch (BadPaddingException e) {
+                                    e.printStackTrace();
+                                } catch (ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (ChecksumException e) {
+                                    e.printStackTrace();
+                                } catch (NullPointerException e){
 
+                                }
+                            }
+                        }
+                        entry.setHistoricalTransfer(historicalTransfer);
+                        historicalTransferEntries.add(entry);
+                    }
                     Log.d(TAG, String.format("Got %d transactions from network request", resp.result.size()));
-                    int inserted = database.putTransactions(resp.result);
+                    int inserted = database.putTransactions(historicalTransferEntries);
                     Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
                     for(HistoricalTransfer historical : resp.result){
                         if(historical.getOperation() != null){
@@ -409,7 +464,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         progressDialog = new ProgressDialog(getActivity());
 
 //        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
-        transfersView = (SortableTableView<HistoricalTransfer>) rootView.findViewById(R.id.tableView);
+        transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
         transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -738,10 +793,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         if (isLoading) {
             Log.i(TAG,"Exporting");
             TableDataAdapter myAdapter = transfersView.getDataAdapter();
-            List<HistoricalTransfer> det = myAdapter.getData();
+            List<HistoricalTransferEntry> data = myAdapter.getData();
             Log.i(TAG,"Constructor");
             PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
-            myTable.createTable(getContext(), det, new UserAccount(accountId));
+            myTable.createTable(getContext(), data, new UserAccount(accountId));
         } else {
             Log.i(TAG,"else is loading");
             Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
@@ -855,6 +910,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 }
             }
         }
+        Log.d(TAG,"getEquivalentComponent. asset list");
+        for(String assetString : assetList) Log.d(TAG, "asset: "+assetString);
 
         WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
             @Override
@@ -1017,7 +1074,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
-
+        Log.d(TAG, "getEquivalentComponents");
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
             public void run() {
@@ -1040,6 +1097,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 if (!currenciesChange.containsKey(accountAsset.symbol)) {
                     currenciesChange.put(accountAsset.symbol, new ArrayList());
                 }
+                Log.d(TAG,"Creating mapping: "+accountAsset.symbol+" -> "+faitCurrency);
                 currenciesChange.get(accountAsset.symbol).add(faitCurrency);
             }
         }
@@ -2904,9 +2962,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
      */
     private void updateTableView() {
         UserAccount account = new UserAccount(accountId);
-        List<HistoricalTransfer> transfers = database.getTransactions(account);
+        List<HistoricalTransferEntry> transfers = database.getTransactions(account);
         Log.d(TAG, String.format("Updating the table view with %d transactions", transfers.size()));
-        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransfer[transfers.size()])));
+        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransferEntry[transfers.size()])));
 
         if (transfersView.getColumnComparator(0) == null) {
             updateSortTable();
