@@ -1,17 +1,21 @@
 package de.bitshares_munich.adapters;
 
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
+import com.google.common.primitives.UnsignedLong;
 
 import java.util.Comparator;
+
+import de.bitshares_munich.database.HistoricalTransferEntry;
 
 /**
  * Created by nelson on 12/14/16.
  */
 
-public class TransferAmountComparator implements Comparator<HistoricalTransfer> {
+public class TransferAmountComparator implements Comparator<HistoricalTransferEntry> {
 
     @Override
-    public int compare(HistoricalTransfer lhs, HistoricalTransfer rhs) {
-        return lhs.getOperation().getTransferAmount().getAmount().compareTo(rhs.getOperation().getTransferAmount().getAmount());
+    public int compare(HistoricalTransferEntry lhs, HistoricalTransferEntry rhs) {
+        UnsignedLong lhsAmount = lhs.getHistoricalTransfer().getOperation().getTransferAmount().getAmount();
+        UnsignedLong rhsAmount = rhs.getHistoricalTransfer().getOperation().getTransferAmount().getAmount();
+        return lhsAmount.compareTo(rhsAmount);
     }
 }

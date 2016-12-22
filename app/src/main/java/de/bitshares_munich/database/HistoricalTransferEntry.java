@@ -21,4 +21,32 @@ public class HistoricalTransferEntry {
     private HistoricalTransfer historicalTransfer;
     private long timestamp;
     private AssetAmount equivalentValue;
+
+    public HistoricalTransferEntry(){
+        this.timestamp = 0;
+    }
+
+    public void setHistoricalTransfer(HistoricalTransfer historicalTransfer) {
+        this.historicalTransfer = historicalTransfer;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setEquivalentValue(AssetAmount equivalentValue) {
+        this.equivalentValue = equivalentValue;
+    }
+
+    public HistoricalTransfer getHistoricalTransfer(){
+        return this.historicalTransfer;
+    }
+
+    public long getTimestamp(){
+        return this.timestamp;
+    }
+
+    public AssetAmount getEquivalentValue(){
+        return this.equivalentValue;
+    }
 }

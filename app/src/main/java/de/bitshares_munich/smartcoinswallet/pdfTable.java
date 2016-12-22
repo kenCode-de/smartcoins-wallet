@@ -24,9 +24,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.utils.Helper;
 
 /**
@@ -103,7 +104,7 @@ public class PdfTable {
 
     }
 
-    public void createTable(Context context, List<HistoricalTransfer> myTransactions, UserAccount me) {
+    public void createTable(Context context, List<HistoricalTransferEntry> myTransactions, UserAccount me) {
 
         Document document = new Document();
         try {
@@ -129,8 +130,9 @@ public class PdfTable {
             for ( int i = 0 ; i < myTransactions.size() ; i++ )
             {
                 table.completeRow();
-                HistoricalTransfer td = myTransactions.get(i);
-                long timestamp = td.getTimestamp();
+                HistoricalTransferEntry transferEntry = myTransactions.get(i);
+                TransferOperation operation = transferEntry.getHistoricalTransfer().getOperation();
+                long timestamp = transferEntry.getTimestamp();
                 String date = Helper.convertDateToGMT(new Date(timestamp), context);
                 String time = Helper.convertDateToGMTWithYear(new Date(timestamp), context);
                 String timeZone = Helper.convertTimeToGMT(new Date(timestamp),context);
@@ -140,7 +142,7 @@ public class PdfTable {
                 table.addCell(dateCell);
 
                 Drawable d;
-                if (td.getOperation().getFrom().getAccountName().equals(me.getAccountName())) {
+                if (operation.getFrom().getAccountName().equals(me.getAccountName())) {
                     d = ContextCompat.getDrawable(myContext,R.drawable.sendicon);
                 } else {
                     d = ContextCompat.getDrawable(myContext,R.drawable.rcvicon);
@@ -168,15 +170,14 @@ public class PdfTable {
                 String to = myContext.getString(R.string.to_capital);
                 String memo = myContext.getString(R.string.memo_capital);
 
-
-                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s",td.getOperation().getTo().getAccountName(),td.getOperation().getFrom().getAccountName(),td.getOperation().getMemo().toString());
+                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s", operation.getTo().getAccountName(),operation.getFrom().getAccountName(), operation.getMemo().getPlaintextMessage());
 
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);
 
                 String amountText = "";
-                AssetAmount assetAmount = td.getOperation().getTransferAmount();
-                if ( td.getOperation().getFrom().getAccountName().equals(me.getAccountName())) {
+                AssetAmount assetAmount = operation.getTransferAmount();
+                if ( operation.getFrom().getAccountName().equals(me.getAccountName())) {
 //                    amountText = String.format("- %s %s\n- %s %s",getAmount(td.getOperation().getTransferAmount().getAmountDouble()),td.getOperation().getTransferAmount().getAsset().getSymbol(),getAmount(td.getOperation().getTransferAmount().getFaitAmount()),td.getOperation().getTransferAmount().getFaitAssetSymbol());
                     amountText = String.format("- %f %s", Util.fromBase(assetAmount), assetAmount.getAsset().getSymbol());
                 } else {

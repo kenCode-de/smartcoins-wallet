@@ -15,6 +15,7 @@ import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.models.AccountProperties;
 import com.luminiasoft.bitshares.models.BlockHeader;
 import com.luminiasoft.bitshares.models.HistoricalTransfer;
+import com.luminiasoft.bitshares.objects.Memo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,30 +52,33 @@ public class SCWallDatabase {
      * the full node into the database
      * @param transactions: List of historical transfer transactions.
      */
-    public int putTransactions(List<HistoricalTransfer> transactions){
+    public int putTransactions(List<HistoricalTransferEntry> transactions){
         long before = System.currentTimeMillis();
         int count = 0;
         ContentValues contentValues;
         for(int i = 0; i < transactions.size(); i++){
             contentValues = new ContentValues();
-            HistoricalTransfer transfer = transactions.get(i);
-            TransferOperation operation = transfer.getOperation();
+            HistoricalTransferEntry transferEntry = transactions.get(i);
+            HistoricalTransfer historicalTransfer = transferEntry.getHistoricalTransfer();
+            TransferOperation operation = historicalTransfer.getOperation();
             if(operation == null) continue;
 
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_ID, transfer.getId());
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0);
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_ID, historicalTransfer.getId());
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, transferEntry.getTimestamp());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT, operation.getFee().getAmount().longValue());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID, operation.getFee().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FROM, operation.getFrom().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TO, operation.getTo().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT, operation.getTransferAmount().getAmount().longValue());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID, operation.getTransferAmount().getAsset().getObjectId());
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, transfer.getBlockNum());
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, historicalTransfer.getBlockNum());
 
-            //TODO: Add equivalent value data
-//            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, "");
-//            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, 0);
-
+            Memo memo = operation.getMemo();
+            if(!memo.getPlaintextMessage().equals("")){
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM, memo.getSource().toString());
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO, memo.getSource().toString());
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
+            }
             try{
                 long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
                 Log.d(TAG, "Inserted transfer in database with id: "+id);
@@ -92,7 +96,7 @@ public class SCWallDatabase {
      * Retrieves the list of historical transfers.
      * @return: The list of historical transfer transactions.
      */
-    public List<HistoricalTransfer> getTransactions(UserAccount userAccount){
+    public List<HistoricalTransferEntry> getTransactions(UserAccount userAccount){
         long before = System.currentTimeMillis();
         HashMap<String, String> userMap = this.getUserMap();
         HashMap<String, Asset> assetMap = this.getAssetMap();
@@ -102,9 +106,10 @@ public class SCWallDatabase {
         String selection = SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
         String[] selectionArgs = { userAccount.getObjectId(), userAccount.getObjectId() };
         Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, null);
-        ArrayList<HistoricalTransfer> transfers = new ArrayList<>();
+        ArrayList<HistoricalTransferEntry> transfers = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
+                HistoricalTransferEntry transferEntry = new HistoricalTransferEntry();
                 HistoricalTransfer historicalTransfer = new HistoricalTransfer();
 
                 // Getting origin and destination user account ids
@@ -133,10 +138,12 @@ public class SCWallDatabase {
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
                 historicalTransfer.setOperation(transferOperation);
                 historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
-                historicalTransfer.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
 
-                // Adding historical transfer to array
-                transfers.add(historicalTransfer);
+                transferEntry.setHistoricalTransfer(historicalTransfer);
+                transferEntry.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
+
+                // Adding historical transfer entry to array
+                transfers.add(transferEntry);
             }while(cursor.moveToNext());
         }else{
             Log.w(TAG, "No historical transactions");

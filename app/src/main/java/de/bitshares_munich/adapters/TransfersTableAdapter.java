@@ -10,15 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.luminiasoft.bitshares.AssetAmount;
+import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.Util;
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.codecrafters.tableview.TableDataAdapter;
@@ -27,12 +28,12 @@ import de.codecrafters.tableview.TableDataAdapter;
 /**
  * Created by nelson on 12/13/16.
  */
-public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> {
+public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEntry> {
     private String TAG = this.getClass().getName();
 
     private UserAccount userAccount;
 
-    public TransfersTableAdapter(Context context, UserAccount userAccount, HistoricalTransfer[] data) {
+    public TransfersTableAdapter(Context context, UserAccount userAccount, HistoricalTransferEntry[] data) {
         super(context, data);
         this.userAccount = userAccount;
     }
@@ -40,25 +41,25 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         View renderedView = null;
-        HistoricalTransfer historicalTransfer = getRowData(rowIndex);
+        HistoricalTransferEntry transferEntry = getRowData(rowIndex);
         switch (columnIndex) {
             case 0:
-                renderedView = renderDateView(historicalTransfer);
+                renderedView = renderDateView(transferEntry);
                 break;
             case 1:
-                renderedView = renderSendRecieve(historicalTransfer);
+                renderedView = renderSendRecieve(transferEntry);
                 break;
             case 2:
-                renderedView = renderDetails(historicalTransfer);
+                renderedView = renderDetails(transferEntry);
                 break;
             case 3:
-                renderedView = renderAmount(historicalTransfer);
+                renderedView = renderAmount(transferEntry);
                 break;
         }
         return renderedView;
     }
 
-    private View renderDateView(HistoricalTransfer historicalTransfer) {
+    private View renderDateView(HistoricalTransferEntry historicalTransfer) {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionsdateview, null);
         TextView dateTextView = (TextView) v.findViewById(R.id.transactiondate);
@@ -80,11 +81,12 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
         return v;
     }
 
-    private View renderSendRecieve(HistoricalTransfer historicalTransfer) {
+    private View renderSendRecieve(HistoricalTransferEntry historicalTransfer) {
+        TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionssendrecieve, null);
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
-        if ( historicalTransfer.getOperation().getFrom().getObjectId().equals(userAccount.getObjectId()) ) {
+        if (operation.getFrom().getObjectId().equals(userAccount.getObjectId()) ) {
             imgView.setImageResource(R.drawable.send);
         } else {
             imgView.setImageResource(R.drawable.receive);
@@ -92,20 +94,25 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
         return v;
     }
 
-    private View renderDetails(HistoricalTransfer historicalTransfer)
-    {
+    private View renderDetails(HistoricalTransferEntry historicalTransfer) {
+        TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
-        String toMessage = getContext().getText(R.string.to_capital) + ": " + historicalTransfer.getOperation().getTo().getAccountName();
+        String toMessage = getContext().getText(R.string.to_capital) + ": " + operation.getTo().getAccountName();
         TextView toUser = (TextView) v.findViewById(R.id.transactiondetailsto);
         toUser.setTextSize(TypedValue.COMPLEX_UNIT_PT, 7);
         toUser.setText(toMessage);
 
-        String fromMessage = getContext().getText(R.string.from_capital) + ": " + historicalTransfer.getOperation().getFrom().getAccountName();
+        String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
         TextView fromUser = (TextView) v.findViewById(R.id.transactiondetailsfrom);
         fromUser.setTextSize(TypedValue.COMPLEX_UNIT_PT, 7);
         fromUser.setText(fromMessage);
+
+        if(!operation.getMemo().getPlaintextMessage().equals("")){
+            TextView memoTextView = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            memoTextView.setText(operation.getMemo().getPlaintextMessage());
+        }
 
 //        if(transactiondetails.getDetailsMemo() == null || transactiondetails.getDetailsMemo().isEmpty()) {
 //            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
@@ -124,12 +131,12 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
         return v;
     }
 
-    private View renderAmount(HistoricalTransfer historicalTransfer)
-    {
+    private View renderAmount(HistoricalTransferEntry historicalTransfer) {
+        TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
         TextView transferAmount = (TextView) root.findViewById(R.id.transactionssendamount);
-        AssetAmount assetAmount = historicalTransfer.getOperation().getTransferAmount();
+        AssetAmount assetAmount = operation.getTransferAmount();
 
         String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
         Locale locale = new Locale(language);
@@ -137,7 +144,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransfer> 
         if(assetAmount.getAsset() != null){
             symbol = assetAmount.getAsset().getSymbol();
         }
-        if(historicalTransfer.getOperation().getFrom().getObjectId().equals(userAccount.getObjectId())){
+        if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
             // User sent this transfer
             transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));

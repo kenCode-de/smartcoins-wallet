@@ -1,16 +1,16 @@
 package de.bitshares_munich.adapters;
 
-import android.util.Log;
-
+import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
 
 import java.util.Comparator;
+
+import de.bitshares_munich.database.HistoricalTransferEntry;
 
 /**
  * Created by nelson on 12/14/16.
  */
-public class TransferSendReceiveComparator implements Comparator<HistoricalTransfer> {
+public class TransferSendReceiveComparator implements Comparator<HistoricalTransferEntry> {
     private String TAG = this.getClass().getName();
 
     private UserAccount me;
@@ -20,9 +20,9 @@ public class TransferSendReceiveComparator implements Comparator<HistoricalTrans
     }
 
     @Override
-    public int compare(HistoricalTransfer lhs, HistoricalTransfer rhs) {
-        Log.d(TAG, "My user account id: "+me.getObjectId()+", lhs operation's from user account id: "+lhs.getOperation().getFrom().getObjectId());
-        boolean isOutgoing = lhs.getOperation().getFrom().getObjectId().equals(me.getObjectId());
+    public int compare(HistoricalTransferEntry lhs, HistoricalTransferEntry rhs) {
+        TransferOperation lhsOperation = lhs.getHistoricalTransfer().getOperation();
+        boolean isOutgoing = lhsOperation.getFrom().getObjectId().equals(me.getObjectId());
         if(isOutgoing)
             return -1;
         else
