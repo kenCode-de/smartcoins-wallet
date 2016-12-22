@@ -467,7 +467,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
 
-//        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
         transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
@@ -2139,21 +2138,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         return (value / ok);
     }
 
-    public void updateSortTableView(SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions) {
-        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
-        simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
-        tableView.setHeaderAdapter(simpleTableHeaderAdapter);
-
-        tableView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-        tableView.setColumnWeight(0, 17);
-        tableView.setColumnWeight(1, 12);
-        tableView.setColumnWeight(2, 30);
-        tableView.setColumnWeight(3, 20);
-        tableView.setColumnComparator(0, new TransactionsDateComparator());
-        tableView.setColumnComparator(1, new TransactionsSendRecieveComparator());
-        tableView.setColumnComparator(3, new TransactionsAmountComparator());
-    }
-
     /**
      * Updating the sort strategy
      */
@@ -2164,9 +2148,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         transfersView.setHeaderAdapter(simpleTableHeaderAdapter);
 
         transfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-        transfersView.setColumnWeight(0, 17);
+        transfersView.setColumnWeight(0, 20);
         transfersView.setColumnWeight(1, 12);
-        transfersView.setColumnWeight(2, 30);
+        transfersView.setColumnWeight(2, 27);
         transfersView.setColumnWeight(3, 22);
         transfersView.setColumnComparator(0, new TransferDateComparator());
         transfersView.setColumnComparator(1, new TransferSendReceiveComparator(new UserAccount(accountId)));
