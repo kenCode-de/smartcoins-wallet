@@ -220,6 +220,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private WebsocketWorkerThread getMissingAssets;
     private WebsocketWorkerThread getMissingTimes;
 
+    private final static String[] SMARTCOINS = new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
+            "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"};
+
     /**
      * Callback activated once we get a block header response.
      */
