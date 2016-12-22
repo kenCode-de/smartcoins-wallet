@@ -893,8 +893,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         for(String symbol : sym){
             if(SMARTCOINS.contains(symbol)){
                 symbols.add("bit"+symbol);
+            }else{
+                symbols.add(symbol);
             }
-            symbols.add(symbol);
         }
 
 
