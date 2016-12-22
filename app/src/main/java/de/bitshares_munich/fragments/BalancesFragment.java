@@ -224,6 +224,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     webSocketCallHelper myWebSocketHelper;
 
+    /* List of transactions for which we don't have the equivalent value data */
+    private LinkedList<HistoricalTransferEntry> missingEquivalentValues;
+
     /* List of block numbers with missing date information in the database */
     private LinkedList<Long> missingTimes;
 
@@ -432,6 +435,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
                         Log.d(TAG, "Requesting missing block times");
+                    }
+
+                    missingEquivalentValues = database.getMissingEquivalentValues();
+                    if(missingEquivalentValues.size() > 0){
+                        //TODO: Get missing equivalent value
                     }
                 }
             });

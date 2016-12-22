@@ -327,6 +327,54 @@ public class SCWallDatabase {
     }
 
     /**
+     * Method used to obtain a list of all historical transfers for which we don't have
+     * an equivalent value.
+     *
+     * Every HistoricalTransferEntry object in the list returned is only
+     * partially built, with just enough information to fill the 2 missing equivalent values
+     * columns, which are the equivalent value asset id, and asset amount.
+     *
+     * @return: List of all historical transfers lacking an equivalent value.
+     */
+    public LinkedList<HistoricalTransferEntry> getMissingEquivalentValues(){
+        LinkedList<HistoricalTransferEntry> historicalEntries = new LinkedList<>();
+        String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String[] columns = {
+                SCWallDatabaseContract.Transfers.COLUMN_ID,
+                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT
+        };
+        String selection = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
+                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " > 0";
+        Cursor cursor = db.query(table, columns, selection, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String historicalTransferId = cursor.getString(0);
+                long timestamp = cursor.getLong(1);
+                String assetId = cursor.getString(2);
+                long amount = cursor.getLong(3);
+
+                TransferOperation operation = new TransferOperation();
+                operation.setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId)));
+
+                HistoricalTransfer transfer = new HistoricalTransfer();
+                transfer.setId(historicalTransferId);
+                transfer.setOperation(operation);
+
+                HistoricalTransferEntry transferEntry = new HistoricalTransferEntry();
+                transferEntry.setHistoricalTransfer(transfer);
+                transferEntry.setTimestamp(timestamp);
+
+                historicalEntries.add(transferEntry);
+            }while(cursor.moveToNext());
+            cursor.close();
+            Log.d(TAG, String.format("Got %d transactions with missing equivalent value"));
+        }
+        return historicalEntries;
+    }
+
+    /**
      * Sets a missing block time information.
      * @param blockHeader: The block header data of this transaction.
      * @param blockNum: The block number, which is not included in the block header
