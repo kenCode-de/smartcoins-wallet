@@ -137,6 +137,12 @@ public class SCWallDatabase {
                 // Building a TransferOperation
                 TransferOperation transferOperation = new TransferOperation(from, to, tranferAmount, feeAmount);
 
+                // Building memo data
+                String memoMessage = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE));
+                Memo memo = new Memo();
+                memo.setPlaintextMessage(memoMessage);
+                transferOperation.setMemo(memo);
+
                 // Adding other historical transfer data
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
                 historicalTransfer.setOperation(transferOperation);
