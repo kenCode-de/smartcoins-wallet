@@ -76,15 +76,15 @@ public class SplashActivity extends Activity {
     }
 
     private void moveToAccountScreen() {
-
         Intent i = new Intent(SplashActivity.this, AccountActivity.class);
+        i.putExtra(KEY_ASK_FOR_PIN, false);
         startActivity(i);
         finish();
     }
 
     private void moveToBackupBrainKey() {
-
         Intent i = new Intent(SplashActivity.this, BackupBrainkeyActivity.class);
+        i.putExtra(KEY_ASK_FOR_PIN, false);
         startActivity(i);
         finish();
     }
