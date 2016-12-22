@@ -71,6 +71,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
@@ -86,6 +87,7 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.cookie.SM;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.Interfaces.InternalMovementListener;
@@ -234,6 +236,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private WebsocketWorkerThread getMissingAccountsThread;
     private WebsocketWorkerThread getMissingAssets;
     private WebsocketWorkerThread getMissingTimes;
+
+    private final static List<String> SMARTCOINS = Arrays.asList(new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
+            "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"});
 
     /**
      * Callback activated once we get a block header response.
@@ -887,8 +892,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         int count = llBalances.getChildCount();
 
         // use standard asset names (like add bit etc)
-        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-        ArrayList<String> symbols = assetsSymbols.updatedList(sym);
+        ArrayList<String> symbols = new ArrayList();
+        for(String symbol : sym){
+            if(SMARTCOINS.contains(symbol)){
+                symbols.add("bit"+symbol);
+            }
+            symbols.add(symbol);
+        }
 
 
         if (count <= 0)
@@ -1225,8 +1235,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
 
                             float b = powerInFloat(pre.get(l), am.get(i));
-
-                            if (assetsSymbols.isUiaSymbol(sym.get(l)))
+                            if(SMARTCOINS.contains(sym.get(l).replace("bit",""))) {
+                                textView1.setText(String.format(locale, "%.2f", b));
+                            }else if (assetsSymbols.isUiaSymbol(sym.get(l)))
                                 textView1.setText(String.format(locale, "%.4f", b));
                             else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
                                 textView1.setText(String.format(locale, "%.2f", b));
@@ -1241,7 +1252,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
                             String r = returnFromPower(pre.get(l), am.get(l));
 
-                            if (assetsSymbols.isUiaSymbol(sym.get(l)))
+                            if(SMARTCOINS.contains(sym.get(l).replace("bit",""))) {
+                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
+                            }else if (assetsSymbols.isUiaSymbol(sym.get(l)))
                                 textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
                             else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
                                 textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
@@ -1394,7 +1407,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                             // update first balance amount
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if (assetsSymbols.isUiaSymbol(symbol))
+                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
+                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            }else if (assetsSymbols.isUiaSymbol(symbol))
                                 tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
                             else if (assetsSymbols.isSmartCoinSymbol(symbol))
                                 tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
@@ -1450,7 +1465,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             }
 
                             AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if (assetsSymbols.isUiaSymbol(symbol))
+                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
+                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
+                            }else if (assetsSymbols.isUiaSymbol(symbol))
                                 tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
                             else if (assetsSymbols.isSmartCoinSymbol(symbol))
                                 tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
