@@ -524,6 +524,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     public void onAccountList(List<UserAccount> accountList) {
         if(accountList.size() == 0){
             Log.d(TAG, "Not updating account this time");
+            tinyDB.putBoolean(Constants.KEY_UPDATE_DONE, true);
             return;
         }else{
             for(UserAccount account : accountList){
@@ -550,7 +551,6 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
             Log.d(TAG, "starting security update");
             startSecurityUpdate();
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
         }else{
             Log.v(TAG, "Security update already performed");
         }

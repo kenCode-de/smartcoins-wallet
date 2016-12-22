@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.luminiasoft.bitshares.Address;
 import com.luminiasoft.bitshares.Asset;
+import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.TransferOperation;
 import com.luminiasoft.bitshares.UserAccount;
 import com.luminiasoft.bitshares.errors.ChecksumException;
@@ -87,7 +88,6 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.cookie.SM;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.Interfaces.InternalMovementListener;
@@ -104,7 +104,6 @@ import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
-import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
@@ -361,14 +360,20 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         if(op != null){
                             Memo memo = op.getMemo();
                             if(memo.getByteMessage() != null){
-                                Address myAddress = memo.getDestination();
+                                Address destinationAddress = memo.getDestination();
                                 try {
                                     String wif = Crypt.getInstance().decrypt_string(wifkey);
                                     ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
-                                    Log.d(TAG, String.format("Trying to decrypt message from %s -> %s", memo.getSource().toString(), memo.getDestination().toString()));
-                                    String decryptedMessage = Memo.decryptMessage(privateKey, myAddress, memo.getNonce(), memo.getByteMessage());
-                                    Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
-                                    memo.setPlaintextMessage(decryptedMessage);
+                                    PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
+                                    Address myAddress = new Address(publicKey.getKey());
+                                    if(destinationAddress.toString().equals(myAddress.toString())){
+                                        Log.d(TAG, String.format("Trying to decrypt message from %s -> %s", memo.getSource().toString(), memo.getDestination().toString()));
+                                        String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
+                                        Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
+                                        memo.setPlaintextMessage(decryptedMessage);
+                                    }else{
+                                        Log.d(TAG, "Memo was not for me");
+                                    }
                                 } catch (InvalidKeyException e) {
                                     e.printStackTrace();
                                 } catch (NoSuchAlgorithmException e) {
@@ -391,6 +396,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                                 }
                             }
+                        }else{
+                            Log.w(TAG,"Null operation");
+                            continue;
                         }
                         entry.setHistoricalTransfer(historicalTransfer);
                         historicalTransferEntries.add(entry);
@@ -398,15 +406,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     Log.d(TAG, String.format("Got %d transactions from network request", resp.result.size()));
                     int inserted = database.putTransactions(historicalTransferEntries);
                     Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
-                    for(HistoricalTransfer historical : resp.result){
-                        if(historical.getOperation() != null){
-                            Memo memo = historical.getOperation().getMemo();
-
-                        }
-                    }
-                    if (!tinyDB.getBoolean(Constants.KEY_MIGRATED_OLD_TRANSACTIONS)) {
-                        migrateTransactionData();
-                    }
 
                     List<UserAccount> missingAccountNames = database.getMissingAccountNames();
                     if (missingAccountNames.size() > 0) {
@@ -520,15 +519,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 return;
             }
 
-            Log.d(TAG, "Scroll Heght : " + Long.toString(height1));
             View transactionsExportHeader = rootView.findViewById(R.id.transactionsExportHeader);
             int height2 = transactionsExportHeader.getHeight();
-            Log.d(TAG, "Scroll Header Heght : " + Long.toString(height2));
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) transfersView.getLayoutParams();
             params.height = height1 - height2;
-            Log.d(TAG, "View Heght : " + Long.toString(params.height));
             tableViewparent.setLayoutParams(params);
-            Log.d(TAG, "View Heght Set");
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
             handler.postDelayed(task, 2000);
@@ -2958,19 +2953,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     public void isAssets() {
         progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
-    }
-
-    /**
-     * Private method used for migration purposes only. Since the past equivalent value data
-     * is only available in the shared preferences, we should migrate that data into our new
-     * database-backed scheme now.
-     * <p>
-     * This migration is only done once.
-     *
-     * @author: Nelson R. Pérez
-     */
-    private void migrateTransactionData() {
-        //TODO: Implement data migration
     }
 
     /**

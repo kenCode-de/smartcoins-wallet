@@ -2,6 +2,7 @@ package de.bitshares_munich.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,8 +111,11 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         fromUser.setText(fromMessage);
 
         if(!operation.getMemo().getPlaintextMessage().equals("")){
+            Log.d(TAG, "Setting memo");
             TextView memoTextView = (TextView) v.findViewById(R.id.transactiondetailsmemo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
+        }else{
+            Log.i(TAG, "No memo");
         }
 
 //        if(transactiondetails.getDetailsMemo() == null || transactiondetails.getDetailsMemo().isEmpty()) {

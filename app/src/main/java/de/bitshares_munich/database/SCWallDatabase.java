@@ -75,9 +75,12 @@ public class SCWallDatabase {
 
             Memo memo = operation.getMemo();
             if(!memo.getPlaintextMessage().equals("")){
+                Log.d(TAG,"Memo has plaintext message");
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
+            }else{
+                Log.i(TAG,"Memo has no message");
             }
             try{
                 long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
