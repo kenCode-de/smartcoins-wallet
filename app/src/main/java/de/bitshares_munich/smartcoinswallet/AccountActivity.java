@@ -24,14 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
-import com.luminiasoft.bitshares.ws.LookupAccounts;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
+import de.bitsharesmunich.graphenej.api.LookupAccounts;
 
 import org.bitcoinj.core.ECKey;
 import org.json.JSONObject;

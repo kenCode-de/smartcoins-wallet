@@ -3,7 +3,7 @@ package de.bitshares_munich.utils;
 import android.content.Context;
 import android.content.Intent;
 
-import com.luminiasoft.bitshares.TransferOperation;
+import de.bitsharesmunich.graphenej.TransferOperation;
 
 import java.util.Date;
 
