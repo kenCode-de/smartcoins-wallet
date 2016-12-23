@@ -354,6 +354,32 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 public void run() {
                     WitnessResponse<List<HistoricalTransfer>> resp = response;
                     List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
+                    String wif = "";
+                    ECKey privateKey = null;
+                    PublicKey publicKey = null;
+                    Address myAddress = null;
+                    try {
+                        wif = Crypt.getInstance().decrypt_string(wifkey);
+                        privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
+                        publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
+                        myAddress = new Address(publicKey.getKey());
+                    } catch (InvalidKeyException e) {
+                        Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
+                    } catch (NoSuchAlgorithmException e) {
+                        Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
+                    } catch (NoSuchPaddingException e) {
+                        Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
+                    } catch (InvalidAlgorithmParameterException e) {
+                        Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
+                    } catch (IllegalBlockSizeException e) {
+                        Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
+                    } catch (BadPaddingException e) {
+                        Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
+                    } catch (ClassNotFoundException e) {
+                        Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
+                    } catch (IOException e) {
+                        Log.e(TAG, "IOException. Msg: "+e.getMessage());
+                    }
                     for(HistoricalTransfer historicalTransfer : resp.result){
                         HistoricalTransferEntry entry = new HistoricalTransferEntry();
                         TransferOperation op = historicalTransfer.getOperation();
@@ -362,42 +388,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             if(memo.getByteMessage() != null){
                                 Address destinationAddress = memo.getDestination();
                                 try {
-                                    String wif = Crypt.getInstance().decrypt_string(wifkey);
-                                    ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
-                                    PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
-                                    Address myAddress = new Address(publicKey.getKey());
                                     if(destinationAddress.toString().equals(myAddress.toString())){
                                         Log.d(TAG, String.format("Trying to decrypt message from %s -> %s", memo.getSource().toString(), memo.getDestination().toString()));
                                         String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                         Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
                                         memo.setPlaintextMessage(decryptedMessage);
-                                    }else{
-                                        Log.d(TAG, "Memo was not for me");
                                     }
-                                } catch (InvalidKeyException e) {
-                                    e.printStackTrace();
-                                } catch (NoSuchAlgorithmException e) {
-                                    e.printStackTrace();
-                                } catch (NoSuchPaddingException e) {
-                                    e.printStackTrace();
-                                } catch (InvalidAlgorithmParameterException e) {
-                                    e.printStackTrace();
-                                } catch (IllegalBlockSizeException e) {
-                                    e.printStackTrace();
-                                } catch (BadPaddingException e) {
-                                    e.printStackTrace();
-                                } catch (ClassNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 } catch (ChecksumException e) {
-                                    e.printStackTrace();
+                                    Log.e(TAG, "ChecksumException. Msg: "+e.getMessage());
                                 } catch (NullPointerException e){
-
+                                    Log.e(TAG, "NullPointerException. Msg: "+e.getMessage());
                                 }
                             }
                         }else{
-                            Log.w(TAG,"Null operation");
                             continue;
                         }
                         entry.setHistoricalTransfer(historicalTransfer);
@@ -467,7 +470,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         progressDialog = new ProgressDialog(getActivity());
 
-//        tableView = (SortableTableView<TransactionDetails>) rootView.findViewById(R.id.tableView);
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
         transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
@@ -891,8 +893,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         for(String symbol : sym){
             if(SMARTCOINS.contains(symbol)){
                 symbols.add("bit"+symbol);
+            }else{
+                symbols.add(symbol);
             }
-            symbols.add(symbol);
         }
 
 
@@ -1302,6 +1305,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     public void playSound() {
+        Log.d(TAG, "playSound");
         try {
             AudioFilePath audioFilePath = new AudioFilePath(getContext());
             MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
@@ -1850,7 +1854,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                     }
                                     // Balance is recieved
                                     else if (amount_d > txtAmount_d) {
-                                        Log.d("Balances Update", "Balance is received");
+                                        Log.d(TAG, "Balance is received. amount_d: "+amount_d+", txtAmount_d: "+txtAmount_d);
                                         tvAmtwo.setTextColor(getResources().getColor(R.color.green));
                                         tvAmtwo.setTypeface(tvAmtwo.getTypeface(), Typeface.BOLD);
 
@@ -1968,7 +1972,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         }
 
 
-                        Log.d("Balances Update", "Number of balances loaded : " + Long.toString(m));
+                        Log.d(TAG, "Number of balances loaded : " + Long.toString(m));
 
                         // Insert/remove balance objects if updated
                         Log.d("Balances Update", "Insert or remove balance objects if needed");
@@ -2024,6 +2028,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                                 @Override
                                                 public void run() {
                                                     try {
+                                                        Log.d(TAG,"a");
                                                         playSound();
                                                     } catch (Exception e) {
 
@@ -2065,7 +2070,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                                 @Override
                                                 public void run() {
                                                     try {
-                                                        playSound();
+                                                        Log.d(TAG,"would be playing sound");
+//                                                        playSound();
                                                     } catch (Exception e) {
 
                                                     }
@@ -2139,21 +2145,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         return (value / ok);
     }
 
-    public void updateSortTableView(SortableTableView<TransactionDetails> tableView, List<TransactionDetails> myTransactions) {
-        SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
-        simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
-        tableView.setHeaderAdapter(simpleTableHeaderAdapter);
-
-        tableView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-        tableView.setColumnWeight(0, 17);
-        tableView.setColumnWeight(1, 12);
-        tableView.setColumnWeight(2, 30);
-        tableView.setColumnWeight(3, 20);
-        tableView.setColumnComparator(0, new TransactionsDateComparator());
-        tableView.setColumnComparator(1, new TransactionsSendRecieveComparator());
-        tableView.setColumnComparator(3, new TransactionsAmountComparator());
-    }
-
     /**
      * Updating the sort strategy
      */
@@ -2164,9 +2155,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         transfersView.setHeaderAdapter(simpleTableHeaderAdapter);
 
         transfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-        transfersView.setColumnWeight(0, 17);
+        transfersView.setColumnWeight(0, 20);
         transfersView.setColumnWeight(1, 12);
-        transfersView.setColumnWeight(2, 30);
+        transfersView.setColumnWeight(2, 27);
         transfersView.setColumnWeight(3, 22);
         transfersView.setColumnComparator(0, new TransferDateComparator());
         transfersView.setColumnComparator(1, new TransferSendReceiveComparator(new UserAccount(accountId)));
