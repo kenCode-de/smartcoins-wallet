@@ -5,16 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.Market;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.api.GetLimitOrders;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.json.JSONArray;
@@ -40,6 +30,16 @@ import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.api.GetAssets;
+import de.bitsharesmunich.graphenej.api.GetLimitOrders;
+import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.Market;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 
 /**
