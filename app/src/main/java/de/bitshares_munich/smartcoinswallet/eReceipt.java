@@ -50,6 +50,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.GravatarDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.Gravatar;
 import de.bitshares_munich.models.MerchantEmail;
@@ -727,13 +728,14 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
             document.close();
             this.runOnUiThread(new Runnable() {
                 public void run() {
-            Intent email = new Intent(Intent.ACTION_SEND);
-            Uri uri = Uri.fromFile(new File(path));
-            email.putExtra(Intent.EXTRA_STREAM, uri);
-            email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
-            email.setType("application/pdf");
-            email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(email);
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    Uri uri = Uri.fromFile(new File(path));
+                    email.putExtra(Intent.EXTRA_STREAM, uri);
+                    email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
+                    email.setType("application/pdf");
+                    email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ((InternalMovementListener) eReceipt.this).onInternalAppMove();
+                    startActivity(email);
                 }
             });
             hideProgressBar();

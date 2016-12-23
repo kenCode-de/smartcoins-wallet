@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.google.zxing.Result;
 
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -145,6 +146,7 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
         Intent intent = new Intent(QRCodeActivity.this, SendScreen.class);
         intent.putExtras(conData);
         intent.putExtra("id",5);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }

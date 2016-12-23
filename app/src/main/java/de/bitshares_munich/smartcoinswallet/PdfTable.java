@@ -23,10 +23,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,8 +33,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 
 /**
  * Created by developer on 5/23/16.
@@ -265,6 +266,7 @@ public class PdfTable {
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ((InternalMovementListener) this).onInternalAppMove();
             myContext.startActivity(email);
         }
         catch(Exception e){

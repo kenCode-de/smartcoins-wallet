@@ -24,7 +24,6 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import de.bitsharesmunich.graphenej.Invoice;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,10 +35,12 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
+import de.bitsharesmunich.graphenej.Invoice;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -196,6 +197,11 @@ public class RecieveActivity extends BaseActivity {
             sharingIntent.putExtra(Intent.EXTRA_SUBJECT, shareText);
             sharingIntent.putExtra(Intent.EXTRA_TEXT, shareText);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            // This is not specifically an internal app move, but it should be treated as such
+            // because we don't want to keep asking the user for the pin number again when he returns
+            // from the sharing scree. Perhaps this should be renamed to "intentionalAppMove" to
+            // better reflect this situation.
+            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(Intent.createChooser(sharingIntent, this.getString(R.string.share_qr_code)));
         } catch (Exception e) {
 
@@ -273,6 +279,7 @@ public class RecieveActivity extends BaseActivity {
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
         intent.putExtra(SplashActivity.KEY_ASK_FOR_PIN, false);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }
@@ -294,6 +301,7 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("trx", transactions[0].trx);
                         intent.putExtra("receiver_id", transactions[0].account_id);
                         intent.putExtra("sender_id", transactions[0].sender_id);
+                        ((InternalMovementListener) RecieveActivity.this).onInternalAppMove();
                         startActivity(intent);
                         finish();
                     } else {
@@ -344,6 +352,7 @@ public class RecieveActivity extends BaseActivity {
     @OnClick(R.id.OnClickSettings_rcv_screen_activity)
     void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 }

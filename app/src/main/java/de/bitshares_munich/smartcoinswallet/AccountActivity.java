@@ -24,14 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.BrainKey;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
-import de.bitsharesmunich.graphenej.api.LookupAccounts;
 
 import org.bitcoinj.core.ECKey;
 import org.json.JSONObject;
@@ -53,6 +45,7 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.utils.Application;
@@ -65,6 +58,14 @@ import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
+import de.bitsharesmunich.graphenej.api.LookupAccounts;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -523,6 +524,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnClick(R.id.tvExistingAccount)
     public void existingAccount(TextView textView) {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -614,6 +616,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
 
         Application.timeStamp();
