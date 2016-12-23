@@ -46,8 +46,8 @@ subprojects {
                 defaultConfig {
                     minSdkVersion 21
                     targetSdkVersion 23
-                    versionCode 192
-                    versionName "1.5.3"
+                    versionCode 193
+                    versionName "1.5.4"
                 }
             }
         }

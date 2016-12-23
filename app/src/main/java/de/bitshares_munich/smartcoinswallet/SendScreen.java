@@ -48,7 +48,7 @@ import com.luminiasoft.bitshares.PublicKey;
 import com.luminiasoft.bitshares.Transaction;
 import com.luminiasoft.bitshares.TransferTransactionBuilder;
 import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.crypto.Random;
+import com.luminiasoft.bitshares.crypto.SecureRandomGenerator;
 import com.luminiasoft.bitshares.errors.MalformedTransactionException;
 import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
 import com.luminiasoft.bitshares.models.AccountProperties;
@@ -1092,7 +1092,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
-                SecureRandom secureRandom = Random.getSecureRandom();
+                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
                 byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
                 Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));

@@ -13,9 +13,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
 
-        versionCode 192
+        versionCode 193
 
-        versionName '1.5.3'
+        versionName '1.5.4'
         multiDexEnabled true
     }
     buildTypes {

@@ -1,14 +1,12 @@
 package com.luminiasoft.bitshares.crypto;
 
 
-import com.luminiasoft.bitshares.crypto.AndroidRandomSource;
-import com.luminiasoft.bitshares.crypto.SecureRandomStrengthener;
 import java.security.SecureRandom;
 
 /**
  * Created by nelson on 12/20/16.
  */
-public class Random {
+public class SecureRandomGenerator {
 
     public static SecureRandom getSecureRandom(){
         SecureRandomStrengthener randomStrengthener = SecureRandomStrengthener.getInstance();
