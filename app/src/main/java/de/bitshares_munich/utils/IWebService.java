@@ -12,7 +12,7 @@ import de.bitshares_munich.models.EquivalentComponentResponse;
 import de.bitshares_munich.models.GenerateKeys;
 import de.bitshares_munich.models.LtmFee;
 import de.bitshares_munich.models.QrHash;
-import de.bitshares_munich.models.RegisterAccount;
+import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.models.ResponseBinFormat;
 import de.bitshares_munich.models.TradeResponse;
 import de.bitshares_munich.models.TransactionIdResponse;
@@ -70,7 +70,7 @@ public interface IWebService {
 
     @Headers({"Content-Type: application/json"})
     @POST("/api/v1/accounts")
-    Call<RegisterAccount> getReg(@Body Map<String, HashMap> params);
+    Call<RegisterAccountResponse> getReg(@Body Map<String, HashMap> params);
 
     @GET
     Call<Void> sendCallback(@Url String urlSubString, @Query("block") String block, @Query("trx") String trx);

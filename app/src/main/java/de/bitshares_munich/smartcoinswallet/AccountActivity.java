@@ -54,7 +54,7 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
-import de.bitshares_munich.models.RegisterAccount;
+import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
@@ -413,15 +413,15 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         try {
             ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_create_url));
             IWebService service = sg.getService(IWebService.class);
-            final Call<RegisterAccount> postingService = service.getReg(hashMap);
-            postingService.enqueue(new Callback<RegisterAccount>() {
+            final Call<RegisterAccountResponse> postingService = service.getReg(hashMap);
+            postingService.enqueue(new Callback<RegisterAccountResponse>() {
 
                 @Override
-                public void onResponse(Call<RegisterAccount> call, Response<RegisterAccount> response) {
+                public void onResponse(Call<RegisterAccountResponse> call, Response<RegisterAccountResponse> response) {
                     Log.d(TAG,"onResponse");
                     if (response.isSuccessful()) {
                         Log.d(TAG,"success");
-                        RegisterAccount resp = response.body();
+                        RegisterAccountResponse resp = response.body();
                         if (resp.account != null) {
                             try {
                                 if(resp.account.name.equals(accountName)) {
@@ -431,17 +431,25 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                             } catch (Exception e) {
                                 Log.e(TAG, "Exception. Msg: "+e.getMessage());
                                 Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+                                hideDialog();
                             }
                         }else{
-                            Log.e(TAG, "account response is null");
-                            Log.e(TAG, "resp: "+resp.toString());
+                            if(resp.error != null && resp.error.base != null && resp.error.base.length > 0){
+                                String errorMessage = getResources().getString(R.string.error_with_message);
+                                Toast.makeText(AccountActivity.this, String.format(errorMessage, resp.error.base[0]), Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(AccountActivity.this, getResources().getString(R.string.error_no_message), Toast.LENGTH_SHORT).show();
+                            }
+                            hideDialog();
                         }
                     }else{
                         Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+                        hideDialog();
                     }
                 }
+
                 @Override
-                public void onFailure(Call<RegisterAccount> call, Throwable t) {
+                public void onFailure(Call<RegisterAccountResponse> call, Throwable t) {
                     Log.e(TAG, "onFailure. Msg: "+t.getMessage());
                     hideDialog();
                     for(StackTraceElement element : t.getStackTrace()){
