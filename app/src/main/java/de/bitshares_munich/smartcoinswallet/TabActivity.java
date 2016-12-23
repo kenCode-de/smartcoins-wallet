@@ -480,7 +480,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             boolean isOld = true;
             Log.d(TAG, "account: "+account.toString());
             try {
-                if(account.securityUpdateFlag == AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
+                if(account.securityUpdateFlag > AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
                     Log.d(TAG, "Account creation is post security update: " + account.securityUpdateFlag);
                     isOld = false;
                 }else{
@@ -547,12 +547,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @Override
     public void onLockReleased() {
-        Log.d(TAG, "onLockReleased");
         if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
-            Log.d(TAG, "starting security update");
             startSecurityUpdate();
-        }else{
-            Log.v(TAG, "Security update already performed");
         }
     }
 }
