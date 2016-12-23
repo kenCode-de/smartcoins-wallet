@@ -81,6 +81,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
@@ -944,6 +945,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
         if(Application.accountCanCreate()) {
+            ((InternalMovementListener)this).onInternalAppMove();
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
