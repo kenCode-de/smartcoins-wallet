@@ -23,10 +23,10 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.TransferOperation;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.Util;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

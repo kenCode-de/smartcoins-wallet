@@ -24,7 +24,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.luminiasoft.bitshares.Invoice;
+import de.bitsharesmunich.graphenej.Invoice;
 
 import java.io.File;
 import java.io.FileOutputStream;
