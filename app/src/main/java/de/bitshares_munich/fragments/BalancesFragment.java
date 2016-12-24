@@ -36,27 +36,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.errors.ChecksumException;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.BlockHeader;
-import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
-import de.bitsharesmunich.graphenej.models.Market;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.objects.Memo;
-import de.bitsharesmunich.graphenej.api.GetAccounts;
-import de.bitsharesmunich.graphenej.api.GetAssets;
-import de.bitsharesmunich.graphenej.api.GetBlockHeader;
-import de.bitsharesmunich.graphenej.api.GetLimitOrders;
-import de.bitsharesmunich.graphenej.api.GetRelativeAccountHistory;
-import de.bitsharesmunich.graphenej.api.LookupAssetSymbols;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -73,6 +52,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
@@ -120,6 +100,29 @@ import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.TransactionsHelper;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Converter;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.GetAssets;
+import de.bitsharesmunich.graphenej.api.GetBlockHeader;
+import de.bitsharesmunich.graphenej.api.GetLimitOrders;
+import de.bitsharesmunich.graphenej.api.GetMarketHistory;
+import de.bitsharesmunich.graphenej.api.GetRelativeAccountHistory;
+import de.bitsharesmunich.graphenej.api.LookupAssetSymbols;
+import de.bitsharesmunich.graphenej.errors.ChecksumException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.BlockHeader;
+import de.bitsharesmunich.graphenej.models.BucketObject;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.models.Market;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.objects.Memo;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
@@ -183,7 +186,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     @Bind(R.id.whiteSpaceAfterBalances)
     LinearLayout whiteSpaceAfterBalances;
 
-    //    private SortableTableView<TransactionDetails> tableView;
     private SortableTableView<HistoricalTransferEntry> transfersView;
     private ArrayList<TransactionDetails> myTransactions;
 
@@ -238,9 +240,36 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private WebsocketWorkerThread getMissingAccountsThread;
     private WebsocketWorkerThread getMissingAssets;
     private WebsocketWorkerThread getMissingTimes;
+    private WebsocketWorkerThread getMissingEquivalentValues;
 
     private final static List<String> SMARTCOINS = Arrays.asList(new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
             "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"});
+
+    private WitnessResponseListener mHistoricalMarketListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG,"historicalMarket.onSuccess");
+            List<BucketObject> buckets = (List<BucketObject>) response.result;
+            HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
+            if(buckets.size() > 0){
+                BucketObject bucket = buckets.get(0);
+                Asset base = database.fillAssetDetails(bucket.key.base);
+                Asset quote = database.fillAssetDetails(bucket.key.quote);
+                Log.d(TAG,String.format("Base: %s, precision: %d", base.getSymbol(), base.getPrecision()));
+
+                Converter converter = new Converter(base, quote, bucket);
+                long convertedValue = converter.getQuoteValue(Converter.CLOSE_VALUE);
+                Log.d(TAG,String.format("Conversion. 1 %s -> %d %s", base.getSymbol(), convertedValue, quote.getSymbol()));
+            }else{
+                Log.w(TAG, "Got no bucket from the requested time period!");
+            }
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG,"historicalMarketListener.onError. Msg: "+error.message);
+        }
+    };
 
     /**
      * Callback activated once we get a block header response.
@@ -392,7 +421,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                 Address destinationAddress = memo.getDestination();
                                 try {
                                     if(destinationAddress.toString().equals(myAddress.toString())){
-                                        Log.d(TAG, String.format("Trying to decrypt message from %s -> %s", memo.getSource().toString(), memo.getDestination().toString()));
                                         String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                         Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
                                         memo.setPlaintextMessage(decryptedMessage);
@@ -400,7 +428,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                 } catch (ChecksumException e) {
                                     Log.e(TAG, "ChecksumException. Msg: "+e.getMessage());
                                 } catch (NullPointerException e){
-                                    Log.e(TAG, "NullPointerException. Msg: "+e.getMessage());
+                                    // This is expected in case the decryption fails, so no need to log this event.
                                 }
                             }
                         }else{
@@ -438,8 +466,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     }
 
                     missingEquivalentValues = database.getMissingEquivalentValues();
+                    Log.d(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
                     if(missingEquivalentValues.size() > 0){
-                        //TODO: Get missing equivalent value
+                        HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
+                        HistoricalTransfer historicalTransfer = transferEntry.getHistoricalTransfer();
+                        TransferOperation operation = historicalTransfer.getOperation();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(transferEntry.getTimestamp() * 1000);
+                        calendar.set(Calendar.MINUTE, 0);
+                        calendar.set(Calendar.SECOND, 0);
+                        Date date = calendar.getTime();
+                        Asset base = operation.getTransferAmount().getAsset();
+                        Asset quote = new Asset("1.3.0");
+                        if(base.getObjectId().equals(quote.getObjectId())){
+                            quote = new Asset("1.3.121");
+                        }
+                        getMissingEquivalentValues = new WebsocketWorkerThread(new GetMarketHistory(base, quote, 3600, date, date, mHistoricalMarketListener));
+                        getMissingEquivalentValues.start();
                     }
                 }
             });
@@ -947,7 +991,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         if (assets.containsKey(base)) {
                             for (final String quote : currencies.get(base)) {
                                 if (assets.containsKey(quote)) {
-                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getId(), assets.get(quote).getId(), 20, new WitnessResponseListener() {
+                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
                                         @Override
                                         public void onSuccess(WitnessResponse response) {
                                             if (response.result.getClass() == ArrayList.class) {
@@ -955,7 +999,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                                 for (Object listObject : list) {
                                                     if (listObject.getClass() == Market.class) {
                                                         Market market = ((Market) listObject);
-                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getId())) {
+                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
                                                             double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
                                                             int exp = assets.get(base).getPrecision() - assets.get(quote).getPrecision();
                                                             price = (price * Math.pow(10, exp));
@@ -1121,7 +1165,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     private void getEquivalentValueIndirect(final Asset indirectAsset, final Asset faitCurrency, final Asset reference){
-        WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getId(), faitCurrency.getId(), 20, new WitnessResponseListener() {
+        WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getObjectId(), faitCurrency.getObjectId(), 20, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
                 if (response.result.getClass() == ArrayList.class) {
@@ -1129,11 +1173,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     for (Object listObject : list) {
                         if (listObject.getClass() == Market.class) {
                             Market market = ((Market) listObject);
-                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(reference.getId())) {
+                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(reference.getObjectId())) {
                                 double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
                                 int exp = reference.getPrecision()- faitCurrency.getPrecision() ;
                                 final double middlePrice = price * Math.pow(10, exp);
-                                WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(indirectAsset.getId(), reference.getId(), 20, new WitnessResponseListener() {
+                                WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(indirectAsset.getObjectId(), reference.getObjectId(), 20, new WitnessResponseListener() {
                                     @Override
                                     public void onSuccess(WitnessResponse response) {
                                         if (response.result.getClass() == ArrayList.class) {
@@ -1141,7 +1185,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                             for (Object listObject : list) {
                                                 if (listObject.getClass() == Market.class) {
                                                     Market market = ((Market) listObject);
-                                                    if (!market.sell_price.base.asset_id.equalsIgnoreCase(indirectAsset.getId())) {
+                                                    if (!market.sell_price.base.asset_id.equalsIgnoreCase(indirectAsset.getObjectId())) {
                                                         double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
                                                         int exp = indirectAsset.getPrecision() - reference.getPrecision();
                                                         price = price * Math.pow(10, exp)* middlePrice;

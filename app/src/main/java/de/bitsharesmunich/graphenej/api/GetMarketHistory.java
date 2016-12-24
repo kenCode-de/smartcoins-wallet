@@ -1,5 +1,7 @@
 package de.bitsharesmunich.graphenej.api;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +30,7 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
  * Created by nelson on 12/22/16.
  */
 public class GetMarketHistory extends WebSocketAdapter {
+    private String TAG = this.getClass().getName();
     // Sequence of message ids
     private final static int LOGIN_ID = 1;
     private final static int GET_HISTORY_ID = 2;
@@ -65,7 +68,7 @@ public class GetMarketHistory extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
-        System.out.println("<<< "+response);
+        Log.d(TAG, "<<< "+response);
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
         if(baseResponse.error != null){
@@ -107,7 +110,7 @@ public class GetMarketHistory extends WebSocketAdapter {
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame())
-            System.out.println(">>> "+frame.getPayloadText());
+            Log.d(TAG, ">>> "+frame.getPayloadText());
     }
 
     @Override

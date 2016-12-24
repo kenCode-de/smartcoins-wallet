@@ -8,14 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.common.primitives.UnsignedLong;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BlockHeader;
-import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
-import de.bitsharesmunich.graphenej.objects.Memo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +19,14 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BlockHeader;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.objects.Memo;
 
 /**
  * Database wrapper class, providing access to the underlying database.
@@ -75,12 +75,9 @@ public class SCWallDatabase {
 
             Memo memo = operation.getMemo();
             if(!memo.getPlaintextMessage().equals("")){
-                Log.d(TAG,"Memo has plaintext message");
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
-            }else{
-                Log.i(TAG,"Memo has no message");
             }
             try{
                 long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
@@ -345,9 +342,11 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
                 SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT
         };
-        String selection = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
+        String selection  = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
                 SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " > 0";
+        Log.d(TAG, "Selection: "+selection);
         Cursor cursor = db.query(table, columns, selection, null, null, null, null, null);
+        Log.d(TAG, String.format("Got cursor with %d entries", cursor.getCount()));
         if(cursor.moveToFirst()){
             do{
                 String historicalTransferId = cursor.getString(0);
@@ -369,7 +368,7 @@ public class SCWallDatabase {
                 historicalEntries.add(transferEntry);
             }while(cursor.moveToNext());
             cursor.close();
-            Log.d(TAG, String.format("Got %d transactions with missing equivalent value"));
+            Log.d(TAG, String.format("Got %d transactions with missing equivalent value", historicalEntries.size()));
         }
         return historicalEntries;
     }
@@ -408,6 +407,38 @@ public class SCWallDatabase {
      */
     public List<Asset> getAssets(){
         return null;
+    }
+
+    /**
+     * Given an incomplete instance of the Asset object, performs a query and fills the asset
+     * reference with 'precision', 'symbol' and 'description' data.
+     *
+     * @param asset: Incomplete asset instance.
+     * @return: Complete asset instance.
+     */
+    public Asset fillAssetDetails(Asset asset){
+        String table = SCWallDatabaseContract.Assets.TABLE_NAME;
+        String selection = SCWallDatabaseContract.Assets.COLUMN_ID + "=?";
+        Log.d(TAG, "Looking up asset with id: "+asset.getObjectId());
+        String[] selectionArgs = new String[]{ asset.getObjectId() };
+        Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
+        Log.d(TAG,String.format("Got %d assets", cursor.getCount()));
+        if(cursor.moveToFirst()){
+            Log.d(TAG,"Getting first one");
+            try{
+                String symbol = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_SYMBOL));
+                int precision = cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_PRECISION));
+                String description = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION));
+                Log.d(TAG, String.format("Got asset: %s, precision: %d", symbol, precision));
+                asset.setSymbol(symbol);
+                asset.setPrecision(precision);
+                asset.setDescription(description);
+            }catch(Exception e){
+                Log.e(TAG,"Exception: "+e.getMessage());
+            }
+        }
+        cursor.close();
+        return asset;
     }
 
     /**
