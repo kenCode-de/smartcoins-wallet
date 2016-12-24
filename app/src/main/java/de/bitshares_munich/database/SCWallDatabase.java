@@ -8,14 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.common.primitives.UnsignedLong;
-import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.TransferOperation;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BlockHeader;
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
-import com.luminiasoft.bitshares.objects.Memo;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BlockHeader;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.objects.Memo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

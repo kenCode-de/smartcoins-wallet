@@ -1,7 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.UserAccount;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * Created by nelson on 12/17/16.

@@ -25,22 +25,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.AccountOptions;
-import com.luminiasoft.bitshares.AccountUpdateTransactionBuilder;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.Authority;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.PublicKey;
-import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccounts;
-import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -652,7 +652,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             boolean isOld = true;
             Log.d(TAG, "account: "+account.toString());
             try {
-                if(account.securityUpdateFlag == AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
+                if(account.securityUpdateFlag > AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
                     Log.d(TAG, "Account creation is post security update: " + account.securityUpdateFlag);
                     isOld = false;
                 }else{
@@ -719,12 +719,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @Override
     public void onLockReleased() {
-        Log.d(TAG, "onLockReleased");
         if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
-            Log.d(TAG, "starting security update");
             startSecurityUpdate();
-        }else{
-            Log.v(TAG, "Security update already performed");
         }
     }
 }

@@ -1,7 +1,7 @@
 package de.bitshares_munich.adapters;
 
-import com.luminiasoft.bitshares.TransferOperation;
-import com.luminiasoft.bitshares.UserAccount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.Comparator;
 

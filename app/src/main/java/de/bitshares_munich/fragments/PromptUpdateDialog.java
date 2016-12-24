@@ -17,7 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.luminiasoft.bitshares.UserAccount;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.ArrayList;
 import java.util.HashMap;

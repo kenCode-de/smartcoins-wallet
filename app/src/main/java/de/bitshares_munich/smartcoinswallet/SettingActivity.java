@@ -34,23 +34,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.AccountOptions;
-import com.luminiasoft.bitshares.AccountUpdateTransactionBuilder;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.Authority;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.PublicKey;
-import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccounts;
-import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -92,6 +75,22 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     private final String TAG = this.getClass().getName();
@@ -352,6 +351,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void onClickSecurePinbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -994,10 +994,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
         if(Application.accountCanCreate()) {
-            ((InternalMovementListener)this).onInternalAppMove();
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
+            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
@@ -1007,6 +1007,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.TransferOperation;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.Util;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
