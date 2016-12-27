@@ -36,6 +36,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.primitives.UnsignedLong;
+
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -80,10 +82,12 @@ import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.models.FiatMapping;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
+import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
@@ -102,6 +106,7 @@ import de.bitshares_munich.utils.TransactionsHelper;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.Converter;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.TransferOperation;
@@ -136,8 +141,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
-    //TODO: REMOVE THIS
+    // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
+    private final boolean DEBUG_EQ_VALUES = true;
 
     static Boolean audioSevice = false;
 
@@ -226,6 +232,29 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     webSocketCallHelper myWebSocketHelper;
 
+    /* Constant used to fix the number of historical transfers to fetch in one batch */
+    private int HISTORICAL_TRANSFER_BATCH_SIZE = 20;
+
+    /* Parameters to be used as the start and stop arguments in the 'get_relative_account_history' API call */
+    private int start = 1;
+    private int stop = HISTORICAL_TRANSFER_BATCH_SIZE;
+    private int historicalTransferCount = 0;
+
+    /*
+    * Attribute used when trying to make a 2-step equivalent value calculation
+    * This variable will hold the equivalent value of the UIA in BTS, that will in turn
+    * have to be converted to the smartcoin of choice for the user */
+    private AssetAmount coreCurrencyEqValue;
+
+    /* Websocket handler */
+    private GetMarketHistory getMarketHistory;
+
+    /*
+    * This is the smartcoin that matches the user's selected fiat currency.
+    * If no smartcoin exists for a user's specific local currency, the bitUSD
+    * will be used instead.*/
+    private Asset mSmartcoin;
+
     /* List of transactions for which we don't have the equivalent value data */
     private LinkedList<HistoricalTransferEntry> missingEquivalentValues;
 
@@ -245,23 +274,166 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private final static List<String> SMARTCOINS = Arrays.asList(new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
             "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"});
 
+    private WitnessResponseListener mHistoricalMarketSecondStepListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG,"historicalMarketSecondStepListener.onSuccess");
+            List<BucketObject> buckets = (List<BucketObject>) response.result;
+            HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
+            Date date = new Date(transferEntry.getTimestamp() * 1000);
+            Log.d(TAG, String.format("Got %d buckets", buckets.size()));
+            if(buckets.size() > 0){
+                // Fetching the last bucket, just in case we have more than one.
+                BucketObject bucket = buckets.get(buckets.size() - 1);
+
+                Asset base = database.fillAssetDetails(bucket.key.base);
+                Asset quote = database.fillAssetDetails(bucket.key.quote);
+
+                // Doing conversion and updating the database
+                Converter converter = new Converter(base, quote, bucket);
+                long convertedBaseValue = converter.convert(coreCurrencyEqValue, Converter.CLOSE_VALUE);
+                AssetAmount equivalentValue = new AssetAmount(UnsignedLong.valueOf(convertedBaseValue), mSmartcoin);
+                Log.d(TAG,String.format("eq value. %s %d", equivalentValue.getAsset().getSymbol(), equivalentValue.getAmount().longValue()));
+
+                // Updating equivalent value entry
+                transferEntry.setEquivalentValue(equivalentValue);
+                database.updateEquivalentValue(transferEntry);
+
+                // Updating table view
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateTableView();
+                    }
+                });
+
+                // Removing the now solved equivalent value
+                missingEquivalentValues.poll();
+
+                // Processing next value, if there is one.
+                // Process the next equivalent value, in case we have one
+                boolean scheduledNext = processNextEquivalentValue();
+                if(!scheduledNext){
+                    if(transferHistoryThread != null && transferHistoryThread.isAlive()){
+                        transferHistoryThread.interrupt();
+                    }
+                    transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
+                    transferHistoryThread.start();
+                }
+            }else{
+                Date currentStart = getMarketHistory.getStart();
+                int previousCount = getMarketHistory.getCount() > 0 ? getMarketHistory.getCount() - 1 : 0;
+                int currentCount = getMarketHistory.getCount();
+                long previousExponentialFactor = (long) Math.pow(2, previousCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
+                long newExponentialFactor = (long) Math.pow(2, currentCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
+                long adjustedStartValue = currentStart.getTime() + previousExponentialFactor - newExponentialFactor;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(adjustedStartValue);
+                getMarketHistory.setStart(calendar.getTime());
+                getMarketHistory.retry();
+            }
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG,"historicalMarketListener.onError. Msg: "+error.message);
+        }
+    };
+
+    /**
+     * Called when we get a response from the 'get_market_history' API call
+     */
     private WitnessResponseListener mHistoricalMarketListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(WitnessResponse response) {
-            Log.d(TAG,"historicalMarket.onSuccess");
             List<BucketObject> buckets = (List<BucketObject>) response.result;
             HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
             if(buckets.size() > 0){
-                BucketObject bucket = buckets.get(0);
+                BucketObject bucket = buckets.get(buckets.size() - 1);
+
+                AssetAmount transferAmount = transferEntry.getHistoricalTransfer().getOperation().getTransferAmount();
+
                 Asset base = database.fillAssetDetails(bucket.key.base);
                 Asset quote = database.fillAssetDetails(bucket.key.quote);
-                Log.d(TAG,String.format("Base: %s, precision: %d", base.getSymbol(), base.getPrecision()));
 
-                Converter converter = new Converter(base, quote, bucket);
-                long convertedValue = converter.getQuoteValue(Converter.CLOSE_VALUE);
-                Log.d(TAG,String.format("Conversion. 1 %s -> %d %s", base.getSymbol(), convertedValue, quote.getSymbol()));
+                if(quote.equals(mSmartcoin)){
+                    Log.i(TAG,String.format("quote is smartcoin. base: %s, quote: %s", base.getObjectId(), quote.getObjectId()));
+
+                    // Doing conversion and updating the database
+                    Converter converter = new Converter(base, quote, bucket);
+                    long convertedBaseValue = converter.convert(transferAmount, Converter.CLOSE_VALUE);
+                    AssetAmount equivalentValue = new AssetAmount(UnsignedLong.valueOf(convertedBaseValue), mSmartcoin);
+
+                    Log.d(TAG,String.format("Saving eq value. %s %d, original: %s %d", equivalentValue.getAsset().getSymbol(), equivalentValue.getAmount().longValue(), transferAmount.getAsset().getSymbol(), transferAmount.getAmount().longValue()));
+                    transferEntry.setEquivalentValue(equivalentValue);
+                    database.updateEquivalentValue(transferEntry);
+
+                    // Updating table view
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateTableView();
+                        }
+                    });
+
+                    // Removing the now solved equivalent value
+                    missingEquivalentValues.poll();
+
+                    // Process the next equivalent value, in case we have one
+                    boolean scheduledNext = processNextEquivalentValue();
+                    if(!scheduledNext){
+                        if(transferHistoryThread != null && transferHistoryThread.isAlive()){
+                            transferHistoryThread.interrupt();
+                        }
+                        transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
+                        transferHistoryThread.start();
+                    }
+                }else{
+                    Log.i(TAG,String.format("quote is UIA. base: %s, quote: %s", base.getObjectId(), quote.getObjectId()));
+                    AssetAmount originalTransfer = transferEntry.getHistoricalTransfer().getOperation().getTransferAmount();
+                    Log.d(TAG,String.format("original value. %s %d", originalTransfer.getAsset().getSymbol(), originalTransfer.getAmount().longValue()));
+                    // Doing conversion and updating the database
+                    Converter converter = new Converter(base, quote, bucket);
+                    long convertedBaseValue = converter.convert(originalTransfer, Converter.CLOSE_VALUE);
+                    coreCurrencyEqValue = new AssetAmount(UnsignedLong.valueOf(convertedBaseValue), base);
+                    Log.d(TAG,String.format("eq value. %s %d", coreCurrencyEqValue.getAsset().getSymbol(), coreCurrencyEqValue.getAmount().longValue()));
+
+                    base = database.fillAssetDetails(Constants.getCoreCurrency());
+                    quote = database.fillAssetDetails(mSmartcoin);
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(transferEntry.getTimestamp() * 1000);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    Date startDate = calendar.getTime();
+                    Date endDate = calendar.getTime();
+
+                    // Performing the 2nd step of the equivalent value calculation. We already hold the
+                    // relationship UIA <-> BTS, now we need the BTS <-> Smartcoin for this time bucket.
+                    getMarketHistory = new GetMarketHistory(
+                            base,
+                            quote,
+                            Constants.DEFAULT_BUCKET_SIZE,
+                            startDate,
+                            endDate,
+                            mHistoricalMarketSecondStepListener);
+                    getMissingEquivalentValues = new WebsocketWorkerThread(getMarketHistory);
+                    getMissingEquivalentValues.start();
+                }
             }else{
-                Log.w(TAG, "Got no bucket from the requested time period!");
+//                Log.w(TAG, String.format("Got no bucket from the requested time period for asset: %s ", transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAsset().getSymbol()));
+                Date currentStart = getMarketHistory.getStart();
+                Calendar calendar = Calendar.getInstance();
+                int previousCount = getMarketHistory.getCount() > 0 ? getMarketHistory.getCount() - 1 : 0;
+                int currentCount = getMarketHistory.getCount();
+                long previousExponentialFactor = (long) Math.pow(2, previousCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
+                long newExponentialFactor = (long) Math.pow(2, currentCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
+                long adjustedStartValue = currentStart.getTime() + previousExponentialFactor - newExponentialFactor;
+//                Log.d(TAG,String.format("prev: %d, current: %d, start: %d", previousExponentialFactor, newExponentialFactor, adjustedStartValue));
+                calendar.setTimeInMillis(adjustedStartValue);
+                getMarketHistory.setStart(calendar.getTime());
+                getMarketHistory.retry();
             }
         }
 
@@ -278,15 +450,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
         @Override
         public void onSuccess(final WitnessResponse response) {
-            Log.d(TAG, "getMissingTime. onSuccess");
+            Log.d(TAG, "getMissingTime. onSuccess. remaining: "+(missingTimes.size() - 1));
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     BlockHeader blockHeader = (BlockHeader) response.result;
                     boolean updated = database.setBlockTime(blockHeader, missingTimes.peek());
-                    if (updated) {
-                        Log.d(TAG, "Block time updated in transaction at block: " + missingTimes.peek());
-                    } else {
+                    if (!updated) {
                         Log.w(TAG, "Failed to update time from transaction at block: " + missingTimes.peek());
                     }
                     missingTimes.poll();
@@ -296,8 +466,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         long blockNum = missingTimes.peek();
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
+                    }else{
+                        // If we're done with loading missing transfer times, we check for missing equivalent values.
+                        missingEquivalentValues = database.getMissingEquivalentValues();
+                        if(missingEquivalentValues.size() > 0){
+                            Log.i(TAG,"Finished loading missing times, now we can safely proceed to missing eq values");
+                            processNextEquivalentValue();
+                        }
                     }
-
                     updateTableView();
                 }
             });
@@ -318,8 +494,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     };
 
     /**
-     * Callback activated once we get a response back from the network informing us about some
-     * missing asset details.
+     * Callback activated whenever we get information about missing assets in the database.
+     * If the missing asset happens to be the user's current base smartcoin, we update the
+     * mSmartcoin reference, since this will be a new and complete Asset instance.
      */
     private WitnessResponseListener mLookupAssetsSymbolsListener = new WitnessResponseListener() {
 
@@ -330,10 +507,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 public void run() {
                     Log.d(TAG, "assetsUpdater.onSuccess");
                     List<Asset> assets = (List<Asset>) response.result;
+                    // Updating the database
                     int count = database.putAssets(assets);
+
                     if (count > 0) {
                         // Assets updated, refresh table adapter.
                         updateTableView();
+                    }
+
+                    // Looking for smartcoin asset
+                    for(Asset asset : assets){
+                        if(asset.getObjectId().equals(mSmartcoin.getObjectId().toString())){
+                            mSmartcoin = asset;
+                        }
+                    }
+
+                    // If we has missing equivalent values that could not be processed until
+                    // we had all the missing assets in the database, start processing them now.
+                    if(missingEquivalentValues != null){
+                        processNextEquivalentValue();
                     }
                 }
             });
@@ -381,6 +573,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         @Override
         public void onSuccess(final WitnessResponse response) {
             Log.d(TAG, "mTransferHistoryListener. onSuccess");
+            historicalTransferCount++;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -422,7 +615,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                 try {
                                     if(destinationAddress.toString().equals(myAddress.toString())){
                                         String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
-                                        Log.d(TAG, String.format("Plaintext version: %s", decryptedMessage));
                                         memo.setPlaintextMessage(decryptedMessage);
                                     }
                                 } catch (ChecksumException e) {
@@ -446,7 +638,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         // Got some missing user names, so we request them to the network.
                         getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
                         getMissingAccountsThread.start();
-                        Log.d(TAG, "Requesting missing account names");
                     }
 
                     List<Asset> missingAssets = database.getMissingAssets();
@@ -454,7 +645,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         // Got some missing asset symbols, so we request them to the network.
                         getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
                         getMissingAssets.start();
-                        Log.d(TAG, "Requesting missing assets");
                     }
 
                     missingTimes = database.getMissingTransferTimes();
@@ -462,29 +652,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         Long blockNum = missingTimes.peek();
                         getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
                         getMissingTimes.start();
-                        Log.d(TAG, "Requesting missing block times");
                     }
 
                     missingEquivalentValues = database.getMissingEquivalentValues();
-                    Log.d(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
-                    if(missingEquivalentValues.size() > 0){
-                        HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
-                        HistoricalTransfer historicalTransfer = transferEntry.getHistoricalTransfer();
-                        TransferOperation operation = historicalTransfer.getOperation();
-
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(transferEntry.getTimestamp() * 1000);
-                        calendar.set(Calendar.MINUTE, 0);
-                        calendar.set(Calendar.SECOND, 0);
-                        Date date = calendar.getTime();
-                        Asset base = operation.getTransferAmount().getAsset();
-                        Asset quote = new Asset("1.3.0");
-                        if(base.getObjectId().equals(quote.getObjectId())){
-                            quote = new Asset("1.3.121");
-                        }
-                        getMissingEquivalentValues = new WebsocketWorkerThread(new GetMarketHistory(base, quote, 3600, date, date, mHistoricalMarketListener));
-                        getMissingEquivalentValues.start();
-                    }
+                    Log.i(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
+                    processNextEquivalentValue();
                 }
             });
         }
@@ -494,6 +666,84 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
             Log.e(TAG, "mTransferHistoryListener. onError. Msg: " + error.message);
         }
     };
+
+    /**
+     * Assuming we have a list of missing equivalent values, this method will be called
+     * to start the procedure needed to resolve a single missing equivalent value.
+     *
+     * Since this procedure might have to be called repeated times, it was better isolated
+     * in a private method.
+     */
+    private boolean processNextEquivalentValue(){
+        boolean scheduledProcessing = false;
+        if(missingEquivalentValues.size() > 0){
+            List<Asset> missingAssets = database.getMissingAssets();
+            List<Long> misingTimes = database.getMissingTransferTimes();
+            if(missingAssets.size() == 0 && misingTimes.size() == 0){
+                HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
+                Asset transferredAsset = transferEntry.getHistoricalTransfer()
+                        .getOperation()
+                        .getTransferAmount()
+                        .getAsset();
+
+                while(transferredAsset.equals(mSmartcoin)){
+                    // In case the transferred asset is the smartcoin itself, there is no need for
+                    // a equivalent value calculation, and as such we just fill in the equivalent
+                    // value fields and .
+                    transferEntry.setEquivalentValue(new AssetAmount(transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAmount(), transferredAsset));
+                    database.updateEquivalentValue(transferEntry);
+
+                    missingEquivalentValues.poll();
+
+                    transferEntry = missingEquivalentValues.peek();
+                    transferredAsset = transferEntry.getHistoricalTransfer()
+                            .getOperation()
+                            .getTransferAmount()
+                            .getAsset();
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(transferEntry.getTimestamp() * 1000);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                Date startDate = calendar.getTime();
+                Date endDate = calendar.getTime();
+
+                Asset base = null;
+                Asset quote = null;
+                if(transferredAsset.equals(Constants.getCoreCurrency())){
+                    // Directly fetch the BTS <-> smartcoin
+                    base = database.fillAssetDetails(transferredAsset);
+                    quote = database.fillAssetDetails(mSmartcoin);
+                } else {
+                    // We need to perform 2 conversions, namely
+                    // Token <-> BTS <-> smartcoin
+                    base = database.fillAssetDetails(transferredAsset);
+                    quote = database.fillAssetDetails(Constants.getCoreCurrency());
+                }
+//                Log.d(TAG, String.format("initial times. start: %d, end: %d", startDate.getTime(), endDate.getTime()));
+                if(base != null && quote != null){
+                    getMarketHistory = new GetMarketHistory(
+                            base,
+                            quote,
+                            Constants.DEFAULT_BUCKET_SIZE,
+                            startDate,
+                            endDate,
+                            mHistoricalMarketListener);
+                    getMissingEquivalentValues = new WebsocketWorkerThread(getMarketHistory);
+                    getMissingEquivalentValues.start();
+                    scheduledProcessing = true;
+                }else{
+                    Log.w(TAG,"Either base or quote is null");
+                }
+            }else{
+                // Don't do anything, the lookup_asset_symbol callback will check for missing
+                // equivalent values again and pick up this series of tasks.
+                Log.w(TAG, "We have some missing assets");
+            }
+        }
+        return scheduledProcessing;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -506,6 +756,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         database = new SCWallDatabase(getContext());
         if (DEBUG_DATE_LOADING) {
             database.clearTimestamps();
+        }
+        if(DEBUG_EQ_VALUES){
+            database.clearTransfers();
+        }
+
+        // Setting the "base" smartcoin for this user
+        String countryCode = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country));
+        this.mSmartcoin = FiatMapping.getMap().get(countryCode);
+        HashMap<String, Asset> knownAssets = database.getAssetMap();
+        if(!knownAssets.containsKey(this.mSmartcoin.getObjectId())){
+            // If the smartcoin asset details are not known, we schedule an update from the full node.
+            Log.d(TAG, "smartcoin asset is not known");
+            ArrayList<Asset> assetList = new ArrayList<>();
+            assetList.add(mSmartcoin);
+            getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(assetList, mLookupAssetsSymbolsListener));
+            getMissingAssets.start();
+        }else{
+            Asset smartcoinAsset = database.fillAssetDetails(mSmartcoin);
+            Log.d(TAG, String.format("smartcoin asset is known. symbol: %s, precision: %d", smartcoinAsset.getSymbol(), smartcoinAsset.getPrecision()));
         }
     }
 
@@ -684,7 +953,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         }
 
         if (!accountId.equals("")) {
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), mTransferHistoryListener));
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
             transferHistoryThread.start();
         } else {
             Log.d(TAG, "account id is empty");
@@ -970,9 +1239,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 }
             }
         }
-        Log.d(TAG,"getEquivalentComponent. asset list");
-        for(String assetString : assetList) Log.d(TAG, "asset: "+assetString);
-
         WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
@@ -1157,7 +1423,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 if (!currenciesChange.containsKey(accountAsset.symbol)) {
                     currenciesChange.put(accountAsset.symbol, new ArrayList());
                 }
-                Log.d(TAG,"Creating mapping: "+accountAsset.symbol+" -> "+faitCurrency);
+//                Log.d(TAG,"Creating mapping: "+accountAsset.symbol+" -> "+faitCurrency);
                 currenciesChange.get(accountAsset.symbol).add(faitCurrency);
             }
         }
@@ -3005,7 +3271,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private void updateTableView() {
         UserAccount account = new UserAccount(accountId);
         List<HistoricalTransferEntry> transfers = database.getTransactions(account);
-        Log.d(TAG, String.format("Updating the table view with %d transactions", transfers.size()));
         transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransferEntry[transfers.size()])));
 
         if (transfersView.getColumnComparator(0) == null) {
@@ -3013,5 +3278,3 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         }
     }
 }
-
-

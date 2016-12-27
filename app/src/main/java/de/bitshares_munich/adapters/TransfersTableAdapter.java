@@ -9,11 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.Util;
-
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +17,10 @@ import java.util.Locale;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 import de.codecrafters.tableview.TableDataAdapter;
 
 
@@ -108,11 +107,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         fromUser.setText(fromMessage);
 
         if(!operation.getMemo().getPlaintextMessage().equals("")){
-            Log.d(TAG, "Setting memo");
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
-        }else{
-            Log.i(TAG, "No memo");
         }
         return v;
     }
@@ -121,8 +117,11 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
-        TextView transferAmount = (TextView) root.findViewById(R.id.transactionssendamount);
+        TextView transferAmount = (TextView) root.findViewById(R.id.asset_amount);
         AssetAmount assetAmount = operation.getTransferAmount();
+
+        TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
+        AssetAmount fiatAmount = historicalTransfer.getEquivalentValue();
 
         String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
         Locale locale = new Locale(language);
@@ -130,16 +129,29 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         if(assetAmount.getAsset() != null){
             symbol = assetAmount.getAsset().getSymbol();
         }
+        int redColor = ContextCompat.getColor(getContext(),R.color.sendamount);
+        int greenColor = ContextCompat.getColor(getContext(),R.color.recieveamount);
+
         if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
             // User sent this transfer
-            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
+            transferAmount.setTextColor(redColor);
+            fiatAmountTextView.setTextColor(redColor);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
-            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
+            transferAmount.setTextColor(greenColor);
+            fiatAmountTextView.setTextColor(greenColor);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("+ %s %s", amount, symbol));
+        }
+
+        if(fiatAmount != null){
+            String eqValue = String.format("~ %s %.2f", fiatAmount.getAsset().getSymbol(), Util.fromBase(fiatAmount));
+            Log.d(TAG,"Fiat amount: "+eqValue);
+            fiatAmountTextView.setText(eqValue);
+        }else{
+            Log.w(TAG,"Fiat amount is null");
         }
 
 //        Locale locale;

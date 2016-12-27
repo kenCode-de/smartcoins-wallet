@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
+        android:id="@+id/asset_amount"
         android:paddingLeft="0dp"
         android:paddingRight="5dp"
         android:paddingBottom="0dp"
         android:paddingTop="5dp"
-        android:id="@+id/transactionssendamount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+ 30.00 OBITS"
         android:fontFamily="sans-serif-light"
-        android:textSize="7.2pt"
+        android:textSize="11sp"
         android:textColor="@color/sendamount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
         android:textStyle="bold"/>
     <TextView
+        android:id="@+id/fiat_amount"
         android:paddingLeft="0dp"
         android:paddingRight="5dp"
         android:paddingBottom="5dp"
         android:paddingTop="0dp"
-        android:id="@+id/transactionssendfaitamount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="+ 3.33 USD"
         android:fontFamily="sans-serif-light"
-        android:textSize="6pt"
+        android:textSize="11sp"
         android:textColor="@color/sendamount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
-        android:visibility="invisible"
-        android:textStyle="bold"/>
+        android:visibility="visible"
+        android:textStyle="bold" />
 </LinearLayout>

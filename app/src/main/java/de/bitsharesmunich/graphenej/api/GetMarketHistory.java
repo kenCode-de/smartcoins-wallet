@@ -42,10 +42,13 @@ public class GetMarketHistory extends WebSocketAdapter {
     private long bucket;
     private Date start;
     private Date end;
-    private WitnessResponseListener mListener;
 
+    // Internal attributes
+    private WitnessResponseListener mListener;
+    private WebSocket mWebsocket;
     private int currentId = 1;
     private int apiId = -1;
+    private int counter = 0;
 
     public GetMarketHistory(Asset base, Asset quote, long bucket, Date start, Date end, WitnessResponseListener listener){
         this.base = base;
@@ -56,8 +59,67 @@ public class GetMarketHistory extends WebSocketAdapter {
         this.mListener = listener;
     }
 
+    public Asset getBase() {
+        return base;
+    }
+
+    public void setBase(Asset base) {
+        this.base = base;
+    }
+
+    public Asset getQuote() {
+        return quote;
+    }
+
+    public void setQuote(Asset quote) {
+        this.quote = quote;
+    }
+
+    public long getBucket() {
+        return bucket;
+    }
+
+    public void setBucket(long bucket) {
+        this.bucket = bucket;
+    }
+
+    public Date getStart() {
+        return start;
+    }
+
+    public void setStart(Date start) {
+        this.start = start;
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
+    public void setEnd(Date end) {
+        this.end = end;
+    }
+
+    public int getCount(){
+        return this.counter;
+    }
+
+    public void disconnect(){
+        if(mWebsocket != null && mWebsocket.isOpen()){
+            mWebsocket.disconnect();
+        }
+    }
+
+    /**
+     * Retries the 'get_market_history' API call.
+     * Hopefully with different 'start' and 'stop' parameters.
+     */
+    public void retry(){
+        sendHistoricalMarketDataRequest();
+    }
+
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
+        mWebsocket = websocket;
         ArrayList<Serializable> loginParams = new ArrayList<>();
         loginParams.add(null);
         loginParams.add(null);
@@ -85,26 +147,36 @@ public class GetMarketHistory extends WebSocketAdapter {
                 WitnessResponse<Integer> witnessResponse = gson.fromJson(response, ApiIdResponse);
                 apiId = witnessResponse.result.intValue();
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-
-                ArrayList<Serializable> params = new ArrayList<>();
-                params.add(this.base.getObjectId());
-                params.add(this.quote.getObjectId());
-                params.add(this.bucket);
-                params.add(dateFormat.format(this.start));
-                params.add(dateFormat.format(this.end));
-
-                ApiCall getRelativeAccountHistoryCall = new ApiCall(apiId, RPC.CALL_GET_MARKET_HISTORY, params, RPC.VERSION, currentId);
-                websocket.sendText(getRelativeAccountHistoryCall.toJsonString());
-            }else if(baseResponse.id == GET_HISTORY_DATA){
+                sendHistoricalMarketDataRequest();
+            }else if(baseResponse.id >= GET_HISTORY_DATA){
                 GsonBuilder builder = new GsonBuilder();
                 Type MarketHistoryResponse = new TypeToken<WitnessResponse<List<BucketObject>>>(){}.getType();
                 builder.registerTypeAdapter(BucketObject.class, new BucketObject.BucketDeserializer());
                 WitnessResponse<List<BucketObject>> marketHistoryResponse = builder.create().fromJson(response, MarketHistoryResponse);
                 mListener.onSuccess(marketHistoryResponse);
-                websocket.disconnect();
             }
         }
+    }
+
+    /**
+     * Actually sends the 'get_market_history' API call request. This method might be called multiple
+     * times during the life-cycle of this instance because we might not have gotten anything
+     * in the first requested interval.
+     */
+    private void sendHistoricalMarketDataRequest(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+
+        ArrayList<Serializable> params = new ArrayList<>();
+        params.add(this.base.getObjectId());
+        params.add(this.quote.getObjectId());
+        params.add(this.bucket);
+        params.add(dateFormat.format(this.start));
+        params.add(dateFormat.format(this.end));
+
+        ApiCall getRelativeAccountHistoryCall = new ApiCall(apiId, RPC.CALL_GET_MARKET_HISTORY, params, RPC.VERSION, currentId);
+        mWebsocket.sendText(getRelativeAccountHistoryCall.toJsonString());
+
+        counter++;
     }
 
     @Override

@@ -73,6 +73,12 @@ public class SCWallDatabase {
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID, operation.getTransferAmount().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, historicalTransfer.getBlockNum());
 
+            if(transferEntry.getEquivalentValue() != null){
+                AssetAmount assetAmount = transferEntry.getEquivalentValue();
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, assetAmount.getAsset().getObjectId());
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, assetAmount.getAmount().longValue());
+            }
+
             Memo memo = operation.getMemo();
             if(!memo.getPlaintextMessage().equals("")){
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM, memo.getSource().toString());
@@ -90,6 +96,20 @@ public class SCWallDatabase {
         long after = System.currentTimeMillis();
         Log.d(TAG, String.format("putTransactions took %d ms with %d transactions", (after - before), transactions.size()));
         return count;
+    }
+
+    public int updateEquivalentValue(HistoricalTransferEntry transfer){
+        String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.Transfers.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ transfer.getHistoricalTransfer().getId() };
+
+        ContentValues contentValues = new ContentValues();
+        Log.d(TAG,String.format("Updating eq value. asset id: %s, amount: %d", transfer.getEquivalentValue().getAsset().getObjectId(), transfer.getEquivalentValue().getAmount().longValue()));
+        contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, transfer.getEquivalentValue().getAmount().longValue());
+        contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, transfer.getEquivalentValue().getAsset().getObjectId());
+
+        int updated = db.update(table, contentValues, whereClause, whereArgs);
+        return updated;
     }
 
     /**
@@ -144,6 +164,31 @@ public class SCWallDatabase {
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
                 historicalTransfer.setOperation(transferOperation);
                 historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
+
+                // Adding equivalent value data
+                String id = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID));
+                long equivalentValue = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE));
+                if(id != null && equivalentValue != 0){
+                    Log.v(TAG,String.format("Eq value asset id: %s, value: %d", id, equivalentValue));
+                    String table = SCWallDatabaseContract.Assets.TABLE_NAME;
+                    String[] columns = new String[] {
+                            SCWallDatabaseContract.Assets.COLUMN_SYMBOL,
+                            SCWallDatabaseContract.Assets.COLUMN_PRECISION
+                    };
+                    String where = SCWallDatabaseContract.Assets.COLUMN_ID + "=?";
+                    String[] whereArgs = new String[]{ id };
+                    Cursor assetCursor = db.query(true, table, columns, where, whereArgs, null, null, null, null);
+                    if(assetCursor.moveToFirst()){
+                        String symbol = assetCursor.getString(0);
+                        int precision = assetCursor.getInt(1);
+                        AssetAmount eqValueAssetAmount = new AssetAmount(UnsignedLong.valueOf(equivalentValue), new Asset(id, symbol, precision));
+                        transferEntry.setEquivalentValue(eqValueAssetAmount);
+                    }else{
+                        Log.w(TAG,"Got empty cursor while trying to fill asset data");
+                    }
+                }else{
+                    Log.v(TAG, "Failed do put equivalent data");
+                }
 
                 transferEntry.setHistoricalTransfer(historicalTransfer);
                 transferEntry.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
@@ -231,7 +276,7 @@ public class SCWallDatabase {
     }
 
     /**
-     * @return: A hashmap connecting asset ids to asset symbols.
+     * @return: A hashmap connecting asset ids to Asset object instances.
      */
     public HashMap<String, Asset> getAssetMap(){
         HashMap<String, Asset> assetMap = new HashMap<>();
@@ -343,10 +388,10 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT
         };
         String selection  = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
-                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " > 0";
-        Log.d(TAG, "Selection: "+selection);
+                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " != 0";
+        Log.i(TAG, "Selection: "+selection);
         Cursor cursor = db.query(table, columns, selection, null, null, null, null, null);
-        Log.d(TAG, String.format("Got cursor with %d entries", cursor.getCount()));
+        Log.i(TAG, String.format("Got cursor with %d entries", cursor.getCount()));
         if(cursor.moveToFirst()){
             do{
                 String historicalTransferId = cursor.getString(0);
@@ -368,7 +413,7 @@ public class SCWallDatabase {
                 historicalEntries.add(transferEntry);
             }while(cursor.moveToNext());
             cursor.close();
-            Log.d(TAG, String.format("Got %d transactions with missing equivalent value", historicalEntries.size()));
+            Log.i(TAG, String.format("Got %d transactions with missing equivalent value", historicalEntries.size()));
         }
         return historicalEntries;
     }
@@ -393,8 +438,11 @@ public class SCWallDatabase {
             String whereClause = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + "=?";
             String[] whereArgs = { String.format("%d", blockNum) };
             int count = db.update(table, values, whereClause, whereArgs);
-            if(count == 1)
+            if(count > 0) {
                 updated = true;
+            }else{
+                Log.w(TAG,String.format("Failed to update block time. block: %d", blockNum));
+            }
         } catch (ParseException e) {
             Log.e(TAG, "ParseException. Msg: "+e.getMessage());
         }
@@ -419,17 +467,13 @@ public class SCWallDatabase {
     public Asset fillAssetDetails(Asset asset){
         String table = SCWallDatabaseContract.Assets.TABLE_NAME;
         String selection = SCWallDatabaseContract.Assets.COLUMN_ID + "=?";
-        Log.d(TAG, "Looking up asset with id: "+asset.getObjectId());
         String[] selectionArgs = new String[]{ asset.getObjectId() };
         Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
-        Log.d(TAG,String.format("Got %d assets", cursor.getCount()));
         if(cursor.moveToFirst()){
-            Log.d(TAG,"Getting first one");
             try{
                 String symbol = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_SYMBOL));
                 int precision = cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_PRECISION));
                 String description = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION));
-                Log.d(TAG, String.format("Got asset: %s, precision: %d", symbol, precision));
                 asset.setSymbol(symbol);
                 asset.setPrecision(precision);
                 asset.setDescription(description);
@@ -474,5 +518,9 @@ public class SCWallDatabase {
         values.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0);
         int count = db.update(SCWallDatabaseContract.Transfers.TABLE_NAME, values, null, null);
         Log.d(TAG, String.format("%d timestamps where deleted", count));
+    }
+
+    public void clearTransfers(){
+        db.execSQL("delete from "+SCWallDatabaseContract.Transfers.TABLE_NAME);
     }
 }

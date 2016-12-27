@@ -132,7 +132,7 @@ Context context;
         Helper.setLocaleNumberFormat(locale, 1);
         if( transactiondetails.getSent() )
         {
-            TextView textView = (TextView) v.findViewById(R.id.transactionssendamount);
+            TextView textView = (TextView) v.findViewById(R.id.asset_amount);
             textView.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
             String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
             textView.setText("- " + amount + " " + transactiondetails.getAssetSymbol());
@@ -140,12 +140,12 @@ Context context;
 
             if ( transactiondetails.getFaitAmount() == 0 )
             {
-                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
                 textView2.setText("");
             }
             else
             {
-                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
                 textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
 
                 double faitAmount = transactiondetails.getFaitAmount();
@@ -181,7 +181,7 @@ Context context;
         }
         else
         {
-            TextView textView = (TextView) v.findViewById(R.id.transactionssendamount);
+            TextView textView = (TextView) v.findViewById(R.id.asset_amount);
             textView.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
             String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
             textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
@@ -189,12 +189,12 @@ Context context;
 
             if ( transactiondetails.getFaitAmount() == 0 )
             {
-                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
                 textView2.setText("");
             }
             else
             {
-                TextView textView2 = (TextView) v.findViewById(R.id.transactionssendfaitamount);
+                TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
                 textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
 
                 double faitAmount = transactiondetails.getFaitAmount();

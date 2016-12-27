@@ -3,15 +3,6 @@ package de.bitsharesmunich.graphenej.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -22,6 +13,16 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 /**
  * Class used to encapsulate the communication sequence used to retrieve the transaction history of
@@ -63,6 +64,16 @@ public class GetRelativeAccountHistory extends WebSocketAdapter {
         this.limit = limit;
         this.start = start;
         this.mListener = listener;
+    }
+
+    /**
+     * Constructor that uses the default values, and sets the limit to its maximum possible value.
+     * @param userAccount The user account to be queried
+     * @param listener Listener to be notified with the result of this query
+     */
+    public GetRelativeAccountHistory(UserAccount userAccount, int limit, WitnessResponseListener listener){
+        this(userAccount, listener);
+        this.limit = limit;
     }
 
     /**
