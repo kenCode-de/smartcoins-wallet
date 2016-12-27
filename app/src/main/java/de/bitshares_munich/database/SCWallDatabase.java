@@ -183,6 +183,7 @@ public class SCWallDatabase {
                         int precision = assetCursor.getInt(1);
                         AssetAmount eqValueAssetAmount = new AssetAmount(UnsignedLong.valueOf(equivalentValue), new Asset(id, symbol, precision));
                         transferEntry.setEquivalentValue(eqValueAssetAmount);
+                        assetCursor.close();
                     }else{
                         Log.w(TAG,"Got empty cursor while trying to fill asset data");
                     }
@@ -351,13 +352,15 @@ public class SCWallDatabase {
      * with the date and time information missing.
      * @return: A list of block numbers.
      */
-    public LinkedList<Long> getMissingTransferTimes(){
+    public LinkedList<Long> getMissingTransferTimes(int limitValue){
         LinkedList<Long> missingTimes = new LinkedList<>();
         String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
         String[] columns = { SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM };
         String selection = SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + "= ?";
         String[] selectionArgs = {"0"};
-        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, null, null);
+        String limit = String.format("%d", limitValue);
+        String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
+        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, orderBy, limit);
         if(cursor.moveToFirst()){
             do{
                 missingTimes.add(new Long(cursor.getLong(0)));

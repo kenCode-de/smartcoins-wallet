@@ -11,10 +11,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
-import de.bitsharesmunich.graphenej.objects.Memo;
 
 import java.lang.reflect.Type;
+
+import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
+import de.bitsharesmunich.graphenej.objects.Memo;
 
 /**
  * Class used to encapsulate the TransferOperation operation related functionalities.

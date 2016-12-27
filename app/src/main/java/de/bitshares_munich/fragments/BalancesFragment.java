@@ -143,7 +143,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = true;
+    private final boolean DEBUG_EQ_VALUES = false;
 
     static Boolean audioSevice = false;
 
@@ -240,6 +240,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     private int stop = HISTORICAL_TRANSFER_BATCH_SIZE;
     private int historicalTransferCount = 0;
 
+    /* Constant used to split the missing times and equivalent values in batches of constant time */
+    private int SECONDARY_LOAD_BATCH_SIZE = 20;
+
     /*
     * Attribute used when trying to make a 2-step equivalent value calculation
     * This variable will hold the equivalent value of the UIA in BTS, that will in turn
@@ -312,14 +315,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                 // Processing next value, if there is one.
                 // Process the next equivalent value, in case we have one
-                boolean scheduledNext = processNextEquivalentValue();
-                if(!scheduledNext){
-                    if(transferHistoryThread != null && transferHistoryThread.isAlive()){
-                        transferHistoryThread.interrupt();
-                    }
-                    transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
-                    transferHistoryThread.start();
-                }
+                processNextEquivalentValue();
             }else{
                 Date currentStart = getMarketHistory.getStart();
                 int previousCount = getMarketHistory.getCount() > 0 ? getMarketHistory.getCount() - 1 : 0;
@@ -381,14 +377,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     missingEquivalentValues.poll();
 
                     // Process the next equivalent value, in case we have one
-                    boolean scheduledNext = processNextEquivalentValue();
-                    if(!scheduledNext){
-                        if(transferHistoryThread != null && transferHistoryThread.isAlive()){
-                            transferHistoryThread.interrupt();
-                        }
-                        transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
-                        transferHistoryThread.start();
-                    }
+                    processNextEquivalentValue();
                 }else{
                     Log.i(TAG,String.format("quote is UIA. base: %s, quote: %s", base.getObjectId(), quote.getObjectId()));
                     AssetAmount originalTransfer = transferEntry.getHistoricalTransfer().getOperation().getTransferAmount();
@@ -451,29 +440,33 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         @Override
         public void onSuccess(final WitnessResponse response) {
             Log.d(TAG, "getMissingTime. onSuccess. remaining: "+(missingTimes.size() - 1));
+
+            BlockHeader blockHeader = (BlockHeader) response.result;
+            boolean updated = database.setBlockTime(blockHeader, missingTimes.peek());
+            if (!updated) {
+                Log.w(TAG, "Failed to update time from transaction at block: " + missingTimes.peek());
+            }
+            missingTimes.poll();
+
+            // If we still have missing times in the queue, work on them
+            if (missingTimes.size() > 0) {
+                long blockNum = missingTimes.peek();
+                getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+                getMissingTimes.start();
+            }else{
+                // If we're done loading missing transfer times, we check for missing equivalent values.
+                // By calling the 'getMissingEquivalentValues' method we should get a list of all transfer
+                // entries that are missing just the equivalent values, but DO HAVE time information.
+                missingEquivalentValues = database.getMissingEquivalentValues();
+                if(missingEquivalentValues.size() > 0){
+                    Log.i(TAG,"Finished loading missing times, now we can safely proceed to missing eq values");
+                    processNextEquivalentValue();
+                }
+            }
+
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    BlockHeader blockHeader = (BlockHeader) response.result;
-                    boolean updated = database.setBlockTime(blockHeader, missingTimes.peek());
-                    if (!updated) {
-                        Log.w(TAG, "Failed to update time from transaction at block: " + missingTimes.peek());
-                    }
-                    missingTimes.poll();
-
-                    // If we still have missing times in the queue, work on them
-                    if (missingTimes.size() > 0) {
-                        long blockNum = missingTimes.peek();
-                        getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
-                        getMissingTimes.start();
-                    }else{
-                        // If we're done with loading missing transfer times, we check for missing equivalent values.
-                        missingEquivalentValues = database.getMissingEquivalentValues();
-                        if(missingEquivalentValues.size() > 0){
-                            Log.i(TAG,"Finished loading missing times, now we can safely proceed to missing eq values");
-                            processNextEquivalentValue();
-                        }
-                    }
                     updateTableView();
                 }
             });
@@ -579,32 +572,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 public void run() {
                     WitnessResponse<List<HistoricalTransfer>> resp = response;
                     List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
-                    String wif = "";
-                    ECKey privateKey = null;
-                    PublicKey publicKey = null;
-                    Address myAddress = null;
-                    try {
-                        wif = Crypt.getInstance().decrypt_string(wifkey);
-                        privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
-                        publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
-                        myAddress = new Address(publicKey.getKey());
-                    } catch (InvalidKeyException e) {
-                        Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
-                    } catch (NoSuchAlgorithmException e) {
-                        Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
-                    } catch (NoSuchPaddingException e) {
-                        Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
-                    } catch (InvalidAlgorithmParameterException e) {
-                        Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
-                    } catch (IllegalBlockSizeException e) {
-                        Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
-                    } catch (BadPaddingException e) {
-                        Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
-                    } catch (ClassNotFoundException e) {
-                        Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
-                    } catch (IOException e) {
-                        Log.e(TAG, "IOException. Msg: "+e.getMessage());
-                    }
+
+                    // Getting decrypted private key in WIF format
+                    String wif = decryptWif();
+
+                    ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
+                    PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
+                    Address myAddress = new Address(publicKey.getKey());
+
+                    // Decrypting memo messages
                     for(HistoricalTransfer historicalTransfer : resp.result){
                         HistoricalTransferEntry entry = new HistoricalTransferEntry();
                         TransferOperation op = historicalTransfer.getOperation();
@@ -629,34 +605,49 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         entry.setHistoricalTransfer(historicalTransfer);
                         historicalTransferEntries.add(entry);
                     }
-                    Log.d(TAG, String.format("Got %d transactions from network request", resp.result.size()));
+
                     int inserted = database.putTransactions(historicalTransferEntries);
-                    Log.d(TAG, String.format("Inserted %d of those into the database", inserted));
+                    Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, historicalTransferEntries.size()));
 
-                    List<UserAccount> missingAccountNames = database.getMissingAccountNames();
-                    if (missingAccountNames.size() > 0) {
-                        // Got some missing user names, so we request them to the network.
-                        getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
-                        getMissingAccountsThread.start();
+                    // If we got exactly the requested amount of historical transfers, it means we
+                    // must have more to fetch.
+                    if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
+                        Log.i(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
+                        start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
+                        stop = ((historicalTransferCount + 1) * HISTORICAL_TRANSFER_BATCH_SIZE) + 1;
+                        Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+                        transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                        transferHistoryThread.start();
+                    }else{
+                        // If we got less than the requested amount of historical transfers, it means we
+                        // are done importing old transactions. We can proceed to get other missing attributes
+                        // like transaction timestamps, asset references and equivalent values.
+                        Log.i(TAG, String.format("Got %d transfers, which is less than what we asked for, so that must be it", resp.result.size()));
+                        List<UserAccount> missingAccountNames = database.getMissingAccountNames();
+                        if (missingAccountNames.size() > 0) {
+                            // Got some missing user names, so we request them to the network.
+                            getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
+                            getMissingAccountsThread.start();
+                        }
+
+                        List<Asset> missingAssets = database.getMissingAssets();
+                        if (missingAssets.size() > 0) {
+                            // Got some missing asset symbols, so we request them to the network.
+                            getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
+                            getMissingAssets.start();
+                        }
+
+                        missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
+                        if (missingTimes.size() > 0) {
+                            Long blockNum = missingTimes.peek();
+                            getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+                            getMissingTimes.start();
+                        }
+
+                        missingEquivalentValues = database.getMissingEquivalentValues();
+                        Log.i(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
+                        processNextEquivalentValue();
                     }
-
-                    List<Asset> missingAssets = database.getMissingAssets();
-                    if (missingAssets.size() > 0) {
-                        // Got some missing asset symbols, so we request them to the network.
-                        getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
-                        getMissingAssets.start();
-                    }
-
-                    missingTimes = database.getMissingTransferTimes();
-                    if (missingTimes.size() > 0) {
-                        Long blockNum = missingTimes.peek();
-                        getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
-                        getMissingTimes.start();
-                    }
-
-                    missingEquivalentValues = database.getMissingEquivalentValues();
-                    Log.i(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
-                    processNextEquivalentValue();
                 }
             });
         }
@@ -674,12 +665,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
      * Since this procedure might have to be called repeated times, it was better isolated
      * in a private method.
      */
-    private boolean processNextEquivalentValue(){
-        boolean scheduledProcessing = false;
+    private void processNextEquivalentValue(){
         if(missingEquivalentValues.size() > 0){
             List<Asset> missingAssets = database.getMissingAssets();
-            List<Long> misingTimes = database.getMissingTransferTimes();
-            if(missingAssets.size() == 0 && misingTimes.size() == 0){
+            if(missingAssets.size() == 0){
                 HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
                 Asset transferredAsset = transferEntry.getHistoricalTransfer()
                         .getOperation()
@@ -732,7 +721,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                             mHistoricalMarketListener);
                     getMissingEquivalentValues = new WebsocketWorkerThread(getMarketHistory);
                     getMissingEquivalentValues.start();
-                    scheduledProcessing = true;
                 }else{
                     Log.w(TAG,"Either base or quote is null");
                 }
@@ -741,8 +729,44 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 // equivalent values again and pick up this series of tasks.
                 Log.w(TAG, "We have some missing assets");
             }
+        }else{
+            // In case we're done loading missing times and equivalent values for this batch,
+            // we can check if we have another batch of times and consequently missing equivalent
+            // values to process.
+            missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
+            if (missingTimes.size() > 0) {
+                Log.d(TAG,String.format("Got a new batch of %d missing times, so we're now going to process them", missingTimes.size()));
+                Long blockNum = missingTimes.peek();
+                getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+                getMissingTimes.start();
+            }else{
+                Log.d(TAG,"We're done with missing times, so this must be it...");
+            }
         }
-        return scheduledProcessing;
+    }
+
+    private String decryptWif(){
+        String wif = null;
+        try {
+            wif = Crypt.getInstance().decrypt_string(wifkey);
+        } catch (InvalidKeyException e) {
+            Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
+        } catch (InvalidAlgorithmParameterException e) {
+            Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
+        } catch (BadPaddingException e) {
+            Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException. Msg: "+e.getMessage());
+        }
+        return wif;
     }
 
     @Override
@@ -767,14 +791,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         HashMap<String, Asset> knownAssets = database.getAssetMap();
         if(!knownAssets.containsKey(this.mSmartcoin.getObjectId())){
             // If the smartcoin asset details are not known, we schedule an update from the full node.
-            Log.d(TAG, "smartcoin asset is not known");
             ArrayList<Asset> assetList = new ArrayList<>();
             assetList.add(mSmartcoin);
             getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(assetList, mLookupAssetsSymbolsListener));
             getMissingAssets.start();
         }else{
             Asset smartcoinAsset = database.fillAssetDetails(mSmartcoin);
-            Log.d(TAG, String.format("smartcoin asset is known. symbol: %s, precision: %d", smartcoinAsset.getSymbol(), smartcoinAsset.getPrecision()));
         }
     }
 
@@ -912,8 +934,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
-
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
@@ -953,7 +973,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         }
 
         if (!accountId.equals("")) {
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE, mTransferHistoryListener));
+            start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
+            stop = ((historicalTransferCount + 1) * HISTORICAL_TRANSFER_BATCH_SIZE) + 1;
+            Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
             transferHistoryThread.start();
         } else {
             Log.d(TAG, "account id is empty");
@@ -1400,7 +1423,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
-        Log.d(TAG, "getEquivalentComponents");
         final Runnable getEquivalentCompRunnable = new Runnable() {
             @Override
             public void run() {
@@ -2467,7 +2489,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
      * Updating the sort strategy
      */
     private void updateSortTable() {
-        Log.d(TAG, "updateSortTable");
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
         transfersView.setHeaderAdapter(simpleTableHeaderAdapter);

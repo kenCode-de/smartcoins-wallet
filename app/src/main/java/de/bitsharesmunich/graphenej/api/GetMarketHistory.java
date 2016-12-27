@@ -146,7 +146,6 @@ public class GetMarketHistory extends WebSocketAdapter {
                 Type ApiIdResponse = new TypeToken<WitnessResponse<Integer>>() {}.getType();
                 WitnessResponse<Integer> witnessResponse = gson.fromJson(response, ApiIdResponse);
                 apiId = witnessResponse.result.intValue();
-
                 sendHistoricalMarketDataRequest();
             }else if(baseResponse.id >= GET_HISTORY_DATA){
                 GsonBuilder builder = new GsonBuilder();
