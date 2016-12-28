@@ -70,7 +70,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
-            SimpleDateFormat timeZone = new SimpleDateFormat("z");
+            SimpleDateFormat timeZone = new SimpleDateFormat("Z");
 
             dateTextView.setText(dateFormat.format(date));
             timeTextView.setText(timeFormat.format(date));

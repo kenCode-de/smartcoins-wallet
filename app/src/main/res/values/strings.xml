@@ -429,4 +429,9 @@
     <!-- Errors -->
     <string name="error_with_message">Error: %s</string>
     <string name="error_no_message">An error prevented this operation to succeed</string>
+
+    <!-- E-Receipt -->
+    <string name="sent">Sent</string>
+    <string name="received">Received</string>
+    <string name="memo_template">Memo: %s</string>
 </resources>

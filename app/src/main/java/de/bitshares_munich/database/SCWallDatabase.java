@@ -465,9 +465,31 @@ public class SCWallDatabase {
     }
 
     /**
+     * Given an incomplete instance of the UserAccount object, this method performs a query and
+     * fills in the missing details.
+     *
+     * The incomplete object passed as argument must have at least its object if set.
+     * @param account: The incomplete UserAccount instance
+     * @return: The same UserAccount instance, but with all the fields with valid data.
+     */
+    public UserAccount fillUserDetails(UserAccount account){
+        String table = SCWallDatabaseContract.UserAccounts.TABLE_NAME;
+        String selection = SCWallDatabaseContract.UserAccounts.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[] { account.getObjectId() };
+        Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
+        if(cursor.moveToFirst()){
+            String accountName = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.UserAccounts.COLUMN_NAME));
+            account.setAccountName(accountName);
+        }
+        cursor.close();
+        return account;
+    }
+
+    /**
      * Given an incomplete instance of the Asset object, performs a query and fills the asset
      * reference with 'precision', 'symbol' and 'description' data.
      *
+     * The incomplete object passed as argument must have at least its object if set.
      * @param asset: Incomplete asset instance.
      * @return: Complete asset instance.
      */

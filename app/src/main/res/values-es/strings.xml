@@ -214,11 +214,11 @@
     <string name="str_balance_available">%1$s %2$s disponibles</string>
 
     <string name="select_backup_asset">Seleccione el elemento de backup</string>
-    <string name="sender_account">de cuenta del emisor</string>
-    <string name="receiver_account">cuenta receptor</string>
+    <string name="sender_account">Cuenta del emisor</string>
+    <string name="receiver_account">Cuenta receptor</string>
     <string name="total">Total</string>
     <string name="payment_method">Método de pago</string>
-    <string name="thankyou_string">Gracias por usar Smartcoins Monedero</string>
+    <string name="thankyou_string">Gracias por usar Smartcoins Wallet</string>
     <string name="audio_folder_path">Ruta de la carpeta de audio</string>
     <string name="please_make_sure_your_bin_file">Por favor asegúrese de que el pasador se ha seleccionado el archivo bin correcta o correcta</string>
 

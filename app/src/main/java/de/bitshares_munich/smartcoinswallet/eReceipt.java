@@ -32,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -50,19 +51,28 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.GravatarDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.database.HistoricalTransferEntry;
+import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.Gravatar;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.utils.TableViewClickListener;
+import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 
 public class eReceipt extends BaseActivity implements IBalancesDelegate,GravatarDelegate {
+    public final String TAG = this.getClass().getName();
     Context context;
 
     @Bind(R.id.ivOtherGravatar)
@@ -70,9 +80,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
     @Bind(R.id.tvOtherCompany)
     TextView tvOtherCompany;
-
-    @Bind(R.id.TvBlockNum)
-    TextView TvBlockNum;
 
     @Bind(R.id.tvTime)
     TextView tvTime;
@@ -83,25 +90,17 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     @Bind(R.id.tvUserName)
     TextView tvUserName;
 
-    @Bind(R.id.tvOtherId)
-    TextView tvOtherId;
-
     @Bind(R.id.tvUserId)
     TextView tvUserId;
 
-    @Bind(R.id.tvMemo)
-    TextView tvMemo;
-
+    @Bind(R.id.memo)
+    TextView memo;
 
     @Bind(R.id.tvAmount)
     TextView tvAmount;
 
     @Bind(R.id.tvAddress)
     TextView tvAddress;
-
-    @Bind(R.id.tvContact)
-    TextView tvContact;
-
 
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
@@ -174,6 +173,21 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     boolean loadComplete = false;
     boolean btnPress = false;
 
+    /* Reference to the class containing all blockchain details about this transaction */
+    private HistoricalTransferEntry historicalTransferEntry;
+
+
+    /* Legacy persistent storage */
+    private TinyDB tinyDB;
+
+    /* Database interface reference */
+    private SCWallDatabase database;
+
+    /* Current user */
+    private UserAccount user;
+
+    /* Transaction id */
+    String transactionId = "";
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -188,6 +202,30 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         setContentView(R.layout.e_receipt);
         ButterKnife.bind(this);
 
+        // Instantiating the database
+        database = new SCWallDatabase(this);
+
+        // Retrieving the currently active account from the legacy tinyDB implementation
+        tinyDB = new TinyDB(this);
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for(AccountDetails accountDetail : accountDetails){
+            if(accountDetail.isSelected){
+                user = database.fillUserDetails(new UserAccount(accountDetail.account_id));
+            }
+        }
+
+        // Deserializing the HistoricalTransferEntry object, which contains all
+        // detailed information about this transfer.
+        Gson gson = new Gson();
+        String jsonOperation = getIntent().getExtras().getString(TableViewClickListener.KEY_OPERATION_ENTRY);
+        historicalTransferEntry = gson.fromJson(jsonOperation, HistoricalTransferEntry.class);
+
+        // Setting the memo message
+        TransferOperation transfer = historicalTransferEntry.getHistoricalTransfer().getOperation();
+        memo.setText(String.format(memo.getText().toString(), transfer.getMemo().getPlaintextMessage()));
+
+        transactionId = historicalTransferEntry.getHistoricalTransfer().getId();
+
         context = getApplicationContext();
         progressDialog = new ProgressDialog(this);
         Application.registerBalancesDelegateEReceipt(this);
@@ -201,22 +239,30 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         time = intent.getStringExtra("Time");
         timeZone = intent.getStringExtra("TimeZone");
 
+        UserAccount fromUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getFrom();
+        if(fromUser.getObjectId().equals(user.getObjectId())){
+            ivImageTag.setImageResource(R.drawable.send);
+            tvUserStatus.setText(getString(R.string.sender_account));
+
+        }else{
+            tvUserStatus.setText(getString(R.string.receiver_account));
+            ivImageTag.setImageResource(R.drawable.receive);
+        }
+
         if (intent.getBooleanExtra("Sent", false)) {
             userName = intent.getStringExtra("From");
             otherName = intent.getStringExtra("To");
-            tvUserStatus.setText(getString(R.string.sender_account));
             isSent = true;
-            ivImageTag.setImageResource(R.drawable.send);
+
         } else {
-            tvUserStatus.setText(getString(R.string.receiver_account));
             userName = intent.getStringExtra("To");
             otherName = intent.getStringExtra("From");
             isSent = false;
-            ivImageTag.setImageResource(R.drawable.receive);
+
         }
         tvOtherName.setText(otherName);
         tvUserName.setText(userName);
-        TvBlockNum.setText(date);
+//        TvBlockNum.setText(date);
         tvTime.setText(time + " " + timeZone);
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -232,9 +278,23 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
         fetchGravatarInfo(get_email(otherName));
 
-        init(eReciept);
+//        init(eReciept);
 
         setBackButton(true);
+
+        HistoricalTransfer historicalTransfer = historicalTransferEntry.getHistoricalTransfer();
+        tvBlockNumber.setText(String.format("%d", historicalTransfer.getBlockNum()));
+        tvTrxInBlock.setText(String.format("%s", historicalTransfer.getId()));
+
+        double amount = Util.fromBase(historicalTransfer.getOperation().getTransferAmount());
+        String symbol = historicalTransfer.getOperation().getTransferAmount().getAsset().getSymbol();
+        int precision = historicalTransfer.getOperation().getTransferAmount().getAsset().getPrecision();
+        String textFormat = String.format("%%.%df %%s", precision);
+        tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
+
+        double eqValueAmount = Util.fromBase(historicalTransferEntry.getEquivalentValue());
+        String eqValueSymbol = historicalTransferEntry.getEquivalentValue().getAsset().getSymbol();
+        tvPaymentEquivalent.setText(String.format("%.2f %s", eqValueAmount, eqValueSymbol));
     }
 
     @Override
@@ -263,7 +323,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     }
 
 
-    String transactionIdClipped = "";
     Boolean transactionIdUpdated = false;
 
     private void getTransactionId(final String block_num, final String trx_in_block)
@@ -294,7 +353,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                                 if (resp.status.equals("success")) {
                                     try {
                                         String trx_id = resp.transaction_id;
-                                        transactionIdClipped = trx_id.substring(0, 7);
+                                        transactionId = trx_id.substring(0, 7);
                                         transactionIdUpdated = true;
 
                                         checkifloadingComplete();
@@ -398,26 +457,17 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                 feeSymbol = assetsSymbols.updateString(sym_preFee.get("symbol"));
                 amountSymbol = assetsSymbols.updateString(sym_preAmount.get("symbol"));
 
-                tvBlockNumber.setText(eReciptmap.get("block_num"));
-                tvTrxInBlock.setText(eReciptmap.get("id"));
+//                tvBlockNumber.setText(eReciptmap.get("block_num"));
+//                tvTrxInBlock.setText(eReciptmap.get("id"));
 
 
                 tvAmount.setText(amountAmount + " " + amountSymbol);
                 tvFee.setText(feeAmount + " " + feeSymbol);
                 tvTotal.setText(tvAmount.getText() + " + " + tvFee.getText());
 
-                tvPaymentAmount.setText(tvTotal.getText());
+//                tvPaymentAmount.setText(tvTotal.getText());
 
-                if (isSent) {
-                    tvOtherId.setText(OPmap.get("to"));
-                    tvUserId.setText(OPmap.get("from"));
-                } else {
-                    tvOtherId.setText(OPmap.get("from"));
-                    tvUserId.setText(OPmap.get("to"));
-                }
-
-                tvMemo.setText(memoMsg);
-
+//                tvOtherName
                 loadComplete = true;
                 checkifloadingComplete();
 
@@ -448,7 +498,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     @OnClick(R.id.buttonSend)
     public void onSendButton() {
         btnPress = true;
-        checkifloadingComplete();
+//        checkifloadingComplete();
+        generatepdfDoc();
     }
 
     String get_email(String accountName) {
@@ -460,7 +511,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     public void updateProfile(Gravatar myGravatar) {
         tvOtherCompany.setText(myGravatar.companyName);
         tvAddress.setText(myGravatar.address);
-        tvContact.setText(myGravatar.url);
+//        tvContact.setText(myGravatar.url);
     }
 
     @Override
@@ -637,8 +688,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                 tvTotalEquivalent.setText(value);
                 setWeight(tvTotal);
             }
-
-            tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
+//            tvPaymentEquivalent.setText(tvTotalEquivalent.getText());
         }
 
     }
@@ -697,13 +747,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         }
     }
 
-    private void generatePdf()
-    {
-        try
-        {
+    private void generatePdf() {
+        try {
             showProgressBar();
             verifyStoragePermissions(this);
-            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionIdClipped + ".pdf";
+            final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getResources().getString(R.string.folder_name) + File.separator + "eReceipt-" + transactionId + ".pdf";
             Document document = new Document();
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
@@ -734,14 +782,13 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                     email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
                     email.setType("application/pdf");
                     email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ((InternalMovementListener) eReceipt.this).onInternalAppMove();
+                    (eReceipt.this).onInternalAppMove();
                     startActivity(email);
                 }
             });
             hideProgressBar();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
+            Log.e(TAG,"Exception while tryig to share receipt info. Msg: "+e.getMessage());
         }
     }
 
@@ -789,36 +836,14 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        checkifloadingComplete();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkifloadingComplete();
-    }
     void generatepdfDoc(){
         Thread t = new Thread(new Runnable() {
             public void run() {
-            generatePdf();
+                generatePdf();
             }
         });
-
         t.start();
     }
-
-    void checkifloadingComplete(){
-        if(transactionIdUpdated && loadComplete){
-            hideProgressBar();
-        }
-        if(btnPress){
-            showProgressBar();
-        }
-        if(transactionIdUpdated && loadComplete && btnPress){
-          //  hideProgressBar();
-            generatepdfDoc();
-            btnPress = false;
-        }
-    }
-
 }
