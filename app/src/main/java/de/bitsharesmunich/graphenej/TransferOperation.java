@@ -11,10 +11,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
-import de.bitsharesmunich.graphenej.objects.Memo;
 
 import java.lang.reflect.Type;
+
+import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
+import de.bitsharesmunich.graphenej.objects.Memo;
 
 /**
  * Class used to encapsulate the TransferOperation operation related functionalities.
@@ -36,6 +37,21 @@ public class TransferOperation extends BaseOperation {
     private Memo memo;
     private String[] extensions;
 
+    /**
+     * Empty constructor is needed in some situations where only part of the
+     * transfer operation data is relevant.
+     */
+    public TransferOperation(){
+        super(OperationType.transfer_operation);
+    }
+
+    /**
+     * Constructor used usually when we have all the transfer operation data, including the fee.
+     * @param from
+     * @param to
+     * @param transferAmount
+     * @param fee
+     */
     public TransferOperation(UserAccount from, UserAccount to, AssetAmount transferAmount, AssetAmount fee){
         super(OperationType.transfer_operation);
         this.from = from;
@@ -45,6 +61,12 @@ public class TransferOperation extends BaseOperation {
         this.memo = new Memo();
     }
 
+    /**
+     * Constructor with the basic transfer operation. Use this if you will setup the fee later.
+     * @param from
+     * @param to
+     * @param transferAmount
+     */
     public TransferOperation(UserAccount from, UserAccount to, AssetAmount transferAmount){
         super(OperationType.transfer_operation);
         this.from = from;
@@ -80,6 +102,18 @@ public class TransferOperation extends BaseOperation {
 
     public Memo getMemo() {
         return this.memo;
+    }
+
+    public void setAmount(AssetAmount amount) {
+        this.amount = amount;
+    }
+
+    public void setFrom(UserAccount from) {
+        this.from = from;
+    }
+
+    public void setTo(UserAccount to) {
+        this.to = to;
     }
 
     @Override

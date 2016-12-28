@@ -9,12 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.Util;
-
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -22,6 +16,10 @@ import java.util.Locale;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 import de.codecrafters.tableview.TableDataAdapter;
 
 
@@ -108,11 +106,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         fromUser.setText(fromMessage);
 
         if(!operation.getMemo().getPlaintextMessage().equals("")){
-            Log.d(TAG, "Setting memo");
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
-        }else{
-            Log.i(TAG, "No memo");
         }
         return v;
     }
@@ -121,8 +116,11 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
-        TextView transferAmount = (TextView) root.findViewById(R.id.transactionssendamount);
+        TextView transferAmount = (TextView) root.findViewById(R.id.asset_amount);
         AssetAmount assetAmount = operation.getTransferAmount();
+
+        TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
+        AssetAmount fiatAmount = historicalTransfer.getEquivalentValue();
 
         String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
         Locale locale = new Locale(language);
@@ -130,123 +128,32 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         if(assetAmount.getAsset() != null){
             symbol = assetAmount.getAsset().getSymbol();
         }
+        int redColor = ContextCompat.getColor(getContext(),R.color.send_amount);
+        int greenColor = ContextCompat.getColor(getContext(),R.color.receive_amount);
+        int lightRed = ContextCompat.getColor(getContext(), R.color.send_amount_light);
+        int lightGreen = ContextCompat.getColor(getContext(), R.color.receive_amount_light);
+
         if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
             // User sent this transfer
-            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
+            transferAmount.setTextColor(redColor);
+            fiatAmountTextView.setTextColor(lightRed);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
-            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
+            transferAmount.setTextColor(greenColor);
+            fiatAmountTextView.setTextColor(lightGreen);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("+ %s %s", amount, symbol));
         }
 
-//        Locale locale;
-        NumberFormat format;
-//        String language;
-//        language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
-//        locale = new Locale(language);
-        Helper.setLocaleNumberFormat(locale, 1);
-//        if( historicalTransfer.getOperation().getFrom().getObjectId().equals(userAccount.getObjectId())) {
-//            // The transaction was sent from this user's account
-//            TextView transferAmount = (TextView) root.findViewById(R.id.transactionssendamount);
-//            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-//            String amount = Helper.setLocaleNumberFormat(locale, historicalTransfer.getOperation().getTransferAmount().getAmount());
-//            transferAmount.setText(String.format("- %s %s", amount, "-"));
-//            amount = "";
-//
-//            if ( transactiondetails.getFaitAmount() == 0 )
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setText("");
-//            }
-//            else
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-//
-//                double faitAmount = transactiondetails.getFaitAmount();
-//
-//                if ( faitAmount > 0.009 )
-//                {
-//                    amount = String.format(locale,"%.2f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
-//                {
-//                    amount = String.format(locale,"%.3f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
-//                {
-//                    amount = String.format(locale,"%.4f",faitAmount);
-//                }
-//                else
-//                {
-//                    amount = String.format(locale,"%.5f",faitAmount);
-//                }
-//
-//                String displayFaitAmount = "";
-//                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
-//                }
-//                else
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
-//                }
-//                textView2.setText("- " + displayFaitAmount);
-//            }
-//        }
-//        else
-//        {
-//            TextView textView = (TextView) root.findViewById(R.id.transactionssendamount);
-//            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
-//            String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
-//            textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
-//            amount = "";
-//
-//            if ( transactiondetails.getFaitAmount() == 0 )
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setText("");
-//            }
-//            else
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
-//
-//                double faitAmount = transactiondetails.getFaitAmount();
-//
-//                if ( faitAmount > 0.009 )
-//                {
-//                    amount = String.format(locale,"%.2f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
-//                {
-//                    amount = String.format(locale,"%.3f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
-//                {
-//                    amount = String.format(locale,"%.4f",faitAmount);
-//                }
-//                else
-//                {
-//                    amount = String.format(locale,"%.5f",faitAmount);
-//                }
-//
-//                String displayFaitAmount = "";
-//                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
-//                }
-//                else
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
-//                }
-//
-//                textView2.setText("+ " + displayFaitAmount);
-//            }
-//        }
+        if(fiatAmount != null){
+            String eqValue = String.format("~ %s %.2f", fiatAmount.getAsset().getSymbol(), Util.fromBase(fiatAmount));
+            Log.d(TAG,"Fiat amount: "+eqValue);
+            fiatAmountTextView.setText(eqValue);
+        }else{
+            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", assetAmount.getAmount().longValue(), assetAmount.getAsset().getSymbol()));
+        }
         return root;
     }
 

@@ -25,8 +25,10 @@
 
     <color name="blackColor">#000000</color>
     <color name="whiteColor">#ffffff</color>
-    <color name="recieveamount">#669900</color>
-    <color name="sendamount">#DC473A</color>
+    <color name="receive_amount">#669900</color>
+    <color name="receive_amount_light">#c5e1a5</color>
+    <color name="send_amount">#DC473A</color>
+    <color name="send_amount_light">#ef9a9a</color>
     <color name="transactionsHeader">#BFE5F5</color>
     <color name="transactionsseparator">#CCCCCC</color>
 

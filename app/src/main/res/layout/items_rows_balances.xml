@@ -40,7 +40,7 @@
                     android:layout_gravity="left|center_vertical"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/recieveamount"
+                    android:textColor="@color/receive_amount"
                     android:text=""
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-light"
@@ -63,7 +63,7 @@
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-light"
                         android:textSize="7.9pt"
-                        android:textColor="@color/recieveamount"
+                        android:textColor="@color/receive_amount"
 
                         android:text=""/>
                     <TextView
@@ -78,7 +78,7 @@
                         android:fontFamily="sans-serif-light"
                         android:textSize="6.7pt"
                         android:paddingLeft="5dp"
-                        android:textColor="@color/recieveamount"
+                        android:textColor="@color/receive_amount"
                         android:text=""/>
                 </LinearLayout>
             </LinearLayout>
@@ -109,7 +109,7 @@
                     android:layout_gravity="left|center_vertical"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/recieveamount"
+                    android:textColor="@color/receive_amount"
                     android:text=""
                     android:fontFamily="sans-serif-light"
                     android:textSize="7.9pt"
@@ -133,7 +133,7 @@
                     android:textSize="7.9pt"
                     android:paddingLeft="5dp"
                     android:textStyle="bold"
-                    android:textColor="@color/recieveamount"/>
+                    android:textColor="@color/receive_amount"/>
                   <TextView
                       android:id="@+id/fait_child_two"
                       android:visibility="visible"
@@ -146,7 +146,7 @@
                       android:fontFamily="sans-serif-light"
                       android:textSize="6.7pt"
                       android:paddingLeft="5dp"
-                      android:textColor="@color/recieveamount"
+                      android:textColor="@color/receive_amount"
                       android:text=""/>
             </LinearLayout>
             </LinearLayout>
