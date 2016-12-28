@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -151,114 +150,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             Log.d(TAG,"Fiat amount: "+eqValue);
             fiatAmountTextView.setText(eqValue);
         }else{
-            Log.w(TAG,"Fiat amount is null");
+            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", assetAmount.getAmount().longValue(), assetAmount.getAsset().getSymbol()));
         }
-
-//        Locale locale;
-        NumberFormat format;
-//        String language;
-//        language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
-//        locale = new Locale(language);
-        Helper.setLocaleNumberFormat(locale, 1);
-//        if( historicalTransfer.getOperation().getFrom().getObjectId().equals(userAccount.getObjectId())) {
-//            // The transaction was sent from this user's account
-//            TextView transferAmount = (TextView) root.findViewById(R.id.transactionssendamount);
-//            transferAmount.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-//            String amount = Helper.setLocaleNumberFormat(locale, historicalTransfer.getOperation().getTransferAmount().getAmount());
-//            transferAmount.setText(String.format("- %s %s", amount, "-"));
-//            amount = "";
-//
-//            if ( transactiondetails.getFaitAmount() == 0 )
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setText("");
-//            }
-//            else
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
-//
-//                double faitAmount = transactiondetails.getFaitAmount();
-//
-//                if ( faitAmount > 0.009 )
-//                {
-//                    amount = String.format(locale,"%.2f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
-//                {
-//                    amount = String.format(locale,"%.3f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
-//                {
-//                    amount = String.format(locale,"%.4f",faitAmount);
-//                }
-//                else
-//                {
-//                    amount = String.format(locale,"%.5f",faitAmount);
-//                }
-//
-//                String displayFaitAmount = "";
-//                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
-//                }
-//                else
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
-//                }
-//                textView2.setText("- " + displayFaitAmount);
-//            }
-//        }
-//        else
-//        {
-//            TextView textView = (TextView) root.findViewById(R.id.transactionssendamount);
-//            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
-//            String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
-//            textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
-//            amount = "";
-//
-//            if ( transactiondetails.getFaitAmount() == 0 )
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setText("");
-//            }
-//            else
-//            {
-//                TextView textView2 = (TextView) root.findViewById(R.id.transactionssendfaitamount);
-//                textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
-//
-//                double faitAmount = transactiondetails.getFaitAmount();
-//
-//                if ( faitAmount > 0.009 )
-//                {
-//                    amount = String.format(locale,"%.2f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.009) && (faitAmount > 0.0009)  )
-//                {
-//                    amount = String.format(locale,"%.3f",faitAmount);
-//                }
-//                else if ( (faitAmount < 0.0009) && (faitAmount > 0.00009)  )
-//                {
-//                    amount = String.format(locale,"%.4f",faitAmount);
-//                }
-//                else
-//                {
-//                    amount = String.format(locale,"%.5f",faitAmount);
-//                }
-//
-//                String displayFaitAmount = "";
-//                if ( Helper.isRTL(locale,transactiondetails.getFaitAssetSymbol()) )
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",amount,transactiondetails.getFaitAssetSymbol());
-//                }
-//                else
-//                {
-//                    displayFaitAmount =  String.format(locale,"%s %s",transactiondetails.getFaitAssetSymbol(),amount);
-//                }
-//
-//                textView2.setText("+ " + displayFaitAmount);
-//            }
-//        }
         return root;
     }
 

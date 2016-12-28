@@ -233,7 +233,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     webSocketCallHelper myWebSocketHelper;
 
     /* Constant used to fix the number of historical transfers to fetch in one batch */
-    private int HISTORICAL_TRANSFER_BATCH_SIZE = 20;
+    private int HISTORICAL_TRANSFER_BATCH_SIZE = 100;
 
     /* Parameters to be used as the start and stop arguments in the 'get_relative_account_history' API call */
     private int start = 1;
@@ -354,14 +354,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 Asset quote = database.fillAssetDetails(bucket.key.quote);
 
                 if(quote.equals(mSmartcoin)){
-                    Log.i(TAG,String.format("quote is smartcoin. base: %s, quote: %s", base.getObjectId(), quote.getObjectId()));
+                    Log.i(TAG,String.format("quote is my smartcoin. base: %s, quote: %s", base.getObjectId(), quote.getObjectId()));
 
                     // Doing conversion and updating the database
                     Converter converter = new Converter(base, quote, bucket);
                     long convertedBaseValue = converter.convert(transferAmount, Converter.CLOSE_VALUE);
                     AssetAmount equivalentValue = new AssetAmount(UnsignedLong.valueOf(convertedBaseValue), mSmartcoin);
 
-                    Log.d(TAG,String.format("Saving eq value. %s %d, original: %s %d", equivalentValue.getAsset().getSymbol(), equivalentValue.getAmount().longValue(), transferAmount.getAsset().getSymbol(), transferAmount.getAmount().longValue()));
+                    Date date = new Date(transferEntry.getTimestamp()*1000);
+                    Log.d(TAG,String.format("Saving eq value. %s %d, original: %s %d. Date: %s", equivalentValue.getAsset().getSymbol(), equivalentValue.getAmount().longValue(), transferAmount.getAsset().getSymbol(), transferAmount.getAmount().longValue(), date.toString()));
                     transferEntry.setEquivalentValue(equivalentValue);
                     database.updateEquivalentValue(transferEntry);
 
@@ -411,7 +412,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     getMissingEquivalentValues.start();
                 }
             }else{
-//                Log.w(TAG, String.format("Got no bucket from the requested time period for asset: %s ", transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAsset().getSymbol()));
+                Log.w(TAG, String.format("Got no bucket from the requested time period for asset: %s ", transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAsset().getSymbol()));
                 Date currentStart = getMarketHistory.getStart();
                 Calendar calendar = Calendar.getInstance();
                 int previousCount = getMarketHistory.getCount() > 0 ? getMarketHistory.getCount() - 1 : 0;
@@ -419,7 +420,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 long previousExponentialFactor = (long) Math.pow(2, previousCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
                 long newExponentialFactor = (long) Math.pow(2, currentCount) * Constants.DEFAULT_BUCKET_SIZE * 1000;
                 long adjustedStartValue = currentStart.getTime() + previousExponentialFactor - newExponentialFactor;
-//                Log.d(TAG,String.format("prev: %d, current: %d, start: %d", previousExponentialFactor, newExponentialFactor, adjustedStartValue));
+                Log.d(TAG,String.format("prev: %d, current: %d, start: %d", previousExponentialFactor, newExponentialFactor, adjustedStartValue));
                 calendar.setTimeInMillis(adjustedStartValue);
                 getMarketHistory.setStart(calendar.getTime());
                 getMarketHistory.retry();
@@ -614,7 +615,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
                         Log.i(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
                         start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
-                        stop = ((historicalTransferCount + 1) * HISTORICAL_TRANSFER_BATCH_SIZE) + 1;
+                        stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
                         Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
                         transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
                         transferHistoryThread.start();
@@ -974,7 +975,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
         if (!accountId.equals("")) {
             start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
-            stop = ((historicalTransferCount + 1) * HISTORICAL_TRANSFER_BATCH_SIZE) + 1;
+            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
             Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
             transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
             transferHistoryThread.start();
@@ -2623,7 +2624,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     @Override
     public void transactionsLoadComplete(List<TransactionDetails> transactionDetails, int newTransactionsLoaded) {
-        Log.d(TAG, "transactionLoadComplete. new tx: " + newTransactionsLoaded);
         try {
             if (updateTriggerFromNetworkBroadcast && (newTransactionsLoaded == 0) && (counterRepeatTransactionLoad++ < 15)) {
                 if (Application.isReady) {

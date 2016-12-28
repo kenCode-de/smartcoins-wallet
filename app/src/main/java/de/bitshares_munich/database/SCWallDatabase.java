@@ -165,10 +165,16 @@ public class SCWallDatabase {
                 historicalTransfer.setOperation(transferOperation);
                 historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
 
+                // Adding the HistoricalTransfer instance
+                transferEntry.setHistoricalTransfer(historicalTransfer);
+
+                // Setting the timestamp
+                transferEntry.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
+
                 // Adding equivalent value data
                 String id = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID));
                 long equivalentValue = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE));
-                if(id != null && equivalentValue != 0){
+                if(id != null){
                     Log.v(TAG,String.format("Eq value asset id: %s, value: %d", id, equivalentValue));
                     String table = SCWallDatabaseContract.Assets.TABLE_NAME;
                     String[] columns = new String[] {
@@ -183,16 +189,14 @@ public class SCWallDatabase {
                         int precision = assetCursor.getInt(1);
                         AssetAmount eqValueAssetAmount = new AssetAmount(UnsignedLong.valueOf(equivalentValue), new Asset(id, symbol, precision));
                         transferEntry.setEquivalentValue(eqValueAssetAmount);
-                        assetCursor.close();
                     }else{
                         Log.w(TAG,"Got empty cursor while trying to fill asset data");
                     }
+                    assetCursor.close();
                 }else{
-                    Log.v(TAG, "Failed do put equivalent data");
+                    Date date = new Date(transferEntry.getTimestamp() * 1000);
+                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
                 }
-
-                transferEntry.setHistoricalTransfer(historicalTransfer);
-                transferEntry.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
 
                 // Adding historical transfer entry to array
                 transfers.add(transferEntry);
