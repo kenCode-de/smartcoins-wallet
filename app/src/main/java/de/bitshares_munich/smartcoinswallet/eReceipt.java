@@ -412,8 +412,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         Memomap.put("nonce", SupportMethods.ParseJsonObject(OPmap.get("memo"), "nonce"));
         Memomap.put("message", SupportMethods.ParseJsonObject(OPmap.get("memo"), "message"));
 
-        get_Time(eReciptmap.get("block_num"), "18");
-
         Assetid.add(Freemap.get("asset_id"));
         Assetid.add(Amountmap.get("asset_id"));
         assets_id_total_size = Assetid.size();
@@ -464,13 +462,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                 tvAmount.setText(amountAmount + " " + amountSymbol);
                 tvFee.setText(feeAmount + " " + feeSymbol);
                 tvTotal.setText(tvAmount.getText() + " + " + tvFee.getText());
-
-//                tvPaymentAmount.setText(tvTotal.getText());
-
-//                tvOtherName
                 loadComplete = true;
-                checkifloadingComplete();
-
             }
         });
     }
