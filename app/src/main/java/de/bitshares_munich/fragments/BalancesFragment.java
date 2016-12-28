@@ -974,10 +974,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         }
 
         if (!accountId.equals("")) {
-            start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
+            UserAccount me = new UserAccount(accountId);
+            List<HistoricalTransferEntry> transactions = database.getTransactions(me);
+
+            start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
             stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
             Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
             transferHistoryThread.start();
         } else {
             Log.d(TAG, "account id is empty");
@@ -1986,7 +1989,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
+                                                    cView.setTextColor(getResources().getColor(R.color.receive_amount));
                                                 } catch (Exception e) {
 
                                                 }
@@ -2065,7 +2068,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
+                                                    cView.setTextColor(getResources().getColor(R.color.receive_amount));
                                                 } catch (Exception e) {
 
                                                 }
@@ -2163,7 +2166,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
+                                                    cView.setTextColor(getResources().getColor(R.color.receive_amount));
                                                 } catch (Exception e) {
 
                                                 }
@@ -2253,7 +2256,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                                             @Override
                                             public void run() {
                                                 try {
-                                                    cView.setTextColor(getResources().getColor(R.color.recieveamount));
+                                                    cView.setTextColor(getResources().getColor(R.color.receive_amount));
                                                 } catch (Exception e) {
 
                                                 }

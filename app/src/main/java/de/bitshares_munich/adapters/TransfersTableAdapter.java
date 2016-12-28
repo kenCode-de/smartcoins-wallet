@@ -128,19 +128,21 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         if(assetAmount.getAsset() != null){
             symbol = assetAmount.getAsset().getSymbol();
         }
-        int redColor = ContextCompat.getColor(getContext(),R.color.sendamount);
-        int greenColor = ContextCompat.getColor(getContext(),R.color.recieveamount);
+        int redColor = ContextCompat.getColor(getContext(),R.color.send_amount);
+        int greenColor = ContextCompat.getColor(getContext(),R.color.receive_amount);
+        int lightRed = ContextCompat.getColor(getContext(), R.color.send_amount_light);
+        int lightGreen = ContextCompat.getColor(getContext(), R.color.receive_amount_light);
 
         if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
             // User sent this transfer
             transferAmount.setTextColor(redColor);
-            fiatAmountTextView.setTextColor(redColor);
+            fiatAmountTextView.setTextColor(lightRed);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
             transferAmount.setTextColor(greenColor);
-            fiatAmountTextView.setTextColor(greenColor);
+            fiatAmountTextView.setTextColor(lightGreen);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
             transferAmount.setText(String.format("+ %s %s", amount, symbol));
         }

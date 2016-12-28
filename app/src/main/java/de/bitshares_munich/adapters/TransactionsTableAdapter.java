@@ -133,7 +133,7 @@ Context context;
         if( transactiondetails.getSent() )
         {
             TextView textView = (TextView) v.findViewById(R.id.asset_amount);
-            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
+            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.send_amount));
             String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
             textView.setText("- " + amount + " " + transactiondetails.getAssetSymbol());
             amount = "";
@@ -146,7 +146,7 @@ Context context;
             else
             {
                 TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
-                textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.sendamount));
+                textView2.setTextColor(ContextCompat.getColor(getContext(),R.color.send_amount));
 
                 double faitAmount = transactiondetails.getFaitAmount();
 
@@ -182,7 +182,7 @@ Context context;
         else
         {
             TextView textView = (TextView) v.findViewById(R.id.asset_amount);
-            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.recieveamount));
+            textView.setTextColor(ContextCompat.getColor(getContext(),R.color.receive_amount));
             String amount = Helper.setLocaleNumberFormat(locale,transactiondetails.getAmount());
             textView.setText("+ " + amount + " " + transactiondetails.getAssetSymbol());
             amount = "";
@@ -195,7 +195,7 @@ Context context;
             else
             {
                 TextView textView2 = (TextView) v.findViewById(R.id.fiat_amount);
-                textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.recieveamount));
+                textView2.setTextColor(ContextCompat.getColor(getContext(), R.color.receive_amount));
 
                 double faitAmount = transactiondetails.getFaitAmount();
 

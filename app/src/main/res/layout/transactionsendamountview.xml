@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:textSize="13sp"
-        android:textColor="@color/sendamount"
+        android:textColor="@color/send_amount"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
         android:textStyle="bold"/>
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
         android:textSize="11sp"
-        android:textColor="@color/sendamount"
+        android:textColor="@color/send_amount_light"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
         android:visibility="visible"
