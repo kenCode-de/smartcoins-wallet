@@ -434,4 +434,7 @@
     <string name="sent">Sent</string>
     <string name="received">Received</string>
     <string name="memo_template">Memo: %s</string>
+
+    <!-- PDF export -->
+    <string name="progress_pdf_generation">Generating PDF file</string>
 </resources>

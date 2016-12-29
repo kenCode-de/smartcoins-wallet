@@ -1,5 +1,6 @@
 package de.bitshares_munich.fragments;
 
+import android.Manifest;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -9,6 +10,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -18,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -73,6 +76,7 @@ import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.Interfaces.PdfGeneratorListener;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
@@ -89,7 +93,6 @@ import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
-import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
@@ -98,6 +101,7 @@ import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.PdfGeneratorTask;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TableViewClickListener;
@@ -129,7 +133,6 @@ import de.bitsharesmunich.graphenej.models.Market;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import de.bitsharesmunich.graphenej.objects.Memo;
 import de.codecrafters.tableview.SortableTableView;
-import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 
@@ -137,13 +140,16 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate, ISound {
+public class BalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
     private final boolean DEBUG_EQ_VALUES = false;
+
+    /* Permission flag */
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     static Boolean audioSevice = false;
 
@@ -219,7 +225,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     Boolean sentCallForTransactions = false;
 
-
     Locale locale;
     NumberFormat format;
     String language;
@@ -231,6 +236,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     webSocketCallHelper myWebSocketHelper;
+
+    /* AsyncTask used to process the PDF generation job in the background */
+    private PdfGeneratorTask pdfGeneratorTask;
+
+    /* Dialog with a pdfProgress bar used to display pdfProgress while generating a new PDF file */
+    private ProgressDialog pdfProgress;
 
     /* Constant used to fix the number of historical transfers to fetch in one batch */
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 100;
@@ -283,8 +294,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
             Log.d(TAG,"historicalMarketSecondStepListener.onSuccess");
             List<BucketObject> buckets = (List<BucketObject>) response.result;
             HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
-            Date date = new Date(transferEntry.getTimestamp() * 1000);
-            Log.d(TAG, String.format("Got %d buckets", buckets.size()));
+
             if(buckets.size() > 0){
                 // Fetching the last bucket, just in case we have more than one.
                 BucketObject bucket = buckets.get(buckets.size() - 1);
@@ -1140,16 +1150,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
     @OnClick(R.id.exportButton)
     public void onExportButton() {
-        if (isLoading) {
-            Log.i(TAG,"Exporting");
-            TableDataAdapter myAdapter = transfersView.getDataAdapter();
-            List<HistoricalTransferEntry> data = myAdapter.getData();
-            Log.i(TAG,"Constructor");
-            PdfTable myTable = new PdfTable(getContext(), getActivity(), "Transactions-scwall");
-            myTable.createTable(getContext(), data, new UserAccount(accountId));
-        } else {
-            Log.i(TAG,"else is loading");
-            Toast.makeText(getContext(), R.string.loading_msg, Toast.LENGTH_LONG).show();
+        int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }else{
+            UserAccount currentUser = new UserAccount(accountId);
+            List<HistoricalTransferEntry> transfers = database.getTransactions(currentUser);
+            pdfGeneratorTask = new PdfGeneratorTask(getContext(), currentUser, this);
+            pdfGeneratorTask.execute(transfers.toArray(new HistoricalTransferEntry[transfers.size()]));
+
+            if(pdfProgress == null){
+                pdfProgress = new ProgressDialog(getContext());
+            }
+            pdfProgress.setMessage(getResources().getString(R.string.progress_pdf_generation));
+            pdfProgress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            pdfProgress.setIndeterminate(false);
+            pdfProgress.setMax(100);
+            pdfProgress.setProgress(0);
+            pdfProgress.show();
         }
     }
 
@@ -2460,7 +2485,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                     Log.d("Balances Load", e.getMessage());
                 }
 
-                progressBar1.setVisibility(View.GONE);
+//                progressBar1.setVisibility(View.GONE);
                 whiteSpaceAfterBalances.setVisibility(View.GONE);
                 isLoading = true;
 
@@ -2515,7 +2540,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         audioSevice = false;
     }
 
-    private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
+   private static class TransactionsDateComparator implements Comparator<TransactionDetails> {
         @Override
         public int compare(TransactionDetails one, TransactionDetails two) {
             return one.getDate().compareTo(two.getDate());
@@ -2682,8 +2707,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                         load_more_values.setEnabled(true);
                     }
 
-                    if (progressBar.getVisibility() != View.GONE)
-                        progressBar.setVisibility(View.GONE);
+//                    if (progressBar.getVisibility() != View.GONE)
+//                        progressBar.setVisibility(View.GONE);
 
                     if (tableViewparent.getVisibility() != View.VISIBLE)
                         tableViewparent.setVisibility(View.VISIBLE);
@@ -2751,14 +2776,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
 //            tableView.setDataAdapter(myTransactionsTableAdapter);
             load_more_values.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
+//            progressBar.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.load_more_values)
     public void Load_more_Values() {
         load_more_values.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         number_of_transactions_to_load = 20;
         loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
     }
@@ -2923,7 +2948,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         myTransactions = getTransactions(to);
 
         if (!onResume || accountNameChanged || faitCurrencyChanged) {
-            progressBar1.setVisibility(View.VISIBLE);
+//            progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
 
 //            progressBar.setVisibility(View.VISIBLE);
@@ -3284,7 +3309,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
     }
 
     public void isAssets() {
-        progressBar.setVisibility(View.GONE);
+//        progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
     }
 
@@ -3300,5 +3325,37 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         if (transfersView.getColumnComparator(0) == null) {
             updateSortTable();
         }
+    }
+
+    /**
+     * PdfGeneratorListener interface method. Used to update the pdfProgress view.
+     *
+     * @param percentage
+     */
+    @Override
+    public void onUpdate(float percentage) {
+        if(pdfProgress != null){
+            int progress = (int) (percentage * 100);
+            pdfProgress.setProgress(progress);
+        }
+    }
+
+    /**
+     * PdfGeneratorListener interface method. Used to dismiss the pdfProgress view.
+     */
+    @Override
+    public void onReady(String message) {
+        if(pdfProgress != null && pdfProgress.isShowing()){
+            pdfProgress.dismiss();
+        }
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * PdfGeneratorListener interface method. Used to inform the user about an error.
+     */
+    @Override
+    public void onError(String message) {
+        Toast.makeText(getContext(), getActivity().getText(R.string.pdf_generated_msg_error) + message, Toast.LENGTH_LONG).show();
     }
 }
