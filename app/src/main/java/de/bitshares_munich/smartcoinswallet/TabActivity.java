@@ -25,22 +25,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.AccountOptions;
-import com.luminiasoft.bitshares.AccountUpdateTransactionBuilder;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.Authority;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.PublicKey;
-import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccounts;
-import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -97,6 +97,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     private TinyDB tinyDB;
 
+    /* Currently active user account */
+    private UserAccount currentlyActive;
+
     /* Dialog displayed to the user only once after the security update */
     private UpdatingAccountsDialog updatingAccountsDialog;
 
@@ -113,7 +116,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     private LinkedList<UpdateAccountTask> successQueue;
 
     /* Account currently being updated */
-    private UpdateAccountTask currentTask;
+    private UpdateAccountTask currentTask = null;
 
     /* Storing old key here and then in preferences*/
     private String oldKey;
@@ -128,16 +131,102 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     private WebsocketWorkerThread refreshKeyWorker;
 
     /**
+     * This listener will be called in the rare case in which we end up with the wrong keys because
+     * of an interrupted account update operation. In this situation we might end up with a mismatch
+     * between the currently account controlling key and the one we have stored in preferences.
+     *
+     * The account update mechanism prepares for this situation, by also storing the newly generated
+     * brain key suggestion in shared preferences as a sort of cache while the request is being
+     * sent to the network.
+     *
+     * In case the operation is successful, but there is an error before updating the currently
+     * control key, we still don't loose the newly generated brain key thanks to this cache.
+     *
+     * A check is performed every time the app starts looking at this cache, which should be empty.
+     * If it is not, this might signal an interrupted account update operation and to make sure we're
+     * doing the right thing we ask the network for the current authorities controlling this account.
+     *
+     * If the key currently being hold at the cache matches what the network says is the public key
+     * for this account, then we can safely proceed to update the key and clear the cache.
+     *
+     * This listener is called upon network response and will perform the checks described in the last
+     * parragraph.
+     *
+     */
+    private WitnessResponseListener recoveryGetAccountListener = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(WitnessResponse response) {
+            Log.d(TAG,"recovery.onSuccess. current update account task: "+currentTask);
+            AccountProperties account = ((List<AccountProperties>) response.result).get(0);
+            for(PublicKey publicKey : account.active.getKeyAuths().keySet()){
+                int weight = account.active.getKeyAuths().get(publicKey);
+                Address networkAddress = new Address(publicKey.getKey());
+                Log.d(TAG, String.format("Key controlling account: %s, weight: %d", networkAddress.toString(), weight));
+
+                // Recovering task information
+                BrainKey brainKey = currentTask.getBrainKey();
+                ECKey privateKey = brainKey.getPrivateKey();
+                Address cachedKeyAddress = new Address(ECKey.fromPublicOnly(privateKey.getPubKey()));
+                Log.d(TAG, String.format("Network address: %s, key derived address: %s", cachedKeyAddress.toString(), networkAddress.toString()));
+                if(networkAddress.toString().equals(cachedKeyAddress.toString())){
+                    // Only if we get the absolute confirmation that this key we're holding
+                    // is the actual authority for this account we proceed to update the local
+                    // information.
+                    ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    for(AccountDetails accountDetail : accountDetails){
+                        if(accountDetail.account_name.equals(currentlyActive.getAccountName())){
+                            try {
+                                accountDetail.brain_key = currentTask.getBrainKey().getBrainKey();
+                                accountDetail.wif_key = Crypt.getInstance().encrypt_string(currentTask.getBrainKey().getWalletImportFormat());
+                            }catch(Exception e){
+                                Log.e(TAG,"Exception while trying to update local key. Msg: "+e.getMessage());
+                            }
+                            break;
+                        }
+                    }
+                    Log.i(TAG, String.format("Updating account with brain key: %s -> %s", brainKey.getBrainKey(), networkAddress.toString()));
+                    /* Updating key of currently active account */
+                    tinyDB.putListObject(getResources().getString(R.string.pref_wallet_accounts), accountDetails);
+
+                    /* Updating store of old keys*/
+                    oldKey = String.format("%s:%s", currentTask.getAccount().getAccountName(), brainKey.getWalletImportFormat());
+                    ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
+                    oldKeys.add(oldKey);
+                    Log.d(TAG,String.format("Updating old keys, adding: %s. List is %d items long now", brainKey.getWalletImportFormat(), oldKeys.size()));
+                    tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
+
+                    /* Removing this suggestion from the stored list */
+                    ArrayList<String> suggestions = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+                    for(int i = 0; i < suggestions.size(); i++){
+                        if(suggestions.get(i).equals(brainKey.getBrainKey())){
+                            suggestions.remove(i);
+                        }
+                    }
+                    tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, suggestions);
+                    break;
+                }else{
+                    Log.d(TAG, "Got old key suggestion stored, but it does not correspond to the current network obtained current key, so we're not updating");
+                }
+            }
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG,"onError. Msg: "+error.message);
+        }
+    };
+
+    /**
      * Listener called only once with all the accounts data. This is done before the security update
      * and only once, just to know what keys to update for each account.
      */
-    private WitnessResponseListener getAccountsListener = new WitnessResponseListener() {
+    private WitnessResponseListener secUpdateGetAccountsListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(final WitnessResponse response) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, "getAccounts. onSuccess");
+                    Log.d(TAG, "accoutUpdate.getAccounts.onSuccess");
                     List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
                     for(AccountProperties accountProperty : accountProperties){
                         BrainKey brainKey = null;
@@ -220,6 +309,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                     oldKeys.add(oldKey);
                     tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
 
+                    /* Removing brain key suggestion from shared preferences */
+                    removeSuggestion(newBrainKey.getBrainKey());
+
                     /* Check next account to update, if there is any */
                     checkAccountUpdateStatus();
                 }
@@ -274,6 +366,38 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         updateBlockNumberHead();
 
         this.setLockListener(this);
+    }
+
+    /**
+     * Checking for any interrupted account update procedure.
+     * This might rarely be used.
+     */
+    private void checkInterruptedUpdate(){
+        Log.d(TAG, "checkInterruptedUpdate");
+        ArrayList<String> suggestions = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        Log.d(TAG, String.format("suggestions is %d items long", suggestions.size()));
+        if(suggestions.size() > 0){
+            Log.d(TAG, String.format("Recovered %d brain keys, probably from interrupted account updates", suggestions.size()));
+            BrainKey brainKey = new BrainKey(suggestions.get(0), BrainKey.DEFAULT_SEQUENCE_NUMBER);
+
+            if(currentTask == null){
+                currentTask = new UpdateAccountTask(currentlyActive, brainKey);
+                getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(currentlyActive.getObjectId(), recoveryGetAccountListener));
+                getAccountsWorker.start();
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        List<AccountDetails> accounts = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for(AccountDetails accountDetail : accounts){
+            if(accountDetail.isSelected){
+                this.currentlyActive = new UserAccount(accountDetail.account_id, accountDetail.account_name);
+            }
+        }
+        checkInterruptedUpdate();
     }
 
     /**
@@ -388,6 +512,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             newBrainKey = new BrainKey(suggestion, 0);
             Log.d(TAG,"new brain key: "+suggestion);
 
+            /* Keeping this suggestion in shared preferences in case we get interrupted */
+            storeSuggestion(suggestion);
+
             // Keeping a reference of the account to be changed, with the updated values
             Address address = new Address(ECKey.fromPublicOnly(newBrainKey.getPrivateKey().getPubKey()));
 
@@ -418,6 +545,51 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
         } catch (IOException e) {
             Log.e(TAG, "IOException. Msg: "+e.getMessage());
+        }
+    }
+
+    /**
+     * We use this method to store a brain key suggestion in shared preferences
+     * just in case the update procedure is interrupted.
+     * @param suggestion
+     */
+    private void storeSuggestion(String suggestion){
+        Log.d(TAG,"storeSuggestion. suggestion: "+suggestion);
+        ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        if(suggestionList.size() > 0){
+            Log.w(TAG,"Already have a previous suggestion!");
+        }
+        suggestionList.add(suggestion);
+        tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, suggestionList);
+    }
+
+    /**
+     * Once the brain key procedure has finished, we no longer need to keep this brain key suggestion
+     * in here.
+     * @param suggestion
+     */
+    private void removeSuggestion(String suggestion){
+        Log.d(TAG,"removeSuggestion. suggestion: "+suggestion);
+        /* Checking that suggestion matches our memory-stored brain key */
+        ArrayList<String> savedSuggestions = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        if(savedSuggestions.size() > 0){
+            if(savedSuggestions.size() > 1){
+                Log.w(TAG,"Have more than one suggestion in memory");
+            }
+            for(int i = 0; i < savedSuggestions.size(); i++){
+                if(savedSuggestions.get(i).equals(suggestion)){
+                    savedSuggestions.remove(i);
+                    break;
+                }
+            }
+            if(savedSuggestions.size() == 0){
+                Log.d(TAG,"saving empty suggestion list, this is expected");
+            }else{
+                Log.w(TAG,"even after removing suggestion, the list was not empty, signaling that a previous account update operation could have been interrupted");
+            }
+            tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, savedSuggestions);
+        }else{
+            Log.w(TAG,"No saved suggestion");
         }
     }
 
@@ -480,7 +652,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             boolean isOld = true;
             Log.d(TAG, "account: "+account.toString());
             try {
-                if(account.securityUpdateFlag == AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
+                if(account.securityUpdateFlag > AccountDetails.PRE_SECURITY_UPDATE && !DEBUG_ACCOUNT_UPDATE){
                     Log.d(TAG, "Account creation is post security update: " + account.securityUpdateFlag);
                     isOld = false;
                 }else{
@@ -540,19 +712,15 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             updatingAccountsDialog.show(ft, TAG_DIALOG_UPDATING_ACCOUNTS);
 
             /* Asking for all account details */
-            getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, this.getAccountsListener));
+            getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, this.secUpdateGetAccountsListener));
             getAccountsWorker.start();
         }
     }
 
     @Override
     public void onLockReleased() {
-        Log.d(TAG, "onLockReleased");
         if(!tinyDB.getBoolean(Constants.KEY_UPDATE_DONE) || DEBUG_ACCOUNT_UPDATE ){
-            Log.d(TAG, "starting security update");
             startSecurityUpdate();
-        }else{
-            Log.v(TAG, "Security update already performed");
         }
     }
 }

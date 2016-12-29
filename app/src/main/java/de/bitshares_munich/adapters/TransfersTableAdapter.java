@@ -3,17 +3,16 @@ package de.bitshares_munich.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.TransferOperation;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.Util;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -101,37 +100,20 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
         String toMessage = getContext().getText(R.string.to_capital) + ": " + operation.getTo().getAccountName();
-        TextView toUser = (TextView) v.findViewById(R.id.transactiondetailsto);
-        toUser.setTextSize(TypedValue.COMPLEX_UNIT_PT, 7);
+        TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
 
         String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
-        TextView fromUser = (TextView) v.findViewById(R.id.transactiondetailsfrom);
-        fromUser.setTextSize(TypedValue.COMPLEX_UNIT_PT, 7);
+        TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
         fromUser.setText(fromMessage);
 
         if(!operation.getMemo().getPlaintextMessage().equals("")){
             Log.d(TAG, "Setting memo");
-            TextView memoTextView = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
         }else{
             Log.i(TAG, "No memo");
         }
-
-//        if(transactiondetails.getDetailsMemo() == null || transactiondetails.getDetailsMemo().isEmpty()) {
-//            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
-//            textView2.setText("");
-//            textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
-//            textView2.setVisibility(View.GONE);
-//        } else {
-//            toMessage = transactiondetails.getDetailsMemo();
-//            toMessage = toMessage.substring(0, Math.min(toMessage.length(), 53));
-//            toMessage = abbreviateString(toMessage, 50);
-//            toMessage = context.getText(R.string.memo_capital) + " : " + toMessage;
-//            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
-//            textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
-//            textView2.setText(toMessage);
-//        }
         return v;
     }
 

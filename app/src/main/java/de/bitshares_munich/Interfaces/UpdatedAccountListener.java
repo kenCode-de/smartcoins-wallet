@@ -4,7 +4,7 @@ package de.bitshares_munich.Interfaces;
  * Created by nelson on 12/17/16.
  */
 
-import com.luminiasoft.bitshares.UserAccount;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * Interface implemented by the class that wishes to be informed about account update

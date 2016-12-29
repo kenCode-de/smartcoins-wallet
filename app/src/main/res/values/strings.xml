@@ -426,5 +426,7 @@
     <string name="please_import_the_correct_file">Please import the correct file</string>
     <string name="merchant_email_has_been_imported_successfully">Merchant email has been imported successfully</string>
 
-
+    <!-- Errors -->
+    <string name="error_with_message">Error: %s</string>
+    <string name="error_no_message">An error prevented this operation to succeed</string>
 </resources>

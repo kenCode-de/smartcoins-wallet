@@ -15,16 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccounts;
-import com.luminiasoft.bitshares.ws.GetAccountsByAddress;
-
 import org.bitcoinj.core.ECKey;
 
 import java.io.IOException;
@@ -41,11 +31,21 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class BrainkeyActivity extends BaseActivity {
 
@@ -328,6 +328,7 @@ public class BrainkeyActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }

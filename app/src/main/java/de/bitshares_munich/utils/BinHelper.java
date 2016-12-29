@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.FileBin;
+import de.bitsharesmunich.graphenej.FileBin;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;

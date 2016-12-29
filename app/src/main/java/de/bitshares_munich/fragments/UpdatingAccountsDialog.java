@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.luminiasoft.bitshares.UserAccount;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.List;
 

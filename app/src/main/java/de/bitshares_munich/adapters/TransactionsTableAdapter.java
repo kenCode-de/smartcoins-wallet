@@ -89,18 +89,18 @@ Context context;
     {
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
-        TextView textView = (TextView) v.findViewById(R.id.transactiondetailsto);
+        TextView textView = (TextView) v.findViewById(R.id.destination_account);
         String tString = context.getText(R.string.to_capital) + ": " + transactiondetails.getDetailsTo();
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
         textView.setText(tString);
         tString = context.getText(R.string.from_capital) + ": " + transactiondetails.getDetailsFrom();
-        TextView textView1 = (TextView) v.findViewById(R.id.transactiondetailsfrom);
+        TextView textView1 = (TextView) v.findViewById(R.id.origin_account);
         textView1.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
         textView1.setText(tString);
 
         if(transactiondetails.getDetailsMemo() == null || transactiondetails.getDetailsMemo().isEmpty())
         {
-            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            TextView textView2 = (TextView) v.findViewById(R.id.memo);
             textView2.setText("");
             textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ Context context;
             tString = tString.substring(0, Math.min(tString.length(), 53));
             tString = abbreviateString(tString, 50);
             tString = context.getText(R.string.memo_capital) + " : " + tString;
-            TextView textView2 = (TextView) v.findViewById(R.id.transactiondetailsmemo);
+            TextView textView2 = (TextView) v.findViewById(R.id.memo);
             textView2.setTextSize(TypedValue.COMPLEX_UNIT_PT,7);
             textView2.setText(tString);
         }
