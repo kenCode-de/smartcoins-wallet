@@ -11,7 +11,7 @@
 <string name="note">Nota</string>
     <string name="bts_will_be_deducted">BTS se deducirá de</string>
     <string name="payment_received">Pago recibido</string>
-<string name="import_brainkey">Importar de BrainKey</string>
+<string name="import_brainkey">Importar del BrainKey</string>
 <string name="import_backup_old">importación de copia de seguridad</string>
 <string name="choose_backup">Seleccione Copia de seguridad</string>
 <string name="choose_file">Elija el archivo</string>
@@ -25,7 +25,7 @@
 <string name="agreement">Acuerdo</string>
     <string name="unable_to_import_account_from_bin_file">No se puede importar la cuenta del archivo del compartimiento</string>
     <string name="importing_keys_from_bin_file">La importación de claves de archivo Bin</string>
-    <string name="import_backup">Importación de copia de seguridad del archivo .bin</string>
+    <string name="import_backup">Importar del archivo .bin de respaldo</string>
     <string name="is_already_added">ya se ha añadido</string>
     <string name="in_valid_email">Email inválido</string>
     <string name="select">Seleccionar</string>

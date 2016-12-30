@@ -28,8 +28,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:homeAsUpIndicator">@drawable/back_button_image</item>
-
         <item name="android:dialogTheme">@style/CustomDialog</item>
+        <item name="android:colorButtonNormal">@color/white</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

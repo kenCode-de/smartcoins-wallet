@@ -54,7 +54,6 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
     }
 
     private void showDialogBackupBrainKey() {
-
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_delete_dialog);
