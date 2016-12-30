@@ -292,9 +292,11 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         String textFormat = String.format("%%.%df %%s", precision);
         tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
 
-        double eqValueAmount = Util.fromBase(historicalTransferEntry.getEquivalentValue());
-        String eqValueSymbol = historicalTransferEntry.getEquivalentValue().getAsset().getSymbol();
-        tvPaymentEquivalent.setText(String.format("%.2f %s", eqValueAmount, eqValueSymbol));
+        if(historicalTransferEntry.getEquivalentValue() != null){
+            double eqValueAmount = Util.fromBase(historicalTransferEntry.getEquivalentValue());
+            String eqValueSymbol = historicalTransferEntry.getEquivalentValue().getAsset().getSymbol();
+            tvPaymentEquivalent.setText(String.format("%.2f %s", eqValueAmount, eqValueSymbol));
+        }
     }
 
     @Override
