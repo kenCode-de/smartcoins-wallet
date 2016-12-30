@@ -32,7 +32,7 @@ public class BalanceItems {
     public void removeBalanceItem(BalanceItem item){
         int index = this.items.indexOf(item);
         this.items.remove(index);
-        this._fireOnBalanceItemRemovedEvent(item, index);
+        this._fireOnBalanceItemRemovedEvent(item, index, this.count());
     }
 
     public BalanceItem findBalanceItemBySymbol(String symbol){
@@ -70,7 +70,7 @@ public class BalanceItems {
     }
 
     public int count(){
-        return this.count();
+        return this.items.size();
     }
 
     public BalanceItem getBalanceItem(int index){
@@ -84,12 +84,20 @@ public class BalanceItems {
         while(i<this.count()){
             nextBalanceItem = this.getBalanceItem(i);
 
-            if (nextBalanceItem.getAmmount() == ""){
+            if ((nextBalanceItem.getAmmount().equals("")) || (nextBalanceItem.getAmmount().equals("0"))){
                 this.removeBalanceItem(nextBalanceItem);
             } else {
                 i++;
             }
         }
+    }
+
+    public synchronized void addListener( BalanceItemsListener listener ) {
+        _listeners.add(listener);
+    }
+
+    public synchronized void removeListener( BalanceItemsListener listener ) {
+        _listeners.remove(listener);
     }
 
     private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item) {
@@ -100,9 +108,10 @@ public class BalanceItems {
         }
     }
 
-    private synchronized void _fireOnBalanceItemRemovedEvent(BalanceItem item, int index) {
+    private synchronized void _fireOnBalanceItemRemovedEvent(BalanceItem item, int index, int newSize) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, item );
         balanceItemsEvent.setIndex(index);
+        balanceItemsEvent.setNewSize(newSize);
         Iterator listeners = _listeners.iterator();
         while( listeners.hasNext() ) {
             ( (BalanceItemsListener) listeners.next() ).onBalanceItemRemoved( balanceItemsEvent );

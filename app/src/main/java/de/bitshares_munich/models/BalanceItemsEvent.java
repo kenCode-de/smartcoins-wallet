@@ -10,6 +10,7 @@ public class BalanceItemsEvent extends EventObject {
     private BalanceItem item;
     private BalanceItem oldItem;
     private int index;
+    private int newSize;
 
     public BalanceItemsEvent( Object source, BalanceItem item ) {
         super( source );
@@ -36,4 +37,11 @@ public class BalanceItemsEvent extends EventObject {
         return this.index;
     }
 
+    public void setNewSize(int newSize){
+        this.newSize = newSize;
+    }
+
+    public int getNewSize(){
+        return this.newSize;
+    }
 }

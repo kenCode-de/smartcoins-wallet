@@ -80,8 +80,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Iterator;
-import java.util.EventObject;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -130,6 +128,7 @@ import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.TableDataAdapter;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
+
 
 
 /**
@@ -893,6 +892,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         BalanceAssetsUpdate(sym, pre, am, false);
     }
 
+    public BalanceItems getBalanceItems(){
+        if (this.balanceItems == null){
+            this.balanceItems = new BalanceItems();
+            this.balanceItems.addListener(this);
+        }
+
+        return this.balanceItems;
+    }
+
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
@@ -1190,7 +1198,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         try {
-            this.balanceItems.clear();
+            this.getBalanceItems().clear();
 
             //symbolsArray = new ArrayList<>();
             //precisionsArray = new ArrayList<>();
@@ -1201,7 +1209,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
                 // remove balances which are zero
                 if (_amount != 0) {
-                    this.balanceItems.addBalanceItem(sym.get(i), pre.get(i), am.get(i));
+                    this.getBalanceItems().addBalanceItem(sym.get(i), pre.get(i), am.get(i));
 
                     //amountsArray.add(am.get(i));
                     //precisionsArray.add(pre.get(i));
@@ -1215,6 +1223,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public void onNewBalanceItem(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
+        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -1226,10 +1235,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void onBalanceItemRemoved(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
         final int index = event.getIndex();
+        final int size = event.getNewSize();
+        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                removeBalanceItemView(item, index);
+                removeBalanceItemView(item, index, size);
             }
         });
     }
@@ -1238,6 +1249,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final BalanceItem oldItem = event.getOldItem();
         final BalanceItem newItem = event.getBalanceItem();
         final int index = event.getIndex();
+        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
@@ -1246,35 +1258,59 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         });
     }
 
-    public void removeBalanceItemView(BalanceItem item, int index){
+    public void removeBalanceItemView(BalanceItem item, int index, int newSize){
         if (index < llBalances.getChildCount()*2){
             TextView symbolTextViewToOccupy;
             TextView ammountTextViewToOccupy;
+            TextView faitTextViewToOccupy;
             TextView symbolTextViewToMoveOut;
             TextView ammountTextViewToMoveOut;
+            TextView faitTextViewToMoveOut;
 
-            for(int i=index;i<llBalances.getChildCount()*2-2;i++){
+            for(int i=index;i<llBalances.getChildCount()*2-1;i++){
                 View rowView = llBalances.getChildAt(i/2);
 
                 if (i % 2 == 0){
                     symbolTextViewToOccupy = (TextView) rowView.findViewById(R.id.symbol_child_one);
-                    ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_one);;
+                    ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_one);
+                    faitTextViewToOccupy = (TextView) rowView.findViewById(R.id.fait_child_one);
                     symbolTextViewToMoveOut = (TextView) rowView.findViewById(R.id.symbol_child_two);
-                    ammountTextViewToMoveOut = (TextView) rowView.findViewById(R.id.amount_child_two);;
+                    ammountTextViewToMoveOut = (TextView) rowView.findViewById(R.id.amount_child_two);
+                    faitTextViewToMoveOut = (TextView) rowView.findViewById(R.id.fait_child_two);
                 } else {
                     symbolTextViewToOccupy = (TextView) rowView.findViewById(R.id.symbol_child_two);
                     ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_two);
+                    faitTextViewToOccupy = (TextView) rowView.findViewById(R.id.fait_child_two);
 
                     View nextRowView = llBalances.getChildAt((i/2)+1);
 
                     symbolTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.symbol_child_one);
                     ammountTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.amount_child_one);;
+                    faitTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.fait_child_one);
                 }
 
                 symbolTextViewToOccupy.setText(symbolTextViewToMoveOut.getText());
                 ammountTextViewToOccupy.setText(ammountTextViewToMoveOut.getText());
+                faitTextViewToOccupy.setText(faitTextViewToMoveOut.getText());
+                symbolTextViewToOccupy.setVisibility(View.VISIBLE);
+                ammountTextViewToOccupy.setVisibility(View.VISIBLE);
+                faitTextViewToOccupy.setVisibility(View.VISIBLE);
+                symbolTextViewToMoveOut.setVisibility(View.INVISIBLE);
+                ammountTextViewToMoveOut.setVisibility(View.INVISIBLE);
+                faitTextViewToMoveOut.setVisibility(View.INVISIBLE);
+            }
+
+            if (newSize % 2 == 0){
+                View rowView = llBalances.getChildAt(llBalances.getChildCount()-1);
+                llBalances.removeView(rowView);
+
+                if (llBalances.getChildCount() == 0) {
+                    whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+                }
             }
         }
+
+        progressBar1.setVisibility(View.GONE);
     }
 
     public void addNewBalanceView(BalanceItem item){
@@ -1323,6 +1359,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         else if (assetsSymbols.isSmartCoinSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.2f", b));
         else ammountTextView.setText(String.format(locale, "%.4f", b));
+
+        progressBar1.setVisibility(View.GONE);
     }
 
 
@@ -1364,7 +1402,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(newItem.getAmmount()));
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
 
                 final Runnable updateTask = new Runnable() {
                     @Override
@@ -1435,7 +1473,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     Log.d("Balances Update", "Animation initiated");
                 //}
 
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(newItem.getAmmount()));
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
 
                 Log.d("Balances Update", "Text Animated");
 
@@ -1475,6 +1513,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 Log.d("Balances Update", "Rcv done");
             }
         }
+
+        progressBar1.setVisibility(View.GONE);
     }
 
     public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
@@ -1625,176 +1665,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     public void removeZeroedBalanceViews() {
-        this.balanceItems.removeZeroBalanceItems();
-
-        /*getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-
-                    for (int i = 0; i < llBalances.getChildCount(); i++) {
-
-                        View row = llBalances.getChildAt(i);
-
-                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
-                        TextView tvAmOne = (TextView) row.findViewById(R.id.amount_child_one);
-                        TextView tvfaitOne = (TextView) row.findViewById(R.id.fait_child_one);
-
-                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
-                        TextView tvAmtwo = (TextView) row.findViewById(R.id.amount_child_two);
-                        TextView tvFaitTwo = (TextView) row.findViewById(R.id.fait_child_two);
-
-                        // If first balance in row is zeroed then update it
-                        if (tvSymOne.getText().toString().equals("")) {
-                            // shift balances from next child here
-                            String symbol = "";
-                            String amount = "";
-                            String fait = "";
-
-                            // Get next non-zero balance
-                            if (tvSymtwo.getText().toString().isEmpty()) {
-                                // if second balance in row is also empty then get next non-zero balance
-                                for (int j = i + 1; j < llBalances.getChildCount(); j++) {
-                                    View nextrow = llBalances.getChildAt(j);
-
-                                    TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
-                                    TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
-                                    TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
-
-                                    if (!tvSymOnenextrow.getText().toString().isEmpty()) {
-                                        symbol = tvSymOnenextrow.getText().toString();
-                                        amount = tvAmOnenextrow.getText().toString();
-                                        fait = tvfaitOnenextrow.getText().toString();
-                                        tvSymOnenextrow.setText("");
-                                        tvAmOnenextrow.setText("");
-                                        tvfaitOnenextrow.setText("");
-                                        break;
-                                    }
-
-                                    TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
-                                    TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
-                                    TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
-
-                                    if (!tvSymtwonextrow.getText().toString().isEmpty()) {
-                                        symbol = tvSymtwonextrow.getText().toString();
-                                        amount = tvAmtwonextrow.getText().toString();
-                                        fait = tvFaitTwonextrow.getText().toString();
-                                        tvSymtwonextrow.setText("");
-                                        tvAmtwonextrow.setText("");
-                                        tvFaitTwonextrow.setText("");
-                                        break;
-                                    }
-                                }
-                            } else {
-                                // if second balance is row is non-empty then move it to first balance
-                                symbol = tvSymtwo.getText().toString();
-                                amount = tvAmtwo.getText().toString();
-                                fait = tvFaitTwo.getText().toString();
-                                tvSymtwo.setText("");
-                                tvAmtwo.setText("");
-                                tvFaitTwo.setText("");
-                            }
-
-                            // update first balance amount
-                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
-                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            }else if (assetsSymbols.isUiaSymbol(symbol))
-                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
-                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else
-                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-
-                            assetsSymbols.displaySpannable(tvSymOne, symbol);
-                            tvfaitOne.setText(fait);
-
-                            if (fait.isEmpty()) {
-                                tvfaitOne.setVisibility(View.GONE);
-                            } else {
-                                tvfaitOne.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        if (tvSymtwo.getText().toString().isEmpty()) {
-                            String symbol = "";
-                            String amount = "";
-                            String fait = "";
-
-                            // Get next non-zero balance
-                            for (int j = i + 1; j < llBalances.getChildCount(); j++) {
-                                View nextrow = llBalances.getChildAt(j);
-
-                                TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
-                                TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
-                                TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
-
-                                if (!tvSymOnenextrow.getText().toString().isEmpty()) {
-                                    symbol = tvSymOnenextrow.getText().toString();
-                                    amount = tvAmOnenextrow.getText().toString();
-                                    fait = tvfaitOnenextrow.getText().toString();
-                                    tvSymOnenextrow.setText("");
-                                    tvAmOnenextrow.setText("");
-                                    tvfaitOnenextrow.setText("");
-                                    break;
-                                }
-
-                                TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
-                                TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
-                                TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
-
-                                if (!tvSymtwonextrow.getText().toString().isEmpty()) {
-                                    symbol = tvSymtwonextrow.getText().toString();
-                                    amount = tvAmtwonextrow.getText().toString();
-                                    fait = tvFaitTwonextrow.getText().toString();
-                                    tvSymtwonextrow.setText("");
-                                    tvAmtwonextrow.setText("");
-                                    tvFaitTwonextrow.setText("");
-                                    break;
-                                }
-                            }
-
-                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
-                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            }else if (assetsSymbols.isUiaSymbol(symbol))
-                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
-                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else
-                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-
-                            assetsSymbols.displaySpannable(tvSymtwo, symbol);
-                            tvFaitTwo.setText(fait);
-
-                            if (fait.isEmpty()) {
-                                tvFaitTwo.setVisibility(View.GONE);
-                            } else {
-                                tvFaitTwo.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-
-                    }
-
-                    // remove empty rows
-                    for (int i = 0; i < llBalances.getChildCount(); i++) {
-                        View row = llBalances.getChildAt(i);
-
-                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
-                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
-
-                        if (tvSymOne.getText().toString().isEmpty() && tvSymtwo.getText().toString().isEmpty()) {
-                            llBalances.removeView(row);
-                        }
-                    }
-
-                    if (llBalances.getChildCount() == 0) {
-                        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                }
-            }
-        });*/
+        this.getBalanceItems().removeZeroBalanceItems();
     }
 
     Handler animateNsoundHandler = new Handler();
@@ -1802,9 +1673,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         for (int i = 0; i < sym.size(); i++) {
             Long _amount = Long.parseLong(am.get(i));
+            BalanceItem balanceItem = this.getBalanceItems().findBalanceItemBySymbol(sym.get(i));
 
-            if (_amount != 0) {
-                this.balanceItems.addOrUpdateBalanceItem(sym.get(i), pre.get(i), am.get(i));
+            if ((balanceItem != null) || (_amount != 0)) {
+                this.getBalanceItems().addOrUpdateBalanceItem(sym.get(i), pre.get(i), am.get(i));
             }
         }
 
