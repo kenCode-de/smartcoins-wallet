@@ -146,7 +146,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = true;
+    private final boolean DEBUG_EQ_VALUES = false;
 
     /* Permission flag */
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
