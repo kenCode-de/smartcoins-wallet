@@ -72,6 +72,7 @@ public class TransferOperation extends BaseOperation {
         this.from = from;
         this.to = to;
         this.amount = transferAmount;
+        this.fee = new AssetAmount(UnsignedLong.valueOf(0), transferAmount.getAsset());
         this.memo = new Memo();
     }
 

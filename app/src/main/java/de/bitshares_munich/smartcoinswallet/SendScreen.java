@@ -105,8 +105,6 @@ import retrofit2.Response;
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
     private String TAG = "SendScreen";
 
-    private final Asset FEE_ASSET = new Asset("1.3.0");
-
     Context context;
 
     TinyDB tinyDB;
@@ -1081,14 +1079,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         try{
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
+            Asset transferAsset = new Asset(assetId);
             long expirationTime = Application.blockTime + 30;
             ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
 
             TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(new UserAccount(senderID))
                     .setDestination(new UserAccount(receiverID))
-                    .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), new Asset(assetId)))
-                    .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+                    .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
@@ -1103,7 +1101,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             Transaction transaction = builder.build();
 
-            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
+            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
             transferBroadcaster.start();
             Log.d(TAG, "started a funds transfer donation broadcast");
 
@@ -1112,12 +1110,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         .setSource(new UserAccount(senderID))
                         .setDestination(bitsharesMunich)
                         .setAmount(donationAmount)
-                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
                         .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                         .setPrivateKey(currentPrivKey);
 
                 Transaction donationTransaction = donationBuilder.build();
-                donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
+                donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
                 donationBroadcaster.start();
                 Log.d(TAG, "started a donation message broadcast");
             }
