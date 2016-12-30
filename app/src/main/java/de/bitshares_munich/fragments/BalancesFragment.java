@@ -146,7 +146,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = false;
+    private final boolean DEBUG_EQ_VALUES = true;
 
     /* Permission flag */
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -292,6 +292,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         @Override
         public void onSuccess(WitnessResponse response) {
             Log.d(TAG,"historicalMarketSecondStepListener.onSuccess");
+            if(getActivity() == null){
+                Log.w(TAG, "Got no activity, quitting..");
+                return;
+            }
             List<BucketObject> buckets = (List<BucketObject>) response.result;
             HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
 
@@ -353,6 +357,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private WitnessResponseListener mHistoricalMarketListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(WitnessResponse response) {
+            if(getActivity() == null){
+                Log.w(TAG, "Got no activity, quitting..");
+                return;
+            }
+
             List<BucketObject> buckets = (List<BucketObject>) response.result;
             HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
             if(buckets.size() > 0){
@@ -451,6 +460,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         @Override
         public void onSuccess(final WitnessResponse response) {
             Log.d(TAG, "getMissingTime. onSuccess. remaining: "+(missingTimes.size() - 1));
+            if(getActivity() == null){
+                Log.w(TAG, "Got no activity, quitting..");
+                return;
+            }
 
             BlockHeader blockHeader = (BlockHeader) response.result;
             boolean updated = database.setBlockTime(blockHeader, missingTimes.peek());
@@ -577,90 +590,90 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         @Override
         public void onSuccess(final WitnessResponse response) {
             Log.d(TAG, "mTransferHistoryListener. onSuccess");
+            if(getActivity() == null){
+                Log.w(TAG, "Got no activity, quitting..");
+                return;
+            }
             historicalTransferCount++;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    WitnessResponse<List<HistoricalTransfer>> resp = response;
-                    List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
 
-                    // Getting decrypted private key in WIF format
-                    String wif = decryptWif();
+            WitnessResponse<List<HistoricalTransfer>> resp = response;
+            List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
 
-                    ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
-                    PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
-                    Address myAddress = new Address(publicKey.getKey());
+            // Getting decrypted private key in WIF format
+            String wif = decryptWif();
 
-                    // Decrypting memo messages
-                    for(HistoricalTransfer historicalTransfer : resp.result){
-                        HistoricalTransferEntry entry = new HistoricalTransferEntry();
-                        TransferOperation op = historicalTransfer.getOperation();
-                        if(op != null){
-                            Memo memo = op.getMemo();
-                            if(memo.getByteMessage() != null){
-                                Address destinationAddress = memo.getDestination();
-                                try {
-                                    if(destinationAddress.toString().equals(myAddress.toString())){
-                                        String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
-                                        memo.setPlaintextMessage(decryptedMessage);
-                                    }
-                                } catch (ChecksumException e) {
-                                    Log.e(TAG, "ChecksumException. Msg: "+e.getMessage());
-                                } catch (NullPointerException e){
-                                    // This is expected in case the decryption fails, so no need to log this event.
-                                }
+            ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
+            PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
+            Address myAddress = new Address(publicKey.getKey());
+
+            // Decrypting memo messages
+            for(HistoricalTransfer historicalTransfer : resp.result){
+                HistoricalTransferEntry entry = new HistoricalTransferEntry();
+                TransferOperation op = historicalTransfer.getOperation();
+                if(op != null){
+                    Memo memo = op.getMemo();
+                    if(memo.getByteMessage() != null){
+                        Address destinationAddress = memo.getDestination();
+                        try {
+                            if(destinationAddress.toString().equals(myAddress.toString())){
+                                String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
+                                memo.setPlaintextMessage(decryptedMessage);
                             }
-                        }else{
-                            continue;
+                        } catch (ChecksumException e) {
+                            Log.e(TAG, "ChecksumException. Msg: "+e.getMessage());
+                        } catch (NullPointerException e){
+                            // This is expected in case the decryption fails, so no need to log this event.
                         }
-                        entry.setHistoricalTransfer(historicalTransfer);
-                        historicalTransferEntries.add(entry);
                     }
-
-                    int inserted = database.putTransactions(historicalTransferEntries);
-                    Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, historicalTransferEntries.size()));
-
-                    // If we got exactly the requested amount of historical transfers, it means we
-                    // must have more to fetch.
-                    if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
-                        Log.i(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
-                        start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
-                        stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-                        Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-                        transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-                        transferHistoryThread.start();
-                    }else{
-                        // If we got less than the requested amount of historical transfers, it means we
-                        // are done importing old transactions. We can proceed to get other missing attributes
-                        // like transaction timestamps, asset references and equivalent values.
-                        Log.i(TAG, String.format("Got %d transfers, which is less than what we asked for, so that must be it", resp.result.size()));
-                        List<UserAccount> missingAccountNames = database.getMissingAccountNames();
-                        if (missingAccountNames.size() > 0) {
-                            // Got some missing user names, so we request them to the network.
-                            getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
-                            getMissingAccountsThread.start();
-                        }
-
-                        List<Asset> missingAssets = database.getMissingAssets();
-                        if (missingAssets.size() > 0) {
-                            // Got some missing asset symbols, so we request them to the network.
-                            getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
-                            getMissingAssets.start();
-                        }
-
-                        missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
-                        if (missingTimes.size() > 0) {
-                            Long blockNum = missingTimes.peek();
-                            getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
-                            getMissingTimes.start();
-                        }
-
-                        missingEquivalentValues = database.getMissingEquivalentValues();
-                        Log.i(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
-                        processNextEquivalentValue();
-                    }
+                }else{
+                    continue;
                 }
-            });
+                entry.setHistoricalTransfer(historicalTransfer);
+                historicalTransferEntries.add(entry);
+            }
+
+            int inserted = database.putTransactions(historicalTransferEntries);
+            Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, historicalTransferEntries.size()));
+
+            // If we got exactly the requested amount of historical transfers, it means we
+            // must have more to fetch.
+            if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
+                Log.i(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
+                start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
+                stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+                Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();
+            }else{
+                // If we got less than the requested amount of historical transfers, it means we
+                // are done importing old transactions. We can proceed to get other missing attributes
+                // like transaction timestamps, asset references and equivalent values.
+                Log.i(TAG, String.format("Got %d transfers, which is less than what we asked for, so that must be it", resp.result.size()));
+                List<UserAccount> missingAccountNames = database.getMissingAccountNames();
+                if (missingAccountNames.size() > 0) {
+                    // Got some missing user names, so we request them to the network.
+                    getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
+                    getMissingAccountsThread.start();
+                }
+
+                List<Asset> missingAssets = database.getMissingAssets();
+                if (missingAssets.size() > 0) {
+                    // Got some missing asset symbols, so we request them to the network.
+                    getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
+                    getMissingAssets.start();
+                }
+
+                missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
+                if (missingTimes.size() > 0) {
+                    Long blockNum = missingTimes.peek();
+                    getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+                    getMissingTimes.start();
+                }
+
+                missingEquivalentValues = database.getMissingEquivalentValues();
+                Log.i(TAG, String.format("Got %d missing equivalent values", missingEquivalentValues.size()));
+                processNextEquivalentValue();
+            }
         }
 
         @Override

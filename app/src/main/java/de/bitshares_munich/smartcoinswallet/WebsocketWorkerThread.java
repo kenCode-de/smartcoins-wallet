@@ -40,7 +40,7 @@ public class WebsocketWorkerThread extends Thread {
         try {
             mWebSocket.connect();
         } catch (WebSocketException e) {
-            e.printStackTrace();
+            Log.e(TAG,"WebSocketException. Msg: "+e.getMessage());
         }
     }
 }
