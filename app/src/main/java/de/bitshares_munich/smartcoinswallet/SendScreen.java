@@ -19,6 +19,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -83,7 +84,7 @@ import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IExchangeRate;
 import de.bitshares_munich.Interfaces.IRelativeHistory;
-import de.bitshares_munich.Interfaces.OnClickListView;
+import de.bitshares_munich.Interfaces.ContactSelectionListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
@@ -102,8 +103,8 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, OnClickListView {
-    private String TAG = "SendScreen";
+public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, ContactSelectionListener {
+    private static final String TAG = "SendScreen";
 
     Context context;
 
@@ -1612,40 +1613,40 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     Dialog contactListDialog;
 
-    @OnClick(R.id.contactActivity)
+    @OnClick(R.id.contactButton)
     void OnClickContactBtn(View view) {
 
         ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
 
         if (contacts.size() > 0) {
-            contactListDialog = new Dialog(SendScreen.this);
-            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            contactListDialog = new Dialog(this);
+//            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            contactListDialog.setTitle(getString(R.string.contacts));
             contactListDialog.setContentView(R.layout.contacts_list_send_screen);
             ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
-            listView.setAdapter(new SendScreenListViewActivity(context, this));
-            int size = listView.getAdapter().getCount();
-            if (size > 5) {
-                setListViewHeightBasedOnChildren(listView, 5);
-            } else setListViewHeightBasedOnChildren(listView, size);
+            listView.setAdapter(new ContactListDialogAdapter(context, this));
+            int childCount = listView.getAdapter().getCount();
+            setListViewHeightBasedOnChildren(listView, Math.min(5, childCount));
             contactListDialog.show();
         } else {
             Toast.makeText(context, R.string.empty_list, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView, int size) {
+    public void setListViewHeightBasedOnChildren(ListView listView, int childCount) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
             return;
         }
         int totalHeight = 0;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < childCount; i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
+            int px = listItem.getMeasuredHeight();
+            totalHeight += px * 1.2;
         }
-
+        Log.d(TAG, String.format("total height: %d", totalHeight));
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (5 - 1));
         listView.setLayoutParams(params);
@@ -1694,8 +1695,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     @Override
-    public void isClicked(String s) {
-        etReceiverAccount.setText(s);
+    public void onContactSelected(String contactName) {
+        etReceiverAccount.setText(contactName);
         if (contactListDialog != null)
             contactListDialog.dismiss();
         createBitShareAN(false);

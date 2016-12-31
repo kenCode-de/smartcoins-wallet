@@ -149,7 +149,7 @@ public class ContactListAdapter extends BaseAdapter {
         return contactlist;
     }
 
-    public static class ListviewContactItem{
+    public static class ListviewContactItem {
         String name;
         String email;
         String account;
@@ -181,12 +181,10 @@ public class ContactListAdapter extends BaseAdapter {
         String GetEmail(){
             return email;
         }
-
-
     }
 
 
-        private void loadWebView(WebView webView , int size, String encryptText) {
+    private void loadWebView(WebView webView , int size, String encryptText) {
         String htmlShareAccountName = "<html><head><style>body,html { margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -199,6 +197,7 @@ public class ContactListAdapter extends BaseAdapter {
         contacts.remove(id);
         tinyDB.putContactsObject("Contacts", contacts);
     }
+
     public void loadmore(){
         pos=0;
         listContact.clear();
