@@ -45,6 +45,10 @@ public class GetAssets extends WebSocketAdapter {
     }
 
     public static boolean inCache(ArrayList<String> assetName){
+        if (GetAssets.assetCache == null){
+            GetAssets.assetCache = new HashMap<String, AssetCache>();
+        }
+
         Date now = new Date();
 
         for (String name : assetName){
@@ -71,6 +75,10 @@ public class GetAssets extends WebSocketAdapter {
     }
 
     public GetAssets(ArrayList<String> assetName, WitnessResponseListener listener) {
+        if (GetAssets.assetCache == null) {
+            GetAssets.assetCache = new HashMap<String, AssetCache>();
+        }
+
         this.assetName = assetName;
         this.mListener = listener;
     }

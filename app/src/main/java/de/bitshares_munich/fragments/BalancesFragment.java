@@ -1017,6 +1017,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     private void updateEquivalentValue(String assetName, String value, Runnable getEquivalentCompRunnable) {
+        if (this.balanceItems.findBalanceItemBySymbol(assetName) != null){
+            this.balanceItems.updateFaitBalanceItem(assetName, value);
+        } else {
+            Log.i(TAG, "tvAsset tv Amount tvFaitAmount nulls");
+            updateEquivalentAmount.postDelayed(getEquivalentCompRunnable, 500);
+        }
+
+/*
         for (int i = 0; i < llBalances.getChildCount(); i++) {
             LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
 
@@ -1094,17 +1102,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                         );
                     }
                 } else {
-                    /*getActivity().runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    tvFaitAmount.setVisibility(View.GONE);
-                                }
-                            }
-                    );*/
+                    //getActivity().runOnUiThread(
+                    //        new Runnable() {
+                    //            @Override
+                    //            public void run() {
+                    //                tvFaitAmount.setVisibility(View.GONE);
+                    //            }
+                    //        }
+                    //);
                 }
             }
-        }
+        }*/
     }
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
@@ -1223,11 +1231,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public void onNewBalanceItem(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
-        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
                 addNewBalanceView(item);
+                progressBar1.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -1236,11 +1245,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final BalanceItem item = event.getBalanceItem();
         final int index = event.getIndex();
         final int size = event.getNewSize();
-        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
                 removeBalanceItemView(item, index, size);
+                progressBar1.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -1249,12 +1259,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final BalanceItem oldItem = event.getOldItem();
         final BalanceItem newItem = event.getBalanceItem();
         final int index = event.getIndex();
-        progressBar1.setVisibility(View.VISIBLE);
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
                 updateBalanceItem(oldItem, newItem, index);
+                progressBar1.setVisibility(View.INVISIBLE);
             }
+
         });
     }
 
@@ -1309,11 +1321,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
             }
         }
-
-        progressBar1.setVisibility(View.GONE);
     }
 
-    public void addNewBalanceView(BalanceItem item){
+    public void addNewBalanceView(final BalanceItem item){
         SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
         TextView textView2 = null;
         TextView symbolTextView;
@@ -1348,23 +1358,30 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             ammountTextView = (TextView) lastChild.findViewById(R.id.amount_child_two);
         }
 
+        String finalSymbol = "";
+        if (SMARTCOINS.contains(item.getSymbol())) {
+            finalSymbol = "bit" + item.getSymbol();
+        } else {
+            finalSymbol = item.getSymbol();
+        }
+
+
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-        assetsSymbols.displaySpannable(symbolTextView, item.getSymbol());
+        assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
         float b = powerInFloat(item.getPrecision(), item.getAmmount());
-        if(SMARTCOINS.contains(item.getSymbol().replace("bit",""))) {
+        if (SMARTCOINS.contains(item.getSymbol().replace("bit", ""))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
-        }else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
+        } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.4f", b));
         else if (assetsSymbols.isSmartCoinSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.2f", b));
         else ammountTextView.setText(String.format(locale, "%.4f", b));
 
-        progressBar1.setVisibility(View.GONE);
     }
 
 
-    public void updateBalanceItem(BalanceItem oldItem, BalanceItem newItem, int index){
+    public void updateBalanceItem(final BalanceItem oldItem, final BalanceItem newItem, final int index){
         final Runnable reloadBalances = new Runnable() {
             @Override
             public void run() {
@@ -1372,8 +1389,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         };
 
-        if (index < llBalances.getChildCount()*2){
-            View rowView = llBalances.getChildAt(index/2);
+        if (index < llBalances.getChildCount() * 2) {
+            View rowView = llBalances.getChildAt(index / 2);
             final TextView symbolTextView;
             final TextView ammountTextView;
             final TextView faitTextView;
@@ -1388,8 +1405,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 faitTextView = (TextView) rowView.findViewById(R.id.fait_child_two);
             }
 
+            String finalSymbol = "";
+            if (SMARTCOINS.contains(newItem.getSymbol())) {
+                finalSymbol = "bit" + newItem.getSymbol();
+            } else {
+                finalSymbol = newItem.getSymbol();
+            }
+
             final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-            assetsSymbols.displaySpannable(symbolTextView, newItem.getSymbol());
+            assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
             Long oldAmmount = Long.parseLong(oldItem.getAmmount());
             Long newAmmount = Long.parseLong(newItem.getAmmount());
@@ -1444,42 +1468,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
                 // run animation
                 //if (animateOnce) {
-                    AudioFilePath audioFilePath = new AudioFilePath(getContext());
-                    if (!audioFilePath.fetchAudioEnabled()) {
-                        audioSevice = true;
-                        getActivity().startService(new Intent(getActivity(), MediaService.class));
-                    }
+                AudioFilePath audioFilePath = new AudioFilePath(getContext());
+                if (!audioFilePath.fetchAudioEnabled()) {
+                    audioSevice = true;
+                    getActivity().startService(new Intent(getActivity(), MediaService.class));
+                }
 
-                    final Runnable rotateTask = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        rotateRecieveButton();
-                                    }
-                                });
+                final Runnable rotateTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    rotateRecieveButton();
+                                }
+                            });
 
-                            } catch (Exception e) {
+                        } catch (Exception e) {
 
-                            }
                         }
-                    };
+                    }
+                };
 
-                    animateNsoundHandler.postDelayed(rotateTask, 200);
+                animateNsoundHandler.postDelayed(rotateTask, 200);
 
-                    //animateOnce = false;
+                //animateOnce = false;
 
-                    Log.d("Balances Update", "Animation initiated");
+                Log.d("Balances Update", "Animation initiated");
                 //}
 
                 animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
 
                 Log.d("Balances Update", "Text Animated");
-
-                //final TextView cView = tvAmOne;
-                //final TextView aView = tvSymOne;
-                //final TextView bView = tvfaitOne;
 
                 final Runnable updateTask = new Runnable() {
                     @Override
@@ -1512,9 +1532,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 Log.d("Balances Update", "Rcv done");
             }
-        }
 
-        progressBar1.setVisibility(View.GONE);
+            //Now, we update the fait (EquivalentComponent)
+            if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
+                try {
+                    final Currency currency = Currency.getInstance(finalFaitCurrency);
+                    double d = convertLocalizeStringToDouble(newItem.getAmmount());
+                    final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
+                    String faitString = "";
+                    if (Helper.isRTL(locale, currency.getSymbol())) {
+                        faitString = String.format(locale, "%.2f %s", eqAmount, currency.getSymbol());
+                    } else {
+                        faitString = String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount);
+                    }
+
+                    faitTextView.setText(faitString);
+                    faitTextView.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
+                    for (StackTraceElement element : e.getStackTrace()) {
+                        Log.e(TAG, element.toString());
+                    }
+                    faitTextView.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     public void BalanceAssetsLoad(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
@@ -1605,10 +1647,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     }
                 }*/
 
-                if (!onStartUp) {
+                /*if (!onStartUp) {
                     progressBar1.setVisibility(View.GONE);
                     isLoading = true;
-                } else {
+                } else {*/
                     try {
                         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
                         for (int i = 0; i < accountDetails.size(); i++) {
@@ -1620,9 +1662,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     } catch (Exception w) {
                         SupportMethods.testing("Assets", w, "Asset Activity");
                     }
-                }
+                /*}
 
-                whiteSpaceAfterBalances.setVisibility(View.GONE);
+                whiteSpaceAfterBalances.setVisibility(View.GONE);*/
             }
         });
     }

@@ -10,6 +10,7 @@ public class BalanceItem {
     String symbol;
     String precision;
     String ammount;
+    String fait;
     TextView symbolTextView;
     TextView ammountTextView;
 
@@ -17,6 +18,7 @@ public class BalanceItem {
         this.symbol = symbol;
         this.precision = precision;
         this.ammount = ammount;
+        this.fait = "";
     }
 
     public String getSymbol(){
@@ -31,6 +33,10 @@ public class BalanceItem {
         return this.ammount;
     }
 
+    public String getFait(){
+        return this.fait;
+    }
+
     public void setSymbol(String symbol){
         this.symbol = symbol;
     }
@@ -41,6 +47,10 @@ public class BalanceItem {
 
     public void setAmmount(String ammount){
         this.ammount = ammount;
+    }
+
+    public void setFait(String fait){
+        this.fait = fait;
     }
 
     public BalanceItem clone(){

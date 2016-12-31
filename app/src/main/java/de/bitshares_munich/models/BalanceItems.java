@@ -19,6 +19,9 @@ public class BalanceItems {
     }
 
     public BalanceItem addBalanceItem(String symbol, String precision, String ammount){
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
+
         BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
         this.items.add(newBalanceItem);
         this._fireOnNewBalanceItemEvent(newBalanceItem);
@@ -37,6 +40,10 @@ public class BalanceItems {
 
     public BalanceItem findBalanceItemBySymbol(String symbol){
         BalanceItem nextBalanceItem;
+        String withoutBit;
+
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
 
         for(int i=0;i<this.count();i++){
             nextBalanceItem = this.getBalanceItem(i);
@@ -49,8 +56,23 @@ public class BalanceItems {
         return null;
     }
 
+    public void updateFaitBalanceItem(String symbol, String fait){
+        BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
+
+        if (balanceItem != null){
+            int index = this.items.indexOf(balanceItem);
+            BalanceItem oldBalanceItem = balanceItem.clone();
+            balanceItem.setFait(fait);
+
+            this._fireOnBalanceItemUpdatedEvent(oldBalanceItem, balanceItem, index);
+        }
+    }
+
     public void addOrUpdateBalanceItem(String symbol, String precision, String ammount){
         BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
+
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
 
         if (balanceItem == null){
             this.addBalanceItem(symbol, precision, ammount);
