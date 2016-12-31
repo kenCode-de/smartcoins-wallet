@@ -1204,7 +1204,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     //ArrayList<String> amountsArray;
 
 
-    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, boolean startUp) {
         try {
             this.getBalanceItems().clear();
 
@@ -1217,8 +1217,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
                 // remove balances which are zero
                 if (_amount != 0) {
-                    this.getBalanceItems().addBalanceItem(sym.get(i), pre.get(i), am.get(i));
-
+                    this.getBalanceItems().addBalanceItem(sym.get(i), pre.get(i), am.get(i), startUp);
                     //amountsArray.add(am.get(i));
                     //precisionsArray.add(pre.get(i));
                     //symbolsArray.add(sym.get(i)));
@@ -1231,11 +1230,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public void onNewBalanceItem(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
+        final boolean isInitialLoad = event.isInitialLoad();
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 progressBar1.setVisibility(View.VISIBLE);
-                addNewBalanceView(item);
+                addNewBalanceView(item, isInitialLoad);
                 progressBar1.setVisibility(View.INVISIBLE);
             }
         });
@@ -1323,11 +1323,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
     }
 
-    public void addNewBalanceView(final BalanceItem item){
+    public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
         SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
         TextView textView2 = null;
         TextView symbolTextView;
-        TextView ammountTextView;
+        final TextView ammountTextView;
         View lastChild = null;
         boolean theresNoChild = true;
 
@@ -1378,6 +1378,50 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             ammountTextView.setText(String.format(locale, "%.2f", b));
         else ammountTextView.setText(String.format(locale, "%.4f", b));
 
+        //if it's not the initial load, then is a balance received, then we must show an animation and sound
+        if (!initialLoad){
+            Log.d("Balances Update", "Balance received");
+
+            ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+            ammountTextView.setTextColor(getResources().getColor(R.color.green));
+            AudioFilePath audioFilePath = new AudioFilePath(getContext());
+            if (!audioFilePath.fetchAudioEnabled()) {
+                audioSevice = true;
+                getActivity().startService(new Intent(getActivity(), MediaService.class));
+            }
+
+            final Runnable rotateTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                rotateRecieveButton();
+                            }
+                        });
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            };
+            animateNsoundHandler.postDelayed(rotateTask, 200);
+            Log.d("Balances Update", "Animation initiated");
+            animateText(ammountTextView, 0, convertLocalizeStringToFloat(returnFromPower(item.getPrecision(), item.getAmmount())));
+            Log.d("Balances Update", "Text Animated");
+
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ammountTextView.setTextColor(getResources().getColor(R.color.recieveamount));
+                    } catch (Exception e) {
+
+                    }
+                }
+            };
+            animateNsoundHandler.postDelayed(updateTask, 4000);
+        }
     }
 
 
@@ -1536,6 +1580,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             //Now, we update the fait (EquivalentComponent)
             if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
                 try {
+                    Log.d("Equivalent Value Update", "Changing Fait Text: "+newItem.getSymbol());
                     final Currency currency = Currency.getInstance(finalFaitCurrency);
                     double d = convertLocalizeStringToDouble(newItem.getAmmount());
                     final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
@@ -1564,104 +1609,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
 
-        updateBalanceArrays(sym, pre, am);
+        updateBalanceArrays(sym, pre, am, onStartUp);
 
-        /*sym.clear();
-        sym.addAll(symbolsArray);
-
-        pre.clear();
-        pre.addAll(precisionsArray);
-
-        am.clear();
-        am.addAll(amountsArray);*/
-
-
+        //TODO this shouldn't be loading in the UI Thread, there's nothing UI here
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                /*SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
-                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                llBalances.removeAllViews();
-
-                for (int i = 0; i < balanceItems.count(); i += 2) {
-                    int counter = 1;
-                    int op = balanceItems.count();
-                    int pr;
-
-                    if ((op - i) > 2) {
-                        pr = 2;
-                    } else {
-                        pr = op - i;
+                try {
+                    ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        if (accountDetails.get(i).isSelected) {
+                            getEquivalentComponents(accountDetails.get(i).AccountAssets);
+                            break;
+                        }
                     }
-
-                    View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                    for (int l = i; l < i + pr; l++) {
-                        BalanceItem nextBalance = balanceItems.getBalanceItem(l);
-
-                        if (counter == 1) {
-                            TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                            assetsSymbols.displaySpannable(textView, nextBalance.getSymbol());
-
-                            TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
-
-                            float b = powerInFloat(nextBalance.getPrecision(), nextBalance.getAmmount());
-                            if(SMARTCOINS.contains(nextBalance.getSymbol().replace("bit",""))) {
-                                textView1.setText(String.format(locale, "%.2f", b));
-                            }else if (assetsSymbols.isUiaSymbol(nextBalance.getSymbol()))
-                                textView1.setText(String.format(locale, "%.4f", b));
-                            else if (assetsSymbols.isSmartCoinSymbol(nextBalance.getSymbol()))
-                                textView1.setText(String.format(locale, "%.2f", b));
-                            else textView1.setText(String.format(locale, "%.4f", b));
-
-                        }
-
-                        if (counter == 2) {
-                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            assetsSymbols.displaySpannable(textView2, nextBalance.getSymbol());
-
-                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                            String r = returnFromPower(nextBalance.getPrecision(), nextBalance.getAmmount());
-
-                            if(SMARTCOINS.contains(nextBalance.getSymbol().replace("bit",""))) {
-                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
-                            }else if (assetsSymbols.isUiaSymbol(nextBalance.getSymbol()))
-                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
-                            else if (assetsSymbols.isSmartCoinSymbol(nextBalance.getSymbol()))
-                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
-                            else
-                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
-
-                            llBalances.addView(customView);
-                        }
-
-                        if (counter == 1 && i == balanceItems.count() - 1) {
-                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            textView2.setText("");
-                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                            textView3.setVisibility(View.GONE);
-                            llBalances.addView(customView);
-                        }
-
-                        if (counter == 1) {
-                            counter = 2;
-                        } else counter = 1;
-                    }
-                }*/
-
-                /*if (!onStartUp) {
-                    progressBar1.setVisibility(View.GONE);
-                    isLoading = true;
-                } else {*/
-                    try {
-                        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                        for (int i = 0; i < accountDetails.size(); i++) {
-                            if (accountDetails.get(i).isSelected) {
-                                getEquivalentComponents(accountDetails.get(i).AccountAssets);
-                                break;
-                            }
-                        }
-                    } catch (Exception w) {
-                        SupportMethods.testing("Assets", w, "Asset Activity");
-                    }
+                } catch (Exception w) {
+                    SupportMethods.testing("Assets", w, "Asset Activity");
+                }
                 /*}
 
                 whiteSpaceAfterBalances.setVisibility(View.GONE);*/

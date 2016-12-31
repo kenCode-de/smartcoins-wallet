@@ -24,7 +24,17 @@ public class BalanceItems {
 
         BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
         this.items.add(newBalanceItem);
-        this._fireOnNewBalanceItemEvent(newBalanceItem);
+        this._fireOnNewBalanceItemEvent(newBalanceItem, false);
+        return newBalanceItem;
+    }
+
+    public BalanceItem addBalanceItem(String symbol, String precision, String ammount, boolean initialLoad){
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
+
+        BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
+        this.items.add(newBalanceItem);
+        this._fireOnNewBalanceItemEvent(newBalanceItem, initialLoad);
         return newBalanceItem;
     }
 
@@ -122,8 +132,9 @@ public class BalanceItems {
         _listeners.remove(listener);
     }
 
-    private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item) {
+    private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item, boolean initialLoad) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, item );
+        balanceItemsEvent.setInitialLoad(initialLoad);
         Iterator listeners = _listeners.iterator();
         while( listeners.hasNext() ) {
             ( (BalanceItemsListener) listeners.next() ).onNewBalanceItem( balanceItemsEvent );
