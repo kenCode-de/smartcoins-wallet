@@ -380,7 +380,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     long convertedBaseValue = converter.convert(transferAmount, Converter.CLOSE_VALUE);
                     AssetAmount equivalentValue = new AssetAmount(UnsignedLong.valueOf(convertedBaseValue), mSmartcoin);
 
-                    Date date = new Date(transferEntry.getTimestamp()*1000);
+                    Date date = new Date(transferEntry.getTimestamp() * 1000);
                     Log.d(TAG,String.format("Saving eq value. %s %d, original: %s %d. Date: %s", equivalentValue.getAsset().getSymbol(), equivalentValue.getAmount().longValue(), transferAmount.getAsset().getSymbol(), transferAmount.getAmount().longValue(), date.toString()));
                     transferEntry.setEquivalentValue(equivalentValue);
                     database.updateEquivalentValue(transferEntry);
@@ -431,7 +431,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     getMissingEquivalentValues.start();
                 }
             }else{
-                Log.w(TAG, String.format("Got no bucket from the requested time period for asset: %s ", transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAsset().getSymbol()));
+                Asset transferAsset = transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAsset();
+                Log.w(TAG, String.format("Got no bucket from the requested time period for asset: %s , id: %s", transferAsset.getSymbol(), transferAsset.getObjectId()));
                 Date currentStart = getMarketHistory.getStart();
                 Calendar calendar = Calendar.getInstance();
                 int previousCount = getMarketHistory.getCount() > 0 ? getMarketHistory.getCount() - 1 : 0;
@@ -449,6 +450,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         @Override
         public void onError(BaseResponse.Error error) {
             Log.e(TAG,"historicalMarketListener.onError. Msg: "+error.message);
+            // Removing this equivalent value task, even though it was not resolved
+            HistoricalTransferEntry entry = missingEquivalentValues.poll();
+
+            // Process the next equivalent value, in case we have one
+            processNextEquivalentValue();
         }
     };
 
@@ -634,12 +640,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             int inserted = database.putTransactions(historicalTransferEntries);
             Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, historicalTransferEntries.size()));
-
+            List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId));
             // If we got exactly the requested amount of historical transfers, it means we
             // must have more to fetch.
             if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
                 Log.i(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
-                start = historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE;
+                start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
                 Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
                 transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
