@@ -146,13 +146,17 @@ public class SCWallDatabase {
                 // Transfer and fee assets
                 Asset transferAsset = assetMap.get(transferAssetId);
                 Asset feeAsset = assetMap.get(feeAssetId);
+                if(transferAsset == null || feeAsset == null){
+                    cursor.moveToNext();
+                    continue;
+                }
 
                 // Transfer and fee amounts
-                AssetAmount tranferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
+                AssetAmount transferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
                 AssetAmount feeAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT))), feeAsset);
 
                 // Building a TransferOperation
-                TransferOperation transferOperation = new TransferOperation(from, to, tranferAmount, feeAmount);
+                TransferOperation transferOperation = new TransferOperation(from, to, transferAmount, feeAmount);
 
                 // Building memo data
                 String memoMessage = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE));

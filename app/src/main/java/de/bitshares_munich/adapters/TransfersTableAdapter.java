@@ -116,8 +116,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
-        TextView transferAmount = (TextView) root.findViewById(R.id.asset_amount);
-        AssetAmount assetAmount = operation.getTransferAmount();
+        TextView transferAmountTextView = (TextView) root.findViewById(R.id.asset_amount);
+        AssetAmount transferAmount = operation.getTransferAmount();
 
         TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
         AssetAmount fiatAmount = historicalTransfer.getEquivalentValue();
@@ -125,8 +125,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
         Locale locale = new Locale(language);
         String symbol = "";
-        if(assetAmount.getAsset() != null){
-            symbol = assetAmount.getAsset().getSymbol();
+        if(transferAmount.getAsset() != null){
+            symbol = transferAmount.getAsset().getSymbol();
         }
         int redColor = ContextCompat.getColor(getContext(),R.color.send_amount);
         int greenColor = ContextCompat.getColor(getContext(),R.color.receive_amount);
@@ -135,16 +135,16 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
 
         if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
             // User sent this transfer
-            transferAmount.setTextColor(redColor);
+            transferAmountTextView.setTextColor(redColor);
             fiatAmountTextView.setTextColor(lightRed);
-            String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
-            transferAmount.setText(String.format("- %s %s", amount, symbol));
+            String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount));
+            transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
-            transferAmount.setTextColor(greenColor);
+            transferAmountTextView.setTextColor(greenColor);
             fiatAmountTextView.setTextColor(lightGreen);
-            String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(assetAmount));
-            transferAmount.setText(String.format("+ %s %s", amount, symbol));
+            String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount));
+            transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
         if(fiatAmount != null){
@@ -152,7 +152,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             Log.d(TAG,"Fiat amount: "+eqValue);
             fiatAmountTextView.setText(eqValue);
         }else{
-            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", assetAmount.getAmount().longValue(), assetAmount.getAsset().getSymbol()));
+            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
         }
         return root;
     }
