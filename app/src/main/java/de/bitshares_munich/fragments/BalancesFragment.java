@@ -1582,7 +1582,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 try {
                     Log.d("Equivalent Value Update", "Changing Fait Text: "+newItem.getSymbol());
                     final Currency currency = Currency.getInstance(finalFaitCurrency);
-                    double d = convertLocalizeStringToDouble(newItem.getAmmount());
+                    double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
                     final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
                     String faitString = "";
                     if (Helper.isRTL(locale, currency.getSymbol())) {
