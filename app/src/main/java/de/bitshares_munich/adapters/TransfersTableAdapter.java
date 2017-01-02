@@ -12,6 +12,9 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -70,11 +73,25 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
-            SimpleDateFormat timeZone = new SimpleDateFormat("Z");
+            SimpleDateFormat timeZone = new SimpleDateFormat("zzz");
+
+            TimeZone tz = TimeZone.getTimeZone(timeZone.format(date));
+            String formattedTimeZone = tz.getDisplayName(false, TimeZone.SHORT);
+
+            // It was requested that we omit the last part of the time zone information
+            // turning GMT-02:00 into GMT-2 for instance.
+            // The following code does just that.
+            Pattern pattern = Pattern.compile("(GMT[+-])(\\d)(\\d):(\\d\\d)");
+            Matcher m = pattern.matcher(formattedTimeZone);
+            if(m.matches()){
+                if(m.group(4).equals("00")){
+                    formattedTimeZone = m.group(1) + m.group(3);
+                }
+            }
 
             dateTextView.setText(dateFormat.format(date));
             timeTextView.setText(timeFormat.format(date));
-            timeZoneTextView.setText(timeZone.format(date));
+            timeZoneTextView.setText(formattedTimeZone);
         }
         return v;
     }

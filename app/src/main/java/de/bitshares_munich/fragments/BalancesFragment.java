@@ -548,7 +548,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     // Looking for smartcoin asset
                     for(Asset asset : assets){
                         if(asset.getObjectId().equals(mSmartcoin.getObjectId().toString())){
-                            mSmartcoin = asset;
+                            mSmartcoin = database.fillAssetDetails(asset);
                         }
                     }
 
@@ -833,7 +833,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(assetList, mLookupAssetsSymbolsListener));
             getMissingAssets.start();
         }else{
-            Asset smartcoinAsset = database.fillAssetDetails(mSmartcoin);
+            mSmartcoin = database.fillAssetDetails(mSmartcoin);
         }
     }
 
