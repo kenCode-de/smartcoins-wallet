@@ -237,6 +237,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     webSocketCallHelper myWebSocketHelper;
 
+    /**
+     * Counter used to keep track of how many times the 'load more' button was pressed
+     */
+    private int loadMoreCounter = 1;
+
     /* AsyncTask used to process the PDF generation job in the background */
     private PdfGeneratorTask pdfGeneratorTask;
 
@@ -244,7 +249,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private ProgressDialog pdfProgress;
 
     /* Constant used to fix the number of historical transfers to fetch in one batch */
-    private int HISTORICAL_TRANSFER_BATCH_SIZE = 100;
+    private int HISTORICAL_TRANSFER_BATCH_SIZE = 50;
 
     /* Parameters to be used as the start and stop arguments in the 'get_relative_account_history' API call */
     private int start = 1;
@@ -640,7 +645,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             int inserted = database.putTransactions(historicalTransferEntries);
             Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, historicalTransferEntries.size()));
-            List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId));
+            List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
             // If we got exactly the requested amount of historical transfers, it means we
             // must have more to fetch.
             if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
@@ -1004,9 +1009,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         if (!accountId.equals("")) {
             UserAccount me = new UserAccount(accountId);
-            List<HistoricalTransferEntry> transactions = database.getTransactions(me);
-
-            start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+//            List<HistoricalTransferEntry> transactions = database.getTransactions(me, loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
+//            start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+            start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
             stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
             Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
             transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
@@ -1181,7 +1186,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             );
         }else{
             UserAccount currentUser = new UserAccount(accountId);
-            List<HistoricalTransferEntry> transfers = database.getTransactions(currentUser);
+            List<HistoricalTransferEntry> transfers = database.getTransactions(currentUser, SCWallDatabase.UNLIMITED_TRANSACTIONS);
             pdfGeneratorTask = new PdfGeneratorTask(getContext(), currentUser, this);
             pdfGeneratorTask.execute(transfers.toArray(new HistoricalTransferEntry[transfers.size()]));
 
@@ -2800,11 +2805,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     @OnClick(R.id.load_more_values)
-    public void Load_more_Values() {
-        load_more_values.setEnabled(false);
-//        progressBar.setVisibility(View.VISIBLE);
-        number_of_transactions_to_load = 20;
-        loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+    public void loadMoreTransactions() {
+        Log.d(TAG,"loadMoreTransactions");
+        loadMoreCounter++;
+        updateTableView();
     }
 
     void isLifeTime(final String name_id, final String id) {
@@ -3338,7 +3342,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
      */
     private void updateTableView() {
         UserAccount account = new UserAccount(accountId);
-        List<HistoricalTransferEntry> transfers = database.getTransactions(account);
+        int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
+        List<HistoricalTransferEntry> transfers = database.getTransactions(account, limit);
         transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransferEntry[transfers.size()])));
 
         if (transfersView.getColumnComparator(0) == null) {

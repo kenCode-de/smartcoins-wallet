@@ -35,6 +35,18 @@ import de.bitsharesmunich.graphenej.objects.Memo;
  */
 public class SCWallDatabase {
     private String TAG = this.getClass().getName();
+
+    /**
+     * Constant used to specify an unlimited amount of transactions for the
+     * second argument of the getTransactions method.
+     */
+    public static final int UNLIMITED_TRANSACTIONS = -1;
+
+    /**
+     * The default number of transactions to load in the transaction list
+     */
+    public static final int DEFAULT_TRANSACTION_BATCH_SIZE = 50;
+
     private SCWallSQLiteOpenHelper dbHelper;
     private SQLiteDatabase db;
 
@@ -114,9 +126,12 @@ public class SCWallDatabase {
 
     /**
      * Retrieves the list of historical transfers.
+     * @param userAccount: The user account whose transactions we're interested in.
+     * @param max: The maximum number of transactions to fetch, if the value is <= 0, then the
+     *           query will put no limits on the number of returned values.
      * @return: The list of historical transfer transactions.
      */
-    public List<HistoricalTransferEntry> getTransactions(UserAccount userAccount){
+    public List<HistoricalTransferEntry> getTransactions(UserAccount userAccount, int max){
         long before = System.currentTimeMillis();
         HashMap<String, String> userMap = this.getUserMap();
         HashMap<String, Asset> assetMap = this.getAssetMap();
@@ -125,7 +140,8 @@ public class SCWallDatabase {
         String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
         String selection = SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
         String[] selectionArgs = { userAccount.getObjectId(), userAccount.getObjectId() };
-        Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, null);
+        String limit = max > 0 ? String.format("%d", max) : null;
+        Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, limit);
         ArrayList<HistoricalTransferEntry> transfers = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
