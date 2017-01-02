@@ -231,6 +231,23 @@ public class SCWallDatabase {
     }
 
     /**
+     * Gets the total number of recorded transactions from a given user.
+     *
+     * @param userAccount: User account we're interested in.
+     * @return: The total number of transaction records in the database from a given user.
+     */
+    public int getTransactionCount(UserAccount userAccount){
+        String sql = "SELECT COUNT(*) FROM " + SCWallDatabaseContract.Transfers.TABLE_NAME +
+                " where " + SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
+        String[] selectionArgs = new String[]{ userAccount.getObjectId(), userAccount.getObjectId() };
+        Cursor cursor = db.rawQuery(sql, selectionArgs);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
+    }
+
+    /**
      * Making a query to fetch all unknown account names. That would be missing entries in the
      * user_accounts table.
      * @return: List of all accounts with missing names.

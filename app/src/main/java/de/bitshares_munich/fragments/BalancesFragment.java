@@ -167,7 +167,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     String finalFaitCurrency;
 
     @Bind(R.id.load_more_values)
-    Button load_more_values;
+    Button loadMoreButton;
 
     @Bind(R.id.scrollViewBalances)
     ScrollView scrollViewBalances;
@@ -236,6 +236,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     webSocketCallHelper myWebSocketHelper;
+
+    private TransfersTableAdapter tableAdapter;
 
     /**
      * Counter used to keep track of how many times the 'load more' button was pressed
@@ -2724,16 +2726,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 //                        tableView.setDataAdapter(myTransactionsTableAdapter);
                     }
 
-                    if (myTransactionActivity.finalBlockRecieved) {
-                        load_more_values.setVisibility(View.GONE);
-                    } else {
-                        load_more_values.setVisibility(View.VISIBLE);
-                        load_more_values.setEnabled(true);
-                    }
-
-//                    if (progressBar.getVisibility() != View.GONE)
-//                        progressBar.setVisibility(View.GONE);
-
                     if (tableViewparent.getVisibility() != View.VISIBLE)
                         tableViewparent.setVisibility(View.VISIBLE);
                 }
@@ -2774,8 +2766,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             Log.d("LogTransactions", "updateTriggerFromNetworkBroadcast");
 
-//            progressBar.setVisibility(View.VISIBLE);
-            load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
@@ -2798,17 +2788,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
             } else
                 myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-//            tableView.setDataAdapter(myTransactionsTableAdapter);
-            load_more_values.setVisibility(View.VISIBLE);
-//            progressBar.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.load_more_values)
     public void loadMoreTransactions() {
-        Log.d(TAG,"loadMoreTransactions");
         loadMoreCounter++;
         updateTableView();
+        int loadedTransaction = loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE;
+        int transactionCount = database.getTransactionCount(new UserAccount(accountId));
+        if(loadedTransaction >= transactionCount){
+            loadMoreButton.setVisibility(View.GONE);
+        }
     }
 
     void isLifeTime(final String name_id, final String id) {
@@ -2952,9 +2943,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 //            tableView.addDataClickListener(new TableViewClickListener(getContext()));
 //            progressBar.setVisibility(View.VISIBLE);
 
-
-            load_more_values.setVisibility(View.GONE);
-
             firstTimeLoad = false;
         }
 
@@ -2974,8 +2962,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 //            progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
 
-//            progressBar.setVisibility(View.VISIBLE);
-            load_more_values.setVisibility(View.GONE);
             number_of_transactions_loaded = 0;
             number_of_transactions_to_load = 20;
             loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
@@ -3344,8 +3330,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         UserAccount account = new UserAccount(accountId);
         int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
         List<HistoricalTransferEntry> transfers = database.getTransactions(account, limit);
-        transfersView.setDataAdapter(new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransferEntry[transfers.size()])));
-
+        if(tableAdapter == null){
+            tableAdapter = new TransfersTableAdapter(getContext(), account, transfers.toArray(new HistoricalTransferEntry[transfers.size()]));
+            Log.d(TAG,"New instance of adapter");
+        }else{
+            Log.d(TAG,"Updating adapter's data");
+            tableAdapter.clear();
+            tableAdapter.addAll(transfers.toArray(new HistoricalTransferEntry[transfers.size()]));
+            tableAdapter.notifyDataSetChanged();
+        }
+        transfersView.setDataAdapter(tableAdapter);
         if (transfersView.getColumnComparator(0) == null) {
             updateSortTable();
         }
