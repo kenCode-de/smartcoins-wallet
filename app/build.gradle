@@ -12,10 +12,6 @@ android {
         applicationId "de.bitsharesmunich.smartcoinswallet"
         minSdkVersion 21
         targetSdkVersion 23
-
-        versionCode 191
-
-        versionName '1.5.2'
         multiDexEnabled true
     }
     buildTypes {

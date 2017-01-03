@@ -19,9 +19,22 @@ public class BalanceItems {
     }
 
     public BalanceItem addBalanceItem(String symbol, String precision, String ammount){
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
+
         BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
         this.items.add(newBalanceItem);
-        this._fireOnNewBalanceItemEvent(newBalanceItem);
+        this._fireOnNewBalanceItemEvent(newBalanceItem, false);
+        return newBalanceItem;
+    }
+
+    public BalanceItem addBalanceItem(String symbol, String precision, String ammount, boolean initialLoad){
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
+
+        BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
+        this.items.add(newBalanceItem);
+        this._fireOnNewBalanceItemEvent(newBalanceItem, initialLoad);
         return newBalanceItem;
     }
 
@@ -32,11 +45,15 @@ public class BalanceItems {
     public void removeBalanceItem(BalanceItem item){
         int index = this.items.indexOf(item);
         this.items.remove(index);
-        this._fireOnBalanceItemRemovedEvent(item, index);
+        this._fireOnBalanceItemRemovedEvent(item, index, this.count());
     }
 
     public BalanceItem findBalanceItemBySymbol(String symbol){
         BalanceItem nextBalanceItem;
+        String withoutBit;
+
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
 
         for(int i=0;i<this.count();i++){
             nextBalanceItem = this.getBalanceItem(i);
@@ -49,8 +66,23 @@ public class BalanceItems {
         return null;
     }
 
+    public void updateFaitBalanceItem(String symbol, String fait){
+        BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
+
+        if (balanceItem != null){
+            int index = this.items.indexOf(balanceItem);
+            BalanceItem oldBalanceItem = balanceItem.clone();
+            balanceItem.setFait(fait);
+
+            this._fireOnBalanceItemUpdatedEvent(oldBalanceItem, balanceItem, index);
+        }
+    }
+
     public void addOrUpdateBalanceItem(String symbol, String precision, String ammount){
         BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
+
+        //TODO eliminate the "bit" string from the logic, this should only be in the view
+        symbol = symbol.replace("bit","");
 
         if (balanceItem == null){
             this.addBalanceItem(symbol, precision, ammount);
@@ -70,7 +102,7 @@ public class BalanceItems {
     }
 
     public int count(){
-        return this.count();
+        return this.items.size();
     }
 
     public BalanceItem getBalanceItem(int index){
@@ -84,7 +116,7 @@ public class BalanceItems {
         while(i<this.count()){
             nextBalanceItem = this.getBalanceItem(i);
 
-            if (nextBalanceItem.getAmmount() == ""){
+            if ((nextBalanceItem.getAmmount().equals("")) || (nextBalanceItem.getAmmount().equals("0"))){
                 this.removeBalanceItem(nextBalanceItem);
             } else {
                 i++;
@@ -92,17 +124,27 @@ public class BalanceItems {
         }
     }
 
-    private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item) {
+    public synchronized void addListener( BalanceItemsListener listener ) {
+        _listeners.add(listener);
+    }
+
+    public synchronized void removeListener( BalanceItemsListener listener ) {
+        _listeners.remove(listener);
+    }
+
+    private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item, boolean initialLoad) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, item );
+        balanceItemsEvent.setInitialLoad(initialLoad);
         Iterator listeners = _listeners.iterator();
         while( listeners.hasNext() ) {
             ( (BalanceItemsListener) listeners.next() ).onNewBalanceItem( balanceItemsEvent );
         }
     }
 
-    private synchronized void _fireOnBalanceItemRemovedEvent(BalanceItem item, int index) {
+    private synchronized void _fireOnBalanceItemRemovedEvent(BalanceItem item, int index, int newSize) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, item );
         balanceItemsEvent.setIndex(index);
+        balanceItemsEvent.setNewSize(newSize);
         Iterator listeners = _listeners.iterator();
         while( listeners.hasNext() ) {
             ( (BalanceItemsListener) listeners.next() ).onBalanceItemRemoved( balanceItemsEvent );

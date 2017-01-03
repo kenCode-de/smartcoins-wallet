@@ -1,7 +1,7 @@
 package de.bitshares_munich.database;
 
-import com.luminiasoft.bitshares.AssetAmount;
-import com.luminiasoft.bitshares.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 
 /**
  * This class is very similar to the HistoricalTransfer, but while the later is used to deserialize

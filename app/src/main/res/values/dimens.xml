@@ -16,4 +16,6 @@
     <dimen name="items_ereciptDouble">140dp</dimen>
     <dimen name="items_ereciptImage">150dp</dimen>
 
+    <!-- Dimensions form the transaction list -->
+    <dimen name="transaction_details_text_size">13sp</dimen>
 </resources>

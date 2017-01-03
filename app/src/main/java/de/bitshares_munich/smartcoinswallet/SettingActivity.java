@@ -34,23 +34,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luminiasoft.bitshares.AccountOptions;
-import com.luminiasoft.bitshares.AccountUpdateTransactionBuilder;
-import com.luminiasoft.bitshares.Address;
-import com.luminiasoft.bitshares.Asset;
-import com.luminiasoft.bitshares.Authority;
-import com.luminiasoft.bitshares.BrainKey;
-import com.luminiasoft.bitshares.PublicKey;
-import com.luminiasoft.bitshares.Transaction;
-import com.luminiasoft.bitshares.UserAccount;
-import com.luminiasoft.bitshares.errors.MalformedTransactionException;
-import com.luminiasoft.bitshares.interfaces.WitnessResponseListener;
-import com.luminiasoft.bitshares.models.AccountProperties;
-import com.luminiasoft.bitshares.models.BaseResponse;
-import com.luminiasoft.bitshares.models.WitnessResponse;
-import com.luminiasoft.bitshares.ws.GetAccounts;
-import com.luminiasoft.bitshares.ws.TransactionBroadcastSequence;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -81,6 +64,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
+import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
@@ -91,6 +75,22 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     private final String TAG = this.getClass().getName();
@@ -165,12 +165,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     String wifKey = "";
 
-    /* Pin pinDialog */
-    private Dialog pinDialog;
-
-    /* Internal attribute used to keep track of the activity state */
-    private boolean mRestarting = false;
-
     /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
     private boolean updateAllRoles;
     private String oldKey;
@@ -235,14 +229,18 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 public void run() {
                     Log.d(TAG,"onSuccess");
                     Toast.makeText(SettingActivity.this, R.string.refresh_keys_success, Toast.LENGTH_LONG).show();
+                    String suggestion = "";
                     for(AccountDetails accountDetail : accountDetails){
                         if(accountDetail.account_id.equals(updatedAccount.account_id)){
                             accountDetail.wif_key = updatedAccount.wif_key;
                             accountDetail.brain_key = updatedAccount.brain_key;
                             Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
+
+                            suggestion = accountDetail.brain_key;
                         }
                         break;
                     }
+
                     tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
                     displayBrainKeyBackup();
 
@@ -250,6 +248,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
                     oldKeys.add(oldKey);
                     tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
+
+                    /* Removing brain key suggestion from shared preferences */
+                    removeSuggestion(suggestion);
                 }
             });
         }
@@ -350,6 +351,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void onClickSecurePinbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -896,6 +898,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             BrainKey brainKey = new BrainKey(suggestion, 0);
             Log.d(TAG,"new brain key: "+suggestion);
 
+            /* Keeping this suggestion in shared preferences in case we get interrupted */
+            storeSuggestion(suggestion);
+
             // Keeping a reference of the account to be changed, with the updated values
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
             updatedAccount.wif_key = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
@@ -941,12 +946,58 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
+    /**
+     * We use this method to store a brain key suggestion in shared preferences
+     * just in case the update procedure is interrupted.
+     * @param suggestion
+     */
+    private void storeSuggestion(String suggestion){
+        Log.d(TAG,"storeSuggestion. suggestion: "+suggestion);
+        ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        if(suggestionList.size() > 0){
+            Log.w(TAG,"Already have a previous suggestion!");
+        }
+        suggestionList.add(suggestion);
+        tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, suggestionList);
+    }
+
+    /**
+     * Once the brain key procedure has finished, we no longer need to keep this brain key suggestion
+     * in here.
+     * @param suggestion
+     */
+    private void removeSuggestion(String suggestion){
+        Log.d(TAG,"removeSuggestion. suggestion: "+suggestion);
+        /* Checking that suggestion matches our memory-stored brain key */
+        ArrayList<String> savedSuggestions = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        if(savedSuggestions.size() > 0){
+            if(savedSuggestions.size() > 1){
+                Log.w(TAG,"Have more than one suggestion in memory");
+            }
+            for(int i = 0; i < savedSuggestions.size(); i++){
+                if(savedSuggestions.get(i).equals(suggestion)){
+                    savedSuggestions.remove(i);
+                    break;
+                }
+            }
+            if(savedSuggestions.size() == 0){
+                Log.d(TAG,"saving empty suggestion list, this is expected");
+            }else{
+                Log.w(TAG,"even after removing suggestion, the list was not empty, signaling that a previous account update operation could have been interrupted");
+            }
+            tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, savedSuggestions);
+        }else{
+            Log.w(TAG,"No saved suggestion");
+        }
+    }
+
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
         if(Application.accountCanCreate()) {
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
+            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
@@ -956,6 +1007,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
+        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
