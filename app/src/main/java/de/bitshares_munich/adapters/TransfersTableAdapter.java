@@ -166,7 +166,6 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
 
         if(fiatAmount != null){
             String eqValue = String.format("~ %s %.2f", fiatAmount.getAsset().getSymbol(), Util.fromBase(fiatAmount));
-            Log.d(TAG,"Fiat amount: "+eqValue);
             fiatAmountTextView.setText(eqValue);
         }else{
             Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
