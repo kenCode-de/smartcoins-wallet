@@ -215,7 +215,7 @@
 
     <string name="select_backup_asset">Seleccione el elemento de backup</string>
     <string name="sender_account">Cuenta del emisor</string>
-    <string name="receiver_account">Cuenta receptor</string>
+    <string name="receiver_account">Cuenta del receptor</string>
     <string name="total">Total</string>
     <string name="payment_method">Método de pago</string>
     <string name="thankyou_string">Gracias por usar Smartcoins Wallet</string>
