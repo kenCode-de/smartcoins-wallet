@@ -23,4 +23,6 @@ public class Constants {
     public static Asset getCoreCurrency(){
         return new Asset("1.3.0");
     }
+
+    public static final String KEY_SUGGESTED_BRAIN_KEY = "key_suggested_brain_key";
 }

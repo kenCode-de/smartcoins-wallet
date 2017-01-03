@@ -40,24 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.primitives.UnsignedLong;
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.BlockData;
-import de.bitsharesmunich.graphenej.Invoice;
-import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.Transaction;
-import de.bitsharesmunich.graphenej.TransferTransactionBuilder;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.crypto.Random;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.objects.Memo;
-import de.bitsharesmunich.graphenej.api.GetAccountByName;
-import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
@@ -96,6 +78,24 @@ import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.BlockData;
+import de.bitsharesmunich.graphenej.Invoice;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.TransferTransactionBuilder;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccountByName;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.objects.Memo;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -1091,7 +1091,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
             if(memoMessage != null) {
-                SecureRandom secureRandom = Random.getSecureRandom();
+                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
                 byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
                 Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));

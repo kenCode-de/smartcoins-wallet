@@ -1,7 +1,5 @@
 package de.bitsharesmunich.graphenej;
 
-import de.bitsharesmunich.graphenej.crypto.Random;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -11,6 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+
+import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
 
 /**
  * Class used to encapsulate all BrainKey-related operations.
@@ -44,7 +44,7 @@ public class BrainKey {
         String[] wordArray = words.split(",");
         ArrayList<String> suggestedBrainKey = new ArrayList<String>();
         assert (wordArray.length == DICT_WORD_COUNT);
-        SecureRandom secureRandom = Random.getSecureRandom();
+        SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
         int index;
         for (int i = 0; i < BRAINKEY_WORD_COUNT; i++) {
             index = secureRandom.nextInt(DICT_WORD_COUNT - 1);

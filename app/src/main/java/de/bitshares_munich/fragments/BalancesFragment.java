@@ -86,7 +86,11 @@ import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.FiatMapping;
+import de.bitshares_munich.models.BalanceItemsEvent;
+import de.bitshares_munich.models.BalanceItem;
+import de.bitshares_munich.models.BalanceItems;
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitshares_munich.models.BalanceItemsListener;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
@@ -136,10 +140,11 @@ import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 
 
+
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener {
+public class BalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
@@ -224,6 +229,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     Boolean sentCallForTransactions = false;
 
+    BalanceItems balanceItems;
+
     Locale locale;
     NumberFormat format;
     String language;
@@ -233,6 +240,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public BalancesFragment() {
         // Required empty public constructor
     }
+
+    //Cache for equivalent component BTS to EUR
+    double BTSCurrencyPriceCache;
+    Date BTSCurrencyPriceCacheDate;
+
 
     webSocketCallHelper myWebSocketHelper;
 
@@ -1255,6 +1267,15 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         BalanceAssetsUpdate(sym, pre, am, false);
     }
 
+    public BalanceItems getBalanceItems(){
+        if (this.balanceItems == null){
+            this.balanceItems = new BalanceItems();
+            this.balanceItems.addListener(this);
+        }
+
+        return this.balanceItems;
+    }
+
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
@@ -1276,7 +1297,53 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     }
 
+    public void processAssets(final HashMap<String, ArrayList<String>> currencies, final HashMap<String, Asset> assets, final Runnable getEquivalentCompRunnable){
+       for (final String base : currencies.keySet()) {
+            if (assets.containsKey(base)) {
+                for (final String quote : currencies.get(base)) {
+                    if (assets.containsKey(quote)) {
+                        WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
+                            @Override
+                            public void onSuccess(WitnessResponse response) {
+                                if (response.result.getClass() == ArrayList.class) {
+                                    ArrayList list = (ArrayList) response.result;
+                                    for (Object listObject : list) {
+                                        if (listObject.getClass() == Market.class) {
+                                            Market market = ((Market) listObject);
+                                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
+                                                double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
+                                                int exp = assets.get(base).getPrecision() - assets.get(quote).getPrecision();
+                                                price = (price * Math.pow(10, exp));
+                                                updateEquivalentValue(base, Double.toString(price), getEquivalentCompRunnable);
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                                getEquivalentValueIndirect(assets.get(base), assets.get(quote), assets.get("BTS"));
+                            }
+
+                            @Override
+                            public void onError(BaseResponse.Error error) {
+                                Log.e(TAG, "Error getLimitOrder " + error.message);
+                                //TODO handle limitOrder error
+                            }
+                        }));
+                        glo.start();
+                    } else {
+                        Log.e(TAG, "Quote is not in assetlist");
+                        //TODO handle quote null error
+                    }
+                }
+            } else {
+                Log.e(TAG, "Base is not in assetlist");
+                //TODO handle base error
+            }
+       }
+    }
+
     public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final Runnable getEquivalentCompRunnable) {
+
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -1302,48 +1369,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                             }
                         }
                     }
-                    for (final String base : currencies.keySet()) {
-                        if (assets.containsKey(base)) {
-                            for (final String quote : currencies.get(base)) {
-                                if (assets.containsKey(quote)) {
-                                    WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(assets.get(base).getObjectId(), assets.get(quote).getObjectId(), 20, new WitnessResponseListener() {
-                                        @Override
-                                        public void onSuccess(WitnessResponse response) {
-                                            if (response.result.getClass() == ArrayList.class) {
-                                                ArrayList list = (ArrayList) response.result;
-                                                for (Object listObject : list) {
-                                                    if (listObject.getClass() == Market.class) {
-                                                        Market market = ((Market) listObject);
-                                                        if (!market.sell_price.base.asset_id.equalsIgnoreCase(assets.get(base).getObjectId())) {
-                                                            double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
-                                                            int exp = assets.get(base).getPrecision() - assets.get(quote).getPrecision();
-                                                            price = (price * Math.pow(10, exp));
-                                                            updateEquivalentValue(base, Double.toString(price), getEquivalentCompRunnable);
-                                                            return;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            getEquivalentValueIndirect(assets.get(base), assets.get(quote), assets.get("BTS"));
-                                        }
-
-                                        @Override
-                                        public void onError(BaseResponse.Error error) {
-                                            Log.e(TAG, "Error getLimitOrder " + error.message);
-                                            //TODO handle limitOrder error
-                                        }
-                                    }));
-                                    glo.start();
-                                } else {
-                                    Log.e(TAG, "Quote is not in assetlist");
-                                    //TODO handle quote null error
-                                }
-                            }
-                        } else {
-                            Log.e(TAG, "Base is not in assetlist");
-                            //TODO handle base error
-                        }
-                    }
+                    processAssets(currencies, assets, getEquivalentCompRunnable);
                 }
             }
 
@@ -1354,10 +1380,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         }));
         wwThread.start();
-
     }
 
     private void updateEquivalentValue(String assetName, String value, Runnable getEquivalentCompRunnable) {
+        if (this.balanceItems.findBalanceItemBySymbol(assetName) != null){
+            this.balanceItems.updateFaitBalanceItem(assetName, value);
+        } else {
+            Log.i(TAG, "tvAsset tv Amount tvFaitAmount nulls");
+            updateEquivalentAmount.postDelayed(getEquivalentCompRunnable, 500);
+        }
+
+/*
         for (int i = 0; i < llBalances.getChildCount(); i++) {
             LinearLayout llRow = (LinearLayout) llBalances.getChildAt(i);
 
@@ -1435,17 +1468,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                         );
                     }
                 } else {
-                    /*getActivity().runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    tvFaitAmount.setVisibility(View.GONE);
-                                }
-                            }
-                    );*/
+                    //getActivity().runOnUiThread(
+                    //        new Runnable() {
+                    //            @Override
+                    //            public void run() {
+                    //                tvFaitAmount.setVisibility(View.GONE);
+                    //            }
+                    //        }
+                    //);
                 }
             }
-        }
+        }*/
     }
 
     private void getEquivalentComponents(final ArrayList<AccountAssets> accountAssets) {
@@ -1478,8 +1511,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         this.getEquivalentComponent(currenciesChange, getEquivalentCompRunnable);
     }
 
-    private void getEquivalentValueIndirect(final Asset indirectAsset, final Asset faitCurrency, final Asset reference){
-        WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getObjectId(), faitCurrency.getObjectId(), 20, new WitnessResponseListener() {
+    private void getEquivalentValueIndirect(final Asset indirectAsset, final Asset faitCurrency, final Asset reference) {
+
+        final WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(indirectAsset.getObjectId(), reference.getObjectId(), 20, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
                 if (response.result.getClass() == ArrayList.class) {
@@ -1487,36 +1521,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     for (Object listObject : list) {
                         if (listObject.getClass() == Market.class) {
                             Market market = ((Market) listObject);
-                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(reference.getObjectId())) {
-                                double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
-                                int exp = reference.getPrecision()- faitCurrency.getPrecision() ;
-                                final double middlePrice = price * Math.pow(10, exp);
-                                WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(indirectAsset.getObjectId(), reference.getObjectId(), 20, new WitnessResponseListener() {
-                                    @Override
-                                    public void onSuccess(WitnessResponse response) {
-                                        if (response.result.getClass() == ArrayList.class) {
-                                            ArrayList list = (ArrayList) response.result;
-                                            for (Object listObject : list) {
-                                                if (listObject.getClass() == Market.class) {
-                                                    Market market = ((Market) listObject);
-                                                    if (!market.sell_price.base.asset_id.equalsIgnoreCase(indirectAsset.getObjectId())) {
-                                                        double price = (double)market.sell_price.base.amount / (double)market.sell_price.quote.amount;
-                                                        int exp = indirectAsset.getPrecision() - reference.getPrecision();
-                                                        price = price * Math.pow(10, exp)* middlePrice;
-                                                        updateEquivalentValue(indirectAsset.getSymbol(), Double.toString(price), null);
-                                                        return;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onError(BaseResponse.Error error) {
-
-                                    }
-                                }));
-                                glo.start();
+                            if (!market.sell_price.base.asset_id.equalsIgnoreCase(indirectAsset.getObjectId())) {
+                                double price = (double) market.sell_price.base.amount / (double) market.sell_price.quote.amount;
+                                int exp = indirectAsset.getPrecision() - reference.getPrecision();
+                                price = price * Math.pow(10, exp) * BTSCurrencyPriceCache;
+                                updateEquivalentValue(indirectAsset.getSymbol(), Double.toString(price), null);
                                 return;
                             }
                         }
@@ -1526,33 +1536,447 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             @Override
             public void onError(BaseResponse.Error error) {
+
             }
         }));
-        middle.start();
+
+
+        Date now = new Date();
+        if ((BTSCurrencyPriceCacheDate != null) && (now.getTime() - BTSCurrencyPriceCacheDate.getTime() <= 300000)) { //if the cache date of the asset is too old, 300000 = 5 minutes
+            glo.start();
+        } else {
+            WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getObjectId(), faitCurrency.getObjectId(), 20, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        ArrayList list = (ArrayList) response.result;
+                        for (Object listObject : list) {
+                            if (listObject.getClass() == Market.class) {
+                                Market market = ((Market) listObject);
+                                if (!market.sell_price.base.asset_id.equalsIgnoreCase(reference.getObjectId())) {
+                                    double price = (double) market.sell_price.base.amount / (double) market.sell_price.quote.amount;
+                                    int exp = reference.getPrecision() - faitCurrency.getPrecision();
+                                    final double middlePrice = price * Math.pow(10, exp);
+                                    BTSCurrencyPriceCache = middlePrice;
+                                    BTSCurrencyPriceCacheDate = new Date();
+
+                                    glo.start();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                }
+            }));
+            middle.start();
+        }
     }
+    //ArrayList<String> symbolsArray;
+    //ArrayList<String> precisionsArray;
+    //ArrayList<String> amountsArray;
 
-    ArrayList<String> symbolsArray;
-    ArrayList<String> precisionsArray;
-    ArrayList<String> amountsArray;
 
-    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, boolean startUp) {
         try {
-            symbolsArray = new ArrayList<>();
-            precisionsArray = new ArrayList<>();
-            amountsArray = new ArrayList<>();
+            this.getBalanceItems().clear();
+
+            //symbolsArray = new ArrayList<>();
+            //precisionsArray = new ArrayList<>();
+            //amountsArray = new ArrayList<>();
 
             for (int i = 0; i < sym.size(); i++) {
                 Long _amount = Long.parseLong(am.get(i));
 
                 // remove balances which are zero
                 if (_amount != 0) {
-                    amountsArray.add(am.get(i));
-                    precisionsArray.add(pre.get(i));
-                    symbolsArray.add(sym.get(i));
+                    this.getBalanceItems().addBalanceItem(sym.get(i), pre.get(i), am.get(i), startUp);
+                    //amountsArray.add(am.get(i));
+                    //precisionsArray.add(pre.get(i));
+                    //symbolsArray.add(sym.get(i)));
                 }
             }
         } catch (Exception e) {
 
+        }
+    }
+
+    public void onNewBalanceItem(BalanceItemsEvent event){
+        final BalanceItem item = event.getBalanceItem();
+        final boolean isInitialLoad = event.isInitialLoad();
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
+                addNewBalanceView(item, isInitialLoad);
+                progressBar1.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    public void onBalanceItemRemoved(BalanceItemsEvent event){
+        final BalanceItem item = event.getBalanceItem();
+        final int index = event.getIndex();
+        final int size = event.getNewSize();
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
+                removeBalanceItemView(item, index, size);
+                progressBar1.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    public void onBalanceItemUpdated(BalanceItemsEvent event){
+        final BalanceItem oldItem = event.getOldItem();
+        final BalanceItem newItem = event.getBalanceItem();
+        final int index = event.getIndex();
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
+                updateBalanceItem(oldItem, newItem, index);
+                progressBar1.setVisibility(View.INVISIBLE);
+            }
+
+        });
+    }
+
+    public void removeBalanceItemView(BalanceItem item, int index, int newSize){
+        if (index < llBalances.getChildCount()*2){
+            TextView symbolTextViewToOccupy;
+            TextView ammountTextViewToOccupy;
+            TextView faitTextViewToOccupy;
+            TextView symbolTextViewToMoveOut;
+            TextView ammountTextViewToMoveOut;
+            TextView faitTextViewToMoveOut;
+
+            for(int i=index;i<llBalances.getChildCount()*2-1;i++){
+                View rowView = llBalances.getChildAt(i/2);
+
+                if (i % 2 == 0){
+                    symbolTextViewToOccupy = (TextView) rowView.findViewById(R.id.symbol_child_one);
+                    ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_one);
+                    faitTextViewToOccupy = (TextView) rowView.findViewById(R.id.fait_child_one);
+                    symbolTextViewToMoveOut = (TextView) rowView.findViewById(R.id.symbol_child_two);
+                    ammountTextViewToMoveOut = (TextView) rowView.findViewById(R.id.amount_child_two);
+                    faitTextViewToMoveOut = (TextView) rowView.findViewById(R.id.fait_child_two);
+                } else {
+                    symbolTextViewToOccupy = (TextView) rowView.findViewById(R.id.symbol_child_two);
+                    ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_two);
+                    faitTextViewToOccupy = (TextView) rowView.findViewById(R.id.fait_child_two);
+
+                    View nextRowView = llBalances.getChildAt((i/2)+1);
+
+                    symbolTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.symbol_child_one);
+                    ammountTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.amount_child_one);;
+                    faitTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.fait_child_one);
+                }
+
+                symbolTextViewToOccupy.setText(symbolTextViewToMoveOut.getText());
+                ammountTextViewToOccupy.setText(ammountTextViewToMoveOut.getText());
+                faitTextViewToOccupy.setText(faitTextViewToMoveOut.getText());
+                symbolTextViewToOccupy.setVisibility(View.VISIBLE);
+                ammountTextViewToOccupy.setVisibility(View.VISIBLE);
+                faitTextViewToOccupy.setVisibility(View.VISIBLE);
+                symbolTextViewToMoveOut.setVisibility(View.INVISIBLE);
+                ammountTextViewToMoveOut.setVisibility(View.INVISIBLE);
+                faitTextViewToMoveOut.setVisibility(View.INVISIBLE);
+            }
+
+            if (newSize % 2 == 0){
+                View rowView = llBalances.getChildAt(llBalances.getChildCount()-1);
+                llBalances.removeView(rowView);
+
+                if (llBalances.getChildCount() == 0) {
+                    whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
+        SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
+        TextView textView2 = null;
+        TextView symbolTextView;
+        final TextView ammountTextView;
+        View lastChild = null;
+        boolean theresNoChild = true;
+
+        if (llBalances.getChildCount() > 0) {//if there's items in balances
+            //we take the right side of the last child of the balances
+            lastChild = llBalances.getChildAt(llBalances.getChildCount() - 1);
+            textView2 = (TextView) lastChild.findViewById(R.id.symbol_child_two);
+            theresNoChild = false;
+        }
+
+        //if there's no items in the balances or the right side of the last child
+        //is already occupied, then we have to create a new View and occupy the left side
+        if (theresNoChild || !textView2.getText().equals("")) {
+            LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
+            symbolTextView = (TextView) customView.findViewById(R.id.symbol_child_one);
+            ammountTextView = (TextView) customView.findViewById(R.id.amount_child_one);
+
+            TextView rightSymbolTextView = (TextView) customView.findViewById(R.id.symbol_child_two);
+            TextView rightAmmountTextView = (TextView) customView.findViewById(R.id.amount_child_two);
+            rightSymbolTextView.setText("");
+            rightAmmountTextView.setText("");
+
+            llBalances.addView(customView);
+        } else {
+            //In this point the right side is free, so we can use it
+            symbolTextView = (TextView) lastChild.findViewById(R.id.symbol_child_two);
+            ammountTextView = (TextView) lastChild.findViewById(R.id.amount_child_two);
+        }
+
+        String finalSymbol = "";
+        if (SMARTCOINS.contains(item.getSymbol())) {
+            finalSymbol = "bit" + item.getSymbol();
+        } else {
+            finalSymbol = item.getSymbol();
+        }
+
+
+        final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+        assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
+
+        float b = powerInFloat(item.getPrecision(), item.getAmmount());
+        if (SMARTCOINS.contains(item.getSymbol().replace("bit", ""))) {
+            ammountTextView.setText(String.format(locale, "%.2f", b));
+        } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
+            ammountTextView.setText(String.format(locale, "%.4f", b));
+        else if (assetsSymbols.isSmartCoinSymbol(item.getSymbol()))
+            ammountTextView.setText(String.format(locale, "%.2f", b));
+        else ammountTextView.setText(String.format(locale, "%.4f", b));
+
+        //if it's not the initial load, then is a balance received, then we must show an animation and sound
+        if (!initialLoad){
+            Log.d("Balances Update", "Balance received");
+
+            ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+            ammountTextView.setTextColor(getResources().getColor(R.color.green));
+            AudioFilePath audioFilePath = new AudioFilePath(getContext());
+            if (!audioFilePath.fetchAudioEnabled()) {
+                audioSevice = true;
+                getActivity().startService(new Intent(getActivity(), MediaService.class));
+            }
+
+            final Runnable rotateTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                rotateRecieveButton();
+                            }
+                        });
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            };
+            animateNsoundHandler.postDelayed(rotateTask, 200);
+            Log.d("Balances Update", "Animation initiated");
+            animateText(ammountTextView, 0, convertLocalizeStringToFloat(returnFromPower(item.getPrecision(), item.getAmmount())));
+            Log.d("Balances Update", "Text Animated");
+
+            final Runnable updateTask = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
+                    } catch (Exception e) {
+
+                    }
+                }
+            };
+            animateNsoundHandler.postDelayed(updateTask, 4000);
+        }
+    }
+
+
+    public void updateBalanceItem(final BalanceItem oldItem, final BalanceItem newItem, final int index){
+        final Runnable reloadBalances = new Runnable() {
+            @Override
+            public void run() {
+                removeZeroedBalanceViews();
+            }
+        };
+
+        if (index < llBalances.getChildCount() * 2) {
+            View rowView = llBalances.getChildAt(index / 2);
+            final TextView symbolTextView;
+            final TextView ammountTextView;
+            final TextView faitTextView;
+
+            if (index % 2 == 0) {
+                symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_one);
+                ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_one);
+                faitTextView = (TextView) rowView.findViewById(R.id.fait_child_one);
+            } else {
+                symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_two);
+                ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_two);
+                faitTextView = (TextView) rowView.findViewById(R.id.fait_child_two);
+            }
+
+            String finalSymbol = "";
+            if (SMARTCOINS.contains(newItem.getSymbol())) {
+                finalSymbol = "bit" + newItem.getSymbol();
+            } else {
+                finalSymbol = newItem.getSymbol();
+            }
+
+            final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+            assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
+
+            Long oldAmmount = Long.parseLong(oldItem.getAmmount());
+            Long newAmmount = Long.parseLong(newItem.getAmmount());
+
+            if (oldAmmount > newAmmount) {
+                Log.d("Balances Update", "Balance sent");
+
+                SupportMethods.testing("float", oldAmmount, "txtamount");
+                SupportMethods.testing("float", newAmmount, "amount");
+                ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+                ammountTextView.setTextColor(getResources().getColor(R.color.red));
+
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
+
+                final Runnable updateTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                };
+                animateNsoundHandler.postDelayed(updateTask, 4000);
+
+                if (newAmmount == 0) {
+                    final Runnable zeroAmount = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ammountTextView.setText("");
+                                symbolTextView.setText("");
+                                faitTextView.setText("");
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    };
+
+                    animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                    animateNsoundHandler.postDelayed(reloadBalances, 5000);
+                }
+
+                Log.d("Balances Update", "Animation initiated");
+            } else if (oldAmmount < newAmmount) {
+
+                Log.d("Balances Update", "Balance received");
+
+                ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+                ammountTextView.setTextColor(getResources().getColor(R.color.green));
+
+                // run animation
+                //if (animateOnce) {
+                AudioFilePath audioFilePath = new AudioFilePath(getContext());
+                if (!audioFilePath.fetchAudioEnabled()) {
+                    audioSevice = true;
+                    getActivity().startService(new Intent(getActivity(), MediaService.class));
+                }
+
+                final Runnable rotateTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    rotateRecieveButton();
+                                }
+                            });
+
+                        } catch (Exception e) {
+
+                        }
+                    }
+                };
+
+                animateNsoundHandler.postDelayed(rotateTask, 200);
+
+                //animateOnce = false;
+
+                Log.d("Balances Update", "Animation initiated");
+                //}
+
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
+
+                Log.d("Balances Update", "Text Animated");
+
+                final Runnable updateTask = new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                };
+                animateNsoundHandler.postDelayed(updateTask, 4000);
+
+                if (newAmmount == 0) {
+                    final Runnable zeroAmount = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ammountTextView.setText("");
+                                symbolTextView.setText("");
+                                faitTextView.setText("");
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    };
+
+                    animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                    animateNsoundHandler.postDelayed(reloadBalances, 5000);
+                }
+                Log.d("Balances Update", "Rcv done");
+            }
+
+            //Now, we update the fait (EquivalentComponent)
+            if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
+                try {
+                    Log.d("Equivalent Value Update", "Changing Fait Text: "+newItem.getSymbol());
+                    final Currency currency = Currency.getInstance(finalFaitCurrency);
+                    double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
+                    final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
+                    String faitString = "";
+                    if (Helper.isRTL(locale, currency.getSymbol())) {
+                        faitString = String.format(locale, "%.2f %s", eqAmount, currency.getSymbol());
+                    } else {
+                        faitString = String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount);
+                    }
+
+                    faitTextView.setText(faitString);
+                    faitTextView.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
+                    for (StackTraceElement element : e.getStackTrace()) {
+                        Log.e(TAG, element.toString());
+                    }
+                    faitTextView.setVisibility(View.GONE);
+                }
+            }
         }
     }
 
@@ -1561,105 +1985,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
 
-        updateBalanceArrays(sym, pre, am);
+        updateBalanceArrays(sym, pre, am, onStartUp);
 
-        sym.clear();
-        sym.addAll(symbolsArray);
-
-        pre.clear();
-        pre.addAll(precisionsArray);
-
-        am.clear();
-        am.addAll(amountsArray);
-
-
+        //TODO this shouldn't be loading in the UI Thread, there's nothing UI here
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
-                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                llBalances.removeAllViews();
-
-                for (int i = 0; i < sym.size(); i += 2) {
-                    int counter = 1;
-                    int op = sym.size();
-                    int pr;
-
-                    if ((op - i) > 2) {
-                        pr = 2;
-                    } else {
-                        pr = op - i;
+                try {
+                    ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        if (accountDetails.get(i).isSelected) {
+                            getEquivalentComponents(accountDetails.get(i).AccountAssets);
+                            break;
+                        }
                     }
-
-                    View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
-                    for (int l = i; l < i + pr; l++) {
-                        if (counter == 1) {
-                            TextView textView = (TextView) customView.findViewById(R.id.symbol_child_one);
-                            assetsSymbols.displaySpannable(textView, sym.get(l));
-
-                            TextView textView1 = (TextView) customView.findViewById(R.id.amount_child_one);
-
-                            float b = powerInFloat(pre.get(l), am.get(i));
-                            if(SMARTCOINS.contains(sym.get(l).replace("bit",""))) {
-                                textView1.setText(String.format(locale, "%.2f", b));
-                            }else if (assetsSymbols.isUiaSymbol(sym.get(l)))
-                                textView1.setText(String.format(locale, "%.4f", b));
-                            else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
-                                textView1.setText(String.format(locale, "%.2f", b));
-                            else textView1.setText(String.format(locale, "%.4f", b));
-
-                        }
-
-                        if (counter == 2) {
-                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            assetsSymbols.displaySpannable(textView2, sym.get(l));
-
-                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                            String r = returnFromPower(pre.get(l), am.get(l));
-
-                            if(SMARTCOINS.contains(sym.get(l).replace("bit",""))) {
-                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
-                            }else if (assetsSymbols.isUiaSymbol(sym.get(l)))
-                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
-                            else if (assetsSymbols.isSmartCoinSymbol(sym.get(l)))
-                                textView3.setText(String.format(locale, "%.2f", Float.parseFloat(r)));
-                            else
-                                textView3.setText(String.format(locale, "%.4f", Float.parseFloat(r)));
-
-                            llBalances.addView(customView);
-                        }
-
-                        if (counter == 1 && i == sym.size() - 1) {
-                            TextView textView2 = (TextView) customView.findViewById(R.id.symbol_child_two);
-                            textView2.setText("");
-                            TextView textView3 = (TextView) customView.findViewById(R.id.amount_child_two);
-                            textView3.setVisibility(View.GONE);
-                            llBalances.addView(customView);
-                        }
-
-                        if (counter == 1) {
-                            counter = 2;
-                        } else counter = 1;
-                    }
+                } catch (Exception w) {
+                    SupportMethods.testing("Assets", w, "Asset Activity");
                 }
+                /*}
 
-                if (!onStartUp) {
-                    progressBar1.setVisibility(View.GONE);
-                    isLoading = true;
-                } else {
-                    try {
-                        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                        for (int i = 0; i < accountDetails.size(); i++) {
-                            if (accountDetails.get(i).isSelected) {
-                                getEquivalentComponents(accountDetails.get(i).AccountAssets);
-                                break;
-                            }
-                        }
-                    } catch (Exception w) {
-                        SupportMethods.testing("Assets", w, "Asset Activity");
-                    }
-                }
-
-                whiteSpaceAfterBalances.setVisibility(View.GONE);
+                whiteSpaceAfterBalances.setVisibility(View.GONE);*/
             }
         });
     }
@@ -1702,181 +2046,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     public void removeZeroedBalanceViews() {
-
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-
-                    for (int i = 0; i < llBalances.getChildCount(); i++) {
-
-                        View row = llBalances.getChildAt(i);
-
-                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
-                        TextView tvAmOne = (TextView) row.findViewById(R.id.amount_child_one);
-                        TextView tvfaitOne = (TextView) row.findViewById(R.id.fait_child_one);
-
-                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
-                        TextView tvAmtwo = (TextView) row.findViewById(R.id.amount_child_two);
-                        TextView tvFaitTwo = (TextView) row.findViewById(R.id.fait_child_two);
-
-                        // If first balance in row is zeroed then update it
-                        if (tvSymOne.getText().toString().equals("")) {
-                            // shift balances from next child here
-                            String symbol = "";
-                            String amount = "";
-                            String fait = "";
-
-                            // Get next non-zero balance
-                            if (tvSymtwo.getText().toString().isEmpty()) {
-                                // if second balance in row is also empty then get next non-zero balance
-                                for (int j = i + 1; j < llBalances.getChildCount(); j++) {
-                                    View nextrow = llBalances.getChildAt(j);
-
-                                    TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
-                                    TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
-                                    TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
-
-                                    if (!tvSymOnenextrow.getText().toString().isEmpty()) {
-                                        symbol = tvSymOnenextrow.getText().toString();
-                                        amount = tvAmOnenextrow.getText().toString();
-                                        fait = tvfaitOnenextrow.getText().toString();
-                                        tvSymOnenextrow.setText("");
-                                        tvAmOnenextrow.setText("");
-                                        tvfaitOnenextrow.setText("");
-                                        break;
-                                    }
-
-                                    TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
-                                    TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
-                                    TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
-
-                                    if (!tvSymtwonextrow.getText().toString().isEmpty()) {
-                                        symbol = tvSymtwonextrow.getText().toString();
-                                        amount = tvAmtwonextrow.getText().toString();
-                                        fait = tvFaitTwonextrow.getText().toString();
-                                        tvSymtwonextrow.setText("");
-                                        tvAmtwonextrow.setText("");
-                                        tvFaitTwonextrow.setText("");
-                                        break;
-                                    }
-                                }
-                            } else {
-                                // if second balance is row is non-empty then move it to first balance
-                                symbol = tvSymtwo.getText().toString();
-                                amount = tvAmtwo.getText().toString();
-                                fait = tvFaitTwo.getText().toString();
-                                tvSymtwo.setText("");
-                                tvAmtwo.setText("");
-                                tvFaitTwo.setText("");
-                            }
-
-                            // update first balance amount
-                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
-                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            }else if (assetsSymbols.isUiaSymbol(symbol))
-                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
-                                tvAmOne.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else
-                                tvAmOne.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-
-                            assetsSymbols.displaySpannable(tvSymOne, symbol);
-                            tvfaitOne.setText(fait);
-
-                            if (fait.isEmpty()) {
-                                tvfaitOne.setVisibility(View.GONE);
-                            } else {
-                                tvfaitOne.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        if (tvSymtwo.getText().toString().isEmpty()) {
-                            String symbol = "";
-                            String amount = "";
-                            String fait = "";
-
-                            // Get next non-zero balance
-                            for (int j = i + 1; j < llBalances.getChildCount(); j++) {
-                                View nextrow = llBalances.getChildAt(j);
-
-                                TextView tvSymOnenextrow = (TextView) nextrow.findViewById(R.id.symbol_child_one);
-                                TextView tvAmOnenextrow = (TextView) nextrow.findViewById(R.id.amount_child_one);
-                                TextView tvfaitOnenextrow = (TextView) nextrow.findViewById(R.id.fait_child_one);
-
-                                if (!tvSymOnenextrow.getText().toString().isEmpty()) {
-                                    symbol = tvSymOnenextrow.getText().toString();
-                                    amount = tvAmOnenextrow.getText().toString();
-                                    fait = tvfaitOnenextrow.getText().toString();
-                                    tvSymOnenextrow.setText("");
-                                    tvAmOnenextrow.setText("");
-                                    tvfaitOnenextrow.setText("");
-                                    break;
-                                }
-
-                                TextView tvSymtwonextrow = (TextView) nextrow.findViewById(R.id.symbol_child_two);
-                                TextView tvAmtwonextrow = (TextView) nextrow.findViewById(R.id.amount_child_two);
-                                TextView tvFaitTwonextrow = (TextView) nextrow.findViewById(R.id.fait_child_two);
-
-                                if (!tvSymtwonextrow.getText().toString().isEmpty()) {
-                                    symbol = tvSymtwonextrow.getText().toString();
-                                    amount = tvAmtwonextrow.getText().toString();
-                                    fait = tvFaitTwonextrow.getText().toString();
-                                    tvSymtwonextrow.setText("");
-                                    tvAmtwonextrow.setText("");
-                                    tvFaitTwonextrow.setText("");
-                                    break;
-                                }
-                            }
-
-                            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-                            if(SMARTCOINS.contains(symbol.replace("bit",""))) {
-                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            }else if (assetsSymbols.isUiaSymbol(symbol))
-                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-                            else if (assetsSymbols.isSmartCoinSymbol(symbol))
-                                tvAmtwo.setText(String.format(locale, "%.2f", Float.parseFloat(amount)));
-                            else
-                                tvAmtwo.setText(String.format(locale, "%.4f", Float.parseFloat(amount)));
-
-                            assetsSymbols.displaySpannable(tvSymtwo, symbol);
-                            tvFaitTwo.setText(fait);
-
-                            if (fait.isEmpty()) {
-                                tvFaitTwo.setVisibility(View.GONE);
-                            } else {
-                                tvFaitTwo.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-
-                    }
-
-                    // remove empty rows
-                    for (int i = 0; i < llBalances.getChildCount(); i++) {
-                        View row = llBalances.getChildAt(i);
-
-                        TextView tvSymOne = (TextView) row.findViewById(R.id.symbol_child_one);
-                        TextView tvSymtwo = (TextView) row.findViewById(R.id.symbol_child_two);
-
-                        if (tvSymOne.getText().toString().isEmpty() && tvSymtwo.getText().toString().isEmpty()) {
-                            llBalances.removeView(row);
-                        }
-                    }
-
-                    if (llBalances.getChildCount() == 0) {
-                        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                }
-            }
-        });
+        this.getBalanceItems().removeZeroBalanceItems();
     }
 
     Handler animateNsoundHandler = new Handler();
 
     public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
-        final Runnable reloadBalances = new Runnable() {
+        for (int i = 0; i < sym.size(); i++) {
+            Long _amount = Long.parseLong(am.get(i));
+            BalanceItem balanceItem = this.getBalanceItems().findBalanceItemBySymbol(sym.get(i));
+
+            if ((balanceItem != null) || (_amount != 0)) {
+                this.getBalanceItems().addOrUpdateBalanceItem(sym.get(i), pre.get(i), am.get(i));
+            }
+        }
+
+
+        /*final Runnable reloadBalances = new Runnable() {
             @Override
             public void run() {
                 removeZeroedBalanceViews();
@@ -2488,7 +2674,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
                 updateBalanceArrays(sym, pre, am);
             }
-        });
+        });*/
     }
 
     String returnFromPower(String i, String str) {
