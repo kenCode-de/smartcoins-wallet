@@ -17,7 +17,6 @@ import java.util.Iterator;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.IBalancesDelegate;
 import de.bitshares_munich.utils.Application;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.webSocketCallHelper;
 
 /**
@@ -239,13 +238,6 @@ public class AssestsActivty  implements IBalancesDelegate {
         return  pairs.get(key);
     }
     void AddinAssets() {
-        SupportMethods.testing("assests",ids,"ids");
-        SupportMethods.testing("assests",symbols,"ids");
-        SupportMethods.testing("assests",precisons,"ids");
-        SupportMethods.testing("assests",ammount,"ids");
-
-        Log.d("Assets Activity", "Updating Assets..............");
-
         assetDelegate.isUpdate(ids,symbols,precisons,ammount);
     }
 }

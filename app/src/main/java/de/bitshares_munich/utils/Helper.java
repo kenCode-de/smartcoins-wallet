@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
 import com.google.gson.Gson;
@@ -145,9 +146,13 @@ public class Helper {
         editor.apply();
     }
 
-    public static String fetchStringSharePref(Context context, String key) {
+    public static String fetchStringSharePref(Context context, String key, String defaultValue) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(key, "");
+        return preferences.getString(key, defaultValue);
+    }
+
+    public static String fetchStringSharePref(Context context, String key){
+        return fetchStringSharePref(context, key, "");
     }
 
     public static void storeObjectSharePref(Context context, String key, Object object) {
@@ -343,6 +348,33 @@ public class Helper {
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
     }
+
+
+
+    /**
+     * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
+     * @param context Context reference to get the TelephonyManager instance from
+     * @return country code or null
+     */
+    public static String getUserCountry(Context context) {
+        try {
+            final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            final String simCountry = tm.getSimCountryIso();
+            if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
+                return simCountry.toLowerCase(Locale.US);
+            }
+            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+                String networkCountry = tm.getNetworkCountryIso();
+                if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
+                    return networkCountry.toLowerCase(Locale.US);
+                }
+            }
+        }
+        catch (Exception e) { }
+        return null;
+    }
+
+
 
     public static String setLocaleNumberFormat(Locale locale, Number number) {
 

@@ -1,17 +1,22 @@
 package de.bitshares_munich.models;
 
+import java.util.Currency;
+
 import de.bitshares_munich.utils.DefaultHashMap;
 import de.bitsharesmunich.graphenej.Asset;
 
 /**
- * Used to maintain a mapping between countries and their equivalent
- * existing smartcoins. If no smartcoin exists for a specific country currency, we
- * fall back to the USD.
+ * Smartcoins are special assets designed to keep track of the value of an external 'real world' asset.
  *
  * Created by nelson on 12/24/16.
  */
-public class FiatMapping {
+public class Smartcoins {
 
+    /*
+     * Returns a DefaultHashMap with the relationships between countries and their equivalent
+     * existing smartcoins. If no smartcoin exists for a specific country's fiat currency, we
+     * fall back to the USD.
+     */
     public static DefaultHashMap<String, Asset> getMap(){
         // Here we instantiate a DefaultHashMap specifying the bitUSD as the default value.
         DefaultHashMap<String, Asset> map = new DefaultHashMap<>(new Asset("1.3.121"));
@@ -76,5 +81,16 @@ public class FiatMapping {
         map.put("SE", new Asset("1.3.111"));
 
         return map;
+    }
+
+    /**
+     * Given a smartcoin asset, this method should return the associated fiat currency symbol.
+     * So for the if the bitEUR is passed as argument, this method should return the '€' symbol for instance.
+     * @param smartcoin The smartcoin asset.
+     * @return The corresponding symbol.
+     */
+    public static String getFiatSymbol(Asset smartcoin) {
+        Currency currency = Currency.getInstance(smartcoin.getSymbol());
+        return currency.getSymbol();
     }
 }

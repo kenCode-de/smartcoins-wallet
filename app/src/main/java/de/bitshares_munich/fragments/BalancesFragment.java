@@ -87,7 +87,7 @@ import de.bitshares_munich.models.BalanceItem;
 import de.bitshares_munich.models.BalanceItems;
 import de.bitshares_munich.models.BalanceItemsEvent;
 import de.bitshares_munich.models.BalanceItemsListener;
-import de.bitshares_munich.models.FiatMapping;
+import de.bitshares_munich.models.Smartcoins;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
@@ -351,7 +351,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG,"historicalMarketListener.onError. Msg: "+error.message);
+            Log.e(TAG,"mHistoricalMarketSecondStepListener.onError. Msg: "+error.message);
+
+            // Removing the now solved equivalent value
+            missingEquivalentValues.poll();
+
+            // Processing next value, if there is one.
+            // Process the next equivalent value, in case we have one
+            processNextEquivalentValue();
         }
     };
 
@@ -402,6 +409,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     base = database.fillAssetDetails(Constants.getCoreCurrency());
                     quote = database.fillAssetDetails(mSmartcoin);
 
+                    Log.d(TAG, String.format("Requesting conversion from %s -> %s", base.getSymbol(), quote.getSymbol()));
+
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(transferEntry.getTimestamp() * 1000);
                     calendar.set(Calendar.MINUTE, 0);
@@ -445,7 +454,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         public void onError(BaseResponse.Error error) {
             Log.e(TAG,"historicalMarketListener.onError. Msg: "+error.message);
             // Removing this equivalent value task, even though it was not resolved
-            HistoricalTransferEntry entry = missingEquivalentValues.poll();
+            missingEquivalentValues.poll();
 
             // Process the next equivalent value, in case we have one
             processNextEquivalentValue();
@@ -803,10 +812,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             database.clearTransfers();
         }
 
+        /**
+         * Setting up the default country to be used in case the user hasn't set up the desired
+         * country in the user settings.
+         */
+        String defaultCountry = getResources().getConfiguration().locale.getCountry();
+        if(defaultCountry.equals("")){
+            // If the locale mechanism fails to give us a country, we try
+            // to get it from the TelephonyManager.
+            defaultCountry = Helper.getUserCountry(getContext());
+            if(defaultCountry.equals("")){
+                defaultCountry = Constants.DEFAULT_COUNTRY_CODE;
+            }
+        }
         // Setting the "base" smartcoin for this user
-        String countryCode = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country));
-        Log.d(TAG,"Country code: "+countryCode);
-        this.mSmartcoin = FiatMapping.getMap().get(countryCode);
+        String countryCode = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country), defaultCountry);
+
+        this.mSmartcoin = Smartcoins.getMap().get(countryCode.toUpperCase());
         HashMap<String, Asset> knownAssets = database.getAssetMap();
         if(!knownAssets.containsKey(this.mSmartcoin.getObjectId())){
             // If the smartcoin asset details are not known, we schedule an update from the full node.
@@ -825,7 +847,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
-        language = Helper.fetchStringSharePref(getActivity(), getString(R.string.pref_language));
+        language = Helper.fetchStringSharePref(getActivity(), getString(R.string.pref_language), "");
         locale = new Locale(language);
         balanceActivity = getActivity();
         format = NumberFormat.getInstance(locale);
@@ -1242,10 +1264,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             SupportMethods.testing("Assets", w, "Asset Activity");
         }
 
-        SupportMethods.testing("Assets", "Assets views 3", "Asset Activity");
-
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        SupportMethods.testing("Assets", "Assets views 4", "Asset Activity");
         BalanceAssetsUpdate(sym, pre, am, false);
     }
 
@@ -1578,7 +1597,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
-        SupportMethods.testing("Assets", "Assets views ", "Asset Activity");
         TextView textView2 = null;
         TextView symbolTextView;
         final TextView ammountTextView;
@@ -1719,8 +1737,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             if (oldAmmount > newAmmount) {
                 Log.d("Balances Update", "Balance sent");
 
-                SupportMethods.testing("float", oldAmmount, "txtamount");
-                SupportMethods.testing("float", newAmmount, "amount");
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
@@ -2045,12 +2061,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 td.updateContext(context);
             }
 
-//            myTransactions.clear();
-//            myTransactions.addAll(transactionDetails);
-
-            AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-//            myTransactions = assetsSymbols.updatedTransactionDetails(myTransactions);
-
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2082,15 +2092,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     @Override
     public void loadAgain() {
-        Log.d("LogTransactions", updateTriggerFromNetworkBroadcast + "");
         if (updateTriggerFromNetworkBroadcast ) {
-            Log.d("LogTransactions", "updateTriggerFromNetworkBroadcast");
             sentCallForTransactions = false;
-        } else {
-//            if (myTransactionsTableAdapter == null) {
-//                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
-//            } else
-//                myTransactionsTableAdapter = new TransactionsTableAdapter(getContext(), myTransactions);
         }
     }
 
@@ -2116,10 +2119,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void getLifetime(String s, int id) {
         myWebSocketHelper.cleanUpTransactionsHandler();
 
-        SupportMethods.testing("getLifetime", s, "s");
-
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        SupportMethods.testing("getAccountID", s, "s");
 
         String result = SupportMethods.ParseJsonObject(s, "result");
         String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
@@ -2129,7 +2129,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             Date date1 = dateFormat.parse(expiration);
             Date date2 = dateFormat.parse("1969-12-31T23:59:59");
             if (date2.getTime() >= date1.getTime()) {
-                SupportMethods.testing("getLifetime", "true", "s");
                 if (accountDetails.size() > accountDetailsId) {
                     accountDetails.get(accountDetailsId).isLifeTime = true;
                     showHideLifeTime(true);
@@ -2139,8 +2138,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
 
-            } else {
-                SupportMethods.testing("getLifetime", "false", "s");
             }
         } catch (Exception e) {
             SupportMethods.testing("getLifetime", e, "Exception");

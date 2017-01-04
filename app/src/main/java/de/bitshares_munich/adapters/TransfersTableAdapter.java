@@ -17,6 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.bitshares_munich.database.HistoricalTransferEntry;
+import de.bitshares_munich.models.Smartcoins;
+import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -137,9 +139,9 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         AssetAmount transferAmount = operation.getTransferAmount();
 
         TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
-        AssetAmount fiatAmount = historicalTransfer.getEquivalentValue();
+        AssetAmount smartcoinAmount = historicalTransfer.getEquivalentValue();
 
-        String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language));
+        String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language), Constants.DEFAULT_LANGUAGE_CODE);
         Locale locale = new Locale(language);
         String symbol = "";
         if(transferAmount.getAsset() != null){
@@ -164,8 +166,9 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
-        if(fiatAmount != null){
-            String eqValue = String.format("~ %s %.2f", fiatAmount.getAsset().getSymbol(), Util.fromBase(fiatAmount));
+        if(smartcoinAmount != null){
+            String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
+            String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
             fiatAmountTextView.setText(eqValue);
         }else{
             Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));

@@ -294,12 +294,10 @@ public static int nodeIndex = 0;
                                 }
                             } else if (id == 99) {
                                 if (iBalancesDelegate_assetsActivity != null) {
-                                    SupportMethods.testing("assests", 99, "account_name");
                                     iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 999) {
                                 if (iBalancesDelegate_assetsActivity != null) {
-                                    SupportMethods.testing("assests", 999, "account_name");
                                     iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 15) {

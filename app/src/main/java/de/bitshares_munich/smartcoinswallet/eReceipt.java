@@ -423,7 +423,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha", e.getMessage(), "error");
             }
             return mIcon11;
         }

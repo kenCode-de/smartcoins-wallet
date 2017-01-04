@@ -25,4 +25,11 @@ public class Constants {
     }
 
     public static final String KEY_SUGGESTED_BRAIN_KEY = "key_suggested_brain_key";
+
+    /**
+     * Default ISO 639 alpha-2 language code
+     */
+    public static final String DEFAULT_LANGUAGE_CODE = "de";
+
+    public static final String DEFAULT_COUNTRY_CODE = "de";
 }
