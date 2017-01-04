@@ -29,7 +29,10 @@ public class Constants {
     /**
      * Default ISO 639 alpha-2 language code
      */
-    public static final String DEFAULT_LANGUAGE_CODE = "de";
+    public static final String DEFAULT_LANGUAGE_CODE = "en";
 
-    public static final String DEFAULT_COUNTRY_CODE = "de";
+    /**
+     * Default country, used only as a last resource fallback mechanism
+     */
+    public static final String DEFAULT_COUNTRY_CODE = "DE";
 }

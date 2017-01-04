@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -23,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -34,6 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import de.bitshares_munich.smartcoinswallet.R;
@@ -573,5 +576,41 @@ public class Helper {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static NumberFormat newCurrencyFormat(Context context, Currency currency, Locale displayLocale) {
+        Log.d(TAG,"newCurrencyFormat");
+        NumberFormat retVal = NumberFormat.getCurrencyInstance(displayLocale);
+        retVal.setCurrency(currency);
+
+        //The default JDK handles situations well when the currency is the default currency for the locale
+        if (currency.equals(Currency.getInstance(displayLocale))) {
+            Log.d(TAG,"Let the JDK handle this");
+            return retVal;
+        }
+
+        //otherwise we need to "fix things up" when displaying a non-native currency
+        if (retVal instanceof DecimalFormat) {
+            DecimalFormat decimalFormat = (DecimalFormat) retVal;
+            String correctedI18NSymbol = getCorrectedInternationalCurrencySymbol(context, currency, displayLocale);
+            if (correctedI18NSymbol != null) {
+                DecimalFormatSymbols dfs = decimalFormat.getDecimalFormatSymbols(); //this returns a clone of DFS
+                dfs.setInternationalCurrencySymbol(correctedI18NSymbol);
+                dfs.setCurrencySymbol(correctedI18NSymbol);
+                decimalFormat.setDecimalFormatSymbols(dfs);
+            }
+        }
+
+        return retVal;
+    }
+
+    private static String getCorrectedInternationalCurrencySymbol(Context context, Currency currency, Locale displayLocale) {
+        AssetsPropertyReader assetsReader = new AssetsPropertyReader(context);
+        Properties properties = assetsReader.getProperties("correctedI18nCurrencySymbols.properties");
+        if(properties.containsKey(currency.getCurrencyCode())){
+            return properties.getProperty(currency.getCurrencyCode());
+        }else{
+            return currency.getCurrencyCode();
+        }
     }
 }
