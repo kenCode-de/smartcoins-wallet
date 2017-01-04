@@ -26,6 +26,7 @@
     <string name="txt_6_digits_pin">6-digits PIN</string>
     <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
     <string name="create">CREATE</string>
+    <string name="or">OR</string>
     <string name="existing_account">Existing Account</string>
     <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
     <string name="block_number" translatable="false">block# -------</string>

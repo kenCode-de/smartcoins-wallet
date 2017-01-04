@@ -30,6 +30,8 @@ public class WebsocketWorkerThread extends Thread {
             mWebSocket.addListener(webSocketListener);
         } catch (IOException e) {
             Log.e(TAG, "IOException. Msg: "+e.getMessage());
+        } catch(NullPointerException e){
+            Log.e(TAG, "NullPointerException at WebsocketWorkerThreas. Msg: "+e.getMessage());
         }
     }
 

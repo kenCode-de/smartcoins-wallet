@@ -86,7 +86,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     EditText etPin;
 
     @Bind(R.id.tvExistingAccount)
-    TextView tvExistingAccount;
+    Button tvExistingAccount;
 
     Boolean settingScreen = false;
     Boolean validAccount = false;
@@ -522,7 +522,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @OnClick(R.id.tvExistingAccount)
-    public void existingAccount(TextView textView) {
+    public void existingAccount(Button button) {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);

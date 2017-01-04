@@ -265,7 +265,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private int historicalTransferCount = 0;
 
     /* Constant used to split the missing times and equivalent values in batches of constant time */
-    private int SECONDARY_LOAD_BATCH_SIZE = 5;
+    private int SECONDARY_LOAD_BATCH_SIZE = 2;
 
     /*
     * Attribute used when trying to make a 2-step equivalent value calculation
@@ -1868,7 +1868,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     animateNsoundHandler.postDelayed(zeroAmount, 4200);
                     animateNsoundHandler.postDelayed(reloadBalances, 5000);
                 }
-                Log.d("Balances Update", "Rcv done");
             }
 
             //Now, we update the fait (EquivalentComponent)
@@ -1881,7 +1880,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
                     Log.i(TAG, currencyFormatter.format(eqAmount));
 
-                    Log.i(TAG,String.format("smartcoin symbol: %s, fiat symbol: %s", mSmartcoin.getSymbol(), currency.getSymbol()));
                     String fiatString = String.format(locale, "%s", currencyFormatter.format(eqAmount));
 
                     faitTextView.setText(fiatString);
