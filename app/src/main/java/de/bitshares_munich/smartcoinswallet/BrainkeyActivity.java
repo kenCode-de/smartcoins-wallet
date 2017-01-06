@@ -137,7 +137,7 @@ public class BrainkeyActivity extends BaseActivity {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
-            if (arr.length == 12 || arr.length == 16) {
+            if (arr.length >= 12 && arr.length <= 16) {
 
                 if (checkBrainKeyExist(temp)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
