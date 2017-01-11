@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.google.zxing.Result;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.TinyDB;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 

@@ -71,10 +71,10 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.ISound;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.Interfaces.PdfGeneratorListener;
+import de.bitshares_munich.interfaces.AssetDelegate;
+import de.bitshares_munich.interfaces.ISound;
+import de.bitshares_munich.interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
 import de.bitshares_munich.adapters.TransferSendReceiveComparator;
@@ -197,9 +197,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Bind(R.id.whiteSpaceAfterBalances)
     LinearLayout whiteSpaceAfterBalances;
 
-    private SortableTableView<HistoricalTransferEntry> transfersView;
-//    private ArrayList<TransactionDetails> myTransactions;
-
     TinyDB tinyDB;
 
     @Bind(R.id.tableViewparent)
@@ -243,6 +240,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     webSocketCallHelper myWebSocketHelper;
 
+    /**
+     * SortableTableView displaying the list of transactions.
+     */
+    private SortableTableView<HistoricalTransferEntry> transfersView;
+
+    /**
+     * Adapter for the transaction list.
+     */
     private TransfersTableAdapter tableAdapter;
 
     /**
@@ -571,7 +576,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 @Override
                 public void run() {
                     List<AccountProperties> missingAccounts = (List<AccountProperties>) response.result;
-                    int count = database.putUserAccounts(missingAccounts);
+                    database.putUserAccounts(missingAccounts);
                 }
             });
         }
@@ -770,7 +775,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateTableView();
+                    updateTableView(true);
                 }
             });
         }
@@ -844,7 +849,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             // If the locale mechanism fails to give us a country, we try
             // to get it from the TelephonyManager.
             String telephonyCountry = Helper.getUserCountry(getContext());
-            if(telephonyCountry.equals("")){
+            if(telephonyCountry == null || telephonyCountry.equals("")){
                 Log.w(TAG,"Could not resolve country information again, falling back to the default");
                 telephonyCountry = Constants.DEFAULT_COUNTRY_CODE;
             }
@@ -877,6 +882,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         Log.d(TAG, String.format("Selected smartcoin: %s", mSmartcoin.getSymbol()));
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(getMissingAssets == null){
+            Log.d(TAG, "Got no missing assets, checking for new transactions");
+            List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE);
+            start = transactions.size();
+            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+            Log.v(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+            transferHistoryThread.start();
+        }else{
+            Log.w(TAG, "getMissingAssets is not null");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -1009,6 +1029,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         // Inflate the layout for this fragment
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
@@ -1049,7 +1070,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
 
         // Loading transfers from database
-        updateTableView();
+        updateTableView(true);
     }
 
     @OnClick(R.id.recievebtn)
@@ -2121,7 +2142,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @OnClick(R.id.load_more_values)
     public void loadMoreTransactions() {
         loadMoreCounter++;
-        updateTableView();
+        updateTableView(false);
         int loadedTransaction = loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE;
         int transactionCount = database.getTransactionCount(new UserAccount(accountId));
         if(loadedTransaction >= transactionCount){
@@ -2514,38 +2535,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         return txtAmount_d;
     }
 
-//    TransactionsHelper myTransactionActivity;
-//    Handler pendingTransactionsLoad;
-
-//    void loadTransactions(final Context context, final String id, final AssetDelegate in, final String wkey, final int loaded, final int toLoad, final ArrayList<TransactionDetails> alreadyLoadedTransactions) {
-//        if (sentCallForTransactions) {
-//            if (pendingTransactionsLoad == null) {
-//                pendingTransactionsLoad = new Handler(Looper.getMainLooper());
-//            }
-//
-//            pendingTransactionsLoad.removeCallbacksAndMessages(null);
-//
-//            pendingTransactionsLoad.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (context != null)
-//                        loadTransactions(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
-//                }
-//            }, 500);
-//
-//        } else {
-//            sentCallForTransactions = true;
-//
-//            if (myTransactionActivity == null) {
-//                myTransactionActivity = new TransactionsHelper(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
-//            } else {
-//                myTransactionActivity.context = null;
-//                myTransactionActivity = new TransactionsHelper(context, id, in, wkey, loaded, toLoad, alreadyLoadedTransactions);
-//            }
-//        }
-//
-//    }
-
     public void isAssets() {
 //        progressBar.setVisibility(View.GONE);
         progressBar1.setVisibility(View.GONE);
@@ -2554,9 +2543,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     /**
      * Refreshes table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
+     * @param reset: If true, the current transfer list is discarded, and a new query is made to the database.
      */
-    private void updateTableView() {
+    private void updateTableView(boolean reset) {
         UserAccount account = new UserAccount(accountId);
+
+        if(reset){
+            loadMoreCounter = 1;
+        }
 
         // Calculate how many items to fetch depending on how many times
         // the 'load more' button has been pressed. Maybe later we can modify the
@@ -2565,7 +2559,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
 
         // Here we check if the SortableTableView has its default adapter or our own instance.
-        if(transfersView.getDataAdapter() instanceof TransfersTableAdapter){
+        if(transfersView.getDataAdapter() instanceof TransfersTableAdapter && !reset){
+            Log.d(TAG,"updating table view");
             tableAdapter = (TransfersTableAdapter) transfersView.getDataAdapter();
             List<HistoricalTransferEntry> existingData = tableAdapter.getData();
             boolean found = true;
@@ -2583,10 +2578,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
         }else{
+            Log.d(TAG, "resetting table view");
             tableAdapter = new TransfersTableAdapter(getContext(), locale, account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
             transfersView.setDataAdapter(tableAdapter);
         }
-
         tableAdapter.notifyDataSetChanged();
 
         if (transfersView.getColumnComparator(0) == null) {

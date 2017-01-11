@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.Interfaces.PdfGeneratorListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;

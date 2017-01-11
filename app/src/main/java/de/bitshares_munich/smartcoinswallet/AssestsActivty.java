@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.IBalancesDelegate;
+import de.bitshares_munich.interfaces.AssetDelegate;
+import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.webSocketCallHelper;
 

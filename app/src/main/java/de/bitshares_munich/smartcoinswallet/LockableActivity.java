@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.Interfaces.LockListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.LockListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.TinyDB;
 

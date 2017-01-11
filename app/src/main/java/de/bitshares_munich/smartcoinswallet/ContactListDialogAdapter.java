@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import de.bitshares_munich.Interfaces.ContactSelectionListener;
+import de.bitshares_munich.interfaces.ContactSelectionListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 

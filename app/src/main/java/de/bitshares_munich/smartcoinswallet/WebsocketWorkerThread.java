@@ -42,7 +42,9 @@ public class WebsocketWorkerThread extends Thread {
         try {
             mWebSocket.connect();
         } catch (WebSocketException e) {
-            Log.e(TAG,"WebSocketException. Msg: "+e.getMessage());
+            Log.e(TAG, "WebSocketException. Msg: "+e.getMessage());
+        } catch(NullPointerException e){
+            Log.e(TAG, "NullPointerException. Msg: "+e.getMessage());
         }
     }
 }

@@ -35,7 +35,7 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;

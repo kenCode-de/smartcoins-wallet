@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 

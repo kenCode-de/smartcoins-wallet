@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.smartcoinswallet.R;
