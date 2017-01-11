@@ -83,6 +83,7 @@ import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.BlockData;
 import de.bitsharesmunich.graphenej.Invoice;
+import de.bitsharesmunich.graphenej.LineItem;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.TransferTransactionBuilder;
@@ -913,29 +914,28 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     /**
      * Setups the correct fields with invoice data obtained from the QR-Code reader.
-     * //TODO: Update this method to work with the Invoice
      * @param qrCodeData: Invoice data read from the QR-Code in the JSON format.
      */
-    void onScanResult(String qrCodeData) {
+    void onScanResult(Invoice invoice) {
         try {
-            JSONObject resJson = new JSONObject(qrCodeData);
-            callbackURL = resJson.get("callback").toString();
+            callbackURL = invoice.getCallback();
             if(!callbackURL.equals("") && !callbackURL.endsWith("/")){
                 callbackURL = callbackURL + "/";
             }
-            etReceiverAccount.setText(resJson.get("to").toString());
+            etReceiverAccount.setText(invoice.getTo());
 
-            spAssets.setSelection(getSpinnerIndex(spAssets, resJson.get("currency").toString()));
+            spAssets.setSelection(getSpinnerIndex(spAssets, invoice.getCurrency()));
             spAssets.setClickable(false);
-            if (resJson.get("memo") != null) {
+            if (invoice.getMemo() == null) {
                 llMemo.setVisibility(View.GONE);
-                etMemo.setText(resJson.get("memo").toString());
-            } else llMemo.setVisibility(View.VISIBLE);
-            JSONArray lineItems = new JSONArray(resJson.get("line_items").toString());
-            Double totalAmount = 0.0;
-            for (int i = 0; i < lineItems.length(); i++) {
-                JSONObject lineItem = (JSONObject) lineItems.get(i);
-                totalAmount += (Double.parseDouble(lineItem.get("quantity").toString()) * Double.parseDouble(lineItem.get("price").toString()));
+            } else {
+                etMemo.setText(invoice.getMemo());
+                llMemo.setVisibility(View.VISIBLE);
+            }
+
+            double totalAmount = 0.0;
+            for (LineItem item : invoice.getLineItems()) {
+                totalAmount += item.getQuantity() * item.getPrice();
             }
             requiredAmount = totalAmount;
             DecimalFormat df = new DecimalFormat("####.####");
@@ -947,9 +947,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 spAssets.setEnabled(false);
             }
             String loyaltypoints = null;
-            if (resJson.has("ruia")) {
-                loyaltypoints = resJson.get("ruia").toString();
-            }
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
             if (loyaltypoints != null) {
                 for (int i = 0; i < accountDetails.size(); i++) {
@@ -1609,7 +1606,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private void decodeInvoiceData(String encoded) {
         Invoice invoice = Invoice.fromQrCode(encoded);
         saveMerchantEmail(invoice.toJsonString());
-        onScanResult(invoice.toJsonString());
+        onScanResult(invoice);
     }
 
     public void saveMerchantEmail(String string) {

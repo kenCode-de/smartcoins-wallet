@@ -41,6 +41,7 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitsharesmunich.graphenej.Invoice;
+import de.bitsharesmunich.graphenej.LineItem;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,7 +142,7 @@ public class RecieveActivity extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Invoice.LineItem[] items = new Invoice.LineItem[]{ new Invoice.LineItem("transfer", 1, "%f".format(price))};
+        LineItem[] items = new LineItem[]{ new LineItem("transfer", 1, Double.valueOf(price))};
         Invoice invoice = new Invoice(to, "", "", currency.replace("bit",""), items, "", "");
         try {
             Bitmap bitmap = encodeAsBitmap(Invoice.toQrCode(invoice), "#006500");
