@@ -345,29 +345,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     };
 
-    private void startupTasks() {
-        runningSpinerForFirstTime = true;
-        init();
-        Intent intent = getIntent();
-        Bundle res = intent.getExtras();
-        if (res != null) {
-            if (res.containsKey("sResult") && res.containsKey("id")) {
-                if (res.getInt("id") == 5) {
-                    decodeInvoiceData(res.getString("sResult"));
-                }
-            }
-        }
-
-        String basset = etBackupAsset.getText().toString();
-
-        if (!basset.isEmpty()) {
-            backupAssetCHanged(basset);
-        }
-
-        loadWebView(webviewTo, 39, Helper.hash("", Helper.SHA256));
-    }
-
-
     webSocketCallHelper myWebSocketHelper;
 
     @Override
@@ -434,6 +411,27 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         setSpinner();
     }
 
+    private void startupTasks() {
+        runningSpinerForFirstTime = true;
+        init();
+        Intent intent = getIntent();
+        Bundle res = intent.getExtras();
+        if (res != null) {
+            if (res.containsKey("sResult") && res.containsKey("id")) {
+                if (res.getInt("id") == 5) {
+                    decodeInvoiceData(res.getString("sResult"));
+                }
+            }
+        }
+
+        String basset = etBackupAsset.getText().toString();
+
+        if (!basset.isEmpty()) {
+            backupAssetCHanged(basset);
+        }
+
+        loadWebView(webviewTo, 39, Helper.hash("", Helper.SHA256));
+    }
 
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
@@ -914,7 +912,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     /**
      * Setups the correct fields with invoice data obtained from the QR-Code reader.
-     * @param qrCodeData: Invoice data read from the QR-Code in the JSON format.
+     * @param invoice: Invoice data read from the QR-Code in the JSON format.
      */
     void onScanResult(Invoice invoice) {
         try {
@@ -944,7 +942,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
                 etAmount.setEnabled(false);
-                spAssets.setEnabled(false);
+//                spAssets.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1189,12 +1187,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    private int getSpinnerIndex(Spinner spinner, String myString) {
+    private int getSpinnerIndex(Spinner spinner, String assetSymbol) {
         int index = 0;
         for (int i = 0; i < spinner.getCount(); i++) {
             String spString = spinner.getItemAtPosition(i).toString();
             spString = spString.replace("bit", "");
-            if (spString.equalsIgnoreCase(myString)) {
+            if (spString.equalsIgnoreCase(assetSymbol)) {
                 index = i;
                 break;
             }
