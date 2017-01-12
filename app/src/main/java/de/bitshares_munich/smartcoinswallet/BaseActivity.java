@@ -15,6 +15,7 @@ import de.bitshares_munich.utils.Helper;
  * Created by qasim on 5/9/16.
  */
 public class BaseActivity extends LockableActivity {
+    public final String TAG = "BaseActivity";
 
     public static final long DISCONNECT_TIMEOUT = (3*60*1000);
 
@@ -88,6 +89,14 @@ public class BaseActivity extends LockableActivity {
         super.onResume();
         Application.setCurrentActivity(this);
         resetDisconnectTimer();
+
+        Application.send(getString(R.string.subscribe_callback));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Application.send(getString(R.string.cancel_subscriptions));
     }
 
     @Override
@@ -95,5 +104,4 @@ public class BaseActivity extends LockableActivity {
         super.onStop();
         stopDisconnectTimer();
     }
-
 }

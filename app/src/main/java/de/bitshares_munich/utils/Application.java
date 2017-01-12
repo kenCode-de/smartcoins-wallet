@@ -197,11 +197,11 @@ public static int nodeIndex = 0;
 
     public static void stringTextRecievedWs(String s) {
                     try {
+                        Log.v(TAG,"< "+s);
                         JSONObject jsonObject = new JSONObject(s);
 
                         if (jsonObject.has("id")) {
                             int id = jsonObject.getInt("id");
-                            Log.d(TAG, "Got response. id: "+id);
                             if (id == 1) {
                                 if (s.contains("true")) {
                                     Application.send(context.getString(R.string.database_indentifier));
@@ -396,11 +396,9 @@ public static int nodeIndex = 0;
                         }
                     }else{
                         String element = (String) subArray.get(i);
-                        Log.d(TAG, "Could not cast string: "+element);
                     }
                 }
                 if(rawBlockId.equals("")) {
-                    Log.w(TAG,"Could not process data");
                     return blockHead;
                 }
                 // Setting block number
@@ -426,11 +424,12 @@ public static int nodeIndex = 0;
 
     //WebSocketConnection
 
-    public static void send(String message)
-    {
-        if (mIsConnected)
-        {
+    public static void send(String message) {
+        if (mIsConnected) {
+            Log.d(TAG,"> "+message);
             mConnection.sendTextMessage(message);
+        }else{
+            Log.w(TAG, "Not sending message: "+message);
         }
     }
 

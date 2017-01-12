@@ -277,6 +277,9 @@
     <string name="subscribe_callback">
         {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
     </string>
+    <string name="cancel_subscriptions">
+        {\"method\":\"call\",\"params\":[2,\"cancel_all_subscriptions\",[]],\"id\":5}
+    </string>
     <!--<string name="subscribe_callback_full_account">-->
     <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
     <!--</string>-->
