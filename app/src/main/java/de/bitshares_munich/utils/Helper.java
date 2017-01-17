@@ -82,7 +82,8 @@ public class Helper {
         languages.add("ms");
         languages.add("no");
         languages.add("pl");
-        languages.add("pt");
+        languages.add("pt-rPT");
+        languages.add("pt-rBR");
         languages.add("ro");
         languages.add("ru");
         languages.add("sr");
@@ -334,6 +335,12 @@ public class Helper {
         }
         else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
             myLocale = Locale.SIMPLIFIED_CHINESE;
+        }
+        else if (lang.equalsIgnoreCase("pt-rBR")) {
+            myLocale = new Locale("pt","BR");
+        }
+        else if (lang.equalsIgnoreCase("pt-rPT")) {
+            myLocale = new Locale("pt","PT");
         }
         else {
             myLocale = new Locale(lang);

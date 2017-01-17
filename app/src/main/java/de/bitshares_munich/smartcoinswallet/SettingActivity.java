@@ -469,6 +469,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
                 langArray.add(langCode);
             }
+            else if(getLangCode.get(i).equalsIgnoreCase("pt-rBR"))
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rBR";
+                langCode.lang = "Português"+ "; " + "pt-rBR" +  " (Português do Brasil)";
+                langArray.add(langCode);
+            }
+            else if(getLangCode.get(i).equalsIgnoreCase("pt-rPT"))
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rPT";
+                langCode.lang = "Português"+ "; " + "pt-rPT" +  " (Português de Portugal)";
+                langArray.add(langCode);
+            }
             else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
@@ -1016,7 +1030,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
         alertMsg.setText(getString(R.string.help_message));
@@ -1083,7 +1097,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void showDialog() {
 
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
