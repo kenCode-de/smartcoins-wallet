@@ -32,9 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -258,7 +257,6 @@ public class ContactListAdapter extends BaseAdapter {
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha",e.getMessage(),"error");
             }
             return mIcon11;
         }

@@ -1,6 +1,4 @@
-package de.bitshares_munich.Interfaces;
-
-import java.util.ArrayList;
+package de.bitshares_munich.interfaces;
 
 /**
  * Created by developer on 7/13/16.

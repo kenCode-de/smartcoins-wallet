@@ -1,6 +1,4 @@
-package de.bitshares_munich.Interfaces;
-
-import org.json.JSONObject;
+package de.bitshares_munich.interfaces;
 
 /**
  * Created by Syed Muhammad Muzzammil on 6/16/16.

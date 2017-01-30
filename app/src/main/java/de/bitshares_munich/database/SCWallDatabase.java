@@ -65,7 +65,6 @@ public class SCWallDatabase {
      * @param transactions: List of historical transfer transactions.
      */
     public int putTransactions(List<HistoricalTransferEntry> transactions){
-        long before = System.currentTimeMillis();
         int count = 0;
         ContentValues contentValues;
         for(int i = 0; i < transactions.size(); i++){
@@ -98,15 +97,13 @@ public class SCWallDatabase {
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
             }
             try{
-                long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
-                Log.d(TAG, "Inserted transfer in database with id: "+id);
+                db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
                 count++;
             }catch (SQLException e){
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        long after = System.currentTimeMillis();
-        Log.d(TAG, String.format("putTransactions took %d ms with %d transactions", (after - before), transactions.size()));
+        Log.d(TAG,String.format("Inserved %d transactions in database", count));
         return count;
     }
 
@@ -152,6 +149,19 @@ public class SCWallDatabase {
                 String fromId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FROM));
                 String toId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO));
 
+                // Skipping transfer if we are missing users information
+                if(userMap.get(fromId) == null || userMap.get(toId) == null){
+                    cursor.moveToNext();
+                    continue;
+                }
+
+                // Skipping transfer if we are missing timestamp information
+                long t = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP));
+                if(t == 0){
+                    cursor.moveToNext();
+                    continue;
+                }
+
                 // Building UserAccount instances
                 UserAccount from = new UserAccount(fromId, userMap.get(fromId));
                 UserAccount to = new UserAccount(toId, userMap.get(toId));
@@ -162,6 +172,8 @@ public class SCWallDatabase {
                 // Transfer and fee assets
                 Asset transferAsset = assetMap.get(transferAssetId);
                 Asset feeAsset = assetMap.get(feeAssetId);
+
+                // Skipping transfer if we are missing transfer and fee asset information
                 if(transferAsset == null || feeAsset == null){
                     cursor.moveToNext();
                     continue;
@@ -214,8 +226,8 @@ public class SCWallDatabase {
                     }
                     assetCursor.close();
                 }else{
-                    Date date = new Date(transferEntry.getTimestamp() * 1000);
-                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
+                    cursor.moveToNext();
+                    continue;
                 }
 
                 // Adding historical transfer entry to array

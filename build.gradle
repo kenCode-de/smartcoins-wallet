@@ -3,13 +3,13 @@
 buildscript {
     repositories {
         jcenter()
-        // maven { url 'https://maven.fabric.io/public' }
+         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        // classpath 'io.fabric.tools:gradle:1.+'
+         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -46,8 +46,8 @@ subprojects {
                 defaultConfig {
                     minSdkVersion 21
                     targetSdkVersion 23
-                    versionCode 195
-                    versionName "1.5.6"
+                    versionCode 196
+                    versionName "1.5.7"
                 }
             }
         }

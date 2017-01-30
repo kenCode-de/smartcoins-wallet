@@ -121,9 +121,7 @@ public class SupportMethods {
         }
         return null;
     }
-    public static void testing(String msg , Object obj , String nameOfObject){
-        Log.i("Saiyed_Testing","=> Msg : "+ msg + " : nameOfObject : " + nameOfObject + " : " + obj);
-    }
+
     public static void testing(String msg , Exception e , String nameOfObject){
         try {
             StackTraceElement[] stackTrace = e.getStackTrace();

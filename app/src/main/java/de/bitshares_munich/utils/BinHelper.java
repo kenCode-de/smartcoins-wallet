@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.bitshares_munich.Interfaces.BackupBinDelegate;
+import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;

@@ -25,9 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import de.bitshares_munich.Interfaces.ContactSelectionListener;
+import de.bitshares_munich.interfaces.ContactSelectionListener;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -143,7 +142,6 @@ public class ContactListDialogAdapter extends BaseAdapter {
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha",e.getMessage(),"error");
             }
             return mIcon11;
         }

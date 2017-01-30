@@ -26,6 +26,7 @@
     <string name="txt_6_digits_pin">6-digits PIN</string>
     <string name="txt_6_digits_pin_confirm">6-digits PIN confirm</string>
     <string name="create">CREATE</string>
+    <string name="or">OR</string>
     <string name="existing_account">Existing Account</string>
     <string name="v_1_0_beta" translatable="false">v 1.0 beta</string>
     <string name="block_number" translatable="false">block# -------</string>
@@ -276,6 +277,9 @@
     <string name="subscribe_callback">
         {\"method\":\"call\",\"params\":[2,\"set_subscribe_callback\",[7,true]],\"id\":5}
     </string>
+    <string name="cancel_subscriptions">
+        {\"method\":\"call\",\"params\":[2,\"cancel_all_subscriptions\",[]],\"id\":5}
+    </string>
     <!--<string name="subscribe_callback_full_account">-->
     <!--{\"method\":\"call\",\"params\":[2,\"get_full_accounts\",[[\"1.2.98834\"],true]],\"id\":17}-->
     <!--</string>-->
@@ -350,6 +354,7 @@
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 
+    <string name="unable_to_find_account_id">Unable to find user account id</string>
     <string name="unable_to_load_brainkey">Unable to load brainkey</string>
     <string name="unable_to_generate_bin_format_for_key">Unable to generate bin format for key</string>
     <string name="creating_backup_file">Creating Backup File</string>

@@ -1,4 +1,4 @@
-package de.bitshares_munich.Interfaces;
+package de.bitshares_munich.interfaces;
 
 /**
  * Interface to be implemented by the entity insterested in get updates from the PdfGeneratorTask.

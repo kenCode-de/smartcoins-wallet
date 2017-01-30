@@ -3,7 +3,6 @@ package de.bitshares_munich.smartcoinswallet;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Display;
@@ -49,8 +47,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.GravatarDelegate;
-import de.bitshares_munich.Interfaces.IBalancesDelegate;
+import de.bitshares_munich.interfaces.GravatarDelegate;
+import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountDetails;
@@ -70,10 +68,8 @@ import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
-
 public class eReceipt extends BaseActivity implements IBalancesDelegate,GravatarDelegate {
     public final String TAG = this.getClass().getName();
-    Context context;
 
     @Bind(R.id.ivOtherGravatar)
     ImageView ivOtherGravatar;
@@ -129,6 +125,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     @Bind(R.id.tvTotal)
     TextView tvTotal;
 
+    @Bind(R.id.tvOtherStatus)
+    TextView tvOtherStatus;
+
     @Bind(R.id.tvUserStatus)
     TextView tvUserStatus;
 
@@ -150,19 +149,14 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     int assets_id_in_work;
     int assets_id_total_size;
 
-    HashMap<String, String> map = new HashMap<>();
-    HashMap<String, String> eReciptmap = new HashMap<>();
-    HashMap<String, String> OPmap = new HashMap<>();
     HashMap<String, String> Freemap = new HashMap<>();
     HashMap<String, String> Amountmap = new HashMap<>();
-    HashMap<String, String> Memomap = new HashMap<>();
     List<String> Assetid = new ArrayList<>();
     HashMap<String, HashMap<String, String>> SymbolsPrecisions = new HashMap<>();
     String memoMsg;
     String date;
     String otherName;
     String userName;
-    Boolean isSent = false;
     String feeSymbol = "";
     String amountSymbol = "";
     String feeAmount = "";
@@ -226,7 +220,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
         transactionId = historicalTransferEntry.getHistoricalTransfer().getId();
 
-        context = getApplicationContext();
         progressDialog = new ProgressDialog(this);
         Application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
@@ -240,26 +233,21 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         timeZone = intent.getStringExtra("TimeZone");
 
         UserAccount fromUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getFrom();
+        UserAccount toUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getTo();
         if(fromUser.getObjectId().equals(user.getObjectId())){
             ivImageTag.setImageResource(R.drawable.send);
             tvUserStatus.setText(getString(R.string.sender_account));
-
+            tvOtherStatus.setText(getString(R.string.receiver_account));
+            otherName = toUser.getAccountName();
+            userName = fromUser.getAccountName();
         }else{
             tvUserStatus.setText(getString(R.string.receiver_account));
+            tvOtherStatus.setText(getString(R.string.sender_account));
             ivImageTag.setImageResource(R.drawable.receive);
+            otherName = fromUser.getAccountName();
+            userName = toUser.getAccountName();
         }
 
-        if (intent.getBooleanExtra("Sent", false)) {
-            userName = intent.getStringExtra("From");
-            otherName = intent.getStringExtra("To");
-            isSent = true;
-
-        } else {
-            userName = intent.getStringExtra("To");
-            otherName = intent.getStringExtra("From");
-            isSent = false;
-
-        }
         tvOtherName.setText(otherName);
         tvUserName.setText(userName);
 //        TvBlockNum.setText(date);
@@ -277,8 +265,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
 
         fetchGravatarInfo(get_email(otherName));
-
-//        init(eReciept);
 
         setBackButton(true);
 
@@ -324,105 +310,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         }
     }
 
-
-    Boolean transactionIdUpdated = false;
-
-    private void getTransactionId(final String block_num, final String trx_in_block)
-    {
-        try {
-            final Handler handler = new Handler();
-
-            final Runnable updateTask = new Runnable() {
-                @Override
-                public void run() {
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("method", "get_transaction_id");
-                    hashMap.put("block_num", block_num);
-                    hashMap.put("trx_in_block", trx_in_block);
-                    //TODO evaluate removal
-
-                    /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-                    IWebService service = sg.getService(IWebService.class);
-                    final Call<TransactionIdResponse> postingService = service.getTransactionIdComponent(hashMap);
-
-                    postingService.enqueue(new Callback<TransactionIdResponse>() {
-
-                        @Override
-                        public void onResponse(Response<TransactionIdResponse> response) {
-                            if (response.isSuccess()) {
-                                TransactionIdResponse resp = response.body();
-
-                                if (resp.status.equals("success")) {
-                                    try {
-                                        String trx_id = resp.transaction_id;
-                                        transactionId = trx_id.substring(0, 7);
-                                        transactionIdUpdated = true;
-
-                                        checkifloadingComplete();
-
-
-                                    } catch (Exception e) {
-                                        getTransactionId(block_num, trx_in_block);
-                                    }
-                                } else {
-                                    getTransactionId(block_num, trx_in_block);
-                                }
-
-                            } else {
-                                getTransactionId(block_num, trx_in_block);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Throwable t) {
-                            getTransactionId(block_num, trx_in_block);
-                        }
-                    });*/
-                }
-            };
-            handler.postDelayed(updateTask, 100);
-        }
-        catch (Exception e)
-        {
-
-        }
-    }
-
-    void init(String eRecipt) {
-        eReciptmap.put("id", SupportMethods.ParseJsonObject(eRecipt, "id"));
-        eReciptmap.put("op", SupportMethods.ParseJsonObject(eRecipt, "op"));
-        String block_num = SupportMethods.ParseJsonObject(eRecipt, "block_num");
-        eReciptmap.put("block_num", block_num);
-        String trx_in_block = SupportMethods.ParseJsonObject(eRecipt, "trx_in_block");
-        eReciptmap.put("trx_in_block", trx_in_block);
-        getTransactionId(block_num, trx_in_block);
-        eReciptmap.put("op_in_trx", SupportMethods.ParseJsonObject(eRecipt, "op_in_trx"));
-        eReciptmap.put("virtual_op", SupportMethods.ParseJsonObject(eRecipt, "virtual_op"));
-        String fetch_OP = SupportMethods.ParseObjectFromJsonArray(eReciptmap.get("op"), 1);
-        OPmap.put("fee", SupportMethods.ParseJsonObject(fetch_OP, "fee"));
-        OPmap.put("from", SupportMethods.ParseJsonObject(fetch_OP, "from"));
-        OPmap.put("to", SupportMethods.ParseJsonObject(fetch_OP, "to"));
-        OPmap.put("amount", SupportMethods.ParseJsonObject(fetch_OP, "amount"));
-        OPmap.put("memo", SupportMethods.ParseJsonObject(fetch_OP, "memo"));
-        OPmap.put("extensions", SupportMethods.ParseJsonObject(fetch_OP, "extensions"));
-        Freemap.put("amount", SupportMethods.ParseJsonObject(OPmap.get("fee"), "amount"));
-        Freemap.put("asset_id", SupportMethods.ParseJsonObject(OPmap.get("fee"), "asset_id"));
-        Amountmap.put("asset_id", SupportMethods.ParseJsonObject(OPmap.get("amount"), "asset_id"));
-        Amountmap.put("amount", SupportMethods.ParseJsonObject(OPmap.get("amount"), "amount"));
-        Memomap.put("from", SupportMethods.ParseJsonObject(OPmap.get("memo"), "from"));
-        Memomap.put("to", SupportMethods.ParseJsonObject(OPmap.get("memo"), "to"));
-        Memomap.put("nonce", SupportMethods.ParseJsonObject(OPmap.get("memo"), "nonce"));
-        Memomap.put("message", SupportMethods.ParseJsonObject(OPmap.get("memo"), "message"));
-
-        Assetid.add(Freemap.get("asset_id"));
-        Assetid.add(Amountmap.get("asset_id"));
-        assets_id_total_size = Assetid.size();
-    }
-
     void onLastCall() {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                AssetsSymbols assetsSymbols = new AssetsSymbols(context);
+                AssetsSymbols assetsSymbols = new AssetsSymbols(eReceipt.this);
 
                 HashMap<String, String> sym_preFee = SymbolsPrecisions.get(Freemap.get("asset_id"));
 //                feeAmount = SupportMethods.ConvertValueintoPrecision(sym_preFee.get("precision"), Freemap.get("amount"));
@@ -469,20 +360,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         });
     }
 
-    void get_Time(String block_num, String id) {
-        int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-        //  {"id":4,"method":"call","params":[2,"get_block_header",[6356159]]}
-        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_block_header\",[ " + block_num + "]]}";
-        Application.send(getDetails);
-    }
-
-    void get_names(String name_id, String id) {
-        int db_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
-        //    {"id":4,"method":"call","params":[2,"get_accounts",[["1.2.101520"]]]}
-        String getDetails = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[" + db_id + ",\"get_accounts\",[[\"" + name_id + "\"]]]}";
-        Application.send(getDetails);
-    }
-
     void get_asset(String asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\"" + asset + "\"]]}";
@@ -497,7 +374,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     }
 
     String get_email(String accountName) {
-        MerchantEmail merchantEmail = new MerchantEmail(context);
+        MerchantEmail merchantEmail = new MerchantEmail(this);
         return merchantEmail.getMerchantEmail(accountName);
     }
 
@@ -546,7 +423,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha", e.getMessage(), "error");
             }
             return mIcon11;
         }
@@ -582,7 +458,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
     private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
 
-        String faitCurrency = Helper.getFadeCurrency(context);
+        String faitCurrency = Helper.getFadeCurrency(this);
 
         if (faitCurrency.isEmpty()) {
             faitCurrency = "EUR";
@@ -600,7 +476,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
             return;
         }
 
-        EquivalentFiatStorage equivalentFiatStorage = new EquivalentFiatStorage(context);
+        EquivalentFiatStorage equivalentFiatStorage = new EquivalentFiatStorage(this);
         HashMap hm = equivalentFiatStorage.getEqHM(faitCurrency);
 
         try {

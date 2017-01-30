@@ -13,8 +13,7 @@ import android.util.Log;
 
 import com.google.zxing.Result;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.utils.SupportMethods;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.TinyDB;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -130,7 +129,6 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
 
     private void finishWithResult(String parseddata) {
         Bundle conData = new Bundle();
-        SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent();
         intent.putExtras(conData);
@@ -141,7 +139,6 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
         Log.d(TAG, "StartWithfinishWithResult");
         Log.d(TAG, "parsed data: "+parseddata);
         Bundle conData = new Bundle();
-        SupportMethods.testing("merchantEmail",parseddata,"Object");
         conData.putSerializable("sResult",parseddata);
         Intent intent = new Intent(QRCodeActivity.this, SendScreen.class);
         intent.putExtras(conData);

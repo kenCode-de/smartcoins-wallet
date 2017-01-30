@@ -68,19 +68,25 @@
                     android:layout_below="@+id/ivOtherGravatar">
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text=""
                         android:textSize="20dp"
                         android:id="@+id/tvOtherCompany" />
                     <TextView
+                        android:id="@+id/tvOtherStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"/>
+                    <TextView
+                        android:id="@+id/tvOtherName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="15dp"
-                        android:id="@+id/tvOtherName" />
+                        android:textSize="15dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -98,30 +104,21 @@
                         android:text=""
                         android:textSize="12dp" />
                 </LinearLayout>
-                <TextView
-                    android:layout_below="@+id/llOtherAccount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="left|center"
-                    android:textColor="@color/black"
-                    android:id="@+id/tvTime"
-                    android:layout_centerInParent="true"
-                    android:textSize="12dp" />
                 <LinearLayout
+                    android:id="@+id/llUserAccount"
                     android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_centerInParent="true"
-                    android:layout_below="@+id/tvTime"
-                    android:id="@+id/llUserAccount">
+                    android:layout_below="@+id/llOtherAccount">
                     <TextView
+                        android:id="@+id/tvUserStatus"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="18dp"
-                        android:id="@+id/tvUserStatus" />
+                        android:textSize="18dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -130,12 +127,20 @@
                         android:textSize="15dp"
                         android:id="@+id/tvUserName" />
                     <TextView
+                        android:id="@+id/tvUserId"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:id="@+id/tvUserId"
                         android:textSize="13dp" />
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:textSize="12dp"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
