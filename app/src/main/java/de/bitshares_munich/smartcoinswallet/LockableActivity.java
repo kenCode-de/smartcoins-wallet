@@ -2,6 +2,7 @@ package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -11,8 +12,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.Interfaces.LockListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.LockListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.TinyDB;
 
@@ -46,6 +47,12 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
     private LockListener mLockListener;
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        tinyDB = new TinyDB(getApplicationContext());
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
         if(!mInternalMove){
@@ -53,7 +60,12 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
              * We want to show the pin dialog if this restart was not caused by
              * an intentional internal app move.
              */
-            showDialogPin();
+            if(this.hasAccounts()){
+                /*
+                * It only makes sense to show the pin dialog if there are accounts.
+                */
+                showDialogPin();
+            }
         }
     }
 
@@ -95,9 +107,6 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
      * Displays a dialog asking the user to input the pin number.
      */
     private void showDialogPin() {
-        if(tinyDB == null){
-            tinyDB = new TinyDB(getApplicationContext());
-        }
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         pinDialog = new Dialog(this);
         pinDialog.setTitle(R.string.txt_6_digits_pin);
@@ -125,6 +134,15 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
         });
         pinDialog.setCancelable(false);
         pinDialog.show();
+    }
+
+    /**
+     * Private method used to check whether the app has any account already registered.
+     * @return
+     */
+    private boolean hasAccounts(){
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        return accountDetails.size() > 0;
     }
 
     public void setLockListener(LockListener listener){

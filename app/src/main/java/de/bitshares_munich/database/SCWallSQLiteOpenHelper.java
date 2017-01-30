@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -34,7 +34,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Transfers.COLUMN_FROM + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TO + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT + TYPE_INTEGER + ", " +
-            SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + TYPE_TEXT + " DEFAULT '', " +
             SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO + TYPE_TEXT + ", " +

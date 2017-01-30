@@ -32,6 +32,7 @@ public class Memo implements ByteSerializable, JsonSerializable {
     private Address to;
     private long nonce;
     private byte[] message;
+    private String plaintextMessage;
 
     public String getPlaintextMessage() {
         if(plaintextMessage == null)
@@ -43,8 +44,6 @@ public class Memo implements ByteSerializable, JsonSerializable {
     public void setPlaintextMessage(String plaintextMessage) {
         this.plaintextMessage = plaintextMessage;
     }
-
-    private String plaintextMessage;
 
     /**
      * Empty Constructor

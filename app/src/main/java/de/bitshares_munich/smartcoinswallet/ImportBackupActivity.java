@@ -22,7 +22,7 @@ import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
@@ -239,13 +239,11 @@ public class ImportBackupActivity extends BaseActivity {
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(),myActivity);
                                 Intent intent;
-
-                                if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
-                                {
+                                int numberOfAccounts = myBinHelper.numberOfWalletAccounts(getApplicationContext());
+                                Log.d(TAG,String.format("number of accounts: %d", numberOfAccounts));
+                                if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 ) {
                                     intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
-                                }
-                                else
-                                {
+                                } else {
                                     intent = new Intent(getApplicationContext(), TabActivity.class);
                                 }
 

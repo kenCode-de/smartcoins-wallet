@@ -1,14 +1,20 @@
 package de.bitsharesmunich.graphenej;
 
-import com.google.gson.*;
-import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
-import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+
+import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
+import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
 
 /**
  * Class tha represents a graphene user account.
@@ -45,6 +51,14 @@ public class UserAccount extends GrapheneObject implements ByteSerializable, Jso
      */
     public String getAccountName() {
         return accountName;
+    }
+
+    /**
+     * Setter for the account name field.
+     * @param accountName: The account name.
+     */
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 
     @Override

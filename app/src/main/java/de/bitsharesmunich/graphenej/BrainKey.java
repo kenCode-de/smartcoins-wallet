@@ -22,7 +22,7 @@ public class BrainKey {
     public static final int DICT_WORD_COUNT = 49744;
 
     /* The required number of words */
-    public static final int BRAINKEY_WORD_COUNT = 12;
+    public static final int BRAINKEY_WORD_COUNT = 16;
 
     /* The corresponding private key derivated from the brain key */
     private ECKey mPrivateKey;

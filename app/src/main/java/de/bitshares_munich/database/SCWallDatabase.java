@@ -8,14 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.common.primitives.UnsignedLong;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BlockHeader;
-import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
-import de.bitsharesmunich.graphenej.objects.Memo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +19,14 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BlockHeader;
+import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.objects.Memo;
 
 /**
  * Database wrapper class, providing access to the underlying database.
@@ -35,6 +35,18 @@ import de.bitshares_munich.models.TransactionDetails;
  */
 public class SCWallDatabase {
     private String TAG = this.getClass().getName();
+
+    /**
+     * Constant used to specify an unlimited amount of transactions for the
+     * second argument of the getTransactions method.
+     */
+    public static final int UNLIMITED_TRANSACTIONS = -1;
+
+    /**
+     * The default number of transactions to load in the transaction list
+     */
+    public static final int DEFAULT_TRANSACTION_BATCH_SIZE = 50;
+
     private SCWallSQLiteOpenHelper dbHelper;
     private SQLiteDatabase db;
 
@@ -53,7 +65,6 @@ public class SCWallDatabase {
      * @param transactions: List of historical transfer transactions.
      */
     public int putTransactions(List<HistoricalTransferEntry> transactions){
-        long before = System.currentTimeMillis();
         int count = 0;
         ContentValues contentValues;
         for(int i = 0; i < transactions.size(); i++){
@@ -73,33 +84,51 @@ public class SCWallDatabase {
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID, operation.getTransferAmount().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, historicalTransfer.getBlockNum());
 
+            if(transferEntry.getEquivalentValue() != null){
+                AssetAmount assetAmount = transferEntry.getEquivalentValue();
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, assetAmount.getAsset().getObjectId());
+                contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, assetAmount.getAmount().longValue());
+            }
+
             Memo memo = operation.getMemo();
             if(!memo.getPlaintextMessage().equals("")){
-                Log.d(TAG,"Memo has plaintext message");
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_FROM, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_TO, memo.getSource().toString());
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
-            }else{
-                Log.i(TAG,"Memo has no message");
             }
             try{
-                long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
-                Log.d(TAG, "Inserted transfer in database with id: "+id);
+                db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
                 count++;
             }catch (SQLException e){
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        long after = System.currentTimeMillis();
-        Log.d(TAG, String.format("putTransactions took %d ms with %d transactions", (after - before), transactions.size()));
+        Log.d(TAG,String.format("Inserved %d transactions in database", count));
         return count;
+    }
+
+    public int updateEquivalentValue(HistoricalTransferEntry transfer){
+        String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.Transfers.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ transfer.getHistoricalTransfer().getId() };
+
+        ContentValues contentValues = new ContentValues();
+        Log.d(TAG,String.format("Updating eq value. asset id: %s, amount: %d", transfer.getEquivalentValue().getAsset().getObjectId(), transfer.getEquivalentValue().getAmount().longValue()));
+        contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE, transfer.getEquivalentValue().getAmount().longValue());
+        contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID, transfer.getEquivalentValue().getAsset().getObjectId());
+
+        int updated = db.update(table, contentValues, whereClause, whereArgs);
+        return updated;
     }
 
     /**
      * Retrieves the list of historical transfers.
+     * @param userAccount: The user account whose transactions we're interested in.
+     * @param max: The maximum number of transactions to fetch, if the value is <= 0, then the
+     *           query will put no limits on the number of returned values.
      * @return: The list of historical transfer transactions.
      */
-    public List<HistoricalTransferEntry> getTransactions(UserAccount userAccount){
+    public List<HistoricalTransferEntry> getTransactions(UserAccount userAccount, int max){
         long before = System.currentTimeMillis();
         HashMap<String, String> userMap = this.getUserMap();
         HashMap<String, Asset> assetMap = this.getAssetMap();
@@ -108,7 +137,8 @@ public class SCWallDatabase {
         String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
         String selection = SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
         String[] selectionArgs = { userAccount.getObjectId(), userAccount.getObjectId() };
-        Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, null);
+        String limit = max > 0 ? String.format("%d", max) : null;
+        Cursor cursor = db.query(tableName, null, selection, selectionArgs, null, null, orderBy, limit);
         ArrayList<HistoricalTransferEntry> transfers = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -118,6 +148,19 @@ public class SCWallDatabase {
                 // Getting origin and destination user account ids
                 String fromId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FROM));
                 String toId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO));
+
+                // Skipping transfer if we are missing users information
+                if(userMap.get(fromId) == null || userMap.get(toId) == null){
+                    cursor.moveToNext();
+                    continue;
+                }
+
+                // Skipping transfer if we are missing timestamp information
+                long t = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP));
+                if(t == 0){
+                    cursor.moveToNext();
+                    continue;
+                }
 
                 // Building UserAccount instances
                 UserAccount from = new UserAccount(fromId, userMap.get(fromId));
@@ -130,12 +173,18 @@ public class SCWallDatabase {
                 Asset transferAsset = assetMap.get(transferAssetId);
                 Asset feeAsset = assetMap.get(feeAssetId);
 
+                // Skipping transfer if we are missing transfer and fee asset information
+                if(transferAsset == null || feeAsset == null){
+                    cursor.moveToNext();
+                    continue;
+                }
+
                 // Transfer and fee amounts
-                AssetAmount tranferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
+                AssetAmount transferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
                 AssetAmount feeAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT))), feeAsset);
 
                 // Building a TransferOperation
-                TransferOperation transferOperation = new TransferOperation(from, to, tranferAmount, feeAmount);
+                TransferOperation transferOperation = new TransferOperation(from, to, transferAmount, feeAmount);
 
                 // Building memo data
                 String memoMessage = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE));
@@ -148,8 +197,38 @@ public class SCWallDatabase {
                 historicalTransfer.setOperation(transferOperation);
                 historicalTransfer.setBlockNum(cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM)));
 
+                // Adding the HistoricalTransfer instance
                 transferEntry.setHistoricalTransfer(historicalTransfer);
+
+                // Setting the timestamp
                 transferEntry.setTimestamp(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP)));
+
+                // Adding equivalent value data
+                String id = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID));
+                long equivalentValue = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE));
+                if(id != null){
+                    Log.v(TAG,String.format("Eq value asset id: %s, value: %d", id, equivalentValue));
+                    String table = SCWallDatabaseContract.Assets.TABLE_NAME;
+                    String[] columns = new String[] {
+                            SCWallDatabaseContract.Assets.COLUMN_SYMBOL,
+                            SCWallDatabaseContract.Assets.COLUMN_PRECISION
+                    };
+                    String where = SCWallDatabaseContract.Assets.COLUMN_ID + "=?";
+                    String[] whereArgs = new String[]{ id };
+                    Cursor assetCursor = db.query(true, table, columns, where, whereArgs, null, null, null, null);
+                    if(assetCursor.moveToFirst()){
+                        String symbol = assetCursor.getString(0);
+                        int precision = assetCursor.getInt(1);
+                        AssetAmount eqValueAssetAmount = new AssetAmount(UnsignedLong.valueOf(equivalentValue), new Asset(id, symbol, precision));
+                        transferEntry.setEquivalentValue(eqValueAssetAmount);
+                    }else{
+                        Log.w(TAG,"Got empty cursor while trying to fill asset data");
+                    }
+                    assetCursor.close();
+                }else{
+                    cursor.moveToNext();
+                    continue;
+                }
 
                 // Adding historical transfer entry to array
                 transfers.add(transferEntry);
@@ -161,6 +240,23 @@ public class SCWallDatabase {
         long after = System.currentTimeMillis();
         Log.d(TAG, String.format("getTransactions took %d ms with %d transactions", (after - before), transfers.size()));
         return transfers;
+    }
+
+    /**
+     * Gets the total number of recorded transactions from a given user.
+     *
+     * @param userAccount: User account we're interested in.
+     * @return: The total number of transaction records in the database from a given user.
+     */
+    public int getTransactionCount(UserAccount userAccount){
+        String sql = "SELECT COUNT(*) FROM " + SCWallDatabaseContract.Transfers.TABLE_NAME +
+                " where " + SCWallDatabaseContract.Transfers.COLUMN_FROM + " = ? OR " + SCWallDatabaseContract.Transfers.COLUMN_TO + " = ?";
+        String[] selectionArgs = new String[]{ userAccount.getObjectId(), userAccount.getObjectId() };
+        Cursor cursor = db.rawQuery(sql, selectionArgs);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        return count;
     }
 
     /**
@@ -234,7 +330,7 @@ public class SCWallDatabase {
     }
 
     /**
-     * @return: A hashmap connecting asset ids to asset symbols.
+     * @return: A hashmap connecting asset ids to Asset object instances.
      */
     public HashMap<String, Asset> getAssetMap(){
         HashMap<String, Asset> assetMap = new HashMap<>();
@@ -309,13 +405,15 @@ public class SCWallDatabase {
      * with the date and time information missing.
      * @return: A list of block numbers.
      */
-    public LinkedList<Long> getMissingTransferTimes(){
+    public LinkedList<Long> getMissingTransferTimes(int limitValue){
         LinkedList<Long> missingTimes = new LinkedList<>();
         String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
         String[] columns = { SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM };
         String selection = SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + "= ?";
         String[] selectionArgs = {"0"};
-        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, null, null);
+        String limit = String.format("%d", limitValue);
+        String orderBy = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + " DESC";
+        Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, orderBy, limit);
         if(cursor.moveToFirst()){
             do{
                 missingTimes.add(new Long(cursor.getLong(0)));
@@ -324,6 +422,56 @@ public class SCWallDatabase {
         cursor.close();
         Log.d(TAG, String.format("Got %d missing times", missingTimes.size()));
         return missingTimes;
+    }
+
+    /**
+     * Method used to obtain a list of all historical transfers for which we don't have
+     * an equivalent value.
+     *
+     * Every HistoricalTransferEntry object in the list returned is only
+     * partially built, with just enough information to fill the 2 missing equivalent values
+     * columns, which are the equivalent value asset id, and asset amount.
+     *
+     * @return: List of all historical transfers lacking an equivalent value.
+     */
+    public LinkedList<HistoricalTransferEntry> getMissingEquivalentValues(){
+        LinkedList<HistoricalTransferEntry> historicalEntries = new LinkedList<>();
+        String table = SCWallDatabaseContract.Transfers.TABLE_NAME;
+        String[] columns = {
+                SCWallDatabaseContract.Transfers.COLUMN_ID,
+                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT
+        };
+        String selection  = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
+                SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " != 0";
+        Log.i(TAG, "Selection: "+selection);
+        Cursor cursor = db.query(table, columns, selection, null, null, null, null, null);
+        Log.i(TAG, String.format("Got cursor with %d entries", cursor.getCount()));
+        if(cursor.moveToFirst()){
+            do{
+                String historicalTransferId = cursor.getString(0);
+                long timestamp = cursor.getLong(1);
+                String assetId = cursor.getString(2);
+                long amount = cursor.getLong(3);
+
+                TransferOperation operation = new TransferOperation();
+                operation.setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId)));
+
+                HistoricalTransfer transfer = new HistoricalTransfer();
+                transfer.setId(historicalTransferId);
+                transfer.setOperation(operation);
+
+                HistoricalTransferEntry transferEntry = new HistoricalTransferEntry();
+                transferEntry.setHistoricalTransfer(transfer);
+                transferEntry.setTimestamp(timestamp);
+
+                historicalEntries.add(transferEntry);
+            }while(cursor.moveToNext());
+            cursor.close();
+            Log.i(TAG, String.format("Got %d transactions with missing equivalent value", historicalEntries.size()));
+        }
+        return historicalEntries;
     }
 
     /**
@@ -346,8 +494,11 @@ public class SCWallDatabase {
             String whereClause = SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM + "=?";
             String[] whereArgs = { String.format("%d", blockNum) };
             int count = db.update(table, values, whereClause, whereArgs);
-            if(count == 1)
+            if(count > 0) {
                 updated = true;
+            }else{
+                Log.w(TAG,String.format("Failed to update block time. block: %d", blockNum));
+            }
         } catch (ParseException e) {
             Log.e(TAG, "ParseException. Msg: "+e.getMessage());
         }
@@ -360,6 +511,56 @@ public class SCWallDatabase {
      */
     public List<Asset> getAssets(){
         return null;
+    }
+
+    /**
+     * Given an incomplete instance of the UserAccount object, this method performs a query and
+     * fills in the missing details.
+     *
+     * The incomplete object passed as argument must have at least its object if set.
+     * @param account: The incomplete UserAccount instance
+     * @return: The same UserAccount instance, but with all the fields with valid data.
+     */
+    public UserAccount fillUserDetails(UserAccount account){
+        String table = SCWallDatabaseContract.UserAccounts.TABLE_NAME;
+        String selection = SCWallDatabaseContract.UserAccounts.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[] { account.getObjectId() };
+        Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
+        if(cursor.moveToFirst()){
+            String accountName = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.UserAccounts.COLUMN_NAME));
+            account.setAccountName(accountName);
+        }
+        cursor.close();
+        return account;
+    }
+
+    /**
+     * Given an incomplete instance of the Asset object, performs a query and fills the asset
+     * reference with 'precision', 'symbol' and 'description' data.
+     *
+     * The incomplete object passed as argument must have at least its object if set.
+     * @param asset: Incomplete asset instance.
+     * @return: Complete asset instance.
+     */
+    public Asset fillAssetDetails(Asset asset){
+        String table = SCWallDatabaseContract.Assets.TABLE_NAME;
+        String selection = SCWallDatabaseContract.Assets.COLUMN_ID + "=?";
+        String[] selectionArgs = new String[]{ asset.getObjectId() };
+        Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
+        if(cursor.moveToFirst()){
+            try{
+                String symbol = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_SYMBOL));
+                int precision = cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_PRECISION));
+                String description = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION));
+                asset.setSymbol(symbol);
+                asset.setPrecision(precision);
+                asset.setDescription(description);
+            }catch(Exception e){
+                Log.e(TAG,"Exception: "+e.getMessage());
+            }
+        }
+        cursor.close();
+        return asset;
     }
 
     /**
@@ -395,5 +596,9 @@ public class SCWallDatabase {
         values.put(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP, 0);
         int count = db.update(SCWallDatabaseContract.Transfers.TABLE_NAME, values, null, null);
         Log.d(TAG, String.format("%d timestamps where deleted", count));
+    }
+
+    public void clearTransfers(){
+        db.execSQL("delete from "+SCWallDatabaseContract.Transfers.TABLE_NAME);
     }
 }

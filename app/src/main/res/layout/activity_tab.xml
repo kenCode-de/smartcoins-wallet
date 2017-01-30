@@ -1,20 +1,17 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent">
-
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            >
-
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -27,7 +24,7 @@
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
                 <android.support.design.widget.TabLayout
                     android:layout_gravity="bottom"
@@ -36,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:tabMode="fixed"
-                    app:tabIndicatorHeight="2dp"
+                    app:tabIndicatorHeight="4dp"
                     app:tabGravity="fill"/>
             </LinearLayout>
 
@@ -47,15 +44,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="1">
-
-
             <android.support.v4.view.ViewPager
                 android:layout_weight="1"
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
-
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
@@ -72,7 +66,6 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:background="@color/bottomBarColor"/>
-
                 <TextView
                     android:background="@color/bottomBarColor"
                     android:id="@+id/tvBlockNumberHead_TabActivity"
@@ -86,17 +79,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:layout_gravity="center"/>
-
                 <ImageView android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_setting"
-                    android:id="@+id/OnClickSettings_TabActivity"
-                    />
+                    android:id="@+id/OnClickSettings_TabActivity" />
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

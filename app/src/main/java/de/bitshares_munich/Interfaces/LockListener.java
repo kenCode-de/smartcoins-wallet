@@ -1,4 +1,4 @@
-package de.bitshares_munich.Interfaces;
+package de.bitshares_munich.interfaces;
 
 /**
  * Interface that must be implemented by any party that desires to be notified of the

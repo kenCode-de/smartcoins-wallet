@@ -43,3 +43,6 @@ captures/
 
 # Mac OS X file
 .DS_Store
+
+# Fabric plugin
+app/fabric.properties

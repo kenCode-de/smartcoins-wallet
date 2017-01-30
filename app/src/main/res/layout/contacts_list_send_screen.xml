@@ -3,21 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <TextView
+    <ListView android:id="@+id/contactsListSendScreen"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contacts"
-        android:textSize="20sp"
-        android:padding="10dp"
-        android:background="@drawable/edittext_background_layer"
-        android:textColor="#000"/>
-<ListView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/contactsListSendScreen"
-    android:clickable="true"
-    android:paddingRight="10dp"
-    android:paddingLeft="10dp"
-    android:paddingBottom="10dp"
-    android:background="#FFFFFF">
-</ListView>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp">
+    </ListView>
 </LinearLayout>

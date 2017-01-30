@@ -177,13 +177,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="40sp"
                             android:orientation="horizontal"
-                            android:weightSum="5"
-                        >
+                            android:weightSum="5">
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
-                            >
+                                android:layout_weight="1">
                                 <RelativeLayout
                                     android:id="@+id/rl_webviewTo"
                                     android:layout_width="40sp"
@@ -195,10 +193,8 @@
                                         android:layout_width="34sp"
                                         android:layout_height="34sp"
                                         android:layout_centerInParent="true"
-                                        android:gravity="center"
-                                    />
+                                        android:gravity="center" />
                                 </RelativeLayout>
-
                                 <EditText
                                     android:id="@+id/etReceiverAccount"
                                     android:layout_width="match_parent"
@@ -212,20 +208,21 @@
                                     android:singleLine="true"
                                     android:textSize="16sp"
                                     android:textColor="#000"
-                                    android:paddingLeft="10dp"
-                                />
+                                    android:paddingLeft="10dp"/>
                                 <RelativeLayout
                                     android:id="@+id/contactActivity"
                                     android:layout_width="50sp"
                                     android:layout_height="match_parent"
                                     android:layout_alignParentRight="true"
                                     android:orientation="horizontal">
-                                    <ImageView
+                                    <ImageButton
+                                        android:id="@+id/contactButton"
                                         android:layout_width="25dp"
                                         android:layout_height="match_parent"
-                                        android:layout_centerInParent="true"
                                         android:src="@drawable/share_group"
-                                    />
+                                        android:layout_centerVertical="true"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentStart="true" />
                                 </RelativeLayout>
                             </RelativeLayout>
                             <ImageButton
@@ -234,8 +231,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="4"
                                 android:background="@null"
-                                android:src="@drawable/photo_icon"
-                            />
+                                android:src="@drawable/photo_icon" />
                         </LinearLayout>
                         <TextView
                             android:id="@+id/tvErrorRecieverAccount"
@@ -553,8 +549,7 @@
                     android:background="#DD4739"
                     android:clickable="true"
                     android:orientation="horizontal"
-                    android:weightSum="4"
-                >
+                    android:weightSum="4">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

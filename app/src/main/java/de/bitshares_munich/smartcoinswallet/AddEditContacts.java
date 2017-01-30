@@ -40,8 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
-import de.bitshares_munich.Interfaces.ContactsDelegate;
-import de.bitshares_munich.Interfaces.IAccount;
+import de.bitshares_munich.interfaces.ContactsDelegate;
+import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
@@ -512,7 +512,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha", e.getMessage(), "error");
             }
             return mIcon11;
         }

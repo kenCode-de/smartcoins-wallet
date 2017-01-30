@@ -3,16 +3,14 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserLabels;
-import de.bitshares_munich.Interfaces.BackupBinDelegate;
+import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.MerchantEmail;
 
 /**

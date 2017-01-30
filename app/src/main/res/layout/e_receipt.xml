@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/scrollView"
+    android:id="@+id/scrollView"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
-    >
+    android:background="#fff">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,20 +11,18 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_horizontal_margin"
         android:paddingBottom="@dimen/activity_horizontal_margin"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
         <RelativeLayout
             android:layout_width="50dp"
             android:layout_gravity="right"
             android:layout_height="50dp">
             <ImageButton
+                android:id="@+id/buttonSend"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:text="@string/email_pdf"
-                android:id="@+id/buttonSend"
                 android:src="@drawable/share"
-                android:background="@color/white"
-                />
+                android:background="@color/white" />
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
@@ -41,8 +38,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_bg"
             android:orientation="vertical"
-            android:id="@+id/llall"
-            >
+            android:id="@+id/llall">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -55,13 +51,12 @@
                     android:layout_height="10dp">
                 </RelativeLayout>
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:id="@+id/ivOtherGravatar"
-                    android:src="@drawable/people"
+                    android:src="@drawable/default_gravatar_image"
                     android:layout_below="@+id/rlbuttonSend"
-                    android:layout_centerInParent="true"
-                    />
+                    android:layout_centerInParent="true" />
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -70,35 +65,28 @@
                     android:orientation="vertical"
                     android:layout_centerInParent="true"
                     android:id="@+id/llOtherAccount"
-                    android:layout_below="@+id/ivOtherGravatar"
-                    >
+                    android:layout_below="@+id/ivOtherGravatar">
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text=""
                         android:textSize="20dp"
-                        android:id="@+id/tvOtherCompany"
-                        />
+                        android:id="@+id/tvOtherCompany" />
                     <TextView
+                        android:id="@+id/tvOtherStatus"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
+                        android:layout_height="wrap_content"
                         android:textColor="@color/black"
-                        android:text=""
-                        android:textSize="15dp"
+                        android:textSize="18dp"/>
+                    <TextView
                         android:id="@+id/tvOtherName"
-                        />
-                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:text=""
-                        android:id="@+id/tvOtherId"
-                        android:textSize="13dp"
-                        />
+                        android:textSize="15dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -106,83 +94,54 @@
                         android:textColor="@color/black"
                         android:text=""
                         android:id="@+id/tvAddress"
-                        android:textSize="12dp"
-                        />
+                        android:textSize="12dp" />
                     <TextView
+                        android:id="@+id/tvContact"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:text=""
-                        android:id="@+id/tvContact"
-                        android:textSize="12dp"
-
-                        />
+                        android:textSize="12dp" />
                 </LinearLayout>
-
-
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:layout_below="@+id/llOtherAccount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="left|center"
-                        android:textColor="@color/black"
-                        android:id="@+id/TvBlockNum"
-                        android:layout_centerInParent="true"
-                        android:textSize="18dp"
-                        />
-
-                <TextView
-                    android:layout_below="@+id/TvBlockNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="left|center"
-                    android:textColor="@color/black"
-                    android:id="@+id/tvTime"
-                    android:layout_centerInParent="true"
-                    android:textSize="12dp"
-                    />
-
-
                 <LinearLayout
+                    android:id="@+id/llUserAccount"
                     android:layout_marginTop="10dp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:layout_centerInParent="true"
-                    android:layout_below="@+id/tvTime"
-                    android:id="@+id/llUserAccount"
-                    >
-
+                    android:layout_below="@+id/llOtherAccount">
                     <TextView
+                        android:id="@+id/tvUserStatus"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="18dp"
-                        android:id="@+id/tvUserStatus"
-                        />
-
+                        android:textSize="18dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:textSize="15dp"
-                        android:id="@+id/tvUserName"
-                        />
+                        android:id="@+id/tvUserName" />
                     <TextView
+                        android:id="@+id/tvUserId"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:id="@+id/tvUserId"
-                        android:textSize="13dp"
-                        />
+                        android:textSize="13dp" />
+                    <TextView
+                        android:id="@+id/tvTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_centerInParent="true"
+                        android:textSize="12dp"/>
                 </LinearLayout>
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
@@ -190,8 +149,7 @@
                     android:layout_below="@+id/llUserAccount"
                     android:orientation="vertical"
                     android:layout_marginTop="10dp"
-                    android:weightSum="5"
-                    >
+                    android:weightSum="5">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:weightSum="3"
@@ -213,8 +171,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:weightSum="2"
-                            android:paddingTop="3dp"
-                            >
+                            android:paddingTop="3dp">
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_weight="2"
@@ -223,9 +180,7 @@
                                 android:gravity="center_vertical|right"
                                 android:textSize="13dp"
                                 android:layout_height="0dp" />
-
                         </LinearLayout>
-
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -248,18 +203,16 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:weightSum="2"
-                            android:paddingTop="3dp"
-                            >
+                            android:paddingTop="3dp">
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_weight="2"
-                                android:text="----"                                android:textColor="@color/black"
+                                android:text="----"
+                                android:textColor="@color/black"
                                 android:gravity="center_vertical|right"
                                 android:textSize="13dp"
                                 android:layout_height="0dp" />
-                        
                         </LinearLayout>
-
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -405,8 +358,7 @@
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:layout_marginTop="10dp"
-                    android:weightSum="3"
-                    >
+                    android:weightSum="3">
                     <LinearLayout
                         android:layout_weight="1"
                         android:layout_width="match_parent"
@@ -464,86 +416,48 @@
                                     android:textSize="15dp"
                                     />
                                 <TextView
+                                    android:id="@+id/tvPaymentAmount"
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
                                     android:textColor="@color/black"
                                     android:gravity="left|center"
                                     android:text=""
                                     android:textSize="13dp"
-                                    android:id="@+id/tvPaymentAmount"
                                     android:layout_height="0dp" />
                                 <TextView
+                                    android:id="@+id/tvPaymentEquivalent"
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
                                     android:textSize="10dp"
-                                    android:id="@+id/tvPaymentEquivalent"
                                     android:text=""
                                     android:gravity="left|center"
                                     android:textColor="@color/black"
                                     android:layout_height="0dp" />
                             </LinearLayout>
-
                         </LinearLayout>
-
                     </LinearLayout>
-
-
                 </LinearLayout>
-
                 <LinearLayout
-
-                  android:layout_width="match_parent"
-                    android:layout_below="@+id/llPaymentMethod"
-                  android:layout_height="wrap_content"
                     android:id="@+id/llMemo"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp"
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:layout_height="match_parent">
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:paddingLeft="25dp"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@string/memo_capital"
-                            android:gravity="center"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="30sp"
-                            android:text=" : "
-                            android:gravity="left|center"
-                            />
-                    </LinearLayout>
-                        <TextView
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent" />
-                    </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_below="@+id/llPaymentMethod"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
 
                     <TextView
-                        android:paddingLeft="30dp"
-                        android:paddingRight="30dp"
-                        android:paddingBottom="5dp"
+                        android:id="@+id/memo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="#000"
-                        android:id="@+id/tvMemo"
-                        android:background="@drawable/edittext_background_layer"
-                        />
-
-                     </LinearLayout>
-
+                        android:paddingLeft="30dp"
+                        android:text="@string/memo_template"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/llMemo"
+                    android:layout_margin="3dp"
+                    android:background="@android:color/darker_gray"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -552,17 +466,13 @@
                     android:layout_marginTop="10dp"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
-                    android:orientation="vertical"
-                    >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/thankyou_string"
-                />
-
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/thankyou_string" />
                 </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_marginTop="10dp"
@@ -573,16 +483,13 @@
                     android:layout_below="@+id/llThankyou"
                     android:orientation="horizontal"
                     android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
-                    >
+                    android:paddingRight="30dp">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="block#"
-                        />
-
+                        android:text="block#" />
                     <TextView
                         android:id="@+id/tvBlockNumber"
                         android:layout_width="0dp"
@@ -601,14 +508,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="center"/>
-
                 </LinearLayout>
-
-
             </RelativeLayout>
-
-
-
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

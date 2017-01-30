@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-import de.bitshares_munich.Interfaces.GravatarDelegate;
+import de.bitshares_munich.interfaces.GravatarDelegate;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.IWebService;
 import de.bitshares_munich.utils.ServiceGenerator;

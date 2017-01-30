@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.BackupBinDelegate;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.BackupBinDelegate;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Helper;
@@ -54,7 +54,6 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
     }
 
     private void showDialogBackupBrainKey() {
-
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_delete_dialog);

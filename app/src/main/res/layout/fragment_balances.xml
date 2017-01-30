@@ -1,13 +1,12 @@
-<ScrollView android:id="@+id/scrollViewBalances"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/whiteColor"
-            android:fillViewport="true"
+<ScrollView
+    android:id="@+id/scrollViewBalances"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whiteColor"
+    android:fillViewport="true"
     android:focusable="false"
-            android:nestedScrollingEnabled="true">
-
-
+    android:nestedScrollingEnabled="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,12 +163,13 @@
                 android:textStyle="bold"/>
             <ProgressBar
                 android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleLarge"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="20dp"
-                android:indeterminateDrawable="@drawable/loader_homescreen">
+                android:indeterminateDrawable="@drawable/loader_homescreen"
+                android:visibility="gone"
+                style="?android:attr/progressBarStyleLarge">
             </ProgressBar>
         </LinearLayout>
 
@@ -210,7 +210,7 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center"
                 android:indeterminateDrawable="@drawable/loader_homescreen"
-                android:visibility="gone">
+                android:visibility="invisible">
             </ProgressBar>
             <Button
                 android:stateListAnimator="@animator/my_animated_button"
@@ -221,7 +221,6 @@
                 android:layout_margin="5dp"
                 android:background="@color/colorPrimary"
                 android:text="@string/export"
-                android:enabled="false"
                 android:textColor="@color/whiteColor"/>
         </LinearLayout>
 
@@ -232,11 +231,10 @@
             android:layout_height="match_parent"
             android:isScrollContainer="true"
             android:orientation="vertical"
-            android:weightSum="1"
-        >
+            android:weightSum="1">
             <de.codecrafters.tableview.SortableTableView
-                android:id="@+id/tableView"
                 xmlns:table="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/tableView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -247,8 +245,7 @@
                 table:tableView_columnCount="4"
                 table:tableView_headerColor="@color/transactionsHeader"
                 table:tableView_headerElevation="10"
-                table:theme="@style/AppTheme"
-            >
+                table:theme="@style/AppTheme">
             </de.codecrafters.tableview.SortableTableView>
             <Button
                 android:stateListAnimator="@animator/my_animated_button"
@@ -257,10 +254,7 @@
                 android:layout_height="35dp"
                 android:layout_gravity="bottom"
                 android:layout_weight="1"
-                android:text="@string/show_more"
-            />
+                android:text="@string/show_more" />
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

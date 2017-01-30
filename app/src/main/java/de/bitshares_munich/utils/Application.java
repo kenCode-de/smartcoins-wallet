@@ -24,15 +24,15 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
-import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.IAccount;
-import de.bitshares_munich.Interfaces.IAccountID;
-import de.bitshares_munich.Interfaces.IAccountObject;
-import de.bitshares_munich.Interfaces.IAssetObject;
-import de.bitshares_munich.Interfaces.IBalancesDelegate;
-import de.bitshares_munich.Interfaces.IExchangeRate;
-import de.bitshares_munich.Interfaces.IRelativeHistory;
-import de.bitshares_munich.Interfaces.ITransactionObject;
+import de.bitshares_munich.interfaces.AssetDelegate;
+import de.bitshares_munich.interfaces.IAccount;
+import de.bitshares_munich.interfaces.IAccountID;
+import de.bitshares_munich.interfaces.IAccountObject;
+import de.bitshares_munich.interfaces.IAssetObject;
+import de.bitshares_munich.interfaces.IBalancesDelegate;
+import de.bitshares_munich.interfaces.IExchangeRate;
+import de.bitshares_munich.interfaces.IRelativeHistory;
+import de.bitshares_munich.interfaces.ITransactionObject;
 import de.bitshares_munich.autobahn.WebSocketConnection;
 import de.bitshares_munich.autobahn.WebSocketException;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -197,11 +197,11 @@ public static int nodeIndex = 0;
 
     public static void stringTextRecievedWs(String s) {
                     try {
+                        Log.v(TAG,"< "+s);
                         JSONObject jsonObject = new JSONObject(s);
 
                         if (jsonObject.has("id")) {
                             int id = jsonObject.getInt("id");
-                            Log.d(TAG, "Got response. id: "+id);
                             if (id == 1) {
                                 if (s.contains("true")) {
                                     Application.send(context.getString(R.string.database_indentifier));
@@ -294,12 +294,10 @@ public static int nodeIndex = 0;
                                 }
                             } else if (id == 99) {
                                 if (iBalancesDelegate_assetsActivity != null) {
-                                    SupportMethods.testing("assests", 99, "account_name");
                                     iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 999) {
                                 if (iBalancesDelegate_assetsActivity != null) {
-                                    SupportMethods.testing("assests", 999, "account_name");
                                     iBalancesDelegate_assetsActivity.OnUpdate(s, id);
                                 }
                             } else if (id == 15) {
@@ -398,11 +396,9 @@ public static int nodeIndex = 0;
                         }
                     }else{
                         String element = (String) subArray.get(i);
-                        Log.d(TAG, "Could not cast string: "+element);
                     }
                 }
                 if(rawBlockId.equals("")) {
-                    Log.w(TAG,"Could not process data");
                     return blockHead;
                 }
                 // Setting block number
@@ -428,11 +424,12 @@ public static int nodeIndex = 0;
 
     //WebSocketConnection
 
-    public static void send(String message)
-    {
-        if (mIsConnected)
-        {
+    public static void send(String message) {
+        if (mIsConnected) {
+            Log.d(TAG,"> "+message);
             mConnection.sendTextMessage(message);
+        }else{
+            Log.w(TAG, "Not sending message: "+message);
         }
     }
 

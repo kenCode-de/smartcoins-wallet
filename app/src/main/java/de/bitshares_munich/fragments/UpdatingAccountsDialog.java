@@ -21,7 +21,7 @@ import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.List;
 
-import de.bitshares_munich.Interfaces.UpdatedAccountListener;
+import de.bitshares_munich.interfaces.UpdatedAccountListener;
 import de.bitshares_munich.smartcoinswallet.R;
 
 /**

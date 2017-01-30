@@ -25,52 +25,48 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import de.bitshares_munich.Interfaces.OnClickListView;
+import de.bitshares_munich.interfaces.ContactSelectionListener;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
  * Created by afnan on 7/5/16.
  */
-public class SendScreenListViewActivity extends BaseAdapter {
-    ArrayList<ContactListAdapter.ListviewContactItem> listContact;
-    Context context;
-    OnClickListView onClickListView;
-
+public class ContactListDialogAdapter extends BaseAdapter {
+    public final String TAG = this.getClass().getName();
+    private ArrayList<ContactListAdapter.ListviewContactItem> listContact;
+    private Context mContext;
+    private ContactSelectionListener mClickListener;
     private LayoutInflater mInflater;
-    TinyDB tinyDB;
-    public SendScreenListViewActivity(Context _context, OnClickListView _onClickListView) {
-        context = _context;
-        onClickListView = _onClickListView;
-        tinyDB = new TinyDB(context);
-        mInflater = LayoutInflater.from(context);
-        listContact = GetlistContact();
-    }
+    private TinyDB tinyDB;
 
+    public ContactListDialogAdapter(Context context, ContactSelectionListener onClickListView) {
+        this.mContext = context;
+        mClickListener = onClickListView;
+        tinyDB = new TinyDB(this.mContext);
+        mInflater = LayoutInflater.from(this.mContext);
+        listContact = getContactList();
+    }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return listContact.size();
     }
 
     @Override
     public Object getItem(int arg0) {
-        // TODO Auto-generated method stub
         return listContact.get(arg0);
     }
 
     @Override
     public long getItemId(int arg0) {
-        // TODO Auto-generated method stub
         return arg0;
     }
 
-    private ArrayList<ContactListAdapter.ListviewContactItem> GetlistContact(){
+    private ArrayList<ContactListAdapter.ListviewContactItem> getContactList(){
         ArrayList<ContactListAdapter.ListviewContactItem> contactlist = new ArrayList<ContactListAdapter.ListviewContactItem>();
 
-        ContactListAdapter.ListviewContactItem contact = new ContactListAdapter.ListviewContactItem();
+        ContactListAdapter.ListviewContactItem contact;
 
         ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         for (int i = 0; i < contacts.size(); i++) {
@@ -88,15 +84,14 @@ public class SendScreenListViewActivity extends BaseAdapter {
 
         return contactlist;
     }
-    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem>
-    {
+    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem> {
         public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
             return left.account.toLowerCase().compareTo(right.account.toLowerCase());
         }
     }
 
     public View getView(final int position, View convertView, final ViewGroup parent) {
-
+        Log.d(TAG, "getView. position: "+position+", is image: "+listContact.get(position).isImage);
         if(listContact.get(position).isImage) {
             convertView = mInflater.inflate(R.layout.listview_send_screen_imageview, null);
         }else {
@@ -117,7 +112,7 @@ public class SendScreenListViewActivity extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickListView.isClicked(accountnm);
+                mClickListener.onContactSelected(accountnm);
             }
         });
 
@@ -147,14 +142,13 @@ public class SendScreenListViewActivity extends BaseAdapter {
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
-                SupportMethods.testing("alpha",e.getMessage(),"error");
             }
             return mIcon11;
         }
 
         protected void onPostExecute(Bitmap result) {
             if(result==null) {
-                Bitmap corner = BitmapFactory.decodeResource(context.getResources(), R.drawable.gravtr);
+                Bitmap corner = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.gravtr);
                 bmImage.setImageBitmap(getRoundedCornerBitmap(corner));
             }
             else {

@@ -1,8 +1,6 @@
 package de.bitsharesmunich.graphenej.api;
 
-import android.util.Log;
-
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
@@ -45,24 +43,12 @@ public class GetAssets extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        try {
-            String response = frame.getPayloadText();
-            Gson gson = new Gson();
-
-            Type getAssetResponse = new TypeToken<WitnessResponse<ArrayList<Asset>>>() {
-            }.getType();
-            WitnessResponse<ArrayList<Asset>> witnessResponse = gson.fromJson(response, getAssetResponse);
-
-            if (witnessResponse.error != null) {
-                this.mListener.onError(witnessResponse.error);
-            } else {
-                this.mListener.onSuccess(witnessResponse);
-            }
-        } catch (Exception e) {
-            Log.d("henry", "exception e " + e.getMessage());
-            e.printStackTrace();
-        }
-
+        String response = frame.getPayloadText();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Type LookupAssetSymbolsResponse = new TypeToken<WitnessResponse<List<Asset>>>(){}.getType();
+        gsonBuilder.registerTypeAdapter(Asset.class, new Asset.AssetDeserializer());
+        WitnessResponse<List<Asset>> witnessResponse = gsonBuilder.create().fromJson(response, LookupAssetSymbolsResponse);
+        mListener.onSuccess(witnessResponse);
         websocket.disconnect();
     }
 

@@ -3,9 +3,11 @@ package de.bitshares_munich.database;
 import android.provider.BaseColumns;
 
 /**
+ * Database contract class. Here we define table and column names as constants
+ * grouped in their own public static classes.
+ *
  * Created by nelson on 12/13/16.
  */
-
 public class SCWallDatabaseContract {
 
     private SCWallDatabaseContract(){}
