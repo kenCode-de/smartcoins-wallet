@@ -378,8 +378,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
                 if (!validReceiver && !validating) {
                     if (etReceiverAccount.getText().length() > 0) {
                         myLowerCaseTimer.cancel();
@@ -388,6 +386,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         myAccountNameValidationTimer.start();
                     }
                 }
+                Log.d(TAG,"validateSend: "+validateSend()+", validReceiver: "+validReceiver);
                 //Do something after 100ms
                 if (validateSend() && validReceiver) {
                     btnSend.setEnabled(true);
@@ -395,11 +394,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
 
                 } else {
-                    btnSend.setEnabled(false);
+//                    btnSend.setEnabled(false);
                     btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.gray));
                     sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
                 }
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 200);
             }
         }, 100);
 
