@@ -3,10 +3,13 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -104,25 +107,46 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
         pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
         Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
         final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < accountDetails.size(); i++) {
-                    if (accountDetails.get(i).isSelected) {
-                        if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
-                            Log.d(TAG, "pin code matches");
-                            pinDialog.cancel();
-                            if(mLockListener != null){
-                                mLockListener.onLockReleased();
+        final TextView errorPin = (TextView) pinDialog.findViewById(R.id.warning);
+        //Listening to changes
+        etPin.addTextChangedListener(new TextWatcher() {
+
+            //When the user's changes and it reaches a 6 character string, it auto submits
+            public void onTextChanged(CharSequence c, int start, int before, int count) {
+                if(etPin.getText().length() == 6){
+                    for (int i = 0; i < accountDetails.size(); i++) {
+                        if (accountDetails.get(i).isSelected) {
+                            if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
+                                Log.d(TAG, "pin code matches");
+                                pinDialog.cancel();
+                                if(mLockListener != null){
+                                    mLockListener.onLockReleased();
+                                }
+                                break;
+                            }else{
+                                errorPin.setText(getResources().getString(R.string.invalid_pin));
+                                Toast.makeText(LockableActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
                             }
-                            break;
-                        }else{
-                            Toast.makeText(LockableActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
+                //If delete one character after entered an invalid PIN remove the warning content
+                else if( (etPin.getText().length() == 5) && (before ==1) ){
+                    errorPin.setText("");
+                }
             }
+
+            public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+                // this space intentionally left blank
+            }
+
+            public void afterTextChanged(Editable c) {
+                // this one too
+            }
+
+
         });
+
         pinDialog.setCancelable(false);
         pinDialog.show();
     }

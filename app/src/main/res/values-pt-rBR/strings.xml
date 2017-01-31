@@ -66,12 +66,12 @@
 <string name="checkbox_donate_old">Doe 2 BTS para os desenvolvedores de apoio no Bitshares Munique</string>
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
 <string name="imported_created_accounts">Importadas / criou contas</string>
-<string name="register_new_account">Registar novos CONTA</string>
+<string name="register_new_account">Registrar nova CONTA</string>
 <string name="secure_pin">EDIT PIN</string>
 <string name="export">Exportar</string>
 <string name="show_more">Mostre mais</string>
-<string name="share_text">Eu encontrei este Wallet Smartcoins impressionante que lhe permite enviar e receber Smartcoins. Confira! Saúde</string>
-<string name="share_info">Convidar um ou mais dos seus amigos para experimentar o Wallet Smartcoins! Os endereços de email não são salvas ou recolhidos por qualquer pessoa pelo que a sua privacidade está garantida.</string>
+<string name="share_text">Eu encontrei esse impressionante Wallet Smartcoins que lhe permite enviar e receber Smartcoins. Confira! Abraços</string>
+<string name="share_info">Convidar um ou mais dos seus amigos para experimentar o Wallet Smartcoins! Os endereços de email não são salvos ou recolhidos por qualquer pessoa pelo que a sua privacidade está garantida.</string>
 <string name="share_subject">Carteira impressionante Smartcoins</string>
 <string name="share_heading">compartilhar com um amigo</string>
 <string name="share_btn_text">Aplicação de email ABERTO</string>
@@ -155,7 +155,7 @@
 <string name="str_trade_not_available">Comercialização não disponível</string>
     <string name="preferred_lang">língua preferida</string>
     <string name="got_it">Entendi</string>
-    <string name="upgrade_to_ltm">Actualiza para o LTM</string>
+    <string name="upgrade_to_ltm">Atualizar para versão LTM</string>
     <string formatted="false" name="help_message">Obter 80% Cashback em Taxas! Membros durante a vida (LTM) obter 80% de desconto em cada taxa de transação que eles pagam, e qualificar-se para ganhar remessa renda dos usuários que se inscreverem com ou se referem à rede. Uma sociedade da vida está agora sob 20000 BTS!</string>
     <string name="txt_yes">sim</string>
     <string name="txt_no">Não</string>

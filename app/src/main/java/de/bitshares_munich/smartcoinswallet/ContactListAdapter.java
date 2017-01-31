@@ -216,7 +216,6 @@ public class ContactListAdapter extends BaseAdapter {
         String alertMsg =  context.getString(R.string.delete);
         String accountName = listContact.get(position).GetAccount();
         alertMsg = alertMsg + " \"" + accountName + "\" ?";
-        Log.e("Error", "PORRA " + alertMsg);
         textView.setText(alertMsg);
 
         Log.e("Error", alertMsg);
