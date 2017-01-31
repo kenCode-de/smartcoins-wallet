@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.util.Locale;
 
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by qasim on 5/9/16.
@@ -22,6 +26,13 @@ public class BaseActivity extends LockableActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(BuildConfig.USE_CRASHLYTICS){
+            Fabric.with(this, new Crashlytics());
+            Log.d(TAG, "Using crashlytics");
+        }else{
+            Log.d(TAG, "Not using crashlytics");
+        }
+
 
         String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language), "");
         if(!language.equals(""))
