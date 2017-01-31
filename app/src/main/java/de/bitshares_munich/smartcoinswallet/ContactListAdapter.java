@@ -205,33 +205,40 @@ public class ContactListAdapter extends BaseAdapter {
     }
 
     public void showDialog(final int position){
-                final Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.alert_delete_dialog);
-                Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-                Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-                TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        btnDone.setText(context.getString(R.string.delete));
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
+
+
         String alertMsg =  context.getString(R.string.delete);
         String accountName = listContact.get(position).GetAccount();
-            alertMsg = alertMsg + " \"" + accountName + "\" ?";
+        alertMsg = alertMsg + " \"" + accountName + "\" ?";
+        Log.e("Error", "PORRA " + alertMsg);
         textView.setText(alertMsg);
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listContact.remove(position);
+        Log.e("Error", alertMsg);
 
-                        removeFromlist(position);
-                        notifyDataSetChanged();
-                        dialog.cancel();
-                    }
-                });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                      public void onClick(View v) {
-                            dialog.cancel();
-                         }
-                   });
-                dialog.show();
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listContact.remove(position);
+
+                removeFromlist(position);
+                notifyDataSetChanged();
+                dialog.cancel();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
 
 
     }

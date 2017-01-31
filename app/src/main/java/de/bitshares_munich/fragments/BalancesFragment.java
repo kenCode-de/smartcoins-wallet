@@ -697,7 +697,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
         alertMsg.setText(getString(R.string.help_message));
