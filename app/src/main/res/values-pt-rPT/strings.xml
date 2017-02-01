@@ -38,7 +38,9 @@
 <string name="please_enter_old_6_digit_pin">Por favor, indique velho pino 6 dígitos</string>
 <string name="please_enter_6_digit_pin">Por favor, indique 6 dígitos pin</string>
 <string name="please_enter_6_digit_pin_confirm">Por favor, indique a confirmação pino 6 dígitos</string>
-<string name="mismatch_pin">pin incompatibilidade</string>
+    <string name="pin_number_warning">O pin deve possuir no mínimo 6 dígitos</string>
+    <string name="old_pin_number_warning">O pin anterior possui no mínimo 6 dígitos</string>
+<string name="mismatch_pin">pin incompatível</string>
 <string name="txt_brain_key">Brainkey</string>
 <string name="txt_brain_key_info">Imprima esta fora, ou anotá-la. Qualquer pessoa com acesso a sua chave de recuperação terá acesso aos fundos dentro desta carteira.</string>
 <string name="create_wallet">CRIAR CARTEIRA</string>
