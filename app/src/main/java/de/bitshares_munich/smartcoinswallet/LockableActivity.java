@@ -113,7 +113,7 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
 
             //When the user's changes and it reaches a 6 character string, it auto submits
             public void onTextChanged(CharSequence c, int start, int before, int count) {
-                if(etPin.getText().length() == 6){
+                if(etPin.getText().length() >= 6){
                     for (int i = 0; i < accountDetails.size(); i++) {
                         if (accountDetails.get(i).isSelected) {
                             if (etPin.getText().toString().equals(accountDetails.get(i).pinCode)) {
@@ -123,16 +123,9 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
                                     mLockListener.onLockReleased();
                                 }
                                 break;
-                            }else{
-                                errorPin.setText(getResources().getString(R.string.invalid_pin));
-                                Toast.makeText(LockableActivity.this, getResources().getString(R.string.invalid_pin), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
-                }
-                //If delete one character after entered an invalid PIN remove the warning content
-                else if( (etPin.getText().length() == 5) && (before ==1) ){
-                    errorPin.setText("");
                 }
             }
 

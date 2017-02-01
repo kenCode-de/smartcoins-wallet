@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
@@ -206,6 +207,7 @@ public class ContactListAdapter extends BaseAdapter {
 
     public void showDialog(final int position){
         final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alert_confirmation_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         btnDone.setText(context.getString(R.string.delete));
