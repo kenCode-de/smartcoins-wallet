@@ -14,14 +14,14 @@
     <EditText
         android:id="@+id/etPin"
         android:layout_width="250dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:background="@drawable/edittext_bg"
         android:inputType="number"
         android:maxLines="1"
         android:singleLine="true"
-        android:maxLength="6" />
+        android:gravity="center_vertical|center_horizontal" />
 
     <TextView
         android:layout_width="match_parent"
