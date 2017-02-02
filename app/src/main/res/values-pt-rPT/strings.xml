@@ -38,7 +38,9 @@
 <string name="please_enter_old_6_digit_pin">Por favor, indique velho pino 6 dígitos</string>
 <string name="please_enter_6_digit_pin">Por favor, indique 6 dígitos pin</string>
 <string name="please_enter_6_digit_pin_confirm">Por favor, indique a confirmação pino 6 dígitos</string>
-<string name="mismatch_pin">pin incompatibilidade</string>
+    <string name="pin_number_warning">O pin deve possuir no mínimo 6 dígitos</string>
+    <string name="old_pin_number_warning">O pin anterior possui no mínimo 6 dígitos</string>
+<string name="mismatch_pin">pin incompatível</string>
 <string name="txt_brain_key">Brainkey</string>
 <string name="txt_brain_key_info">Imprima esta fora, ou anotá-la. Qualquer pessoa com acesso a sua chave de recuperação terá acesso aos fundos dentro desta carteira.</string>
 <string name="create_wallet">CRIAR CARTEIRA</string>
@@ -128,12 +130,13 @@
 <string name="requested">Requeridos</string>
 <string name="failed_transaction">Transaction Failed</string>
 
+<string name="delete">Deletar</string>
 <string name="str_invalid_amount">Por favor, indique valor válido</string>
 <string name="str_invalid_receiver">Por favor, indique válida Para dar conta</string>
 <string name="str_transaction_failed">Falha na transação</string>
 <string name="please_enter_valid_amount">Por favor, indique valor válido</string>
 <string name="select_timezone">Escolha um fuso horário</string>
-<string name="old_pin">PIN de 6 dígitos de idade</string>
+<string name="old_pin">PIN de 6 dígitos anterior</string>
 <string name="pin_created_successfully">PIN criado com sucesso</string>
 <string name="edit_pin">Editar PIN</string>
 <string name="txt_edit">SALVAR</string>
@@ -161,7 +164,7 @@
     <string name="txt_confirmation">Confirmação</string>
     <string name="txt_confirmation_msg">Você tem certeza?</string>
     <string name="txt_folder_name">Smartcoins</string>
-    <string name="txt_folder_created">pasta Criada</string>
+    <string name="txt_folder_created">Pasta Criada</string>
     <string name="upgrade_failed">atualização com falha</string>
     <string name="upgrading">Atualizando ...</string>
     <string name="import_new_account">CONTA DE IMPORTAÇÃO</string>

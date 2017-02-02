@@ -122,10 +122,12 @@ public class BrainkeyActivity extends BaseActivity {
         } else {
             String trimmedBrainKey = etBrainKey.getText().toString().trim();
             etBrainKey.setText(trimmedBrainKey);
-            if (etPin.getText().length() < 5) {
+            if (etPin.getText().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+            }
+            //PIN must have minimum of 6-digit
+            else if (etPin.getText().length() < 6) {
+                Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
             } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {

@@ -33,12 +33,13 @@
     <string name="pref_agreement">pref_agreement</string>
     <string name="cancel_and_exit">Cancel and Exit</string>
     <string name="i_agree">I Agree</string>
-    <string name="kindly_create_account">Kindly create account</string>
+    <string name="kindly_create_account">Kindly create an account name</string>
     <string name="please_enter_old_6_digit_pin">Please enter old 6-digit pin</string>
     <string name="please_enter_6_digit_pin">Please enter 6-digit pin</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter 6-digit pin confirmation</string>
     <string name="pin_number_request">Please enter the pin number used to encode this backup file</string>
     <string name="pin_number_warning">The pin number must be at least 6 digits</string>
+    <string name="old_pin_number_warning">The old pin number must be at least 6 digits</string>
     <string name="mismatch_pin">mismatch pin</string>
     <string name="error_invalid_account">Invalid account</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
