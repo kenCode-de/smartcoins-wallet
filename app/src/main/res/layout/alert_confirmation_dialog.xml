@@ -42,6 +42,7 @@
             android:text="@string/cancel"
             android:stateListAnimator="@animator/my_animated_button"
             android:textColor="@color/white"/>
+
         <Button
             android:id="@+id/btnDone"
             android:layout_width="wrap_content"
