@@ -127,6 +127,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     webSocketCallHelper myWebSocketHelper;
 
+    /* Agreement License Dialog */
+    private Dialog mLicenseDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -290,17 +293,17 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void onStart() {
         super.onStart();
-        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) {
-            showDialogLiscence();
+        if ( (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && ( mLicenseDialog == null || !mLicenseDialog.isShowing() )  ) {
+            showDialogLicence();
         }
     }
 
-    private void showDialogLiscence() {
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
-        dialog.setTitle(R.string.agreement);
-        dialog.setContentView(R.layout.custom_dialog_liscence);
-        Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
-        WebView webView = (WebView) dialog.findViewById(R.id.webviewLisense);
+    private void showDialogLicence() {
+        mLicenseDialog = new Dialog(this, R.style.stylishDialog);
+        mLicenseDialog.setTitle(R.string.agreement);
+        mLicenseDialog.setContentView(R.layout.custom_dialog_licence);
+        Button dialog_btn_cancel = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_cancel);
+        WebView webView = (WebView) mLicenseDialog.findViewById(R.id.webviewLisense);
         String html = getString(R.string.lisence_html);
         webView.loadData(html, "text/html", "UTF-8");
 
@@ -312,17 +315,17 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             }
         });
-        Button dialog_btn_agree = (Button) dialog.findViewById(R.id.dialog_btn_agree);
+        Button dialog_btn_agree = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_agree);
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
-                dialog.cancel();
+                mLicenseDialog.cancel();
             }
         });
-        dialog.setCancelable(false);
+        mLicenseDialog.setCancelable(false);
 
-        dialog.show();
+        mLicenseDialog.show();
     }
 
     private void validationAccountName() {
