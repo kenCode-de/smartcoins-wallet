@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 
 public class ExistingAccountActivity extends BaseActivity {
 
@@ -23,14 +22,12 @@ public class ExistingAccountActivity extends BaseActivity {
     @OnClick(R.id.tvImportBrainKey)
     public void importBrainKey(TextView textView) {
         Intent intent=new Intent(getApplicationContext(),BrainkeyActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
     @OnClick(R.id.tvBackup)
     public void importBackup(TextView textView) {
         Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 }

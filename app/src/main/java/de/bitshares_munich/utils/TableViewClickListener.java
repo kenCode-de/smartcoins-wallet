@@ -7,7 +7,6 @@ import de.bitsharesmunich.graphenej.TransferOperation;
 
 import java.util.Date;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -20,11 +19,9 @@ import de.codecrafters.tableview.listeners.TableDataClickListener;
 public class TableViewClickListener implements TableDataClickListener<HistoricalTransferEntry> {
 
     private Context myContext;
-    private InternalMovementListener mListener;
 
-    public TableViewClickListener(Context _context, InternalMovementListener listener) {
+    public TableViewClickListener(Context _context) {
         this.myContext = _context;
-        this.mListener = listener;
     }
 
     @Override
@@ -44,7 +41,6 @@ public class TableViewClickListener implements TableDataClickListener<Historical
             intent.putExtra("From", operation.getFrom().getAccountName());
             //TODO: Fix this!
             intent.putExtra("Sent", true);
-            mListener.onInternalAppMove();
 //            myContext.startActivity(intent);
         }
     }

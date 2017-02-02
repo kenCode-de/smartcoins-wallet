@@ -336,7 +336,7 @@ public class Helper {
         else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
             myLocale = Locale.SIMPLIFIED_CHINESE;
         }
-        else if (lang.equalsIgnoreCase("pt-rBR")) {
+        else if (lang.equalsIgnoreCase("pt-rBR") || lang.equalsIgnoreCase("pt")) {
             myLocale = new Locale("pt","BR");
         }
         else if (lang.equalsIgnoreCase("pt-rPT")) {

@@ -64,7 +64,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
@@ -351,7 +350,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void onClickSecurePinbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -1011,7 +1009,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
-            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
@@ -1021,7 +1018,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 

@@ -91,7 +91,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.AssetDelegate;
 import de.bitshares_munich.Interfaces.ISound;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.adapters.TransactionsTableAdapter;
 import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
@@ -472,7 +471,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
         progressDialog = new ProgressDialog(getActivity());
 
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
-        transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -653,7 +651,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -677,7 +674,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ((InternalMovementListener) getActivity()).onInternalAppMove();
                     startActivity(intent);
                 }
 
@@ -776,7 +772,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound 
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    ((InternalMovementListener)getActivity()).onInternalAppMove();
                     startActivity(intent);
                 }
 

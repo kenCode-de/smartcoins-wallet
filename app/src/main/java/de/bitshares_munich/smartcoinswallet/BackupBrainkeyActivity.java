@@ -23,7 +23,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.Interfaces.BackupBinDelegate;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Helper;
@@ -110,7 +109,6 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
             Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((InternalMovementListener)this).onInternalAppMove();
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.please_backup_your_brainkey), Toast.LENGTH_SHORT).show();

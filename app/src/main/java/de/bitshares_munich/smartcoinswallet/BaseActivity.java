@@ -22,9 +22,12 @@ public class BaseActivity extends LockableActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //If app language preferences aren't set, get language device language
         String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
         if(!language.equals(""))
-        Helper.setLocale(language,getResources());
+        {
+            Helper.setLocale(language,getResources());
+        }
         else {
             language = Locale.getDefault().getLanguage();
             Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language) , language);

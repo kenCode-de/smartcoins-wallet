@@ -45,7 +45,6 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.Interfaces.IAccount;
 import de.bitshares_munich.Interfaces.IAccountID;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.utils.Application;
@@ -526,7 +525,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnClick(R.id.tvExistingAccount)
     public void existingAccount(TextView textView) {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -602,6 +600,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.account_id = account_id;
         accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
+        //Success (Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
+
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails, getApplicationContext(), this);
 
@@ -618,7 +620,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
 
         Application.timeStamp();
