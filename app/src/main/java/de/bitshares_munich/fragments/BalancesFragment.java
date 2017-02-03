@@ -72,16 +72,15 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.interfaces.AssetDelegate;
-import de.bitshares_munich.interfaces.ISound;
-import de.bitshares_munich.interfaces.InternalMovementListener;
-import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.adapters.TransferAmountComparator;
 import de.bitshares_munich.adapters.TransferDateComparator;
 import de.bitshares_munich.adapters.TransferSendReceiveComparator;
 import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.interfaces.AssetDelegate;
+import de.bitshares_munich.interfaces.ISound;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.BalanceItem;
@@ -106,7 +105,6 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PdfGeneratorTask;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
-import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.graphenej.Address;
@@ -910,7 +908,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         progressDialog = new ProgressDialog(getActivity());
 
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
-        transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -1084,7 +1081,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -1107,7 +1103,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener) getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -1203,7 +1198,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 

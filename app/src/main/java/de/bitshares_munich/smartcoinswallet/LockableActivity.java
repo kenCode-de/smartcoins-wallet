@@ -1,23 +1,19 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.interfaces.LockListener;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.TinyDB;
 
 /**
@@ -32,7 +28,7 @@ import de.bitshares_munich.utils.TinyDB;
  *
  * Created by nelson on 12/21/16.
  */
-public abstract class LockableActivity extends AppCompatActivity implements InternalMovementListener {
+public abstract class LockableActivity extends AppCompatActivity {
     private final String TAG = "LockableActivity";
 
     /* Pin pinDialog */
@@ -41,8 +37,8 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
     /* Reference to TinyDB, which is basically a wrapper around shared preferences */
     private TinyDB tinyDB;
 
-    /* Internal attribute used to keep track of the activity state */
-    private boolean mInternalMove = false;
+    //Reference to the Application
+    private Application app;
 
     /**
      * This will inform any listener of the 'lock release' event.
@@ -50,56 +46,24 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
     private LockListener mLockListener;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        tinyDB = new TinyDB(getApplicationContext());
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(!mInternalMove){
-            /**
-             * We want to show the pin dialog if this restart was not caused by
-             * an intentional internal app move.
-             */
-            if(this.hasAccounts()){
-                /*
-                * It only makes sense to show the pin dialog if there are accounts.
-                */
-                showDialogPin();
-            }
+    protected void onResume() {
+        super.onResume();
+        if(tinyDB == null){
+            tinyDB = new TinyDB(getApplicationContext());
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(!mInternalMove){
-            /**
-             * We might want to display the pin dialog if this onStart call is
-             * not a result of an intentional internal app movement.
-             */
-            if(pinDialog == null || !pinDialog.isShowing()){
-                /**
-                 * The dialog must already be up, because onStart is called after
-                 * onRestart. Here we just check for that.
-                 */
-                Bundle extras = getIntent().getExtras();
-                if(extras != null){
-                    boolean showPin = extras.getBoolean(SplashActivity.KEY_ASK_FOR_PIN);
-                    if(showPin){
-                        showDialogPin();
-                    }
-                }
-            }
+        app = (Application) getApplicationContext();
+        //Lock only if timer set the lock t Application and there is any logged account
+        ArrayList<AccountDetails> walletAccountList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //Show the PIn dialog (No need to check if it is already visible because onPause events always dismiss the dialog)
+        if( (app.getLock()) && (walletAccountList.size() > 0) ){
+            showDialogPin();
         }
-        mInternalMove = false;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //Dismiss the PIN dialog when the Activity is paused (to avoid activity memory leak)
         if(pinDialog != null && pinDialog.isShowing()){
             pinDialog.dismiss();
         }
@@ -131,6 +95,9 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
                                 if(mLockListener != null){
                                     mLockListener.onLockReleased();
                                 }
+                                app = (Application) getApplicationContext();
+                                //Set global context to unlocked
+                                app.setLock(false);
                                 break;
                             }
                         }
@@ -170,12 +137,5 @@ public abstract class LockableActivity extends AppCompatActivity implements Inte
         return this.mLockListener;
     }
 
-    /**
-     * Method used to keep state of this activity and prevent the pin dialog from showing up
-     * once the user comes back to it from internal activity moves.
-     */
-    @Override
-    public void onInternalAppMove() {
-        mInternalMove = true;
-    }
+
 }

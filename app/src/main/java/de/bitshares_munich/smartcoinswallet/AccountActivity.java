@@ -44,7 +44,6 @@ import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.interfaces.IAccountID;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.utils.Application;
@@ -127,7 +126,11 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     webSocketCallHelper myWebSocketHelper;
 
+
     private Handler handler;
+
+    /* Agreement License Dialog */
+    private Dialog mLicenseDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,20 +293,30 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) {
-            showDialogLiscence();
+    public void onResume() {
+        super.onResume();
+        if ( (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && ( mLicenseDialog == null || !mLicenseDialog.isShowing() )  ) {
+            showDialogLicence();
         }
     }
 
-    private void showDialogLiscence() {
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
-        dialog.setTitle(R.string.agreement);
-        dialog.setContentView(R.layout.custom_dialog_liscence);
-        Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
-        WebView webView = (WebView) dialog.findViewById(R.id.webviewLisense);
-        String html = getString(R.string.lisence_html);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //Dismiss the License agreement dialog when the Activity is paused (to avoid activity memory leak)
+        if(mLicenseDialog != null && mLicenseDialog.isShowing()){
+            mLicenseDialog.dismiss();
+        }
+        mLicenseDialog = null;
+    }
+
+    private void showDialogLicence() {
+        mLicenseDialog = new Dialog(this, R.style.stylishDialog);
+        mLicenseDialog.setTitle(R.string.agreement);
+        mLicenseDialog.setContentView(R.layout.custom_dialog_licence);
+        Button dialog_btn_cancel = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_cancel);
+        WebView webView = (WebView) mLicenseDialog.findViewById(R.id.webviewLicense);
+        String html = getString(R.string.licence_html);
         webView.loadData(html, "text/html", "UTF-8");
 
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -314,17 +327,17 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             }
         });
-        Button dialog_btn_agree = (Button) dialog.findViewById(R.id.dialog_btn_agree);
+        Button dialog_btn_agree = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_agree);
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
-                dialog.cancel();
+                mLicenseDialog.cancel();
             }
         });
-        dialog.setCancelable(false);
+        mLicenseDialog.setCancelable(false);
 
-        dialog.show();
+        mLicenseDialog.show();
     }
 
     private void validationAccountName() {
@@ -530,7 +543,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @OnClick(R.id.tvExistingAccount)
     public void existingAccount(Button button) {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -606,6 +618,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.account_id = account_id;
         accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
+        //Success (Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
+
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails, getApplicationContext(), this);
 
@@ -622,7 +638,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
 
         Application.timeStamp();
