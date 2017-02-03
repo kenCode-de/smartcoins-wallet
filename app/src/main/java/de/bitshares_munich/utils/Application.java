@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -36,6 +37,7 @@ import de.bitshares_munich.interfaces.IRelativeHistory;
 import de.bitshares_munich.interfaces.ITransactionObject;
 import de.bitshares_munich.autobahn.WebSocketConnection;
 import de.bitshares_munich.autobahn.WebSocketException;
+import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.R;
 
 /**
@@ -148,6 +150,49 @@ public class Application extends android.app.Application implements de.bitshares
         * better estimate when the user has left the app and it is safe to lock the app or not
         */
         registerActivityLifecycleCallbacks(this);
+
+
+        //SETUP LOCALE AND DEFAULT PREFERENCES
+
+        //Setup Country
+        String country = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country), "");
+        //If not at preferences yet it will setup device country or constant default
+        //(It is expected that this "if" will be executed only one time, at first start up)
+        if (country.equals("")) {
+            Log.w(TAG, "Could not resolve country information, trying with the telephony manager");
+            //If the locale mechanism fails to give us a country, we try
+            //to get it from the TelephonyManager.
+            country = Helper.getDeviceCountry(getApplicationContext());
+            //If device don't respond with any country set it to the default (app constant)
+            if (country == null || country.equals("")) {
+                Log.w(TAG, "Could not resolve country information again, falling back to the default");
+                country = Constants.DEFAULT_COUNTRY_CODE;
+            }
+        }
+        Helper.setCountry(getApplicationContext(), country);
+
+        //Setup Language
+        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+        //If app language preferences aren't set, set default as device/os language (telephony language)
+        //(It is expected that this "if" will be executed only one time, at first start up)
+        if (language.equals("")) {
+            language = Locale.getDefault().getLanguage();
+            //Just checking if we still don't have a language setup in the locale, in which
+            //case we fallback to english as the default (the app constant .
+            if (language.equals("")) {
+                Log.w(TAG, "Could not resolve language information, falling back to english");
+                language = Constants.DEFAULT_LANGUAGE_CODE;
+            }
+        }
+        Helper.setLanguage(getApplicationContext(), language);
+
+
+        //Check automatically close app behavior (after 3 min) is set and if not, put true by default
+        Boolean closeAppPref = Helper.checkSharedPref(getApplicationContext(), "close_bitshare");
+        if (!closeAppPref) {
+            Helper.storeBoolianSharePref(getApplicationContext(), "close_bitshare", true);
+        }
+
 
         init();
         accountCreateInit();

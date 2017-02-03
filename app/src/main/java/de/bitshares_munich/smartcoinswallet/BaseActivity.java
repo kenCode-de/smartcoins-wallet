@@ -32,26 +32,6 @@ public class BaseActivity extends LockableActivity {
         }else{
             Log.d(TAG, "Not using crashlytics");
         }
-
-        //If app language preferences aren't set, get language device language
-        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-
-        if(!language.equals(""))
-        {
-            Helper.setLocale(language,getResources());
-        }
-        else {
-            language = Locale.getDefault().getLanguage();
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language) , language);
-            Helper.setLocale(language,getResources());
-        }
-        //Check automatically close app behavior (after 3 min) is set and if not, put true by default
-        Boolean closeAppPref = Helper.checkSharedPref(getApplicationContext(), "close_bitshare");
-        if(!closeAppPref)
-        {
-            Helper.storeBoolianSharePref(getApplicationContext(), "close_bitshare", true);
-        }
-
     }
 
     public void setBackButton(Boolean isBackButton) {

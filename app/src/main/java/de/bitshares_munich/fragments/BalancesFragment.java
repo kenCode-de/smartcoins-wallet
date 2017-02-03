@@ -823,48 +823,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         // Getting the system's configuration locale
         locale = getResources().getConfiguration().locale;
 
-        // Checking the app's configuration to override the system configuration
-        // country locale if it is other than an empty string.
-        String configurationCountry = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country), "");
-        if(!configurationCountry.equals("")){
-            locale = new Locale.Builder().setLocale(locale).setRegion(configurationCountry).build();
-        }
-
-        // Checking the app's configuration to override the system configuration
-        // language locale if it is other than an empty string.
-        language = Helper.fetchStringSharePref(getActivity(), getString(R.string.pref_language), "");
-        if(!language.equals("")){
-            locale = new Locale.Builder().setLocale(locale).setLanguage(language).build();
-        }
-
-        /**
-         * Just checking if we still don't have a country setup in the locale, in which case
-         * we try the telephony manager and then if that too fails we just setup Germany as
-         * the default country.
-         */
-        String localeCountry = locale.getCountry();
-        if(localeCountry.equals("")){
-            Log.w(TAG, "Could not resolve country information, trying with the telephony manager");
-            // If the locale mechanism fails to give us a country, we try
-            // to get it from the TelephonyManager.
-            String telephonyCountry = Helper.getUserCountry(getContext());
-            if(telephonyCountry == null || telephonyCountry.equals("")){
-                Log.w(TAG,"Could not resolve country information again, falling back to the default");
-                telephonyCountry = Constants.DEFAULT_COUNTRY_CODE;
-            }
-            locale = new Locale.Builder().setRegion(telephonyCountry).build();
-        }
-
-        /**
-         * Just checking if we still don't have a language setup in the locale, in which
-         * case we fallback to english as the default.
-         */
-        String localeLanguage = locale.getLanguage();
-        if(localeLanguage.equals("")){
-            Log.w(TAG,"Could not resolve language information, falling back to english");
-            locale = new Locale.Builder().setLocale(locale).setLanguage(Constants.DEFAULT_LANGUAGE_CODE).build();
-        }
-
         this.mSmartcoin = Smartcoins.getMap().get(locale.getCountry());
         HashMap<String, Asset> knownAssets = database.getAssetMap();
         if(!knownAssets.containsKey(this.mSmartcoin.getObjectId())){
