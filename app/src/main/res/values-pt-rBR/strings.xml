@@ -63,7 +63,7 @@
 <string name="check_for_updates">Verificar atualizações na inicialização</string>
 <string name="automatically_install">instalar automaticamente versão principal</string>
 <string name="require_pin">Exigir PIN / padrão para enviar fundos e vista memos</string>
-<string name="close_bitshare">Fechar automaticamente Wallet Bitshares após 3 minutos de inatividade</string>
+<string name="close_bitshare">Fechar automaticamente o Smartcoins Wallet após 3 minutos de inatividade</string>
 <string name="always_donate">Sempre Doe 2 BTS para os desenvolvedores de Suporte em BitShares Munich (Munique bitshares)</string>
 <string name="hide_donations">Esconder Doações de lista Transações homescreen</string>
 <string name="backup">.bin BACKUP</string>

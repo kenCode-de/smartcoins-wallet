@@ -126,6 +126,14 @@ public class Helper {
         return "";
     }
 
+    /*
+     * Checks whether the preferences contains a preference.
+     */
+    public static Boolean checkSharedPref(Context context, String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.contains(key);
+    }
+
     public static void storeStringSharePref(Context context, String key, String value) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
