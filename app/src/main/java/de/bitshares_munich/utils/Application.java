@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -40,7 +41,8 @@ import de.bitshares_munich.smartcoinswallet.R;
 /**
  * Created by qasim on 5/9/16.
  */
-public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver {
+public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver,
+        android.app.Application.ActivityLifecycleCallbacks {
     private static String TAG = "Application";
     public static Context context;
     static IAccount iAccount;
@@ -59,6 +61,47 @@ public class Application extends android.app.Application implements de.bitshares
     public static long refBlockPrefix;
     public static long blockTime;
     private static Activity currentActivity;
+
+    /* Internal attribute used to keep track of the application state */
+    private boolean mAppLock = true;
+
+    /**
+     * Constant used to specify how long will the app wait for another activity to go through its starting life
+     * cycle events before create the lock pin screen.
+     * <p>
+     * This is used as a means to detect whether or not the user has left the app.
+     */
+    private final int LOCK_DELAY = 10000;
+
+    /**
+     * Handler instance used to schedule tasks back to the main thread
+     */
+    private Handler mHandler;
+
+    /**
+     * Runnable that will set to lock the app with the PIN.
+     */
+    private Runnable lockApp = new Runnable() {
+        @Override
+        public void run() {
+            mAppLock = true;
+            Log.i(TAG, "App Locked");
+        }
+    };
+
+    /*
+     * Return the state of the application(If locked or not).
+     */
+    public Boolean getLock() {
+        return mAppLock;
+    }
+
+    /*
+     * Set the state of the application(If locked or not).
+     */
+    public void setLock(Boolean value) {
+        mAppLock = value;
+    }
 
     public static String urlsSocketConnection[] =
             {
@@ -98,31 +141,37 @@ public class Application extends android.app.Application implements de.bitshares
         ButterKnife.setDebug(true);
         context = getApplicationContext();
         blockHead = "";
+
+        mHandler = new Handler();
+        /*
+        * Registering this class as a listener to all activitie's callback cycle events, in order to
+        * better estimate when the user has left the app and it is safe to lock the app or not
+        */
+        registerActivityLifecycleCallbacks(this);
+
         init();
         accountCreateInit();
     }
 
-    public void init()
-    {
+    public void init() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                if ( mConnection == null )
-                {
+                if (mConnection == null) {
                     mConnection = new WebSocketConnection();
-                   checkConnection();
+                    checkConnection();
                 }
             }
-        },1000);
+        }, 1000);
 
     }
 
 
-    public static void  registerCallback(IAccount callbackClass) {
+    public static void registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
     }
 
-    public static void  registerCallbackIAccountID(IAccountID callbackClass) {
+    public static void registerCallbackIAccountID(IAccountID callbackClass) {
         iAccountID = callbackClass;
     }
 
@@ -134,11 +183,11 @@ public class Application extends android.app.Application implements de.bitshares
         iBalancesDelegate_transactionActivity = callbackClass;
     }
 
-    public static void  registerBalancesDelegateEReceipt(IBalancesDelegate callbackClass) {
+    public static void registerBalancesDelegateEReceipt(IBalancesDelegate callbackClass) {
         iBalancesDelegate_ereceiptActivity = callbackClass;
     }
 
-    public static void  registerBalancesDelegateAssets(IBalancesDelegate callbackClass) {
+    public static void registerBalancesDelegateAssets(IBalancesDelegate callbackClass) {
         iBalancesDelegate_assetsActivity = callbackClass;
     }
 
@@ -173,10 +222,9 @@ public class Application extends android.app.Application implements de.bitshares
         }
     }
 
-public static int nodeIndex = 0;
+    public static int nodeIndex = 0;
 
-    private void webSocketConnection()
-    {
+    private void webSocketConnection() {
         isReady = false;
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -196,172 +244,145 @@ public static int nodeIndex = 0;
     public static Boolean isReady = false;
 
     public static void stringTextRecievedWs(String s) {
-                    try {
-                        Log.v(TAG,"< "+s);
-                        JSONObject jsonObject = new JSONObject(s);
+        try {
+            JSONObject jsonObject = new JSONObject(s);
 
-                        if (jsonObject.has("id")) {
-                            int id = jsonObject.getInt("id");
-                            if (id == 1) {
-                                if (s.contains("true")) {
-                                    Application.send(context.getString(R.string.database_indentifier));
-                                } else {
-                                    Application.send(context.getString(R.string.login_api));
-                                }
-                            } else if (id == 2) {
-                                Helper.storeIntSharePref(context, context.getString(R.string.sharePref_database), jsonObject.getInt("result"));
-                                Application.send(context.getString(R.string.network_broadcast_identifier));
-                            } else if (id == 3) {
-                                Helper.storeIntSharePref(context, context.getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
-                                Application.send(context.getString(R.string.history_identifier));
-                            } else if (id == 4) {
-                                Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
-                                Application.send(context.getString(R.string.subscribe_callback));
-                                isReady = true;
-                            } else if (id == 6) {
-                                if (iAccount != null) {
-                                    iAccount.checkAccount(jsonObject);
-                                }
-                            } else if (id == 100 || id == 200) {
-                                JSONArray jsonArray = (JSONArray) jsonObject.get("result");
-                                JSONObject obj = new JSONObject();
-                                if (jsonArray.length() != 0) {
-                                    obj = (JSONObject) jsonArray.get(1);
-                                }
-                                iExchangeRate.callback_exchange_rate(obj, id);
-                            }
-                            else if (id == 8)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null)
-                                {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 20)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null)
-                                {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 21)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null)
-                                {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 22)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null)
-                                {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 23)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null)
-                                {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 12)
-                            {
-                                if (iTransactionObject != null) {
-                                    iTransactionObject.checkTransactionObject(jsonObject);
-                                }
-                            } else if (id == 13) {
-                                if (iAccountObject != null) {
-                                    iAccountObject.accountObjectCallback(jsonObject);
-                                }
-                            } else if (id == 14) {
-                                if (iAssetObject != null) {
-                                    iAssetObject.assetObjectCallback(jsonObject);
-                                }
-                            } else if (id == 9)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null) {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            } else if (id == 10) {
-                                if (iBalancesDelegate_transactionActivity != null) {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            } else if (id == 11)
-                            {
-                                if (iBalancesDelegate_transactionActivity != null) {
-                                    iBalancesDelegate_transactionActivity.OnUpdate(s, id);
-                                }
-                            } else if (id == 99) {
-                                if (iBalancesDelegate_assetsActivity != null) {
-                                    iBalancesDelegate_assetsActivity.OnUpdate(s, id);
-                                }
-                            } else if (id == 999) {
-                                if (iBalancesDelegate_assetsActivity != null) {
-                                    iBalancesDelegate_assetsActivity.OnUpdate(s, id);
-                                }
-                            } else if (id == 15) {
+            if (jsonObject.has("id")) {
+                int id = jsonObject.getInt("id");
+                Log.d(TAG, "Got response. id: " + id);
+                if (id == 1) {
+                    if (s.contains("true")) {
+                        Application.send(context.getString(R.string.database_indentifier));
+                    } else {
+                        Application.send(context.getString(R.string.login_api));
+                    }
+                } else if (id == 2) {
+                    Helper.storeIntSharePref(context, context.getString(R.string.sharePref_database), jsonObject.getInt("result"));
+                    Application.send(context.getString(R.string.network_broadcast_identifier));
+                } else if (id == 3) {
+                    Helper.storeIntSharePref(context, context.getString(R.string.sharePref_network_broadcast), jsonObject.getInt("result"));
+                    Application.send(context.getString(R.string.history_identifier));
+                } else if (id == 4) {
+                    Helper.storeIntSharePref(context, context.getString(R.string.sharePref_history), jsonObject.getInt("result"));
+                    Application.send(context.getString(R.string.subscribe_callback));
+                    isReady = true;
+                } else if (id == 6) {
+                    if (iAccount != null) {
+                        iAccount.checkAccount(jsonObject);
+                    }
+                } else if (id == 100 || id == 200) {
+                    JSONArray jsonArray = (JSONArray) jsonObject.get("result");
+                    JSONObject obj = new JSONObject();
+                    if (jsonArray.length() != 0) {
+                        obj = (JSONObject) jsonArray.get(1);
+                    }
+                    iExchangeRate.callback_exchange_rate(obj, id);
+                } else if (id == 8) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 20) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 21) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 22) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 23) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 12) {
+                    if (iTransactionObject != null) {
+                        iTransactionObject.checkTransactionObject(jsonObject);
+                    }
+                } else if (id == 13) {
+                    if (iAccountObject != null) {
+                        iAccountObject.accountObjectCallback(jsonObject);
+                    }
+                } else if (id == 14) {
+                    if (iAssetObject != null) {
+                        iAssetObject.assetObjectCallback(jsonObject);
+                    }
+                } else if (id == 9) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 10) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 11) {
+                    if (iBalancesDelegate_transactionActivity != null) {
+                        iBalancesDelegate_transactionActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 99) {
+                    if (iBalancesDelegate_assetsActivity != null) {
+                        iBalancesDelegate_assetsActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 999) {
+                    if (iBalancesDelegate_assetsActivity != null) {
+                        iBalancesDelegate_assetsActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 15) {
+                    if (iAssetDelegate != null) {
+                        iAssetDelegate.getLifetime(s, id);
+                    }
+                } else if (id == 151) {
+                    if (iAccountID != null) {
+                        iAccountID.accountId(s);
+                    }
+                } else if (id == 160 || id == 161) {
+                    if (iRelativeHistory != null) {
+                        iRelativeHistory.relativeHistoryCallback(jsonObject);
+                    }
+                } else if (id == 17) {
+                } else if (id == 18) {
+                    if (iBalancesDelegate_ereceiptActivity != null) {
+                        iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
+                    }
+                } else if (id == 19) {
+                    if (iBalancesDelegate_ereceiptActivity != null) {
+                        iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
+                    }
+                }
+            } else if (jsonObject.has("method")) {
+                if (jsonObject.getString("method").equals("notice")) {
+                    if (jsonObject.has("params")) {
+                        int id = jsonObject.getJSONArray("params").getInt(0);
+                        JSONArray values = jsonObject.getJSONArray("params").getJSONArray(1);
+
+                        if (id == 7) {
+                            headBlockNumber(values.toString());
+
+                            if (monitorAccountId != null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId)) {
                                 if (iAssetDelegate != null) {
-                                    iAssetDelegate.getLifetime(s, id);
+                                    iAssetDelegate.loadAll();
                                 }
-                            } else if (id == 151) {
-                                if (iAccountID != null) {
-                                    iAccountID.accountId(s);
-                                }
-                            } else if (id == 160 || id == 161) {
-                                if (iRelativeHistory != null) {
-                                    iRelativeHistory.relativeHistoryCallback(jsonObject);
-                                }
-                            } else if (id == 17) {
+                                Log.d("Notice Update", values.toString());
                             }
-                            else if (id == 18) {
-                                if (iBalancesDelegate_ereceiptActivity != null) {
-                                    iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
-                                }
-                            }
-                            else if (id == 19) {
-                                if (iBalancesDelegate_ereceiptActivity != null) {
-                                    iBalancesDelegate_ereceiptActivity.OnUpdate(s, id);
-                                }
-                            }
-                        } else if (jsonObject.has("method")) {
-                            if (jsonObject.getString("method").equals("notice")) {
-                                if (jsonObject.has("params")) {
-                                    int id = jsonObject.getJSONArray("params").getInt(0);
-                                    JSONArray values = jsonObject.getJSONArray("params").getJSONArray(1);
-
-                                    if (id == 7)
-                                    {
-                                        headBlockNumber(values.toString());
-
-                                        if (monitorAccountId != null && !monitorAccountId.isEmpty() && values.toString().contains(monitorAccountId))
-                                        {
-                                            if (iAssetDelegate != null)
-                                            {
-                                                iAssetDelegate.loadAll();
-                                            }
-                                            Log.d("Notice Update", values.toString());
-                                        }
-                                    }
-                                    else {
-                                        Log.d("other notice", values.toString());
-                                    }
-
-                                }
-                            }
+                        } else {
+                            Log.d("other notice", values.toString());
                         }
-
-
-                    } catch (JSONException e) {
 
                     }
                 }
+            }
 
-    private static void sendInitialSocket(final Context context)
-    {
 
-        if (Application.mIsConnected)
-        {
+        } catch (JSONException e) {
+
+        }
+    }
+
+    private static void sendInitialSocket(final Context context) {
+
+        if (Application.mIsConnected) {
             Application.send(context.getString(R.string.login_api));
         }
     }
@@ -374,31 +395,33 @@ public static int nodeIndex = 0;
             JSONArray array = new JSONArray(json);
             String rawBlockId = "";
             String blockNumber = "";
-            if(array.length() == 1){
+            if (array.length() == 1) {
                 JSONArray subArray = array.getJSONArray(0);
-                for(int i = 0; i < subArray.length(); i++){
-                    if(subArray.get(i) instanceof JSONObject){
+                for (int i = 0; i < subArray.length(); i++) {
+                    if (subArray.get(i) instanceof JSONObject) {
                         JSONObject element = (JSONObject) subArray.get(i);
-                        if(element.has(BLOCK_REFERENCE_ID)){
+                        if (element.has(BLOCK_REFERENCE_ID)) {
                             rawBlockId = element.getString(BLOCK_REFERENCE_ID);
                         }
-                        if(element.has(HEAD_BLOCK_NUMBER)){
+                        if (element.has(HEAD_BLOCK_NUMBER)) {
                             blockNumber = element.getString(HEAD_BLOCK_NUMBER);
                         }
-                        if(element.has(TIME)){
+                        if (element.has(TIME)) {
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                             try {
                                 Date date = simpleDateFormat.parse(element.getString(TIME));
                                 blockTime = date.getTime() / 1000;
                             } catch (ParseException e) {
-                                Log.e(TAG, "ParseException while trying to parse time. time string: "+element.getString(TIME));
+                                Log.e(TAG, "ParseException while trying to parse time. time string: " + element.getString(TIME));
                             }
                         }
-                    }else{
+                    } else {
                         String element = (String) subArray.get(i);
+                        Log.d(TAG, "Could not cast string: " + element);
                     }
                 }
-                if(rawBlockId.equals("")) {
+                if (rawBlockId.equals("")) {
+                    Log.w(TAG, "Could not process data");
                     return blockHead;
                 }
                 // Setting block number
@@ -410,7 +433,7 @@ public static int nodeIndex = 0;
                 // Setting block prefix
                 String hashData = rawBlockId.substring(8, 16);
                 StringBuilder builder = new StringBuilder();
-                for(int i = 0; i < 8; i = i + 2){
+                for (int i = 0; i < 8; i = i + 2) {
                     builder.append(hashData.substring(6 - i, 8 - i));
                 }
                 refBlockPrefix = Long.parseLong(builder.toString(), 16);
@@ -426,10 +449,7 @@ public static int nodeIndex = 0;
 
     public static void send(String message) {
         if (mIsConnected) {
-            Log.d(TAG,"> "+message);
             mConnection.sendTextMessage(message);
-        }else{
-            Log.w(TAG, "Not sending message: "+message);
         }
     }
 
@@ -438,14 +458,13 @@ public static int nodeIndex = 0;
 
     public static void disconnect() {
         Log.i("internetBlockpay", "Disconnect");
-        if(mConnection!=null) {
+        if (mConnection != null) {
             mConnection.disconnect();
         }
     }
 
     @Override
-    public void onOpen()
-    {
+    public void onOpen() {
         Log.i("internetBlockpay", "open internet");
         mIsConnected = true;
 //        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
@@ -453,17 +472,19 @@ public static int nodeIndex = 0;
     }
 
     Handler connectionHandler = new Handler();
-    public void checkConnection(){
+
+    public void checkConnection() {
         connectionHandler.removeCallbacksAndMessages(null);
         connectionHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                if(checkInternetConnection()) {{
+                if (checkInternetConnection()) {
+                    {
                         webSocketConnection();
                     }
-                }else {
-                    connectionHandler.postDelayed(this,500);
+                } else {
+                    connectionHandler.postDelayed(this, 500);
                 }
 
             }
@@ -472,17 +493,15 @@ public static int nodeIndex = 0;
 
 
     @Override
-    public void onClose(WebSocketCloseNotification code, String reason)
-    {
+    public void onClose(WebSocketCloseNotification code, String reason) {
         Log.i("internetBlockpay", "close internet");
         mIsConnected = false;
         checkConnection();
     }
 
     @Override
-    public void onTextMessage(String payload)
-    {
-      stringTextRecievedWs(payload);
+    public void onTextMessage(String payload) {
+        stringTextRecievedWs(payload);
     }
 
     @Override
@@ -497,100 +516,134 @@ public static int nodeIndex = 0;
     private static URI mServerURI;
 
     @NonNull
-    public static Boolean isConnected(){
-        return mConnection!=null && (mConnection.isConnected());
+    public static Boolean isConnected() {
+        return mConnection != null && (mConnection.isConnected());
     }
 
-    private void connect(String node)
-    {
+    private void connect(String node) {
         Log.i("internetBlockpay", "connecting to internet");
         Log.i("Connect", "connect(String node) called");
-        try
-        {
-            if ( !mIsConnected )
-            {
+        try {
+            if (!mIsConnected) {
                 Log.i("Connect", "Inside when not mIsConnected");
                 mServerURI = new URI(node);
                 connectedSocket = node;
                 mConnection.connect(mServerURI, this);
             }
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             String message = e.getLocalizedMessage();
             Log.i("Connect", "Inside catch block when not mIsConnected, got exception, msg is:" + message);
             checkConnection();
-        }
-        catch (WebSocketException e)
-        {
+        } catch (WebSocketException e) {
             String message = e.getLocalizedMessage();
             Log.i("Connect", "Inside catch block when not mIsConnected, got exception, msg is:" + message);
-            if ( !mIsConnected ) {
+            if (!mIsConnected) {
                 checkConnection();
             }
         }
     }
 
-    Boolean checkInternetConnection(){
+    Boolean checkInternetConnection() {
         ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
 
-    public static void timeStamp(){
+    public static void timeStamp() {
 
-        Helper.storeBoolianSharePref(context,"account_can_create",false);
+        Helper.storeBoolianSharePref(context, "account_can_create", false);
         setTimeStamp();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-                    Helper.storeBoolianSharePref(context,"account_can_create",true);
+                Helper.storeBoolianSharePref(context, "account_can_create", true);
 
-                }
-            }, 10 * 60000);
+            }
+        }, 10 * 60000);
     }
+
     @NonNull
-    public static Boolean accountCanCreate(){
-        return Helper.fetchBoolianSharePref(context,"account_can_create");
+    public static Boolean accountCanCreate() {
+        return Helper.fetchBoolianSharePref(context, "account_can_create");
     }
-    void accountCreateInit(){
-        if(Helper.containKeySharePref(context,"account_can_create")){
-           if(!accountCanCreate()){
-              getTimeStamp();
-           }
-        }else {
-            Helper.storeBoolianSharePref(context,"account_can_create",true);
+
+    void accountCreateInit() {
+        if (Helper.containKeySharePref(context, "account_can_create")) {
+            if (!accountCanCreate()) {
+                getTimeStamp();
+            }
+        } else {
+            Helper.storeBoolianSharePref(context, "account_can_create", true);
         }
     }
-    static void setTimeStamp(){
+
+    static void setTimeStamp() {
         Calendar c = Calendar.getInstance();
         long time = c.getTimeInMillis();
-        Helper.storeLongSharePref(context,"account_create_timestamp",time);
+        Helper.storeLongSharePref(context, "account_create_timestamp", time);
     }
-    static void getTimeStamp(){
+
+    static void getTimeStamp() {
         try {
             Calendar c = Calendar.getInstance();
-            long currentTime = c.getTimeInMillis();;
+            long currentTime = c.getTimeInMillis();
+            ;
             long oldTime = Helper.fetchLongSharePref(context, "account_create_timestamp");
-            long diff = currentTime-oldTime;
-            if(diff < TimeUnit.MINUTES.toMillis(10)){
+            long diff = currentTime - oldTime;
+            if (diff < TimeUnit.MINUTES.toMillis(10)) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Helper.storeBoolianSharePref(context,"account_can_create",true);
+                        Helper.storeBoolianSharePref(context, "account_can_create", true);
                     }
-                }, TimeUnit.MINUTES.toMillis(10)-diff);
-            }else {
-                Helper.storeBoolianSharePref(context,"account_can_create",true);
+                }, TimeUnit.MINUTES.toMillis(10) - diff);
+            } else {
+                Helper.storeBoolianSharePref(context, "account_can_create", true);
             }
-        }catch (Exception e){
-            Helper.storeBoolianSharePref(context,"account_can_create",true);
+        } catch (Exception e) {
+            Helper.storeBoolianSharePref(context, "account_can_create", true);
         }
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        mHandler.removeCallbacks(this.lockApp);
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        mHandler.removeCallbacks(this.lockApp);
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        mHandler.removeCallbacks(this.lockApp);
+        Application.setCurrentActivity(activity);
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+        //Call the handler only if app is not already locked
+        if (!mAppLock) {
+            mHandler.postDelayed(this.lockApp, LOCK_DELAY);
+        }
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
     }
 }
 

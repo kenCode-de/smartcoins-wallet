@@ -32,7 +32,6 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
@@ -319,6 +318,10 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
+
+        //Success Import(Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
 
@@ -333,7 +336,6 @@ public class BrainkeyActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }
