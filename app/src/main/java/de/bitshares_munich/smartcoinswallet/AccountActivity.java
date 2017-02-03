@@ -313,8 +313,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         mLicenseDialog.setTitle(R.string.agreement);
         mLicenseDialog.setContentView(R.layout.custom_dialog_licence);
         Button dialog_btn_cancel = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_cancel);
-        WebView webView = (WebView) mLicenseDialog.findViewById(R.id.webviewLisense);
-        String html = getString(R.string.lisence_html);
+        WebView webView = (WebView) mLicenseDialog.findViewById(R.id.webviewLicense);
+        String html = getString(R.string.licence_html);
         webView.loadData(html, "text/html", "UTF-8");
 
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
