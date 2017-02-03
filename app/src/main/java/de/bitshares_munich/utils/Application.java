@@ -71,7 +71,7 @@ public class Application extends android.app.Application implements de.bitshares
      * <p>
      * This is used as a means to detect whether or not the user has left the app.
      */
-    private final int LOCK_DELAY = 1000;
+    private final int LOCK_DELAY = 10000;
 
     /**
      * Handler instance used to schedule tasks back to the main thread

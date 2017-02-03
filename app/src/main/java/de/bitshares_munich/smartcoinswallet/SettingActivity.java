@@ -467,7 +467,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
                 langArray.add(langCode);
             }
-            else if(getLangCode.get(i).equalsIgnoreCase("pt-rBR"))
+            else if( getLangCode.get(i).equalsIgnoreCase("pt-rBR") || getLangCode.get(i).equalsIgnoreCase("pt") )
             {
                 LangCode langCode = new LangCode();
                 langCode.code = "pt-rBR";
@@ -501,6 +501,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 LangCode lc = langArray.get(i);
 
                 if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
+                {
+                    spLanguage.setSelection(i);
+                }
+                else if ( langCode.equalsIgnoreCase("pt") && lc.code.equalsIgnoreCase("pt-rbr") )
                 {
                     spLanguage.setSelection(i);
                 }

@@ -291,11 +291,21 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         if ( (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && ( mLicenseDialog == null || !mLicenseDialog.isShowing() )  ) {
             showDialogLicence();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //Dismiss the License agreement dialog when the Activity is paused (to avoid activity memory leak)
+        if(mLicenseDialog != null && mLicenseDialog.isShowing()){
+            mLicenseDialog.dismiss();
+        }
+        mLicenseDialog = null;
     }
 
     private void showDialogLicence() {

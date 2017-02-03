@@ -49,60 +49,24 @@ public abstract class LockableActivity extends AppCompatActivity {
     private LockListener mLockListener;
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         if(tinyDB == null){
             tinyDB = new TinyDB(getApplicationContext());
         }
         app = (Application) getApplicationContext();
-        Log.i(TAG, "Activity Created: " +  String.valueOf(app.getLock()) );
-
         //Lock only if timer set the lock t Application and there is any logged account
         ArrayList<AccountDetails> walletAccountList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //Show the PIn dialog (No need to check if it is already visible because onPause events always dismiss the dialog)
         if( (app.getLock()) && (walletAccountList.size() > 0) ){
-            /**
-             * We want to show the pin dialog if this restart was not caused by
-             * an intentional internal app move.
-             */
             showDialogPin();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(tinyDB == null){
-            tinyDB = new TinyDB(getApplicationContext());
-        }
-        app = (Application) getApplicationContext();
-        Log.i(TAG, "Activity Started: " +  String.valueOf(app.getLock()) );
-        //Lock only if timer set the lock t Application and there is any logged account
-        ArrayList<AccountDetails> walletAccountList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if( (app.getLock()) && (walletAccountList.size() > 0) ){
-            /**
-             * We might want to display the pin dialog if this onStart call is
-             * not a result of an intentional internal app movement.
-             */
-            if(pinDialog == null || !pinDialog.isShowing()){
-                /**
-                 * The dialog must already be up, because onStart is called after
-                 * onRestart. Here we just check for that.
-                 */
-                Bundle extras = getIntent().getExtras();
-                if(extras != null){
-                    boolean showPin = extras.getBoolean(SplashActivity.KEY_ASK_FOR_PIN);
-                    if(showPin){
-                        showDialogPin();
-                    }
-                }
-            }
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i(TAG, "Activity Paused: " +  String.valueOf(app.getLock()) );
+        //Dismiss the PIN dialog when the Activity is paused (to avoid activity memory leak)
         if(pinDialog != null && pinDialog.isShowing()){
             pinDialog.dismiss();
         }
