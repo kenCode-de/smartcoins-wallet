@@ -12,7 +12,7 @@ public class UpdateAccountTask {
     private boolean updateOwner;
     private boolean updateMemo;
 
-    UpdateAccountTask(UserAccount account, BrainKey brainKey){
+    public UpdateAccountTask(UserAccount account, BrainKey brainKey){
         this.account = account;
         this.brainKey = brainKey;
     }

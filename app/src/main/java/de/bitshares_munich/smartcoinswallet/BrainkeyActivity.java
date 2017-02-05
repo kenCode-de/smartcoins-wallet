@@ -48,6 +48,8 @@ import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
+
 public class BrainkeyActivity extends BaseActivity {
     private final String TAG = this.getClass().getName();
     @Bind(R.id.etPin)

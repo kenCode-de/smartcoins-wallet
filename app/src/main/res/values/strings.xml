@@ -14,6 +14,8 @@
     <string name="note">Note</string>
     <string name="payment_received">Payment Received</string>
 
+    <string name="import_currency_account">Import</string>
+    <string name="create_currency_account">Create</string>
     <string name="import_brainkey">Import from BrainKey</string>
     <string name="import_backup_old">Import Backup from .bin file</string>
     <string name="choose_backup">Choose Backup</string>
@@ -42,6 +44,7 @@
     <string name="pin_number_warning">The pin number must be at least 6 digits</string>
     <string name="mismatch_pin">mismatch pin</string>
     <string name="error_invalid_account">Invalid account, please check your brain key for typing errors</string>
+    <string name="no_currency_account">There is no account for this currency yet. Do you want to create or import one?</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
     <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>
@@ -53,6 +56,7 @@
     <string name="please_enter_brainkey">Please enter brainkey</string>
     <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
     <string name="balances">Balances</string>
+    <string name="bitcoin">Bitcoin</string>
     <string name="contacts">Contacts</string>
     <string name="receive_uppercase">RECEIVE</string>
     <string name="send_uppercase">SEND</string>

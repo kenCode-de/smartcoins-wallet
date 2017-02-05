@@ -12,6 +12,7 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 /**
  * Created by qasim on 5/19/16.
  */
