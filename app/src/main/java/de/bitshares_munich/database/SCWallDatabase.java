@@ -12,6 +12,7 @@ import com.google.common.primitives.UnsignedLong;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -19,6 +20,12 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.bitshares_munich.models.TransactionDetails;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
+import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.TransferOperation;
@@ -601,4 +608,205 @@ public class SCWallDatabase {
     public void clearTransfers(){
         db.execSQL("delete from "+SCWallDatabaseContract.Transfers.TABLE_NAME);
     }
+
+
+    // CryptoCoinCore
+
+    public AccountSeed getSeed(String idSeed) {
+        AccountSeed seed = null;
+        String[] columns = {
+                SCWallDatabaseContract.Seeds.COLUMN_ID,
+                SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC,
+                SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
+                SCWallDatabaseContract.Seeds.COLUMN_TYPE
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
+                SCWallDatabaseContract.Seeds.COLUMN_ID + " = '" + idSeed + "'",
+                null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
+                String additional = cursor.getString(2);
+                String type = cursor.getString(3);
+                switch (type) {
+                    case "BIP39":
+                        seed = new BIP39(id, mnemonic, additional);
+                        break;
+                    case "BrainKey":
+                        seed = new Brainkey(id, mnemonic, additional);
+                        break;
+                    default:
+                        seed = null;
+                }
+                cursor.close();
+                return seed;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
+    public String getIdSeed(AccountSeed seed) {
+        String[] columns = {
+                SCWallDatabaseContract.Seeds.COLUMN_ID,
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
+                SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC + " = '" + seed.getMnemonicCodeString()
+                        + "' AND " + SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL + " = '" + seed.getAdditional() + "'",
+                null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                cursor.close();
+                return id;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
+    public List<AccountSeed> getSeeds() {
+        List<AccountSeed> seeds = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.Seeds.COLUMN_ID,
+                SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC,
+                SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
+                SCWallDatabaseContract.Seeds.COLUMN_TYPE
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns, null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            AccountSeed seed;
+            do{
+                String id = cursor.getString(0);
+                List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
+                String additional = cursor.getString(2);
+                String type = cursor.getString(3);
+                switch (type) {
+                    case "BIP39":
+                        seed = new BIP39(id, mnemonic, additional);
+                        break;
+                    case "BrainKey":
+                        seed = new Brainkey(id, mnemonic, additional);
+                        break;
+                    default:
+                        seed = null;
+                }
+                cursor.close();
+                seeds.add(seed);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return seeds;
+    }
+
+    public GeneralCoinAccount getAccount(String coinType) {
+        String[] columns = {
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = " + coinType,
+                null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                String name = cursor.getString(1);
+                Coin type = Coin.valueOf(cursor.getString(2));
+                String idSeed = cursor.getString(3);
+                AccountSeed seed = getSeed(idSeed);
+                if (seed == null) {
+                    continue;
+                }
+                int accountIndex = cursor.getInt(4);
+                int changeIndex = cursor.getInt(5);
+                int externalIndex = cursor.getInt(6);
+                GeneralCoinAccount account = CryptoCoinFactory
+                        .getGeneralCoinManager(type)
+                        .getAccount(id, name, seed, accountIndex,
+                                externalIndex, changeIndex);
+                cursor.close();
+                return account;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
+    public GeneralCoinAccount getAccount(AccountSeed seed, String coinType) {
+        String[] columns = {
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = " + coinType + " AND " + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = " + seed.getId(),
+                null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                String name = cursor.getString(1);
+                Coin type = Coin.valueOf(coinType);
+                int accountIndex = cursor.getInt(2);
+                int changeIndex = cursor.getInt(3);
+                int externalIndex = cursor.getInt(4);
+                GeneralCoinAccount account = CryptoCoinFactory
+                        .getGeneralCoinManager(type)
+                        .getAccount(id, name, seed, accountIndex,
+                                externalIndex, changeIndex);
+                cursor.close();
+                return account;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
+    public List<GeneralCoinAccount> getAccounts() {
+
+        List<GeneralCoinAccount> accounts = new ArrayList();
+
+        String[] columns = {
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
+                null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                String name = cursor.getString(1);
+                Coin type = Coin.valueOf(cursor.getString(2));
+                String idSeed = cursor.getString(3);
+                AccountSeed seed = getSeed(idSeed);
+                if (seed == null) {
+                    continue;
+                }
+                int accountIndex = cursor.getInt(4);
+                int changeIndex = cursor.getInt(5);
+                int externalIndex = cursor.getInt(6);
+                GeneralCoinAccount account = CryptoCoinFactory
+                        .getGeneralCoinManager(type)
+                        .getAccount(id, name, seed, accountIndex,
+                                externalIndex, changeIndex);
+                accounts.add(account);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return accounts;
+    }
+
+
 }
