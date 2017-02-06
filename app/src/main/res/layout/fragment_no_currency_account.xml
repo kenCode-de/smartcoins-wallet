@@ -13,16 +13,16 @@
         android:text="@string/no_currency_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/noCurrencyAccountText" />
 
     <Button
-        android:id="@+id/tvImportBrainKey"
+        android:id="@+id/importCurrencyAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:text="@string/import_currency_account"/>
     <Button
-        android:id="@+id/tvBackup"
+        android:id="@+id/createCurrencyAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"

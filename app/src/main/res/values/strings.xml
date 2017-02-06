@@ -44,7 +44,7 @@
     <string name="pin_number_warning">The pin number must be at least 6 digits</string>
     <string name="mismatch_pin">mismatch pin</string>
     <string name="error_invalid_account">Invalid account, please check your brain key for typing errors</string>
-    <string name="no_currency_account">There is no account for this currency yet. Do you want to create or import one?</string>
+    <string name="no_currency_account">There is no account for %1$s yet. Do you want to create or import one?</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
     <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>

@@ -12,6 +12,7 @@ import de.bitsharesmunich.cryptocoincore.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 
+import de.bitsharesmunich.cryptocoincore.fragments.NoCurrencyAccountFragment;
 import de.bitsharesmunich.cryptocoincore.models.Coin;
 
 /**
@@ -20,6 +21,8 @@ import de.bitsharesmunich.cryptocoincore.models.Coin;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private Context mContext;
+
+    private boolean testing = true;
 
     public ViewPagerAdapter(Context context, FragmentManager manager) {
         super(manager);
@@ -32,7 +35,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return BalancesFragment.newInstance(Coin.BITSHARE);
             case 1:
-                if (SCWallDatabase.getAccount(Account seed, String cointype))
+                //if (SCWallDatabase.getAccount(Account seed, String cointype))
+                if (testing){
+                    testing = false;
+                    return NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
+                }
                 return BalancesFragment.newInstance(Coin.BITCOIN);
             case 2:
                 return new ContactsFragment();
@@ -69,8 +76,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        registeredFragments.remove(position);
-        super.destroyItem(container, position, object);
+        //registeredFragments.remove(position);
+        int index = registeredFragments.indexOfValue((Fragment)object);
+        registeredFragments.remove(index);
+        super.destroyItem(container, index, object);
     }
 
     public Fragment getRegisteredFragment(int position) {
