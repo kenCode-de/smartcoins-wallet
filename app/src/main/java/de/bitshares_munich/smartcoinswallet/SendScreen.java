@@ -372,8 +372,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
 
-        startupTasks();
-
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -386,7 +384,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                         myAccountNameValidationTimer.start();
                     }
                 }
-                Log.d(TAG,"validateSend: "+validateSend()+", validReceiver: "+validReceiver);
                 //Do something after 100ms
                 if (validateSend() && validReceiver) {
                     btnSend.setEnabled(true);
@@ -482,6 +479,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnItemSelected(R.id.spinnerFrom)
     void onItemSelected(int position) {
+        Log.d(TAG,"onItemSelected. position: "+position);
         if (!runningSpinerForFirstTime) {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
 
@@ -493,8 +491,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     accountDetail.isSelected = false;
                 }
             }
-
-            startupTasks();
+//            startupTasks();
         } else {
             this.runningSpinerForFirstTime = false;
         }
@@ -919,9 +916,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 callbackURL = callbackURL + "/";
             }
             etReceiverAccount.setText(invoice.getTo());
-
             spAssets.setSelection(getSpinnerIndex(spAssets, invoice.getCurrency()));
-            spAssets.setClickable(false);
             if (invoice.getMemo() == null) {
                 llMemo.setVisibility(View.GONE);
             } else {
@@ -1031,13 +1026,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
             spinnerArray = assetsSymbols.updatedList(spinnerArray);
-
             createSpinner(spinnerArray, spAssets);
         } catch (Exception e) {
         }
     }
 
     void setSpinner() {
+        Log.d(TAG,"setSpinner");
         populateAccountsSpinner();
         populateAssetsSpinner();
         setBackUpAsset();
@@ -1714,8 +1709,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     public void onResume() {
         super.onResume();
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        init();
-        populateAccountsSpinner();
+        startupTasks();
     }
 
     private void showDialogPin(final Boolean fundTransfer) {
