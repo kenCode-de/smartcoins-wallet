@@ -56,8 +56,8 @@ public class NoCurrencyAccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (pager != null){
-                    ((ViewPagerAdapter)pager.getAdapter()).destroyItem(pager,0,f);
-                    pager.getAdapter().notifyDataSetChanged();
+                    ((ViewPagerAdapter)pager.getAdapter()).changeBitcoinFragment();
+                    //pager.getAdapter().notifyDataSetChanged();
                 }
 
             }
