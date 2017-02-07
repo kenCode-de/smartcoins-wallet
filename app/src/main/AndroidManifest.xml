@@ -35,8 +35,7 @@
             android:name=".TabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/MyMaterialTheme"
-            android:windowSoftInputMode="adjustNothing"/>
+            android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"

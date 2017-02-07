@@ -21,15 +21,15 @@ import io.fabric.sdk.android.Fabric;
 public class BaseActivity extends LockableActivity {
     public final String TAG = "BaseActivity";
 
-    public static final long DISCONNECT_TIMEOUT = (3*60*1000);
+    public static final long DISCONNECT_TIMEOUT = (3 * 60 * 1000);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(BuildConfig.USE_CRASHLYTICS){
+        if (BuildConfig.USE_CRASHLYTICS) {
             Fabric.with(this, new Crashlytics());
             Log.d(TAG, "Using crashlytics");
-        }else{
+        } else {
             Log.d(TAG, "Not using crashlytics");
         }
     }
@@ -56,16 +56,12 @@ public class BaseActivity extends LockableActivity {
 
     private Runnable disconnectCallback = new Runnable() {
         @Override
-        public void run()
-        {
+        public void run() {
             String close_bitshare = "close_bitshare";
             Boolean cb = Helper.fetchBoolianSharePref(getApplicationContext(), close_bitshare);
-            if (cb)
-            {
+            if (cb) {
                 finishAffinity();
-            }
-            else
-            {
+            } else {
                 resetDisconnectTimer();
             }
         }
