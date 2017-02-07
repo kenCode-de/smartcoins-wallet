@@ -7,12 +7,14 @@ import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Balance;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 
 import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
 
@@ -26,8 +28,8 @@ public class BitcoinAccount extends GeneralCoinAccount {
     private DeterministicKey accountKey;
     private DeterministicKey externalKey;
     private DeterministicKey changeKey;
-    private HashMap<Integer, BitcoinAddress> externalKeys = new HashMap();
-    private HashMap<Integer, BitcoinAddress> changeKeys = new HashMap();
+    private HashMap<Integer, GeneralCoinAddress> externalKeys = new HashMap();
+    private HashMap<Integer, GeneralCoinAddress> changeKeys = new HashMap();
 
     private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
 
@@ -59,8 +61,8 @@ public class BitcoinAccount extends GeneralCoinAccount {
         changeKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(1, false));
     }
 
-    public void loadAddresses(List<BitcoinAddress> addresses) {
-        for (BitcoinAddress address : addresses) {
+    public void loadAddresses(List<GeneralCoinAddress> addresses) {
+        for (GeneralCoinAddress address : addresses) {
             if (address.isIsChange()) {
                 changeKeys.put(address.getIndex(), address);
             } else {
@@ -71,15 +73,28 @@ public class BitcoinAccount extends GeneralCoinAccount {
 
     @Override
     public Balance getBalance() {
-        return null;
+        long amount = 0;
+        for (GeneralCoinAddress key : externalKeys.values()) {
+            amount += key.getBalance();
+        }
+
+        for (GeneralCoinAddress key : changeKeys.values()) {
+            amount += key.getBalance();
+        }
+
+        Balance balance = new Balance();
+        balance.setType(BITCOIN);
+        balance.setDate(new Date());
+        balance.setAmmount(amount);
+        return balance;
     }
 
     public String getNextRecieveAddress() {
         //TODO Check if current address has balance
         if (!externalKeys.containsKey(lastExternalIndex)) {
-            externalKeys.put(lastExternalIndex, new BitcoinAddress(HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false)), lastExternalIndex, false, param));
+            externalKeys.put(lastExternalIndex, new GeneralCoinAddress(this, false, lastExternalIndex, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false))));
         }
-        return externalKeys.get(lastExternalIndex).getAddressString();
+        return externalKeys.get(lastExternalIndex).getAddressString(param);
     }
 
     public void sendCoin(Address to, Coin amount) {
@@ -92,7 +107,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
     }
 
     public Address getAddress() {
-        return externalKeys.get(lastExternalIndex).getAddress();
+        return externalKeys.get(lastExternalIndex).getAddress(param);
     }
 
     @Override
