@@ -56,7 +56,6 @@
     <string name="please_enter_brainkey">Please enter brainkey</string>
     <string name="please_enter_correct_brainkey">Please enter correct brainkey</string>
     <string name="balances">Balances</string>
-    <string name="bitcoin">Bitcoin</string>
     <string name="contacts">Contacts</string>
     <string name="receive_uppercase">RECEIVE</string>
     <string name="send_uppercase">SEND</string>
@@ -446,4 +445,5 @@
 
     <!-- PDF export -->
     <string name="progress_pdf_generation">Generating PDF file</string>
+    <string name="bitcoin">Bitcoin</string>
 </resources>
