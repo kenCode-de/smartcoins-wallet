@@ -16,7 +16,7 @@ import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 
 import de.bitsharesmunich.cryptocoincore.fragments.NoCurrencyAccountFragment;
-import de.bitsharesmunich.cryptocoincore.models.Coin;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 /**
  * Created by henry on 05/02/17.

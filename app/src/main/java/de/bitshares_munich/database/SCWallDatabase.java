@@ -24,6 +24,7 @@ import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
 import de.bitsharesmunich.graphenej.Asset;
@@ -612,6 +613,38 @@ public class SCWallDatabase {
 
     // CryptoCoinCore
 
+    public List<AccountSeed> getSeeds(SeedType type){
+        List<AccountSeed> seeds = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.Seeds.COLUMN_ID,
+                SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC,
+                SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
+                SCWallDatabaseContract.Seeds.COLUMN_TYPE+ " = '" + type.name() + "'", null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            AccountSeed seed;
+            do{
+                String id = cursor.getString(0);
+                List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
+                String additional = cursor.getString(2);
+                switch (type.name()) {
+                    case "BIP39":
+                        seed = new BIP39(id, mnemonic, additional);
+                        break;
+                    case "BrainKey":
+                        seed = new Brainkey(id, mnemonic, additional);
+                        break;
+                    default:
+                        seed = null;
+                }
+                seeds.add(seed);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return seeds;
+    }
+
     public AccountSeed getSeed(String idSeed) {
         AccountSeed seed = null;
         String[] columns = {
@@ -692,7 +725,6 @@ public class SCWallDatabase {
                     default:
                         seed = null;
                 }
-                cursor.close();
                 seeds.add(seed);
             }while(cursor.moveToNext());
         }
