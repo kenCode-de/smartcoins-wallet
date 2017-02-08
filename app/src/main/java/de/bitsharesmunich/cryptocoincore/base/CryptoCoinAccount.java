@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import java.util.List;
+
 /**
  * Created by henry on 05/02/2017.
  */
@@ -47,9 +49,6 @@ public abstract class CryptoCoinAccount {
         this.coin = coin;
     }
 
-    //public abstract String toJsonString();
-    //public abstract CryptoCoinContactBook getContactBook();
-    public abstract Balance getBalance();
+    public abstract List<Balance> getBalance();
 
-    //public abstract CryptoCoinTransfer transfer(CryptoCoinAccount to, double ammount, String description, CryptoCoinTransferData additionalData);
 }

@@ -25,6 +25,7 @@ import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
@@ -927,5 +928,60 @@ public class SCWallDatabase {
         return accounts;
     }
 
+    // General Account Coin Address Section
+
+    public String putGeneralCoinAddress(final GeneralCoinAddress address){
+        ContentValues contentValues = new ContentValues();
+        String newId = UUID.randomUUID().toString();
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID, newId);
+        if(address.getAccount() == null || address.getAccount().getId() == null){
+            Log.d(TAG,"Error inserting account  null seed in database");
+            return null;
+        }
+
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT, address.getAccount().getId());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_INDEX, address.getIndex());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_IS_CHANGE, address.getIndex());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY, address.getKey().getPublicKeyAsHex());
+
+        try{
+            db.insertOrThrow(SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, null, contentValues);
+            address.setId(newId);
+            Log.d(TAG,String.format("Inserted %s address seuccesfully transactions in database", newId));
+            return newId;
+        }catch (SQLException e){
+        }
+        Log.d(TAG,"Error inserting address in database");
+        return null;
+    }
+
+    public boolean updateGeneralCoinAddress(GeneralCoinAddress address){
+        return false;
+    }
+
+    public List<GeneralCoinAddress> getGeneralCoinAddress(GeneralCoinAccount account){
+        List<GeneralCoinAddress> addrs = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID,
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_INDEX,
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_IS_CHANGE,
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY,
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT+ " = '" + account.getId() + "'", null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            GeneralCoinAddress addr ;
+            do{
+                String id = cursor.getString(0);
+                int index = cursor.getInt(1);
+                int isChange = cursor.getInt(2);
+                String pubHexKey = cursor.getString(3);
+                addr = new GeneralCoinAddress(id,account,isChange>0,index,pubHexKey);
+                addrs.add(addr);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return addrs;
+    }
 
 }
