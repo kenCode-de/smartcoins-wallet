@@ -629,7 +629,6 @@ public class SCWallDatabase {
             Log.d(TAG,String.format("Inserted %s seed seuccesfully transactions in database", newId));
             return newId;
             }catch (SQLException e){
-                //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         Log.d(TAG,"Error inserting seed in database");
         return null;
@@ -768,6 +767,57 @@ public class SCWallDatabase {
 
 
     //General Coin Account section
+
+    public String putGeneralCoinAccount(final GeneralCoinAccount account){
+        ContentValues contentValues = new ContentValues();
+        String newId = UUID.randomUUID().toString();
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ID, newId);
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE, account.getCoin().name());
+        if(account.getSeed() == null){
+            Log.d(TAG,"Error inserting account  null seed in database");
+            return null;
+        }
+        String idSeed = account.getSeed().getId();
+        if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")){
+            idSeed = getIdSeed(account.getSeed());
+            if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")){
+                idSeed = putSeed(account.getSeed());
+                if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")) {
+                    Log.d(TAG,"Error inserting account  null id seed in database");
+                    return null;
+                }
+            }
+            account.getSeed().setId(idSeed);
+        }
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED, idSeed);
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME, account.getName());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX, account.getAccountNumber());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX, account.getLastChangeIndex());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX, account.getLastExternalIndex());
+        try{
+            db.insertOrThrow(SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, null, contentValues);
+            account.setId(newId);
+            Log.d(TAG,String.format("Inserted %s account seuccesfully transactions in database", newId));
+            return newId;
+        }catch (SQLException e){
+        }
+        Log.d(TAG,"Error inserting account in database");
+        return null;
+    }
+
+    public boolean updateGeneralCoinAccount(GeneralCoinAccount account){
+        String table = SCWallDatabaseContract.GeneralAccounts.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ account.getId()};
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME, account.getName());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX, account.getAccountNumber());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX, account.getLastChangeIndex());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX, account.getLastExternalIndex());
+        int affected = db.update(table,contentValues,whereClause,whereArgs);
+        return affected > 0;
+    }
 
     public GeneralCoinAccount getGeneralCoinAccount(String coinType) {
         String[] columns = {
