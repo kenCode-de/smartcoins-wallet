@@ -100,7 +100,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_ID_ACCOUNT = "id_account";
         public static final String COLUMN_IS_CHANGE = "is_change";
-        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_INDEX = "address_index";
         public static final String COLUMN_PUBLIC_KEY = "pub_key";
     }
 

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.fragments.BalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -26,7 +29,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
     private FragmentManager mFragmentManager;
     private Fragment fragmentAtBitcoin;
-    private boolean testing = false;
 
     public ViewPagerAdapter(Context context, FragmentManager manager) {
         super(manager);
@@ -40,15 +42,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return BalancesFragment.newInstance(Coin.BITSHARE);
             case 1:
-                //if (SCWallDatabase.getAccount(Account seed, String cointype))
-                if (testing){
+                final SCWallDatabase db = new SCWallDatabase(mContext);
+                GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+
+                if (account != null){
                     this.fragmentAtBitcoin = BalancesFragment.newInstance(Coin.BITCOIN);
                 } else {
-                    testing = true;
-                    //if (this.fragmentAtBitcoin == null){
-                        this.fragmentAtBitcoin = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
-
-                    //}
+                    this.fragmentAtBitcoin = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
                 }
                 return this.fragmentAtBitcoin;
                 //return BalancesFragment.newInstance(Coin.BITCOIN);

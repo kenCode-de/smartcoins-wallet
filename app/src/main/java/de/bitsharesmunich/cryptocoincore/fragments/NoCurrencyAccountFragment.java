@@ -15,10 +15,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.smartcoinswallet.BackupBrainkeyActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
+import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
 
 
 /**
@@ -63,48 +72,66 @@ public class NoCurrencyAccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (pager != null){
-                    ((ViewPagerAdapter)pager.getAdapter()).changeBitcoinFragment();
+                    final SCWallDatabase db = new SCWallDatabase(getContext());
+                    List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
 
-                    final Dialog dialog = new Dialog(getContext() this, R.style.stylishDialog);
-                    dialog.setTitle(getString(R.string.backup_brainkey));
-                    dialog.setContentView(R.layout.activity_copybrainkey);
-                    final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
-                    try {
-                        String brainKey = getBrainKey();
-                        if (brainKey.isEmpty()) {
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.unable_to_load_brainkey), Toast.LENGTH_LONG).show();
-                            return;
-                        } else {
-                            etBrainKey.setText(brainKey);
+                    if (seeds.size() == 0) {
+                        final Dialog dialog = new Dialog(getContext(), R.style.stylishDialog);
+                        dialog.setTitle(getString(R.string.backup_master_seed));
+                        dialog.setContentView(R.layout.activity_copybrainkey);
+                        final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
+                        final AccountSeed newSeed;
+                        try {
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(getContext().getAssets().open("bip39dict.txt"), "UTF-8"));
+                            String dictionary = reader.readLine();
+                            newSeed = new BIP39(dictionary.split(","));
+
+                            String masterSeedWords = newSeed.getMnemonicCodeString();
+                            if (masterSeedWords.isEmpty()) {
+                                Toast.makeText(getContext(), getResources().getString(R.string.unable_to_create_master_seed), Toast.LENGTH_LONG).show();
+                                return;
+                            } else {
+                                etBrainKey.setText(masterSeedWords);
+                            }
+
+
+                            Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+                            btnCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.cancel();
+                                }
+                            });
+                            Button btnCopy = (Button) dialog.findViewById(R.id.btnCopy);
+                            btnCopy.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    db.putSeed(newSeed);
+                                    BitcoinAccount bitcoinAccount = new BitcoinAccount(newSeed, "BTC Account");
+                                    db.putGeneralCoinAccount(bitcoinAccount);
+
+                                    Toast.makeText(getContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                                    ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
+                                    clipboard.setPrimaryClip(clip);
+                                    dialog.cancel();
+                                    ((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
+                                }
+                            });
+                            dialog.setCancelable(false);
+
+                            dialog.show();
+                        } catch (Exception e) {
+
                         }
-                    } catch (Exception e) {
-
+                    } else {
+                        BitcoinAccount bitcoinAccount = new BitcoinAccount(seeds.get(0), "BTC Account");
+                        db.putGeneralCoinAccount(bitcoinAccount);
+                        ((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
                     }
-
-                    Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-                    btnCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.cancel();
-                        }
-                    });
-                    Button btnCopy = (Button) dialog.findViewById(R.id.btnCopy);
-                    btnCopy.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(BackupBrainkeyActivity.this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
-                            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
-                            clipboard.setPrimaryClip(clip);
-                            dialog.cancel();
-                        }
-                    });
-                    dialog.setCancelable(false);
-
-                    dialog.show();
-
                 }
 
+                //((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
             }
         });
 

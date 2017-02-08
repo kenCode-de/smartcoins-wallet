@@ -830,7 +830,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = " + coinType,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = '" + coinType+"'",
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
@@ -866,7 +866,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = " + coinType + " AND " + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = " + seed.getId(),
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = '" + coinType + "' AND " + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = '" + seed.getId()+"'",
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{

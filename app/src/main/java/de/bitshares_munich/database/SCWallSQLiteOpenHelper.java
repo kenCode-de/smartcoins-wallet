@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
