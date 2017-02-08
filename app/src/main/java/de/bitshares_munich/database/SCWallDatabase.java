@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
@@ -613,6 +614,39 @@ public class SCWallDatabase {
 
     // CryptoCoinCore
 
+    // Account Seed Section
+
+    public String putSeed(final AccountSeed seed){
+        ContentValues contentValues = new ContentValues();
+        String newId = UUID.randomUUID().toString();
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ID, newId);
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_TYPE, seed.getType().name());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL, seed.getAdditional());
+        try{
+            db.insertOrThrow(SCWallDatabaseContract.Seeds.TABLE_NAME, null, contentValues);
+            seed.setId(newId);
+            Log.d(TAG,String.format("Inserted %s seed seuccesfully transactions in database", newId));
+            return newId;
+            }catch (SQLException e){
+                //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
+            }
+        Log.d(TAG,"Error inserting seed in database");
+        return null;
+    }
+
+    public boolean updateSeed(AccountSeed seed){
+        String table = SCWallDatabaseContract.Seeds.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.Seeds.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ seed.getId() };
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_TYPE, seed.getType().name());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL, seed.getAdditional());
+        int affected = db.update(table,contentValues,whereClause,whereArgs);
+        return affected > 0;
+    }
+
     public List<AccountSeed> getSeeds(SeedType type){
         List<AccountSeed> seeds = new ArrayList();
         String[] columns = {
@@ -732,7 +766,10 @@ public class SCWallDatabase {
         return seeds;
     }
 
-    public GeneralCoinAccount getAccount(String coinType) {
+
+    //General Coin Account section
+
+    public GeneralCoinAccount getGeneralCoinAccount(String coinType) {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
@@ -770,7 +807,7 @@ public class SCWallDatabase {
         return null;
     }
 
-    public GeneralCoinAccount getAccount(AccountSeed seed, String coinType) {
+    public GeneralCoinAccount getGeneralCoinAccount(AccountSeed seed, String coinType) {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
@@ -801,7 +838,7 @@ public class SCWallDatabase {
         return null;
     }
 
-    public List<GeneralCoinAccount> getAccounts() {
+    public List<GeneralCoinAccount> getGeneralCoinAccounts() {
 
         List<GeneralCoinAccount> accounts = new ArrayList();
 
