@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
-import de.bitsharesmunich.cryptocoincore.models.Coin;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 
 /**
