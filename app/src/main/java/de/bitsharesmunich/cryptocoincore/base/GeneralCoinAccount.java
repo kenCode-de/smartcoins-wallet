@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import com.google.gson.JsonObject;
+
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
@@ -90,5 +92,15 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public int getLastChangeIndex() {
         return lastChangeIndex;
+    }
+
+    public JsonObject toJson() {
+        JsonObject answer = new JsonObject();
+        answer.addProperty("type", this.coin.name());
+        answer.addProperty("name", this.name);
+        answer.addProperty("accountNumber", this.accountNumber);
+        answer.addProperty("changeIndex", this.lastChangeIndex);
+        answer.addProperty("externalIndex", this.lastExternalIndex);
+        return answer;
     }
 }

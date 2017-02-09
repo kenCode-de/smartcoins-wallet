@@ -1,10 +1,16 @@
 package de.bitsharesmunich.graphenej;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import de.bitshares_munich.database.SCWallDatabase;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.graphenej.crypto.AndroidRandomSource;
 import de.bitsharesmunich.graphenej.crypto.SecureRandomStrengthener;
 
@@ -23,6 +29,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -43,7 +50,7 @@ public abstract class FileBin {
      * @return the brainkey file, or null if the file or the password are
      * incorrect
      */
-    public static String getBrainkeyFromByte(byte[] input, String password) {
+    public static String getBrainkeyFromByte(byte[] input, String password, Context context) {
         try {
             byte[] publicKey = new byte[33];
             byte[] rawData = new byte[input.length - 33];
@@ -85,6 +92,10 @@ public abstract class FileBin {
                 wallet_string = wallet_string + "}";
                 wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
             }
+
+            JsonObject scwallWallet = wallet.get("scwall_wallet").getAsJsonObject();
+            JsontoDatabase(scwallWallet,password,context);
+
             if (wallet.get("wallet").isJsonArray()) {
                 wallet = wallet.get("wallet").getAsJsonArray().get(0).getAsJsonObject();
             } else {
@@ -119,7 +130,7 @@ public abstract class FileBin {
      * @param accountName The account name
      * @return The array byte of the file, or null if an error ocurred
      */
-    public static byte[] getBytesFromBrainKey(String BrainKey, String password, String accountName) {
+    public static byte[] getBytesFromBrainKey(String BrainKey, String password, String accountName, Context context) {
         byte[] result = null;
         try {
             byte[] encKey = new byte[32];
@@ -145,6 +156,9 @@ public abstract class FileBin {
             jsonAccountName.add("name", new JsonParser().parse(accountName));
             accountNames.add(jsonAccountName);
             wallet_object.add("linked_accounts", accountNames);
+
+            wallet_object.add("scwall_wallet", DatabaseToJson(password,context));
+
             byte[] compressedData = Util.compress(wallet_object.toString().getBytes("UTF-8"), COMPRESS_TYPE);
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] checksum = md.digest(compressedData);
@@ -254,5 +268,45 @@ public abstract class FileBin {
         } catch (NoSuchAlgorithmException | DataLengthException | IllegalStateException | InvalidCipherTextException ex) {
         }
         return null;
+    }
+
+    public static JsonObject DatabaseToJson(String password, Context context) {
+
+        SCWallDatabase db = new SCWallDatabase(context);
+        JsonObject answer = new JsonObject();
+        List<AccountSeed> seeds = db.getSeeds();
+        JsonArray seedsObject = new JsonArray();
+        for (AccountSeed seed : seeds) {
+            JsonObject seedObject = seed.toJson(password);
+            List<GeneralCoinAccount> accounts = db.getGeneralCoinAccounts(seed);
+            JsonArray accountsObject = new JsonArray();
+            for (GeneralCoinAccount account : accounts) {
+                JsonObject accountObject = account.toJson();
+                accountsObject.add(accountObject);
+            }
+            seedObject.add("accounts", accountsObject);
+            seedsObject.add(seedObject);
+        }
+        answer.add("seeds", seedsObject);
+        return answer;
+    }
+
+    public static void JsontoDatabase(JsonObject in, String password,Context context) {
+        SCWallDatabase db = new SCWallDatabase(context);
+
+        JsonArray seedsObject = in.getAsJsonArray("seeds");
+        for (int i = 0; i < seedsObject.size(); i++) {
+            JsonObject seedObject = seedsObject.get(i).getAsJsonObject();
+            AccountSeed seed = AccountSeed.fromJson(seedObject, password);
+            String idSeed = db.putSeed(seed);
+            seed.setId(idSeed);
+            JsonArray accountsObject = seedObject.get("accounts").getAsJsonArray();
+            for (int j = 0; j < accountsObject.size(); j++) {
+                JsonObject accountObject = accountsObject.get(j).getAsJsonObject();
+                GeneralCoinAccount account = (GeneralCoinAccount) CryptoCoinFactory.getAccountFromJson(accountObject, seed);
+                db.putGeneralCoinAccount(account);
+            }
+        }
+
     }
 }

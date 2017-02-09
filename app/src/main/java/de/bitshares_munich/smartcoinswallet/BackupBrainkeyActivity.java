@@ -51,7 +51,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile();
+        myBinHelper.createBackupBinFile(getApplicationContext());
 
     }
 

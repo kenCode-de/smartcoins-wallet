@@ -162,7 +162,7 @@ public class ImportBackupActivity extends BaseActivity {
             for(int i = 0 ; i < bytes.size();i++){
                 byteArray[i] = bytes.get(i).byteValue();
             }
-            final String brainKey = FileBin.getBrainkeyFromByte(byteArray, pin);
+            final String brainKey = FileBin.getBrainkeyFromByte(byteArray, pin,getApplicationContext());
             BrainKey bKey = new BrainKey(brainKey, 0);
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());

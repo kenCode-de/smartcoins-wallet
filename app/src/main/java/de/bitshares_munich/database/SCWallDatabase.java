@@ -889,6 +889,40 @@ public class SCWallDatabase {
         return null;
     }
 
+    public List<GeneralCoinAccount> getGeneralCoinAccounts(AccountSeed seed) {
+
+        List<GeneralCoinAccount> accounts = new ArrayList();
+
+        String[] columns = {
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = '" + seed.getId()+"'",
+                null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                String name = cursor.getString(1);
+                Coin type = Coin.valueOf(cursor.getString(2));
+                int accountIndex = cursor.getInt(3);
+                int changeIndex = cursor.getInt(4);
+                int externalIndex = cursor.getInt(5);
+                GeneralCoinAccount account = CryptoCoinFactory
+                        .getGeneralCoinManager(type)
+                        .getAccount(id, name, seed, accountIndex,
+                                externalIndex, changeIndex);
+                accounts.add(account);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return accounts;
+    }
+
     public List<GeneralCoinAccount> getGeneralCoinAccounts() {
 
         List<GeneralCoinAccount> accounts = new ArrayList();
