@@ -1,238 +1,478 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+ <string name="pin_number_warning">El nombre de PIN ha de ser d\'almenys 6 dígits</string>
+ <string name="old_pin_number_warning">El nombre de pin d\'edat ha de ser d\'almenys 6 dígits</string>
+
     <string name="bts_will_be_deducted">BTS s\'ha de deduir de</string>
 
+
+
     <string name="license">Llicència</string>
+
 <string name="send_capital">Enviar</string>
+
 <string name="account_create_register_or_import">CREAR COMPTE o importació</string>
+
 <string name="txt_account_name">Nom del compte</string>
+
 <string name="time_stamp">segell de temps</string>
+
 <string name="email_pdf">email PDF</string>
+
 <string name="account">Compte</string>
+
 <string name="friendly_name">nom descriptiu</string>
+
 <string name="notes">Notes</string>
+
 <string name="note">Nota</string>
+
     <string name="please_make_sure_your_pin">Si us plau assegureu-vos que el seu PIN és correcte</string>
+
     <string name="please_make_sure_your_pin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer PIN correcte o correctes</string>
+
 <string name="payment_received">Pagament rebut</string>
+
 <string name="import_brainkey">Importa el BrainKey</string>
+
 <string name="import_backup_old">Importar còpia de seguretat</string>
+
 <string name="choose_backup">Seleccionar còpia de seguretat</string>
+
 <string name="choose_file">Triar l\'arxiu</string>
+
 <string name="no_file_chosen">Cap arxiu triat</string>
+
 <string name="account_label">Trieu larxiu</string>
+
 <string name="loading_msg">El vostre saldo s\'està carregant</string>
-<string name="txt_6_digits_pin">PIN de 6 dígits</string>
-<string name="txt_6_digits_pin_confirm">Confirma el PIN de 6 dígits</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ dígits)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">confirmen PIN</string>
+ 
 <string name="create">CREAR</string>
+
 <string name="existing_account">Compte existent</string>
+
 <string name="agreement">Acord</string>
+
 <string name="cancel_and_exit">Cancel·lar i Sortir</string>
+
 <string name="i_agree">Estic d\'acord</string>
+
     <string name="unable_to_import_account_from_bin_file">No es pot importar el compte de l\'arxiu del compartiment</string>
+
     <string name="importing_keys_from_bin_file">La importació de claus d\'arxiu Bin</string>
+
     <string name="import_backup">Importació de còpia de seguretat del fitxer .bin</string>
+
     <string name="is_already_added">Ja s\'ha afegit</string>
+
     <string name="in_valid_email">Email invàlid</string>
+
     <string name="select">Seleccionar</string>
+
     <string name="are_you_sure">Estàs segur?</string>
 
+
+
     <string name="kindly_create_account">amablement Entrada</string>
-<string name="please_enter_old_6_digit_pin">Si us plau, l\'antic PIN de 6 dígits</string>
-<string name="please_enter_6_digit_pin">Si us plau, introdueixi el nou PIN de 6 dígits</string>
-<string name="please_enter_6_digit_pin_confirm">Si us plau, introdueixi la confirmació PIN 6 dígits</string>
+
+ <string name="please_enter_old_6_digit_pin">Si us plau, introdueixi el PIN d\'edat</string>
+ 
+ <string name="please_enter_6_digit_pin">Si us plau, introdueixi el PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Si us plau, introdueixi el PIN de confirmació</string>
+ 
 <string name="mismatch_pin">El PIN no correspon</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Imprimiu o anoteu aquesta clau. Qualsevol persona amb accés a la clau de recuperació tindrà accés als fons dins d\'aquesta cartera.</string>
+
 <string name="create_wallet">CREAR CARPETA</string>
+
 <string name="cance">CANCEL·LAR</string>
+
 <string name="save">GUARDAR</string>
+
 <string name="next">SEGÜENT</string>
+
 <string name="please_enter_brainkey">Si us plau, introdueixi la brainkey</string>
+
 <string name="please_enter_correct_brainkey">Si us plau, introdueixi la brainkey correcta</string>
+
 <string name="balances">Saldos</string>
+
 <string name="contacts">Contactes</string>
+
 <string name="receive_uppercase">REBRE</string>
+
 <string name="send_uppercase">ENVIAR</string>
+
 <string name="transactions">Transaccions</string>
+
 <string name="title_activity_setting">SettingActivity</string>
+
 <string name="backup_asset">Actius de còpia de seguretat</string>
+
 <string name="taxable_country">gravable País</string>
+
 <string name="date_time">Dates i hores de visualització com</string>
+
 <string name="check_for_updates">Comprovar si hi ha actualitzacions al iniciar</string>
+
 <string name="automatically_install">instal·larà automàticament la versió principal</string>
+
 <string name="require_pin">Requerir PIN / patró per enviar fons i veure les notes</string>
+
 <string name="close_bitshare">Tancar automàticament el moneder Bitshares després de 3 minuts d\'inactivitat</string>
+
 <string name="always_donate">Sempre donar 2 BTS als desenvolupadors de suport a BitShares Munic (bitshares Munic)</string>
+
 <string name="hide_donations"> Ocultar les donacions de la llista de Transaccions de pantalla d\'inici</string>
+
 <string name="backup">.bin BACKUP</string>
+
 <string name="checkbox_donate_old">Donar 2 BTS als desenvolupadors de suport a Bitshares Munic</string>
+
 <string name="backup_brainkey">BRAINKEY BACKUP</string>
+
 <string name="imported_created_accounts">Importats / creat els comptes</string>
+
 <string name="register_new_account">Registrar un nou compte</string>
+
 <string name="secure_pin">EDITAR PIN</string>
+
 <string name="export">exportació</string>
+
     <string name="checkbox_donate">Donar 2 BTS als desenvolupadors de suport a</string>
+
 <string name="show_more">Mostra més</string>
+
 <string name="share_text">Acabo de trobar aquest Moneder impressionant Smartcoins que li permet enviar i rebre Smartcoins. Comprova-ho! Salut!</string>
+
 <string name="share_info">Convidi a un o més dels seus amics per provar el Moneder Smartcoins! Les adreces de correu no es guarden o recollits per qualsevol persona pel que es garanteix la seva privacitat.</string>
+
 <string name="share_subject">Moneder impressionant Smartcoins</string>
+
 <string name="share_heading">compartir amb un amic</string>
+
 <string name="share_btn_text">Compartir</string>
+
 <string name="action_settings">Configuració</string>
+
 <string name="txt_validating_account">La validació del compte ...</string>
+
 <string name="validating_account">La validació del compte ...</string>
+
 <string name="account_name_should_be_longer">El nom del compte ha de ser més llarg</string>
+
 <string name="account_name_already_exist">Nom del compte ja existeix</string>
+
 <string name="account_name_not_exist">Nom del compte no existeix</string>
+
 <string name="add_contact">afegir</string>
+
 <string name="edit_contact">editar</string>
+
 <string name="empty_list">La llista de contactes està buida</string>
+
 <string name="account_name_validate">El nom del compte és vàlid</string>
+
 <string name="txt_no_internet_connection">Sense connexió a Internet</string>
+
 <string name="unable_to_create_account_from_brainkey">No es pot crear el compte de brainkey</string>
+
 <string name="importing_your_wallet">Importació de la seva cartera ...</string>
+
 <string name="str_trading_pair_not_exist">parell el comerç no existeix</string>
+
 <string name="unable_to_create_qr_code">No es pot generar codi QR</string>
+
 <string name="price">preu</string>
+
 <string name="currency">moneda</string>
+
 <string name="please_enter_amount">Si us plau, ingressi la quantitat</string>
+
 <string name="amount_should_be_greater_than_zero">La quantitat ha de ser més gran que zero</string>
+
 <string name="no_amount_requested">Cap quantitat sol·licitada</string>
+
 <string name="to_capital">a</string>
+
 <string name="from_capital">de</string>
+
 <string name="memo_capital">memoràndum</string>
+
 <string name="empty_file_created">Arxiu buit creat</string>
+
 <string name="date">Data</string>
+
 <string name="all">tots</string>
+
 <string name="to_from">a</string>
+
 <string name="amount">quantitat</string>
+
 <string name="message">missatge</string>
+
 <string name="pdf_generated_msg">PDF genera i es guarda:</string>
+
 <string name="pdf_generated_msg_error">No es pot generar pdf. Torneu-ho a provar de nou. error:</string>
+
 <string name="raw_transactions">Transacció en brut:</string>
+
 <string name="extensions">extensions</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Enviats / rebuts</string>
+
 <string name="details">Detalls</string>
+
 <string name="share_qr_code">compartir QR</string>
+
 <string name="done">fet</string>
+
 <string name="id_s">identificació</string>
+
 <string name="time">temps</string>
+
 <string name="operations">operacions</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">símbol</string>
+
 <string name="fee_capital">quota</string>
+
 <string name="ok">D\'acord</string>
+
 <string name="loading">Carregant ...</string>
+
 <string name="pay_to">pagar a</string>
+
 <string name="requested">demanat</string>
+
 <string name="failed_transaction">transacció fallida</string>
+
 <string name="str_invalid_amount">Si us plau, introdueixi una quantitat vàlida</string>
+
 <string name="str_invalid_receiver">Si us plau, introdueixi una quantitat vàlida a rebre</string>
+
 <string name="str_transaction_failed">transacció fallida</string>
+
 <string name="please_enter_valid_amount">Si us plau, introdueixi la quantitat vàlida</string>
+
 <string name="select_timezone">Selecció de la zona horari</string>
-<string name="old_pin">Antic PIN de 6 dígits</string>
-<string name="pin_created_successfully">PIN creat correctament</string>
-<string name="edit_pin">Edita PIN</string>
+
+ <string name="old_pin">PIN antic</string>
+ 
+ <string name="pin_created_successfully">PIN creat correctament</string>
+ 
+ <string name="edit_pin">Edita PIN</string>
+ 
 <string name="txt_edit">GUARDAR</string>
-<string name="create_pin">crear PIN</string>
+
+ <string name="create_pin">crear PIN</string>
+ 
 <string name="pin_changed_successfully">PIN canviat correctament</string>
+
 <string name="incorrect_old_pin">PIN anterior incorrecte</string>
+
 <string name="copy">còpia</string>
+
 <string name="pin_verification">OBERT</string>
+
 <string name="send_screen_name">enviar</string>
+
 <string name="rcv_screen_name">rebre</string>
+
 <string name="request_amount_screen_name">quantitat</string>
+
 <string name="payment_rcvd_screen_name">Gràcies</string>
+
 <string name="e_receipt_activity_name">rebut electrònic</string>
+
 <string name="settings_activity_name">configuració</string>
+
 <string name="qr_code_activity_name">escanejar codi QR</string>
+
 <string name="share_account_activity_name">Comparteix amb amics</string>
+
 <string name="add_contact_activity_name">afegir contacte</string>
+
 <string name="str_trade_not_available">Intercanvi no disponible</string>
+
     <string name="preferred_lang">idioma preferit</string>
+
     <string name="got_it">Ho tinc</string>
+
     <string name="upgrade_to_ltm">Puja a UDM</string>
+
     <string formatted="false" name="help_message">Obtenir 80% de reemborsament de Taxes! Els membres de tota la vida (LTM) reben el 80% de Cashback a cada tarifa de transacció que paguen, i qualificar per obtenir ingressos remissió dels usuaris que es registrin amb o fan referència a la xarxa. Una membre de per vida és ara sota 20000 BTS!</string>
+
     <string name="txt_yes">si</string>
+
     <string name="txt_no">No</string>
+
     <string name="txt_confirmation">confirmació</string>
+
     <string name="txt_confirmation_msg">Són la seva assegurança?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">creat carpeta</string>
+
     <string name="upgrade_failed">error d\'actualització</string>
+
     <string name="upgrading">Actualitzant ...</string>
+
     <string name="import_new_account">COMPTE D\'IMPORTACIÓ</string>
+
     <string name="upgrade_account">COMPTE D\'ACTUALITZACIÓ</string>
+
     <string name="remove_account">Elimina el compte</string>
+
     <string name="txt_alertmsg">¿Segur eliminar aquest compte</string>
+
     <string name="validation_in_progress">Validació en curs ..</string>
+
     <string name="last_letter_cannot">última carta no pot ser -</string>
+
     <string name="account_name_shoud_have">nom de compte shoud té almenys un -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">El compte ja existeix</string>
+
     <string name="txt_back">esquena</string>
+
     <string name="please_pay">Si us plau, presti</string>
+
     <string name="transfer_funds">La transferència de fons</string>
+
     <string name="unable_to_process">No es pot processar</string>
+
     <string name="cancel">CANCEL · LAR</string>
+
     <string name="donation">Donació</string>
+
     <string name="insufficient_funds">Fons insuficients</string>
+
     <string name="txt_wallet_atleast_one_account">Ho sentim, però la seva cartera ha de tenir almenys un compte</string>
+
     <string name="updating_transaction_id">Actualització de ID de la transacció, si us plau esperi</string>
+
     <string name="email_name">Per mostrar una foto per aquest contacte, introdueixi la seva adreça de correu Gravatar aquí</string>
+
     <string name="upgrade_success">Actualització correcta!</string>
+
     <string name="copied_to_clipboard">Copiat al porta-retalls</string>
 
+
+
     <string name="unable_to_load_brainkey">No es pot carregar brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">No es pot generar el format bin per la clau</string>
+
     <string name="creating_backup_file">La creació de còpies de seguretat d\'arxius</string>
+
     <string name="fetching_key">obtenint clau</string>
+
     <string name="generating_bin_format">Generant format bin</string>
+
     <string name="invalid_pin">PIN no vàlid</string>
+
     <string name="saving_bin_file_to">Bin estalvi d\'arxius per</string>
+
     <string name="bin_file_saved_successfully_to">Bin arxiu desat amb èxit per</string>
+
     <string name="unable_to_save_bin_file">No es pot desar el fitxer bin</string>
 
+
+
     <string name="txt_alertmsg_fr">Esteu segur que voleu eliminar el</string>
+
     <string name="txt_alertmsg_la">donar compte d\'aquesta cartera?</string>
+
     <string name="bugs_or_errors">Bugs i errors?</string>
+
     <string name="please_let_us_know">Si us plau fes-nos-ho saber:</string>
+
     <string name="try_again">Torneu-ho de nou després de 5 minuts</string>
+
     <string name="warning_msg_same_account">No es pot enviar la quantitat en el mateix compte</string>
 
+
+
     <string name="please_backup_your_brainkey">Si us plau doni suport les seves brainkey</string>
+
     <string name="backup_brainkey_msg">Còpia de seguretat del seu arxiu .bin en un lloc segur o els seus fons podrien perdre!</string>
+
     <string name="unable_to_trade_bAssets">No és possible negociar els elements de backup</string>
+
     <string name="unable_to_send_amount">No es pot enviar la quantitat.</string>
+
     <string name="unable_to_decode_QR">No és possible descodificar el codi QR.</string>
 
+
+
     <string name="loyalty_points">Punts de fidelitat</string>
+
     <string name="str_warning_only_available">Atenció! Només 1 %1$s %2$s està disponible</string>
+
     <string name="str_balance_available">%1$s %2$s disponibles</string>
 
+
+
     <string name="select_backup_asset">Seleccioneu l\'element de backup</string>
+
     <string name="sender_account">de compte de l\'emissor</string>
+
     <string name="receiver_account">compte receptor</string>
+
     <string name="total">total</string>
+
     <string name="payment_method">Mètode de pagament</string>
+
     <string name="thankyou_string">Gràcies per utilitzar Smartcoins Moneder</string>
+
     <string name="audio_folder_path">Ruta de la carpeta d\'àudio</string>
 
+
+
     <string name="please_make_sure_your_bin_file">Si us plau assegureu-vos que el passador s\'ha seleccionat el fitxer bin correcta o correcta</string>
+
     <string name="change">Canvia ...</string>
 
+
+
     <string name="connected_to">Connectat a</string>
+
     <string name="account_create_msg">Només un compte cada 10 minuts es pot registrar</string>
+
     <string name="names_must_include_a_number">Els noms han d\'incloure un nombre</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">"Els noms han d'incloure un guió (-) i un nombre"</string>
+
     <string name="import_gravatar">importació Gravatar</string>
+
     <string name="please_import_the_correct_file">Si us plau, importar l\'arxiu correcte</string>
+
     <string name="merchant_email_has_been_imported_successfully">email comerç s\'ha importat amb èxit</string>
 
+
+
 </resources>
+

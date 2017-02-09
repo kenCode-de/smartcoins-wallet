@@ -1,234 +1,470 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources><string name="license">Licens</string>
+ <string name="pin_number_warning">Stiften nummer skal være mindst 6 cifre</string>
+ <string name="old_pin_number_warning">Det gamle pinkode skal være mindst 6 cifre</string>
+
 <string name="send_capital">Sende</string>
+
 <string name="account_create_register_or_import">REGISTRER KONTO ELLER IMPORTER</string>
+
 <string name="txt_account_name">Kontonavn</string>
+
 <string name="time_stamp">tidsstempel</string>
+
 <string name="email_pdf">Email PDF</string>
+
     <string name="bts_will_be_deducted">BTS vil blive fratrukket</string>
+
     <string name="account">Konto</string>
+
 <string name="friendly_name">Venligt navn</string>
+
 <string name="notes">Noter</string>
+
 <string name="note">Note</string>
+
 <string name="payment_received">Betaling modtaget</string>
+
 <string name="import_brainkey">Importer fra BrainKey</string>
+
 <string name="import_backup_old">Import Backup</string>
+
 <string name="choose_backup">Vælg Backup</string>
+
 <string name="choose_file">Vælg fil</string>
+
 <string name="no_file_chosen">Ingen fil valgt</string>
+
 <string name="account_label">Vælg fil</string>
+
     <string name="unable_to_import_account_from_bin_file">Kan ikke importere konto fra bin fil</string>
+
     <string name="importing_keys_from_bin_file">Import af nøgler fra Bin fil</string>
+
     <string name="import_backup">Import Backup fra .bin fil</string>
+
     <string name="is_already_added">er allerede tilføjet</string>
+
     <string name="in_valid_email">Ugyldig email</string>
+
     <string name="select">Vælg</string>
+
     <string name="are_you_sure">Er du sikker?</string>
+
     <string name="please_make_sure_your_pin">Sørg for din pin er korrekt</string>
+
     <string name="please_make_sure_your_pin_file">Sørg for din pin er rigtig eller korrekt pin-fil er valgt</string>
+
     <string name="loading_msg">Vent Venligst</string>
-<string name="txt_6_digits_pin">PIN 6-cifre</string>
-<string name="txt_6_digits_pin_confirm">6-cifre PIN confirm</string>
+
+ <string name="txt_6_digits_pin">PIN-kode (6 + cifre)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN confirm</string>
+ 
 <string name="create">SKABE</string>
+
 <string name="existing_account">Eksisterende konto</string>
+
 <string name="agreement">Aftale</string>
+
 <string name="cancel_and_exit">Annuller og Exit</string>
+
 <string name="i_agree">Jeg er enig</string>
+
 <string name="kindly_create_account">Kindly oprette konto</string>
-<string name="please_enter_old_6_digit_pin">Indtast venligst gamle 6-cifret pin</string>
-<string name="please_enter_6_digit_pin">Indtast venligst 6-cifret pin</string>
-<string name="please_enter_6_digit_pin_confirm">Indtast venligst 6-cifret pin bekræftelse</string>
+
+ <string name="please_enter_old_6_digit_pin">Indtast venligst gamle PIN-kode</string>
+ 
+ <string name="please_enter_6_digit_pin">Indtast PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Indtast PIN bekræftelse</string>
+ 
 <string name="mismatch_pin">uoverensstemmelse pin</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Udskriv dette, eller skrive det ned. Enhver med adgang til din opsving nøgle vil have adgang til midler inden denne tegnebog.</string>
+
 <string name="create_wallet">LAV WALLET</string>
+
 <string name="cance">AFBRYDE</string>
+
 <string name="save">GEMME</string>
+
 <string name="next">NÆSTE</string>
+
 <string name="please_enter_brainkey">Indtast venligst brainkey</string>
+
 <string name="please_enter_correct_brainkey">Indtast korrekt brainkey</string>
+
 <string name="balances">Saldo</string>
+
 <string name="contacts">Kontakter</string>
+
 <string name="receive_uppercase">MODTAGE</string>
+
 <string name="send_uppercase">SENDE</string>
+
 <string name="transactions">Transaktioner</string>
+
 <string name="title_activity_setting">SettingActivity</string>
+
 <string name="backup_asset">Backup Asset</string>
+
 <string name="taxable_country">skattepligtig Land</string>
+
 <string name="date_time">Display Tidspunkt som</string>
+
 <string name="check_for_updates">Søg efter opdateringer ved opstart</string>
+
 <string name="automatically_install">Automatisk installere større version</string>
+
 <string name="require_pin">Kræv pinkode / Mønster til at sende penge og se notater</string>
+
 <string name="close_bitshare">Sluk automatisk Bitshares Wallet efter 3 minutter uden aktivitet</string>
+
 <string name="always_donate">Doner altid 2 BTS til Support udviklere på BitShares München (bitshares munich)</string>
+
 <string name="hide_donations">Skjul Donationer fra homescreen Transaktionsliste</string>
+
 <string name="backup">BACKUP .bin</string>
+
 <string name="checkbox_donate_old">Donér 2 BTS til Support udviklere på Bitshares München</string>
+
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
+
 <string name="imported_created_accounts">Importerede / Skabte konti</string>
+
 <string name="register_new_account">Tilmeld ny konto</string>
+
 <string name="secure_pin">EDIT PIN</string>
+
 <string name="export">Eksport</string>
+
     <string name="checkbox_donate">Donér 2 BTS til Support af udviklere hos</string>
+
 <string name="show_more">Vis mere</string>
+
 <string name="share_text">Jeg har lige fundet denne fantastiske Smartcoins Wallet, der gør det muligt at sende og modtage Smartcoins. Tjek det ud! Skål</string>
+
 <string name="share_info">Inviter en eller flere af dine venner til at afprøve Smartcoins Wallet! E-mail-adresser er ikke gemt eller indsamlet af nogen så deres privatliv er sikkert.</string>
+
 <string name="share_subject">Fantastisk Smartcoins Wallet</string>
+
 <string name="share_heading">dele med en ven</string>
+
 <string name="share_btn_text">ÅBEN EMAIL PROGRAM</string>
+
 <string name="action_settings">Indstillinger</string>
+
 <string name="txt_validating_account">Validere konto ...</string>
+
 <string name="validating_account">Validere konto ...</string>
+
 <string name="account_name_should_be_longer">Kontonavn skal være længere</string>
+
 <string name="account_name_already_exist">Kontonavn %s findes allerede</string>
+
 <string name="account_name_not_exist">Kontonavn %s eksisterer ikke</string>
+
 <string name="add_contact">Tilføje</string>
+
 <string name="edit_contact">Redigere</string>
+
 <string name="empty_list">Kontakt liste er tom</string>
+
 <string name="account_name_validate">Konto navn er gyldigt</string>
+
 <string name="txt_no_internet_connection">Ingen internetforbindelse</string>
+
 <string name="unable_to_create_account_from_brainkey">Kan ikke oprette konto fra brainkey</string>
+
 <string name="importing_your_wallet">Import af din tegnebog ...</string>
+
 <string name="str_trading_pair_not_exist">Handel pair findes ikke</string>
+
 <string name="unable_to_create_qr_code">Kunne ikke generere Qr kode</string>
+
 <string name="price">pris</string>
+
 <string name="currency">valuta</string>
+
 <string name="please_enter_amount">Indtast beløb</string>
+
 <string name="amount_should_be_greater_than_zero">Beløb skal være større end nul</string>
+
 <string name="no_amount_requested">Ingen mængde anmodet</string>
+
 <string name="to_capital">Til</string>
+
 <string name="from_capital">Fra</string>
+
 <string name="memo_capital">Note</string>
+
 <string name="empty_file_created">Tom fil oprettet</string>
+
 <string name="date">Dato</string>
+
 <string name="all">Alle</string>
+
 <string name="to_from">Til</string>
+
 <string name="amount">Beløb</string>
+
 <string name="message">Besked</string>
+
 <string name="pdf_generated_msg">PDF genereret og gemt:</string>
+
 <string name="pdf_generated_msg_error">Kunne ikke generere pdf. Prøv igen. Fejl:</string>
+
 <string name="raw_transactions">Rå handel:</string>
+
 <string name="extensions">Udvidelser</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Sendt / modtaget</string>
+
 <string name="details">Detaljer</string>
+
 <string name="share_qr_code">Del QR Code</string>
+
 <string name="done">Færdig</string>
+
 <string name="id_s">id</string>
+
 <string name="time">tid</string>
+
 <string name="operations">operationer</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Symbol</string>
+
 <string name="fee_capital">Betaling</string>
+
 <string name="ok">Okay</string>
+
 <string name="loading">Indlæser ...</string>
+
 <string name="pay_to">Betal til</string>
+
 <string name="requested">anmodet</string>
+
 <string name="failed_transaction">Mislykket Transaktion</string>
 
+
+
 <string name="str_invalid_amount">Indtast gyldigt beløb</string>
+
 <string name="str_invalid_receiver">Indtast gyldig modtager</string>
+
 <string name="str_transaction_failed">Transaktion mislykkedes</string>
+
 <string name="please_enter_valid_amount">Indtast gyldigt beløb</string>
+
 <string name="select_timezone">Vælg TimeZone</string>
-<string name="old_pin">Gammel 6-cifre pinkode</string>
-<string name="pin_created_successfully">PIN oprettet</string>
-<string name="edit_pin">Rediger PIN</string>
+
+ <string name="old_pin">gammel PIN-kode</string>
+ 
+ <string name="pin_created_successfully">PIN oprettet</string>
+ 
+ <string name="edit_pin">Rediger PIN</string>
+ 
 <string name="txt_edit">GEM</string>
-<string name="create_pin">Opret PIN</string>
+
+ <string name="create_pin">Opret PIN</string>
+ 
 <string name="pin_changed_successfully">PIN ændret</string>
+
 <string name="incorrect_old_pin">Forkert gammele PIN-kode</string>
+
 <string name="copy">Kopi</string>
+
 <string name="pin_verification">Åbnet</string>
+
 <string name="send_screen_name">Send</string>
+
 <string name="rcv_screen_name">Modtag</string>
+
 <string name="request_amount_screen_name">Beløb</string>
+
 <string name="payment_rcvd_screen_name">Thankyou</string>
+
 <string name="e_receipt_activity_name">e-Kvittering</string>
+
 <string name="settings_activity_name">Indstillinger</string>
+
 <string name="qr_code_activity_name">Scan QR</string>
+
 <string name="share_account_activity_name">Del med venner</string>
+
 <string name="add_contact_activity_name">Tilføj kontakt</string>
+
 <string name="str_trade_not_available">Handel utilgængelig</string>
+
     <string name="preferred_lang">foretrukne sprog</string>
+
     <string name="got_it">Forstået</string>
+
     <string name="upgrade_to_ltm">Opgrader til LTM</string>
+
     <string name="txt_back">Tilbage</string>
+
     <string name="please_pay">betal venligst</string>
+
     <string name="transfer_funds">Overførsel af fonde</string>
+
     <string name="unable_to_process">Kan ikke behandle</string>
+
     <string name="cancel">AFBRYD</string>
+
     <string formatted="false" name="help_message">Få 80% Cashback på gebyrer! Livstidsmedlemmer (LTM) får 80% cashback på hver transaktion gebyr, de betaler, og kvalificere sig til at tjene henvisning indkomst fra brugere, de registrerer med eller henvise til netværket.Et Livstidsmedlemskab er nu under 20000 BTS!</string>
+
     <string name="txt_yes">Ja</string>
+
     <string name="txt_no">Nej</string>
+
     <string name="txt_confirmation">Bekræftelse</string>
+
     <string name="txt_confirmation_msg">Er din sikker?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">Folder Oprettet</string>
+
     <string name="upgrade_failed">Opgradering mislykkedes</string>
+
     <string name="upgrading">Opgradering ...</string>
+
     <string name="import_new_account">IMPORTER KONTO</string>
+
     <string name="upgrade_account">kontoopgradering</string>
+
     <string name="remove_account">Fjern konto</string>
+
     <string name="txt_alertmsg">Er du sikker på at slette denne konto</string>
+
     <string name="validation_in_progress">Validering er i gang ..</string>
+
     <string name="last_letter_cannot">sidste bogstav kan ikke være -</string>
+
     <string name="account_name_shoud_have">kontonavn mediefil have mindst én -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">Konto findes allerede</string>
+
     <string name="donation">Donation</string>
+
     <string name="insufficient_funds">Ikke nok penge</string>
+
     <string name="txt_wallet_atleast_one_account">Beklager, men din tegnebog skal have mindst en konto i den</string>
+
     <string name="updating_transaction_id">Opdatere Transaktion Id, vent venligst</string>
+
     <string name="email_name">For at vise et foto til denne Kontakt, indtast dens Gravatar e-mail her</string>
+
     <string name="upgrade_success">Opgradering Vellykket!</string>
+
     <string name="copied_to_clipboard">Kopieret til udklipsholderen</string>
 
+
+
     <string name="unable_to_load_brainkey">Kan ikke indlæse brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Kunne ikke genererer bin format til nøgle</string>
+
     <string name="creating_backup_file">Oprettelse Backup Fil</string>
+
     <string name="fetching_key">Henter Key</string>
+
     <string name="generating_bin_format">Opretter bin format</string>
+
     <string name="invalid_pin">Ugyldig PIN</string>
+
     <string name="saving_bin_file_to">Lagrer Bin fil til</string>
+
     <string name="bin_file_saved_successfully_to">Bin fil gemt til</string>
+
     <string name="unable_to_save_bin_file">Kan ikke gemme bin fil</string>
 
+
+
     <string name="txt_alertmsg_fr">Er du sikker på at du vil fjerne</string>
+
     <string name="txt_alertmsg_la">konto fra denne tegnebog?</string>
+
     <string name="bugs_or_errors">Bugs eller fejl?</string>
+
     <string name="please_let_us_know">Vær venlig at informere os:</string>
+
     <string name="try_again">Prøv venligst igen om 5 minutter</string>
+
     <string name="warning_msg_same_account">Du kan ikke sende beløb på samme konto</string>
 
+
+
     <string name="please_backup_your_brainkey">Sørg for at sikkerhedskopiere din brainkey</string>
+
     <string name="backup_brainkey_msg">Backup din .bin fil et sikkert sted eller dine penge kan gå tabt!</string>
+
     <string name="unable_to_trade_bAssets">Kan ikke handle med Backup aktiver</string>
+
     <string name="unable_to_send_amount">Kunne ikke sende beløbet.</string>
+
     <string name="unable_to_decode_QR">Kan ikke læse QR-koden.</string>
 
+
+
     <string name="loyalty_points">loyalitetspoint</string>
+
     <string name="str_warning_only_available">Advarsel! Kun %1$s %2$s er tilgængelig</string>
+
     <string name="str_balance_available">%1$s %2$s til rådighed</string>
 
+
+
     <string name="select_backup_asset">Vælg Backup Asset</string>
+
     <string name="sender_account">Sender konto</string>
+
     <string name="receiver_account">Modtager konto</string>
+
     <string name="total">Total</string>
+
     <string name="payment_method">Betalingsmetode</string>
+
     <string name="thankyou_string">Tak for hjælp Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Audio Folder Path</string>
+
     <string name="please_make_sure_your_bin_file">Sørg din pin er rigtig eller korrekt bin fil er valgt</string>
+
     <string name="change">Lave om...</string>
 
+
+
     <string name="connected_to">Forbundet til</string>
+
     <string name="account_create_msg">Kun én konto hver 10 minutter kan registreres</string>
+
     <string name="names_must_include_a_number">Navne skal indeholde en række</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Navne skal indeholde en bindestreg (-) og en række</string>
+
     <string name="import_gravatar">Import Gravatar</string>
+
     <string name="please_import_the_correct_file">importere venligst den korrekte fil</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant email er blevet importeret</string>
+
 </resources>
+

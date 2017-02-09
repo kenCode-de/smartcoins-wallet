@@ -1,234 +1,470 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+ <string name="pin_number_warning">يجب أن يكون الرقم السري لا يقل عن 6 ارقام</string>
+ <string name="old_pin_number_warning">يجب أن يكون الرقم السري القديم لا يقل عن 6 ارقام</string>
+
     <string name="bts_will_be_deducted">سيتم خصم BTS من</string>
+
     <string name="license">رخصة</string>
+
 <string name="send_capital">إرسال</string>
+
 <string name="account_create_register_or_import">انشاء حساب جديد أو استيراد حساب</string>
+
 <string name="txt_account_name">أسم الحساب</string>
+
 <string name="time_stamp">الطابع الزمني</string>
+
 <string name="email_pdf">البريد الإلكتروني PDF</string>
+
 <string name="account">حساب</string>
+
 <string name="friendly_name">اسم لطيف</string>
+
 <string name="notes">الملاحظات</string>
+
 <string name="note">ملاحظة</string>
+
 <string name="payment_received">تم الدفع</string>
+
 <string name="import_brainkey">استيراد Brainkey</string>
+
 <string name="import_backup_old">استيراد النسخة الاحتياطية القديمة</string>
+
 <string name="choose_backup">اختيار النسخة الاحتياطية</string>
+
     <string name="please_make_sure_your_pin">الرجاء التأكد من أن الرمز السري صحيح</string>
+
     <string name="please_make_sure_your_pin_file">الرجاء التأكد من ملف الرمز السري هة الملف الصحيح</string>
+
 <string name="choose_file">اختر ملف</string>
+
 <string name="no_file_chosen">لم تقم باختيار ملف</string>
+
 <string name="account_label">وسم الحساب</string>
+
 <string name="loading_msg">يرجى الانتظار حتى يتم تحميل الأرصدة</string>
-<string name="txt_6_digits_pin">أرقام الرمز التعريفي الستة</string>
-<string name="txt_6_digits_pin_confirm">التأكد من أرقام الرمز التعريفي الستة</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ أرقام)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">تأكيد PIN</string>
+ 
 <string name="create">انشاء</string>
+
 <string name="existing_account">حساب موجود</string>
+
 <string name="agreement">الاتفاقية</string>
+
 <string name="cancel_and_exit">إلغاء وخروج</string>
+
 <string name="i_agree">موافق</string>
+
 <string name="kindly_create_account">يرجى إنشاء حساب</string>
-<string name="please_enter_old_6_digit_pin">الرجاء ادخال الرمو السري القديم من ستة أرقام</string>
-<string name="please_enter_6_digit_pin">الرجاء ادخال الرمز السري القديم من ستة ارقام</string>
-<string name="please_enter_6_digit_pin_confirm">الرجاء تأكيد الرمز السري من ستة أرقام</string>
+
+ <string name="please_enter_old_6_digit_pin">الرجاء إدخال رقم التعريف الشخصي القديم</string>
+ 
+ <string name="please_enter_6_digit_pin">يرجى إدخال رقم التعريف الشخصي</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">الرجاء إدخال تأكيدا PIN</string>
+ 
 <string name="mismatch_pin">عدم تطابق الرمز السري</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">اطبع ال Brainkey و احفظه. أي شخص يحصل عليه يستطيع الوصول الى الأموال داخل المحفظة</string>
+
 <string name="create_wallet">انشاء محفظة</string>
+
 <string name="cance">إلغاء</string>
+
 <string name="save">حفظ</string>
+
 <string name="next">التالي</string>
+
 <string name="please_enter_brainkey">الرجاء إدخال brainkey</string>
+
 <string name="please_enter_correct_brainkey">الرجاء إدخال brainkey الصحيح</string>
+
 <string name="balances">أرصدة</string>
+
 <string name="contacts">جهات الاتصال</string>
+
 <string name="receive_uppercase">استلام</string>
+
 <string name="send_uppercase">إرسال</string>
+
 <string name="transactions">المعاملات</string>
+
 <string name="title_activity_setting">الاعدادات</string>
+
 <string name="backup_asset">انشاء نسخة احتياطية للأصول</string>
+
 <string name="taxable_country">ضريبة الدولة</string>
+
 <string name="date_time">التاريخ و الوقت</string>
+
 <string name="check_for_updates">تحقق من وجود تحديثات عند بدء التشغيل</string>
+
 <string name="automatically_install">تثبيت الاصدار بشكل تلقائي</string>
+
 <string name="require_pin">مطلوب الرمز السري لارسال الأموال و عرض المذكرات</string>
+
 <string name="close_bitshare">تلقائيا أغلق المحفظة بعد 3 دقائق من الخمول</string>
+
 <string name="always_donate">دائما تبرع ب 2 BTS لدعم المطورين في Bitshares ميونخ</string>
+
 <string name="hide_donations">إخفاء التبرعات من قائمة المعاملات الشاشة الرئيسية</string>
+
 <string name="backup">انشاء نسخة احتياطية ل .BIN</string>
+
 <!--<string name="checkbox_donate">التبرع ل Bitshares</string>-->
+
 <string name="backup_brainkey">انشاء نسخة احتياطية من Brainkey</string>
+
 <string name="imported_created_accounts">استيراد حسابات منشئة من الأصل</string>
+
 <string name="register_new_account">تسجيل حساب جديد</string>
+
 <string name="secure_pin">تعديل الرمز السري</string>
+
 <string name="export">تصدير</string>
+
 <string name="show_more">أظهر المزيد</string>
+
 <string name="share_text">لقد عثؤت على هذه المحفظة التي تسمح لك بارسال و استقبال smartcoins</string>
+
 <string name="share_info">ادع اصدقائك لتجربة محفظة smartcoin. البريد الالكتروني لا يحفظ لذلك لا داعي من الخوف على الخصوصية</string>
+
 <string name="share_subject">رهيبة محفظة Smartcoins</string>
+
 <string name="share_heading">مشاركة مع أصدقاء</string>
+
 <string name="share_btn_text">تفتح البريد الإلكتروني التطبيق</string>
+
 <string name="action_settings">اعدادات</string>
+
 <string name="txt_validating_account">التحقق من صحة الحساب ...</string>
+
 <string name="validating_account">التحقق من صحة الحساب ...</string>
+
 <string name="account_name_should_be_longer">يجب أن يكون اسم الحساب أطول</string>
+
 <string name="account_name_not_exist"> أسم الحساب %s غير موجود</string>
+
 <string name="account_name_already_exist"> أسم الحساب %s موجود مسبقا</string>
+
 <string name="add_contact">إضافة</string>
+
 <string name="edit_contact">تحرير</string>
+
 <string name="empty_list">قائمة الاتصال فارغة</string>
+
 <string name="account_name_validate">اسم الحساب صحيح</string>
+
 <string name="txt_no_internet_connection">لا يوجد اتصال إنترنت</string>
+
 <string name="unable_to_create_account_from_brainkey">غير قادر على إنشاء حساب من brainkey</string>
+
 <string name="importing_your_wallet">استيراد محفظتك ...</string>
+
 <string name="str_trading_pair_not_exist">لا توجد تداولات الزوج</string>
+
 <string name="unable_to_create_qr_code">غير قادر على توليد رمز الاستجابة السريعة</string>
+
 <string name="price">السعر</string>
+
 <string name="currency">عملة</string>
+
 <string name="please_enter_amount">الرجاء إدخال كمية</string>
+
 <string name="amount_should_be_greater_than_zero">وينبغي أن تكون كمية أكبر من الصفر</string>
+
 <string name="no_amount_requested">لم تطلب كمية</string>
+
 <string name="to_capital">إلى</string>
+
 <string name="from_capital">من عند</string>
+
 <string name="memo_capital">مذكرة</string>
+
 <string name="empty_file_created">تم انشاء ملف فارغ</string>
+
 <string name="date">تاريخ</string>
+
 <string name="all">جميع</string>
+
 <string name="to_from">إلى</string>
+
 <string name="amount">كمية</string>
+
 <string name="message">الرسالة</string>
+
 <string name="pdf_generated_msg">تم انشاء و حفظ PDF</string>
+
 <string name="pdf_generated_msg_error">خظأز غير قادر على انشاء ملف PDF</string>
+
 <string name="raw_transactions">صفقة خام</string>
+
 <string name="extensions">ملحقات</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">أرسلت / تلقيت</string>
+
 <string name="details">تفاصيل</string>
+
 <string name="share_qr_code">حصة رمز الاستجابة السريعة</string>
+
 <string name="done">فعله</string>
+
 <string name="id_s">هوية شخصية</string>
+
 <string name="time">مرة</string>
+
 <string name="operations">عمليات</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">رمز</string>
+
 <string name="fee_capital">رسوم</string>
+
 <string name="ok">حسنا</string>
+
 <string name="loading">جار التحميل...</string>
+
 <string name="pay_to">دفع ل</string>
+
 <string name="requested">طلب</string>
+
 <string name="failed_transaction">عملية فاشلة</string>
+
 <string name="str_invalid_amount">يرجى إدخال مبلغ صالح</string>
+
 <string name="str_invalid_receiver">الرجاء إدخال صالحة لحساب</string>
+
 <string name="str_transaction_failed">فشل الاجراء</string>
+
 <string name="please_enter_valid_amount">يرجى إدخال مبلغ صالح</string>
+
 <string name="select_timezone">حدد المنطقة الزمنية</string>
-<string name="old_pin">قديم PIN 6-سيارة</string>
-<string name="pin_created_successfully">إنشاء PIN بنجاح</string>
-<string name="edit_pin">تحرير الرمز السري</string>
+
+ <string name="old_pin">PIN قديم</string>
+ 
+ <string name="pin_created_successfully">إنشاء PIN بنجاح</string>
+ 
+ <string name="edit_pin">تحرير PIN</string>
+ 
 <string name="txt_edit">حفظ</string>
-<string name="create_pin">انشاء رمز سري</string>
+
+ <string name="create_pin">إنشاء PIN</string>
+ 
 <string name="pin_changed_successfully">تم تغيير الرمز السري بنجاح</string>
+
 <string name="incorrect_old_pin">الرمز السري القديم غير صحيح</string>
+
 <string name="copy">نسخ</string>
+
 <string name="pin_verification">غير مقفل</string>
+
 <string name="send_screen_name">إرسال</string>
+
 <string name="rcv_screen_name">استلام</string>
+
 <string name="request_amount_screen_name">كمية</string>
+
 <string name="payment_rcvd_screen_name">شكرا</string>
+
 <string name="e_receipt_activity_name">إيصال البريد</string>
+
 <string name="settings_activity_name">إعدادات</string>
+
 <string name="qr_code_activity_name">مسح QR</string>
+
 <string name="share_account_activity_name">شارك مع الاصدقاء</string>
+
 <string name="add_contact_activity_name">إضافة جهة اتصال</string>
+
 <string name="str_trade_not_available">التجارة غير متوفر</string>
+
     <string name="preferred_lang">اللغة المفضلة</string>
+
     <string name="got_it">فهمتك</string>
+
     <string name="upgrade_to_ltm">الترقية إلى LTM</string>
+
     <string formatted="false" name="help_message">احصل على 80٪ استرداد النقود على رسوم! عمر الأعضاء (LTM) الحصول على 80٪ استرداد النقود على كل رسوم المعاملات يدفعون، والتأهل لكسب الدخل الإحالة من المستخدمين يسجلون مع أو الرجوع إلى الشبكة. وعضوية مدى الحياة هي الآن تحت 20000 BTS!</string>
+
     <string name="txt_yes">نعم فعلا</string>
+
     <string name="txt_no">لا</string>
+
     <string name="txt_confirmation">تأكيد</string>
+
     <string name="txt_confirmation_msg">هل انت متأكد؟</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">مجلد مكون</string>
+
     <string name="upgrade_failed">فشل الترقية</string>
+
     <string name="upgrading">رفع ...</string>
+
     <string name="is_already_added">وأضفت</string>
+
     <string name="in_valid_email">بريد إلكتروني خاطئ</string>
+
     <string name="select">اختار</string>
+
     <string name="are_you_sure">هل أنت واثق؟</string>
+
     <string name="import_new_account">استيراد حساب</string>
+
     <string name="upgrade_account">حدث الحساب</string>
+
     <string name="remove_account">ازالة الحساب</string>
+
     <string name="txt_alertmsg">هل أنت متأكد من حذف هذا الحساب</string>
+
     <string name="validation_in_progress">التحقق من الصحة في التقدم ..</string>
+
     <string name="last_letter_cannot">الحرف الأخير لا يمكن أن يكون -</string>
+
     <string name="account_name_shoud_have">اسم الحساب، فهذه يكون أتلست واحد -</string>
+
     <string name="default_currency">يورو</string>
+
     <string name="account_already_exist">حساب موجود بالفعل</string>
+
     <string name="txt_back">الى الخلف</string>
+
     <string name="please_pay">الرجاء الدفع</string>
+
     <string name="transfer_funds">نقل الأموال</string>
+
     <string name="unable_to_process">غير قادر على المعالجة</string>
+
     <string name="cancel">إلغاء</string>
+
     <string name="donation">هبة</string>
+
     <string name="insufficient_funds">أموال غير كافية</string>
+
     <string name="txt_wallet_atleast_one_account">آسف، ولكن يجب أن يكون محفظتك حساب لا يقل عن 1 في ذلك</string>
+
     <string name="updating_transaction_id">تحديث عملية معرف، الرجاء الانتظار</string>
+
     <string name="email_name">لعرض الصورة لهذا الاتصال، أدخل البريد الإلكتروني غرفتر لها هنا</string>
+
     <string name="upgrade_success">ترقية ناجحة!</string>
+
     <string name="copied_to_clipboard">نسخ إلى الحافظة</string>
+
     <string name="unable_to_import_account_from_bin_file">غير قادر على استيراد حساب من ملف بن ل</string>
+
     <string name="importing_keys_from_bin_file">استيراد مفاتيح من ملف بن</string>
+
     <string name="import_backup">استيراد النسخ الاحتياطي من ملف بالملحق .bin</string>
 
+
+
     <string name="unable_to_load_brainkey">غير قادر على تحميل brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">غير قادر على توليد شكل بن لمفتاح</string>
+
     <string name="creating_backup_file">إنشاء ملف النسخ الاحتياطي</string>
+
     <string name="fetching_key">جلب مفتاح</string>
+
     <string name="generating_bin_format">توليد شكل بن</string>
+
     <string name="invalid_pin">PIN غير صالح</string>
+
     <string name="saving_bin_file_to">إنقاذ بن ملف ل</string>
+
     <string name="bin_file_saved_successfully_to">حفظ بن الملف بنجاح</string>
+
     <string name="unable_to_save_bin_file">غير قادر على حفظ ملف بن ل</string>
 
+
+
     <string name="txt_alertmsg_fr">هل أنت متأكد أنك تريد إزالة</string>
+
     <string name="txt_alertmsg_la">حساب من هذه المحفظة؟</string>
+
     <string name="bugs_or_errors">الخلل أو الأخطاء؟</string>
+
     <string name="please_let_us_know">من فضلك، اسمحوا لنا أن نعرف:</string>
+
     <string name="try_again">يرجى المحاولة مرة أخرى بعد 5 دقائق</string>
+
     <string name="warning_msg_same_account">لا يمكنك إرسال المبلغ في نفس الحساب</string>
 
+
+
     <string name="please_backup_your_brainkey">إرضاء النسخ الاحتياطي brainkey الخاص بك</string>
+
     <string name="backup_brainkey_msg">ملف النسخ الاحتياطي .bin لديك مكان آمن أو يمكن أن تضيع أموالك!</string>
+
     <string name="unable_to_trade_bAssets">غير قادر على تداول الأصول الاحتياطية</string>
+
     <string name="unable_to_send_amount">غير قادر على إرسال المبلغ</string>
+
     <string name="unable_to_decode_QR">غير قادر على فك رمز QR</string>
 
+
+
     <string name="loyalty_points">نقاط الولاء</string>
+
     <string name="str_warning_only_available">تحذير! فقط٪ 1 $ s من٪ 2 $ s غير متاح</string>
+
     <string name="str_balance_available">٪ 1 $ s من٪ 2 $ الصورة المتاحة</string>
+
     <string name="select_backup_asset">تحديد الأصول الاحتياطية</string>
+
     <string name="sender_account">حساب المرسل</string>
+
     <string name="receiver_account">حساب المتلقي</string>
+
     <string name="total">مجموع</string>
+
     <string name="payment_method">طريقة الدفع او السداد</string>
+
     <string name="thankyou_string">الشكر لاستخدام Smartcoins محفظة</string>
+
     <string name="audio_folder_path">الصوت مسار المجلد</string>
+
     <string name="please_make_sure_your_bin_file">يرجى التأكد من رقم التعريف الشخصي الخاص بك هو تحديد الصحيح أو الصحيح ملف بن ل</string>
+
     <string name="checkbox_donate">تبرع 2 BTS للمطورين الدعم في</string>
+
     <string name="change">تغيير...</string>
 
+
+
     <string name="connected_to">متصلا</string>
+
     <string name="account_create_msg">حساب واحد فقط كل 10 دقائق يمكن تسجيلها</string>
+
     <string name="names_must_include_a_number">ويجب أن يتضمن أسماء عدد</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">ويجب أن يتضمن أسماء شرطة (-) وعدد</string>
+
     <string name="import_gravatar">استيراد غرفتر</string>
+
     <string name="please_import_the_correct_file">يرجى استيراد الملف الصحيح</string>
+
     <string name="merchant_email_has_been_imported_successfully">تم استيراد التاجر البريد الإلكتروني بنجاح</string>
 
+
+
 </resources>
+
