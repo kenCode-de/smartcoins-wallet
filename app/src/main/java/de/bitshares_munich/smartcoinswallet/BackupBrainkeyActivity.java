@@ -23,7 +23,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Helper;
@@ -56,7 +55,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
     private void showDialogBackupBrainKey() {
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         dialog.setCancelable(false);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -109,7 +108,6 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
             Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((InternalMovementListener)this).onInternalAppMove();
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.please_backup_your_brainkey), Toast.LENGTH_SHORT).show();
