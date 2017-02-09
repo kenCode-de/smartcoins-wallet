@@ -92,9 +92,12 @@ public abstract class FileBin {
                 wallet_string = wallet_string + "}";
                 wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
             }
-
-            JsonObject scwallWallet = wallet.get("scwall_wallet").getAsJsonObject();
-            JsontoDatabase(scwallWallet,password,context);
+try {
+    JsonObject scwallWallet = wallet.get("scwall_wallet").getAsJsonObject();
+    JsontoDatabase(scwallWallet, password, context);
+}catch(Exception e){
+    e.printStackTrace();
+}
 
             if (wallet.get("wallet").isJsonArray()) {
                 wallet = wallet.get("wallet").getAsJsonArray().get(0).getAsJsonObject();

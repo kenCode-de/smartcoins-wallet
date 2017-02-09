@@ -28,7 +28,11 @@ public class MediaService extends Service {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
-                    BalancesFragment.iSound.soundFinish();
+                    try {
+                        BalancesFragment.iSound.soundFinish();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
     }

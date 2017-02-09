@@ -92,7 +92,11 @@ public class WebSocketWriter extends Thread {
 	public void forward(Object message) {
 		Message msg = mHandler.obtainMessage();
 		msg.obj = message;
-		mHandler.sendMessage(msg);
+		try {
+			mHandler.sendMessage(msg);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 
