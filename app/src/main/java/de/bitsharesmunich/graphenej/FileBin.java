@@ -271,41 +271,49 @@ public abstract class FileBin {
     }
 
     public static JsonObject DatabaseToJson(String password, Context context) {
-
-        SCWallDatabase db = new SCWallDatabase(context);
         JsonObject answer = new JsonObject();
-        List<AccountSeed> seeds = db.getSeeds();
-        JsonArray seedsObject = new JsonArray();
-        for (AccountSeed seed : seeds) {
-            JsonObject seedObject = seed.toJson(password);
-            List<GeneralCoinAccount> accounts = db.getGeneralCoinAccounts(seed);
-            JsonArray accountsObject = new JsonArray();
-            for (GeneralCoinAccount account : accounts) {
-                JsonObject accountObject = account.toJson();
-                accountsObject.add(accountObject);
+        try {
+            SCWallDatabase db = new SCWallDatabase(context);
+
+            List<AccountSeed> seeds = db.getSeeds();
+            JsonArray seedsObject = new JsonArray();
+            for (AccountSeed seed : seeds) {
+                JsonObject seedObject = seed.toJson(password);
+                List<GeneralCoinAccount> accounts = db.getGeneralCoinAccounts(seed);
+                JsonArray accountsObject = new JsonArray();
+                for (GeneralCoinAccount account : accounts) {
+                    JsonObject accountObject = account.toJson();
+                    accountsObject.add(accountObject);
+                }
+                seedObject.add("accounts", accountsObject);
+                seedsObject.add(seedObject);
             }
-            seedObject.add("accounts", accountsObject);
-            seedsObject.add(seedObject);
+            answer.add("seeds", seedsObject);
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        answer.add("seeds", seedsObject);
         return answer;
     }
 
     public static void JsontoDatabase(JsonObject in, String password,Context context) {
-        SCWallDatabase db = new SCWallDatabase(context);
+        try {
+            SCWallDatabase db = new SCWallDatabase(context);
 
-        JsonArray seedsObject = in.getAsJsonArray("seeds");
-        for (int i = 0; i < seedsObject.size(); i++) {
-            JsonObject seedObject = seedsObject.get(i).getAsJsonObject();
-            AccountSeed seed = AccountSeed.fromJson(seedObject, password);
-            String idSeed = db.putSeed(seed);
-            seed.setId(idSeed);
-            JsonArray accountsObject = seedObject.get("accounts").getAsJsonArray();
-            for (int j = 0; j < accountsObject.size(); j++) {
-                JsonObject accountObject = accountsObject.get(j).getAsJsonObject();
-                GeneralCoinAccount account = (GeneralCoinAccount) CryptoCoinFactory.getAccountFromJson(accountObject, seed);
-                db.putGeneralCoinAccount(account);
+            JsonArray seedsObject = in.getAsJsonArray("seeds");
+            for (int i = 0; i < seedsObject.size(); i++) {
+                JsonObject seedObject = seedsObject.get(i).getAsJsonObject();
+                AccountSeed seed = AccountSeed.fromJson(seedObject, password);
+                String idSeed = db.putSeed(seed);
+                seed.setId(idSeed);
+                JsonArray accountsObject = seedObject.get("accounts").getAsJsonArray();
+                for (int j = 0; j < accountsObject.size(); j++) {
+                    JsonObject accountObject = accountsObject.get(j).getAsJsonObject();
+                    GeneralCoinAccount account = (GeneralCoinAccount) CryptoCoinFactory.getAccountFromJson(accountObject, seed);
+                    db.putGeneralCoinAccount(account);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }
