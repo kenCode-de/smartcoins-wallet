@@ -63,6 +63,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
@@ -75,6 +76,9 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.AccountOptions;
 import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
 import de.bitsharesmunich.graphenej.Address;
@@ -783,6 +787,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
             String brainKey = getBrainKey();
+
+            /*If there is a master seed, then add it to the mnemonics*/
+            SCWallDatabase db = new SCWallDatabase(getApplicationContext());
+            List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+            if (seeds.size() > 0){
+                AccountSeed masterSeed = (BIP39)seeds.get(0);
+                if (!brainKey.isEmpty()) {
+                    brainKey += masterSeed.getMnemonicCodeString().toUpperCase();
+                }
+            }
+
             if (brainKey.isEmpty()) {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
                 return;

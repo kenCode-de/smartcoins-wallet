@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,11 +18,15 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.smartcoinswallet.BackupBrainkeyActivity;
+import de.bitshares_munich.smartcoinswallet.BrainkeyActivity;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
@@ -51,6 +56,19 @@ public class NoCurrencyAccountFragment extends Fragment {
         return noCurrencyAccountFragment;
     }
 
+    private String getBrainKey() {
+        TinyDB tinyDB;
+        tinyDB = new TinyDB(getContext());
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                return accountDetails.get(i).brain_key;
+            }
+        }
+
+        return "";
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -67,6 +85,13 @@ public class NoCurrencyAccountFragment extends Fragment {
         }
 
         Button importButton = (Button) v.findViewById(R.id.importCurrencyAccount);
+        importButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),BrainkeyActivity.class);
+                startActivity(intent);
+            }
+        });
         Button createButton = (Button) v.findViewById(R.id.createCurrencyAccount);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,12 +111,13 @@ public class NoCurrencyAccountFragment extends Fragment {
                             String dictionary = reader.readLine();
                             newSeed = new BIP39(dictionary.split(","));
 
-                            String masterSeedWords = newSeed.getMnemonicCodeString();
-                            if (masterSeedWords.isEmpty()) {
+                            String masterSeedWords = newSeed.getMnemonicCodeString().toUpperCase();
+                            String brainKey = getBrainKey();
+                            if (masterSeedWords.isEmpty() || brainKey.isEmpty()) {
                                 Toast.makeText(getContext(), getResources().getString(R.string.unable_to_create_master_seed), Toast.LENGTH_LONG).show();
                                 return;
                             } else {
-                                etBrainKey.setText(masterSeedWords);
+                                etBrainKey.setText(brainKey+" "+masterSeedWords);
                             }
 
 
