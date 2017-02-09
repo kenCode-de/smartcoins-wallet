@@ -60,8 +60,6 @@ public class WebSocketWriter extends Thread {
 	/**
 	 * Create new WebSockets background writer.
 	 *
-	 * @param looper    The message looper of the background thread on which
-	 *                  this object is running.
 	 * @param master    The message handler of master (foreground thread).
 	 * @param socket    The socket channel created on foreground thread.
 	 * @param options   WebSockets connection options.
