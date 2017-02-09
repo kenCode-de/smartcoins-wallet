@@ -30,6 +30,7 @@ public class BIP39 extends AccountSeed {
     public BIP39(String words, String passPhrase) {
         this.id = "";
         this.type = SeedType.BIP39;
+        words = words.toLowerCase();
         this.mnemonicCode = Arrays.asList(words.split(" "));
         this.additional = passPhrase;
     }
