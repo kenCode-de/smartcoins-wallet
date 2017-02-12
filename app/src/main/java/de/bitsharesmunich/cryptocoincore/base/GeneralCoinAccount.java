@@ -160,10 +160,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public abstract NetworkParameters getNetworkParam();
 
-    public class TransactionsCustomComparator implements Comparator<GIOTx> {
+    public class TransactionsCustomComparator implements Comparator<GeneralTransaction> {
         @Override
-        public int compare(GIOTx o1, GIOTx o2) {
-            return o1.getTransaction().getDate().compareTo(o2.getTransaction().getDate());
+        public int compare(GeneralTransaction o1, GeneralTransaction o2) {
+            return o1.getDate().compareTo(o2.getDate());
         }
     }
 
