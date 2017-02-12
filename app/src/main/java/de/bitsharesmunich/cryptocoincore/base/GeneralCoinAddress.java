@@ -106,4 +106,38 @@ public class GeneralCoinAddress {
 
         return answer;
     }
+
+    public void BalanceChange(){
+        this.getAccount().balanceChange();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeneralCoinAddress that = (GeneralCoinAddress) o;
+
+        if (isChange != that.isChange) return false;
+        if (index != that.index) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (account != null ? !account.equals(that.account) : that.account != null) return false;
+        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (inputTransaction != null ? !inputTransaction.equals(that.inputTransaction) : that.inputTransaction != null)
+            return false;
+        return outputTransaction != null ? outputTransaction.equals(that.outputTransaction) : that.outputTransaction == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (account != null ? account.hashCode() : 0);
+        result = 31 * result + (isChange ? 1 : 0);
+        result = 31 * result + index;
+        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (inputTransaction != null ? inputTransaction.hashCode() : 0);
+        result = 31 * result + (outputTransaction != null ? outputTransaction.hashCode() : 0);
+        return result;
+    }
 }

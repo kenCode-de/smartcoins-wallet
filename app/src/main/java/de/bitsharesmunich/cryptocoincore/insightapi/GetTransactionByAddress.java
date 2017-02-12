@@ -11,13 +11,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 
@@ -48,6 +51,7 @@ public class GetTransactionByAddress extends Thread {
     @Override
     public void run() {
         if (addresses.size() > 0) {
+            Set<GeneralCoinAccount> accountsChanged = new HashSet();
             try {
                 for (GeneralCoinAddress address : addresses) {
                     serverUrl += address.getAddressString(param) + ",";
@@ -84,6 +88,7 @@ public class GetTransactionByAddress extends Thread {
                             if (address.getAddressString(param).equals(addr)) {
                                 input.setAddress(address);
                                 address.getOutputTransaction().add(input);
+                                accountsChanged.add(address.getAccount());
                             }
                         }
                         transaction.getTxInputs().add(input);
@@ -103,13 +108,16 @@ public class GetTransactionByAddress extends Thread {
                             if (address.getAddressString(param).equals(addr)) {
                                 output.setAddress(address);
                                 address.getInputTransaction().add(output);
+                                accountsChanged.add(address.getAccount());
                             }
                         }
                         transaction.getTxOutputs().add(output);
                     }
                 }
 
-                addresses.get(0).getAccount();//TODO notify account that balance change
+                for(GeneralCoinAccount account : accountsChanged){
+                    account.balanceChange();
+                }
 
             } catch (JSONException | IOException ex) {
                 Logger.getLogger(GetTransactionByAddress.class.getName()).log(Level.SEVERE, null, ex);

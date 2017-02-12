@@ -160,6 +160,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public abstract NetworkParameters getNetworkParam();
 
+    public void balanceChange() {
+        this._fireOnChangeBalance(this.getBalance().get(0)); //TODO make it more genertic
+    }
+
     public class TransactionsCustomComparator implements Comparator<GeneralTransaction> {
         @Override
         public int compare(GeneralTransaction o1, GeneralTransaction o2) {
@@ -175,5 +179,25 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         for (ChangeBalanceListener listener : this.changeBalanceListeners){
             listener.balanceChange(balance);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeneralCoinAccount that = (GeneralCoinAccount) o;
+
+        if (coin != that.coin) return false;
+        if (accountNumber != that.accountNumber) return false;
+        return accountKey != null ? accountKey.equals(that.accountKey) : that.accountKey == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accountNumber;
+        result = 31 * result + (accountKey != null ? accountKey.hashCode() : 0);
+        return result;
     }
 }
