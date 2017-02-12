@@ -118,16 +118,32 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return answer;
     }
 
-    public List<GIOTx> getTransactions(){
-        List<GIOTx> transactions = new ArrayList();
+    public List<GeneralTransaction> getTransactions(){
+        List<GeneralTransaction> transactions = new ArrayList();
         for(GeneralCoinAddress address : externalKeys.values()){
-            transactions.addAll(address.getInputTransaction());
-            transactions.addAll(address.getOutputTransaction());
+            for(GIOTx giotx : address.getInputTransaction()){
+                if(!transactions.contains(giotx.getTransaction())){
+                    transactions.add(giotx.getTransaction());
+                }
+            }
+            for(GIOTx giotx : address.getOutputTransaction()){
+                if(!transactions.contains(giotx.getTransaction())){
+                    transactions.add(giotx.getTransaction());
+                }
+            }
         }
 
         for(GeneralCoinAddress address : changeKeys.values()){
-            transactions.addAll(address.getInputTransaction());
-            transactions.addAll(address.getOutputTransaction());
+            for(GIOTx giotx : address.getInputTransaction()){
+                if(!transactions.contains(giotx.getTransaction())){
+                    transactions.add(giotx.getTransaction());
+                }
+            }
+            for(GIOTx giotx : address.getOutputTransaction()){
+                if(!transactions.contains(giotx.getTransaction())){
+                    transactions.add(giotx.getTransaction());
+                }
+            };
         }
 
         return transactions;
