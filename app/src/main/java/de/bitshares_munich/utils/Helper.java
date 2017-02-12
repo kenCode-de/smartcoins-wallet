@@ -163,7 +163,7 @@ public class Helper {
         return preferences.getString(key, defaultValue);
     }
 
-    public static String fetchStringSharePref(Context context, String key){
+    public static String fetchStringSharePref(Context context, String key) {
         return fetchStringSharePref(context, key, "");
     }
 
@@ -344,21 +344,20 @@ public class Helper {
         }
     }
 
+    /*
+     * Setup app locale based on the language
+     */
     public static void setLocale(String lang, Resources res) {
         Locale myLocale;
         if (lang.equalsIgnoreCase("zh-rTW")) {
             myLocale = Locale.TRADITIONAL_CHINESE;
-        }
-        else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
+        } else if (lang.equalsIgnoreCase("zh-rCN") || lang.equalsIgnoreCase("zh")) {
             myLocale = Locale.SIMPLIFIED_CHINESE;
-        }
-        else if (lang.equalsIgnoreCase("pt-rBR") || lang.equalsIgnoreCase("pt")) {
-            myLocale = new Locale("pt","BR");
-        }
-        else if (lang.equalsIgnoreCase("pt-rPT")) {
-            myLocale = new Locale("pt","PT");
-        }
-        else {
+        } else if (lang.equalsIgnoreCase("pt-rBR") || lang.equalsIgnoreCase("pt")) {
+            myLocale = new Locale("pt", "BR");
+        } else if (lang.equalsIgnoreCase("pt-rPT")) {
+            myLocale = new Locale("pt", "PT");
+        } else {
             myLocale = new Locale(lang);
         }
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -367,31 +366,54 @@ public class Helper {
         res.updateConfiguration(conf, dm);
     }
 
+    /*
+     * Setup app Language LOCALE and app Language PREFERENCES.
+     */
+    public static void setLanguage(Context context, String language) {
+        //Setup locale
+        Helper.setLocale(language, context.getResources());
+        //Setup Preferences
+        Helper.storeStringSharePref(context, context.getString(R.string.pref_language), language);
+    }
+
+    /*
+     * Setup app Country LOCALE and app Contry PREFERENCES.
+     */
+    public static void setCountry(Context context, String country) {
+        //Setup locale
+        Locale myLocale;
+        myLocale = new Locale.Builder().setRegion(country).build();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        Configuration conf = context.getResources().getConfiguration();
+        conf.locale = myLocale;
+        context.getResources().updateConfiguration(conf, dm);
+        //Setup Preferences
+        Helper.storeStringSharePref(context, context.getString(R.string.pref_country), country);
+    }
 
 
     /**
      * Get ISO 3166-1 alpha-2 country code for this device (or null if not available)
+     *
      * @param context Context reference to get the TelephonyManager instance from
      * @return country code or null
      */
-    public static String getUserCountry(Context context) {
+    public static String getDeviceCountry(Context context) {
         try {
             final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             final String simCountry = tm.getSimCountryIso();
             if (simCountry != null && simCountry.length() == 2) { // SIM country code is available
                 return simCountry.toLowerCase(Locale.US);
-            }
-            else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
+            } else if (tm.getPhoneType() != TelephonyManager.PHONE_TYPE_CDMA) { // device is not 3G (would be unreliable)
                 String networkCountry = tm.getNetworkCountryIso();
                 if (networkCountry != null && networkCountry.length() == 2) { // network country code is available
                     return networkCountry.toLowerCase(Locale.US);
                 }
             }
+        } catch (Exception e) {
         }
-        catch (Exception e) { }
         return null;
     }
-
 
 
     public static String setLocaleNumberFormat(Locale locale, Number number) {
@@ -449,8 +471,6 @@ public class Helper {
     }
 
 
-
-
     public static String convertTimeToGMT(Date date, Context context) {
 
         if (Helper.containKeySharePref(context, context.getString(R.string.date_time_zone))) {
@@ -493,8 +513,8 @@ public class Helper {
             calendar.setTimeZone(tz);
             String region = calendar.getTimeZone().getID();
             String[] arr = region.split("/");
-            for ( String ss : arr) {
-                if (ss.equals("Europe")){
+            for (String ss : arr) {
+                if (ss.equals("Europe")) {
                     region = "CET";
                 }
             }
@@ -515,8 +535,7 @@ public class Helper {
         }
     }
 
-    public static String getFadeCurrencySymbol(Context context)
-    {
+    public static String getFadeCurrencySymbol(Context context) {
         String currrencyCode = getFadeCurrency(context);
         return Currency.getInstance(currrencyCode).getSymbol(Locale.ENGLISH);
     }
@@ -568,6 +587,7 @@ public class Helper {
         }
 
     }
+
     public static final String md5(final String s) {
         final String MD5 = "MD5";
         try {
@@ -594,15 +614,15 @@ public class Helper {
     }
 
     public static NumberFormat newCurrencyFormat(Context context, Currency currency, Locale displayLocale) {
-        Log.d(TAG,"newCurrencyFormat");
+        Log.d(TAG, "newCurrencyFormat");
         NumberFormat retVal = NumberFormat.getCurrencyInstance(displayLocale);
         retVal.setCurrency(currency);
 
         //The default JDK handles situations well when the currency is the default currency for the locale
-        if (currency.equals(Currency.getInstance(displayLocale))) {
-            Log.d(TAG,"Let the JDK handle this");
-            return retVal;
-        }
+//        if (currency.equals(Currency.getInstance(displayLocale))) {
+//            Log.d(TAG, "Let the JDK handle this");
+//            return retVal;
+//        }
 
         //otherwise we need to "fix things up" when displaying a non-native currency
         if (retVal instanceof DecimalFormat) {
@@ -622,9 +642,9 @@ public class Helper {
     private static String getCorrectedInternationalCurrencySymbol(Context context, Currency currency, Locale displayLocale) {
         AssetsPropertyReader assetsReader = new AssetsPropertyReader(context);
         Properties properties = assetsReader.getProperties("correctedI18nCurrencySymbols.properties");
-        if(properties.containsKey(currency.getCurrencyCode())){
+        if (properties.containsKey(currency.getCurrencyCode())) {
             return properties.getProperty(currency.getCurrencyCode());
-        }else{
+        } else {
             return currency.getCurrencyCode();
         }
     }

@@ -1,235 +1,472 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources><string name="license">Lizenz</string>
+ <string name="pin_number_warning">Die PIN-Nummer muss mindestens 6 Zeichen lang sein</string>
+ <string name="old_pin_number_warning">Die alte PIN-Nummer muss mindestens 6 Zeichen lang sein</string>
+
     <string name="bts_will_be_deducted">BTS wird aus abgezogen werden</string>
+
     <string name="send_capital">Senden</string>
+
 <string name="account_create_register_or_import">Konto erstellen Registrieren oder IMPORT</string>
+
 <string name="txt_account_name">Kontobezeichnung</string>
+
 <string name="time_stamp">Zeitstempel</string>
+
 <string name="email_pdf">Email PDF</string>
+
 <string name="account">Konto</string>
+
 <string name="friendly_name">Bezeichnung</string>
+
 <string name="notes">Notizen</string>
+
 <string name="note">Notiz</string>
+
 <string name="payment_received">Zahlung erhalten</string>
+
 <string name="import_brainkey">Import von BrainKey</string>
+
 <string name="import_backup_old">Import-Backup</string>
+
 <string name="choose_backup">Wählen Sie die Datei</string>
+
 <string name="choose_file">Datei wählen</string>
+
 <string name="no_file_chosen">Keine Datei ausgewählt</string>
+
 <string name="account_label">Datei wählen</string>
+
     <string name="unable_to_import_account_from_bin_file">Konto konnte nicht von Bin-Datei importiert werden</string>
+
     <string name="importing_keys_from_bin_file">Importiere den Schlüssel von der Bin-Datei</string>
+
     <string name="import_backup">Import Backup von .bin-Datei</string>
+
     <string name="is_already_added">bereits hinzugefügt</string>
+
     <string name="in_valid_email">Ungültige E-Mail</string>
+
     <string name="select">Wählen</string>
+
     <string name="are_you_sure">Bist du sicher?</string>
+
     <string name="please_make_sure_your_pin">Bitte stellen Sie sicher, dass Ihr PIN richtig ist </string>
+
     <string name="please_make_sure_your_pin_file">Bitte stellen Sie sicher, dass Ihr PIN richtig ist oder die richtige PIN-Datei ausgewählt wurde</string>
+
     <string name="loading_msg">Bitte warten Sie, bis Ihr Kontostand geladen wurde</string>
-<string name="txt_6_digits_pin">6-stelliger PIN</string>
-<string name="txt_6_digits_pin_confirm">6-stelliger PIN bestätigen</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ Ziffern)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN bestätigen</string>
+ 
 <string name="create">NEUES KONTO ERSTELLEN</string>
+
 <string name="existing_account">Bestehendes Konto</string>
+
 <string name="agreement">Zustimmen</string>
+
 <string name="cancel_and_exit">Abbrechen und Beenden</string>
+
 <string name="i_agree">Ich stimme zu</string>
+
 <string name="kindly_create_account">Bitte Konto erstellen</string>
-<string name="please_enter_old_6_digit_pin">Bitte geben Sie den alten 6-stelligen PIN ein</string>
-<string name="please_enter_6_digit_pin">Bitte geben Sie den 6-stelligen PIN ein</string>
-<string name="please_enter_6_digit_pin_confirm">Bitte geben Sie den 6-stelligen PIN als Bestätigung ein</string>
+
+ <string name="please_enter_old_6_digit_pin">Bitte geben Sie die alte PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">Bitte PIN eingeben</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Bitte geben Sie die PIN Bestätigung</string>
+ 
 <string name="mismatch_pin">Mismatch-PIN</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Drucken Sie den Brainkey aus, oder schreiben Sie ihn auf. Verwahren Sie den Brainkey sehr sicher. Sollte der Brainkey verloren gehen haben Sie keinen Zugang zu Ihrem Konto mehr. Vorsicht, jeder der den Brainkey besitzt kann auf Ihr Konto zugreifen.</string>
+
 <string name="create_wallet">ERSTELLE WALLET</string>
+
 <string name="cance">ABBRECHEN</string>
+
 <string name="save">SPEICHERN</string>
+
 <string name="next">WEITER</string>
+
 <string name="please_enter_brainkey">Bitte geben Sie Ihren Brainkey ein</string>
+
 <string name="please_enter_correct_brainkey">Bitte geben Sie den richtigen Brainkey ein</string>
+
 <string name="balances">Konto</string>
+
 <string name="contacts">Adressbuch</string>
+
 <string name="receive_uppercase">EMPFANGEN</string>
+
 <string name="send_uppercase">SENDEN</string>
+
 <string name="transactions">Transaktionen</string>
+
 <string name="title_activity_setting">SettingActivity</string>
+
 <string name="backup_asset">Backup-Asset</string>
+
 <string name="taxable_country">Steuerpflichtiges Land</string>
+
 <string name="date_time">Zeitzone</string>
+
 <string name="check_for_updates">Download neue Updates beim Start</string>
+
 <string name="automatically_install">Automatische Installation von Hauptversion</string>
+
 <string name="require_pin">PIN / Pattern Eingabe Erforderlich &amp; für jede Überweisung</string>
+
 <string name="close_bitshare">Schließe das Wallet automatisch nach 3 Minuten Inaktivität</string>
+
 <string name="always_donate">Spende bei jeder Überweisung 2 BTS an das BitShares Munich Entwickler Team (bitshares-munich)</string>
+
 <string name="hide_donations">Spenden an BitShares Munich ausblenden</string>
+
 <string name="backup">BACKUP .bin</string>
+
 <string name="checkbox_donate_old">Spende 2 BTS an das BitShares Munich Entwickler Team</string>
+
 <string name="backup_brainkey">BRAINKEY SICHERN</string>
+
 <string name="imported_created_accounts">Importierte / Erstellt Accounts</string>
+
 <string name="secure_pin">PIN ÄNDERN</string>
+
 <string name="export">Export</string>
+
 <string name="show_more">Weitere Transaktionen</string>
+
     <string name="checkbox_donate">Spende 2 BTS an das BitShares Munich Entwickler Team </string>
+
 <string name="share_text">Ich habe gerade dieses coole Smartcoins Wallet gefunden. Du kannst damit ganz einfach Smartcoins senden und empfangen. Schau es dir selber an unter www.BitShares-Munich.de </string>
+
 <string name="share_info">Lade deine Freunde ein und teilt ganz einfach Smartcoins miteinander! Aus Sicherheitsgründen werden deine E-Mail Adressen nicht gespeichert.</string>
+
 <string name="share_subject">Cooles Smartcoins Wallet</string>
+
 <string name="share_heading">Teile mit deinen Freunden </string>
+
 <string name="share_btn_text">Öffne E-Mail Programm</string>
+
 <string name="action_settings">Einstellungen</string>
+
 <string name="txt_validating_account">Prüfe Kontoname ...</string>
+
 <string name="validating_account">Prüfe Kontoname ...</string>
+
 <string name="account_name_should_be_longer">Wähle einen längeren Kontonamen</string>
+
 <string name="account_name_already_exist">Kontoname %s ist bereits vorhanden</string>
+
 <string name="account_name_not_exist">Kontoname %s &#160; existiert nicht</string>
+
 <string name="add_contact">Hinzufügen</string>
+
 <string name="edit_contact">Bearbeiten</string>
+
 <string name="empty_list">Adressbuch ist leer</string>
+
 <string name="account_name_validate">Kontoname ist gültig</string>
+
 <string name="txt_no_internet_connection">Keine Internetverbindung</string>
+
 <string name="unable_to_create_account_from_brainkey">Konto konnte nicht mit Brainkey erstellt werden </string>
+
 <string name="importing_your_wallet">Importieren Sie Ihre Wallet ...</string>
+
 <string name="str_trading_pair_not_exist">Handels Paar existiert nicht</string>
+
 <string name="unable_to_create_qr_code">Konnte den QR-Code nicht generieren </string>
+
 <string name="price">Preis</string>
+
 <string name="currency">Währung</string>
+
 <string name="please_enter_amount">Bitte geben Sie den Betrag ein</string>
+
 <string name="amount_should_be_greater_than_zero">Betrag muss größer als Null sein</string>
+
 <string name="no_amount_requested">Kein Betrag angefordert</string>
+
 <string name="to_capital">Nach</string>
+
 <string name="from_capital">Von</string>
+
 <string name="memo_capital">Memo</string>
+
 <string name="empty_file_created">Leere Datei erstellt</string>
+
 <string name="date">Datum</string>
+
 <string name="all">Alle</string>
+
 <string name="to_from">Details</string>
+
 <string name="amount">Betrag</string>
+
 <string name="message">Nachricht</string>
+
 <string name="pdf_generated_msg">PDF generiert und gespeichert:</string>
+
 <string name="pdf_generated_msg_error">Die PDF Datei konnte nicht erzeugt werden. Bitte versuche es erneut. Fehler:</string>
+
 <string name="raw_transactions">Raw Transaktion:</string>
+
 <string name="extensions">Erweiterungen</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Gesendete / Empfangene</string>
+
 <string name="details">Einzelheiten</string>
+
 <string name="share_qr_code">Teile den QR Code</string>
+
 <string name="done">Entsperren</string>
+
 <string name="id_s">Überweisung ID</string>
+
 <string name="time">Zeit</string>
+
 <string name="operations">Geschäftstätigkeit</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Symbol</string>
+
 <string name="fee_capital">Netzwerk Gebühr</string>
+
 <string name="ok">OK</string>
+
 <string name="loading">Laden...</string>
+
 <string name="pay_to">Überweisen Sie an</string>
+
 <string name="requested">angefordert</string>
+
 <string name="failed_transaction">Transaktion fehlgeschlagen</string>
 
+
+
 <string name="str_invalid_amount">Bitte geben Sie einen gültigen Betrag ein</string>
+
 <string name="str_invalid_receiver">Bitte geben Sie eine gültiges Empfänger Konto ein</string>
+
 <string name="str_transaction_failed">Transaktion fehlgeschlagen</string>
+
 <string name="please_enter_valid_amount">Bitte geben Sie einen gültigen Betrag ein</string>
+
 <string name="select_timezone">Wählen Sie Ihre Zeitzone</string>
-<string name="old_pin">Alter 6-stelliger PIN</string>
-<string name="pin_created_successfully">PIN erfolgreich erstellt</string>
-<string name="edit_pin">PIN Bearbeiten</string>
+
+ <string name="old_pin">Alte PIN</string>
+ 
+ <string name="pin_created_successfully">PIN erfolgreich erstellt</string>
+ 
+ <string name="edit_pin">Bearbeiten PIN</string>
+ 
 <string name="txt_edit">SPEICHERN</string>
-<string name="create_pin">PIN erstellen</string>
+
+ <string name="create_pin">PIN erstellen</string>
+ 
 <string name="pin_changed_successfully">PIN erfolgreich geändert</string>
+
 <string name="incorrect_old_pin">Alter PIN falsch</string>
+
 <string name="copy">Kopieren</string>
+
 <string name="pin_verification">PIN Eingabe</string>
+
 <string name="send_screen_name">Senden</string>
+
 <string name="rcv_screen_name">Empfangen</string>
+
 <string name="request_amount_screen_name">Betrag</string>
+
 <string name="payment_rcvd_screen_name">Vielen Dank</string>
+
 <string name="e_receipt_activity_name">E-Quittung</string>
+
 <string name="settings_activity_name">Einstellungen</string>
+
 <string name="qr_code_activity_name">Scannen QR-Code</string>
+
 <string name="share_account_activity_name">Mit Freunden teilen</string>
+
 <string name="add_contact_activity_name">Kontakt hinzufügen</string>
+
 <string name="str_trade_not_available">Handel nicht verfügbar</string>
+
     <string name="preferred_lang">Bevorzugte Sprache</string>
+
     <string name="got_it">Alles klar</string>
+
     <string name="upgrade_to_ltm">Upgrade auf LTM</string>
+
     <string name="txt_back">Zurück</string>
+
     <string name="please_pay">Bitte zahlen Sie</string>
+
     <string name="transfer_funds">Betrag überweisen</string>
+
     <string name="unable_to_process">Konnte nicht verarbeitet werden</string>
+
     <string name="cancel">ABBRECHEN</string>
+
     <string formatted="false" name="help_message">Erhalten Sie 80% Rabatt auf alle Transaktion Gebühren! Lebenslange Mitglieder (LTM) erhalten 80% der Gebühren als Cashback zurück. Upgraden Sie jetzt für nur 20,000 BTS!</string>
+
     <string name="txt_yes">Ja</string>
+
     <string name="txt_no">Nein</string>
+
     <string name="txt_confirmation">Bestätigung</string>
+
     <string name="txt_confirmation_msg">Bist du dir sicher?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">Ordner erstellt</string>
+
     <string name="upgrade_failed">Aktualisierung fehlgeschlagen</string>
+
     <string name="upgrading">Aktualisieren ...</string>
+
     <string name="remove_account">KONTO ENTFERNEN</string>
+
     <string name="txt_alertmsg">Sind Sie sich sicher, dass Sie dieses Konto entfernen möchten?</string>
+
     <string name="validation_in_progress">Validierung im bearbeitung ..</string>
+
     <string name="last_letter_cannot">letzten Brief konnte nicht -</string>
+
     <string name="account_name_shoud_have">Kontoname muss mindestenz ein haben -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">Dieser Kontoname existiert bereits</string>
+
     <string name="donation">Spende</string>
+
     <string name="insufficient_funds">Unzureichendes Guthaben</string>
+
     <string name="txt_wallet_atleast_one_account">Sorry, du brauchst mindestens einen Konto in deinem Wallet </string>
+
     <string name="updating_transaction_id">Aktualisieren der Transaktions-ID. Bitte warten.</string>
+
     <string name="email_name">Geben Sie hier die Gravatar E-Mail Adresse ein um ein Foto hinzuzufügen</string>
+
     <string name="upgrade_success">Erfolgreich Upgegradet!</string>
+
     <string name="copied_to_clipboard">In die Zwischenablage kopiert</string>
 
+
+
     <string name="unable_to_load_brainkey">Laden des Brainkey´s fehlgeschlagen</string>
+
     <string name="unable_to_generate_bin_format_for_key">Bin Datei für Schlüssel konnte nicht erstellt werden</string>
+
     <string name="creating_backup_file">Erstellen von Backup-Datei</string>
+
     <string name="fetching_key">Fetching Key</string>
+
     <string name="generating_bin_format">Erzeuge Bin Datei</string>
+
     <string name="invalid_pin">Ungültiger PIN</string>
+
     <string name="saving_bin_file_to">Speicher Bin Datei zu</string>
+
     <string name="bin_file_saved_successfully_to">Bin Datei erfolgreich gespeichert </string>
+
     <string name="unable_to_save_bin_file">Bin Datei konnte nicht gespeichert werden</string>
 
+
+
     <string name="bugs_or_errors">Bugs oder Fehler?</string>
+
     <string name="please_let_us_know">Bitte informieren Sie uns:</string>
+
     <string name="try_again">Bitte versuchen Sie es in 5 Minuten erneut</string>
+
     <string name="warning_msg_same_account">Sie können nicht den Betrag an das selbe Konto senden</string>
 
+
+
     <string name="please_backup_your_brainkey">Bitte sichern Sie Ihren Brainkey</string>
+
     <string name="backup_brainkey_msg">Speichern Sie Ihre .bin-Datei an einem sicheren Ort ansonsten könnten Sie Ihr Geld verlieren!</string>
+
     <string name="unable_to_trade_bAssets">Fehler, Das Backup-Assets konnte nicht verwendet werden</string>
+
     <string name="unable_to_send_amount">Der Betrag konnte nicht gesendet werden.</string>
+
     <string name="unable_to_decode_QR">Der QR-Code konnte nich gelesen werden.</string>
 
+
+
     <string name="txt_alertmsg_fr">Sind Sie sicher, dass Sie dieses Konto entfernen möchten, </string>
+
     <string name="txt_alertmsg_la">Das Konto von diesem Wallet?</string>
 
+
+
     <string name="loyalty_points">Treuepunkte</string>
+
     <string name="str_warning_only_available">Warnung! Nur %1$s %2$s ist verfügbar</string>
+
     <string name="str_balance_available">%1$s %2$s verfügbar</string>
 
+
+
     <string name="select_backup_asset">Wählen Sie Backup-Asset-</string>
+
     <string name="sender_account">Sender Konto</string>
+
     <string name="receiver_account">Empfänger-Konto</string>
+
     <string name="total">Gesamt</string>
+
     <string name="payment_method">Bezahlverfahren</string>
+
     <string name="thankyou_string">Vielen Dank für die Verwendung von Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Audio Ordnerpfad</string>
+
     <string name="please_make_sure_your_bin_file">Bitte stellen Sie sicher, dass Ihr PIN richtig ist oder dass die richtige bin-Datei ausgewählt haben,</string>
+
     <string name="change">Veränderung...</string>
 
+
+
     <string name="register_new_account">NEUES KONTO</string>
+
     <string name="import_new_account">KONTO IMPORTIEREN</string>
+
     <string name="upgrade_account">UPGRADE KONTO</string>
 
+
+
     <string name="connected_to">Verbunden mit</string>
+
     <string name="account_create_msg">Es kann nur alle 10 Minuten ein Konto registriert werden</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Namen müssen einen Bindestrich (-) und eine Reihe</string>
+
     <string name="import_gravatar">Import Gravatar</string>
+
     <string name="please_import_the_correct_file">Importieren Sie die richtige Datei</string>
+
     <string name="merchant_email_has_been_imported_successfully">Händler E-Mail wurde erfolgreich importiert</string>
+
 </resources>
+
