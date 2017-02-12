@@ -102,6 +102,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Inputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Inputs.COLUMN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_AMOUNT + TYPE_REAL + ", " +
             " FOREIGN KEY("+SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS+") REFERENCES "+SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME+"("+SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID+"),"+
@@ -111,6 +112,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Outputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Outputs.COLUMN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_AMOUNT + TYPE_REAL + ", " +
             " FOREIGN KEY("+SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS+") REFERENCES "+SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME+"("+SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID+"),"+

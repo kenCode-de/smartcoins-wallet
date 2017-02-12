@@ -109,6 +109,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_ID_ADDRESS = "id_address"; //point to a GeneralCoinAddress
+        public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
     }
@@ -118,6 +119,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_ID_ADDRESS = "id_address"; //point to a GeneralCoinAddress
+        public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
     }
