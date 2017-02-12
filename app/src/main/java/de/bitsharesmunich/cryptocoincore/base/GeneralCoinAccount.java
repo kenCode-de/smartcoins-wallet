@@ -8,6 +8,8 @@ import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     protected DeterministicKey changeKey;
     protected HashMap<Integer, GeneralCoinAddress> externalKeys = new HashMap();
     protected HashMap<Integer, GeneralCoinAddress> changeKeys = new HashMap();
+    protected List<ChangeBalanceListener> changeBalanceListeners = new ArrayList();
 
     public GeneralCoinAccount(String id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, coin, seed);
@@ -130,6 +133,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
             transactions.addAll(address.getOutputTransaction());
         }
 
+        Collections.sort(transactions, new TransactionsCustomComparator());
+
         return transactions;
     }
 
@@ -138,4 +143,21 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     public abstract GeneralCoinAddress getAddress(int index, boolean change);
 
     public abstract NetworkParameters getNetworkParam();
+
+    public class TransactionsCustomComparator implements Comparator<GIOTx> {
+        @Override
+        public int compare(GIOTx o1, GIOTx o2) {
+            return o1.getTransaction().getDate().compareTo(o2.getTransaction().getDate());
+        }
+    }
+
+    public void addChangeBalanceListener(ChangeBalanceListener listener){
+        this.changeBalanceListeners.add(listener);
+    }
+
+    protected void _fireOnChangeBalance(Balance balance){
+        for (ChangeBalanceListener listener : this.changeBalanceListeners){
+            listener.balanceChange(balance);
+        }
+    }
 }

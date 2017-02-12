@@ -109,11 +109,14 @@ import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.Converter;
 import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
@@ -843,10 +846,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             locale = new Locale.Builder().setLocale(locale).setRegion(configurationCountry).build();
         }
 
-        if (savedInstanceState == null){
+        if (this.getArguments().getString("coin") == null){
             coin = Coin.BITSHARE;
         } else {
-            coin = Coin.valueOf(savedInstanceState.getString("coin", "BITSHARE"));
+            coin = Coin.valueOf(this.getArguments().getString("coin", "BITSHARE"));
         }
 
         // Checking the app's configuration to override the system configuration
@@ -1265,42 +1268,49 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     public void loadBalancesFromSharedPref() {
-        try {
-            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        if (this.coin == Coin.BITSHARE) {
+            try {
+                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-            if (accountDetails.size() > 1) {
-                ivMultiAccArrow.setVisibility(View.VISIBLE);
-            } else {
-                ivMultiAccArrow.setVisibility(View.GONE);
-            }
+                if (accountDetails.size() > 1) {
+                    ivMultiAccArrow.setVisibility(View.VISIBLE);
+                } else {
+                    ivMultiAccArrow.setVisibility(View.GONE);
+                }
 
 
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
 
-                    if ((accountAsset != null) && (accountAsset.size() > 0)) {
-                        ArrayList<String> sym = new ArrayList<>();
-                        ArrayList<String> pre = new ArrayList<>();
-                        ArrayList<String> am = new ArrayList<>();
+                        if ((accountAsset != null) && (accountAsset.size() > 0)) {
+                            ArrayList<String> sym = new ArrayList<>();
+                            ArrayList<String> pre = new ArrayList<>();
+                            ArrayList<String> am = new ArrayList<>();
 
-                        for (int j = 0; j < accountAsset.size(); j++) {
-                            pre.add(j, accountAsset.get(j).precision);
-                            sym.add(j, accountAsset.get(j).symbol);
-                            am.add(j, accountAsset.get(j).ammount);
+                            for (int j = 0; j < accountAsset.size(); j++) {
+                                pre.add(j, accountAsset.get(j).precision);
+                                sym.add(j, accountAsset.get(j).symbol);
+                                am.add(j, accountAsset.get(j).ammount);
+                            }
+
+                            BalanceAssetsUpdate(sym, pre, am, true);
                         }
 
-                        BalanceAssetsUpdate(sym, pre, am, true);
+                        break;
                     }
-
-                    break;
                 }
+            } catch (Exception e) {
+
             }
-        } catch (Exception e) {
+        } else {
+            SCWallDatabase db = new SCWallDatabase(getContext());
+            GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
 
+            if (account != null){
+                this.getBalanceItems().addBalanceItem(this.coin.name(), ""+8, ""+account.getBalance().get(0).getAmmount(), true);
+            }
         }
-
-
     }
 
     Handler updateEquivalentAmount;
@@ -2564,46 +2574,52 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
      * @param reset: If true, the current transfer list is discarded, and a new query is made to the database.
      */
     private void updateTableView(boolean reset) {
-        UserAccount account = new UserAccount(accountId);
+        if (this.coin == Coin.BITSHARE) {
+            UserAccount account = new UserAccount(accountId);
 
-        if(reset){
-            loadMoreCounter = 1;
-        }
-
-        // Calculate how many items to fetch depending on how many times
-        // the 'load more' button has been pressed. Maybe later we can modify the
-        // getTransactions method to accept ranges and simplify this code.
-        int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
-        List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
-
-        // Here we check if the SortableTableView has its default adapter or our own instance.
-        if(transfersView.getDataAdapter() instanceof TransfersTableAdapter && !reset){
-            Log.d(TAG,"updating table view");
-            tableAdapter = (TransfersTableAdapter) transfersView.getDataAdapter();
-            List<HistoricalTransferEntry> existingData = tableAdapter.getData();
-            boolean found = true;
-            for(HistoricalTransferEntry newEntry : newData){
-                for(HistoricalTransferEntry existingEntry : existingData){
-                    if(newEntry.getHistoricalTransfer().getId().equals(existingEntry.getHistoricalTransfer().getId())){
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found){
-                    existingData.add(newEntry);
-                }
-                found = false;
+            if (reset) {
+                loadMoreCounter = 1;
             }
 
-        }else{
-            Log.d(TAG, "resetting table view");
-            tableAdapter = new TransfersTableAdapter(getContext(), locale, account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
-            transfersView.setDataAdapter(tableAdapter);
-        }
-        tableAdapter.notifyDataSetChanged();
+            // Calculate how many items to fetch depending on how many times
+            // the 'load more' button has been pressed. Maybe later we can modify the
+            // getTransactions method to accept ranges and simplify this code.
+            int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
+            List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
 
-        if (transfersView.getColumnComparator(0) == null) {
-            updateSortTable();
+            // Here we check if the SortableTableView has its default adapter or our own instance.
+            if(transfersView.getDataAdapter() instanceof TransfersTableAdapter && !reset){
+                Log.d(TAG,"updating table view");
+                tableAdapter = (TransfersTableAdapter) transfersView.getDataAdapter();
+                List<HistoricalTransferEntry> existingData = tableAdapter.getData();
+                boolean found = true;
+                for(HistoricalTransferEntry newEntry : newData){
+                    for(HistoricalTransferEntry existingEntry : existingData){
+                        if(newEntry.getHistoricalTransfer().getId().equals(existingEntry.getHistoricalTransfer().getId())){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found){
+                        existingData.add(newEntry);
+                    }
+                    found = false;
+                }
+
+            }else{
+                Log.d(TAG, "resetting table view");
+                tableAdapter = new TransfersTableAdapter(getContext(), locale, account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
+                transfersView.setDataAdapter(tableAdapter);
+            }
+            tableAdapter.notifyDataSetChanged();
+
+            if (transfersView.getColumnComparator(0) == null) {
+                updateSortTable();
+            }
+        } else {
+            GeneralCoinAccount account = database.getGeneralCoinAccount(Coin.BITCOIN.name());
+            List<GIOTx> transactions = account.getTransactions();
+
         }
     }
 
