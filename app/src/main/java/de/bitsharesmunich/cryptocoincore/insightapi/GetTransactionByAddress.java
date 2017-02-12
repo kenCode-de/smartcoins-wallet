@@ -35,6 +35,7 @@ public class GetTransactionByAddress extends Thread {
 
     private String serverUrl;
 
+
     public GetTransactionByAddress(String server, int port, NetworkParameters param) {
         serverUrl = "http://" + server + ":" + port + urlQuery;
         this.param = param;

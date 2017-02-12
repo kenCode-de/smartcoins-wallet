@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.database.SCWallDatabaseContract;
 
 /**
  * Created by henry on 05/02/2017.
@@ -115,6 +116,21 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         answer.addProperty("changeIndex", this.lastChangeIndex);
         answer.addProperty("externalIndex", this.lastExternalIndex);
         return answer;
+    }
+
+    public List<GIOTx> getTransactions(){
+        List<GIOTx> transactions = new ArrayList();
+        for(GeneralCoinAddress address : externalKeys.values()){
+            transactions.addAll(address.getInputTransaction());
+            transactions.addAll(address.getOutputTransaction());
+        }
+
+        for(GeneralCoinAddress address : changeKeys.values()){
+            transactions.addAll(address.getInputTransaction());
+            transactions.addAll(address.getOutputTransaction());
+        }
+
+        return transactions;
     }
 
     public abstract String getAddressString(int index, boolean change);
