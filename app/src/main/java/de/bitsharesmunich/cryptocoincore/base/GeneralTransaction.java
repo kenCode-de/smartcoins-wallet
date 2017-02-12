@@ -73,6 +73,22 @@ public class GeneralTransaction {
         this.date = date;
     }
 
+    public List<GIOTx> getTxInputs() {
+        return txInputs;
+    }
+
+    public void setTxInputs(List<GIOTx> txInputs) {
+        this.txInputs = txInputs;
+    }
+
+    public List<GIOTx> getTxOutputs() {
+        return txOutputs;
+    }
+
+    public void setTxOutputs(List<GIOTx> txOutputs) {
+        this.txOutputs = txOutputs;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

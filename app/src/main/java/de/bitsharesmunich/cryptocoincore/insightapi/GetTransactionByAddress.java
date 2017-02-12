@@ -86,24 +86,26 @@ public class GetTransactionByAddress extends Thread {
                                 address.getOutputTransaction().add(input);
                             }
                         }
+                        transaction.getTxInputs().add(input);
                     }
 
                     JSONArray vouts = transactionObject.getJSONArray("vout");
                     for (int j = 0; j < vouts.length(); j++) {
                         JSONObject vout = vouts.getJSONObject(j);
-                        GIOTx input = new GIOTx();
-                        input.setAmount(vout.getDouble("value"));
-                        input.setTransaction(transaction);
-                        input.setOut(false);
-                        input.setType(Coin.BITCOIN);
+                        GIOTx output = new GIOTx();
+                        output.setAmount(vout.getDouble("value"));
+                        output.setTransaction(transaction);
+                        output.setOut(false);
+                        output.setType(Coin.BITCOIN);
                         String addr = vout.getJSONObject("scriptPubKey").getJSONArray("addresses").getString(0);
-                        input.setAddressString(addr);
+                        output.setAddressString(addr);
                         for (GeneralCoinAddress address : addresses) {
                             if (address.getAddressString(param).equals(addr)) {
-                                input.setAddress(address);
-                                address.getInputTransaction().add(input);
+                                output.setAddress(address);
+                                address.getInputTransaction().add(output);
                             }
                         }
+                        transaction.getTxOutputs().add(output);
                     }
                 }
 
