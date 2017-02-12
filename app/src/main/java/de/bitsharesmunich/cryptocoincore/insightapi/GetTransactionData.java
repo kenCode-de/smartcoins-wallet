@@ -86,6 +86,7 @@ public class GetTransactionData extends Thread {
                     }
                 }
             }
+            //TODO notify account that balance change
 
         } catch (JSONException | IOException ex) {
             Logger.getLogger(GetTransactionByAddress.class.getName()).log(Level.SEVERE, null, ex);

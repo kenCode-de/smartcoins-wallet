@@ -51,7 +51,6 @@ public class GetTransactionByAddress extends Thread {
             try {
                 for (GeneralCoinAddress address : addresses) {
                     serverUrl += address.getAddressString(param) + ",";
-
                 }
                 serverUrl = serverUrl.substring(0, serverUrl.length() - 1) + urlPostQuery;
                 URLConnection connection = new URL(serverUrl).openConnection();
@@ -108,7 +107,7 @@ public class GetTransactionByAddress extends Thread {
                     }
                 }
 
-                addresses.get(0).getAccount();//TODO update
+                addresses.get(0).getAccount();//TODO notify account that balance change
 
             } catch (JSONException | IOException ex) {
                 Logger.getLogger(GetTransactionByAddress.class.getName()).log(Level.SEVERE, null, ex);

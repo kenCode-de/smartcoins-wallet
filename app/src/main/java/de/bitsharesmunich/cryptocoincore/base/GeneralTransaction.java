@@ -72,4 +72,23 @@ public class GeneralTransaction {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeneralTransaction that = (GeneralTransaction) o;
+
+        if (txid != null ? !txid.equals(that.txid) : that.txid != null) return false;
+        return type == that.type;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = txid != null ? txid.hashCode() : 0;
+        result = 31 * result + type.hashCode();
+        return result;
+    }
 }
