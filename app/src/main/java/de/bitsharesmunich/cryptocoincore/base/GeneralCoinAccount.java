@@ -2,11 +2,14 @@ package de.bitsharesmunich.cryptocoincore.base;
 
 import com.google.gson.JsonObject;
 
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
 
@@ -48,7 +51,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
         for(int i = 0; i < lastExternalIndex;i++){
             if(!externalKeys.containsKey(i)){
-                externalKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(0, false))));
+                externalKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(i, false))));
             }
         }
     }
@@ -59,9 +62,19 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
         for(int i = 0; i < lastChangeIndex;i++){
             if(!changeKeys.containsKey(i)){
-                changeKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(0, false))));
+                changeKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
             }
         }
+    }
+
+    public List<GeneralCoinAddress> getAddresses() {
+        calculateGapExternal();
+        calculateGapChange();
+
+        List<GeneralCoinAddress> addresses = new ArrayList();
+        addresses.addAll(changeKeys.values());
+        addresses.addAll(externalKeys.values());
+        return addresses;
     }
 
     public void saveAddresses(SCWallDatabase db){
@@ -103,4 +116,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         answer.addProperty("externalIndex", this.lastExternalIndex);
         return answer;
     }
+
+    public abstract String getAddressString(int index, boolean change);
+
+    public abstract GeneralCoinAddress getAddress(int index, boolean change);
+
+    public abstract NetworkParameters getNetworkParam();
 }

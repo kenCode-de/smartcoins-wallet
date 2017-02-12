@@ -11,10 +11,10 @@ import java.util.List;
 public class GeneralTransaction {
 
     private String id;
-    private String address;
+    private String txid;
     private Coin type;
     private long block;
-    private long fee;
+    private double fee;
     private int confirm;
     private Date date;
 
@@ -29,13 +29,9 @@ public class GeneralTransaction {
         this.id = id;
     }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getTxid() {        return txid;    }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public void setTxid(String txid) {        this.txid = txid;    }
 
     public Coin getType() {
         return type;
@@ -53,11 +49,11 @@ public class GeneralTransaction {
         this.block = block;
     }
 
-    public long getFee() {
+    public double getFee() {
         return fee;
     }
 
-    public void setFee(long fee) {
+    public void setFee(double fee) {
         this.fee = fee;
     }
 

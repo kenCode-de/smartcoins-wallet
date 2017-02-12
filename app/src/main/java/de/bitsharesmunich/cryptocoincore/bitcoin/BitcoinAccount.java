@@ -113,4 +113,39 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 + ", nextAddress=" + getNextRecieveAddress()
                 + ", param=" + param + '}';
     }
+
+    @Override
+    public String getAddressString(int index, boolean change) {
+        if (change) {
+            if (!changeKeys.containsKey(index)) {
+                changeKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+            }
+            return changeKeys.get(index).getAddressString(param);
+        } else {
+            if (!externalKeys.containsKey(index)) {
+                externalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(index, false))));
+            }
+            return externalKeys.get(index).getAddressString(param);
+        }
+    }
+
+    @Override
+    public NetworkParameters getNetworkParam() {
+        return param;
+    }
+
+    @Override
+    public GeneralCoinAddress getAddress(int index, boolean change) {
+        if (change) {
+            if (!changeKeys.containsKey(index)) {
+                changeKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+            }
+            return changeKeys.get(index);
+        } else {
+            if (!externalKeys.containsKey(index)) {
+                externalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(index, false))));
+            }
+            return externalKeys.get(index);
+        }
+    }
 }

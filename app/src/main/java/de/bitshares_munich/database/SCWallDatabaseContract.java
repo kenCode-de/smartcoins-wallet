@@ -125,7 +125,7 @@ public class SCWallDatabaseContract {
     public static class GeneralTransaction implements BaseColumns {
         public static final String TABLE_NAME = "bitcoin_transaction";
         public static final String COLUMN_ID = "id";
-        public static final String COLUMN_ADDRESS = "address";
+        public static final String COLUMN_TXI = "txi";
         public static final String COLUMN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_BLOCK = "block"; //the number of the block where is include
         public static final String COLUMN_DATE = "date"; //receive date
