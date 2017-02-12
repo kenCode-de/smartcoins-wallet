@@ -619,10 +619,10 @@ public class Helper {
         retVal.setCurrency(currency);
 
         //The default JDK handles situations well when the currency is the default currency for the locale
-        if (currency.equals(Currency.getInstance(displayLocale))) {
-            Log.d(TAG, "Let the JDK handle this");
-            return retVal;
-        }
+//        if (currency.equals(Currency.getInstance(displayLocale))) {
+//            Log.d(TAG, "Let the JDK handle this");
+//            return retVal;
+//        }
 
         //otherwise we need to "fix things up" when displaying a non-native currency
         if (retVal instanceof DecimalFormat) {
