@@ -139,7 +139,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
             if (seeds.size() > 0){
                 AccountSeed masterSeed = (BIP39)seeds.get(0);
                 if (!brainKey.isEmpty()) {
-                    brainKey += masterSeed.getMnemonicCodeString().toUpperCase();
+                    brainKey += " "+masterSeed.getMnemonicCodeString().toUpperCase();
                 }
             }
 
