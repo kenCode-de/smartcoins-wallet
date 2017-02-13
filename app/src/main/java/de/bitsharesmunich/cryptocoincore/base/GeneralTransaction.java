@@ -107,4 +107,28 @@ public class GeneralTransaction {
         result = 31 * result + type.hashCode();
         return result;
     }
+
+    public double getAccountBalanceChange(){
+        double balance = 0;
+        boolean theresAccountInput = false;
+
+        for (GIOTx txInputs : this.getTxInputs()){
+            if (txInputs.isOut() && (txInputs.getAddress() != null)){
+                balance += -txInputs.getAmount();
+                theresAccountInput = true;
+            }
+        }
+
+        for (GIOTx txOutput : this.getTxOutputs()){
+            if (!txOutput.isOut() && (txOutput.getAddress() != null)){
+                balance += txOutput.getAmount();
+            }
+        }
+
+        if (theresAccountInput){
+            balance += -this.getFee();
+        }
+
+        return balance;
+    }
 }

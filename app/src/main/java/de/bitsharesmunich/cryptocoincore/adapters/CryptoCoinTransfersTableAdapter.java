@@ -23,6 +23,7 @@ import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
@@ -33,13 +34,13 @@ import de.codecrafters.tableview.TableDataAdapter;
 /**
  * Created by henry on 12/02/17.
  */
-public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
+public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTransaction> {
     private String TAG = this.getClass().getName();
 
     private GeneralCoinAccount account;
     private Locale locale;
 
-    public CryptoCoinTransfersTableAdapter(Context context, GeneralCoinAccount account, Locale locale, GIOTx[] data) {
+    public CryptoCoinTransfersTableAdapter(Context context, GeneralCoinAccount account, Locale locale, GeneralTransaction[] data) {
         super(context, data);
         this.locale = locale;
         this.account = account;
@@ -48,7 +49,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         View renderedView = null;
-        GIOTx transferEntry = getRowData(rowIndex);
+        GeneralTransaction transferEntry = getRowData(rowIndex);
         switch (columnIndex) {
             case 0:
                 renderedView = renderDateView(transferEntry);
@@ -66,7 +67,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
         return renderedView;
     }
 
-    private View renderDateView(GIOTx historicalTransfer) {
+    private View renderDateView(GeneralTransaction historicalTransfer) {
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionsdateview, null);
         TextView dateTextView = (TextView) v.findViewById(R.id.transactiondate);
@@ -75,7 +76,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
 
         //if(historicalTransfer.getTransaction().getDate()getTimestamp() > 0){
 
-            Date date = historicalTransfer.getTransaction().getDate();
+            Date date = historicalTransfer.getDate();
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
@@ -102,12 +103,12 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
         return v;
     }
 
-    private View renderSendRecieve(GIOTx historicalTransfer) {
+    private View renderSendRecieve(GeneralTransaction historicalTransfer) {
         //TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionssendrecieve, null);
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
-        if (historicalTransfer.isOut()) {
+        if (historicalTransfer.getAccountBalanceChange() < 0) {
             imgView.setImageResource(R.drawable.send);
         } else {
             imgView.setImageResource(R.drawable.receive);
@@ -115,18 +116,18 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
         return v;
     }
 
-    private View renderDetails(GIOTx historicalTransfer) {
+    private View renderDetails(GeneralTransaction historicalTransfer) {
         //TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
-        String toMessage = getContext().getText(R.string.to_capital) + ": " + historicalTransfer.getAddressString()  operation.getTo().getAccountName();
+        /*String toMessage = getContext().getText(R.string.to_capital) + ": " + historicalTransfer.getAddressString()  operation.getTo().getAccountName();
         TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
 
         String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
-        fromUser.setText(fromMessage);
+        fromUser.setText(fromMessage);*/
 
         /*if(!operation.getMemo().getPlaintextMessage().equals("")){
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
@@ -135,7 +136,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
         return v;
     }
 
-    private View renderAmount(GIOTx historicalTransfer) {
+    private View renderAmount(GeneralTransaction historicalTransfer) {
         //TransferOperation operation = historicalTransfer.getAmount() getHistoricalTransfer().getOperation();
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
@@ -156,17 +157,19 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GIOTx> {
         int lightRed = ContextCompat.getColor(getContext(), R.color.send_amount_light);
         int lightGreen = ContextCompat.getColor(getContext(), R.color.receive_amount_light);
 
-        if(historicalTransfer.isOut()){
+        double balanceChange = historicalTransfer.getAccountBalanceChange();
+
+        if(balanceChange < 0){
             // User sent this transfer
             transferAmountTextView.setTextColor(redColor);
             fiatAmountTextView.setTextColor(lightRed);
-            String amount = Helper.setLocaleNumberFormat(locale, historicalTransfer.getAmount());
+            String amount = Helper.setLocaleNumberFormat(locale, balanceChange);
             transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
             transferAmountTextView.setTextColor(greenColor);
             fiatAmountTextView.setTextColor(lightGreen);
-            String amount = Helper.setLocaleNumberFormat(locale, historicalTransfer.getAmount());
+            String amount = Helper.setLocaleNumberFormat(locale, balanceChange);
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
