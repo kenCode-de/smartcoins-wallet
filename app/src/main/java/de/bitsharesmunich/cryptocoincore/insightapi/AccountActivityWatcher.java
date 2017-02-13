@@ -58,7 +58,7 @@ public class AccountActivityWatcher {
     };
 
     public AccountActivityWatcher(String serverAddress, int serverPort, GeneralCoinAccount account) throws URISyntaxException {
-        this.socket = IO.socket("http:/" + serverAddress + ":" + Integer.toString(serverPort) + "/");
+        this.socket = IO.socket("http://" + serverAddress + ":" + Integer.toString(serverPort) + "/");
         this.socket.on(Socket.EVENT_CONNECT, onConnect);
         this.socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
         this.socket.on(changeAddressRoom, onAddressTransaction);

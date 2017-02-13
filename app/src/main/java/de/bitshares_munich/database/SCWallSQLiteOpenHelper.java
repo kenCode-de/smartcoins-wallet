@@ -54,7 +54,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_SEED_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Seeds.TABLE_NAME + " (" +
             SCWallDatabaseContract.Seeds.COLUMN_ID + " TEXT PRIMARY KEY, " +
-            SCWallDatabaseContract.Seeds.COLUMN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC + TYPE_TEXT + ", "+
             SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL + TYPE_TEXT +", " +
             "CONSTRAINT seedContraint UNIQUE ("+SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC+","+SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL+") "+
@@ -63,19 +63,19 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_ACCOUNT_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralAccounts.TABLE_NAME + " (" +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + TYPE_TEXT + ", "+
             SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX + TYPE_INTEGER + ", "+
             SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX + TYPE_INTEGER + ", "+
             SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX + TYPE_INTEGER + ", "+
             " FOREIGN KEY("+SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED+") REFERENCES "+SCWallDatabaseContract.Seeds.TABLE_NAME+"("+SCWallDatabaseContract.Seeds.COLUMN_ID+"),"+
-            "CONSTRAINT accountContraint UNIQUE ("+SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED+","+SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE+","+SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX+") "+
+            "CONSTRAINT accountContraint UNIQUE ("+SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED+","+SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE +","+SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX+") "+
             ")";
 
     private static final String SQL_CREATE_GENERAL_ORPHAN_KEY_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralOrphanKeys.TABLE_NAME + " (" +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_NAME + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_WIF + TYPE_TEXT + ", "+
             "CONSTRAINT generalOprhanContraint UNIQUE ("+SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_WIF+"))";
 
@@ -110,9 +110,9 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_OUTPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Outputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Outputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
-            SCWallDatabaseContract.Outputs.COLUMN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_AMOUNT + TYPE_REAL + ", " +
             " FOREIGN KEY("+SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS+") REFERENCES "+SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME+"("+SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID+"),"+

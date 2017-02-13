@@ -621,7 +621,7 @@ public class SCWallDatabase {
         ContentValues contentValues = new ContentValues();
         String newId = UUID.randomUUID().toString();
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ID, newId);
-        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_TYPE, seed.getType().name());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE, seed.getType().name());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL, seed.getAdditional());
         try{
@@ -640,7 +640,7 @@ public class SCWallDatabase {
         String whereClause = SCWallDatabaseContract.Seeds.COLUMN_ID + "=?";
         String[] whereArgs = new String[]{ seed.getId() };
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_TYPE, seed.getType().name());
+        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE, seed.getType().name());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL, seed.getAdditional());
         int affected = db.update(table,contentValues,whereClause,whereArgs);
@@ -655,7 +655,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
-                SCWallDatabaseContract.Seeds.COLUMN_TYPE+ " = '" + type.name() + "'", null, null, null, null, null);
+                SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE + " = '" + type.name() + "'", null, null, null, null, null);
         if(cursor.moveToFirst()){
             AccountSeed seed;
             do{
@@ -685,7 +685,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Seeds.COLUMN_ID,
                 SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC,
                 SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
-                SCWallDatabaseContract.Seeds.COLUMN_TYPE
+                SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
                 SCWallDatabaseContract.Seeds.COLUMN_ID + " = '" + idSeed + "'",
@@ -739,7 +739,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Seeds.COLUMN_ID,
                 SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC,
                 SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL,
-                SCWallDatabaseContract.Seeds.COLUMN_TYPE
+                SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns, null, null, null, null, null, null);
         if(cursor.moveToFirst()){
@@ -773,7 +773,7 @@ public class SCWallDatabase {
         ContentValues contentValues = new ContentValues();
         String newId = UUID.randomUUID().toString();
         contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ID, newId);
-        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE, account.getCoin().name());
+        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE, account.getCoin().name());
         if(account.getSeed() == null){
             Log.d(TAG,"Error inserting account  null seed in database");
             return null;
@@ -824,14 +824,14 @@ public class SCWallDatabase {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = '" + coinType+"'",
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE + " = '" + coinType+"'",
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
@@ -867,7 +867,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE + " = '" + coinType + "' AND " + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = '" + seed.getId()+"'",
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE + " = '" + coinType + "' AND " + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + " = '" + seed.getId()+"'",
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
@@ -896,7 +896,7 @@ public class SCWallDatabase {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX
@@ -930,7 +930,7 @@ public class SCWallDatabase {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME,
-                SCWallDatabaseContract.GeneralAccounts.COLUMN_TYPE,
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ACCOUNT_INDEX,
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX,
