@@ -1,47 +1,45 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
 import org.bitcoinj.core.NetworkParameters;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.models.AddressTxi;
+import de.bitsharesmunich.cryptocoincore.insightapi.models.Txi;
+import de.bitsharesmunich.cryptocoincore.insightapi.models.Vin;
+import de.bitsharesmunich.cryptocoincore.insightapi.models.Vout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by henry on 12/02/2017.
  */
 
-public class GetTransactionByAddress extends Thread {
+public class GetTransactionByAddress extends Thread implements Callback<AddressTxi> {
 
-    private final String urlQuery = "/insight-api/addrs/";
-    private final String urlPostQuery = "/txs/";
+
+
     private Coin coin;
     private NetworkParameters param;
     private List<GeneralCoinAddress> addresses = new ArrayList();
+    private InsightApiServiceGenerator serviceGenerator;
 
-    private String serverUrl;
 
+    public GetTransactionByAddress(NetworkParameters param, Coin coin) {
 
-    public GetTransactionByAddress(String server, int port, NetworkParameters param) {
-        serverUrl = "http://" + server + ":" + port + urlQuery;
+        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(coin) + ":" + InsightApiConstants.getPort(coin);
         this.param = param;
+        this.coin = coin;
+        serviceGenerator = new InsightApiServiceGenerator(serverUrl);
     }
 
     public void addAdress(GeneralCoinAddress address) {
@@ -49,79 +47,79 @@ public class GetTransactionByAddress extends Thread {
     }
 
     @Override
+    public void onResponse(Call<AddressTxi> call, Response<AddressTxi> response) {
+        if(response.isSuccessful()){
+            HashSet<GeneralCoinAccount> accountsChanged = new HashSet();
+            AddressTxi addressTxi = response.body();
+
+            for (Txi txi : addressTxi.items) {
+                GeneralTransaction transaction = new GeneralTransaction();
+                transaction.setTxid(txi.txid);
+                transaction.setBlock(txi.blockheight);
+                transaction.setDate(new Date(txi.time));
+                transaction.setFee(txi.fee*InsightApiConstants.amountMultiplier);
+                transaction.setConfirm(txi.confirmations);
+                transaction.setType(coin);
+
+                for (Vin vin : txi.vin) {
+                    GIOTx input = new GIOTx();
+                    input.setAmount(vin.valueSat);
+                    input.setTransaction(transaction);
+                    input.setOut(true);
+                    input.setType(coin);
+                    String addr = vin.addr;
+                    input.setAddressString(addr);
+                    for (GeneralCoinAddress address : addresses) {
+                        if (address.getAddressString(param).equals(addr)) {
+                            input.setAddress(address);
+                            address.getOutputTransaction().add(input);
+                            accountsChanged.add(address.getAccount());
+                        }
+                    }
+                    transaction.getTxInputs().add(input);
+                }
+
+                for (Vout vout : txi.vout){
+                    GIOTx output = new GIOTx();
+                    output.setAmount(vout.value*InsightApiConstants.amountMultiplier);
+                    output.setTransaction(transaction);
+                    output.setOut(false);
+                    output.setType(coin);
+                    String addr = vout.scriptPubKey.addresses[0];
+                    output.setAddressString(addr);
+                    for (GeneralCoinAddress address : addresses) {
+                        if (address.getAddressString(param).equals(addr)) {
+                            output.setAddress(address);
+                            address.getInputTransaction().add(output);
+                            accountsChanged.add(address.getAccount());
+                        }
+                    }
+                    transaction.getTxOutputs().add(output);
+                }
+            }
+
+            for(GeneralCoinAccount account : accountsChanged){
+                account.balanceChange();
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(Call<AddressTxi> call, Throwable t) {
+
+    }
+
+    @Override
     public void run() {
         if (addresses.size() > 0) {
-            Set<GeneralCoinAccount> accountsChanged = new HashSet();
-            try {
+                StringBuilder addressToQuery = new StringBuilder();
                 for (GeneralCoinAddress address : addresses) {
-                    serverUrl += address.getAddressString(param) + ",";
+                    addressToQuery.append(address.getAddressString(param)).append(",");
                 }
-                serverUrl = serverUrl.substring(0, serverUrl.length() - 1) + urlPostQuery;
-                URLConnection connection = new URL(serverUrl).openConnection();
-                InputStream response = connection.getInputStream();
-                Scanner scanner = new Scanner(response);
-                String responseBody = scanner.useDelimiter("\\A").next();
-                System.out.println(responseBody);
-                JSONObject responseObject = new JSONObject(responseBody);
-                JSONArray items = responseObject.getJSONArray("items");
-                for (int i = 0; i < items.length(); i++) {
-                    JSONObject transactionObject = items.getJSONObject(i);
-                    GeneralTransaction transaction = new GeneralTransaction();
-                    transaction.setTxid(transactionObject.getString("txid"));
-                    transaction.setBlock(transactionObject.getLong("blockheight"));
-                    transaction.setDate(new Date(transactionObject.getLong("time")));
-                    transaction.setFee(transactionObject.getDouble("fees"));
-                    transaction.setConfirm(transactionObject.getInt("confirmations"));
-                    transaction.setType(coin);
-
-                    JSONArray vins = transactionObject.getJSONArray("vin");
-                    for (int j = 0; j < vins.length(); j++) {
-                        JSONObject vin = vins.getJSONObject(j);
-                        GIOTx input = new GIOTx();
-                        input.setAmount(vin.getDouble("value"));
-                        input.setTransaction(transaction);
-                        input.setOut(true);
-                        input.setType(Coin.BITCOIN);
-                        String addr = vin.getString("addr");
-                        input.setAddressString(addr);
-                        for (GeneralCoinAddress address : addresses) {
-                            if (address.getAddressString(param).equals(addr)) {
-                                input.setAddress(address);
-                                address.getOutputTransaction().add(input);
-                                accountsChanged.add(address.getAccount());
-                            }
-                        }
-                        transaction.getTxInputs().add(input);
-                    }
-
-                    JSONArray vouts = transactionObject.getJSONArray("vout");
-                    for (int j = 0; j < vouts.length(); j++) {
-                        JSONObject vout = vouts.getJSONObject(j);
-                        GIOTx output = new GIOTx();
-                        output.setAmount(vout.getDouble("value"));
-                        output.setTransaction(transaction);
-                        output.setOut(false);
-                        output.setType(Coin.BITCOIN);
-                        String addr = vout.getJSONObject("scriptPubKey").getJSONArray("addresses").getString(0);
-                        output.setAddressString(addr);
-                        for (GeneralCoinAddress address : addresses) {
-                            if (address.getAddressString(param).equals(addr)) {
-                                output.setAddress(address);
-                                address.getInputTransaction().add(output);
-                                accountsChanged.add(address.getAccount());
-                            }
-                        }
-                        transaction.getTxOutputs().add(output);
-                    }
-                }
-
-                for(GeneralCoinAccount account : accountsChanged){
-                    account.balanceChange();
-                }
-
-            } catch (JSONException | IOException ex) {
-                Logger.getLogger(GetTransactionByAddress.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                addressToQuery.deleteCharAt(addressToQuery.length()-1);
+            InsightApiService service = serviceGenerator.getService(InsightApiService.class);
+            Call<AddressTxi> addressTxiCall = service.getTransactionByAddress(addressToQuery.toString());
+            addressTxiCall.enqueue(this);
         }
     }
 }

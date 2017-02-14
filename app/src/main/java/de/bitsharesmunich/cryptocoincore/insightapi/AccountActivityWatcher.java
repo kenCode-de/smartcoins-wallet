@@ -21,11 +21,6 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 
 public class AccountActivityWatcher {
 
-    private final String changeAddressRoom = "bitcoind/addresstxid";
-
-    private String serverAddress;
-    private int serverPort;
-
     private final GeneralCoinAccount account;
     private List<String> watchAddress = new ArrayList();
     private Socket socket;
@@ -35,8 +30,8 @@ public class AccountActivityWatcher {
         public void call(Object... os) {
             try {
                 System.out.println("New addr transaction received: " + ((JSONObject) os[0]).toString());
-                String txi = ((JSONObject) os[0]).getString("txi");
-                new GetTransactionData(serverAddress, serverPort, txi, account).start();
+                String txi = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
+                new GetTransactionData(txi, account).start();
             } catch (JSONException ex) {
                 Logger.getLogger(AccountActivityWatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -47,7 +42,7 @@ public class AccountActivityWatcher {
     private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... os) {
-            socket.emit("subscribe", changeAddressRoom, watchAddress.toArray());
+            socket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, watchAddress.toArray());
         }
     };
 
@@ -57,20 +52,18 @@ public class AccountActivityWatcher {
         }
     };
 
-    public AccountActivityWatcher(String serverAddress, int serverPort, GeneralCoinAccount account) throws URISyntaxException {
-        this.socket = IO.socket("http://" + serverAddress + ":" + Integer.toString(serverPort) + "/");
+    public AccountActivityWatcher(GeneralCoinAccount account) throws URISyntaxException {
+        this.socket = IO.socket(InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin())+"/");
         this.socket.on(Socket.EVENT_CONNECT, onConnect);
         this.socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
-        this.socket.on(changeAddressRoom, onAddressTransaction);
-        this.serverAddress = serverAddress;
-        this.serverPort = serverPort;
+        this.socket.on(InsightApiConstants.changeAddressRoom, onAddressTransaction);
         this.account = account;
     }
 
     public void addAddress(String address) {
         watchAddress.add(address);
         if (this.socket.connected()) {
-            socket.emit("subscribe", changeAddressRoom, new String[]{address});
+            socket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, new String[]{address});
         }
     }
 
