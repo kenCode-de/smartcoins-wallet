@@ -14,7 +14,7 @@ public class GeneralTransaction {
     private String txid;
     private Coin type;
     private long block;
-    private double fee;
+    private long fee;
     private int confirm;
     private Date date;
 
@@ -49,11 +49,11 @@ public class GeneralTransaction {
         this.block = block;
     }
 
-    public double getFee() {
+    public long getFee() {
         return fee;
     }
 
-    public void setFee(double fee) {
+    public void setFee(long fee) {
         this.fee = fee;
     }
 

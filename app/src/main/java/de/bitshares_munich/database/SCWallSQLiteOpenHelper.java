@@ -96,7 +96,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS + TYPE_INTEGER + ", " +
-            SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE + TYPE_REAL + ")";
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE + TYPE_INTEGER + ")";
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Inputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
@@ -104,7 +104,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.Inputs.COLUMN_AMOUNT + TYPE_REAL + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_AMOUNT + TYPE_INTEGER + ", " +
             " FOREIGN KEY("+SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS+") REFERENCES "+SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME+"("+SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID+"),"+
             " FOREIGN KEY("+SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION+") REFERENCES "+SCWallDatabaseContract.GeneralTransaction.TABLE_NAME+"("+SCWallDatabaseContract.GeneralTransaction.COLUMN_ID+"))";
 
@@ -114,7 +114,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.Outputs.COLUMN_AMOUNT + TYPE_REAL + ", " +
+            SCWallDatabaseContract.Outputs.COLUMN_AMOUNT + TYPE_INTEGER + ", " +
             " FOREIGN KEY("+SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS+") REFERENCES "+SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME+"("+SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID+"),"+
             " FOREIGN KEY("+SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION+") REFERENCES "+SCWallDatabaseContract.GeneralTransaction.TABLE_NAME+"("+SCWallDatabaseContract.GeneralTransaction.COLUMN_ID+"))";
 
