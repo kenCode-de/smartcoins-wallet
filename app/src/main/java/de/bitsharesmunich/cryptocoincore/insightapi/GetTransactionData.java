@@ -46,7 +46,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
             transaction.setDate(new Date(txi.time));
-            transaction.setFee(txi.fee*InsightApiConstants.amountMultiplier);
+            transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
             transaction.setConfirm(txi.confirmations);
             transaction.setType(account.getCoin());
 
@@ -69,7 +69,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
 
             for (Vout vout : txi.vout){
                 GIOTx output = new GIOTx();
-                output.setAmount(vout.value*InsightApiConstants.amountMultiplier);
+                output.setAmount((long)(vout.value*InsightApiConstants.amountMultiplier));
                 output.setTransaction(transaction);
                 output.setOut(false);
                 output.setType(account.getCoin());

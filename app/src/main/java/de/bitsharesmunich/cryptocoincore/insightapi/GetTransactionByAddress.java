@@ -57,7 +57,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 transaction.setTxid(txi.txid);
                 transaction.setBlock(txi.blockheight);
                 transaction.setDate(new Date(txi.time));
-                transaction.setFee((int)(txi.fee*InsightApiConstants.amountMultiplier));
+                transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
                 transaction.setConfirm(txi.confirmations);
                 transaction.setType(coin);
 
@@ -81,7 +81,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
                 for (Vout vout : txi.vout){
                     GIOTx output = new GIOTx();
-                    output.setAmount((int)(vout.value*InsightApiConstants.amountMultiplier));
+                    output.setAmount((long)(vout.value*InsightApiConstants.amountMultiplier));
                     output.setTransaction(transaction);
                     output.setOut(false);
                     output.setType(coin);
