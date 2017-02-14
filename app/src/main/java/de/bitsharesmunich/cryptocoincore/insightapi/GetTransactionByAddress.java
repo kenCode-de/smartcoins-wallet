@@ -44,7 +44,7 @@ public class GetTransactionByAddress extends Thread {
         this.param = param;
     }
 
-    public void addAdress(GeneralCoinAddress address) {
+    public void addAddress(GeneralCoinAddress address) {
         addresses.add(address);
     }
 

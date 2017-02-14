@@ -112,10 +112,15 @@ import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransferAmountCompar
 import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransferDateComparator;
 import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransferSendReceiveComparator;
 import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransfersTableAdapter;
+import de.bitsharesmunich.cryptocoincore.base.Balance;
+import de.bitsharesmunich.cryptocoincore.base.ChangeBalanceListener;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionByAddress;
+import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionData;
 import de.bitsharesmunich.cryptocoincore.utils.CryptoCoinTableViewClickListener;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
@@ -1333,11 +1338,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         } else {
             SCWallDatabase db = new SCWallDatabase(getContext());
-            GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
 
-            if (account != null){
-                this.getBalanceItems().addBalanceItem(this.coin.name(), ""+8, ""+account.getBalance().get(0).getAmmount(), true);
+            account.addChangeBalanceListener(new ChangeBalanceListener() {
+                @Override
+                public void balanceChange(Balance balance) {
+                    if (account != null) {
+                        getBalanceItems().addOrUpdateBalanceItem(coin.name(), "" + 8, "" + account.getBalance().get(0).getAmmount());
+                    }
+                }
+            });
+
+            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress("fr.blockpay.ch",3003,account.getNetworkParam());
+            for(GeneralCoinAddress address: account.getAddresses()){
+                getTransactionByAddress.addAddress(address);
             }
+            getTransactionByAddress.start();
         }
     }
 
@@ -2665,7 +2681,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
 
             } else {
-                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), account, locale, (GeneralTransaction[]) transactions.toArray());
+                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), account, locale, transactions.toArray(new GeneralTransaction[0]));
                 cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
             }
         }
