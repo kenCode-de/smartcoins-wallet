@@ -1349,7 +1349,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
             });
 
-            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress("fr.blockpay.ch",3003,account.getNetworkParam());
+            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin);
             for(GeneralCoinAddress address: account.getAddresses()){
                 getTransactionByAddress.addAddress(address);
             }
