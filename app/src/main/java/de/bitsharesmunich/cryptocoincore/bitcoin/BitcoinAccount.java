@@ -25,9 +25,6 @@ import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
 
 public class BitcoinAccount extends GeneralCoinAccount {
 
-    private final static int ADDRESS_GAP = 20;
-
-
     private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
 
     public BitcoinAccount(String id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {

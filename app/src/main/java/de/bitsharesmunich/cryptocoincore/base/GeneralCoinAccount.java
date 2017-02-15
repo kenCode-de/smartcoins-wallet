@@ -31,6 +31,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     protected HashMap<Integer, GeneralCoinAddress> changeKeys = new HashMap();
     protected List<ChangeBalanceListener> changeBalanceListeners = new ArrayList();
 
+    private final static int ADDRESS_GAP = 20;
+
     public GeneralCoinAccount(String id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, coin, seed);
         this.accountNumber = accountNumber;
@@ -53,7 +55,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         if(externalKey == null){
             calculateAddresses();
         }
-        for(int i = 0; i < lastExternalIndex;i++){
+        for(int i = 0; i < lastExternalIndex + ADDRESS_GAP;i++){
             if(!externalKeys.containsKey(i)){
                 externalKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(i, false))));
             }
@@ -64,7 +66,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         if(changeKey == null){
             calculateAddresses();
         }
-        for(int i = 0; i < lastChangeIndex;i++){
+        for(int i = 0; i < lastChangeIndex + ADDRESS_GAP;i++){
             if(!changeKeys.containsKey(i)){
                 changeKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
             }
