@@ -7,7 +7,7 @@ package de.bitsharesmunich.cryptocoincore.insightapi.models;
 public class Vin {
     public String txid;
     public int vout;
-    public int sequence;
+    public long sequence;
     public int n;
     public ScriptSig scriptSig;
     public String addr;

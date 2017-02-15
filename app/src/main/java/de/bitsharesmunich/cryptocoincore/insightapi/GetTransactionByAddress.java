@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
+import android.util.Log;
+
 import org.bitcoinj.core.NetworkParameters;
 
 import java.util.ArrayList;
@@ -106,7 +108,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
     @Override
     public void onFailure(Call<AddressTxi> call, Throwable t) {
-
+        Log.e("GetTransactionByAddress","Error in json format");
     }
 
     @Override
