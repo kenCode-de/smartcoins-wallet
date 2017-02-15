@@ -88,7 +88,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 }
                 transaction.getTxOutputs().add(output);
             }
-            
+
             SCWallDatabase db = new SCWallDatabase(this.context);
             String idTransaction =db.getGeneralTransactionId(transaction);
             if(idTransaction == null) {

@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
+import android.content.Context;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -24,6 +26,7 @@ public class AccountActivityWatcher {
     private final GeneralCoinAccount account;
     private List<String> watchAddress = new ArrayList();
     private Socket socket;
+    private final Context context;
 
     private final Emitter.Listener onAddressTransaction = new Emitter.Listener() {
         @Override
@@ -31,7 +34,7 @@ public class AccountActivityWatcher {
             try {
                 System.out.println("New addr transaction received: " + ((JSONObject) os[0]).toString());
                 String txi = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
-                new GetTransactionData(txi, account).start();
+                new GetTransactionData(txi, account,context).start();
             } catch (JSONException ex) {
                 Logger.getLogger(AccountActivityWatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -52,12 +55,13 @@ public class AccountActivityWatcher {
         }
     };
 
-    public AccountActivityWatcher(GeneralCoinAccount account) throws URISyntaxException {
+    public AccountActivityWatcher(GeneralCoinAccount account, Context context) throws URISyntaxException {
         this.socket = IO.socket(InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin())+"/");
         this.socket.on(Socket.EVENT_CONNECT, onConnect);
         this.socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
         this.socket.on(InsightApiConstants.changeAddressRoom, onAddressTransaction);
         this.account = account;
+        this.context = context;
     }
 
     public void addAddress(String address) {
