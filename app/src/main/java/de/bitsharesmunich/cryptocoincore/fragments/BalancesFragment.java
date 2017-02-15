@@ -1349,7 +1349,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
             });
 
-            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin);
+            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin, getContext());
             for(GeneralCoinAddress address: account.getAddresses()){
                 getTransactionByAddress.addAddress(address);
             }
