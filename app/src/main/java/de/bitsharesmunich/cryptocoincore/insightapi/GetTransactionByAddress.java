@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
+import android.content.Context;
+
 import android.util.Log;
 
 import org.bitcoinj.core.NetworkParameters;
@@ -9,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
@@ -34,14 +37,16 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
     private NetworkParameters param;
     private List<GeneralCoinAddress> addresses = new ArrayList();
     private InsightApiServiceGenerator serviceGenerator;
+    private Context context;
 
 
-    public GetTransactionByAddress(NetworkParameters param, Coin coin) {
+    public GetTransactionByAddress(NetworkParameters param, Coin coin, Context context) {
 
         String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(coin) + ":" + InsightApiConstants.getPort(coin);
         this.param = param;
         this.coin = coin;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
+        this.context = context;
     }
 
     public void addAddress(GeneralCoinAddress address) {
@@ -96,7 +101,16 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                             accountsChanged.add(address.getAccount());
                         }
                     }
+
                     transaction.getTxOutputs().add(output);
+                }
+                SCWallDatabase db = new SCWallDatabase(this.context);
+                String idTransaction =db.getGeneralTransactionId(transaction);
+                if(idTransaction == null) {
+                    db.putGeneralTransaction(transaction);
+                }else{
+                    transaction.setId(idTransaction);
+                    db.updateGeneralTransaction(transaction);
                 }
             }
 

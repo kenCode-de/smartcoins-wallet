@@ -1090,6 +1090,24 @@ public class SCWallDatabase {
         return null;
     }
 
+    public String getGeneralTransactionId(final GeneralTransaction transaction){
+        String[] columns = {
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID+ " = '" + transaction.getTxid() + "'", null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String id = cursor.getString(0);
+                cursor.close();
+                return id;
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
     public String putGeneralTransaction(final GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
         String newId = UUID.randomUUID().toString();
