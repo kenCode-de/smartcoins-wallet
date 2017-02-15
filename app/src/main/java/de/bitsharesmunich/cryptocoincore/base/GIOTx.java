@@ -13,6 +13,10 @@ public class GIOTx {
     private boolean isOut;
     private String addressString;
 
+    public GIOTx(){
+
+    }
+
     public GIOTx(String id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString) {
         this.id = id;
         this.type = type;

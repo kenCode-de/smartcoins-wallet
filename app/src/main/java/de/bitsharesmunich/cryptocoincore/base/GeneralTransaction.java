@@ -21,6 +21,9 @@ public class GeneralTransaction {
     private List<GIOTx> txInputs = new ArrayList();
     private List<GIOTx> txOutputs = new ArrayList();
 
+    public GeneralTransaction() {
+    }
+
     public GeneralTransaction(String id, String txid, Coin type, long block, long fee, int confirm, Date date) {
         this.id = id;
         this.txid = txid;
