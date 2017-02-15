@@ -83,6 +83,16 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return addresses;
     }
 
+    public void loadAddresses(List<GeneralCoinAddress> addresses) {
+        for (GeneralCoinAddress address : addresses) {
+            if (address.isIsChange()) {
+                changeKeys.put(address.getIndex(), address);
+            } else {
+                externalKeys.put(address.getIndex(), address);
+            }
+        }
+    }
+
     public void saveAddresses(SCWallDatabase db){
         for(GeneralCoinAddress externalAddress : externalKeys.values()){
             if(externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")){

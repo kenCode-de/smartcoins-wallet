@@ -13,6 +13,16 @@ public class GIOTx {
     private boolean isOut;
     private String addressString;
 
+    public GIOTx(String id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString) {
+        this.id = id;
+        this.type = type;
+        this.address = address;
+        this.transaction = transaction;
+        this.amount = amount;
+        this.isOut = isOut;
+        this.addressString = addressString;
+    }
+
     public String getId() {
         return id;
     }

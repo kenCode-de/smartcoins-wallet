@@ -43,16 +43,6 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
     }
 
-    public void loadAddresses(List<GeneralCoinAddress> addresses) {
-        for (GeneralCoinAddress address : addresses) {
-            if (address.isIsChange()) {
-                changeKeys.put(address.getIndex(), address);
-            } else {
-                externalKeys.put(address.getIndex(), address);
-            }
-        }
-    }
-
     @Override
     public List<Balance> getBalance() {
         long amount = 0;

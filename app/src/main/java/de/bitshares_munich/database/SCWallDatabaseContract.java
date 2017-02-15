@@ -107,7 +107,7 @@ public class SCWallDatabaseContract {
     public static class Inputs implements BaseColumns {
         public static final String TABLE_NAME = "input_tx";
         public static final String COLUMN_ID = "id";
-        public static final String COLUMN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
+        public static final String COLUMN_COIN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_ID_ADDRESS = "id_address"; //point to a GeneralCoinAddress
         public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
@@ -127,8 +127,8 @@ public class SCWallDatabaseContract {
     public static class GeneralTransaction implements BaseColumns {
         public static final String TABLE_NAME = "general_transaction";
         public static final String COLUMN_ID = "id";
-        public static final String COLUMN_TXI = "Txi";
-        public static final String COLUMN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
+        public static final String COLUMN_TXID = "txid";
+        public static final String COLUMN_COIN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_BLOCK = "block"; //the number of the block where is include
         public static final String COLUMN_DATE = "date"; //receive date
         public static final String COLUMN_FEE = "fee"; //the amount of the comission

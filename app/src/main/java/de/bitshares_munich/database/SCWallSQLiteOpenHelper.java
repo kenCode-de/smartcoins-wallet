@@ -91,8 +91,8 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_GENERAL_TRANSACTION_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + " (" +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + " TEXT PRIMARY KEY, " +
-            SCWallDatabaseContract.GeneralTransaction.COLUMN_TYPE + TYPE_TEXT + ", " +
-            SCWallDatabaseContract.GeneralTransaction.COLUMN_TXI + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS + TYPE_INTEGER + ", " +
@@ -100,7 +100,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Inputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
-            SCWallDatabaseContract.Inputs.COLUMN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
