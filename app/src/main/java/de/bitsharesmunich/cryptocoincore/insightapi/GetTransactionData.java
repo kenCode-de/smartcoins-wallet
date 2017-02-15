@@ -1,7 +1,10 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
+import android.content.Context;
+
 import java.util.Date;
 
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
@@ -22,12 +25,14 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     private final GeneralCoinAccount account;
     private String txid;
     private InsightApiServiceGenerator serviceGenerator;
+    private Context context;
 
-    public GetTransactionData(String txid, GeneralCoinAccount account) {
+    public GetTransactionData(String txid, GeneralCoinAccount account,Context context) {
         String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
         this.account = account;
         this.txid = txid;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
+        this.context = context;
     }
 
     @Override
@@ -82,6 +87,15 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                     }
                 }
                 transaction.getTxOutputs().add(output);
+            }
+            
+            SCWallDatabase db = new SCWallDatabase(this.context);
+            String idTransaction =db.getGeneralTransactionId(transaction);
+            if(idTransaction == null) {
+                db.putGeneralTransaction(transaction);
+            }else{
+                transaction.setId(idTransaction);
+                db.updateGeneralTransaction(transaction);
             }
             account.balanceChange();
         }
