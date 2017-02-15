@@ -1046,7 +1046,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE, gitx.getType().name());
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING, gitx.getAddressString());
 
-        if (gitx.getAddress() != null || gitx.getAddress().getId() != null) {
+        if (gitx.getAddress() != null && gitx.getAddress().getId() != null) {
             contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, gitx.getAddress().getId());
         }
 
@@ -1072,7 +1072,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE, gotx.getType().name());
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING, gotx.getAddressString());
 
-        if (gotx.getAddress() != null || gotx.getAddress().getId() != null) {
+        if (gotx.getAddress() != null && gotx.getAddress().getId() != null) {
             contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, gotx.getAddress().getId());
         }
 
