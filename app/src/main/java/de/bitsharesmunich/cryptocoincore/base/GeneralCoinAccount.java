@@ -51,32 +51,40 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         changeKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(1, false));
     }
 
-    public void calculateGapExternal(){
-        if(externalKey == null){
+    public void calculateGapExternal() {
+        if (externalKey == null) {
             calculateAddresses();
         }
-        for(int i = 0; i < lastExternalIndex + ADDRESS_GAP;i++){
-            if(!externalKeys.containsKey(i)){
-                externalKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(i, false))));
+        for (int i = 0; i < lastExternalIndex + ADDRESS_GAP; i++) {
+            if (!externalKeys.containsKey(i)) {
+                externalKeys.put(i, new GeneralCoinAddress(this, false, i, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(i, false))));
             }
         }
     }
 
-    public void calculateGapChange(){
-        if(changeKey == null){
+    public void calculateGapChange() {
+        if (changeKey == null) {
             calculateAddresses();
         }
-        for(int i = 0; i < lastChangeIndex + ADDRESS_GAP;i++){
-            if(!changeKeys.containsKey(i)){
-                changeKeys.put(i,new GeneralCoinAddress(this,false,i,HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
+        for (int i = 0; i < lastChangeIndex + ADDRESS_GAP; i++) {
+            if (!changeKeys.containsKey(i)) {
+                changeKeys.put(i, new GeneralCoinAddress(this, false, i, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
             }
         }
     }
 
-    public List<GeneralCoinAddress> getAddresses() {
+    public List<GeneralCoinAddress> getAddresses(SCWallDatabase db) {
         calculateGapExternal();
         calculateGapChange();
 
+        List<GeneralCoinAddress> addresses = new ArrayList();
+        addresses.addAll(changeKeys.values());
+        addresses.addAll(externalKeys.values());
+        this.saveAddresses(db);
+        return addresses;
+    }
+
+    public List<GeneralCoinAddress> getAddresses() {
         List<GeneralCoinAddress> addresses = new ArrayList();
         addresses.addAll(changeKeys.values());
         addresses.addAll(externalKeys.values());
@@ -93,19 +101,21 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
     }
 
-    public void saveAddresses(SCWallDatabase db){
-        for(GeneralCoinAddress externalAddress : externalKeys.values()){
-            if(externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")){
-                db.putGeneralCoinAddress(externalAddress);
-            }else{
+    public void saveAddresses(SCWallDatabase db) {
+        for (GeneralCoinAddress externalAddress : externalKeys.values()) {
+            if (externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")) {
+                String id = db.putGeneralCoinAddress(externalAddress);
+                externalAddress.setId(id);
+            } else {
                 db.updateGeneralCoinAddress(externalAddress);
             }
         }
 
-        for(GeneralCoinAddress changeAddress : changeKeys.values()){
-            if(changeAddress.getId() == null || changeAddress.getId().isEmpty() || changeAddress.getId().equalsIgnoreCase("null")){
-                db.putGeneralCoinAddress(changeAddress);
-            }else{
+        for (GeneralCoinAddress changeAddress : changeKeys.values()) {
+            if (changeAddress.getId() == null || changeAddress.getId().isEmpty() || changeAddress.getId().equalsIgnoreCase("null")) {
+                String id = db.putGeneralCoinAddress(changeAddress);
+                changeAddress.setId(id);
+            } else {
                 db.updateGeneralCoinAddress(changeAddress);
             }
         }
@@ -133,32 +143,33 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return answer;
     }
 
-    public List<GeneralTransaction> getTransactions(){
+    public List<GeneralTransaction> getTransactions() {
         List<GeneralTransaction> transactions = new ArrayList();
-        for(GeneralCoinAddress address : externalKeys.values()){
-            for(GIOTx giotx : address.getInputTransaction()){
-                if(!transactions.contains(giotx.getTransaction())){
+        for (GeneralCoinAddress address : externalKeys.values()) {
+            for (GIOTx giotx : address.getInputTransaction()) {
+                if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for(GIOTx giotx : address.getOutputTransaction()){
-                if(!transactions.contains(giotx.getTransaction())){
+            for (GIOTx giotx : address.getOutputTransaction()) {
+                if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
         }
 
-        for(GeneralCoinAddress address : changeKeys.values()){
-            for(GIOTx giotx : address.getInputTransaction()){
-                if(!transactions.contains(giotx.getTransaction())){
+        for (GeneralCoinAddress address : changeKeys.values()) {
+            for (GIOTx giotx : address.getInputTransaction()) {
+                if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for(GIOTx giotx : address.getOutputTransaction()){
-                if(!transactions.contains(giotx.getTransaction())){
+            for (GIOTx giotx : address.getOutputTransaction()) {
+                if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
-            };
+            }
+            ;
         }
 
         Collections.sort(transactions, new TransactionsCustomComparator());
@@ -183,12 +194,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
     }
 
-    public void addChangeBalanceListener(ChangeBalanceListener listener){
+    public void addChangeBalanceListener(ChangeBalanceListener listener) {
         this.changeBalanceListeners.add(listener);
     }
 
-    protected void _fireOnChangeBalance(Balance balance){
-        for (ChangeBalanceListener listener : this.changeBalanceListeners){
+    protected void _fireOnChangeBalance(Balance balance) {
+        for (ChangeBalanceListener listener : this.changeBalanceListeners) {
             listener.balanceChange(balance);
         }
     }
