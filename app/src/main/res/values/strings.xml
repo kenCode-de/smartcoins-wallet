@@ -14,6 +14,8 @@
     <string name="note">Note</string>
     <string name="payment_received">Payment Received</string>
 
+    <string name="import_currency_account">Import</string>
+    <string name="create_currency_account">Create</string>
     <string name="import_brainkey">Import from BrainKey</string>
     <string name="import_backup_old">Import Backup from .bin file</string>
     <string name="choose_backup">Choose Backup</string>
@@ -43,6 +45,7 @@
     <string name="old_pin_number_warning">The old pin number must be at least 6 digits</string>
     <string name="mismatch_pin">mismatch pin</string>
     <string name="error_invalid_account">Invalid account, please check your brain key for typing errors</string>
+    <string name="no_currency_account">There is no account for %1$s yet. Do you want to create or import one?</string>
     <string name="key_brainkey" translatable="false">menace saa tenible carless koftgar snarly stoned gear abater outbow defile stowage unsappy scrout cowskin wramp</string>
     <string name="txt_pin" translatable="false">pin</string>
     <string name="txt_brain_key">Brainkey</string>
@@ -71,6 +74,7 @@
     <string name="backup">BACKUP .bin</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
+    <string name="backup_master_seed">BACKUP MASTER SEED</string>
     <string name="backup_no_keys_found_error">No account using this key was found, please make sure you are using an updated backup file.</string>
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
@@ -128,6 +132,7 @@
 
     <string name="unable_to_create_account_from_brainkey">Unable to create account from brainkey
     </string>
+    <string name="unable_to_create_master_seed">Unable to create master seed</string>
     <string name="importing_your_wallet">Importing your wallet...</string>
 
     <string name="str_trading_pair_not_exist">Trading pair does not exist</string>
@@ -443,4 +448,5 @@
 
     <!-- PDF export -->
     <string name="progress_pdf_generation">Generating PDF file</string>
+    <string name="bitcoin">Bitcoin</string>
 </resources>

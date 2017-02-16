@@ -69,6 +69,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
     private final String TAG = this.getClass().getName();

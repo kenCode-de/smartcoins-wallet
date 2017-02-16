@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TabActivity"
+            android:name="de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/MyMaterialTheme"

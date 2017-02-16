@@ -101,6 +101,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
 }
 
 afterEvaluate {

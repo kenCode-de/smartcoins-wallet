@@ -1,4 +1,4 @@
-package de.bitshares_munich.smartcoinswallet;
+package de.bitsharesmunich.cryptocoincore.smartcoinwallets;
 
 
 import android.app.Activity;
@@ -25,6 +25,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.bitshares_munich.smartcoinswallet.AccountActivity;
+import de.bitshares_munich.smartcoinswallet.BaseActivity;
+import de.bitshares_munich.smartcoinswallet.BuildConfig;
+import de.bitshares_munich.smartcoinswallet.Constants;
+import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.smartcoinswallet.SettingActivity;
+import de.bitshares_munich.smartcoinswallet.UpdateAccountTask;
+import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -39,33 +64,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.adapters.ViewPagerAdapter;
-import de.bitshares_munich.fragments.PromptUpdateDialog;
-import de.bitshares_munich.fragments.UpdatingAccountsDialog;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
+import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.interfaces.LockListener;
 import de.bitshares_munich.interfaces.UpdatedAccountListener;
+import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
+import de.bitshares_munich.fragments.PromptUpdateDialog;
+import de.bitshares_munich.fragments.UpdatingAccountsDialog;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
-import de.bitsharesmunich.graphenej.AccountOptions;
-import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.Authority;
-import de.bitsharesmunich.graphenej.BrainKey;
-import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.Transaction;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.api.GetAccounts;
-import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, LockListener {
     private String TAG = this.getClass().getName();
@@ -621,8 +631,12 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @OnClick(R.id.OnClickSettings_TabActivity)
     void OnClickSettings() {
+        this.onInternalAppMove();
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment currentFragment = adapter.getRegisteredFragment(viewPager.getCurrentItem());
+        if(currentFragment instanceof  InternalMovementListener){
+            ((InternalMovementListener) currentFragment).onInternalAppMove();
+        }
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
