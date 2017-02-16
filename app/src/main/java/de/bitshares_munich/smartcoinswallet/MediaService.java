@@ -43,8 +43,8 @@ public class MediaService extends Service {
 
     public void onStart(Intent intent,int startid){
         try{
-        mp.start();}
-        catch(Exception e){
+            mp.start();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

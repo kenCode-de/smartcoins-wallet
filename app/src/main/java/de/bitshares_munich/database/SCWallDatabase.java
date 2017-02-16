@@ -1156,7 +1156,7 @@ public class SCWallDatabase {
         return affected > 0;
     }
 
-    private List<GIOTx> getGTIx(GeneralTransaction transaction, GeneralCoinAccount account){
+    private List<GIOTx> getGTIx(GeneralTransaction transaction, final GeneralCoinAccount account){
         List<GIOTx> gtixs = new ArrayList();
         String[] columns = {
                 SCWallDatabaseContract.Inputs.COLUMN_ID,
@@ -1172,11 +1172,9 @@ public class SCWallDatabase {
                 String id = cursor.getString(0);
                 String addressString = cursor.getString(1);
                 String idAddress = cursor.getString(2);
-                Log.i(TAG,"Loading General transaction idAddress " + idAddress);
                 GeneralCoinAddress address = null;
                 if(idAddress != null){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
-                        Log.i(TAG,"Loading General transaction account address1 " + address1.getId());
                         if(address1.getId().equals(idAddress)){
                             address = address1;
                             break;
@@ -1184,8 +1182,10 @@ public class SCWallDatabase {
                     }
                 }
                 long amount = cursor.getLong(3);
-                Log.i(TAG,"Loading General transaction Input " + amount);
                 gtix = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString);
+                if(address != null){
+                    address.getOutputTransaction().add(gtix);
+                }
                 gtixs.add(gtix);
             }while(cursor.moveToNext());
         }
@@ -1193,7 +1193,7 @@ public class SCWallDatabase {
         return gtixs;
     }
 
-    private List<GIOTx> getGTOx(GeneralTransaction transaction, GeneralCoinAccount account){
+    private List<GIOTx> getGTOx(GeneralTransaction transaction,final GeneralCoinAccount account){
         List<GIOTx> gtoxs = new ArrayList();
         String[] columns = {
                 SCWallDatabaseContract.Outputs.COLUMN_ID,
@@ -1210,7 +1210,6 @@ public class SCWallDatabase {
                 String addressString = cursor.getString(1);
                 String idAddress = cursor.getString(2);
                 GeneralCoinAddress address = null;
-                Log.i(TAG,"Loading General transaction out idAddress " + idAddress);
                 if(idAddress != null){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
                         if(address1.getId().equals(idAddress)){
@@ -1220,8 +1219,10 @@ public class SCWallDatabase {
                     }
                 }
                 long amount = cursor.getLong(3);
-                Log.i(TAG,"Loading General transaction Output " + amount);
                 gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,false,addressString);
+                if(address != null){
+                    address.getInputTransaction().add(gtox);
+                }
                 gtoxs.add(gtox);
             }while(cursor.moveToNext());
         }
@@ -1251,11 +1252,8 @@ public class SCWallDatabase {
                 long block = cursor.getLong(3);
                 long fee = cursor.getLong(4);
                 int confirms = cursor.getInt(5);
-                Log.i(TAG,"Loading General transaction");
                 transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date);
-                Log.i(TAG,"Loading General transaction inputs");
                 transaction.setTxInputs(getGTIx(transaction,account));
-                Log.i(TAG,"Loading General transaction outputs");
                 transaction.setTxOutputs(getGTOx(transaction,account));
                 transactions.add(transaction);
             }while(cursor.moveToNext());
