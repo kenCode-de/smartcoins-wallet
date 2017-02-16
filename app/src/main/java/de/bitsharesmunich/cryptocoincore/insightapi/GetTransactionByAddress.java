@@ -95,7 +95,6 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     output.setAddressString(addr);
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
-                            Log.i("test","se encontro direccion out");
                             output.setAddress(address);
                             address.getInputTransaction().add(output);
                             accountsChanged.add(address.getAccount());
