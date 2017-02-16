@@ -5,5 +5,15 @@ package de.bitsharesmunich.cryptocoincore.base;
  */
 
 public enum Coin {
-    BITCOIN, BITCOIN_TEST, LITECOIN, DASH, DOGECOIN, BITSHARE
+    BITCOIN(8), BITCOIN_TEST(8), LITECOIN(8), DASH(8), DOGECOIN(8), BITSHARE(8);
+
+    protected int precision;
+
+    Coin(int precision){
+        this.precision = precision;
+    }
+
+    public int getPrecision(){
+        return this.precision;
+    }
 }

@@ -1346,7 +1346,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 @Override
                 public void balanceChange(Balance balance) {
                     if (account != null) {
-                        getBalanceItems().addOrUpdateBalanceItem(coin.name(), "" + 8, "" + account.getBalance().get(0).getAmmount());
+                        getBalanceItems().addOrUpdateBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount());
                     }
                 }
             });
