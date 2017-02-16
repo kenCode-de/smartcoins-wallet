@@ -985,15 +985,16 @@ public class SCWallDatabase {
 
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT, address.getAccount().getId());
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_INDEX, address.getIndex());
-        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_IS_CHANGE, address.getIndex());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_IS_CHANGE, address.isIsChange()?1:0);
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY, address.getKey().getPublicKeyAsHex());
 
         try{
-            db.insertOrThrow(SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, null, contentValues);
+            db.insertOrThrow(SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME, null, contentValues);
             address.setId(newId);
             Log.d(TAG,String.format("Inserted %s address succesfully transactions in database", newId));
             return newId;
-        }catch (SQLException ignored){
+        }catch (SQLException e){
+            Log.e(TAG,e.toString());
         }
         Log.d(TAG,"Error inserting address in database");
         return null;
@@ -1168,9 +1169,11 @@ public class SCWallDatabase {
                 String id = cursor.getString(0);
                 String addressString = cursor.getString(1);
                 String idAddress = cursor.getString(2);
+                Log.i(TAG,"Loading General transaction idAddress " + idAddress);
                 GeneralCoinAddress address = null;
                 if(idAddress != null){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
+                        Log.i(TAG,"Loading General transaction account address1 " + address1.getId());
                         if(address1.getId().equals(idAddress)){
                             address = address1;
                             break;
@@ -1178,6 +1181,7 @@ public class SCWallDatabase {
                     }
                 }
                 long amount = cursor.getLong(3);
+                Log.i(TAG,"Loading General transaction Input " + amount);
                 gtix = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString);
                 gtixs.add(gtix);
             }while(cursor.moveToNext());
@@ -1212,7 +1216,8 @@ public class SCWallDatabase {
                     }
                 }
                 long amount = cursor.getLong(3);
-                gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString);
+                Log.i(TAG,"Loading General transaction Output " + amount);
+                gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,false,addressString);
                 gtoxs.add(gtox);
             }while(cursor.moveToNext());
         }
@@ -1220,7 +1225,7 @@ public class SCWallDatabase {
         return gtoxs;
     }
 
-    public List<GeneralTransaction> getGeneralTransactionByAccount(GeneralCoinAccount account){
+    public List<GeneralTransaction> getGeneralTransactionByAccount(final GeneralCoinAccount account){
         List<GeneralTransaction> transactions = new ArrayList();
         String[] columns = {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
@@ -1235,14 +1240,18 @@ public class SCWallDatabase {
         if(cursor.moveToFirst()){
             GeneralTransaction transaction ;
             do{
+
                 String id = cursor.getString(0);
                 String txid = cursor.getString(1);
                 Date date = new Date(cursor.getLong(2));
                 long block = cursor.getLong(3);
                 long fee = cursor.getLong(4);
                 int confirms = cursor.getInt(5);
+                Log.i(TAG,"Loading General transaction");
                 transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date);
+                Log.i(TAG,"Loading General transaction inputs");
                 transaction.setTxInputs(getGTIx(transaction,account));
+                Log.i(TAG,"Loading General transaction outputs");
                 transaction.setTxOutputs(getGTOx(transaction,account));
                 transactions.add(transaction);
             }while(cursor.moveToNext());

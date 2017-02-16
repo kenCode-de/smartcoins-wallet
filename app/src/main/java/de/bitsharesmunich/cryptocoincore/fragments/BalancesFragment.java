@@ -1339,6 +1339,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         } else {
             SCWallDatabase db = new SCWallDatabase(getContext());
             final GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+            account.getAddresses(db);
 
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
@@ -1354,7 +1355,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             for(GeneralCoinAddress address: account.getAddresses()){
                 getTransactionByAddress.addAddress(address);
             }
-            getTransactionByAddress.start();
+            //getTransactionByAddress.start();
         }
     }
 
