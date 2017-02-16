@@ -1853,8 +1853,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
             assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
-            Long oldAmmount = Long.parseLong(oldItem.getAmmount());
-            Long newAmmount = Long.parseLong(newItem.getAmmount());
+            //Long oldAmmount = Long.parseLong(oldItem.getAmmount());
+            //Long newAmmount = Long.parseLong(newItem.getAmmount());
+            double oldAmmount = Double.parseDouble(oldItem.getAmmount());
+            double newAmmount = Double.parseDouble(newItem.getAmmount());
 
             if (oldAmmount > newAmmount) {
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
