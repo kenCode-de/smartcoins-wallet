@@ -77,6 +77,7 @@ import de.bitshares_munich.adapters.TransferSendReceiveComparator;
 import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.database.SCWallDatabaseContract;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.ISound;
 import de.bitshares_munich.interfaces.InternalMovementListener;
@@ -1339,7 +1340,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         } else {
             SCWallDatabase db = new SCWallDatabase(getContext());
             final GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
-            account.getAddresses(db);
+            List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
@@ -1351,10 +1352,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             });
 
             GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin, getContext());
-            for(GeneralCoinAddress address: account.getAddresses()){
+            for(GeneralCoinAddress address: addresses){
                 getTransactionByAddress.addAddress(address);
             }
-            //getTransactionByAddress.start();
+            getTransactionByAddress.start();
         }
     }
 

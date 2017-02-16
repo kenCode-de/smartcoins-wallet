@@ -67,7 +67,6 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
                 transaction.setConfirm(txi.confirmations);
                 transaction.setType(coin);
-
                 for (Vin vin : txi.vin) {
                     GIOTx input = new GIOTx();
                     input.setAmount(vin.valueSat);
@@ -96,6 +95,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     output.setAddressString(addr);
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
+                            Log.i("test","se encontro direccion out");
                             output.setAddress(address);
                             address.getInputTransaction().add(output);
                             accountsChanged.add(address.getAccount());

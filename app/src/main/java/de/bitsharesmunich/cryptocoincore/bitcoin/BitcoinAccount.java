@@ -27,7 +27,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
 
     private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
 
-    public BitcoinAccount(String id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    BitcoinAccount(String id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, BITCOIN, seed, accountNumber, lastExternalIndex, lastChangeIndex);
 
     }
@@ -36,7 +36,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         this(seed, name, false);
     }
 
-    public BitcoinAccount(final AccountSeed seed, String name, boolean importing) {
+    BitcoinAccount(final AccountSeed seed, String name, boolean importing) {
         super("", name, BITCOIN, seed, 0, 0, 0);
         if (importing) {
             //TODO calculate the number of account
@@ -105,7 +105,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
     public String getAddressString(int index, boolean change) {
         if (change) {
             if (!changeKeys.containsKey(index)) {
-                changeKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+                changeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
             }
             return changeKeys.get(index).getAddressString(param);
         } else {
@@ -125,7 +125,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
     public GeneralCoinAddress getAddress(int index, boolean change) {
         if (change) {
             if (!changeKeys.containsKey(index)) {
-                changeKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+                changeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
             }
             return changeKeys.get(index);
         } else {

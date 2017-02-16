@@ -4,6 +4,7 @@ import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinManager;
 
 /**
+ *
  * Created by henry on 05/02/2017.
  */
 

@@ -978,6 +978,7 @@ public class SCWallDatabase {
         ContentValues contentValues = new ContentValues();
         String newId = UUID.randomUUID().toString();
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID, newId);
+
         if(address.getAccount() == null || address.getAccount().getId() == null){
             Log.d(TAG,"Error inserting address null account in database");
             return null;
@@ -996,7 +997,7 @@ public class SCWallDatabase {
         }catch (SQLException e){
             Log.e(TAG,e.toString());
         }
-        Log.d(TAG,"Error inserting address in database");
+        Log.d(TAG,"Error inserting address in database ");
         return null;
     }
 
@@ -1127,7 +1128,7 @@ public class SCWallDatabase {
             for(GIOTx gitx : transaction.getTxInputs()){
                 putGITx(gitx,transaction);
             }
-            for(GIOTx gotx : transaction.getTxInputs()){
+            for(GIOTx gotx : transaction.getTxOutputs()){
                 putGOTx(gotx,transaction);
             }
             Log.d(TAG,String.format("Inserted %s General Transaction succesfully in database", newId));
@@ -1149,7 +1150,9 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK, transaction.getBlock());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE, transaction.getFee());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
+        db.beginTransaction();
         int affected = db.update(table,contentValues,whereClause,whereArgs);
+        db.endTransaction();
         return affected > 0;
     }
 
@@ -1207,6 +1210,7 @@ public class SCWallDatabase {
                 String addressString = cursor.getString(1);
                 String idAddress = cursor.getString(2);
                 GeneralCoinAddress address = null;
+                Log.i(TAG,"Loading General transaction out idAddress " + idAddress);
                 if(idAddress != null){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
                         if(address1.getId().equals(idAddress)){

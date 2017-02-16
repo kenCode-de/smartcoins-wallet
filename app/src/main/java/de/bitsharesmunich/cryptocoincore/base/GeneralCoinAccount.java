@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import android.util.Log;
+
 import com.google.gson.JsonObject;
 
 import org.bitcoinj.core.NetworkParameters;
@@ -68,7 +70,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
         for (int i = 0; i < lastChangeIndex + ADDRESS_GAP; i++) {
             if (!changeKeys.containsKey(i)) {
-                changeKeys.put(i, new GeneralCoinAddress(this, false, i, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
+                changeKeys.put(i, new GeneralCoinAddress(this, true, i, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
             }
         }
     }
@@ -105,6 +107,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         for (GeneralCoinAddress externalAddress : externalKeys.values()) {
             if (externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")) {
                 String id = db.putGeneralCoinAddress(externalAddress);
+                if(id != null)
                 externalAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(externalAddress);
@@ -113,7 +116,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
         for (GeneralCoinAddress changeAddress : changeKeys.values()) {
             if (changeAddress.getId() == null || changeAddress.getId().isEmpty() || changeAddress.getId().equalsIgnoreCase("null")) {
+                Log.i("SCW","change address id " + changeAddress.getId());
                 String id = db.putGeneralCoinAddress(changeAddress);
+                if(id != null)
                 changeAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(changeAddress);
