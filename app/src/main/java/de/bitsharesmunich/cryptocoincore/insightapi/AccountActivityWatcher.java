@@ -32,9 +32,9 @@ public class AccountActivityWatcher {
         @Override
         public void call(Object... os) {
             try {
-                System.out.println("New addr transaction received: " + ((JSONObject) os[0]).toString());
-                String txi = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
-                new GetTransactionData(txi, account,context).start();
+                System.out.println("accountActivityWatcher New addr transaction received: " + ((JSONObject) os[0]).toString());
+                String txid = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
+                new GetTransactionData(txid, account, context).start();
             } catch (JSONException ex) {
                 Logger.getLogger(AccountActivityWatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -45,6 +45,7 @@ public class AccountActivityWatcher {
     private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... os) {
+            System.out.println("Connected to accountActivityWatcher");
             socket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, watchAddress.toArray());
         }
     };
@@ -52,11 +53,12 @@ public class AccountActivityWatcher {
     private final Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... os) {
+            System.out.println("Disconnected to accountActivityWatcher");
         }
     };
 
     public AccountActivityWatcher(GeneralCoinAccount account, Context context) throws URISyntaxException {
-        this.socket = IO.socket(InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin())+"/");
+        this.socket = IO.socket(InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin()) + "/");
         this.socket.on(Socket.EVENT_CONNECT, onConnect);
         this.socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
         this.socket.on(InsightApiConstants.changeAddressRoom, onAddressTransaction);
