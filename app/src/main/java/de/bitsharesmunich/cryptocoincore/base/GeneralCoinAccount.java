@@ -33,6 +33,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     protected HashMap<Integer, GeneralCoinAddress> changeKeys = new HashMap();
     protected List<ChangeBalanceListener> changeBalanceListeners = new ArrayList();
 
+    protected List<GeneralTransaction> transactions = new ArrayList();
+
     private final static int ADDRESS_GAP = 20;
 
     public GeneralCoinAccount(String id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
@@ -41,6 +43,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         this.lastExternalIndex = lastExternalIndex;
         this.lastChangeIndex = lastChangeIndex;
         calculateAddresses();
+    }
+
+    public void setTransactions(List<GeneralTransaction> transactions) {
+        this.transactions = transactions;
     }
 
     private void calculateAddresses() {

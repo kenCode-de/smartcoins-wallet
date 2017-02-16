@@ -853,7 +853,7 @@ public class SCWallDatabase {
                         .getAccount(id, name, seed, accountIndex,
                                 externalIndex, changeIndex);
                 account.loadAddresses(getGeneralCoinAddress(account));
-                getGeneralTransactionByAccount(account);
+                account.setTransactions(getGeneralTransactionByAccount(account));
                 cursor.close();
                 return account;
             }while(cursor.moveToNext());
@@ -886,7 +886,7 @@ public class SCWallDatabase {
                         .getAccount(id, name, seed, accountIndex,
                                 externalIndex, changeIndex);
                 account.loadAddresses(getGeneralCoinAddress(account));
-                getGeneralTransactionByAccount(account);
+                account.setTransactions(getGeneralTransactionByAccount(account));
                 cursor.close();
                 return account;
             }while(cursor.moveToNext());
@@ -923,7 +923,7 @@ public class SCWallDatabase {
                         .getAccount(id, name, seed, accountIndex,
                                 externalIndex, changeIndex);
                 account.loadAddresses(getGeneralCoinAddress(account));
-                getGeneralTransactionByAccount(account);
+                account.setTransactions(getGeneralTransactionByAccount(account));
                 accounts.add(account);
             }while(cursor.moveToNext());
         }
@@ -964,7 +964,7 @@ public class SCWallDatabase {
                         .getAccount(id, name, seed, accountIndex,
                                 externalIndex, changeIndex);
                 account.loadAddresses(getGeneralCoinAddress(account));
-                getGeneralTransactionByAccount(account);
+                account.setTransactions(getGeneralTransactionByAccount(account));
                 accounts.add(account);
             }while(cursor.moveToNext());
         }
