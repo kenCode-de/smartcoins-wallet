@@ -17,6 +17,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        debug {
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
@@ -27,15 +31,22 @@ android {
     }
     buildTypes {
         debug {
-            // enable crashlytics
+            // disable crashlytics
             buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            ext.enableCrashlytics = false
+            signingConfig signingConfigs.debug
+        }
+        preRelease {
+            // enable crashlytics
+            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
             ext.enableCrashlytics = true
+            debuggable true
+            signingConfig signingConfigs.debug
         }
         release {
-            // disable crashlytics
+            // enable crashlytics
             buildConfigField "boolean", "USE_CRASHLYTICS", "true"
-            ext.enableCrashlytics = false
-
+            ext.enableCrashlytics = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
