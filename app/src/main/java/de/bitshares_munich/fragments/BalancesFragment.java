@@ -2549,7 +2549,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
         }else{
-            tableAdapter = new TransfersTableAdapter(getContext(), locale, account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
+            tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
             transfersView.setDataAdapter(tableAdapter);
         }
 
