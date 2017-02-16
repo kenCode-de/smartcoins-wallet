@@ -26,17 +26,31 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     private String txid;
     private InsightApiServiceGenerator serviceGenerator;
     private Context context;
+    private boolean mustWait = false;
+
+
 
     public GetTransactionData(String txid, GeneralCoinAccount account,Context context) {
+        this(txid,account,context,false);
+    }
+
+    public GetTransactionData(String txid, GeneralCoinAccount account,Context context, boolean mustWait) {
         String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
         this.account = account;
         this.txid = txid;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
         this.context = context;
+        this.mustWait = mustWait;
     }
 
     @Override
     public void run() {
+        if (mustWait) {
+            try {
+                Thread.sleep(InsightApiConstants.WAIT_TIME);
+            } catch (InterruptedException ignored) {
+            }
+        }
         InsightApiService service = serviceGenerator.getService(InsightApiService.class);
         Call<Txi> txiCall = service.getTransaction(txid);
         txiCall.enqueue(this);
@@ -98,6 +112,9 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 db.updateGeneralTransaction(transaction);
             }
             account.balanceChange();
+            if (transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
+                new GetTransactionData(txid, account, context, true).start();
+            }
         }
     }
 
