@@ -88,8 +88,32 @@ public class GeneralCoinAddress {
         this.inputTransaction = inputTransaction;
     }
 
+    public boolean hasInputTransaction(GIOTx inputToFind, NetworkParameters param){
+        for(GIOTx input : inputTransaction){
+            if ((input.getTransaction().getTxid().equals(inputToFind.getTransaction().getTxid()))
+              && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress().getAddressString(param)))
+            ){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public List<GIOTx> getOutputTransaction() {
         return outputTransaction;
+    }
+
+    public boolean hasOutputTransaction(GIOTx outputToFind, NetworkParameters param){
+        for(GIOTx output : outputTransaction){
+            if ((output.getTransaction().getTxid() == outputToFind.getTransaction().getTxid())
+                    && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress().getAddressString(param)))
+            ){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void setOutputTransaction(List<GIOTx> outputTransaction) {
