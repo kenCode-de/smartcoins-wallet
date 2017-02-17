@@ -17,7 +17,7 @@ abstract class InsightApiConstants {
     static final String txTag = "txid";
 
     static int MIN_CONFIRM = 6; //minimun number of confirmations of a transaction
-    static long WAIT_TIME = (5 *60 *1000); //wait 5 minutes
+    static long WAIT_TIME = (30 *1000); //wait 30 seconds
 
     static{
         serverAddressPort.put(Coin.BITCOIN,new AddressPort("fr.blockpay.ch",3003));

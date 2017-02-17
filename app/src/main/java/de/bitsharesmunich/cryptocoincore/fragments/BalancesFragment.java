@@ -1369,6 +1369,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
                 watcher.addAddress(address.getAddressString(account.getNetworkParam()));
             }
+                watcher.connect();
 
             } catch (URISyntaxException e) {
                 e.printStackTrace();

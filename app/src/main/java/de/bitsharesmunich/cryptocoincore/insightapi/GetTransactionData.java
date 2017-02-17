@@ -1,6 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -46,6 +47,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     @Override
     public void run() {
         if (mustWait) {
+            Log.i("test"," waiting for confirmation from " + txid);
             try {
                 Thread.sleep(InsightApiConstants.WAIT_TIME);
             } catch (InterruptedException ignored) {
@@ -114,6 +116,8 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             account.balanceChange();
             if (transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
                 new GetTransactionData(txid, account, context, true).start();
+            }else{
+                Log.i("test","Transaction " + txid + " confirmed");
             }
         }
     }

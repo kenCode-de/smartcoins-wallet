@@ -60,6 +60,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
             AddressTxi addressTxi = response.body();
 
             for (Txi txi : addressTxi.items) {
+                GeneralCoinAccount tempAccount = null;
                 GeneralTransaction transaction = new GeneralTransaction();
                 transaction.setTxid(txi.txid);
                 transaction.setBlock(txi.blockheight);
@@ -79,6 +80,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         if (address.getAddressString(param).equals(addr)) {
                             input.setAddress(address);
                             address.getOutputTransaction().add(input);
+                            tempAccount = address.getAccount();
                             accountsChanged.add(address.getAccount());
                         }
                     }
@@ -96,6 +98,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
                             output.setAddress(address);
+                            tempAccount = address.getAccount();
                             address.getInputTransaction().add(output);
                             accountsChanged.add(address.getAccount());
                         }
@@ -110,6 +113,9 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 }else{
                     transaction.setId(idTransaction);
                     db.updateGeneralTransaction(transaction);
+                }
+                if (tempAccount != null && transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
+                    new GetTransactionData(transaction.getTxid(), tempAccount, context, true).start();
                 }
             }
 

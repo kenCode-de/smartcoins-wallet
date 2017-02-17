@@ -6,6 +6,7 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +47,11 @@ public class AccountActivityWatcher {
         @Override
         public void call(Object... os) {
             System.out.println("Connected to accountActivityWatcher");
-            socket.emit(InsightApiConstants.subscribeEmmit, new Object[]{InsightApiConstants.changeAddressRoom, watchAddress.toArray()});
+            JSONArray array = new JSONArray();
+            for(String addr : watchAddress) {
+                array.put(addr);
+            }
+            socket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, array);
         }
     };
 
