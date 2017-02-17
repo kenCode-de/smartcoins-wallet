@@ -48,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -120,6 +121,7 @@ import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.AccountActivityWatcher;
 import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionByAddress;
 import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionData;
 import de.bitsharesmunich.cryptocoincore.utils.CryptoCoinTableViewClickListener;
@@ -1359,6 +1361,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
             getTransactionByAddress.start();
+
+            try {
+                AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
+
+            for(GeneralCoinAddress address: addresses){
+                Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
+                watcher.addAddress(address.getAddressString(account.getNetworkParam()));
+            }
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
     }
 

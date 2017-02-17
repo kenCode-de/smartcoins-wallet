@@ -46,7 +46,7 @@ public class AccountActivityWatcher {
         @Override
         public void call(Object... os) {
             System.out.println("Connected to accountActivityWatcher");
-            socket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, watchAddress.toArray());
+            socket.emit(InsightApiConstants.subscribeEmmit, new Object[]{InsightApiConstants.changeAddressRoom, watchAddress.toArray()});
         }
     };
 
