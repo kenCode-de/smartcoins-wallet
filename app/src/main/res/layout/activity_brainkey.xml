@@ -9,8 +9,6 @@
     android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical">
-
-
     <TextView
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -20,6 +18,7 @@
         android:id="@+id/tvPin"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>
+
     <EditText
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -27,11 +26,8 @@
         android:layout_width="match_parent"
         android:inputType="number"
         android:background="@drawable/edittext_bg"
-        android:singleLine="true"
         android:maxLines="1"
-        android:layout_height="40dp"
-        android:maxLength="6"/>
-
+        android:layout_height="40dp"/>
     <TextView
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -41,6 +37,7 @@
         android:text="@string/txt_6_digits_pin_confirm"
         android:textStyle="bold"
         android:layout_marginTop="10dp"/>
+
     <EditText
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -50,8 +47,7 @@
         android:background="@drawable/edittext_bg"
         android:singleLine="true"
         android:maxLines="1"
-        android:layout_height="40dp"
-        android:maxLength="6"/>
+        android:layout_height="40dp" />
 
 
     <TextView

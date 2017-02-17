@@ -65,7 +65,6 @@ public class SCWallDatabase {
      * @param transactions: List of historical transfer transactions.
      */
     public int putTransactions(List<HistoricalTransferEntry> transactions){
-        long before = System.currentTimeMillis();
         int count = 0;
         ContentValues contentValues;
         for(int i = 0; i < transactions.size(); i++){
@@ -98,15 +97,13 @@ public class SCWallDatabase {
                 contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_MEMO_MESSAGE, memo.getPlaintextMessage());
             }
             try{
-                long id = db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
-                Log.d(TAG, "Inserted transfer in database with id: "+id);
+                db.insertOrThrow(SCWallDatabaseContract.Transfers.TABLE_NAME, null, contentValues);
                 count++;
             }catch (SQLException e){
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        long after = System.currentTimeMillis();
-        Log.d(TAG, String.format("putTransactions took %d ms with %d transactions", (after - before), transactions.size()));
+        Log.d(TAG,String.format("Inserved %d transactions in database", count));
         return count;
     }
 

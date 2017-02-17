@@ -1,241 +1,484 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources><string name="license">Licence</string>
+ <string name="pin_number_warning">Le nombre de broches doit être d\'au moins 6 chiffres</string>
+ <string name="old_pin_number_warning">L\'ancien numéro de broche doit être d\'au moins 6 chiffres</string>
+
 <string name="send_capital">Envoyer</string>
+
 <string name="account_create_register_or_import">Création ou importation de Compte</string>
+
 <string name="txt_account_name">Nom du compte</string>
+
 <string name="time_stamp">Horodatage</string>
+
 <string name="email_pdf">E-mail PDF</string>
+
 <string name="account">Compte</string>
+
 <string name="friendly_name">Pseudonyme</string>
+
 <string name="notes">Remarques</string>
+
 <string name="note">Remarque</string>
+
     <string name="bts_will_be_deducted">BTS sera déduit de</string>
+
     <string name="payment_received">Paiement reçu</string>
+
 <string name="import_brainkey">Importer à partir de la clé de récupération - BrainKey</string>
+
 <string name="import_backup_old">Importation de la sauvegarde</string>
+
 <string name="choose_backup">Choisissez la sauvegarde</string>
+
 <string name="choose_file">Choisissez le fichier</string>
+
     <string name="unable_to_import_account_from_bin_file">Impossible d\'importer le compte à partir du fichier .bin</string>
+
     <string name="importing_keys_from_bin_file">Importation des clés à partir du fichier .bin</string>
+
     <string name="import_backup">Importation des sauvegardes à partir du fichier .bin</string>
+
     <string name="is_already_added">est déjà ajouté</string>
+
     <string name="in_valid_email">E-mail invalide</string>
+
     <string name="select">Sélectionner</string>
+
     <string name="are_you_sure">Êtes-vous sûr?</string>
+
     <string name="please_make_sure_your_pin">S\'il vous plaît assurez-vous que votre code PIN est correct</string>
+
     <string name="please_make_sure_your_pin_file">S\'il vous plaît assurez-vous que votre fichier PIN est correct</string>
+
     <string name="no_file_chosen">Aucun fichier choisi</string>
+
 <string name="account_label">Choisissez le fichier</string>
+
 <string name="loading_msg">S\'il vous plaît attendez jusqu\'à ce que vos soldes soient chargés</string>
-<string name="txt_6_digits_pin">Code PIN à 6 chiffres</string>
-<string name="txt_6_digits_pin_confirm">Confirmez votre code PIN à 6 chiffres</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ chiffres)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN confirmer</string>
+ 
 <string name="create">CRÉER</string>
+
 <string name="existing_account">Compte existant</string>
+
 <string name="agreement">Contrat</string>
+
 <string name="cancel_and_exit">Annuler et Quitter</string>
+
 <string name="i_agree">Je suis d\'accord</string>
+
 <string name="kindly_create_account">Veuillez créer un compte</string>
-<string name="please_enter_old_6_digit_pin">S\'il vous plaît entrez votre ancien code PIN à 6 chiffres</string>
-<string name="please_enter_6_digit_pin">S\'il vous plaît entrez votre code PIN à 6 chiffres</string>
-<string name="please_enter_6_digit_pin_confirm">S\'il vous plaît entrez entrez la confirmation de votre code PIN à 6 chiffres</string>
+
+ <string name="please_enter_old_6_digit_pin">S\'il vous plaît entrer l\'ancien code PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">S\'il vous plaît entrer le code PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">S\'il vous plaît entrer confirmation PIN</string>
+ 
 <string name="mismatch_pin">Les codes PIN ne correspondent pas</string>
+
 <string name="txt_brain_key">Clé de récupération - Brainkey</string>
+
 <string name="txt_brain_key_info">Imprimer celui-ci ou écrivez-le dans un endroit sûr. Toute personne ayant accès à votre clé de récupération aura accès aux fonds dans ce portefeuille.</string>
+
 <string name="create_wallet">CRÉER PORTEFEUILLE</string>
+
 <string name="cance">ANNULER</string>
+
 <string name="save">ENREGISTRER</string>
+
 <string name="next">SUIVANT</string>
+
 <string name="please_enter_brainkey">S\'il vous plaît entrez votre clé de récupération - Brainkey</string>
+
 <string name="please_enter_correct_brainkey">S\'il vous plaît entrer correctement votre clé de récupération - Brainkey</string>
+
 <string name="balances">Soldes</string>
+
 <string name="contacts">Contacts</string>
+
 <string name="receive_uppercase">REÇEVOIR</string>
+
 <string name="send_uppercase">ENVOYER</string>
+
 <string name="transactions">Transactions</string>
 
+
+
 <string name="title_activity_setting">Paramètres d\'activités</string>
+
 <string name="backup_asset">Devise de secours</string>
 
+
+
 <string name="taxable_country">Pays imposable</string>
+
 <string name="date_time">Afficher les dates et les heures comme</string>
+
 <string name="check_for_updates">Vérifier les mises à jour au démarrage</string>
+
 <string name="automatically_install">Installation automatique des version majeures</string>
+
 <string name="require_pin">Exige le code PIN ou le motif de dévérouillage pour envoyer des fonds et afficher les notes</string>
+
 <string name="close_bitshare">Fermer automatiquement le porte-feuille après 3 minutes d\'inactivité</string>
+
 <string name="always_donate">Toujours faire un don de 2 BTS aux développeur de BitShares-Munich (bitshares munich)</string>
+
 <string name="hide_donations">Cacher les dons de la liste des transactions du menu principal</string>
+
 <string name="backup">Sauvegarde du fichier .BIN</string>
+
 <string name="checkbox_donate_old">Donner 2 BTS aux développeurs de Bitshares Munich</string>
+
 <string name="backup_brainkey">Sauvegarde de la clé de récupération - Brainkey</string>
+
 <string name="imported_created_accounts">Comptes crées et importés</string>
+
 <string name="register_new_account">Créer un nouveau compte</string>
+
 <string name="secure_pin">MODIFIER LE CODE PIN</string>
+
 <string name="export">Exporter</string>
+
 <string name="show_more">Montrer plus</string>
+
 <string name="share_text">Je viens de découvrir ce portefeuille Smartcoins, c\'est impressionnant, cela vous permet d\'envoyer et de recevoir des Smartcoins. Essayez-le!</string>
+
 <string name="share_info">Inviter un ou plusieurs de vos amis à essayer le portefeuille Smartcoins! Les adresses e-mail ne sont pas enregistrées ou collectées, la vie privée du destinataire est assurée.</string>
 
+
+
 <string name="share_subject">Impressionnant portefeuille SmartCoins</string>
+
 <string name="share_heading">Partager avec un ami</string>
+
 <string name="share_btn_text">OUVRIR L\'APPLICATION D\'E-MAIL</string>
 
+
+
 <string name="action_settings">Paramètres</string>
+
     <string name="checkbox_donate">Donnez 2 BTS aux développeurs de Bitshares Munich pour les soutenir</string>
+
 <string name="txt_validating_account">Validation du compte ...</string>
+
 <string name="validating_account">Validatinon compte ...</string>
+
 <string name="account_name_should_be_longer">Le nom du compte devrait être plus long</string>
+
 <string name="account_name_already_exist">Le nom du compte %s existe déjà</string>
+
 <string name="account_name_not_exist">Le nom du compte %s n\'existe pas</string>
+
 <string name="add_contact">Ajouter</string>
+
 <string name="edit_contact">Modifier</string>
+
 <string name="empty_list">La liste de contacts est vide</string>
+
 <string name="account_name_validate">Le nom de compte est valide</string>
+
 <string name="txt_no_internet_connection">Pas de connexion Internet</string>
+
 <string name="unable_to_create_account_from_brainkey">Impossible de créer un compte à partir du la clé de récupération - Brainkey</string>
+
 <string name="importing_your_wallet">Importation de votre portefeuille ...</string>
+
 <string name="str_trading_pair_not_exist">Cette paire d\'échange n\'existe pas</string>
+
 <string name="unable_to_create_qr_code">Impossible de générer le QR Code</string>
+
 <string name="price">prix</string>
+
 <string name="currency">devise</string>
+
 <string name="please_enter_amount">S\'il vous plaît entrez le montant</string>
+
 <string name="amount_should_be_greater_than_zero">Le montant doit être supérieur à zéro</string>
+
 <string name="no_amount_requested">Aucun montant demandé</string>
+
 <string name="to_capital">À</string>
+
 <string name="from_capital">De</string>
+
 <string name="memo_capital">Note</string>
+
 <string name="empty_file_created">Fichier vide créé</string>
+
 <string name="date">Date</string>
+
 <string name="all">Tout</string>
+
 <string name="to_from">À</string>
+
 <string name="amount">Montant</string>
+
 <string name="message">Message</string>
+
 <string name="pdf_generated_msg">Le fichier PDF a été généré et sauvegardé:</string>
+
 <string name="pdf_generated_msg_error">Impossible de générer le fichier PDF. S\'il vous plaît réessayer. Erreur :</string>
+
 <string name="raw_transactions">Transaction Brute:</string>
+
 <string name="extensions">Extensions</string>
+
 <string name="op_in_trx">Opération de la transaction</string>
+
 <string name="virtual_op">Opération virtuelle</string>
+
 <string name="operation_results">Résultats de l\'opération</string>
+
 <string name="sent_rcv">Envoyé / Reçu</string>
+
 <string name="details">Détails</string>
+
 <string name="share_qr_code">Partager le QR Code</string>
+
 <string name="done">Terminé</string>
+
 <string name="id_s">ID</string>
+
 <string name="time">temps</string>
+
 <string name="operations">opérations</string>
+
 <string name="trx_in_block">transactions dans le bloc</string>
+
 <string name="symbol_capital">symbole</string>
+
 <string name="fee_capital">Frais</string>
+
 <string name="ok">D\'accord</string>
+
 <string name="loading">Chargement...</string>
+
 <string name="pay_to">Payer à</string>
+
 <string name="requested">demandé</string>
+
 <string name="failed_transaction">Echec de la transaction</string>
 
+
+
 <string name="str_invalid_amount">S\'il vous plaît entrez un montant valide</string>
+
 <string name="str_invalid_receiver">S\'il vous plaît entrer un destinataire valide</string>
+
 <string name="str_transaction_failed">La transaction a échoué</string>
+
 <string name="please_enter_valid_amount">S\'il vous plaît entrez un montant valide</string>
+
 <string name="select_timezone">Sélectionnez votre fuseau horaire</string>
-<string name="old_pin">Ancien code PIN de 6 chiffres</string>
-<string name="pin_created_successfully">Code PIN créé avec succès</string>
-<string name="edit_pin">Modifier le code PIN</string>
+
+ <string name="old_pin">Ancien PIN</string>
+ 
+ <string name="pin_created_successfully">PIN créé avec succès</string>
+ 
+ <string name="edit_pin">Modifier PIN</string>
+ 
 <string name="txt_edit">ENREGISTRER</string>
-<string name="create_pin">Créer le code PIN</string>
+
+ <string name="create_pin">Créer code PIN</string>
+ 
 <string name="pin_changed_successfully">Code PIN modifié avec succès</string>
+
 <string name="incorrect_old_pin">Ancien code PIN incorrect</string>
+
 <string name="copy">Copier</string>
+
 <string name="pin_verification">DÉVEROUILLEZ</string>
+
 <string name="send_screen_name">Envoyer</string>
+
 <string name="rcv_screen_name">Recevoir</string>
+
 <string name="request_amount_screen_name">Montant</string>
+
 <string name="payment_rcvd_screen_name">Merci!</string>
+
 <string name="e_receipt_activity_name">e-Reçu</string>
+
 <string name="settings_activity_name">Paramètres</string>
+
 <string name="qr_code_activity_name">Scanner le QR Code</string>
+
 <string name="share_account_activity_name">Partager avec des amis</string>
+
 <string name="add_contact_activity_name">Ajouter le contact</string>
+
 <string name="str_trade_not_available">Échange Non Disponible</string>
+
     <string name="preferred_lang">langue préférée</string>
+
     <string name="got_it">Je l\'ai</string>
+
     <string name="txt_back">Précédent</string>
+
     <string name="please_pay">Payez s\'il vous plait</string>
+
     <string name="transfer_funds">transfert de fonds</string>
+
     <string name="unable_to_process">Impossible de traiter</string>
+
     <string name="cancel">ANNULER</string>
 
+
+
     <string name="upgrade_to_ltm">Mise à niveau vers LTM</string>
+
     <string formatted="false" name="help_message">Obtenez 80% de remises sur les commissions ! Les membres à vie (LTM) obtiennent 80% de remise sur tous les frais de transaction qu\'ils paient, et sont admissibles à gagner un revenu pour le référencement de nouveaux utilisateurs qu\'ils enregistrent. Une adhésion à vie coûte moins de 20000 BTS!</string>
+
     <string name="txt_yes">Oui</string>
+
     <string name="txt_no">Non</string>
+
     <string name="txt_confirmation">Confirmation</string>
+
     <string name="txt_confirmation_msg">Êtes-vous sûr?</string>
+
     <string name="txt_folder_name">SmartCoins</string>
+
     <string name="txt_folder_created">Dossier créé</string>
+
     <string name="upgrade_failed">La mise à niveau a échoué</string>
+
     <string name="upgrading">Mise à niveau ...</string>
+
     <string name="import_new_account">IMPORTER LE COMPTE</string>
+
     <string name="upgrade_account">METTRE À NIVEAU LE COMPTE</string>
+
     <string name="remove_account">SUPPRIMER LE COMPTE</string>
+
     <string name="txt_alertmsg">Êtes-vous sûr de vouloir supprimer ce compte ?</string>
+
     <string name="validation_in_progress">Validation en cours ..</string>
+
     <string name="last_letter_cannot">La dernière lettre ne peut être -</string>
+
     <string name="account_name_shoud_have">Le nom de compte devrait au moins avoir un -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">Le compte existe déjà</string>
+
     <string name="donation">Dons</string>
+
     <string name="insufficient_funds">Fonds insuffisants</string>
+
     <string name="txt_wallet_atleast_one_account">Désolé, mais votre portefeuille doit avoir au moins 1 compte</string>
 
+
+
     <string name="updating_transaction_id">Mise à jour de de l\'ID de la transaction, Merci de patientez</string>
+
     <string name="email_name">Pour afficher une photo de ce contact, entrez l\'e-mail associé à son compte Gravatar</string>
+
     <string name="upgrade_success">Mise à niveau réussie !</string>
+
+
 
     <string name="copied_to_clipboard">Copié dans le presse-papier</string>
 
+
+
     <string name="unable_to_load_brainkey">Impossible de charger la clé de récupération - Brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Impossible de générer le format .bin pour la clé</string>
+
     <string name="creating_backup_file">Création du fichier de sauvegarde</string>
+
     <string name="fetching_key">Récupération de la clé</string>
+
     <string name="generating_bin_format">Génération du format .bin</string>
+
     <string name="invalid_pin">Code PIN non valide</string>
+
     <string name="saving_bin_file_to">Enregistrement du fichier .bin pour</string>
+
     <string name="bin_file_saved_successfully_to">Fichier .bin enregistré avec succès</string>
+
     <string name="unable_to_save_bin_file">Impossible d\'enregistrer le fichier bin</string>
 
+
+
     <string name="txt_alertmsg_fr">Êtes-vous sûr de vouloir supprimer le</string>
+
     <string name="txt_alertmsg_la">compte de ce portefeuille?</string>
+
     <string name="bugs_or_errors">Bugs ou erreurs?</string>
+
     <string name="please_let_us_know">S\'il vous plaît laissez-nous savoir:</string>
+
     <string name="try_again">S\'il vous plaît essayer de nouveau après 5 minutes</string>
+
     <string name="warning_msg_same_account">Vous ne pouvez pas envoyer montant dans le même compte</string>
 
+
+
     <string name="please_backup_your_brainkey">Veuillez sauvegarder votre brainkey</string>
+
     <string name="backup_brainkey_msg">Sauvegardez votre fichier .bin dans un endroit sûr ou vos fonds pourraient être perdus!</string>
+
     <string name="unable_to_trade_bAssets">Impossible de négocier les actifs de sauvegarde</string>
+
     <string name="unable_to_send_amount">Impossible d\'envoyer le montant.</string>
+
     <string name="unable_to_decode_QR">Impossible de décoder le code QR.</string>
 
+
+
     <string name="loyalty_points">Points de fidélité</string>
+
     <string name="str_warning_only_available">Attention! Seulement %1$s %2$s est disponible</string>
+
     <string name="str_balance_available">%1$s %2$s disponible</string>
 
+
+
     <string name="select_backup_asset">Sélectionnez Asset sauvegarde</string>
+
     <string name="sender_account">Compte de l\'expéditeur</string>
+
     <string name="receiver_account">compte Receiver</string>
+
     <string name="total">Total</string>
+
     <string name="payment_method">Mode de paiement</string>
+
     <string name="thankyou_string">Merci pour l\'utilisation de Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Audio Chemin du dossier</string>
+
     <string name="please_make_sure_your_bin_file">S\'il vous plaît assurez-vous que votre NIP est fichier correct ou de corriger bin est sélectionné</string>
+
     <string name="change">Changement...</string>
 
+
+
     <string name="connected_to">Connecté à</string>
+
     <string name="account_create_msg">Un seul compte toutes les 10 minutes peut être enregistré</string>
+
     <string name="names_must_include_a_number">Les noms doivent inclure un numéro</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Les noms doivent inclure un tiret (-) et un certain nombre</string>
+
     <string name="import_gravatar">importation Gravatar</string>
+
     <string name="please_import_the_correct_file">S\'il vous plaît importer le fichier correct</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant email a été importé avec succès</string>
+
 </resources>
+

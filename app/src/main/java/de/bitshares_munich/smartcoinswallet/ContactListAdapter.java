@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
@@ -32,7 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
@@ -101,7 +101,6 @@ public class ContactListAdapter extends BaseAdapter {
         ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
         ibEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((InternalMovementListener)context).onInternalAppMove();
                 int index = position;
                 Intent intent = new Intent(context, AddEditContacts.class);
                 intent.putExtra("id", index);
@@ -203,33 +202,40 @@ public class ContactListAdapter extends BaseAdapter {
     }
 
     public void showDialog(final int position){
-                final Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.alert_delete_dialog);
-                Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-                Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-                TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
+        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        btnDone.setText(context.getString(R.string.delete));
+        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+        TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
+
+
         String alertMsg =  context.getString(R.string.delete);
         String accountName = listContact.get(position).GetAccount();
-            alertMsg = alertMsg + " \"" + accountName + "\" ?";
+        alertMsg = alertMsg + " \"" + accountName + "\" ?";
         textView.setText(alertMsg);
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listContact.remove(position);
+        Log.e("Error", alertMsg);
 
-                        removeFromlist(position);
-                        notifyDataSetChanged();
-                        dialog.cancel();
-                    }
-                });
-                btnCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                      public void onClick(View v) {
-                            dialog.cancel();
-                         }
-                   });
-                dialog.show();
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listContact.remove(position);
+
+                removeFromlist(position);
+                notifyDataSetChanged();
+                dialog.cancel();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
 
 
     }

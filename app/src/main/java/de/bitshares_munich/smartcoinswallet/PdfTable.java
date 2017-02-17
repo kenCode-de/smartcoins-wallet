@@ -28,8 +28,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
-import de.bitshares_munich.Interfaces.PdfGeneratorListener;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -228,7 +227,6 @@ public class PdfTable {
             email.putExtra(Intent.EXTRA_STREAM, uri);
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((InternalMovementListener) this).onInternalAppMove();
             myContext.startActivity(email);
         } catch(Exception e){
             mListener.onError(e.getMessage());

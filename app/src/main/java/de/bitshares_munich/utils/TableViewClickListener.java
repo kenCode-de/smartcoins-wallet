@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 
 import java.util.Date;
 
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -31,11 +30,9 @@ public class TableViewClickListener implements TableDataClickListener<Historical
     public static final String KEY_OPERATION_ENTRY = "operation_entry";
 
     private Context myContext;
-    private InternalMovementListener mListener;
 
-    public TableViewClickListener(Context _context, InternalMovementListener listener) {
+    public TableViewClickListener(Context _context) {
         this.myContext = _context;
-        this.mListener = listener;
     }
 
     @Override
@@ -58,7 +55,6 @@ public class TableViewClickListener implements TableDataClickListener<Historical
             intent.putExtra("From", operation.getFrom().getAccountName());
             intent.putExtra("Sent", true);
             intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
-            mListener.onInternalAppMove();
             myContext.startActivity(intent);
         }
     }

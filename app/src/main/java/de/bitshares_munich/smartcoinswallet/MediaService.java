@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 
-import de.bitshares_munich.Interfaces.IAccount;
-import de.bitshares_munich.Interfaces.ISound;
 import de.bitshares_munich.fragments.BalancesFragment;
 
 /**

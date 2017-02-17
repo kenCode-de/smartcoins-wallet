@@ -1,236 +1,474 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources><string name="license">Licentie</string>
+ <string name="pin_number_warning">De pincode moet ten minste 6 cijfers</string>
+ <string name="old_pin_number_warning">De oude pincode moet ten minste 6 cijfers</string>
+
 <string name="send_capital">verstuur</string>
+
 <string name="account_create_register_or_import">ACCOUNT AANMAKEN / registreren of IMPORTEREN</string>
+
 <string name="txt_account_name">Accountnaam</string>
+
 <string name="time_stamp">tijdstempel</string>
+
 <string name="email_pdf">E-mail PDF</string>
+
 <string name="account">Account</string>
+
 <string name="friendly_name">Vriendelijke naam</string>
+
 <string name="notes">Notities</string>
+
     <string name="bts_will_be_deducted">BTS zal worden afgetrokken van</string>
+
     <string name="note">Notitie</string>
+
 <string name="payment_received">Betaling ontvangen</string>
+
 <string name="import_brainkey">Importeer BrainKey</string>
+
 <string name="import_backup_old">importeer Backup</string>
+
 <string name="choose_backup">Kies Backup</string>
+
 <string name="choose_file">Kies bestand</string>
+
     <string name="unable_to_import_account_from_bin_file">Kan account niet importeren uit het Bin-bestand</string>
+
     <string name="importing_keys_from_bin_file">Sleutels laden uit het Bin-bestand</string>
+
     <string name="import_backup">Importeer Backup van Bin-bestand</string>
+
     <string name="is_already_added">Reeds toegevoegd</string>
+
     <string name="in_valid_email">Ongeldige e-mail</string>
+
     <string name="select">kies</string>
+
     <string name="are_you_sure">Weet je het zeker?</string>
+
     <string name="please_make_sure_your_pin">Zorg ervoor dat uw pincode correct is</string>
+
     <string name="please_make_sure_your_pin_file">Zorg ervoor dat uw pincode correct is of juist pin bestand is geselecteerd</string>
+
     <string name="no_file_chosen">Geen bestand gekozen</string>
+
 <string name="account_label">Kies bestand</string>
+
 <string name="loading_msg">Bericht laden</string>
-<string name="txt_6_digits_pin">PIN(6 cijfers)</string>
-<string name="txt_6_digits_pin_confirm"> PIN(6 cijfers)bevestigen</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ cijfers)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN bevestigen</string>
+ 
 <string name="create">Aanmaken</string>
+
 <string name="existing_account">Bestaand account</string>
+
 <string name="agreement">Overeenkomst</string>
+
 <string name="cancel_and_exit">Annuleren en Exit</string>
+
 <string name="i_agree">Ik ga akkoord</string>
+
 <string name="kindly_create_account">Graag account aanmaken</string>
-<string name="please_enter_old_6_digit_pin">Vul de oude 6-cijferige pincode in</string>
-<string name="please_enter_6_digit_pin">Vul de 6-cijferige pincode in</string>
-<string name="please_enter_6_digit_pin_confirm">Bevestig de 6-cijferige pincode</string>
+
+ <string name="please_enter_old_6_digit_pin">Vul oude PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">PIN-code invoeren</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Vul PIN bevestiging</string>
+ 
 <string name="mismatch_pin">PIN komt niet overeen</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Print dit uit of schrijf het op. Iedereen met toegang tot uw herstel sleutel zal toegang tot alle middelen binnen deze portefeuille hebben.</string>
+
 <string name="create_wallet"> Wallet aanmaken</string>
+
 <string name="cance">ANNULEER</string>
+
 <string name="save">Opslaan</string>
+
 <string name="next">Volgende</string>
+
 <string name="please_enter_brainkey">Vul brainkey in</string>
+
 <string name="please_enter_correct_brainkey">Voer de juiste brainkey in</string>
+
 <string name="balances">Tegoeden</string>
+
 <string name="contacts">Contacten</string>
+
 <string name="receive_uppercase">ONTVANG</string>
+
 <string name="send_uppercase">STUUR</string>
+
 <string name="transactions">transacties</string>
+
 <string name="title_activity_setting">SettingActivity</string>
+
 <string name="backup_asset">backup Asset</string>
+
 <string name="taxable_country">belastbaar Land</string>
+
 <string name="date_time">Datum en tijd</string>
+
 <string name="check_for_updates">Controleren op updates bij het opstarten</string>
+
 <string name="automatically_install">belangrijke versie automatisch te installeren</string>
+
 <string name="require_pin">PIN vereist / Pattern om fondsen &amp; view memo sturen</string>
+
 <string name="close_bitshare">Automatisch sluiten van Bitshares Portemonnee na 3 minuten van inactiviteit</string>
+
 <string name="always_donate">Doneer altijd 2 BTS naar de Ondersteuning Ontwikkeling bij BitShares München (bitshares München)</string>
+
 <string name="hide_donations">Verberg Donaties van homescreen Transactions lijst</string>
+
 <string name="backup">BACKUP .bin</string>
+
 <string name="checkbox_donate_old">Doneer 2 BTS naar de Ondersteuning Ontwikkeling bij Bitshares München</string>
+
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
+
 <string name="imported_created_accounts">Geïmporteerde / aangemaakte accounts</string>
+
 <string name="register_new_account">Maak nieuw account aan</string>
+
 <string name="secure_pin">EDIT PIN</string>
+
 <string name="export">Exporteer</string>
+
 <string name="show_more">Laat meer zien</string>
+
 <string name="share_text">Ik vond deze geweldige Smartcoins Wallet waarmee u Smartcoins kan verzenden en ontvangen. Zeker bekijken!</string>
+
 <string name="share_info">Nodig een of meer van uw vrienden om de Smartcoins Wallet te proberen! E-mailadressen worden niet opgeslagen of opgehaald door iemand om zo hun privacy te waarborgen.</string>
+
 <string name="share_subject">Awesome Smartcoins Wallet</string>
+
 <string name="share_heading">delen met een vriend</string>
+
     <string name="checkbox_donate">Doneer 2 BTS naar de Ondersteuning Ontwikkeling bij</string>
+
 <string name="share_btn_text">OPEN E-mailtoepassing</string>
+
 <string name="action_settings">instellingen</string>
+
 <string name="txt_validating_account">Valideren van rekening ...</string>
+
 <string name="validating_account">Valideren van Account ...</string>
+
 <string name="account_name_should_be_longer">Account naam moet langer zijn</string>
+
 <string name="account_name_already_exist">Account Name %s bestaan</string>
+
 <string name="account_name_not_exist">Account naam %s bestaat niet</string>
+
 <string name="add_contact">Toevoegen</string>
+
 <string name="edit_contact">Bewerk</string>
+
 <string name="empty_list">Contact lijst is leeg</string>
+
 <string name="account_name_validate">Accountnaam is geldig</string>
+
 <string name="txt_no_internet_connection">Geen internet verbinding</string>
+
 <string name="unable_to_create_account_from_brainkey">Onmogelijk om een account aan te maken uit de brainkey</string>
+
 <string name="importing_your_wallet">Importeren van je portemonnee ...</string>
+
 <string name="str_trading_pair_not_exist">Trading pair bestaat niet</string>
+
 <string name="unable_to_create_qr_code">Kan geen Qr code genereren</string>
+
 <string name="price">prijs</string>
+
 <string name="currency">valuta</string>
+
 <string name="please_enter_amount">Vul bedrag in</string>
+
 <string name="amount_should_be_greater_than_zero">Bedrag moet groter zijn dan nul</string>
+
 <string name="no_amount_requested">Geen bedrag gevraagd</string>
+
 <string name="to_capital">naar</string>
+
 <string name="from_capital">Van</string>
+
 <string name="memo_capital">memo</string>
+
 <string name="empty_file_created">Leeg bestand aangemaakt</string>
+
 <string name="date">Datum</string>
+
 <string name="all">Alle</string>
+
 <string name="to_from">naar</string>
+
 <string name="amount">Bedrag</string>
+
 <string name="message">Bericht</string>
+
 <string name="pdf_generated_msg">PDF gegenereerd en opgeslagen:</string>
+
 <string name="pdf_generated_msg_error">Kan geen pdf genereren. Probeer het opnieuw. fout:</string>
+
 <string name="raw_transactions">Raw Transactie:</string>
+
 <string name="extensions">uitbreidingen</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Verzonden / ontvangen</string>
+
 <string name="details">Details</string>
+
 <string name="share_qr_code">Share QR Code</string>
+
 <string name="done">Gedaan</string>
+
 <string name="id_s">id</string>
+
 <string name="time">tijd</string>
+
 <string name="operations">activiteiten</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Symbool</string>
+
 <string name="fee_capital">honorarium</string>
+
 <string name="ok">OK</string>
+
 <string name="loading">Loading ...</string>
+
 <string name="pay_to">Betalen om</string>
+
 <string name="requested">aangevraagd</string>
+
 <string name="failed_transaction">Mislukt Transactie</string>
 
+
+
 <string name="str_invalid_amount">Voer geldige hoeveelheid in</string>
+
 <string name="str_invalid_receiver">Voer geldige ontvanger in.</string>
+
 <string name="str_transaction_failed">Transactie mislukt</string>
+
 <string name="please_enter_valid_amount">Voer geldige hoeveelheid in</string>
+
 <string name="select_timezone">Selecteer tijdszone</string>
-<string name="old_pin">Oude 6-cijferige PIN</string>
-<string name="pin_created_successfully">PIN succesvol gecreëerd </string>
-<string name="edit_pin">PIN bewerken</string>
+
+ <string name="old_pin">oude PIN</string>
+ 
+ <string name="pin_created_successfully">PIN gecreëerd succes</string>
+ 
+ <string name="edit_pin">PIN bewerken</string>
+ 
 <string name="txt_edit">SAVE</string>
-<string name="create_pin">Maak PIN</string>
+
+ <string name="create_pin">Maak PIN</string>
+ 
 <string name="pin_changed_successfully">PIN succesvol veranderd </string>
+
 <string name="incorrect_old_pin">Onjuiste oude PIN</string>
+
 <string name="copy">Kopiëren</string>
+
 <string name="pin_verification">GEOPEND</string>
+
 <string name="send_screen_name">sturen</string>
+
 <string name="rcv_screen_name">Ontvangen</string>
+
 <string name="request_amount_screen_name">Bedrag</string>
+
 <string name="payment_rcvd_screen_name">Dank je</string>
+
 <string name="e_receipt_activity_name">e-Receipt</string>
+
 <string name="settings_activity_name">instellingen</string>
+
 <string name="qr_code_activity_name">Scan QR</string>
+
 <string name="share_account_activity_name">Delen met vrienden</string>
+
 <string name="add_contact_activity_name">Contactpersoon toevoegen</string>
+
 <string name="str_trade_not_available">Trade Niet beschikbaar</string>
+
     <string name="preferred_lang">Voorkeurstaal</string>
+
     <string name="got_it">Begrepen</string>
+
     <string name="upgrade_to_ltm">Upgrade naar LTM</string>
+
     <string name="txt_back">Terug</string>
+
     <string name="please_pay">Betaal alsjeblieft</string>
+
     <string name="transfer_funds"> overdracht van middelen</string>
+
     <string name="unable_to_process">Niet in staat om te verwerken</string>
+
     <string name="cancel">ANNULEER</string>
+
     <string formatted="false" name="help_message">Ontvang 80% Cashback op kosten! Lifetime Members (LTM) krijgen 80% cashback op elke transactie kosten die zij betalen, en in aanmerking komen voor verwijzing inkomen te verdienen van gebruikers ze zich inschrijven met of verwijzen naar het netwerk. A Lifetime Lidmaatschap is nu onder 20.000 BTS!</string>
+
     <string name="txt_yes">Ja</string>
+
     <string name="txt_no">Nee</string>
+
     <string name="txt_confirmation">Bevestiging</string>
+
     <string name="txt_confirmation_msg">Weet je het zeker?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">folder Gemaakt</string>
+
     <string name="upgrade_failed">upgrade is mislukt</string>
+
     <string name="upgrading">Upgrading ...</string>
+
     <string name="import_new_account">IMPORT ACCOUNT</string>
+
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
+
     <string name="remove_account">VERWIJDER ACCOUNT</string>
+
     <string name="txt_alertmsg">Weet u zeker dat dit account te verwijderen</string>
+
     <string name="validation_in_progress">Validatie in progress ..</string>
+
     <string name="last_letter_cannot">laatste brief kan niet worden -</string>
+
     <string name="account_name_shoud_have">accountnaam shoud minstens één hebben -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">Account bestaat al</string>
+
     <string name="donation">schenking</string>
+
     <string name="insufficient_funds">onvoldoende Funds</string>
+
     <string name="txt_wallet_atleast_one_account">Sorry, maar je portemonnee moet minstens 1 account te hebben in deze</string>
+
     <string name="updating_transaction_id">Het bijwerken van Transaction Id, Even geduld aub</string>
+
     <string name="email_name">Als u een foto voor deze contactpersoon weer te geven, voert u het Gravatar e-mail hier</string>
+
     <string name="upgrade_success">Upgrade Succesvolle!</string>
+
     <string name="copied_to_clipboard">Gekopieerd naar het klembord</string>
 
+
+
     <string name="unable_to_load_brainkey">Kan geen brainkey laden</string>
+
     <string name="unable_to_generate_bin_format_for_key">Kan geen bin formaat voor sleutel te genereren</string>
+
     <string name="creating_backup_file">Het maken van back-upbestand</string>
+
     <string name="fetching_key">Ophalen Key</string>
+
     <string name="generating_bin_format">Het genereren van bin formaat</string>
+
     <string name="invalid_pin">ongeldige PIN</string>
+
     <string name="saving_bin_file_to">Opslaan van Bin bestand naar</string>
+
     <string name="bin_file_saved_successfully_to">Bin File opgeslagen succes</string>
+
     <string name="unable_to_save_bin_file">Kan geen bin bestand op te slaan</string>
 
+
+
     <string name="txt_alertmsg_fr">Weet u zeker dat u het verwijderen</string>
+
     <string name="txt_alertmsg_la">rekening van deze portefeuille?</string>
+
     <string name="bugs_or_errors">Bugs of fouten?</string>
+
     <string name="please_let_us_know">Laat het ons weten:</string>
+
     <string name="try_again">Probeer het nog eens na 5 minuten</string>
+
     <string name="warning_msg_same_account">Je kunt geen bedrag te sturen in dezelfde account</string>
 
+
+
     <string name="please_backup_your_brainkey">Maak een backup van uw brainkey</string>
+
     <string name="backup_brainkey_msg">Een backup van je .bin bestand ergens veilig of je tegoeden zouden kunnen worden verloren!</string>
+
     <string name="unable_to_trade_bAssets">Kan het Backup Assets handel</string>
+
     <string name="unable_to_send_amount">Kan het bedrag te sturen.</string>
+
     <string name="unable_to_decode_QR">Niet in staat om de QR-code te decoderen.</string>
 
+
+
     <string name="loyalty_points">spaarpunten</string>
+
     <string name="str_warning_only_available">Waarschuwing! Slechts %1$s %2$s is beschikbaar</string>
+
     <string name="str_balance_available">%1$s %2$s beschikbaar</string>
 
+
+
     <string name="select_backup_asset">Selecteer Backup Asset</string>
+
     <string name="sender_account">Sender account</string>
+
     <string name="receiver_account">receiver account</string>
+
     <string name="total">Totaal</string>
+
     <string name="payment_method">Betalingsmiddel</string>
+
     <string name="thankyou_string">Dank u voor het gebruik van Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Audio Folder Path</string>
+
     <string name="please_make_sure_your_bin_file">Zorg ervoor dat uw pincode correct is of juist bin bestand is geselecteerd</string>
+
     <string name="change">Verandering...</string>
 
+
+
     <string name="connected_to">Verbonden met</string>
+
     <string name="account_create_msg">Slechts één account elke 10 minuten kunnen worden geregistreerd</string>
+
     <string name="names_must_include_a_number">Namen moet een nummer bevatten</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">(-) En een aantal namen moeten een streepje bevatten</string>
+
     <string name="import_gravatar">import Gravatar</string>
+
     <string name="please_import_the_correct_file">Gelieve importeren het juiste bestand</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant e-mail is met succes geïmporteerd</string>
 
+
+
 </resources>
+
+
 

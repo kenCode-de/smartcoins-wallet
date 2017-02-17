@@ -15,8 +15,7 @@ import android.widget.ListView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.ContactsDelegate;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.ContactsDelegate;
 import de.bitshares_munich.smartcoinswallet.AddEditContacts;
 import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -61,7 +60,6 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     }
     @OnClick(R.id.addcontact)
     public void AddContact(){
-        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), AddEditContacts.class);
         intent.putExtra("activity",99999);
         startActivity(intent);
@@ -74,7 +72,6 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
     }
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
-        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), ShareContact.class);
         startActivity(intent);
     }

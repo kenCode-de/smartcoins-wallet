@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="3"
-              android:background="@color/white"
-              tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="3"
+    android:background="@color/white"
+    tools:context="de.bitshares_munich.smartcoinswallet.MainActivity">
 
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="0.3"
-                  android:orientation="vertical"
-                  android:paddingLeft="@dimen/activity_horizontal_margin"
-                  android:paddingRight="@dimen/activity_horizontal_margin"
-                  android:paddingTop="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_alignParentTop="true">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
             android:text="@string/account_create_register_or_import"
             android:textSize="15dp"
             android:textStyle="bold"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +57,6 @@
             android:layout_height="40dp"
             android:background="@drawable/edittext_bg"
             android:inputType="number"
-            android:maxLength="6"
             android:maxLines="1"
             android:singleLine="true"/>
 
@@ -66,44 +67,44 @@
             android:id="@+id/tvPinConfirmation"
             android:text="@string/txt_6_digits_pin_confirm"
             android:textStyle="bold"/>
+
         <EditText
             android:id="@+id/etPinConfirmation"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/edittext_bg"
             android:inputType="number"
-            android:maxLength="6"
             android:maxLines="1"
             android:singleLine="true"/>
+
         <Button
             android:id="@+id/btnCreate"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/create"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/or"
+            android:layout_margin="10dp"/>
+        <Button
+            android:id="@+id/tvExistingAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/existing_account"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2.7"
+        android:layout_weight="1"
         android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:weightSum="1">
-        <TextView
-            android:layout_weight="0.1"
-            android:id="@+id/tvExistingAccount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/existing_account"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:layout_gravity="left"
-            android:textAlignment="gravity"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9">
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="35dp"
@@ -112,8 +113,7 @@
             android:gravity="bottom"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            >
+            android:paddingRight="@dimen/activity_horizontal_margin">
             <TextView
                 android:id="@+id/tvAppVersion"
                 android:layout_width="0dp"
@@ -121,7 +121,6 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:background="@color/bottomBarColor"/>
-
             <TextView
                 android:background="@color/bottomBarColor"
                 android:id="@+id/tvBlockNumberHead"
@@ -135,14 +134,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"/>
-
             <ImageView android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_weight="0.5"
-                       android:layout_gravity="center"
+               android:layout_height="wrap_content"
+               android:layout_weight="0.5"
+               android:layout_gravity="center"
                 android:visibility="invisible"
-                       android:src="@drawable/icon_setting"
-                />
+               android:src="@drawable/icon_setting"/>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

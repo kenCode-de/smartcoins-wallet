@@ -1,4 +1,4 @@
-package de.bitshares_munich.Interfaces;
+package de.bitshares_munich.interfaces;
 
 /**
  * Created by nelson on 12/17/16.

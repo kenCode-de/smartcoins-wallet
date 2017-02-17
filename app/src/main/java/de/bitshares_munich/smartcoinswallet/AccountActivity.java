@@ -3,7 +3,6 @@ package de.bitshares_munich.smartcoinswallet;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,9 +42,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
-import de.bitshares_munich.Interfaces.IAccount;
-import de.bitshares_munich.Interfaces.IAccountID;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
+import de.bitshares_munich.interfaces.IAccount;
+import de.bitshares_munich.interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.RegisterAccountResponse;
 import de.bitshares_munich.utils.Application;
@@ -61,9 +59,10 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
+import de.bitsharesmunich.graphenej.api.GetAccountByName;
 import de.bitsharesmunich.graphenej.api.LookupAccounts;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import retrofit2.Call;
@@ -76,7 +75,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     public final static String BRAINKEY_FILE = "brainkeydict.txt";
 
-    Context context;
     TinyDB tinyDB;
 
     @Bind(R.id.etAccountName)
@@ -86,7 +84,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     EditText etPin;
 
     @Bind(R.id.tvExistingAccount)
-    TextView tvExistingAccount;
+    Button tvExistingAccount;
 
     Boolean settingScreen = false;
     Boolean validAccount = false;
@@ -128,6 +126,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     webSocketCallHelper myWebSocketHelper;
 
+
+    private Handler handler;
+
+    /* Agreement License Dialog */
+    private Dialog mLicenseDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +141,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         setTitle(getResources().getString(R.string.app_name));
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
-        context = this;
+        handler = new Handler();
 
         myWebSocketHelper = new webSocketCallHelper(this);
 
@@ -289,20 +293,30 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) {
-            showDialogLiscence();
+    public void onResume() {
+        super.onResume();
+        if ( (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && ( mLicenseDialog == null || !mLicenseDialog.isShowing() )  ) {
+            showDialogLicence();
         }
     }
 
-    private void showDialogLiscence() {
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
-        dialog.setTitle(R.string.agreement);
-        dialog.setContentView(R.layout.custom_dialog_liscence);
-        Button dialog_btn_cancel = (Button) dialog.findViewById(R.id.dialog_btn_cancel);
-        WebView webView = (WebView) dialog.findViewById(R.id.webviewLisense);
-        String html = getString(R.string.lisence_html);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //Dismiss the License agreement dialog when the Activity is paused (to avoid activity memory leak)
+        if(mLicenseDialog != null && mLicenseDialog.isShowing()){
+            mLicenseDialog.dismiss();
+        }
+        mLicenseDialog = null;
+    }
+
+    private void showDialogLicence() {
+        mLicenseDialog = new Dialog(this, R.style.stylishDialog);
+        mLicenseDialog.setTitle(R.string.agreement);
+        mLicenseDialog.setContentView(R.layout.custom_dialog_licence);
+        Button dialog_btn_cancel = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_cancel);
+        WebView webView = (WebView) mLicenseDialog.findViewById(R.id.webviewLicense);
+        String html = getString(R.string.licence_html);
         webView.loadData(html, "text/html", "UTF-8");
 
         dialog_btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -313,17 +327,17 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             }
         });
-        Button dialog_btn_agree = (Button) dialog.findViewById(R.id.dialog_btn_agree);
+        Button dialog_btn_agree = (Button) mLicenseDialog.findViewById(R.id.dialog_btn_agree);
         dialog_btn_agree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_agreement), true);
-                dialog.cancel();
+                mLicenseDialog.cancel();
             }
         });
-        dialog.setCancelable(false);
+        mLicenseDialog.setCancelable(false);
 
-        dialog.show();
+        mLicenseDialog.show();
     }
 
     private void validationAccountName() {
@@ -412,7 +426,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         hashMap.put("account", hm);
 
         try {
-            ServiceGenerator sg = new ServiceGenerator(context.getString(R.string.account_create_url));
+            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_create_url));
             IWebService service = sg.getService(IWebService.class);
             final Call<RegisterAccountResponse> postingService = service.getReg(hashMap);
             postingService.enqueue(new Callback<RegisterAccountResponse>() {
@@ -426,9 +440,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         if (resp.account != null) {
                             try {
                                 if(resp.account.name.equals(accountName)) {
-                                    get_account_id(address);
+                                    getAccountId(accountName);
                                     tvErrorAccountName.setVisibility(View.GONE);
-                                };
+                                }else{
+                                    Log.w(TAG,"Response account name differs from 'accountName'");
+                                    Log.w(TAG,"r: "+resp.account.name+", accountName: "+accountName);
+                                }
                             } catch (Exception e) {
                                 Log.e(TAG, "Exception. Msg: "+e.getMessage());
                                 Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
@@ -501,10 +518,12 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                 tvErrorAccountName.setVisibility(View.VISIBLE);
                 tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
             } else {
-                if (etPin.getText().length() < 5) {
+                if (etPin.getText().length() == 0) {
                     Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-                } else if (etPinConfirmation.getText().length() < 5) {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+                }
+                //PIN must have minimum of 6-digit
+                else if (etPin.getText().length() < 6) {
+                    Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
                 } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                     Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
                 } else {
@@ -522,9 +541,8 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @OnClick(R.id.tvExistingAccount)
-    public void existingAccount(TextView textView) {
+    public void existingAccount(Button button) {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -600,6 +618,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         accountDetails.account_id = account_id;
         accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
+        //Success (Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
+
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetails, getApplicationContext(), this);
 
@@ -616,7 +638,6 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
 
         Application.timeStamp();
@@ -627,37 +648,32 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
 
-    void get_account_id(Address address)
-    {
-        new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
+    /**
+     * Retrieves the id for the newly created account.
+     * @param accountName: Account name
+     */
+    private void getAccountId(final String accountName){
+        new WebsocketWorkerThread(new GetAccountByName(accountName, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
-                Log.d(TAG, "onSuccess");
-                List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
-                if(resp.size() > 0){
-                    List<UserAccount> accounts = resp.get(0);
-                    if(accounts.size() > 0){
-                        if(accounts.size() > 2){
-                            Log.w(TAG, "More than one account with the same controlling keys");
-                        }
-                        addWallet(accounts.get(0).getObjectId());
-                    }else{
-                        Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
-                }
-                hideDialog();
+                AccountProperties accountProperties = (AccountProperties) response.result;
+                Log.d(TAG,"onSuccess. account id: "+accountProperties.id);
+                addWallet(accountProperties.id);
             }
 
             @Override
             public void onError(BaseResponse.Error error) {
-                hideDialog();
-                Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"onError. Msg: "+error.message);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.unable_to_find_account_id, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }), 0).start();
+        })).start();
     }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 

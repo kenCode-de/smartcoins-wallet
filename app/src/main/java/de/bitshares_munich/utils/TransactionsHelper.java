@@ -24,8 +24,8 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import de.bitshares_munich.Interfaces.AssetDelegate;
-import de.bitshares_munich.Interfaces.IBalancesDelegate;
+import de.bitshares_munich.interfaces.AssetDelegate;
+import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;

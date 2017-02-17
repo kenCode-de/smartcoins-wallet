@@ -32,7 +32,6 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.Interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
@@ -121,10 +120,12 @@ public class BrainkeyActivity extends BaseActivity {
         } else {
             String trimmedBrainKey = etBrainKey.getText().toString().trim();
             etBrainKey.setText(trimmedBrainKey);
-            if (etPin.getText().length() < 5) {
+            if (etPin.getText().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+            }
+            //PIN must have minimum of 6-digit
+            else if (etPin.getText().length() < 6) {
+                Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
             } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {
@@ -137,7 +138,7 @@ public class BrainkeyActivity extends BaseActivity {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
-            if (arr.length == 12 || arr.length == 16) {
+            if (arr.length >= 12 && arr.length <= 16) {
 
                 if (checkBrainKeyExist(temp)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
@@ -247,6 +248,9 @@ public class BrainkeyActivity extends BaseActivity {
                                 accountDetails.pub_key = pubKey;
                                 accountDetails.brain_key = brainkey;
                                 accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
+                                accountDetails.isSelected = true;
+                                accountDetails.status = "success";
+                                accountDetails.pinCode = pinCode;
                                 addWallet(accountDetails, brainkey, pinCode);
                             } else {
                                 Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
@@ -314,18 +318,12 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
-        AccountDetails accountDetails = new AccountDetails();
-        accountDetails.wif_key = accountDetail.wif_key;
-        accountDetails.pinCode = pinCode;
-        accountDetails.account_name = accountDetail.account_name;
-        accountDetails.pub_key = accountDetail.pub_key;
-        accountDetails.brain_key = brainKey;
-        accountDetails.isSelected = true;
-        accountDetails.status = "success";
-        accountDetails.account_id = accountDetail.account_id;
 
+        //Success Import(Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
         BinHelper myBinHelper = new BinHelper();
-        myBinHelper.addWallet(accountDetails, getApplicationContext(),this);
+        myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
 
 
         Intent intent;
@@ -338,7 +336,6 @@ public class BrainkeyActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }

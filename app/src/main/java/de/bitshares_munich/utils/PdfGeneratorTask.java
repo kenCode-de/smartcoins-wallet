@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.bitshares_munich.Interfaces.PdfGeneratorListener;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitsharesmunich.graphenej.UserAccount;
