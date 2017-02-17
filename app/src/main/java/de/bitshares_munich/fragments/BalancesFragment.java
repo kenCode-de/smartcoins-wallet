@@ -164,7 +164,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     String to = "";
 
     String wifkey = "";
-//    String finalFaitCurrency;
+    String finalFaitCurrency;
 
     @Bind(R.id.load_more_values)
     Button loadMoreButton;
@@ -267,6 +267,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private int start = 1;
     private int stop = HISTORICAL_TRANSFER_BATCH_SIZE;
     private int historicalTransferCount = 0;
+    private int HISTORICAL_TRANSFER_MAX = 10;
 
     /* Constant used to split the missing times and equivalent values in batches of constant time */
     private int SECONDARY_LOAD_BATCH_SIZE = 2;
@@ -535,13 +536,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     Log.d(TAG, "assetsUpdater.onSuccess");
                     List<Asset> assets = (List<Asset>) response.result;
                     // Updating the database
-                    database.putAssets(assets);
+                    int count = database.putAssets(assets);
 
                     // Looking for smartcoin asset
                     for(Asset asset : assets){
                         if(asset.getObjectId().equals(mSmartcoin.getObjectId().toString())){
                             mSmartcoin = database.fillAssetDetails(asset);
-                            Log.d(TAG,"Setting smartcoin as: "+mSmartcoin.getSymbol());
                         }
                     }
 
@@ -550,9 +550,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     if(missingEquivalentValues != null){
                         processNextEquivalentValue();
                     }
-
-                    //TODO: Remove this from here and replace the balance update procedure with something better
-                    loadBalancesFromSharedPref();
                 }
             });
         }
@@ -641,7 +638,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
             // If we got exactly the requested amount of historical transfers, it means we
             // must have more to fetch.
-            if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
+            if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX){
                 Log.v(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
@@ -820,10 +817,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             database.clearTransfers();
         }
 
+        // Setting the "base" smartcoin for this user
+        String countryCode = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country));
+
+        this.mSmartcoin = Smartcoins.getMap().get(countryCode.toUpperCase());
+
         // Getting the system's configuration locale
         locale = getResources().getConfiguration().locale;
 
-        this.mSmartcoin = Smartcoins.getMap().get(locale.getCountry());
         HashMap<String, Asset> knownAssets = database.getAssetMap();
         if(!knownAssets.containsKey(this.mSmartcoin.getObjectId())){
             // If the smartcoin asset details are not known, we schedule an update from the full node.
@@ -831,12 +832,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             assetList.add(mSmartcoin);
             getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(assetList, mLookupAssetsSymbolsListener));
             getMissingAssets.start();
-            Log.d(TAG,"Don't know much about this smartcoin, making a network query");
         }else{
-            Log.d(TAG, "Already have the details in database, just filling them");
             mSmartcoin = database.fillAssetDetails(mSmartcoin);
         }
-        Log.d(TAG, String.format("Selected smartcoin: %s", mSmartcoin.getSymbol()));
     }
 
     @Override
@@ -860,6 +858,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
         ButterKnife.bind(this, rootView);
+        language = Helper.fetchStringSharePref(getActivity(), getString(R.string.pref_language), "");
+        locale = new Locale(language);
         balanceActivity = getActivity();
         format = NumberFormat.getInstance(locale);
         tvUpgradeLtm.setPaintFlags(tvUpgradeLtm.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -1002,16 +1002,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
         Boolean accountNameChange = checkIfAccountNameChange();
 
-        String smartcoinSymbol = mSmartcoin.getSymbol();
-        if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
+        if (accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)))
             llBalances.removeAllViews();
 
-        if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
-            if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
+        if (isHideDonationsChanged || accountNameChange || (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency))) {
+            if (finalFaitCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFaitCurrency)) {
                 loadBasic(true, accountNameChange, true);
             } else {
                 loadBasic(true, accountNameChange, false);
             }
+
         }
 
         if (!accountId.equals("")) {
@@ -1394,6 +1394,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         if (this.balanceItems.findBalanceItemBySymbol(assetName) != null){
             this.balanceItems.updateFaitBalanceItem(assetName, value);
         } else {
+            Log.i(TAG, "tvAsset tv Amount tvFaitAmount nulls");
             updateEquivalentAmount.postDelayed(getEquivalentCompRunnable, 500);
         }
     }
@@ -1406,15 +1407,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         };
 
+        String faitCurrency = Helper.getFadeCurrency(getContext());
+
+        if (faitCurrency.isEmpty()) {
+            faitCurrency = "EUR";
+        }
+        finalFaitCurrency = faitCurrency;
+
         HashMap<String, ArrayList<String>> currenciesChange = new HashMap();
 
         for (int i = 0; i < accountAssets.size(); i++) {
             AccountAssets accountAsset = accountAssets.get(i);
-            if (!accountAsset.symbol.equals(mSmartcoin.getSymbol())) {
+            if (!accountAsset.symbol.equals(faitCurrency)) {
                 if (!currenciesChange.containsKey(accountAsset.symbol)) {
                     currenciesChange.put(accountAsset.symbol, new ArrayList());
                 }
-                currenciesChange.get(accountAsset.symbol).add(mSmartcoin.getSymbol());
+                currenciesChange.get(accountAsset.symbol).add(faitCurrency);
             }
         }
         this.getEquivalentComponent(currenciesChange, getEquivalentCompRunnable);
@@ -1736,6 +1744,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             Long newAmmount = Long.parseLong(newItem.getAmmount());
 
             if (oldAmmount > newAmmount) {
+                Log.d("Balances Update", "Balance sent");
+
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
@@ -1848,16 +1858,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             //Now, we update the fait (EquivalentComponent)
             if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
                 try {
-                    final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
+                    Log.d("Equivalent Value Update", "Changing Fait Text: "+newItem.getSymbol());
+                    final Currency currency = Currency.getInstance(finalFaitCurrency);
                     double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
                     final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
+                    String faitString = "";
+                    if (Helper.isRTL(locale, currency.getSymbol())) {
+                        faitString = String.format(locale, "%.2f %s", eqAmount, currency.getSymbol());
+                    } else {
+                        faitString = String.format(locale, "%s %.2f", currency.getSymbol(), eqAmount);
+                    }
 
-                    NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
-                    Log.i(TAG, currencyFormatter.format(eqAmount));
+                    faitTextView.setText(faitString);
 
-                    String fiatString = String.format(locale, "%s", currencyFormatter.format(eqAmount));
-
-                    faitTextView.setText(fiatString);
                     faitTextView.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
@@ -2265,7 +2278,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     void loadBasic(boolean onResume, boolean accountNameChanged, boolean faitCurrencyChanged) {
-        Log.d(TAG,"loadBasic");
+
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         if (accountDetails.size() == 1) {
             accountDetailsId = 0;
@@ -2532,8 +2545,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
         }else{
-            Log.d(TAG, "resetting table view");
-            tableAdapter = new TransfersTableAdapter(getContext(), locale, account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
+            tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
+
             transfersView.setDataAdapter(tableAdapter);
         }
         tableAdapter.notifyDataSetChanged();
