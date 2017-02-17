@@ -267,6 +267,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private int start = 1;
     private int stop = HISTORICAL_TRANSFER_BATCH_SIZE;
     private int historicalTransferCount = 0;
+    private int HISTORICAL_TRANSFER_MAX = 10;
 
     /* Constant used to split the missing times and equivalent values in batches of constant time */
     private int SECONDARY_LOAD_BATCH_SIZE = 2;
@@ -637,7 +638,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
             // If we got exactly the requested amount of historical transfers, it means we
             // must have more to fetch.
-            if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE){
+            if(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX){
                 Log.v(TAG,String.format("Got %d transactions, which es exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
