@@ -79,9 +79,12 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
                             input.setAddress(address);
-                            address.getOutputTransaction().add(input);
                             tempAccount = address.getAccount();
-                            accountsChanged.add(address.getAccount());
+
+                            if (!address.hasOutputTransaction(input, this.param)) {
+                                address.getOutputTransaction().add(input);
+                                accountsChanged.add(address.getAccount());
+                            }
                         }
                     }
                     transaction.getTxInputs().add(input);
@@ -99,8 +102,11 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         if (address.getAddressString(param).equals(addr)) {
                             output.setAddress(address);
                             tempAccount = address.getAccount();
-                            address.getInputTransaction().add(output);
-                            accountsChanged.add(address.getAccount());
+
+                            if (!address.hasInputTransaction(output, this.param)) {
+                                address.getInputTransaction().add(output);
+                                accountsChanged.add(address.getAccount());
+                            }
                         }
                     }
 
