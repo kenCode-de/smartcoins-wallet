@@ -66,7 +66,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             GeneralTransaction transaction = new GeneralTransaction();
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
-            transaction.setDate(new Date(txi.time));
+            transaction.setDate(new Date(txi.time*1000));
             transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
             transaction.setConfirm(txi.confirmations);
             transaction.setType(account.getCoin());

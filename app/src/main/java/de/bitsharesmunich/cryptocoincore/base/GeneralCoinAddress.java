@@ -8,6 +8,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.bitsharesmunich.graphenej.Util;
@@ -88,11 +89,11 @@ public class GeneralCoinAddress {
         this.inputTransaction = inputTransaction;
     }
 
-    public boolean hasInputTransaction(GIOTx inputToFind, NetworkParameters param){
-        for(GIOTx input : inputTransaction){
+    public boolean hasInputTransaction(GIOTx inputToFind, NetworkParameters param) {
+        for (GIOTx input : inputTransaction) {
             if ((input.getTransaction().getTxid().equals(inputToFind.getTransaction().getTxid()))
-              && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress().getAddressString(param)))
-            ){
+                    && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress().getAddressString(param)))
+                    ) {
                 return true;
             }
         }
@@ -104,11 +105,11 @@ public class GeneralCoinAddress {
         return outputTransaction;
     }
 
-    public boolean hasOutputTransaction(GIOTx outputToFind, NetworkParameters param){
-        for(GIOTx output : outputTransaction){
+    public boolean hasOutputTransaction(GIOTx outputToFind, NetworkParameters param) {
+        for (GIOTx output : outputTransaction) {
             if ((output.getTransaction().getTxid() == outputToFind.getTransaction().getTxid())
                     && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress().getAddressString(param)))
-            ){
+                    ) {
                 return true;
             }
         }
@@ -120,20 +121,75 @@ public class GeneralCoinAddress {
         this.outputTransaction = outputTransaction;
     }
 
-    public long getBalance(){
-        long answer = 0 ;
-        for(GIOTx input : inputTransaction){
-            answer += input.getAmount();
+    public long getUncofirmedBalance() {
+        long answer = 0;
+        for (GIOTx input : inputTransaction) {
+            if (input.getTransaction().getConfirm() < 6) {
+                answer += input.getAmount();
+            }
         }
 
-        for(GIOTx output : outputTransaction){
-            answer -= output.getAmount();
+        for (GIOTx output : outputTransaction) {
+            if (output.getTransaction().getConfirm() < 6) {
+                answer -= output.getAmount();
+            }
         }
 
         return answer;
     }
 
-    public void BalanceChange(){
+    public long getCofirmedBalance() {
+        long answer = 0;
+        for (GIOTx input : inputTransaction) {
+            if (input.getTransaction().getConfirm() >= 6) {
+                answer += input.getAmount();
+            }
+        }
+
+        for (GIOTx output : outputTransaction) {
+            if (output.getTransaction().getConfirm() >= 6) {
+                answer -= output.getAmount();
+            }
+        }
+
+        return answer;
+    }
+
+    public Date getLastDate() {
+        Date lastDate = null;
+        for (GIOTx input : inputTransaction) {
+            if (lastDate == null || lastDate.before(input.getTransaction().getDate())) {
+                lastDate = input.getTransaction().getDate();
+            }
+        }
+
+        for (GIOTx output : outputTransaction) {
+            if (lastDate == null || lastDate.before(output.getTransaction().getDate())) {
+                lastDate = output.getTransaction().getDate();
+            }
+        }
+
+        return lastDate;
+
+    }
+
+    public int getLessConfirmed(){
+        int lessConfirm = -1;
+        for (GIOTx input : inputTransaction) {
+            if (lessConfirm == -1 || input.getTransaction().getConfirm() < lessConfirm) {
+                lessConfirm = input.getTransaction().getConfirm();
+            }
+        }
+
+        for (GIOTx output : outputTransaction) {
+            if (lessConfirm == -1 || output.getTransaction().getConfirm() < lessConfirm) {
+                lessConfirm = output.getTransaction().getConfirm();
+            }
+        }
+        return lessConfirm;
+    }
+
+    public void BalanceChange() {
         this.getAccount().balanceChange();
     }
 
@@ -166,4 +222,6 @@ public class GeneralCoinAddress {
         result = 31 * result + (outputTransaction != null ? outputTransaction.hashCode() : 0);
         return result;
     }
+
+
 }

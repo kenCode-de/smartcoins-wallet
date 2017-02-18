@@ -45,19 +45,36 @@ public class BitcoinAccount extends GeneralCoinAccount {
 
     @Override
     public List<Balance> getBalance() {
-        long amount = 0;
+        long uncofirmedAmount = 0;
+        long confirmedAmount = 0;
+        int lessConfirmed = -1;
+        Date lastDate = null;
         for (GeneralCoinAddress key : externalKeys.values()) {
-            amount += key.getBalance();
+            uncofirmedAmount = key.getUncofirmedBalance();
+            confirmedAmount = key.getCofirmedBalance();
+            int keyLessConf = key.getLessConfirmed();
+            if(keyLessConf != -1 && (lessConfirmed== -1 || keyLessConf< lessConfirmed)){
+                lessConfirmed = keyLessConf;
+            }
+            if(lastDate == null || (key.getLastDate()!= null && lastDate.before(key.getLastDate()))){
+                lastDate = key.getLastDate();
+            }
         }
 
         for (GeneralCoinAddress key : changeKeys.values()) {
-            amount += key.getBalance();
+            uncofirmedAmount = key.getUncofirmedBalance();
+            confirmedAmount = key.getCofirmedBalance();
+            int keyLessConf = key.getLessConfirmed();
+            if(keyLessConf != -1 && (lessConfirmed== -1 || keyLessConf< lessConfirmed)){
+                lessConfirmed = keyLessConf;
+            }
         }
 
         Balance balance = new Balance();
         balance.setType(BITCOIN);
-        balance.setDate(new Date());
-        balance.setAmmount(amount);
+        balance.setDate(lastDate);
+        balance.setConfirmedAccomunt(confirmedAmount);
+        balance.setUnconfirmedAmount(uncofirmedAmount);
         List<Balance> balances = new ArrayList();
         balances.add(balance);
         return balances;
