@@ -79,6 +79,10 @@ public class BalanceItems {
     }
 
     public void addOrUpdateBalanceItem(String symbol, String precision, String ammount){
+        addOrUpdateDetailedBalanceItem(symbol,precision,ammount,-1);
+    }
+
+    public void addOrUpdateDetailedBalanceItem(String symbol, String precision, String ammount, int confirmations) {
         BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
 
         //TODO eliminate the "bit" string from the logic, this should only be in the view
@@ -92,6 +96,7 @@ public class BalanceItems {
             balanceItem.setSymbol(symbol);
             balanceItem.setPrecision(precision);
             balanceItem.setAmmount(ammount);
+            balanceItem.setConfirmations(confirmations);
 
             this._fireOnBalanceItemUpdatedEvent(oldBalanceItem, balanceItem, index);
         }

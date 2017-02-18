@@ -7,14 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
-import de.bitsharesmunich.cryptocoincore.base.SeedType;
-import de.bitsharesmunich.cryptocoincore.fragments.BalancesFragment;
+import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinBalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 
@@ -40,18 +35,18 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return BalancesFragment.newInstance(Coin.BITSHARE);
+                return GeneralCoinBalancesFragment.newInstance(Coin.BITSHARE);
             case 1:
                 final SCWallDatabase db = new SCWallDatabase(mContext);
                 GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
 
                 if (account != null){
-                    this.fragmentAtBitcoin = BalancesFragment.newInstance(Coin.BITCOIN);
+                    this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
                 } else {
                     this.fragmentAtBitcoin = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
                 }
                 return this.fragmentAtBitcoin;
-                //return BalancesFragment.newInstance(Coin.BITCOIN);
+                //return GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
             case 2:
                 return new ContactsFragment();
             default:
@@ -76,7 +71,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getItemPosition(Object object)
     {
-        if (object instanceof NoCurrencyAccountFragment && this.fragmentAtBitcoin instanceof BalancesFragment) {
+        if (object instanceof NoCurrencyAccountFragment && this.fragmentAtBitcoin instanceof GeneralCoinBalancesFragment) {
             return POSITION_NONE;
         }
         return POSITION_UNCHANGED;
@@ -97,7 +92,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public void changeBitcoinFragment(){
         mFragmentManager.beginTransaction().remove(this.fragmentAtBitcoin).commit();
-        this.fragmentAtBitcoin = BalancesFragment.newInstance(Coin.BITCOIN);
+        this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
         notifyDataSetChanged();
     }
 

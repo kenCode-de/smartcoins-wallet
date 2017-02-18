@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -44,6 +45,31 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
         super(context, data);
         this.locale = locale;
         this.account = account;
+    }
+
+    public void addOrReplaceData(GeneralTransaction[] data){
+        List<GeneralTransaction> oldData = this.getData();
+        boolean added;
+
+        for (GeneralTransaction newTransaction : data){
+            added = false;
+
+            for (GeneralTransaction oldTransaction : oldData){
+                if (oldTransaction.equals(newTransaction)){
+                    oldData.set(oldData.indexOf(oldTransaction), newTransaction);
+                    added = true;
+                } else if (oldTransaction.getDate().compareTo(newTransaction.getDate()) < 0){
+                    oldData.add(oldData.indexOf(oldTransaction), newTransaction);
+                    added = true;
+                }
+            }
+
+            if (!added){
+                oldData.add(newTransaction);
+            }
+        }
+
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -121,13 +147,19 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
-        /*String toMessage = getContext().getText(R.string.to_capital) + ": " + historicalTransfer.getAddressString()  operation.getTo().getAccountName();
+        String to = historicalTransfer.getTxOutputs().get(0).getAddressString();
+        to = to.substring(0,2)+"..."+to.substring(to.length()-4,to.length());
+
+        String toMessage = getContext().getText(R.string.to_capital) + ": " + to;
         TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
 
-        String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
+        String from = historicalTransfer.getTxInputs().get(0).getAddressString();
+        from = from.substring(0,2)+"..."+from.substring(from.length()-4,from.length());
+
+        String fromMessage = getContext().getText(R.string.from_capital) + ": " + from;
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
-        fromUser.setText(fromMessage);*/
+        fromUser.setText(fromMessage);
 
         /*if(!operation.getMemo().getPlaintextMessage().equals("")){
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
@@ -173,18 +205,35 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
-        /*if(smartcoinAmount != null){
-            Log.d(TAG,"Using smartcoin: "+smartcoinAmount.getAsset().getObjectId());
-            final Currency currency = Currency.getInstance(smartcoinAmount.getAsset().getSymbol());
-            NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
-            String eqValue = currencyFormatter.format(Util.fromBase(smartcoinAmount));
+        if (historicalTransfer.getConfirm() < historicalTransfer.getType().getConfirmationsNeeded()){
+            int percentageDone = (historicalTransfer.getConfirm()+1)*100/historicalTransfer.getType().getConfirmationsNeeded();
+            int confirmationColor = 0;
 
-//            String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
-//            String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
-            fiatAmountTextView.setText(eqValue);
-        }else{
-            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
-        }*/
+            if (percentageDone < 34){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+            } else if (percentageDone < 67){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+            } else {
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+            }
+
+            fiatAmountTextView.setTextColor(confirmationColor);
+            fiatAmountTextView.setText(historicalTransfer.getConfirm()+" of "+historicalTransfer.getType().getConfirmationsNeeded()+" conf");
+        } else {
+
+            /*if(smartcoinAmount != null){
+                Log.d(TAG,"Using smartcoin: "+smartcoinAmount.getAsset().getObjectId());
+                final Currency currency = Currency.getInstance(smartcoinAmount.getAsset().getSymbol());
+                NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
+                String eqValue = currencyFormatter.format(Util.fromBase(smartcoinAmount));
+
+    //            String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
+    //            String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
+                fiatAmountTextView.setText(eqValue);
+            }else{
+                Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
+            }*/
+        }
         return root;
     }
 

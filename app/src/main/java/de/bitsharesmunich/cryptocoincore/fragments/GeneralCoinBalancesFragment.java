@@ -21,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,7 +79,6 @@ import de.bitshares_munich.adapters.TransferSendReceiveComparator;
 import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.ISound;
 import de.bitshares_munich.interfaces.InternalMovementListener;
@@ -117,20 +117,17 @@ import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransfersTableAdapte
 import de.bitsharesmunich.cryptocoincore.base.Balance;
 import de.bitsharesmunich.cryptocoincore.base.ChangeBalanceListener;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.cryptocoincore.insightapi.AccountActivityWatcher;
 import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionByAddress;
-import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionData;
 import de.bitsharesmunich.cryptocoincore.utils.CryptoCoinTableViewClickListener;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.Converter;
 import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
@@ -158,7 +155,7 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
+public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
@@ -246,18 +243,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public static ISound iSound;
 
-    public BalancesFragment() {
+    public GeneralCoinBalancesFragment() {
         // Required empty public constructor
     }
 
-    public static BalancesFragment newInstance(Coin coin) {
-        BalancesFragment balancesFragment = new BalancesFragment();
+    public static GeneralCoinBalancesFragment newInstance(Coin coin) {
+        GeneralCoinBalancesFragment generalCoinBalancesFragment = new GeneralCoinBalancesFragment();
 
         Bundle args = new Bundle();
         args.putString("coin",coin.toString());
-        balancesFragment.setArguments(args);
+        generalCoinBalancesFragment.setArguments(args);
 
-        return balancesFragment;
+        return generalCoinBalancesFragment;
     }
 
     //Cache for equivalent component BTS to EUR
@@ -1341,39 +1338,44 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         } else {
             SCWallDatabase db = new SCWallDatabase(getContext());
-            final GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
             List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
+            getBalanceItems().addBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount(),true);
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
                 public void balanceChange(Balance balance) {
                     if (account != null) {
-                        getBalanceItems().addOrUpdateBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount());
+                        getBalanceItems().addOrUpdateDetailedBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount(), balance.getLessConfirmed());
+                        updateTableView(false);
                     }
                 }
             });
+
             Log.i("test","account balance " + account.getBalance().get(0).getAmmount());
 
-            account.balanceChange();
+
+            //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
+            try {
+                AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
+
+                for(GeneralCoinAddress address: addresses){
+                    Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
+                    watcher.addAddress(address.getAddressString(account.getNetworkParam()));
+                }
+                watcher.connect();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            //Start the GetTransactionByAddress to get the transaction previously obtained by the server
             GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin, getContext());
             for(GeneralCoinAddress address: addresses){
                 getTransactionByAddress.addAddress(address);
             }
-
             getTransactionByAddress.start();
 
-            try {
-                AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
 
-            for(GeneralCoinAddress address: addresses){
-                Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
-                watcher.addAddress(address.getAddressString(account.getNetworkParam()));
-            }
-                watcher.connect();
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -1739,6 +1741,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         TextView textView2 = null;
         TextView symbolTextView;
         final TextView ammountTextView;
+        final TextView faitTextView;
         View lastChild = null;
         boolean theresNoChild = true;
 
@@ -1756,17 +1759,21 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
             symbolTextView = (TextView) customView.findViewById(R.id.symbol_child_one);
             ammountTextView = (TextView) customView.findViewById(R.id.amount_child_one);
+            faitTextView =  (TextView) customView.findViewById(R.id.fait_child_one);
 
             TextView rightSymbolTextView = (TextView) customView.findViewById(R.id.symbol_child_two);
             TextView rightAmmountTextView = (TextView) customView.findViewById(R.id.amount_child_two);
+            TextView rightFaitTextView = (TextView) customView.findViewById(R.id.fait_child_two);
             rightSymbolTextView.setText("");
             rightAmmountTextView.setText("");
+            rightFaitTextView.setText("");
 
             llBalances.addView(customView);
         } else {
             //In this point the right side is free, so we can use it
             symbolTextView = (TextView) lastChild.findViewById(R.id.symbol_child_two);
             ammountTextView = (TextView) lastChild.findViewById(R.id.amount_child_two);
+            faitTextView = (TextView) lastChild.findViewById(R.id.fait_child_two);
         }
 
         String finalSymbol = "";
@@ -1788,6 +1795,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         else if (assetsSymbols.isSmartCoinSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.2f", b));
         else ammountTextView.setText(String.format(locale, "%.4f", b));
+
+        //If there are confirmations needed, then print how many in the equivalent value text
+        if ((item.getConfirmations() != -1) && (item.getConfirmations() < this.coin.getConfirmationsNeeded())){
+            int percentageDone = (item.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+            int confirmationColor = 0;
+
+            if (percentageDone < 34){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+            } else if (percentageDone < 67){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+            } else {
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+            }
+
+            faitTextView.setTextColor(confirmationColor);
+            faitTextView.setText(item.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+
+        }
 
         //if it's not the initial load, then is a balance received, then we must show an animation and sound
         if (!initialLoad){
@@ -1985,8 +2010,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
             }
 
-            //Now, we update the fait (EquivalentComponent)
-            if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
+            if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < this.coin.getConfirmationsNeeded())){
+                int percentageDone = (newItem.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+                int confirmationColor = 0;
+
+                if (percentageDone < 34){
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+                } else if (percentageDone < 67){
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+                } else {
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+                }
+
+                faitTextView.setTextColor(confirmationColor);
+                faitTextView.setText(newItem.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+
+            } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
+                faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.blackColor));
+
                 try {
                     final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
                     double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
@@ -2701,8 +2742,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             List<GeneralTransaction> transactions = account.getTransactions();
 
             if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
-
+                Log.d(TAG,"updating "+this.coin.name()+" table view");
+                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+                cryptoCoinTableAdapter.addOrReplaceData(transactions.toArray(new GeneralTransaction[0]));
             } else {
+                Log.d(TAG, "resetting "+this.coin.name()+" table view");
                 cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), account, locale, transactions.toArray(new GeneralTransaction[0]));
                 cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
             }
