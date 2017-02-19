@@ -1152,6 +1152,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
         db.beginTransaction();
         int affected = db.update(table,contentValues,whereClause,whereArgs);
+        db.setTransactionSuccessful();
         db.endTransaction();
         return affected > 0;
     }

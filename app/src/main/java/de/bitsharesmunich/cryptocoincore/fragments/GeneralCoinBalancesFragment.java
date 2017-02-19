@@ -1341,7 +1341,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
             List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
-            getBalanceItems().addBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount(),true);
+            getBalanceItems().addBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(),true);
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
                 public void balanceChange(Balance balance) {
