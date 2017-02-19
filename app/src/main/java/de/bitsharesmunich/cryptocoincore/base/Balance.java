@@ -12,7 +12,7 @@ public class Balance {
     protected Date date;
 
     protected double unconfirmedAmount;
-    protected double confirmedAccomunt;
+    protected double confirmedAmount;
     protected int lessConfirmed;
 
     public Coin getType() {
@@ -32,7 +32,7 @@ public class Balance {
     }
 
     public double getAmmount() {
-        return unconfirmedAmount + confirmedAccomunt;
+        return unconfirmedAmount + confirmedAmount;
     }
 
     public double getUnconfirmedAmount() {
@@ -43,12 +43,12 @@ public class Balance {
         this.unconfirmedAmount = unconfirmedAmount;
     }
 
-    public double getConfirmedAccomunt() {
-        return confirmedAccomunt;
+    public double getConfirmedAmount() {
+        return confirmedAmount;
     }
 
-    public void setConfirmedAccomunt(double confirmedAccomunt) {
-        this.confirmedAccomunt = confirmedAccomunt;
+    public void setConfirmedAmount(double confirmedAmount) {
+        this.confirmedAmount = confirmedAmount;
     }
 
     public int getLessConfirmed() {

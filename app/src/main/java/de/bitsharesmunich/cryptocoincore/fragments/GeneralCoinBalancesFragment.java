@@ -1346,7 +1346,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 @Override
                 public void balanceChange(Balance balance) {
                     if (account != null) {
-                        getBalanceItems().addOrUpdateDetailedBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount(), balance.getLessConfirmed());
+                        getBalanceItems().addOrUpdateDetailedBalanceItem(coin.name(), "" + coin.getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
                         updateTableView(false);
                     }
                 }

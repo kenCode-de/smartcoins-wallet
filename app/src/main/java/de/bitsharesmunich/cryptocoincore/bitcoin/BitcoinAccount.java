@@ -74,7 +74,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         Balance balance = new Balance();
         balance.setType(BITCOIN);
         balance.setDate(lastDate);
-        balance.setConfirmedAccomunt(confirmedAmount);
+        balance.setConfirmedAmount(confirmedAmount);
         balance.setUnconfirmedAmount(uncofirmedAmount);
         List<Balance> balances = new ArrayList();
         balances.add(balance);
