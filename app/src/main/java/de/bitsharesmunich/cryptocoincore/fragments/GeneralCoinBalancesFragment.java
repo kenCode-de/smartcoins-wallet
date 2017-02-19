@@ -1088,39 +1088,42 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
         onClicked = false;
-        final String hide_donations_isChanged = "hide_donations_isChanged";
-        Boolean isHideDonationsChanged = false;
-        if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
-            if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
-                isHideDonationsChanged = true;
-                Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
+
+        if (this.coin == Coin.BITSHARE) {
+            final String hide_donations_isChanged = "hide_donations_isChanged";
+            Boolean isHideDonationsChanged = false;
+            if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
+                if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
+                    isHideDonationsChanged = true;
+                    Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
+                }
             }
-        }
-        Boolean isCheckedTimeZone = false;
-        isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
-        Boolean accountNameChange = checkIfAccountNameChange();
+            Boolean isCheckedTimeZone = false;
+            isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
+            Boolean accountNameChange = checkIfAccountNameChange();
 
-        String smartcoinSymbol = mSmartcoin.getSymbol();
-        if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
-            llBalances.removeAllViews();
+            String smartcoinSymbol = mSmartcoin.getSymbol();
+            if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
+                llBalances.removeAllViews();
 
-        if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
-            if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
-                loadBasic(true, accountNameChange, true);
+            if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
+                if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
+                    loadBasic(true, accountNameChange, true);
+                } else {
+                    loadBasic(true, accountNameChange, false);
+                }
+            }
+
+            if (!accountId.equals("")) {
+                UserAccount me = new UserAccount(accountId);
+                start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+                stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+                Log.i(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();
             } else {
-                loadBasic(true, accountNameChange, false);
+                Log.d(TAG, "account id is empty");
             }
-        }
-
-        if (!accountId.equals("")) {
-            UserAccount me = new UserAccount(accountId);
-            start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
-            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-            Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-            transferHistoryThread.start();
-        } else {
-            Log.d(TAG, "account id is empty");
         }
 
         // Loading transfers from database
@@ -1341,13 +1344,17 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
             List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
-            getBalanceItems().addBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(),true);
+            getBalanceItems().addBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), true);
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
                 public void balanceChange(Balance balance) {
                     if (account != null) {
                         getBalanceItems().addOrUpdateDetailedBalanceItem(coin.name(), "" + coin.getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
-                        updateTableView(false);
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                updateTableView(false);
+                            }
+                        });
                     }
                 }
             });
@@ -2422,76 +2429,87 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     String transactionsLoadedAccountName = "";
 
     void loadViews(Boolean onResume, Boolean accountNameChanged, boolean faitCurrencyChanged) {
+        if (this.coin == Coin.BITSHARE) {
+            if (firstTimeLoad) {
 
-        if (firstTimeLoad) {
+                //            tableViewparent.setVisibility(View.GONE);
+                //            myTransactions = new ArrayList<>();
+                //TODO: Implement this
+                //            updateSortTableView(tableView, myTransactions);
 
-//            tableViewparent.setVisibility(View.GONE);
-//            myTransactions = new ArrayList<>();
-            //TODO: Implement this
-//            updateSortTableView(tableView, myTransactions);
+                //TODO: Implement this
+                //            tableView.addDataClickListener(new TableViewClickListener(getContext()));
+                //            progressBar.setVisibility(View.VISIBLE);
 
-            //TODO: Implement this
-//            tableView.addDataClickListener(new TableViewClickListener(getContext()));
-//            progressBar.setVisibility(View.VISIBLE);
+                firstTimeLoad = false;
+            }
 
-            firstTimeLoad = false;
-        }
+            whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+            if (myAssetsActivity == null) {
+                myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
+                myAssetsActivity.registerDelegate();
+            }
 
-        if (myAssetsActivity == null) {
-            myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
-            myAssetsActivity.registerDelegate();
-        }
-
-        // get transactions from sharedPref
+            // get transactions from sharedPref
 
 
-//        myTransactions = getTransactions(to);
+            //        myTransactions = getTransactions(to);
 
-        if (!onResume || accountNameChanged || faitCurrencyChanged) {
-//            progressBar1.setVisibility(View.VISIBLE);
-            myAssetsActivity.loadBalances(to);
+            if (!onResume || accountNameChanged || faitCurrencyChanged) {
+                //            progressBar1.setVisibility(View.VISIBLE);
+                myAssetsActivity.loadBalances(to);
 
-//            number_of_transactions_loaded = 0;
-//            number_of_transactions_to_load = 20;
-//            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+                //            number_of_transactions_loaded = 0;
+                //            number_of_transactions_to_load = 20;
+                //            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+            }
+        } else {
+            if (firstTimeLoad) {
+                firstTimeLoad = false;
+            }
+
+            whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
         }
     }
 
     void loadBasic(boolean onResume, boolean accountNameChanged, boolean faitCurrencyChanged) {
-        Log.d(TAG,"loadBasic");
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (accountDetails.size() == 1) {
-            accountDetailsId = 0;
-            accountDetails.get(0).isSelected = true;
-            to = accountDetails.get(0).account_name;
-            accountId = accountDetails.get(0).account_id;
-            wifkey = accountDetails.get(0).wif_key;
-            showHideLifeTime(accountDetails.get(0).isLifeTime);
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        } else {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    accountDetailsId = i;
-                    to = accountDetails.get(i).account_name;
-                    accountId = accountDetails.get(i).account_id;
-                    wifkey = accountDetails.get(i).wif_key;
-                    showHideLifeTime(accountDetails.get(i).isLifeTime);
-                    break;
+        if (this.coin == Coin.BITSHARE) {
+            Log.d(TAG, "loadBasic");
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            if (accountDetails.size() == 1) {
+                accountDetailsId = 0;
+                accountDetails.get(0).isSelected = true;
+                to = accountDetails.get(0).account_name;
+                accountId = accountDetails.get(0).account_id;
+                wifkey = accountDetails.get(0).wif_key;
+                showHideLifeTime(accountDetails.get(0).isLifeTime);
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            } else {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetailsId = i;
+                        to = accountDetails.get(i).account_name;
+                        accountId = accountDetails.get(i).account_id;
+                        wifkey = accountDetails.get(i).wif_key;
+                        showHideLifeTime(accountDetails.get(i).isLifeTime);
+                        break;
+                    }
                 }
             }
-        }
-        Application.monitorAccountId = accountId;
-        tvAccountName.setText(to);
-        isLifeTime(accountId, "15");
+            Application.monitorAccountId = accountId;
+            tvAccountName.setText(to);
+            isLifeTime(accountId, "15");
 
-        if (onResume && accountNameChanged) {
-            loadBalancesFromSharedPref();
-//            TransactionUpdateOnStartUp(to);
-        }
+            if (onResume && accountNameChanged) {
+                loadBalancesFromSharedPref();
+                //            TransactionUpdateOnStartUp(to);
+            }
 
-        loadViews(onResume, accountNameChanged, faitCurrencyChanged);
+            loadViews(onResume, accountNameChanged, faitCurrencyChanged);
+        } else {
+            loadViews(onResume, false, false);
+        }
     }
 
     Boolean checkIfAccountNameChange() {
