@@ -49,22 +49,21 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
 
     public void addOrReplaceData(GeneralTransaction[] data){
         List<GeneralTransaction> oldData = this.getData();
-        boolean added;
+        GeneralTransaction oldTransactionFound;
 
         for (GeneralTransaction newTransaction : data){
-            added = false;
+            oldTransactionFound = null;
 
             for (GeneralTransaction oldTransaction : oldData){
                 if (oldTransaction.equals(newTransaction)){
-                    oldData.set(oldData.indexOf(oldTransaction), newTransaction);
-                    added = true;
-                } else if (oldTransaction.getDate().compareTo(newTransaction.getDate()) < 0){
-                    oldData.add(oldData.indexOf(oldTransaction), newTransaction);
-                    added = true;
+                    oldTransactionFound = oldTransaction;
+                    break;
                 }
             }
 
-            if (!added){
+            if (oldTransactionFound != null) {
+                oldData.set(oldData.indexOf(oldTransactionFound), newTransaction);
+            } else {
                 oldData.add(newTransaction);
             }
         }
