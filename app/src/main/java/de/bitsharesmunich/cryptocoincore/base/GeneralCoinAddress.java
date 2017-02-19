@@ -121,16 +121,16 @@ public class GeneralCoinAddress {
         this.outputTransaction = outputTransaction;
     }
 
-    public long getUncofirmedBalance() {
+    public long getUnconfirmedBalance() {
         long answer = 0;
         for (GIOTx input : inputTransaction) {
-            if (input.getTransaction().getConfirm() < 6) {
+            if (input.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
         for (GIOTx output : outputTransaction) {
-            if (output.getTransaction().getConfirm() < 6) {
+            if (output.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
         }
@@ -138,16 +138,16 @@ public class GeneralCoinAddress {
         return answer;
     }
 
-    public long getCofirmedBalance() {
+    public long getConfirmedBalance() {
         long answer = 0;
         for (GIOTx input : inputTransaction) {
-            if (input.getTransaction().getConfirm() >= 6) {
+            if (input.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
         for (GIOTx output : outputTransaction) {
-            if (output.getTransaction().getConfirm() >= 6) {
+            if (output.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
         }

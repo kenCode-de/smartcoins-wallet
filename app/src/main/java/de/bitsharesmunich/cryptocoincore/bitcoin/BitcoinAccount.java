@@ -4,12 +4,10 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
@@ -50,8 +48,8 @@ public class BitcoinAccount extends GeneralCoinAccount {
         int lessConfirmed = -1;
         Date lastDate = null;
         for (GeneralCoinAddress key : externalKeys.values()) {
-            uncofirmedAmount = key.getUncofirmedBalance();
-            confirmedAmount = key.getCofirmedBalance();
+            uncofirmedAmount += key.getUnconfirmedBalance();
+            confirmedAmount += key.getConfirmedBalance();
             int keyLessConf = key.getLessConfirmed();
             if(keyLessConf != -1 && (lessConfirmed== -1 || keyLessConf< lessConfirmed)){
                 lessConfirmed = keyLessConf;
@@ -62,11 +60,14 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
 
         for (GeneralCoinAddress key : changeKeys.values()) {
-            uncofirmedAmount = key.getUncofirmedBalance();
-            confirmedAmount = key.getCofirmedBalance();
+            uncofirmedAmount += key.getUnconfirmedBalance();
+            confirmedAmount += key.getConfirmedBalance();
             int keyLessConf = key.getLessConfirmed();
             if(keyLessConf != -1 && (lessConfirmed== -1 || keyLessConf< lessConfirmed)){
                 lessConfirmed = keyLessConf;
+            }
+            if(lastDate == null || (key.getLastDate()!= null && lastDate.before(key.getLastDate()))){
+                lastDate = key.getLastDate();
             }
         }
 
