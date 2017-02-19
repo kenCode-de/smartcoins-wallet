@@ -2026,7 +2026,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 faitTextView.setText(newItem.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
 
             } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
-                faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.blackColor));
+                faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.receive_amount));
 
                 try {
                     final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
