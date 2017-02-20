@@ -1236,7 +1236,7 @@ public class SCWallDatabase {
                 long amount = cursor.getLong(3);
                 int index = cursor.getInt(4);
                 String scriptHex = cursor.getString(5);
-                gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString,index,scriptHex);
+                gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,false,addressString,index,scriptHex);
                 if(address != null){
                     address.getInputTransaction().add(gtox);
                 }
