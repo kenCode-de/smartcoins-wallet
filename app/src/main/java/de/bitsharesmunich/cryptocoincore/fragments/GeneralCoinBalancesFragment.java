@@ -1784,7 +1784,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
 
         String finalSymbol = "";
-        if (SMARTCOINS.contains(item.getSymbol())) {
+        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol()))) {
             finalSymbol = "bit" + item.getSymbol();
         } else {
             finalSymbol = item.getSymbol();
@@ -1795,7 +1795,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
         float b = powerInFloat(item.getPrecision(), item.getAmmount());
-        if (SMARTCOINS.contains(item.getSymbol().replace("bit", ""))) {
+        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
         } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.4f", b));
@@ -1893,7 +1893,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
             String finalSymbol = "";
-            if (SMARTCOINS.contains(newItem.getSymbol())) {
+            if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
                 finalSymbol = "bit" + newItem.getSymbol();
             } else {
                 finalSymbol = newItem.getSymbol();
