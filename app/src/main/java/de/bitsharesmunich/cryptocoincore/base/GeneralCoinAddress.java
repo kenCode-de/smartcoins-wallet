@@ -223,5 +223,29 @@ public class GeneralCoinAddress {
         return result;
     }
 
+    public boolean updateTransaction(GeneralTransaction transaction){
+        for(GIOTx gitx : inputTransaction){
+            if(gitx.getTransaction().equals(transaction)){
+                gitx.getTransaction().setConfirm(transaction.getConfirm());
+                gitx.getTransaction().setBlock(transaction.getBlock());
+                gitx.getTransaction().setBlockHeight(transaction.getBlockHeight());
+                gitx.getTransaction().setDate(transaction.getDate());
+                return true;
+            }
+        }
+
+        for(GIOTx gotx : outputTransaction){
+            if(gotx.getTransaction().equals(transaction)){
+                gotx.getTransaction().setConfirm(transaction.getConfirm());
+                gotx.getTransaction().setBlock(transaction.getBlock());
+                gotx.getTransaction().setBlockHeight(transaction.getBlockHeight());
+                gotx.getTransaction().setDate(transaction.getDate());
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
+

@@ -234,4 +234,18 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         result = 31 * result + (accountKey != null ? accountKey.hashCode() : 0);
         return result;
     }
+
+    public void updateTransaction(GeneralTransaction transaction){
+        for (GeneralCoinAddress address : externalKeys.values()) {
+            if(address.updateTransaction(transaction)){
+                return;
+            }
+        }
+
+        for (GeneralCoinAddress address : changeKeys.values()) {
+            if(address.updateTransaction(transaction)){
+                return;
+            }
+        }
+    }
 }
