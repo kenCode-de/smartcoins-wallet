@@ -107,6 +107,7 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -866,6 +867,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         progressDialog = new ProgressDialog(getActivity());
 
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
+        transfersView.addDataClickListener(new TableViewClickListener(getContext()));
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();

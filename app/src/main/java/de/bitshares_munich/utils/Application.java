@@ -107,10 +107,13 @@ public class Application extends android.app.Application implements de.bitshares
 
     public static String urlsSocketConnection[] =
             {
+// i think we need to set the 7 regions here via the user country selection. see job doc
+// example: public_nodes_asia, public_nodes_africa, public_nodes_europe, etc
+            
 //                    "ws://api.devling.xyz:8088",
-                    "wss://de.blockpay.ch:8089",                // German node
-                    "wss://fr.blockpay.ch:8089",               // France node
-                    "wss://bitshares.openledger.info/ws",      // Openledger node
+                      "wss://de.blockpay.ch/node",               // German node
+                      "wss://fr.blockpay.ch/node",               // France node
+                      "wss://bitshares.openledger.info/ws",      // Openledger node
 
 //                    "wss://bit.btsabc.org/ws",
 //                    "wss://bts.transwiser.com/ws",
@@ -118,9 +121,9 @@ public class Application extends android.app.Application implements de.bitshares
 //                    "wss://okbtc.org:8089/ws",
 //                    "wss://ratebts.com:8089",
 //                    "wss://webber.tech:8089/ws",
-                    //"wss://bitshares.dacplay.org:8089/ws"
-                    //,"https://dele-puppy.com/ws"
-                    //,"https://valen-tin.fr:8090"
+//                    "wss://bitshares.dacplay.org:8089/ws",
+//                    "https://dele-puppy.com/ws",
+//                    "https://valen-tin.fr:8090"
             };
 
     public static String monitorAccountId;
