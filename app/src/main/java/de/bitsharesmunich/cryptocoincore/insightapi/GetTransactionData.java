@@ -82,7 +82,9 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);
-                        address.getOutputTransaction().add(input);
+                        if (!address.hasOutputTransaction(input, account.getNetworkParam())) {
+                            address.getOutputTransaction().add(input);
+                        }
                     }
                 }
                 transaction.getTxInputs().add(input);
@@ -101,7 +103,9 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         output.setAddress(address);
-                        address.getInputTransaction().add(output);
+                        if (!address.hasInputTransaction(output, account.getNetworkParam())) {
+                            address.getInputTransaction().add(output);
+                        }
                     }
                 }
                 transaction.getTxOutputs().add(output);

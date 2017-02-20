@@ -33,13 +33,11 @@ public class AccountActivityWatcher {
         @Override
         public void call(Object... os) {
             try {
-                System.out.println("accountActivityWatcher New addr transaction received: " + ((JSONObject) os[0]).toString());
                 String txid = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
                 new GetTransactionData(txid, account, context).start();
             } catch (JSONException ex) {
                 Logger.getLogger(AccountActivityWatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     };
 
@@ -59,6 +57,7 @@ public class AccountActivityWatcher {
         @Override
         public void call(Object... os) {
             System.out.println("Disconnected to accountActivityWatcher");
+            socket.connect();
         }
     };
 
