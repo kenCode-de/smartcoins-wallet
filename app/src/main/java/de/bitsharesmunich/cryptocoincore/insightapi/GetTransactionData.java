@@ -119,6 +119,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 transaction.setId(idTransaction);
                 db.updateGeneralTransaction(transaction);
             }
+            account.updateTransaction(transaction);
             account.balanceChange();
             if (transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 new GetTransactionData(txid, account, context, true).start();
