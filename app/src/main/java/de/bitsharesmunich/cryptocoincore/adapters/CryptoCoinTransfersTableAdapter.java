@@ -179,7 +179,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
 
 //        String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language), Constants.DEFAULT_LANGUAGE_CODE);
 //        Locale locale = new Locale(language);
-        String symbol = historicalTransfer.getType().name();
+        String symbol = historicalTransfer.getType().getLabel();
         //if(transferAmount.getAsset() != null){
         //    symbol = transferAmount.getAsset().getSymbol();
         //}
