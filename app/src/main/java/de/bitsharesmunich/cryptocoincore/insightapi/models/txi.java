@@ -11,7 +11,7 @@ public class Txi {
     public Vin[] vin;
     public Vout[] vout;
     public String blockhash;
-    public long blockheight;
+    public int blockheight;
     public int confirmations;
     public long time;
     public long blocktime;

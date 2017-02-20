@@ -113,7 +113,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_SCRIPT_HEX = "script_hex";
-        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_INDEX = "tx_index";
     }
 
     public static class Outputs implements BaseColumns {
@@ -125,7 +125,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
         public static final String COLUMN_SCRIPT_HEX = "script_hex";
-        public static final String COLUMN_INDEX = "index";
+        public static final String COLUMN_INDEX = "tx_index";
     }
 
     public static class GeneralTransaction implements BaseColumns {
