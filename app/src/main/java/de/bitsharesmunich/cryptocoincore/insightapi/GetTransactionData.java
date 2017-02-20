@@ -29,13 +29,11 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     private Context context;
     private boolean mustWait = false;
 
-
-
-    public GetTransactionData(String txid, GeneralCoinAccount account,Context context) {
-        this(txid,account,context,false);
+    public GetTransactionData(String txid, GeneralCoinAccount account, Context context) {
+        this(txid, account, context, false);
     }
 
-    public GetTransactionData(String txid, GeneralCoinAccount account,Context context, boolean mustWait) {
+    public GetTransactionData(String txid, GeneralCoinAccount account, Context context, boolean mustWait) {
         String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
         this.account = account;
         this.txid = txid;
@@ -47,7 +45,6 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     @Override
     public void run() {
         if (mustWait) {
-            Log.i("test"," waiting for confirmation from " + txid);
             try {
                 Thread.sleep(InsightApiConstants.WAIT_TIME);
             } catch (InterruptedException ignored) {
@@ -60,16 +57,17 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
 
     @Override
     public void onResponse(Call<Txi> call, Response<Txi> response) {
-        if(response.isSuccessful()){
+        if (response.isSuccessful()) {
             Txi txi = response.body();
 
             GeneralTransaction transaction = new GeneralTransaction();
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
-            transaction.setDate(new Date(txi.time*1000));
-            transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
+            transaction.setDate(new Date(txi.time * 1000));
+            transaction.setFee((long) (txi.fee * InsightApiConstants.amountMultiplier));
             transaction.setConfirm(txi.confirmations);
             transaction.setType(account.getCoin());
+            transaction.setBlockHeight(txi.blockheight);
 
             for (Vin vin : txi.vin) {
                 GIOTx input = new GIOTx();
@@ -79,6 +77,8 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 input.setType(account.getCoin());
                 String addr = vin.addr;
                 input.setAddressString(addr);
+                input.setIndex(vin.n);
+                input.setScriptHex(vin.scriptSig.hex);
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);
@@ -88,14 +88,16 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 transaction.getTxInputs().add(input);
             }
 
-            for (Vout vout : txi.vout){
+            for (Vout vout : txi.vout) {
                 GIOTx output = new GIOTx();
-                output.setAmount((long)(vout.value*InsightApiConstants.amountMultiplier));
+                output.setAmount((long) (vout.value * InsightApiConstants.amountMultiplier));
                 output.setTransaction(transaction);
                 output.setOut(false);
                 output.setType(account.getCoin());
                 String addr = vout.scriptPubKey.addresses[0];
                 output.setAddressString(addr);
+                output.setIndex(vout.n);
+                output.setScriptHex(vout.scriptPubKey.hex);
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         output.setAddress(address);
@@ -106,18 +108,16 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             }
 
             SCWallDatabase db = new SCWallDatabase(this.context);
-            String idTransaction =db.getGeneralTransactionId(transaction);
-            if(idTransaction == null) {
+            String idTransaction = db.getGeneralTransactionId(transaction);
+            if (idTransaction == null) {
                 db.putGeneralTransaction(transaction);
-            }else{
+            } else {
                 transaction.setId(idTransaction);
                 db.updateGeneralTransaction(transaction);
             }
             account.balanceChange();
-            if (transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
+            if (transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 new GetTransactionData(txid, account, context, true).start();
-            }else{
-                Log.i("test","Transaction " + txid + " confirmed");
             }
         }
     }

@@ -112,6 +112,8 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
+        public static final String COLUMN_SCRIPT_HEX = "script_hex";
+        public static final String COLUMN_INDEX = "index";
     }
 
     public static class Outputs implements BaseColumns {
@@ -122,6 +124,8 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
+        public static final String COLUMN_SCRIPT_HEX = "script_hex";
+        public static final String COLUMN_INDEX = "index";
     }
 
     public static class GeneralTransaction implements BaseColumns {
@@ -130,6 +134,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_TXID = "txid";
         public static final String COLUMN_COIN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_BLOCK = "block"; //the number of the block where is include
+        public static final String COLUMN_BLOCK_HEIGHT = "block_height";
         public static final String COLUMN_DATE = "date"; //receive date
         public static final String COLUMN_FEE = "fee"; //the amount of the comission
         public static final String COLUMN_CONFIRMS = "confirm"; //the last confirm reader, this only matters when is lower than 6

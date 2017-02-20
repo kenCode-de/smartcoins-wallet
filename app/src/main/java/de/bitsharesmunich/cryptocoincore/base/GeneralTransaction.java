@@ -17,6 +17,7 @@ public class GeneralTransaction {
     private long fee;
     private int confirm;
     private Date date;
+    private int blockHeight;
 
     private List<GIOTx> txInputs = new ArrayList();
     private List<GIOTx> txOutputs = new ArrayList();
@@ -24,7 +25,7 @@ public class GeneralTransaction {
     public GeneralTransaction() {
     }
 
-    public GeneralTransaction(String id, String txid, Coin type, long block, long fee, int confirm, Date date) {
+    public GeneralTransaction(String id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight) {
         this.id = id;
         this.txid = txid;
         this.type = type;
@@ -32,6 +33,7 @@ public class GeneralTransaction {
         this.fee = fee;
         this.confirm = confirm;
         this.date = date;
+        this.blockHeight = blockHeight;
     }
 
     public String getId() {
@@ -84,6 +86,14 @@ public class GeneralTransaction {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public int getBlockHeight() {
+        return blockHeight;
+    }
+
+    public void setBlockHeight(int blockHeight) {
+        this.blockHeight = blockHeight;
     }
 
     public List<GIOTx> getTxInputs() {

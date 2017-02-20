@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -97,15 +97,18 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT + TYPE_INTEGER + ", " +
             " CONSTRAINT generalTransactionContraint UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + "))";
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Inputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_INDEX + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_AMOUNT + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX + TYPE_TEXT + ", " +
             " FOREIGN KEY(" + SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + ") REFERENCES " + SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + ")," +
             " FOREIGN KEY(" + SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + ") REFERENCES " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + ")," +
             " CONSTRAINT genInputsContraint UNIQUE (" + SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE + "," + SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + "," + SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + ") " +
@@ -114,10 +117,12 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_OUTPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Outputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Outputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Outputs.COLUMN_INDEX + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_AMOUNT + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.Outputs.COLUMN_SCRIPT_HEX + TYPE_TEXT + ", " +
             " FOREIGN KEY(" + SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + ") REFERENCES " + SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + ")," +
             " FOREIGN KEY(" + SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + ") REFERENCES " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + ")," +
             " CONSTRAINT genOutputsContraint UNIQUE (" + SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE + "," + SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING + "," + SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + ") " +
@@ -182,7 +187,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_GENERAL_ADDRESS_TABLE);
         }
 
-        if (oldVersion < 8) {
+        if (oldVersion < 9) {
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Inputs.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Outputs.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME);

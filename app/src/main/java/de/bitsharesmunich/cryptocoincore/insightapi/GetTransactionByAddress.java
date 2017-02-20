@@ -68,6 +68,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
                 transaction.setConfirm(txi.confirmations);
                 transaction.setType(coin);
+                transaction.setBlockHeight(txi.blockheight);
+
                 for (Vin vin : txi.vin) {
                     GIOTx input = new GIOTx();
                     input.setAmount(vin.valueSat);
@@ -76,6 +78,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     input.setType(coin);
                     String addr = vin.addr;
                     input.setAddressString(addr);
+                    input.setIndex(vin.n);
+                    input.setScriptHex(vin.scriptSig.hex);
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
                             input.setAddress(address);
@@ -98,6 +102,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     output.setType(coin);
                     String addr = vout.scriptPubKey.addresses[0];
                     output.setAddressString(addr);
+                    output.setIndex(vout.n);
+                    output.setScriptHex(vout.scriptPubKey.hex);
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
                             output.setAddress(address);
@@ -120,7 +126,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     transaction.setId(idTransaction);
                     db.updateGeneralTransaction(transaction);
                 }
-                if (tempAccount != null && transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
+                if (tempAccount != null && transaction.getConfirm() < coin.getConfirmationsNeeded()) {
                     new GetTransactionData(transaction.getTxid(), tempAccount, context, true).start();
                 }
             }
