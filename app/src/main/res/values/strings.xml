@@ -38,6 +38,7 @@
     <string name="please_enter_old_6_digit_pin">Please enter old PIN</string>
     <string name="please_enter_6_digit_pin">Please enter PIN</string>
     <string name="please_enter_6_digit_pin_confirm">Please enter PIN confirmation</string>
+    <string name="missing_existing_password">Please enter the password used to encrypt this backup file</string>
     <string name="pin_number_request">Please enter the pin number used to encode this backup file</string>
     <string name="pin_number_warning">The pin number must be at least 6 digits</string>
     <string name="old_pin_number_warning">The old pin number must be at least 6 digits</string>
@@ -443,4 +444,8 @@
 
     <!-- PDF export -->
     <string name="progress_pdf_generation">Generating PDF file</string>
+
+    <!-- Import Backup activity -->
+    <string name="txt_existing_password">Current backup password</string>
+    <string name="txt_new_pin">New PIN (6+ digits)</string>
 </resources>
