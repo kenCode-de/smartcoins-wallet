@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GeneralTransaction {
 
-    private long id;
+    private long id = -1;
     private String txid;
     private Coin type;
     private long block;

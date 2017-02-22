@@ -5,7 +5,7 @@ package de.bitsharesmunich.cryptocoincore.base;
  */
 
 public class GIOTx {
-    private long id;
+    private long id = -1;
     private Coin type;
     private int index;
     private GeneralCoinAddress address;

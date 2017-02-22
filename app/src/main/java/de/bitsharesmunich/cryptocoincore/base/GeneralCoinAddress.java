@@ -19,7 +19,7 @@ import de.bitsharesmunich.graphenej.Util;
 
 public class GeneralCoinAddress {
 
-    private long id;
+    private long id = -1;
     private final GeneralCoinAccount account;
     private final boolean isChange;
     private final int index;

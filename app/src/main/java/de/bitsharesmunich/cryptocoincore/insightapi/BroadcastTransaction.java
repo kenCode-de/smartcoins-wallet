@@ -33,11 +33,13 @@ public class BroadcastTransaction extends Thread implements Callback<Txi> {
     @Override
     public void onResponse(Call<Txi> call, Response<Txi> response) {
         if (response.isSuccessful()) {
+            System.out.println("SENDTEST: sendSuccesfull " + response.body().txid );
             //TODO invalidated send
             //TODO call getTransactionData
             GetTransactionData trData = new GetTransactionData(response.body().txid,account,context);
             trData.start();
         } else {
+            System.out.println("SENDTEST: not succesful " + response.message());
             //TODO invalid transaction
         }
     }
@@ -45,6 +47,7 @@ public class BroadcastTransaction extends Thread implements Callback<Txi> {
     @Override
     public void onFailure(Call<Txi> call, Throwable t) {
         //TODO invalid transaction
+        System.out.println("SENDTEST: sendError " + t.getMessage() );
     }
 
     @Override
