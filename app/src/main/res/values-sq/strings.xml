@@ -1,240 +1,482 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources><string name="license">leje</string>
+ <string name="pin_number_warning">Numri pin duhet të jetë të paktën 6 shifra</string>
+ <string name="old_pin_number_warning">Numri i vjetër pin duhet të jetë të paktën 6 shifra</string>
+
 <string name="send_capital">dergon kapital</string>
+
 <string name="account_create_register_or_import"> krijo/regjistro nje llogari ose importo</string>
+
 <string name="txt_account_name"> emri i llogarise</string>
+
 <string name="time_stamp"> periudhe</string>
+
 <string name="email_pdf">email pdf</string>
+
 <string name="account">llogari</string>
+
 <string name="friendly_name">emer miqesor</string>
+
 <string name="notes">shenime</string>
+
 <string name="note">shenim</string>
+
 <string name="payment_received">pagese e marre</string>
+
     <string name="bts_will_be_deducted">BTS do të zbriten nga</string>
+
     <string name="import_brainkey">importo  celesin</string>
+
 <string name="import_backup_old">importo backup</string>
+
 <string name="choose_backup">zgjidh backup</string>
+
 <string name="choose_file">zgjidh skedarin</string>
+
 <string name="no_file_chosen">asnje skedar i zgjedhur</string>
+
 <string name="account_label"> etikete e llogarise</string>
+
 <string name="loading_msg"> prit nje moment , po procesojme kerkesen tuaj</string>
-<string name="txt_6_digits_pin"> zgjidh nje PIN me 6 numra</string>
-<string name="txt_6_digits_pin_confirm"> konfermo Pin me 6 numra</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ shifra)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN konfirmuar</string>
+ 
 <string name="create">krijo</string>
+
     <string name="unable_to_import_account_from_bin_file">deshtim i imPotimit te llogarise nga skedari BIN</string>
+
     <string name="importing_keys_from_bin_file">IMPORTIMI I CELESAVE NGA SKEDARI BIN</string>
+
     <string name="import_backup">importo skedarin backup .bin</string>
+
     <string name="is_already_added">eshte tashme e shtuar</string>
+
     <string name="in_valid_email">email nuk eshte i sakte</string>
+
     <string name="select"> zgjidh</string>
+
     <string name="are_you_sure">je i sigurt?</string>
+
     <string name="please_make_sure_your_pin">ju lutem verifikoni qe pin eshte i sakte</string>
+
     <string name="please_make_sure_your_pin_file">ju lutem verifikoni qe pin eshte i sakte</string>
+
     <string name="existing_account">adrese eksistuese</string>
+
 <string name="agreement">marreveshje</string>
+
 <string name="cancel_and_exit">fshije dhe dil</string>
+
 <string name="i_agree"> jam dakort</string>
+
 <string name="kindly_create_account">ju lutem te krijoni nje llogari</string>
-<string name="please_enter_old_6_digit_pin">ju lutem vendosni pinin e vjeter me 6 numra</string>
-<string name="please_enter_6_digit_pin">ju lutem vendonsi pinin me 6 numra</string>
-<string name="please_enter_6_digit_pin_confirm">ju lutem vendosni pinin e konfermes me 6 numra</string>
+
+ <string name="please_enter_old_6_digit_pin">Ju lutemi shkruani PIN-in e vjetër</string>
+ 
+ <string name="please_enter_6_digit_pin">Ju lutemi shkruani kodin PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Ju lutemi shkruani PIN konfirmimin</string>
+ 
 <string name="mismatch_pin">pini eshte i gabuar ju lutem riprovoni</string>
+
 <string name="txt_brain_key"> celesi</string>
+
 <string name="txt_brain_key_info"> celesi eshte i rendesishem, bej backupin e celesit. Nese mundesh stampoje ose shruaje dhe vendose ne nje vend te sigurt. Kushdo qe ka hyrje ne celesin tuaj do te kete te drejte te hyje ne fondet e portafolit tuaj</string>
+
 <string name="create_wallet">krijo portafolin</string>
+
 <!--<string name="cancel"> fshij</string>-->
+
 <string name="save">shpeto</string>
+
 <string name="next">ne vazhdim</string>
+
 <string name="please_enter_brainkey">ju lutem vendosni celesin tuaj</string>
+
 <string name="please_enter_correct_brainkey">ju lutem vendosni celesin e sakte</string>
+
 <string name="balances">buxhet/ekuiliber</string>
+
 <string name="contacts">kontrata</string>
+
 <string name="receive_uppercase">merr germe e madhe</string>
+
 <string name="send_uppercase">dergo germe e vogel</string>
+
 <string name="transactions">transaksioni</string>
+
 <string name="title_activity_setting"> titulli i posizionit te aktivitetit</string>
+
 <string name="backup_asset"> backupi i prones</string>
+
 <string name="taxable_country">vendi qe eshte i tatueshem</string>
+
 <string name="date_time"> data dhe ora</string>
+
 <string name="check_for_updates">kontrollo per axhornimet/fillim</string>
+
 <string name="automatically_install">instalo automatikisht</string>
+
 <string name="require_pin">kerko pinin</string>
+
 <string name="close_bitshare">mbyll automatikisht portofolin bitshares pas tre minutash qe nuk e perdor</string>
+
 <string name="always_donate">dergo gjithnje 2 BTS per mbeshtetjen e zhvilluesit te BitShares Monako di Baviera(Monako di Baviera bitshares)</string>
+
 <string name="hide_donations">fsheh donacionet</string>
+
 <string name="backup">.bin BACKUP</string>
+
 <string name="checkbox_donate_old">dergo gjithnje 2 BTS per mbeshtetjen e zhvilluesit te BitShares Monako di Baviera</string>
+
 <string name="backup_brainkey">Backup del BRAINKEY</string>
+
 <string name="imported_created_accounts">importo llogarit e krijuara</string>
+
 <string name="register_new_account">regjistro nje llogari te re</string>
+
 <string name="secure_pin">vije ne sigures pinin</string>
+
 <string name="export">esporto</string>
+
 <string name="show_more">trego me shume</string>
+
 <string name="share_text">sapo gjeta kete portafol te rendesishem smartcoins qe te lejon te dergosh e te marresh Smartcoin ...controllo, pershendetje</string>
+
 <string name="share_info">fto nje ose me shume miq tuajt per te provuar portafolin smartcoins ..adresat e postes elektronike nuk do te shpetohen e reservohen ndaj intimiteti i tyre do te ruhet.</string>
+
 <string name="share_subject">mbreselenese</string>
+
 <string name="share_heading">ndajeni me nje mik</string>
+
 <string name="share_btn_text">hap aplikazioni posta elektronike</string>
+
 <string name="action_settings">parametrat</string>
+
     <string name="checkbox_donate">dergo gjithnje 2 BTS per mbeshtetjen e zhvilluesit te BitShares Monako di Baviera</string>
+
 <string name="txt_validating_account">mirato llogarin ...</string>
+
 <string name="validating_account">mirato llogarin ...</string>
+
 <string name="account_name_should_be_longer">emri i llogarise duhet te jete me i gjate</string>
+
 <string name="account_name_already_exist">ermi i llogaris tashme eksiston</string>
+
 <string name="account_name_not_exist">emri i llogarise nuk eksiston</string>
+
 <string name="add_contact">shtoni kontakt</string>
+
 <string name="edit_contact">modifico kontaktin</string>
+
 <string name="empty_list">Lista e zbrazėt</string>
+
 <string name="account_name_validate">emri i llogarise esht i sakte</string>
+
 <string name="txt_no_internet_connection">nuk ka lidhje interneti</string>
+
 <string name="unable_to_create_account_from_brainkey">e pamundur te krijosh nje llogari nga celesi</string>
+
 <string name="importing_your_wallet">importim nga portafolio...</string>
+
 <string name="str_trading_pair_not_exist">trading pair nuk eksiston</string>
+
 <string name="unable_to_create_qr_code">e pamundur te krijohet kodi QR</string>
+
 <string name="price">cmimi</string>
+
 <string name="currency">monedhe</string>
+
 <string name="please_enter_amount">ju lutem vendosni vleren e shumes</string>
+
 <string name="amount_should_be_greater_than_zero">vlera duhet te jete me shume se zero</string>
+
 <string name="no_amount_requested">asnje shume e kerkuar</string>
+
 <string name="to_capital"> te </string>
+
 <string name="from_capital">nga </string>
+
 <string name="memo_capital">kujtese</string>
+
 <string name="empty_file_created">nje file bosh eshte krijuar</string>
+
 <string name="date">Data</string>
+
 <string name="all">te gjitha</string>
+
 <string name="to_from">A /da </string>
+
 <string name="amount">sasi/vlere/shume</string>
+
 <string name="message">mesazh</string>
+
 <string name="pdf_generated_msg">pdf i krijuar e shpetur:</string>
+
 <string name="pdf_generated_msg_error">e pamundur te krijohet pdf. Ju lutemi provoni pėrsėri. Eabim:</string>
+
 <string name="raw_transactions">transaksionet e meparshme</string>
+
 <string name="extensions">estensioni</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">operacioni virtual</string>
+
 <string name="operation_results">resultatet e operazionit</string>
+
 <string name="sent_rcv">i derguar</string>
+
 <string name="details">detajet</string>
+
 <string name="share_qr_code">pjesė kodin tuaj QR</string>
+
 <string name="done">e mbaruar</string>
+
 <string name="id_s">id</string>
+
 <string name="time">kohė</string>
+
 <string name="operations">koha orag</string>
+
 <string name="trx_in_block">transaksion nė bllok</string>
+
 <string name="symbol_capital">simboli i kapitalit</string>
+
 <string name="fee_capital">taksa e kapitalit</string>
+
 <string name="ok">po</string>
+
 <string name="loading">karikim ne vazhdim...</string>
+
 <string name="pay_to">pagesa</string>
+
 <string name="requested">e kerkuarg</string>
+
 <string name="failed_transaction">transaksioni i deshtuar</string>
 
+
+
 <string name="str_invalid_amount">vlera/ sasia eshte e pavlere</string>
+
 <string name="str_invalid_receiver">marresi nuk eshte i vlefshem</string>
+
 <string name="str_transaction_failed">transaksion i deshtuar</string>
+
 <string name="please_enter_valid_amount">ju lutem te vendosni nje vlere/ sasi te vlefshme</string>
+
 <string name="select_timezone">zgjidhni zonen e ores</string>
-<string name="old_pin">vendosni pini e vjeter me 6 numra</string>
-<string name="pin_created_successfully">pini eshte krijuar me sukses</string>
-<string name="edit_pin">modifiko pinin</string>
+
+ <string name="old_pin">vjetër PIN</string>
+ 
+ <string name="pin_created_successfully">PIN krijuar me sukses</string>
+ 
+ <string name="edit_pin">ndrysho PIN</string>
+ 
 <string name="txt_edit">modifiko</string>
-<string name="create_pin">krijo pining</string>
+
+ <string name="create_pin">Krijo PIN</string>
+ 
 <string name="pin_changed_successfully">pini eshte modifikuar me sukses</string>
+
 <string name="incorrect_old_pin">pini i vjeter eshte i gabuar</string>
+
 <string name="copy">kopjo</string>
+
 <string name="pin_verification">kontrollo pinin</string>
+
 <string name="send_screen_name">emri i derguesit</string>
+
 <string name="rcv_screen_name">emri i marresit</string>
+
 <string name="request_amount_screen_name">sasi</string>
+
 <string name="payment_rcvd_screen_name">pagesa e marre me emer</string>
+
 <string name="e_receipt_activity_name">fature e aktivitetit</string>
+
 <string name="settings_activity_name">impostacioni i aktivitetit</string>
+
 <string name="qr_code_activity_name">Scan QR</string>
+
 <string name="share_account_activity_name">ndajeni numerin e llogarise me shoket</string>
+
 <string name="add_contact_activity_name">shto emrin e kantaktit te aktivitetit</string>
+
 <string name="str_trade_not_available">shkembimi nuk eshte i mundur</string>
+
     <string name="preferred_lang">gjuha e preferuar</string>
+
     <string name="got_it">kupto</string>
+
     <string name="upgrade_to_ltm">axhiornim a LTM</string>
+
     <string formatted="false" name="help_message">te kesh 80% cashback mbi taksat! Anetaret e perjetshem lmt marrin 80% te lekeve pas mbi sco takse te transacionit qe paguajn, dhe kualifikohen per te fituar te ardhurat nga cdo anetare i regjistruar qe bejne pjese ne rjete . Nje abonament vjetor eshte poshte 20000bts</string>
+
     <string name="txt_yes">po</string>
+
     <string name="txt_no">jo</string>
+
     <string name="txt_confirmation">vertetim</string>
+
     <string name="txt_confirmation_msg">je i sigurt</string>
+
     <string name="txt_folder_name">emri i karteles</string>
+
     <string name="txt_folder_created">kartela e krijuar</string>
+
     <string name="upgrade_failed">axhiornim i deshtuar</string>
+
     <string name="upgrading">axhiornim ...</string>
+
     <string name="import_new_account">importo nje llogari te re</string>
+
     <string name="upgrade_account">axhiorno llogarine</string>
+
     <string name="remove_account">hiq llogarine</string>
+
     <string name="txt_back">pas</string>
+
     <string name="please_pay">ju lutem paguani</string>
+
     <string name="transfer_funds">dergimi i lekeve</string>
+
     <string name="unable_to_process">e pamundur te procesohet</string>
+
     <string name="cancel">fshi</string>
+
     <string name="txt_alertmsg">je i sigurt qe doni te eliminoni kete adres</string>
+
     <string name="validation_in_progress">miratim ne vazhdim...</string>
+
     <string name="last_letter_cannot">letra e fundit nuk mund te jete -</string>
+
     <string name="account_name_shoud_have">emri i llogarise duhet te jete vetem nje -</string>
+
     <string name="default_currency">lek</string>
+
     <string name="account_already_exist">llogaria tashme eksiston</string>
+
     <string name="donation">dhurim</string>
+
     <string name="insufficient_funds">lek te pamjaftuheshme</string>
+
     <string name="txt_wallet_atleast_one_account">me keqardhje, portafoli duhet te kete te pakten nje llogari</string>
+
     <string name="updating_transaction_id">axhiornim i transaksioni, prit</string>
+
     <string name="email_name">per te pare nje foto per kete kontakt vendos adresen email ketu gravatar</string>
+
     <string name="upgrade_success">axhiornim i suksesshem</string>
+
     <string name="copied_to_clipboard">i kopiuar ne shenime</string>
 
+
+
     <string name="unable_to_load_brainkey">e pamundur te karikohet celesi</string>
+
     <string name="unable_to_generate_bin_format_for_key">e pamundur te krijosh formatin bin per celesin</string>
+
     <string name="creating_backup_file">krijimi i karteles se backup</string>
+
     <string name="fetching_key">marim celesin</string>
+
     <string name="generating_bin_format">krijimi formatit bin</string>
+
     <string name="invalid_pin">pini nuk eshte i vlefshem</string>
+
     <string name="saving_bin_file_to">shpetim i karteles bin</string>
+
     <string name="bin_file_saved_successfully_to">kartela bin e shpetuar me sukses</string>
+
     <string name="unable_to_save_bin_file">e pamundur te krijohet kartela bin</string>
 
+
+
     <string name="txt_alertmsg_fr">je i sigurt qe doni te hiqni</string>
+
     <string name="txt_alertmsg_la">llogaria nga ky portafol</string>
+
     <string name="bugs_or_errors">gjej i bug o gabimet</string>
+
     <string name="please_let_us_know">ju lutem na tregoni:</string>
+
     <string name="try_again">riprovo pas 5 minutash</string>
+
     <string name="warning_msg_same_account">nuk eshte e mundur te dergohet shuma ne te njejten llogari</string>
 
+
+
     <!--<string name="please_backup_your_brainkey">Ju lutemi të backup brainkey tuaj</string>-->
+
     <!--<string name="backup_brainkey_msg">Backup dosja juaj .bin diku të sigurt apo fondet tuaja mund të jetë e humbur!</string>-->
+
     <!--<string name="unable_to_trade_bAssets">Në pamundësi për të tregtisë pasurinë Backup</string>-->
+
     <!--<string name="unable_to_send_amount">Në pamundësi për të dërguar sasi.</string>-->
+
     <!--<string name="unable_to_decode_QR">Në pamundësi për të deshifroj kodin QR.</string>-->
+
     <string name="loyalty_points">Pikat e Besnikërisë</string>
+
     <string name="str_warning_only_available">Warning! Vetëm %1$s %2$s është i disponueshëm</string>
+
     <string name="str_balance_available">%1$s %2$s në dispozicion</string>
 
+
+
     <string name="please_backup_your_brainkey">Ju lutemi tė mbėshtetur nė brainkey</string>
+
     <string name="backup_brainkey_msg">Bej backup te karteles .bin ne nje vend te sigurt nese jo fondet do te humbasin</string>
+
     <string name="unable_to_trade_bAssets">e pamundur te nderosh pronen e backup</string>
+
     <string name="unable_to_send_amount">e pamundur te dergosh shumen.</string>
+
     <string name="unable_to_decode_QR">e pamundur te deshifrosh kodin QR</string>
 
+
+
     <string name="select_backup_asset">Zgjidhni Asetin Backup</string>
+
     <string name="sender_account">Llogaria Sender</string>
+
     <string name="receiver_account">Llogaria Marresit</string>
+
     <string name="total">Total</string>
+
     <string name="payment_method">Metoda e pagesës</string>
+
     <string name="thankyou_string">Thankyou për përdorimin Smartcoins portofolin</string>
+
     <string name="audio_folder_path">Audio Folder Path</string>
+
     <string name="please_make_sure_your_bin_file">Ju lutem sigurohuni që pin juaj është e saktë apo e saktë fotografi bin është zgjedhur</string>
+
     <string name="change">Ndrysho ...</string>
 
+
+
     <string name="connected_to">Lidhur me</string>
+
     <string name="account_create_msg">Vetëm një llogari çdo 10 minuta mund të regjistrohet</string>
+
     <string name="names_must_include_a_number">Emrat duhet të përfshijë një numër të</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Emrat duhet të përfshijë një dash (-) dhe një numër</string>
+
     <string name="import_gravatar">Import Gravatar</string>
+
     <string name="please_import_the_correct_file">Ju lutemi import file saktë</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant email është importuar me sukses</string>
 
+
+
 </resources>
+
