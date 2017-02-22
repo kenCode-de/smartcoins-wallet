@@ -35,7 +35,7 @@ public BitcoinAccount importAccount(AccountSeed seed,String name) {
         }
 
 @Override
-public BitcoinAccount getAccount(String id, String name, AccountSeed seed, int accountIndex, int externalIndex, int changeIndex) {
+public BitcoinAccount getAccount(long id, String name, AccountSeed seed, int accountIndex, int externalIndex, int changeIndex) {
         return new BitcoinAccount(id, name, seed, accountIndex, externalIndex, changeIndex);
         }
 

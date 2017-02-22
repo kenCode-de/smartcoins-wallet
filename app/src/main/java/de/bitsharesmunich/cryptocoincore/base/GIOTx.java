@@ -5,7 +5,7 @@ package de.bitsharesmunich.cryptocoincore.base;
  */
 
 public class GIOTx {
-    private String id;
+    private long id;
     private Coin type;
     private int index;
     private GeneralCoinAddress address;
@@ -20,7 +20,7 @@ public class GIOTx {
 
     }
 
-    public GIOTx(String id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString, int index, String scriptHex) {
+    public GIOTx(long id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString, int index, String scriptHex) {
         this.id = id;
         this.type = type;
         this.address = address;
@@ -32,11 +32,11 @@ public class GIOTx {
         this.scriptHex = scriptHex;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

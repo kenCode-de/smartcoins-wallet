@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -53,7 +53,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.UserAccounts.COLUMN_NAME + TYPE_TEXT + ")";
 
     private static final String SQL_CREATE_SEED_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Seeds.TABLE_NAME + " (" +
-            SCWallDatabaseContract.Seeds.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.Seeds.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL + TYPE_TEXT + ", " +
@@ -61,7 +61,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             ") ";
 
     private static final String SQL_CREATE_ACCOUNT_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralAccounts.TABLE_NAME + " (" +
-            SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralAccounts.COLUMN_ID_SEED + TYPE_TEXT + ", " +
@@ -73,14 +73,14 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             ")";
 
     private static final String SQL_CREATE_GENERAL_ORPHAN_KEY_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralOrphanKeys.TABLE_NAME + " (" +
-            SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_NAME + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_WIF + TYPE_TEXT + ", " +
             "CONSTRAINT generalOprhanContraint UNIQUE (" + SCWallDatabaseContract.GeneralOrphanKeys.COLUMN_WIF + "))";
 
     private static final String SQL_CREATE_GENERAL_ADDRESS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME + " (" +
-            SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralCoinAddress.COLUMN_INDEX + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralCoinAddress.COLUMN_IS_CHANGE + TYPE_INTEGER + ", " +
@@ -90,7 +90,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             ")";
 
     private static final String SQL_CREATE_GENERAL_TRANSACTION_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + " (" +
-            SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + TYPE_TEXT + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE + TYPE_TEXT + ", " +
@@ -101,7 +101,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             " CONSTRAINT generalTransactionContraint UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + "))";
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
-            SCWallDatabaseContract.Inputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.Inputs.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_INDEX + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +
@@ -115,7 +115,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             ")";
 
     private static final String SQL_CREATE_OUTPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Outputs.TABLE_NAME + " (" +
-            SCWallDatabaseContract.Outputs.COLUMN_ID + " TEXT PRIMARY KEY, " +
+            SCWallDatabaseContract.Outputs.COLUMN_ID + " INTEGER PRIMARY KEY, " +
             SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_INDEX + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS + TYPE_TEXT + ", " +

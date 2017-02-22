@@ -170,7 +170,7 @@ public class BrainkeyActivity extends BaseActivity {
 
                 /*Checking if master seed exists, if not, importing the account*/
                 AccountSeed seed = new BIP39(masterSeed,"");
-                if (db.getIdSeed(seed) != null) {
+                if (db.getIdSeed(seed) != -1) {
                     if (brainkeyExists){//If this is true, then the brainkey and the master seed already exists
                         Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                     }

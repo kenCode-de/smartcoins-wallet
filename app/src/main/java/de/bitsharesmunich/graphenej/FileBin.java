@@ -306,7 +306,7 @@ try {
             for (int i = 0; i < seedsObject.size(); i++) {
                 JsonObject seedObject = seedsObject.get(i).getAsJsonObject();
                 AccountSeed seed = AccountSeed.fromJson(seedObject, password);
-                String idSeed = db.putSeed(seed);
+                long idSeed = db.putSeed(seed);
                 seed.setId(idSeed);
                 JsonArray accountsObject = seedObject.get("accounts").getAsJsonArray();
                 for (int j = 0; j < accountsObject.size(); j++) {

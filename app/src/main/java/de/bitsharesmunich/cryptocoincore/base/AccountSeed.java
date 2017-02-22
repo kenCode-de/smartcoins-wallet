@@ -21,7 +21,7 @@ import de.bitsharesmunich.graphenej.Util;
  */
 
 public abstract class AccountSeed {
-    protected String id;
+    protected long id;
     protected SeedType type;
     protected List<String> mnemonicCode;
     protected String additional;
@@ -50,11 +50,11 @@ public abstract class AccountSeed {
         return additional;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

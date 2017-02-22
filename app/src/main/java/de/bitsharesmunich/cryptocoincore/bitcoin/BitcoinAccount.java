@@ -25,7 +25,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
 
     private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
 
-    BitcoinAccount(String id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    BitcoinAccount(long id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, BITCOIN, seed, accountNumber, lastExternalIndex, lastChangeIndex);
 
     }
@@ -35,7 +35,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
     }
 
     BitcoinAccount(final AccountSeed seed, String name, boolean importing) {
-        super("", name, BITCOIN, seed, 0, 0, 0);
+        super(-1, name, BITCOIN, seed, 0, 0, 0);
         if (importing) {
             //TODO calculate the number of account
         }

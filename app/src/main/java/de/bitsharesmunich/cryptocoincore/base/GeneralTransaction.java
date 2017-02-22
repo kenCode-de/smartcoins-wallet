@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GeneralTransaction {
 
-    private String id;
+    private long id;
     private String txid;
     private Coin type;
     private long block;
@@ -25,7 +25,7 @@ public class GeneralTransaction {
     public GeneralTransaction() {
     }
 
-    public GeneralTransaction(String id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight) {
+    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight) {
         this.id = id;
         this.txid = txid;
         this.type = type;
@@ -36,11 +36,11 @@ public class GeneralTransaction {
         this.blockHeight = blockHeight;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -37,7 +37,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     private final static int ADDRESS_GAP = 20;
 
-    public GeneralCoinAccount(String id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, coin, seed);
         this.accountNumber = accountNumber;
         this.lastExternalIndex = lastExternalIndex;
@@ -111,9 +111,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public void saveAddresses(SCWallDatabase db) {
         for (GeneralCoinAddress externalAddress : externalKeys.values()) {
-            if (externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")) {
-                String id = db.putGeneralCoinAddress(externalAddress);
-                if(id != null)
+            if (externalAddress.getId() == -1) {
+                long id = db.putGeneralCoinAddress(externalAddress);
+                if(id != -1)
                 externalAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(externalAddress);
@@ -121,10 +121,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
 
         for (GeneralCoinAddress changeAddress : changeKeys.values()) {
-            if (changeAddress.getId() == null || changeAddress.getId().isEmpty() || changeAddress.getId().equalsIgnoreCase("null")) {
+            if (changeAddress.getId() == -1) {
                 Log.i("SCW","change address id " + changeAddress.getId());
-                String id = db.putGeneralCoinAddress(changeAddress);
-                if(id != null)
+                long id = db.putGeneralCoinAddress(changeAddress);
+                if(id != -1)
                 changeAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(changeAddress);

@@ -19,7 +19,7 @@ import de.bitsharesmunich.graphenej.Util;
 
 public class GeneralCoinAddress {
 
-    private String id;
+    private long id;
     private final GeneralCoinAccount account;
     private final boolean isChange;
     private final int index;
@@ -29,7 +29,7 @@ public class GeneralCoinAddress {
     private List<GIOTx> outputTransaction = new ArrayList();
 
 
-    public GeneralCoinAddress(String id, GeneralCoinAccount account, boolean isChange, int index, String publicHexKey) {
+    public GeneralCoinAddress(long id, GeneralCoinAccount account, boolean isChange, int index, String publicHexKey) {
         this.id = id;
         this.account = account;
         this.isChange = isChange;
@@ -45,11 +45,11 @@ public class GeneralCoinAddress {
         this.key = key;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -202,7 +202,7 @@ public class GeneralCoinAddress {
 
         if (isChange != that.isChange) return false;
         if (index != that.index) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (id != -1) return false;
         if (account != null ? !account.equals(that.account) : that.account != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
         if (inputTransaction != null ? !inputTransaction.equals(that.inputTransaction) : that.inputTransaction != null)
@@ -213,7 +213,7 @@ public class GeneralCoinAddress {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
+        int result = (int) id;
         result = 31 * result + (account != null ? account.hashCode() : 0);
         result = 31 * result + (isChange ? 1 : 0);
         result = 31 * result + index;

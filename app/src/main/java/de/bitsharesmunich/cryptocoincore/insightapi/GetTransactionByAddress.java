@@ -119,8 +119,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     transaction.getTxOutputs().add(output);
                 }
                 SCWallDatabase db = new SCWallDatabase(this.context);
-                String idTransaction = db.getGeneralTransactionId(transaction);
-                if (idTransaction == null) {
+                long idTransaction = db.getGeneralTransactionId(transaction);
+                if (idTransaction == -1) {
                     db.putGeneralTransaction(transaction);
                 } else {
                     transaction.setId(idTransaction);
