@@ -34,7 +34,6 @@ public class GeneralCoinAddress {
         this.account = account;
         this.isChange = isChange;
         this.index = index;
-
         this.key = ECKey.fromPublicOnly(Util.hexToBytes(publicHexKey));
     }
 
@@ -97,7 +96,6 @@ public class GeneralCoinAddress {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -113,7 +111,6 @@ public class GeneralCoinAddress {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -162,15 +159,12 @@ public class GeneralCoinAddress {
                 lastDate = input.getTransaction().getDate();
             }
         }
-
         for (GIOTx output : outputTransaction) {
             if (lastDate == null || lastDate.before(output.getTransaction().getDate())) {
                 lastDate = output.getTransaction().getDate();
             }
         }
-
         return lastDate;
-
     }
 
     public int getLessConfirmed(){
@@ -187,6 +181,23 @@ public class GeneralCoinAddress {
             }
         }
         return lessConfirm;
+    }
+
+    public List<GIOTx> getUTXos(){
+        List<GIOTx> utxo = new ArrayList();
+        for(GIOTx gitx : inputTransaction){
+            boolean find = false;
+            for(GIOTx gotx : outputTransaction){
+                if(gitx.getTransaction().getTxid().equals(gotx.getTransaction().getTxid())){
+                    find = true;
+                    break;
+                }
+            }
+            if(!find){
+                utxo.add(gitx);
+            }
+        }
+        return utxo;
     }
 
     public void BalanceChange() {

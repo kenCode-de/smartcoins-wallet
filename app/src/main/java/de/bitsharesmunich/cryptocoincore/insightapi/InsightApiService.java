@@ -3,7 +3,10 @@ package de.bitsharesmunich.cryptocoincore.insightapi;
 import de.bitsharesmunich.cryptocoincore.insightapi.models.AddressTxi;
 import de.bitsharesmunich.cryptocoincore.insightapi.models.Txi;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -17,5 +20,9 @@ public interface InsightApiService {
 
     @GET("/insight-api/addrs/{addrs}/txs")
     Call<AddressTxi> getTransactionByAddress(@Path(value = "addrs", encoded = true) String addrs);
+
+    @FormUrlEncoded
+    @POST("/insight-api/tx/send")
+    Call<Txi> broadcastTransaction(@Field("rawtx") String rawtx);
 
 }

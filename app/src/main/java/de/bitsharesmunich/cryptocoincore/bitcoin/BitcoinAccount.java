@@ -1,10 +1,16 @@
 package de.bitsharesmunich.cryptocoincore.bitcoin;
 
+import android.content.Context;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.HDKeyDerivation;
+import org.bitcoinj.script.Script;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,8 +18,11 @@ import java.util.List;
 
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Balance;
+import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
+import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
+import de.bitsharesmunich.graphenej.Util;
 
 import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
 
@@ -97,13 +106,80 @@ public class BitcoinAccount extends GeneralCoinAccount {
         return externalKeys.get(lastExternalIndex).getAddressString(param);
     }
 
-    public void sendCoin(Address to, Coin amount) {
+    public String getNextChangeAddress() {
+        if (!changeKeys.containsKey(lastChangeIndex)) {
+            changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
+        }
 
-        //Get from address
-        //Get Change address to use
-        //Put all input in transaction
-        //Put all output in transaction
-        //sign transaction
+        //Finding the next unused address
+        while(changeKeys.get(lastChangeIndex).getOutputTransaction().size()>0){
+            ++lastChangeIndex;
+            if (!changeKeys.containsKey(lastChangeIndex)) {
+                changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
+            }
+        }
+        return changeKeys.get(lastChangeIndex).getAddressString(param);
+    }
+
+    @Override
+    public void send(String toAddress, de.bitsharesmunich.cryptocoincore.base.Coin coin, long amount, Context context) {
+        if(coin.name().equalsIgnoreCase("bitcoin")){
+            Transaction tx = new Transaction(param);
+
+            long currentAmount = 0;
+            long fee = 10000; //TODO calculate fee
+
+            List<GeneralCoinAddress> addresses = getAddresses();
+            List<GIOTx> utxos = new ArrayList();
+            for(GeneralCoinAddress address : addresses){
+                List<GIOTx> addrUtxos = address.getUTXos();
+                for(GIOTx addrUtxo : addrUtxos){
+                    utxos.add(addrUtxo);
+                    currentAmount += addrUtxo.getAmount();
+                    if(currentAmount >= amount+ fee){
+                        break;
+                    }
+                }
+                if(currentAmount >= amount + fee){
+                    break;
+                }
+            }
+
+            if(currentAmount< amount + fee){
+                //TODO error amount bigger than avaible
+                return;
+            }
+
+            //String to an address
+            Address toAddr = Address.fromBase58(param, toAddress);
+            tx.addOutput(Coin.valueOf(amount), toAddr);
+
+            //Change address
+            if(currentAmount - amount - fee > 0 ) {
+                Address changeAddr = Address.fromBase58(param, getNextChangeAddress());
+                tx.addOutput(Coin.valueOf(currentAmount - amount - fee), changeAddr);
+            }
+
+            for(GIOTx utxo: utxos) {
+                Sha256Hash txHash = Sha256Hash.wrap(utxo.getTransaction().getTxid());
+                Script script = new Script(Util.hexToBytes(utxo.getScriptHex()));
+                TransactionOutPoint outPoint = new TransactionOutPoint(param, utxo.getIndex(), txHash);
+                if(utxo.getAddress().getKey().isPubKeyOnly()){
+                    if(utxo.getAddress().isIsChange()){
+                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
+                    }else{
+                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
+                    }
+                }
+                tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
+            }
+
+            BroadcastTransaction brTrans = new BroadcastTransaction(tx.getHashAsString(),this,context);
+            brTrans.start();
+
+        }else{
+            //TODO error bad coin argument
+        }
     }
 
     public Address getAddress() {
