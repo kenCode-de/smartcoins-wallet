@@ -38,6 +38,7 @@ public class GeneralCoinAddress {
     }
 
     public GeneralCoinAddress(GeneralCoinAccount account, boolean isChange, int index, DeterministicKey key) {
+        this.id = -1;
         this.account = account;
         this.isChange = isChange;
         this.index = index;
