@@ -1,5 +1,6 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -143,6 +144,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     public int getLastChangeIndex() {
         return lastChangeIndex;
     }
+
+    public abstract String getNextRecieveAddress();
+
+    public abstract String getNextChangeAddress();
+
+    public abstract void send(String toAddress, Coin coin, long amount, Context context);
 
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
