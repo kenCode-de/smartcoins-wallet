@@ -144,6 +144,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
                     break;
                 }
             }
+            System.out.println("SENDTEST: amount : " + currentAmount+ " utxos : " + utxos.size());
 
             if(currentAmount< amount + fee){
                 //TODO error amount bigger than avaible
@@ -155,9 +156,12 @@ public class BitcoinAccount extends GeneralCoinAccount {
             tx.addOutput(Coin.valueOf(amount), toAddr);
 
             //Change address
-            if(currentAmount - amount - fee > 0 ) {
+            long remain = currentAmount - amount - fee;
+            if( remain > 0 ) {
+                System.out.println("SENDTEST: remain : " + remain);
                 Address changeAddr = Address.fromBase58(param, getNextChangeAddress());
-                tx.addOutput(Coin.valueOf(currentAmount - amount - fee), changeAddr);
+                System.out.println("SENDTEST: NC " + changeAddr.toBase58());
+                tx.addOutput(Coin.valueOf(remain), changeAddr);
             }
 
             for(GIOTx utxo: utxos) {
@@ -174,7 +178,9 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
             }
 
-            BroadcastTransaction brTrans = new BroadcastTransaction(tx.getHashAsString(),this,context);
+            System.out.println("SENDTEST: " + Util.bytesToHex(tx.bitcoinSerialize()));
+
+            BroadcastTransaction brTrans = new BroadcastTransaction(Util.bytesToHex(tx.bitcoinSerialize()),this,context);
             brTrans.start();
 
         }else{

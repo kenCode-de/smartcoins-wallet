@@ -21,7 +21,7 @@ import de.bitsharesmunich.graphenej.Util;
  */
 
 public abstract class AccountSeed {
-    protected long id;
+    protected long id = -1;
     protected SeedType type;
     protected List<String> mnemonicCode;
     protected String additional;

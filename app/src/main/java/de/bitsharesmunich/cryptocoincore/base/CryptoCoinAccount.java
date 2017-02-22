@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class CryptoCoinAccount {
 
-    protected long id;
+    protected long id = -1;
     protected String name;
     protected Coin coin;
     protected AccountSeed seed;
