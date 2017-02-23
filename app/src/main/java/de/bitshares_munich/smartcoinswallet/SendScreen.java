@@ -1144,6 +1144,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                     .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                     .setPrivateKey(currentPrivKey);
+            Log.i(TAG,"Memo Message: " + memoMessage);
             if(memoMessage != null) {
                 SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
@@ -1151,6 +1152,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
                 Address to = new Address(destination.getKey());
                 Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                Log.i(TAG,"Memo Message: " + encryptedMemo);
                 builder.setMemo(memo);
             }
 

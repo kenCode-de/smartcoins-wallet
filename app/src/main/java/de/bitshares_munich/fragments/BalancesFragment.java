@@ -614,7 +614,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if(op != null){
                     Memo memo = op.getMemo();
+                    Log.e(TAG, "Memo - from "+ memo.getSource() +", to " + memo.getDestination() );
+
                     if(memo.getByteMessage() != null){
+                        Log.e(TAG, "Memo ByteMessage: "+ memo.getByteMessage());
+
                         Address destinationAddress = memo.getDestination();
                         try {
                             if(destinationAddress.toString().equals(myAddress.toString())){
@@ -633,6 +637,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 entry.setHistoricalTransfer(historicalTransfer);
                 historicalTransferEntries.add(entry);
             }
+
 
             int inserted = database.putTransactions(historicalTransferEntries);
             Log.d(TAG,String.format("Inserted %d out of %d obtained operations", inserted, resp.result.size()));

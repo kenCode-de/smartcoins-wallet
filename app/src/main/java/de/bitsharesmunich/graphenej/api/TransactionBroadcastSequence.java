@@ -117,9 +117,10 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
 
                 // Building a new API call to request fees information
                 ArrayList<Serializable> accountParams = new ArrayList<>();
-                accountParams.add((Serializable) transaction.getOperations());
+                //accountParams.add((Serializable) transaction.getOperations());
                 accountParams.add(this.feeAsset.getObjectId());
-                ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_REQUIRED_FEES, accountParams, RPC.VERSION, currentId);
+                //ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_REQUIRED_FEES, accountParams, RPC.VERSION, currentId);
+                ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_ASSET_INFO + " " + this.feeAsset.getObjectId(), accountParams, RPC.VERSION, currentId);
 
                 // Requesting fee amount
                 websocket.sendText(getRequiredFees.toJsonString());
@@ -140,6 +141,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                         currentId);
 
                 // Finally broadcasting transaction
+                Log.d(TAG, "Broadcasting Transaction>>> "+call.toJsonString());
                 websocket.sendText(call.toJsonString());
             }else if(baseResponse.id >= BROADCAST_TRANSACTION){
                 Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();

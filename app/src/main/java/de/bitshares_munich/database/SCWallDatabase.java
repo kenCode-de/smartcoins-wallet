@@ -103,7 +103,7 @@ public class SCWallDatabase {
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        Log.d(TAG,String.format("Inserved %d transactions in database", count));
+        Log.d(TAG,String.format("Inserted %d transactions in database", count));
         return count;
     }
 
@@ -191,6 +191,8 @@ public class SCWallDatabase {
                 Memo memo = new Memo();
                 memo.setPlaintextMessage(memoMessage);
                 transferOperation.setMemo(memo);
+                Log.e(TAG, "memoMessage: " + memoMessage);
+
 
                 // Adding other historical transfer data
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));

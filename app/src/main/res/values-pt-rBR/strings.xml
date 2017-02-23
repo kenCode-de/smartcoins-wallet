@@ -420,7 +420,7 @@
 
     <string name="please_backup_your_brainkey">Por favor, backup de seu brainkey</string>
 
-    <string name="backup_brainkey_msg">Backup seu arquivo .bin em algum lugar seguro ou seus fundos poderiam ser perdidos!</string>
+    <string name="backup_brainkey_msg">Faça Backup de seu arquivo .bin em algum lugar seguro ou seus fundos poderiam ser perdidos!</string>
 
     <string name="unable_to_trade_bAssets">Não é possível trocar os recursos de backup</string>
 
@@ -432,7 +432,7 @@
 
     <string name="loyalty_points">Pontos de fidelidade</string>
 
-    <string name="str_warning_only_available">Atenção! Somente %1$s %2$s está disponível</string>
+    <string name="str_warning_only_available">Atenção! Somente %1$s %2$s estão disponíveis</string>
 
     <string name="str_balance_available">%1$s %2$s disponíveis</string>
 
