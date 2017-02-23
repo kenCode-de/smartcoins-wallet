@@ -104,7 +104,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IRelativeHistory, ContactSelectionListener {
+public class SendScreen extends BaseActivity implements IExchangeRate, ContactSelectionListener {
     private static final String TAG = "SendScreen";
 
     TinyDB tinyDB;
@@ -113,7 +113,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
     AccountAssets loyaltyAsset;
     AccountAssets backupAssets;
 
-    boolean validReceiver = false;
+//    boolean validReceiver = false;
     boolean validAmount = false;
     boolean sendBtnPressed = false;
     boolean alwaysDonate = false;
@@ -121,7 +121,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
-    String backupAsset, receiverID, callbackURL;
+    String backupAsset, callbackURL;
 
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
@@ -231,7 +231,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
     private WebsocketWorkerThread getAccountByName;
 
     /* This is one of the of the recipient account's public key, it will be used for memo encoding */
-    private PublicKey destination;
+    private PublicKey destinationPublicKey;
 
     /**
      * Callback fired when we get a response from the network with the transaction details.
@@ -294,17 +294,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
                     Toast.makeText(SendScreen.this, getResources().getString(R.string.send_success), Toast.LENGTH_SHORT).show();
                 }
             });
-//            mHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    int start = database.getTransactionCount(sourceAccount);
-//                    int stop = start + HISTORICAL_TRANSFER_BATCH_SIZE;
-//                    Log.d(TAG, String.format("Calling get_relative_account_history with start: %d, stop: %d", start, stop));
-//
-//                    transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(sourceAccount, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-//                    transferHistoryThread.start();
-//                }
-//            }, REQUEST_TRANSFER_HISTORY_DELAY);
         }
 
         @Override
@@ -335,8 +324,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
         ButterKnife.bind(this);
         Application.registerExchangeRateCallback(this);
-//        Application.registerCallback(this);
-        Application.registerRelativeHistoryCallback(this);
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
@@ -379,7 +366,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
     @OnTextChanged(R.id.etReceiverAccount)
     void onTextChangedTo(CharSequence text) {
-        validReceiver = false;
         tvErrorRecieverAccount.setText("");
 
         if (text != null) {
@@ -405,7 +391,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
     @OnFocusChange(R.id.etReceiverAccount)
     public void onFocusChange(boolean hasFocus) {
-        validReceiver = false;
 
         if (!hasFocus) {
             validating = true;
@@ -561,11 +546,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
 
     @OnClick(R.id.btnSend)
-    public void setBtnSend(View view) {
+    public void onSendButtonClicked(View view) {
         sendBtnPressed = true;
-        if (validReceiver)
+        if (destinationAccount != null) {
             validatingComplete();
-        else {
+        } else {
             tvErrorRecieverAccount.setText("");
             tvErrorRecieverAccount.setVisibility(View.VISIBLE);
             myLowerCaseTimer.cancel();
@@ -576,9 +561,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
     }
 
     void validatingComplete() {
-        Log.d(TAG, "validatingComplete");
         if (validateSend()) {
-            Log.d(TAG,"send validated");
             progressDialog = new ProgressDialog(this);
             if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
                 if (Helper.fetchBoolianSharePref(this, "require_pin")) {
@@ -751,10 +734,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
     };
 
     private void lookupAccounts() {
-//        String socketText = getString(R.string.lookup_account_a);
-//        String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
-//        myWebSocketHelper.make_websocket_call(socketText, scketText2, webSocketCallHelper.api_identifier.database);
-
         this.getAccountByName = new WebsocketWorkerThread(new GetAccountByName(etReceiverAccount.getText().toString(), mAccountByNameListener));
         this.getAccountByName.start();
         validating = true;
@@ -778,10 +757,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
                     if(accountProperties != null){
                         Log.d(TAG,"Found account with name");
                         Log.d(TAG,accountProperties.name);
-                        destination = accountProperties.active.getKeyAuths().keySet().iterator().next();
+                        destinationPublicKey = accountProperties.active.getKeyAuths().keySet().iterator().next();
+                        destinationAccount = new UserAccount(accountProperties.id);
                     }else{
                         Log.i(TAG, "No account with that name");
-                        destination = null;
+                        destinationPublicKey = null;
+                        destinationAccount = null;
                     }
 
                     validating = false;
@@ -932,7 +913,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
                 etAmount.setEnabled(false);
-//                spAssets.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1098,7 +1078,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
             return false;
         } else if (checkIfZero()) {
             return false;
-        } else if(destination == null){
+        } else if(destinationPublicKey == null){
             return false;
         }
         return true;
@@ -1135,7 +1115,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
             ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
 
             sourceAccount = new UserAccount(senderID);
-            destinationAccount = new UserAccount(receiverID);
 
             TransferTransactionBuilder builder = new TransferTransactionBuilder()
                     .setSource(sourceAccount)
@@ -1146,9 +1125,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
             if(memoMessage != null) {
                 SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
-                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
+                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
                 Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
-                Address to = new Address(destination.getKey());
+                Address to = new Address(destinationPublicKey.getKey());
                 Memo memo = new Memo(from, to, nonce, encryptedMemo);
                 builder.setMemo(memo);
             }
@@ -1227,49 +1206,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
 
     }
-
-//    @Override
-//    public void checkAccount(JSONObject jsonObject) {
-//        myWebSocketHelper.cleanUpTransactionsHandler();
-//        try {
-//            JSONArray jsonArray = jsonObject.getJSONArray("result");
-//            boolean found = false;
-//            for (int i = 0; i < jsonArray.length(); i++) {
-//                final String accountName = jsonArray.getJSONArray(i).getString(0);
-//                String accountId = jsonArray.getJSONArray(i).getString(1);
-//                if (accountName.equals(etReceiverAccount.getText().toString())) {
-//                    found = true;
-//                    validReceiver = true;
-//                    receiverID = jsonArray.getJSONArray(i).getString(1);
-//                    sendBtnPressed = false;
-//                    validating = false;
-//                    break;
-//                }
-//            }
-//            if (!found) {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        validReceiver = false;
-//                        sendBtnPressed = false;
-//                        validating = false;
-//                        // This code works correct, donot edit if it shows red underline
-//                        try {
-//                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-//                            format = format.replaceAll("\\s+", " ").trim();
-//                            tvErrorRecieverAccount.setText(format);
-//                        } catch (Exception e) {
-//                            tvErrorRecieverAccount.setText("");
-//                        }
-//
-//                        tvErrorRecieverAccount.setVisibility(View.VISIBLE);
-//                    }
-//                });
-//            }
-//        } catch (Exception e) {
-//            sendBtnPressed = false;
-//        }
-//    }
 
     private void showDialog(String title, String msg)
     {
@@ -1395,129 +1331,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
             myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.database);
         }
     }
-
-    //********Get trx block****************Start
-    Handler reTryGetTrxBlock = new Handler();
-    int reTryTimeGetTrxBlock = 1000;
-    boolean callInProgressForGettingTrx = false;
-    boolean callReceivedForGettingTrx = true;
-
-    public void getTrxBlock(final String id) {
-
-        String selectedAccountId = "";
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                selectedAccountId = accountDetail.account_id;
-            }
-        }
-        String params = "{\"id\":" + id + ",\"method\":\"call\",\"params\":[";
-        String params2 = ",\"get_relative_account_history\",[\"" + selectedAccountId + "\",0,10,0]]}";
-        myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.history);
-    }
-
-    private void fetchTrxBlockAndUpdateServer(final JSONArray jsonArray) {
-        try {
-            final Runnable reTry = new Runnable() {
-                @Override
-                public void run() {
-                    fetchTrxBlockAndUpdateServer(jsonArray);
-                }
-            };
-
-            for (int i = 0; i < 2; i++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                JSONArray opArray = (JSONArray) jsonObject.get("op");
-                JSONObject operation = (JSONObject) opArray.get(1);
-
-                if (operation.get("to").toString().equals(receiverID)) {
-                    ServiceGenerator sg = new ServiceGenerator(callbackURL);
-                    IWebService service = sg.getService(IWebService.class);
-
-                    if (jsonObject.has("block_num") && jsonObject.has("trx_in_block")) {
-
-                        final Call<Void> postingService = service.sendCallback(callbackURL, jsonObject.get("block_num").toString(), jsonObject.get("trx_in_block").toString());
-                        postingService.enqueue(new Callback<Void>() {
-
-                            @Override
-                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                if (response.isSuccessful()) {
-
-                                } else {
-                                    reTryGetTrxBlock.postDelayed(reTry, 100);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-                                reTryGetTrxBlock.postDelayed(reTry, 100);
-                            }
-                        });
-                        break;
-                    } else {
-                        getTrxBlock("160");
-                    }
-                } else {
-                    getTrxBlock("160");
-                }
-            }
-        } catch (Exception e) {
-        }
-    }
-
-
-    //********Get trx block****************End
-
-    @Override
-    public void relativeHistoryCallback(JSONObject msg) {
-        Log.d(TAG,"relativeHistoryCallback: "+msg.toString());
-        myWebSocketHelper.cleanUpTransactionsHandler();
-        try {
-            JSONArray jsonArray = (JSONArray) msg.get("result");
-            boolean found = false;
-            if (msg.get("id").equals(160)) {
-                callInProgressForGettingTrx = true;
-                callReceivedForGettingTrx = false;
-                reTryGetTrxBlock.removeCallbacksAndMessages(null);
-
-                fetchTrxBlockAndUpdateServer(jsonArray);
-            }
-            if (msg.get("id").equals(161)) {
-                for (int i = 0; i < 2; i++) {
-                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                    JSONArray opArray = (JSONArray) jsonObject.get("op");
-                    if (opArray.get(0).equals(4)) {
-                        JSONObject operation = (JSONObject) opArray.get(1);
-                        JSONObject pays = (JSONObject) operation.get("pays");
-                        if (pays.get("asset_id").equals(backupAssets.id)) {
-                            found = true;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideDialog();
-                                    sendFunds(true);
-                                }
-                            });
-                            break;
-                        }
-                    }
-                }
-                if (!found) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideDialog();
-                            Toast.makeText(SendScreen.this, R.string.str_trade_not_available, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void tradeAsset() {
         String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1661,7 +1474,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IRelative
 
         if (contacts.size() > 0) {
             contactListDialog = new Dialog(this);
-//            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             contactListDialog.setTitle(getString(R.string.contacts));
             contactListDialog.setContentView(R.layout.contacts_list_send_screen);
             ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
