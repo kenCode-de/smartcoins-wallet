@@ -189,7 +189,7 @@ public class GeneralCoinAddress {
         for(GIOTx gitx : inputTransaction){
             boolean find = false;
             for(GIOTx gotx : outputTransaction){
-                if(gitx.getTransaction().getTxid().equals(gotx.getTransaction().getTxid())){
+                if(gitx.getTransaction().getTxid().equals(gotx.getOriginalTxid())){
                     find = true;
                     break;
                 }

@@ -14,9 +14,10 @@ public class GIOTx {
     private boolean isOut;
     private String addressString;
     private String scriptHex;
+    private String originalTxid;
 
 
-    public GIOTx(){
+    public GIOTx() {
 
     }
 
@@ -102,5 +103,13 @@ public class GIOTx {
 
     public void setScriptHex(String scriptHex) {
         this.scriptHex = scriptHex;
+    }
+
+    public String getOriginalTxid() {
+        return originalTxid;
+    }
+
+    public void setOriginalTxid(String originalTxid) {
+        this.originalTxid = originalTxid;
     }
 }

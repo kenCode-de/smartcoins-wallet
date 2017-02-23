@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -109,6 +109,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_AMOUNT + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Inputs.COLUMN_ORIGIN_TXID + TYPE_TEXT + ", " +
             " FOREIGN KEY(" + SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS + ") REFERENCES " + SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + ")," +
             " FOREIGN KEY(" + SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + ") REFERENCES " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + ")," +
             " CONSTRAINT genInputsContraint UNIQUE (" + SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE + "," + SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING + "," + SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION + ") " +
@@ -175,7 +176,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_USER_ACCOUNTS_TABLE);
         }
 
-        if (oldVersion <= 7) {
+        if (oldVersion < 10) {
 
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralOrphanKeys.TABLE_NAME);
@@ -187,7 +188,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_GENERAL_ADDRESS_TABLE);
         }
 
-        if (oldVersion < 9) {
+        if (oldVersion < 11) {
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Inputs.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Outputs.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME);
