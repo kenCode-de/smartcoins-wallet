@@ -63,7 +63,6 @@ import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.interfaces.IExchangeRate;
 import de.bitshares_munich.interfaces.IRelativeHistory;
 import de.bitshares_munich.interfaces.ContactSelectionListener;
@@ -89,7 +88,6 @@ import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.TransferTransactionBuilder;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccountByName;
-import de.bitsharesmunich.graphenej.api.GetRelativeAccountHistory;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
 import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
 import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
@@ -106,7 +104,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
  */
-public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, ContactSelectionListener {
+public class SendScreen extends BaseActivity implements IExchangeRate, IRelativeHistory, ContactSelectionListener {
     private static final String TAG = "SendScreen";
 
     TinyDB tinyDB;
@@ -184,10 +182,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Spinner spinnerFrom;
 
     @Bind(R.id.btnSend)
-    LinearLayout btnSend;
-
-    @Bind(R.id.sendicon)
-    ImageView sendicon;
+    Button btnSend;
 
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
@@ -210,7 +205,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
      * Handler and delay
      */
     private int REQUEST_TRANSFER_HISTORY_DELAY = 1800;
-    private Handler mHandler;
 
     /**
      * Instance of the database interface
@@ -266,25 +260,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         @Override
         public void onError(BaseResponse.Error error) {
             Log.e(TAG, "mTransferHistoryListener.onError. Msg: "+error.message);
-        }
-    };
-
-    /**
-     * Callback that obtains the response from the get_account_by_name API call.
-     * Here we're just interested in get one of the public keys from the recipient account
-     * in order to use it for memo encryption.
-     */
-    private WitnessResponseListener accountByNameListener = new WitnessResponseListener() {
-        @Override
-        public void onSuccess(WitnessResponse response) {
-            Log.d(TAG,"accountByNameListener. onSuccess");
-            AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
-            destination = accountProperties.active.getKeyAuths().keySet().iterator().next();
-        }
-
-        @Override
-        public void onError(BaseResponse.Error error) {
-            Log.d(TAG,"accountByNameListener.onError. Msg: "+error.message);
         }
     };
 
@@ -360,7 +335,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
         ButterKnife.bind(this);
         Application.registerExchangeRateCallback(this);
-        Application.registerCallback(this);
+//        Application.registerCallback(this);
         Application.registerRelativeHistoryCallback(this);
 
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
@@ -371,33 +346,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
         cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!validReceiver && !validating) {
-                    if (etReceiverAccount.getText().length() > 0) {
-                        myLowerCaseTimer.cancel();
-                        myAccountNameValidationTimer.cancel();
-                        myLowerCaseTimer.start();
-                        myAccountNameValidationTimer.start();
-                    }
-                }
-                //Do something after 100ms
-                if (validateSend() && validReceiver) {
-                    btnSend.setEnabled(true);
-                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
-
-                } else {
-//                    btnSend.setEnabled(false);
-                    btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.gray));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
-                }
-                handler.postDelayed(this, 200);
-            }
-        }, 100);
 
         database = new SCWallDatabase(this);
     }
@@ -453,8 +401,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
         tvErrorRecieverAccount.setVisibility(View.GONE);
         loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
-
-        mHandler = new Handler();
     }
 
     @OnFocusChange(R.id.etReceiverAccount)
@@ -472,7 +418,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
     @OnTextChanged(R.id.etAmount)
     void onAmountChanged(CharSequence text) {
-        updateAmountStatus();
+        onTransferAmountUpdated();
     }
 
     Boolean runningSpinerForFirstTime = true;
@@ -502,7 +448,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @OnItemSelected(R.id.spAssets)
     void onAssetsSelected(int position) {
         if (loyaltyAsset == null) {
-            updateAmountStatus();
+            onTransferAmountUpdated();
         }
         if (backupAsset != null && !backupAsset.isEmpty()) {
             getExchangeRate(200);
@@ -710,7 +656,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     }
 
-    public void updateAmountStatus() {
+    public void onTransferAmountUpdated() {
+        Log.d(TAG,"onTransferAmountUpdated");
         try {
             tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
             String selectedAsset;
@@ -762,8 +709,17 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
         } catch (Exception e) {
-
+            Log.e(TAG,"Exception. Msg: "+e.getMessage());
         }
+
+        // Enabling or disabling the send button depending on
+        // the result of the validation.
+        if(validateSend()){
+            btnSend.setEnabled(true);
+        }else{
+            btnSend.setEnabled(false);
+        }
+
     }
 
     private void loadWebView(WebView webView, int size, String encryptText) {
@@ -795,15 +751,56 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     };
 
     private void lookupAccounts() {
-        String socketText = getString(R.string.lookup_account_a);
-        String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
-        myWebSocketHelper.make_websocket_call(socketText, scketText2, webSocketCallHelper.api_identifier.database);
+//        String socketText = getString(R.string.lookup_account_a);
+//        String scketText2 = getString(R.string.lookup_account_b) + "\"" + etReceiverAccount.getText().toString() + "\"" + ",50]],\"id\": 6}";
+//        myWebSocketHelper.make_websocket_call(socketText, scketText2, webSocketCallHelper.api_identifier.database);
 
-        this.getAccountByName = new WebsocketWorkerThread(new GetAccountByName(etReceiverAccount.getText().toString(), accountByNameListener), 0);
+        this.getAccountByName = new WebsocketWorkerThread(new GetAccountByName(etReceiverAccount.getText().toString(), mAccountByNameListener));
         this.getAccountByName.start();
+        validating = true;
     }
 
-    Handler reloadToAccountValidation = new Handler();
+    /**
+     * Callback that obtains the response from the get_account_by_name API call.
+     * Here we're just interested in get one of the public keys from the recipient account
+     * in order to use it for memo encryption.
+     */
+    private WitnessResponseListener mAccountByNameListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            Log.d(TAG,"mAccountByNameListener. onSuccess");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
+                    if(accountProperties != null){
+                        Log.d(TAG,"Found account with name");
+                        Log.d(TAG,accountProperties.name);
+                        destination = accountProperties.active.getKeyAuths().keySet().iterator().next();
+                    }else{
+                        Log.i(TAG, "No account with that name");
+                        destination = null;
+                    }
+
+                    validating = false;
+
+                    // Check whether we can enable the "send" button or not
+                    if(validateSend()){
+                        btnSend.setEnabled(true);
+                    }else{
+                        btnSend.setEnabled(false);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.d(TAG,"mAccountByNameListener.onError. Msg: "+error.message);
+        }
+    };
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
@@ -1101,6 +1098,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             return false;
         } else if (checkIfZero()) {
             return false;
+        } else if(destination == null){
+            return false;
         }
         return true;
     }
@@ -1229,58 +1228,48 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     }
 
-    @Override
-    public void checkAccount(JSONObject jsonObject) {
-        myWebSocketHelper.cleanUpTransactionsHandler();
-        try {
-            JSONArray jsonArray = jsonObject.getJSONArray("result");
-            boolean found = false;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                final String accountName = jsonArray.getJSONArray(i).getString(0);
-                String accountId = jsonArray.getJSONArray(i).getString(1);
-                if (accountName.equals(etReceiverAccount.getText().toString())) {
-                    Log.d(TAG, "valid account name: "+accountName+", account id: "+accountId);
-                    found = true;
-                    validReceiver = true;
-                    receiverID = jsonArray.getJSONArray(i).getString(1);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-//                            if (sendBtnPressed) {
-////                                validatingComplete();
-//                            }
-                        }
-                    });
-                    sendBtnPressed = false;
-                    validating = false;
-//                    destination = new UserAccount(accountId, accountName);
-                    break;
-                }
-            }
-            if (!found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        validReceiver = false;
-                        sendBtnPressed = false;
-                        validating = false;
-                        // This code works correct, donot edit if it shows red underline
-                        try {
-                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                            format = format.replaceAll("\\s+", " ").trim();
-                            tvErrorRecieverAccount.setText(format);
-                        } catch (Exception e) {
-                            tvErrorRecieverAccount.setText("");
-                        }
-
-                        tvErrorRecieverAccount.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            sendBtnPressed = false;
-        }
-    }
+//    @Override
+//    public void checkAccount(JSONObject jsonObject) {
+//        myWebSocketHelper.cleanUpTransactionsHandler();
+//        try {
+//            JSONArray jsonArray = jsonObject.getJSONArray("result");
+//            boolean found = false;
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                final String accountName = jsonArray.getJSONArray(i).getString(0);
+//                String accountId = jsonArray.getJSONArray(i).getString(1);
+//                if (accountName.equals(etReceiverAccount.getText().toString())) {
+//                    found = true;
+//                    validReceiver = true;
+//                    receiverID = jsonArray.getJSONArray(i).getString(1);
+//                    sendBtnPressed = false;
+//                    validating = false;
+//                    break;
+//                }
+//            }
+//            if (!found) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        validReceiver = false;
+//                        sendBtnPressed = false;
+//                        validating = false;
+//                        // This code works correct, donot edit if it shows red underline
+//                        try {
+//                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+//                            format = format.replaceAll("\\s+", " ").trim();
+//                            tvErrorRecieverAccount.setText(format);
+//                        } catch (Exception e) {
+//                            tvErrorRecieverAccount.setText("");
+//                        }
+//
+//                        tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//            }
+//        } catch (Exception e) {
+//            sendBtnPressed = false;
+//        }
+//    }
 
     private void showDialog(String title, String msg)
     {

@@ -469,7 +469,6 @@ public class Application extends android.app.Application implements de.bitshares
                     }
                 }
                 if (rawBlockId.equals("")) {
-                    Log.w(TAG, "Could not process data");
                     return blockHead;
                 }
                 // Setting block number
