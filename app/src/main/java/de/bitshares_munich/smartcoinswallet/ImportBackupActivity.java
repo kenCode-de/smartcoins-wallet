@@ -37,6 +37,7 @@ import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
 
 public class ImportBackupActivity extends BaseActivity {
     private final String TAG = this.getClass().getName();
@@ -46,6 +47,9 @@ public class ImportBackupActivity extends BaseActivity {
 
     @Bind(R.id.etPinBin)
     EditText etPinBin;
+
+    @Bind(R.id.etExistingPassword)
+    EditText etExistingPassword;
 
     ArrayList<Integer> bytes;
 
@@ -70,15 +74,18 @@ public class ImportBackupActivity extends BaseActivity {
     @OnClick(R.id.btnWalletBin)
     public void onClickbtnWalletBin()
     {
+        String currentPassword = etExistingPassword.getText().toString();
         String pinText = etPinBin.getText().toString();
 
-        if(pinText.length() == 0){
+        if(currentPassword.length() == 0){
+            Toast.makeText(this, getResources().getString(R.string.missing_existing_password), Toast.LENGTH_SHORT).show();
+        }else if(pinText.length() == 0){
             Toast.makeText(this, getResources().getString(R.string.pin_number_request), Toast.LENGTH_SHORT).show();
         }else if(pinText.length() < 6){
             Toast.makeText(this, getResources().getString(R.string.pin_number_warning), Toast.LENGTH_SHORT).show();
         }else{
             showDialog("",getString(R.string.importing_keys_from_bin_file));
-            recoverAccountFromBackup(pinText);
+            recoverAccountFromBackup(currentPassword, pinText);
         }
     }
 
@@ -154,19 +161,29 @@ public class ImportBackupActivity extends BaseActivity {
 
     }
 
-    public void recoverAccountFromBackup(final String pin) {
+    public void recoverAccountFromBackup(String existingPassword, final String pin) {
         try {
             byte[] byteArray = new byte[bytes.size()];
             for(int i = 0 ; i < bytes.size();i++){
                 byteArray[i] = bytes.get(i).byteValue();
             }
-            final String brainKey = FileBin.getBrainkeyFromByte(byteArray, pin);
+            String brainKey;
+            brainKey = FileBin.getBrainkeyFromByte(byteArray, existingPassword);
+            if(brainKey == null){
+                WalletBackup walletBackup = FileBin.deserializeWalletBackup(byteArray, existingPassword);
+
+                if(walletBackup.getKeyCount() > 0){
+                    brainKey = walletBackup.getWallet(0).decryptBrainKey(existingPassword);
+                }
+            }
+
             BrainKey bKey = new BrainKey(brainKey, 0);
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
             Log.d(TAG, "Got brain key: "+brainKey);
             Log.d(TAG, "Looking up keys for address: "+address.toString());
+            final String finalBrainKey = brainKey;
             new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(final WitnessResponse response) {
@@ -182,7 +199,7 @@ public class ImportBackupActivity extends BaseActivity {
                                     Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
                                 }else{
                                     for(UserAccount account : accounts){
-                                        getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pin);
+                                        getAccountById(account.getObjectId(), privkey, pubkey, finalBrainKey, pin);
                                     }
                                 }
                             }else{
@@ -208,9 +225,8 @@ public class ImportBackupActivity extends BaseActivity {
             }), 0).start();
         } catch (Exception e) {
             hideDialog();
-            Toast.makeText(myActivity, myActivity.getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
         }
-
     }
 
     private void getAccountById(final String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
