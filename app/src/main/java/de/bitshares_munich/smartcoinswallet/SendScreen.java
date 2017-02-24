@@ -926,7 +926,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
-                etAmount.setEnabled(false);
+//                etAmount.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();

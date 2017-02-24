@@ -191,8 +191,6 @@ public class SCWallDatabase {
                 Memo memo = new Memo();
                 memo.setPlaintextMessage(memoMessage);
                 transferOperation.setMemo(memo);
-                Log.e(TAG, "memoMessage: " + memoMessage);
-
 
                 // Adding other historical transfer data
                 historicalTransfer.setId(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_ID)));
