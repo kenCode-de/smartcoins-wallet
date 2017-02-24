@@ -614,10 +614,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if(op != null){
                     Memo memo = op.getMemo();
-                    Log.e(TAG, "Memo - from "+ memo.getSource() +", to " + memo.getDestination() );
 
                     if(memo.getByteMessage() != null){
-                        Log.e(TAG, "Memo ByteMessage: "+ memo.getByteMessage());
 
                         Address destinationAddress = memo.getDestination();
                         try {
