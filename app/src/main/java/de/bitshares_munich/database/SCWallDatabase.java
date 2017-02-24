@@ -103,7 +103,7 @@ public class SCWallDatabase {
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        Log.d(TAG,String.format("Inserved %d transactions in database", count));
+        Log.d(TAG,String.format("Inserted %d transactions in database", count));
         return count;
     }
 

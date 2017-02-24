@@ -194,7 +194,7 @@
     <string name="please_enter_valid_amount">Please enter valid amount</string>
     <string name="insufficient_amount">Insufficient Amount</string>
     <string name="error_insufficient_balance">Insufficient balance for this operation</string>
-    <string name="error_transfer_funds">An error ocurred while broadcasting your transaction, please try again.</string>
+    <string name="error_transfer_funds">An error ocurred while broadcasting your transaction, some assets require a small amount of BTS to complete the transfer.</string>
     <string name="select_timezone">Select TimeZone</string>
 
 

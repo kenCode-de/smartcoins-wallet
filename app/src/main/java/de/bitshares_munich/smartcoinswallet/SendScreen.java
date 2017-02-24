@@ -107,6 +107,9 @@ import retrofit2.Response;
 public class SendScreen extends BaseActivity implements IExchangeRate, ContactSelectionListener {
     private static final String TAG = "SendScreen";
 
+    private final Asset CORE_ASSET = new Asset("1.3.0");
+    private final Asset FEE_ASSET = CORE_ASSET;
+
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
@@ -122,6 +125,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, callbackURL;
+
+    private boolean mSendAttemptFail = false;
 
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
@@ -286,6 +291,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         @Override
         public void onSuccess(WitnessResponse response) {
             Log.d(TAG, "send.onSuccess");
+            mSendAttemptFail = false;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -299,13 +305,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         @Override
         public void onError(BaseResponse.Error error) {
             Log.e(TAG, "send.onError. msg: "+error.message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    hideDialog();
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_transfer_funds), Toast.LENGTH_SHORT).show();
-                }
-            });
+            //Try to pay free with asset instead of BTS (second try)
+            if(mSendAttemptFail){
+                Log.d(TAG, "Second send attempt using current asset");
+                sendFunds(false);
+            }
+            else{
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_transfer_funds), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
         }
     };
 
@@ -912,7 +926,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
-                etAmount.setEnabled(false);
+//                etAmount.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1116,41 +1130,85 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
             sourceAccount = new UserAccount(senderID);
 
-            TransferTransactionBuilder builder = new TransferTransactionBuilder()
-                    .setSource(sourceAccount)
-                    .setDestination(destinationAccount)
-                    .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-                    .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                    .setPrivateKey(currentPrivKey);
-            if(memoMessage != null) {
-                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
-                long nonce = secureRandom.nextLong();
-                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
-                Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
-                Address to = new Address(destinationPublicKey.getKey());
-                Memo memo = new Memo(from, to, nonce, encryptedMemo);
-                builder.setMemo(memo);
-            }
 
-            Transaction transaction = builder.build();
-
-            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
-            transferBroadcaster.start();
-
-            if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-                TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-                        .setSource(new UserAccount(senderID))
-                        .setDestination(bitsharesMunich)
-                        .setAmount(donationAmount)
-                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+            if(mSendAttemptFail){
+                mSendAttemptFail = false;
+                TransferTransactionBuilder builder = new TransferTransactionBuilder()
+                        .setSource(sourceAccount)
+                        .setDestination(destinationAccount)
+                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                         .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                         .setPrivateKey(currentPrivKey);
+                if(memoMessage != null) {
+                    SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+                    long nonce = secureRandom.nextLong();
+                    byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
+                    Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                    Address to = new Address(destinationPublicKey.getKey());
+                    Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                    builder.setMemo(memo);
+                }
 
-                Transaction donationTransaction = donationBuilder.build();
-                donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
-                donationBroadcaster.start();
-                Log.d(TAG, "started a donation message broadcast");
+                Transaction transaction = builder.build();
+
+                transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
+                transferBroadcaster.start();
+
+                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+                            .setSource(new UserAccount(senderID))
+                            .setDestination(bitsharesMunich)
+                            .setAmount(donationAmount)
+                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+                            .setPrivateKey(currentPrivKey);
+
+                    Transaction donationTransaction = donationBuilder.build();
+                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
+                    donationBroadcaster.start();
+                    Log.d(TAG, "started a donation message broadcast");
+                }
             }
+            else{
+                mSendAttemptFail = true;
+                TransferTransactionBuilder builder = new TransferTransactionBuilder()
+                        .setSource(sourceAccount)
+                        .setDestination(destinationAccount)
+                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
+                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+                        .setPrivateKey(currentPrivKey);
+                if(memoMessage != null) {
+                    SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+                    long nonce = secureRandom.nextLong();
+                    byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
+                    Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                    Address to = new Address(destinationPublicKey.getKey());
+                    Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                    builder.setMemo(memo);
+                }
+                Transaction transaction = builder.build();
+
+                transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
+                transferBroadcaster.start();
+                Log.d(TAG, "started a funds transfer donation broadcast");
+
+                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+                            .setSource(new UserAccount(senderID))
+                            .setDestination(bitsharesMunich)
+                            .setAmount(donationAmount)
+                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+                            .setPrivateKey(currentPrivKey);
+
+                    Transaction donationTransaction = donationBuilder.build();
+                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
+                    donationBroadcaster.start();
+                    Log.d(TAG, "started a donation message broadcast");
+                }
+            }
+
         } catch (MalformedTransactionException e) {
             hideDialog();
             e.printStackTrace();
