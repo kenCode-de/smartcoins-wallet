@@ -11,14 +11,14 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
     private static final String TYPE_INTEGER = " INTEGER";
     private static final String TYPE_REAL = " REAL";
 
-    private static final String SQL_CREATE_ASSETS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Assets.TABLE_NAME + " (" +
+    private static final String SQL_CREATE_ASSETS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.Assets.TABLE_NAME + " (" +
             SCWallDatabaseContract.Assets.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Assets.COLUMN_SYMBOL + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Assets.COLUMN_PRECISION + TYPE_INTEGER + ", " +
@@ -26,7 +26,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Assets.COLUMN_MAX_SUPPLY + TYPE_INTEGER + ")";
 
-    private static final String SQL_CREATE_TRANSFERS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Transfers.TABLE_NAME + " (" +
+    private static final String SQL_CREATE_TRANSFERS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.Transfers.TABLE_NAME + " (" +
             SCWallDatabaseContract.Transfers.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_FEE_AMOUNT + TYPE_INTEGER + ", " +
@@ -48,9 +48,15 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + ") REFERENCES "+
             SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "))";
 
-    private static final String SQL_CREATE_USER_ACCOUNTS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.UserAccounts.TABLE_NAME + "(" +
+    private static final String SQL_CREATE_USER_ACCOUNTS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.UserAccounts.TABLE_NAME + "(" +
             SCWallDatabaseContract.UserAccounts.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.UserAccounts.COLUMN_NAME + TYPE_TEXT + ")";
+
+    private static final String SQL_CREATE_ACCOUNT_KEYS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.AccountKeys.TABLE_NAME + "( " +
+            SCWallDatabaseContract.BaseTable.COLUMN_CREATION_DATE + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.AccountKeys.COLUMN_BRAINKEY + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.AccountKeys.COLUMN_SEQUENCE_NUMBER + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.AccountKeys.COLUMN_WIF + TYPE_TEXT + " UNIQUE)";
 
 
     public SCWallSQLiteOpenHelper(Context context) {
@@ -63,18 +69,17 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
         Log.d(TAG, SQL_CREATE_ASSETS_TABLE);
         Log.d(TAG, SQL_CREATE_TRANSFERS_TABLE);
         Log.d(TAG, SQL_CREATE_USER_ACCOUNTS_TABLE);
+        Log.d(TAG, SQL_CREATE_ACCOUNT_KEYS_TABLE);
 
         db.execSQL(SQL_CREATE_ASSETS_TABLE);
         db.execSQL(SQL_CREATE_TRANSFERS_TABLE);
         db.execSQL(SQL_CREATE_USER_ACCOUNTS_TABLE);
+        db.execSQL(SQL_CREATE_ACCOUNT_KEYS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade");
-        db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Transfers.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.UserAccounts.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Assets.TABLE_NAME);
-        onCreate(db);
+        db.execSQL(SQL_CREATE_ACCOUNT_KEYS_TABLE);
     }
 }
