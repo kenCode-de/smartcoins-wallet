@@ -260,7 +260,6 @@ public class ImportBackupActivity extends BaseActivity {
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(),myActivity);
                                 Intent intent;
                                 int numberOfAccounts = myBinHelper.numberOfWalletAccounts(getApplicationContext());
-                                Log.d(TAG,String.format("number of accounts: %d", numberOfAccounts));
                                 if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 ) {
                                     intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
                                 } else {

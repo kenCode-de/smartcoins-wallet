@@ -416,6 +416,8 @@
 
     <string name="please_backup_your_brainkey">Por favor, backup de seu brainkey</string>
 
+    <string name="title_important">Importante</string>
+
     <string name="backup_brainkey_msg">Backup seu arquivo .bin em algum lugar seguro ou seus fundos poderiam ser perdidos!</string>
 
     <string name="unable_to_trade_bAssets">Não é possível trocar os recursos de backup</string>

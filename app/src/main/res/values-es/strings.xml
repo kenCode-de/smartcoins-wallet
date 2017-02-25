@@ -412,7 +412,9 @@
 
 
 
-    <string name="please_backup_your_brainkey">Por favor respalde sus brainkey</string>
+    <string name="please_backup_your_brainkey">Por favor respalde su brainkey</string>
+
+    <string name="title_important">Importante</string>
 
     <string name="backup_brainkey_msg">Haz una copia de seguridad de tu archivo .bin de respaldo en un lugar seguro o sus fondos podrían perderse!</string>
 

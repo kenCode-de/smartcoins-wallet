@@ -418,7 +418,9 @@
 
 
 
-    <string name="please_backup_your_brainkey">Por favor, backup de seu brainkey</string>
+    <string name="please_backup_your_brainkey">Por favor, anote a sua brainkey</string>
+
+    <string name="title_important">Importante</string>
 
     <string name="backup_brainkey_msg">Faça Backup de seu arquivo .bin em algum lugar seguro ou seus fundos poderiam ser perdidos!</string>
 
