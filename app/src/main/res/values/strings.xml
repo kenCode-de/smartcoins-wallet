@@ -211,6 +211,7 @@
     <string name="copy">Copy</string>
 
     <string name="pin_verification">UNLOCKED</string>
+    <string name="title_prompt_pin">Please enter PIN</string>
 
     // Screen Names
     <string name="send_screen_name">Send</string>

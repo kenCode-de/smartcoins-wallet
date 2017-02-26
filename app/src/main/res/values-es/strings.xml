@@ -290,6 +290,8 @@
 
 <string name="pin_verification">ABIERTO</string>
 
+<string name="title_prompt_pin">Por favor digite su PIN</string>
+
 <string name="send_screen_name">Enviar</string>
 
 <string name="rcv_screen_name">Recibir</string>

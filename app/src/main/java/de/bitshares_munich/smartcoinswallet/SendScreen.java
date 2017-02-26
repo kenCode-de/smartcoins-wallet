@@ -1574,9 +1574,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     private void showDialogPin(final Boolean fundTransfer) {
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(SendScreen.this);
-        dialog.setTitle(R.string.pin_verification);
+        dialog.setTitle(R.string.title_prompt_pin);
         dialog.setContentView(R.layout.activity_alert_pin_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        btnDone.setVisibility(View.VISIBLE);
         final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override

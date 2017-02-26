@@ -292,6 +292,8 @@
 
 <string name="pin_verification">UNLOCKED</string>
 
+<string name="title_prompt_pin">Por favor digite o seu PIN</string>
+
 <string name="send_screen_name">Enviar</string>
 
 <string name="rcv_screen_name">Receber</string>
