@@ -284,7 +284,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
                                 /* Creating automatic bin backup */
                                 BinHelper myBinHelper = new BinHelper(TabActivity.this, TabActivity.this);
-                                myBinHelper.get_bin_bytes_from_brainkey(localAccountDetail.brain_key, localAccountDetail.account_name, localAccountDetail.pinCode);
+                                myBinHelper.getBinBytesFromBrainkey(localAccountDetail.brain_key, localAccountDetail.account_name, localAccountDetail.pinCode);
                             }catch(Exception e){
                                 Log.e(TAG, String.format("Exception while trying to update local copy of authority keys from account %s. Msg: %s", localAccountDetail.account_name, e.getMessage()));
                             }

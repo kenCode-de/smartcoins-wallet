@@ -66,12 +66,12 @@ public class TransactionsHelper implements IBalancesDelegate {
         accountid = account_id;
 
         handleHourlyTransactions = new Handler(Looper.getMainLooper());
-        transactionsRecievedHm = new HashMap<>();
-        assetsRecievedHm = new HashMap<>();
+        transactionsReceivedHm = new HashMap<>();
+        assetsReceivedHm = new HashMap<>();
         headerTimings = new HashMap<>();
         namesToResolveHm = new HashMap<>();
         memosToDecodeHm = new HashMap<>();
-        finalBlockRecieved = false;
+        finalBlockReceived = false;
 
         numberOfTransactionsLoaded = _numberOfTransactionsLoaded;
         numberOfTransactionsToLoad = _numberOfTransactionsToLoad;
@@ -103,13 +103,13 @@ public class TransactionsHelper implements IBalancesDelegate {
 
         handleHourlyTransactions = new Handler(Looper.getMainLooper());
         transactionsTimeSpan = _transactionsTimeSpan;
-        transactionsRecievedHm = new HashMap<>();
-        assetsRecievedHm = new HashMap<>();
+        transactionsReceivedHm = new HashMap<>();
+        assetsReceivedHm = new HashMap<>();
         headerTimings = new HashMap<>();
         namesToResolveHm = new HashMap<>();
         memosToDecodeHm = new HashMap<>();
         hourlyNumberOfTransactionsLoaded = 0;
-        finalBlockRecieved = false;
+        finalBlockReceived = false;
 
         if (account_id != null) {
             get_relative_account_history(account_id, "20", hourlyNumberOfTransactionsLoaded);
@@ -133,7 +133,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     private void make_websocket_call(final String call_string_before_identifier, final String call_string_after_identifier, final api_identifier identifer) {
         handleHourlyTransactions.removeCallbacksAndMessages(null);
 
-        final Runnable checkifTransactionRecieved = new Runnable() {
+        final Runnable checkifTransactionReceived = new Runnable() {
             @Override
             public void run() {
                 if (callInProgressForHourlyTransactions && !callReceivedForHourlyTransactions && Application.isReady) // if balances are not returned in one second
@@ -172,7 +172,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                     Application.send(call);
                     callInProgressForHourlyTransactions = true;
                     callReceivedForHourlyTransactions = false;
-                    handleHourlyTransactions.postDelayed(checkifTransactionRecieved, time);
+                    handleHourlyTransactions.postDelayed(checkifTransactionReceived, time);
                 } else {
                     make_websocket_call(call_string_before_identifier, call_string_after_identifier, identifer);
                 }
@@ -239,19 +239,19 @@ public class TransactionsHelper implements IBalancesDelegate {
                 blockNumberTimeReceivedHourly(s);
             }
         } else if (id == 22) {
-            assetsRecieved(s);
+            assetsReceived(s);
         } else if (id == 23) {
-            namesRecieved(s);
+            namesReceived(s);
         }
     }
 
     String firstTransactionId = "";
     // block number -> ids -> operation
-    HashMap<String, HashMap<String, JSONObject>> transactionsRecievedHm;
-    HashMap<String, JSONObject> assetsRecievedHm;
+    HashMap<String, HashMap<String, JSONObject>> transactionsReceivedHm;
+    HashMap<String, JSONObject> assetsReceivedHm;
     HashMap<String, JSONObject> namesToResolveHm;
     HashMap<JSONObject, String> memosToDecodeHm;
-    public boolean finalBlockRecieved = false;
+    public boolean finalBlockReceived = false;
 
     void hourlyTransactionsReceived(String result) {
         try {
@@ -278,10 +278,10 @@ public class TransactionsHelper implements IBalancesDelegate {
             }
 
             // initialize few HashMaps and else
-            if (transactionsRecievedHm == null) {
-                transactionsRecievedHm = new HashMap<>();
-                finalBlockRecieved = false;
-                assetsRecievedHm = new HashMap<>();
+            if (transactionsReceivedHm == null) {
+                transactionsReceivedHm = new HashMap<>();
+                finalBlockReceived = false;
+                assetsReceivedHm = new HashMap<>();
                 namesToResolveHm = new HashMap<>();
                 memosToDecodeHm = new HashMap<>();
             }
@@ -296,20 +296,20 @@ public class TransactionsHelper implements IBalancesDelegate {
                         ) {
                     // first transaction occurred again in history
                     // meaning last transaction is already received
-                    finalBlockRecieved = true;
+                    finalBlockReceived = true;
                 } else {
                     // Fetch only transactions wrt to block number and transaction ids 1.11.0002320
                     if (myJson.getJSONObject(i).has("block_num") && myJson.getJSONObject(i).has("id")) {
-                        if (transactionsRecievedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString())) {
-                            if (transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString())) {
+                        if (transactionsReceivedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString())) {
+                            if (transactionsReceivedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString())) {
                                 // id already exists
                             } else {
-                                transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
+                                transactionsReceivedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
                             }
                         } else {
                             HashMap<String, JSONObject> newENtry = new HashMap<>();
                             newENtry.put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
-                            transactionsRecievedHm.put(myJson.getJSONObject(i).get("block_num").toString(), newENtry);
+                            transactionsReceivedHm.put(myJson.getJSONObject(i).get("block_num").toString(), newENtry);
 
                             headersTimeToFetch.add(myJson.getJSONObject(i).get("block_num").toString());
                         }
@@ -326,8 +326,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                                 if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("fee")) {
                                     String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("fee").get("asset_id").toString();
 
-                                    if (!assetsRecievedHm.containsKey(asset_id)) {
-                                        assetsRecievedHm.put(asset_id, null);
+                                    if (!assetsReceivedHm.containsKey(asset_id)) {
+                                        assetsReceivedHm.put(asset_id, null);
                                     }
                                 }
 
@@ -335,8 +335,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                                 if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("amount")) {
                                     String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("amount").get("asset_id").toString();
 
-                                    if (!assetsRecievedHm.containsKey(asset_id)) {
-                                        assetsRecievedHm.put(asset_id, null);
+                                    if (!assetsReceivedHm.containsKey(asset_id)) {
+                                        assetsReceivedHm.put(asset_id, null);
                                     }
                                 }
 
@@ -384,7 +384,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                 headerTimings = new HashMap<>();
             }
 
-            getTimeForTransactionsRecieved();
+            getTimeForTransactionsReceived();
         } catch (Exception e) {
             if (context == null) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
@@ -418,10 +418,10 @@ public class TransactionsHelper implements IBalancesDelegate {
             }
 
             // initialize few HashMaps and else
-            if (transactionsRecievedHm == null) {
-                transactionsRecievedHm = new HashMap<>();
-                finalBlockRecieved = false;
-                assetsRecievedHm = new HashMap<>();
+            if (transactionsReceivedHm == null) {
+                transactionsReceivedHm = new HashMap<>();
+                finalBlockReceived = false;
+                assetsReceivedHm = new HashMap<>();
                 namesToResolveHm = new HashMap<>();
                 memosToDecodeHm = new HashMap<>();
             }
@@ -442,7 +442,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                         ) {
                     // first transaction occurred again in history
                     // meaning last transaction is already received
-                    finalBlockRecieved = true;
+                    finalBlockReceived = true;
                 }
 
                 if (
@@ -459,16 +459,16 @@ public class TransactionsHelper implements IBalancesDelegate {
 
                 if (myJson.getJSONObject(i).has("block_num") && myJson.getJSONObject(i).has("id") && myJson.getJSONObject(i).has("op")) {
 
-                    if (transactionsRecievedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString())) {
-                        if (transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString())) {
+                    if (transactionsReceivedHm.containsKey(myJson.getJSONObject(i).get("block_num").toString())) {
+                        if (transactionsReceivedHm.get(myJson.getJSONObject(i).get("block_num").toString()).containsKey(myJson.getJSONObject(i).get("id").toString())) {
                             // id already exists
                         } else {
-                            transactionsRecievedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
+                            transactionsReceivedHm.get(myJson.getJSONObject(i).get("block_num").toString()).put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
                         }
                     } else {
                         HashMap<String, JSONObject> newENtry = new HashMap<>();
                         newENtry.put(myJson.getJSONObject(i).get("id").toString(), myJson.getJSONObject(i));
-                        transactionsRecievedHm.put(myJson.getJSONObject(i).get("block_num").toString(), newENtry);
+                        transactionsReceivedHm.put(myJson.getJSONObject(i).get("block_num").toString(), newENtry);
 
                         headersTimeToFetch.add(myJson.getJSONObject(i).get("block_num").toString());
                     }
@@ -480,8 +480,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                             if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("fee")) {
                                 String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("fee").get("asset_id").toString();
 
-                                if (!assetsRecievedHm.containsKey(asset_id)) {
-                                    assetsRecievedHm.put(asset_id, null);
+                                if (!assetsReceivedHm.containsKey(asset_id)) {
+                                    assetsReceivedHm.put(asset_id, null);
                                 }
                             }
 
@@ -489,8 +489,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                             if (myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).has("amount")) {
                                 String asset_id = myJson.getJSONObject(i).getJSONArray("op").getJSONObject(j).getJSONObject("amount").get("asset_id").toString();
 
-                                if (!assetsRecievedHm.containsKey(asset_id)) {
-                                    assetsRecievedHm.put(asset_id, null);
+                                if (!assetsReceivedHm.containsKey(asset_id)) {
+                                    assetsReceivedHm.put(asset_id, null);
                                 }
                             }
 
@@ -542,7 +542,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                 headerTimings = new HashMap<>();
             }
 
-            getTimeForTransactionsRecieved();
+            getTimeForTransactionsReceived();
             // }
 //            }else {
 //                Log.d("LogTransactions","not found");
@@ -564,7 +564,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     List<String> headersTimeToFetch;
     int indexHeadersTimeToFetch;
 
-    void getTimeForTransactionsRecieved() {
+    void getTimeForTransactionsReceived() {
         try {
             get_block_header("21", headersTimeToFetch.get(indexHeadersTimeToFetch));
         } catch (Exception e) {
@@ -614,8 +614,8 @@ public class TransactionsHelper implements IBalancesDelegate {
 
                 if (++indexHeadersTimeToFetch < headersTimeToFetch.size()) {
                     headerTimings.put(headersTimeToFetch.get(indexHeadersTimeToFetch - 1), formattedDate);
-                    getTimeForTransactionsRecieved();
-                } else if (finalBlockRecieved) {
+                    getTimeForTransactionsReceived();
+                } else if (finalBlockReceived) {
                     getAssetsInTransactionsReceived();
                 } else {
                     get_relative_account_history(hourlyTransactionsAccountId, "20", hourlyNumberOfTransactionsLoaded);
@@ -661,8 +661,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                 headerTimings.put(headersTimeToFetch.get(indexHeadersTimeToFetch), formattedDate);
             }
             if (++indexHeadersTimeToFetch < headersTimeToFetch.size()) {
-                getTimeForTransactionsRecieved();
-            } else if (finalBlockRecieved) {
+                getTimeForTransactionsReceived();
+            } else if (finalBlockReceived) {
                 getAssetsInTransactionsReceived();
             } else {
                 getAssetsInTransactionsReceived();
@@ -679,17 +679,17 @@ public class TransactionsHelper implements IBalancesDelegate {
         try {
             // fetch assets
             // usables :
-            // transactionsRecievedHm
+            // transactionsReceivedHm
             // headerTimings
-            // assetsRecievedHm
+            // assetsReceivedHm
 
             if (context == null) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fetching_assets_in_transactions));
 
-            if (assetsRecievedHm.size() > 0) {
+            if (assetsReceivedHm.size() > 0) {
                 String values = "";
 
-                for (String assets : assetsRecievedHm.keySet()) {
+                for (String assets : assetsReceivedHm.keySet()) {
                     values += "\"" + assets + "\"" + ",";
                 }
 
@@ -698,7 +698,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                 get_assets(values, "22");
             } else {
                 if (context == null) return;
-                getNamesInTransactionsRecieved();
+                getNamesInTransactionsReceived();
             }
         } catch (Exception e) {
             if (context == null) return;
@@ -706,7 +706,7 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    void assetsRecieved(String result) {
+    void assetsReceived(String result) {
         try {
             // get time from result
             JSONObject resultJson = new JSONObject(result);
@@ -722,22 +722,22 @@ public class TransactionsHelper implements IBalancesDelegate {
             for (int i = 0; i < assets.length(); i++) {
                 JSONObject asset = assets.getJSONObject(i);
 
-                if (asset.has("id") && assetsRecievedHm.containsKey(asset.getString("id"))) {
-                    assetsRecievedHm.put(asset.getString("id"), asset);
+                if (asset.has("id") && assetsReceivedHm.containsKey(asset.getString("id"))) {
+                    assetsReceivedHm.put(asset.getString("id"), asset);
                 }
             }
 
             if (context == null) return;
-            assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.assets_retrieved) + assetsRecievedHm.size());
+            assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.assets_retrieved) + assetsReceivedHm.size());
 
-            getNamesInTransactionsRecieved();
+            getNamesInTransactionsReceived();
         } catch (Exception e) {
             if (context == null) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
         }
     }
 
-    void getNamesInTransactionsRecieved() {
+    void getNamesInTransactionsReceived() {
         try {
             if (context == null) return;
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.resolving_account_names_in_transactions));
@@ -762,7 +762,7 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    void namesRecieved(String result) {
+    void namesReceived(String result) {
         try {
             // get time from result
             JSONObject resultJson = new JSONObject(result);
@@ -795,7 +795,7 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    private void decodeMemoTransactionsRecieved(final JSONObject memoObject) {
+    private void decodeMemoTransactionsReceived(final JSONObject memoObject) {
         ECKey toKey;
         toKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifkey).getKey().getPrivKeyBytes());
         if (context == null) return;
@@ -815,7 +815,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     }
 
 
-    private void decodeAllMemosInTransactionsRecieved(final List<JSONObject> memosArray) {
+    private void decodeAllMemosInTransactionsReceived(final List<JSONObject> memosArray) {
         ECKey toKey;
         toKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifkey).getKey().getPrivKeyBytes());
 
@@ -841,7 +841,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     private void loadMemoSListForDecoding() {
         try {
             if (indexEncryptedMemos < memosToDecodeHm.size()) {
-                decodeMemoTransactionsRecieved(encryptedMemos[indexEncryptedMemos]);
+                decodeMemoTransactionsReceived(encryptedMemos[indexEncryptedMemos]);
                 indexEncryptedMemos++;
                 if (context == null) return;
                 assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.decrypting_memos) + indexEncryptedMemos + " of " + memosToDecodeHm.size());
@@ -859,7 +859,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             /*
             if ( indexEncryptedMemos < memosToDecodeHm.size() )
             {
-                decodeMemoTransactionsRecieved(encryptedMemos[indexEncryptedMemos]);
+                decodeMemoTransactionsReceived(encryptedMemos[indexEncryptedMemos]);
                 indexEncryptedMemos++;
                 if ( context == null ) return;
                 assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.decrypting_memos) + indexEncryptedMemos + " of " + memosToDecodeHm.size());
@@ -875,7 +875,7 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    private void decodeRecievedMemos() {
+    private void decodeReceivedMemos() {
         try {
 
             // trim down extra memos
@@ -895,7 +895,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                 for (JSONObject memoObj : Arrays.asList(encryptedMemos)) {
                     memosList.add(memoObj);
                 }
-                decodeAllMemosInTransactionsRecieved(memosList);
+                decodeAllMemosInTransactionsReceived(memosList);
             } else {
                 generateTransactionsDetailArray();
             }
@@ -916,7 +916,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             List<TransactionDetails> myTransactions = new ArrayList<>();
 
             for (String blockNum : listOfBlocks) {
-                HashMap<String, JSONObject> transactions = transactionsRecievedHm.get(blockNum);
+                HashMap<String, JSONObject> transactions = transactionsReceivedHm.get(blockNum);
                 String[] transactionsIds = transactions.keySet().toArray(new String[transactions.size()]);
                 List<String> transactionIdsList = Arrays.asList(transactionsIds);
                 Collections.sort(transactionIdsList);
@@ -936,10 +936,10 @@ public class TransactionsHelper implements IBalancesDelegate {
                                 // get amount asset
                                 if (transaction.getJSONArray("op").getJSONObject(j).has("amount")) {
                                     // get asset symbol
-                                    myTransactionDetails.assetSymbol = assetsRecievedHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("amount").getString("asset_id")).getString("symbol");
+                                    myTransactionDetails.assetSymbol = assetsReceivedHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("amount").getString("asset_id")).getString("symbol");
 
                                     // get asset amount
-                                    String precision = assetsRecievedHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("amount").getString("asset_id")).getString("precision");
+                                    String precision = assetsReceivedHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("amount").getString("asset_id")).getString("precision");
                                     String number = transaction.getJSONArray("op").getJSONObject(j).getJSONObject("amount").getString("amount");
                                     myTransactionDetails.Amount = SupportMethods.convertAssetAmountToDouble(precision, number);
 
@@ -980,6 +980,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                                 }
 
                                 // get memo message
+                                Log.d(TAG, "Memo: " + memosToDecodeHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("memo")));
                                 if (transaction.getJSONArray("op").getJSONObject(j).has("memo")) {
                                     if (memosToDecodeHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("memo")) != null) {
                                         myTransactionDetails.Memo = memosToDecodeHm.get(transaction.getJSONArray("op").getJSONObject(j).getJSONObject("memo"));
@@ -1041,7 +1042,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             if (context == null) return;
             EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
             equivalentRatesHm = myFiatStorage.getEqHM(fc);
-            decodeRecievedMemos();
+            decodeReceivedMemos();
         }
     }
 
@@ -1050,7 +1051,7 @@ public class TransactionsHelper implements IBalancesDelegate {
         EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
         //myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
         equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
-        decodeRecievedMemos();
+        decodeReceivedMemos();
     }
 
     int retryGetIndirectEquivalentRates = 0;
@@ -1067,7 +1068,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             if (context == null) return;
             EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
             equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
-            decodeRecievedMemos();
+            decodeReceivedMemos();
         }
     }
 
@@ -1178,7 +1179,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                             if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
 
-                            decodeRecievedMemos();
+                            decodeReceivedMemos();
                         }
                         catch (Exception e)
                         {
@@ -1310,7 +1311,7 @@ public class TransactionsHelper implements IBalancesDelegate {
                     if (context == null) return;
                     assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
 
-                    decodeRecievedMemos();
+                    decodeReceivedMemos();
                 }
             }
 
