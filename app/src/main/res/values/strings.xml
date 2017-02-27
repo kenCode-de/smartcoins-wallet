@@ -267,6 +267,7 @@
     <string name="life_time_validation_date">1969&#8211;12&#8211;31T23:59:59</string>
     <string name="head_block_number">head_block_number</string>
     <string name="e_receipt">e_receipt</string>
+    <string name="coin">coin</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
     <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}</string>

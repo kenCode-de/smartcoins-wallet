@@ -52,13 +52,23 @@
             android:label="@string/send_screen_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
-        <activity
+        <!--<activity
             android:name=".RecieveActivity"
             android:label="@string/rcv_screen_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" />!-->
         <activity
+            android:name="de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity"
+            android:label="@string/rcv_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <!--<activity
             android:name=".RequestActivity"
+            android:label="@string/request_amount_screen_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />!-->
+        <activity
+            android:name="de.bitsharesmunich.cryptocoincore.smartcoinwallets.RequestActivity"
             android:label="@string/request_amount_screen_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />

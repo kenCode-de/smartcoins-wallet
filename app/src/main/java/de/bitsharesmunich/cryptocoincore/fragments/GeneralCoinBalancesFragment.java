@@ -98,7 +98,7 @@ import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.RecieveActivity;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
@@ -1133,8 +1133,16 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     @OnClick(R.id.recievebtn)
     public void GoToRecieveActivity() {
         final Intent intent = new Intent(getActivity(), RecieveActivity.class);
-        intent.putExtra(getString(R.string.to), to);
-        intent.putExtra(getString(R.string.account_id), accountId);
+        if(coin == Coin.BITSHARE) {
+            intent.putExtra(getString(R.string.to), to);
+            intent.putExtra(getString(R.string.account_id), accountId);
+        }else{
+            SCWallDatabase db = new SCWallDatabase(getContext());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
+            intent.putExtra(getString(R.string.to), account.getNextRecieveAddress());
+            intent.putExtra(getString(R.string.account_id), Long.toString(account.getId()));
+        }
+        intent.putExtra(getString(R.string.coin),coin);
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
