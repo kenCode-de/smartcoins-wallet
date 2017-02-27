@@ -321,13 +321,26 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
     };
 
+
+    public void onTransactionSuccess(){
+        Log.d(TAG, "send.onSuccess");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                hideDialog();
+                etAmount.setText("");
+                Toast.makeText(SendScreen.this, getResources().getString(R.string.send_success), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     /**
      * Callback that is fired when we get a response from a transaction broadcast sequence.
      */
     private WitnessResponseListener broadcastTransactionListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(WitnessResponse response) {
-            Log.d(TAG, "send.onSuccess");
+            /*Log.d(TAG, "send.onSuccess");
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -335,7 +348,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     etAmount.setText("");
                     Toast.makeText(SendScreen.this, getResources().getString(R.string.send_success), Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
+            onTransactionSuccess();
 //            mHandler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
@@ -506,15 +520,26 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnFocusChange(R.id.etReceiverAccount)
     public void onFocusChange(boolean hasFocus) {
-        validReceiver = false;
 
-        if (!hasFocus) {
-            validating = true;
-            tvErrorRecieverAccount.setText("");
-            myLowerCaseTimer.cancel();
-            myAccountNameValidationTimer.cancel();
-            myLowerCaseTimer.start();
-            myAccountNameValidationTimer.start();
+        if (this.coin == Coin.BITSHARE) {
+            validReceiver = false;
+
+            if (!hasFocus) {
+                validating = true;
+                tvErrorRecieverAccount.setText("");
+                myLowerCaseTimer.cancel();
+                myAccountNameValidationTimer.cancel();
+                myLowerCaseTimer.start();
+                myAccountNameValidationTimer.start();
+            }
+        } else {
+            GeneralCoinValidator validator = GeneralCoinFactory.getValidator(this.coin);
+            validReceiver = validator.validateAddress(etReceiverAccount.getText().toString());
+
+            if (!validReceiver){
+                tvErrorRecieverAccount.setText(getString(R.string.address_invalid_format));
+                tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+            }
         }
     }
     @OnTextChanged(R.id.etAmount)
@@ -681,7 +706,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (validateSend()) {
             Log.d(TAG,"send validated");
             progressDialog = new ProgressDialog(this);
-            if (!etBackupAsset.getText().toString().equals("") && Double.parseDouble(etBackupAsset.getText().toString()) != 0) {
+            if ((this.coin == Coin.BITSHARE) && (!etBackupAsset.getText().toString().equals("")) && (Double.parseDouble(etBackupAsset.getText().toString()) != 0)) {
                 if (Helper.fetchBoolianSharePref(this, "require_pin")) {
                     showDialogPin(true);
                 } else {
@@ -703,7 +728,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Log.d(TAG, "sendFunds: "+isTrade);
         String transferFunds = this.getString(R.string.transfer_funds) + "...";
         showDialog("", transferFunds);
-        if (isTrade) {
+        if ((this.coin == Coin.BITSHARE) && (isTrade)) {
             Double tradeAmount = Double.parseDouble(etBackupAsset.getText().toString()) * backAssetRate;
             if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
                 tradeAmount += Double.parseDouble(etAmount.getText().toString());
@@ -712,26 +737,37 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             mainAsset = mainAsset.replace("bit", "");
             transferAmount(String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", tradeAmount), mainAsset, etReceiverAccount.getText().toString());
         } else if (!etAmount.getText().toString().equals("") && Double.parseDouble(etAmount.getText().toString()) != 0) {
-            String mainAsset = spAssets.getSelectedItem().toString();
-            mainAsset = mainAsset.replace("bit", "");
             String mainAmount;
-            if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
-                mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
+            String mainAsset;
+            if (this.coin == Coin.BITSHARE) {
+                mainAsset = spAssets.getSelectedItem().toString();
+                mainAsset = mainAsset.replace("bit", "");
+                if (selectedAccountAsset != null && selectedAccountAsset.precision != null && !selectedAccountAsset.precision.isEmpty()) {
+                    mainAmount = String.format(Locale.ENGLISH, "%." + selectedAccountAsset.precision + "f", Double.parseDouble(etAmount.getText().toString()));
+                } else {
+                    mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
+                }
             } else {
-                mainAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etAmount.getText().toString()));
-            }
-            transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
-        }
-        if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
-            String loyaltyAmount;
-            String loyaltyAsset = tvLoyalty.getText().toString();
-            if (loyaltyAsset.equalsIgnoreCase("YASHA")) {
-                loyaltyAmount = String.format(Locale.ENGLISH, "%.3f", Double.parseDouble(etLoyalty.getText().toString()));
-            } else {
-                loyaltyAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etLoyalty.getText().toString()));
+                long ammount = (long)(Double.parseDouble(etAmount.getText().toString())*Math.pow(10,this.coin.getPrecision()));
+                mainAmount = String.format(Locale.ENGLISH, "%." + this.coin.getPrecision() + "f", Double.parseDouble(etAmount.getText().toString()));
+                mainAsset = this.coin.name();
             }
 
-            transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
+            transferAmount(mainAmount, mainAsset, etReceiverAccount.getText().toString());
+        }
+
+        if (this.coin == Coin.BITSHARE) {
+            if (!etLoyalty.getText().toString().equals("") && Double.parseDouble(etLoyalty.getText().toString()) != 0) {
+                String loyaltyAmount;
+                String loyaltyAsset = tvLoyalty.getText().toString();
+                if (loyaltyAsset.equalsIgnoreCase("YASHA")) {
+                    loyaltyAmount = String.format(Locale.ENGLISH, "%.3f", Double.parseDouble(etLoyalty.getText().toString()));
+                } else {
+                    loyaltyAmount = String.format(Locale.ENGLISH, "%.4f", Double.parseDouble(etLoyalty.getText().toString()));
+                }
+
+                transferAmount(loyaltyAmount, loyaltyAsset, etReceiverAccount.getText().toString());
+            }
         }
     }
 
@@ -759,55 +795,67 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void updateAmountStatus() {
         try {
+
             tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
-            String selectedAsset;
-            if (spAssets.getChildCount() > 0) {
-                selectedAsset = spAssets.getSelectedItem().toString();
-            } else selectedAsset = "";
-            selectedAccountAsset();
-            Double selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
-            String availableBalance = selectedBalance.toString();
+            Double selectedBalance = 0.0;
+            String availableBalance = "";
+            String selectedAsset = "";
 
-            if (etAmount.getText().length() > 0) {
-                String enteredAmountStr = etAmount.getText().toString();
-
-                if (enteredAmountStr.equals(".")) {
-                    enteredAmountStr = "0.";
-                }
-                Double enteredAmount = Double.parseDouble(enteredAmountStr);
-                if (enteredAmount != 0) {
-                    String remainingBalance = "0";
-
-                    if (enteredAmount > selectedBalance | enteredAmount < 0) {
-                        validAmount = false;
-                        tvAmountStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
-                        tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
-                    } else {
-                        validAmount = true;
-
-                        remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
-                        tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
-                        setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
-                        updateTotalStatus(); // shayan
-                    }
-
-                } else {
-                    if (!etLoyalty.getText().toString().equals("")) {
-                        validAmount = true;
-                    }
-                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-                }
+            if (this.coin == Coin.BITSHARE) {
+                if (spAssets.getChildCount() > 0) {
+                    selectedAsset = spAssets.getSelectedItem().toString();
+                } else selectedAsset = "";
+                selectedAccountAsset();
+                selectedBalance = Double.parseDouble(selectedAccountAsset.ammount) / Math.pow(10, Integer.parseInt(selectedAccountAsset.precision));
+                availableBalance = selectedBalance.toString();
             } else {
-                etBackupAsset.setText(""); //shayan
-                validAmount = false;
-                tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
-                setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
+                selectedBalance = generalCoinAccount.getBalance().get(0).getConfirmedAmount()/Math.pow(10, this.coin.getPrecision());
+                availableBalance = selectedBalance.toString();
+                selectedAsset = this.coin.getLabel();
             }
 
-            //Crashing
-            setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 14, selectedAsset, Color.RED);
-            tvAmountStatus.setTextColor(Color.RED); //shayan
-            updateTotalStatus();
+
+                if (etAmount.getText().length() > 0) {
+                    String enteredAmountStr = etAmount.getText().toString();
+
+                    if (enteredAmountStr.equals(".")) {
+                        enteredAmountStr = "0.";
+                    }
+                    Double enteredAmount = Double.parseDouble(enteredAmountStr);
+                    if (enteredAmount != 0) {
+                        String remainingBalance = "0";
+
+                        if (enteredAmount > selectedBalance | enteredAmount < 0) {
+                            validAmount = false;
+                            tvAmountStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                            tvAmountStatus.setText(String.format(getString(R.string.str_warning_only_available), selectedBalance.toString(), selectedAsset));
+                        } else {
+                            validAmount = true;
+
+                            remainingBalance = String.format(Locale.ENGLISH, "%.4f", (selectedBalance - enteredAmount));
+                            tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), remainingBalance, selectedAsset));
+                            setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
+                            updateTotalStatus(); // shayan
+                        }
+
+                    } else {
+                        if (!etLoyalty.getText().toString().equals("")) {
+                            validAmount = true;
+                        }
+                        tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+                    }
+                } else {
+                    etBackupAsset.setText(""); //shayan
+                    validAmount = false;
+                    tvAmountStatus.setText(String.format(getString(R.string.str_balance_available), selectedBalance.toString(), selectedAsset));
+                    setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 0, selectedAsset, Color.BLACK); //shayan
+                }
+
+                //Crashing
+                setHyperlinkText(tvAmountStatus, availableBalance, etAmount, 14, selectedAsset, Color.RED);
+                tvAmountStatus.setTextColor(Color.RED); //shayan
+                updateTotalStatus();
+
         } catch (Exception e) {
 
         }
@@ -825,9 +873,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         }
 
         public void onFinish() {
-            if (!etReceiverAccount.getText().toString().equals(etReceiverAccount.getText().toString().toLowerCase())) {
-                etReceiverAccount.setText(etReceiverAccount.getText().toString().toLowerCase());
-                etReceiverAccount.setSelection(etReceiverAccount.getText().toString().length());
+            if (coin == Coin.BITSHARE) {
+                if (!etReceiverAccount.getText().toString().equals(etReceiverAccount.getText().toString().toLowerCase())) {
+                    etReceiverAccount.setText(etReceiverAccount.getText().toString().toLowerCase());
+                    etReceiverAccount.setSelection(etReceiverAccount.getText().toString().length());
+                }
             }
         }
     };
@@ -1067,25 +1117,29 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     public void populateAssetsSpinner() {
         try {
-            String selectedAccount = spinnerFrom.getSelectedItem().toString();
             ArrayList<String> spinnerArray = new ArrayList<String>();
-            for (int i = 0; i < accountDetails.size(); i++) {
-                AccountDetails accountDetail = accountDetails.get(i);
-                if (accountDetail.account_name.equals(selectedAccount)) {
-                    try {
-                        for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
-                            selectedAccountAsset = accountDetail.AccountAssets.get(j);
-                            spinnerArray.add(selectedAccountAsset.symbol);
+
+            if (this.coin == Coin.BITSHARE) {
+                String selectedAccount = spinnerFrom.getSelectedItem().toString();
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    AccountDetails accountDetail = accountDetails.get(i);
+                    if (accountDetail.account_name.equals(selectedAccount)) {
+                        try {
+                            for (int j = 0; j < accountDetail.AccountAssets.size(); j++) {
+                                selectedAccountAsset = accountDetail.AccountAssets.get(j);
+                                spinnerArray.add(selectedAccountAsset.symbol);
+                            }
+                        } catch (Exception r) {
+                            selectedAccountAsset = null;
                         }
-                    } catch (Exception r) {
-                        selectedAccountAsset = null;
                     }
                 }
+
+                AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
+                spinnerArray = assetsSymbols.updatedList(spinnerArray);
+            } else {
+                spinnerArray.add(this.coin.getLabel());
             }
-
-            AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
-            spinnerArray = assetsSymbols.updatedList(spinnerArray);
-
             createSpinner(spinnerArray, spAssets);
         } catch (Exception e) {
         }
@@ -1170,77 +1224,83 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
-        String senderID = null;
-        String selectedAccount = spinnerFrom.getSelectedItem().toString();
-        String wifKey = "";
-        for (int i = 0; i < accountDetails.size(); i++) {
-            AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_name.equals(selectedAccount)) {
-                senderID = accountDetail.account_id;
-                try {
-                    wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (this.coin == Coin.BITSHARE) {
+            String senderID = null;
+            String selectedAccount = spinnerFrom.getSelectedItem().toString();
+            String wifKey = "";
+            for (int i = 0; i < accountDetails.size(); i++) {
+                AccountDetails accountDetail = accountDetails.get(i);
+                if (accountDetail.account_name.equals(selectedAccount)) {
+                    senderID = accountDetail.account_id;
+                    try {
+                        wifKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 }
-                break;
             }
-        }
-        String memoMessage = null;
-        if (!etMemo.getText().toString().isEmpty()){
-            memoMessage = etMemo.getText().toString();
-        }else{
-            memoMessage = null;
-        }
-
-        try{
-            long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
-            String assetId = selectedAccountAsset.id;
-            Asset transferAsset = new Asset(assetId);
-            long expirationTime = Application.blockTime + 30;
-            ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
-
-            sourceAccount = new UserAccount(senderID);
-            destinationAccount = new UserAccount(receiverID);
-
-            TransferTransactionBuilder builder = new TransferTransactionBuilder()
-                    .setSource(sourceAccount)
-                    .setDestination(destinationAccount)
-                    .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-                    .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                    .setPrivateKey(currentPrivKey);
-            if(memoMessage != null) {
-                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
-                long nonce = secureRandom.nextLong();
-                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
-                Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
-                Address to = new Address(destination.getKey());
-                Memo memo = new Memo(from, to, nonce, encryptedMemo);
-                builder.setMemo(memo);
+            String memoMessage = null;
+            if (!etMemo.getText().toString().isEmpty()) {
+                memoMessage = etMemo.getText().toString();
+            } else {
+                memoMessage = null;
             }
 
-            Transaction transaction = builder.build();
+            try {
+                long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
+                String assetId = selectedAccountAsset.id;
+                Asset transferAsset = new Asset(assetId);
+                long expirationTime = Application.blockTime + 30;
+                ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
 
-            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
-            transferBroadcaster.start();
+                sourceAccount = new UserAccount(senderID);
+                destinationAccount = new UserAccount(receiverID);
 
-            if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-                TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-                        .setSource(new UserAccount(senderID))
-                        .setDestination(bitsharesMunich)
-                        .setAmount(donationAmount)
-                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+                TransferTransactionBuilder builder = new TransferTransactionBuilder()
+                        .setSource(sourceAccount)
+                        .setDestination(destinationAccount)
+                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                         .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                         .setPrivateKey(currentPrivKey);
+                if (memoMessage != null) {
+                    SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+                    long nonce = secureRandom.nextLong();
+                    byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destination, nonce, memoMessage);
+                    Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                    Address to = new Address(destination.getKey());
+                    Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                    builder.setMemo(memo);
+                }
 
-                Transaction donationTransaction = donationBuilder.build();
-                donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
-                donationBroadcaster.start();
-                Log.d(TAG, "started a donation message broadcast");
+                Transaction transaction = builder.build();
+
+                transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
+                transferBroadcaster.start();
+
+                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+                            .setSource(new UserAccount(senderID))
+                            .setDestination(bitsharesMunich)
+                            .setAmount(donationAmount)
+                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+                            .setPrivateKey(currentPrivKey);
+
+                    Transaction donationTransaction = donationBuilder.build();
+                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
+                    donationBroadcaster.start();
+                    Log.d(TAG, "started a donation message broadcast");
+                }
+            } catch (MalformedTransactionException e) {
+                hideDialog();
+                e.printStackTrace();
+                Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
             }
-        } catch (MalformedTransactionException e) {
-            hideDialog();
-            e.printStackTrace();
-            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
+        } else {
+            long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, this.coin.getPrecision()));
+            generalCoinAccount.send(toAccount, this.coin, baseAmount, getApplicationContext());
+            onTransactionSuccess();
         }
     }
 
@@ -1295,54 +1355,56 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @Override
     public void checkAccount(JSONObject jsonObject) {
-        myWebSocketHelper.cleanUpTransactionsHandler();
-        try {
-            JSONArray jsonArray = jsonObject.getJSONArray("result");
-            boolean found = false;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                final String accountName = jsonArray.getJSONArray(i).getString(0);
-                String accountId = jsonArray.getJSONArray(i).getString(1);
-                if (accountName.equals(etReceiverAccount.getText().toString())) {
-                    Log.d(TAG, "valid account name: " + accountName + ", account id: " + accountId);
-                    found = true;
-                    validReceiver = true;
-                    receiverID = jsonArray.getJSONArray(i).getString(1);
+        if (this.coin == Coin.BITSHARE) {
+            myWebSocketHelper.cleanUpTransactionsHandler();
+            try {
+                JSONArray jsonArray = jsonObject.getJSONArray("result");
+                boolean found = false;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    final String accountName = jsonArray.getJSONArray(i).getString(0);
+                    String accountId = jsonArray.getJSONArray(i).getString(1);
+                    if (accountName.equals(etReceiverAccount.getText().toString())) {
+                        Log.d(TAG, "valid account name: " + accountName + ", account id: " + accountId);
+                        found = true;
+                        validReceiver = true;
+                        receiverID = jsonArray.getJSONArray(i).getString(1);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //                            if (sendBtnPressed) {
+                                ////                                validatingComplete();
+                                //                            }
+                            }
+                        });
+                        sendBtnPressed = false;
+                        validating = false;
+                        //                    destination = new UserAccount(accountId, accountName);
+                        break;
+                    }
+                }
+                if (!found) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //                            if (sendBtnPressed) {
-                            ////                                validatingComplete();
-                            //                            }
+                            validReceiver = false;
+                            sendBtnPressed = false;
+                            validating = false;
+                            // This code works correct, donot edit if it shows red underline
+                            try {
+                                String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
+                                format = format.replaceAll("\\s+", " ").trim();
+                                tvErrorRecieverAccount.setText(format);
+                            } catch (Exception e) {
+                                tvErrorRecieverAccount.setText("");
+                            }
+
+                            tvErrorRecieverAccount.setVisibility(View.VISIBLE);
                         }
                     });
-                    sendBtnPressed = false;
-                    validating = false;
-                    //                    destination = new UserAccount(accountId, accountName);
-                    break;
                 }
+            } catch (Exception e) {
+                sendBtnPressed = false;
             }
-            if (!found) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        validReceiver = false;
-                        sendBtnPressed = false;
-                        validating = false;
-                        // This code works correct, donot edit if it shows red underline
-                        try {
-                            String format = String.format(getResources().getString(R.string.account_name_not_exist), etReceiverAccount.getText());
-                            format = format.replaceAll("\\s+", " ").trim();
-                            tvErrorRecieverAccount.setText(format);
-                        } catch (Exception e) {
-                            tvErrorRecieverAccount.setText("");
-                        }
-
-                        tvErrorRecieverAccount.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            sendBtnPressed = false;
         }
     }
 

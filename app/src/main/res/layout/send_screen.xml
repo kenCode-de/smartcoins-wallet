@@ -196,20 +196,7 @@
                                         android:layout_centerInParent="true"
                                         android:gravity="center" />
                                 </RelativeLayout>
-                                <EditText
-                                    android:id="@+id/etReceiverAccount"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginLeft="5sp"
-                                    android:layout_marginRight="5sp"
-                                    android:layout_toLeftOf="@+id/contactActivity"
-                                    android:layout_toRightOf="@+id/rl_webviewTo"
-                                    android:background="@drawable/edittext_background_layer"
-                                    android:maxLines="1"
-                                    android:singleLine="true"
-                                    android:textSize="16sp"
-                                    android:textColor="#000"
-                                    android:paddingLeft="10dp"/>
+
                                 <RelativeLayout
                                     android:id="@+id/contactActivity"
                                     android:layout_width="50sp"
@@ -225,6 +212,21 @@
                                         android:layout_alignParentEnd="true"
                                         android:layout_alignParentStart="true" />
                                 </RelativeLayout>
+
+                                <EditText
+                                    android:id="@+id/etReceiverAccount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5sp"
+                                    android:layout_marginRight="5sp"
+                                    android:background="@drawable/edittext_background_layer"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:textSize="16sp"
+                                    android:textColor="#000"
+                                    android:paddingLeft="10dp"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_toStartOf="@+id/contactActivity" />
                             </RelativeLayout>
                             <ImageButton
                                 android:id="@+id/scanning"

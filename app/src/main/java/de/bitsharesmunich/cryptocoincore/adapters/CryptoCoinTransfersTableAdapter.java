@@ -194,7 +194,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
             // User sent this transfer
             transferAmountTextView.setTextColor(redColor);
             fiatAmountTextView.setTextColor(lightRed);
-            String amount = Helper.setLocaleNumberFormat(locale, balanceChange/Math.pow(10,historicalTransfer.getType().getPrecision()));
+            String amount = Helper.setLocaleNumberFormat(locale, -balanceChange/Math.pow(10,historicalTransfer.getType().getPrecision()));
             transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
