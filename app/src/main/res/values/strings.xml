@@ -72,6 +72,7 @@
     <string name="hide_donations">Hide Donations from homescreen Transactions list</string>
     <string name="backup">BACKUP .bin</string>
     <string name="checkbox_donate">Donate 2 BTS to the Support Developers at</string>
+    <string name="checkbox_donate_general_coin">Donate %1$.2f %2$s to the Support Developers at</string>
     <string name="backup_brainkey">BACKUP BRAINKEY</string>
     <string name="backup_master_seed">BACKUP MASTER SEED</string>
     <string name="backup_no_keys_found_error">No account using this key was found, please make sure you are using an updated backup file.</string>

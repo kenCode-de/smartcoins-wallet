@@ -113,6 +113,7 @@
                                         android:textSize="15sp"
                                         android:visibility="gone">
                                     </Spinner>
+
                                     <TextView
                                         android:paddingLeft="10dp"
                                         android:textColor="#000"

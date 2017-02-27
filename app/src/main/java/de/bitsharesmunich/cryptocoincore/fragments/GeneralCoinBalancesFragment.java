@@ -99,7 +99,7 @@ import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.RecieveActivity;
-import de.bitshares_munich.smartcoinswallet.SendScreen;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -1158,6 +1158,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     @OnClick(R.id.sendbtn)
     public void GoToSendActivity() {
         final Intent intent = new Intent(getActivity(), SendScreen.class);
+        Bundle b = new Bundle();
+        b.putString("coin", this.coin.name());
+        intent.putExtras(b);
+
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
