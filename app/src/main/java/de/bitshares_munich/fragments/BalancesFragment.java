@@ -809,7 +809,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
-        Application.registerAssetDelegate(this);
         iSound = this;
         updateEquivalentAmount = new Handler();
         myWebSocketHelper = new webSocketCallHelper(getContext());
@@ -844,6 +843,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Override
     public void onStart() {
         super.onStart();
+        Application.registerAssetDelegate(this);
         if(getMissingAssets == null){
             Log.d(TAG, "Got no missing assets, checking for new transactions");
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE);
@@ -908,6 +908,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
 //        getLtmPrice(getActivity(), tvAccountName.getText().toString());
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Application.registerAssetDelegate(null);
     }
 
     private void setSortableTableViewHeight(View rootView, Handler handler, Runnable task) {
