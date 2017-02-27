@@ -116,6 +116,7 @@
     <string name="account_name_already_exist">Account Name %s already exist</string>
     <string name="account_name_not_exist">Account Name %s does not exist</string>
     <string name="account_already_exist">Account already exist</string>
+    <string name="address_invalid_format">Invalid address format</string>
     <string name="add_contact">Add</string>
     <string name="edit_contact">Edit</string>
     <string name="empty_list">Contact list is Empty</string>

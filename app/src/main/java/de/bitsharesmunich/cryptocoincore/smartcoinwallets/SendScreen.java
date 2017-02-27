@@ -89,6 +89,9 @@ import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinValidator;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -463,6 +466,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     void onTextChangedTo(CharSequence text) {
         validReceiver = false;
         tvErrorRecieverAccount.setText("");
+        tvErrorRecieverAccount.setVisibility(View.GONE);
 
         if (text != null) {
             if (!text.toString().equals(text.toString().trim())) {
@@ -474,16 +478,27 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             if (spinnerFrom.getSelectedItem().toString().equals(etReceiverAccount.getText().toString())) {
                 Toast.makeText(this, R.string.warning_msg_same_account, Toast.LENGTH_SHORT).show();
             }
+
+            if (etReceiverAccount.getText().length() > 0) {
+                validating = true;
+                myLowerCaseTimer.cancel();
+                myAccountNameValidationTimer.cancel();
+                myLowerCaseTimer.start();
+                myAccountNameValidationTimer.start();
+            }
+
+
+        } else {
+            GeneralCoinValidator validator = GeneralCoinFactory.getValidator(this.coin);
+            validReceiver = validator.validateAddress(etReceiverAccount.getText().toString());
+
+            if (!validReceiver){
+                tvErrorRecieverAccount.setText(getString(R.string.address_invalid_format));
+                tvErrorRecieverAccount.setVisibility(View.VISIBLE);
+            }
         }
 
-        if (etReceiverAccount.getText().length() > 0) {
-            validating = true;
-            myLowerCaseTimer.cancel();
-            myAccountNameValidationTimer.cancel();
-            myLowerCaseTimer.start();
-            myAccountNameValidationTimer.start();
-        }
-        tvErrorRecieverAccount.setVisibility(View.GONE);
+
         loadWebView(webviewTo, 34, Helper.hash(etReceiverAccount.getText().toString(), Helper.SHA256));
 
         mHandler = new Handler();
@@ -1288,21 +1303,21 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 final String accountName = jsonArray.getJSONArray(i).getString(0);
                 String accountId = jsonArray.getJSONArray(i).getString(1);
                 if (accountName.equals(etReceiverAccount.getText().toString())) {
-                    Log.d(TAG, "valid account name: "+accountName+", account id: "+accountId);
+                    Log.d(TAG, "valid account name: " + accountName + ", account id: " + accountId);
                     found = true;
                     validReceiver = true;
                     receiverID = jsonArray.getJSONArray(i).getString(1);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            if (sendBtnPressed) {
-////                                validatingComplete();
-//                            }
+                            //                            if (sendBtnPressed) {
+                            ////                                validatingComplete();
+                            //                            }
                         }
                     });
                     sendBtnPressed = false;
                     validating = false;
-//                    destination = new UserAccount(accountId, accountName);
+                    //                    destination = new UserAccount(accountId, accountName);
                     break;
                 }
             }
