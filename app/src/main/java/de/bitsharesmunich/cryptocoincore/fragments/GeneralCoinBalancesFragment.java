@@ -1386,7 +1386,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
             getTransactionByAddress.start();
 
-            //account.send("mx6Ta9NiZQmkcdoZf7ZPdpqPJV4HSy42jm",account.getCoin(),200000000,getContext());
+            //account.send("n1nyxWEQ7av9fWRuR5QZ5vCVcH9C7JFrzd",account.getCoin(),2000000,getContext());
         }
     }
 

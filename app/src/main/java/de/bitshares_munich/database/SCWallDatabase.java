@@ -1059,6 +1059,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_AMOUNT, gitx.getAmount());
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_INDEX, gitx.getIndex());
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX, gitx.getScriptHex());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ORIGIN_TXID, gitx.getOriginalTxid());
 
         try{
             long newId = db.insertOrThrow(SCWallDatabaseContract.Inputs.TABLE_NAME, null, contentValues);
@@ -1174,7 +1175,8 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS,
                 SCWallDatabaseContract.Inputs.COLUMN_AMOUNT,
                 SCWallDatabaseContract.Inputs.COLUMN_INDEX,
-                SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX
+                SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX,
+                SCWallDatabaseContract.Inputs.COLUMN_ORIGIN_TXID
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Inputs.TABLE_NAME, columns,
                 SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION+ " = '" + transaction.getId() + "'", null, null, null, null, null);
@@ -1196,7 +1198,9 @@ public class SCWallDatabase {
                 long amount = cursor.getLong(3);
                 int index = cursor.getInt(4);
                 String scriptHex = cursor.getString(5);
+                String originalTxid = cursor.getString(6);
                 gtix = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString,index,scriptHex);
+                gtix.setOriginalTxid(originalTxid);
                 if(address != null){
                     address.getOutputTransaction().add(gtix);
                 }

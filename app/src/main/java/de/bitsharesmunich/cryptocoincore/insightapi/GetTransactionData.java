@@ -79,6 +79,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 input.setAddressString(addr);
                 input.setIndex(vin.n);
                 input.setScriptHex(vin.scriptSig.hex);
+                input.setOriginalTxid(vin.txid);
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);

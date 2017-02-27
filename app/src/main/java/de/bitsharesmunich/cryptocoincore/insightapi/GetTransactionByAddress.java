@@ -80,6 +80,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     input.setAddressString(addr);
                     input.setIndex(vin.n);
                     input.setScriptHex(vin.scriptSig.hex);
+                    input.setOriginalTxid(vin.txid);
                     for (GeneralCoinAddress address : addresses) {
                         if (address.getAddressString(param).equals(addr)) {
                             input.setAddress(address);
