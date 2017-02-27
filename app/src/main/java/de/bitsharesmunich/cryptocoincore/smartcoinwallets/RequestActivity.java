@@ -71,11 +71,10 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
 
         Intent intent = getIntent();
-        if (intent.hasExtra(getString(R.string.coin))) {
-            coin = (Coin) intent.getSerializableExtra(getString(R.string.coin));
-            popwin.setText(coin.getLabel());
-        }else{
-            coin = Coin.BITSHARE;
+        if (this.getIntent().getExtras().getString(getString(R.string.coin)) == null){
+            this.coin = Coin.BITSHARE;
+        } else {
+            this.coin = Coin.valueOf(this.getIntent().getExtras().getString(getString(R.string.coin), "BITSHARE"));
         }
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));

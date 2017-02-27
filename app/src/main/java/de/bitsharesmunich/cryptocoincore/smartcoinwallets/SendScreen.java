@@ -75,7 +75,6 @@ import de.bitshares_munich.smartcoinswallet.BaseActivity;
 import de.bitshares_munich.smartcoinswallet.BuildConfig;
 import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
 import de.bitshares_munich.smartcoinswallet.ContactListDialogAdapter;
-import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.SettingActivity;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
@@ -383,10 +382,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.send_screen);
 
-        if (this.getIntent().getExtras().getString("coin") == null){
+        if (this.getIntent().getExtras().getString(getString(R.string.coin)) == null){
             this.coin = Coin.BITSHARE;
         } else {
-            this.coin = Coin.valueOf(this.getIntent().getExtras().getString("coin", "BITSHARE"));
+            this.coin = Coin.valueOf(this.getIntent().getExtras().getString(getString(R.string.coin), "BITSHARE"));
         }
 
         setBackButton(true);
@@ -413,6 +412,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             startupTasks();
         } else {
             cbAlwaysDonate.setText(getString(R.string.checkbox_donate_general_coin,1.0,this.coin.getLabel()) + " BitShares Munich");
+            Intent intent = getIntent();
+            Bundle res = intent.getExtras();
+            if (res != null) {
+                if (res.containsKey("sResult") && res.containsKey("id")) {
+                    if (res.getInt("id") == 5) {
+                        decodeInvoiceData(res.getString("sResult"));
+                    }
+                }
+            }
         }
 
         final Handler handler = new Handler();
@@ -1224,6 +1232,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     public void transferAmount(String amount, String symbol, String toAccount) {
+        String memoMessage = null;
+        if (!etMemo.getText().toString().isEmpty()) {
+            memoMessage = etMemo.getText().toString();
+        } else {
+            memoMessage = null;
+        }
+
         if (this.coin == Coin.BITSHARE) {
             String senderID = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1240,12 +1255,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     break;
                 }
             }
-            String memoMessage = null;
-            if (!etMemo.getText().toString().isEmpty()) {
-                memoMessage = etMemo.getText().toString();
-            } else {
-                memoMessage = null;
-            }
+
 
             try {
                 long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
@@ -1299,7 +1309,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
         } else {
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, this.coin.getPrecision()));
-            generalCoinAccount.send(toAccount, this.coin, baseAmount, getApplicationContext());
+            generalCoinAccount.send(toAccount, this.coin, baseAmount, memoMessage,getApplicationContext());
             onTransactionSuccess();
         }
     }
@@ -1721,9 +1731,23 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     }
 
     private void decodeInvoiceData(String encoded) {
-        Invoice invoice = Invoice.fromQrCode(encoded);
-        saveMerchantEmail(invoice.toJsonString());
-        onScanResult(invoice);
+        if(coin == Coin.BITSHARE) {
+            Invoice invoice = Invoice.fromQrCode(encoded);
+            saveMerchantEmail(invoice.toJsonString());
+            onScanResult(invoice);
+        }else{
+            GeneralCoinValidator validator = GeneralCoinFactory.getValidator(coin);
+            etReceiverAccount.setText(validator.getAddressFromURI(encoded));
+            DecimalFormat df = new DecimalFormat("####.####");
+            df.setRoundingMode(RoundingMode.CEILING);
+            df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
+            if (validator.getAmount(encoded) > 0) {
+                etAmount.setText(df.format(validator.getAmount(encoded)));
+                etAmount.setEnabled(false);
+            }
+            //TODO process message of uri
+            //TODO proccess label, (account name)
+        }
     }
 
     public void saveMerchantEmail(String string) {

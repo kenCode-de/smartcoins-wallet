@@ -115,12 +115,11 @@ public class RecieveActivity extends BaseActivity {
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
-        if (intent.hasExtra(getString(R.string.coin))) {
-            coin = (Coin) intent.getSerializableExtra("coin");
-        }else{
-            coin = Coin.BITSHARE;
+        if (this.getIntent().getExtras().getString(getString(R.string.coin)) == null){
+            this.coin = Coin.BITSHARE;
+        } else {
+            this.coin = Coin.valueOf(this.getIntent().getExtras().getString(getString(R.string.coin), "BITSHARE"));
         }
-
 
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));String concate;

@@ -122,7 +122,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
     }
 
     @Override
-    public void send(String toAddress, de.bitsharesmunich.cryptocoincore.base.Coin coin, long amount, Context context) {
+    public void send(String toAddress, de.bitsharesmunich.cryptocoincore.base.Coin coin, long amount, String memo, Context context) {
         if(coin.name().equalsIgnoreCase("bitcoin")){
             Transaction tx = new Transaction(param);
 
@@ -144,7 +144,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
                     break;
                 }
             }
-            System.out.println("SENDTEST: amount : " + currentAmount+ " utxos : " + utxos.size());
+
 
             if(currentAmount< amount + fee){
                 //TODO error amount bigger than avaible
@@ -176,6 +176,9 @@ public class BitcoinAccount extends GeneralCoinAccount {
                     }
                 }
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
+            }
+
+            if(memo != null && !memo.isEmpty()){
             }
 
             System.out.println("SENDTEST: " + Util.bytesToHex(tx.bitcoinSerialize()));

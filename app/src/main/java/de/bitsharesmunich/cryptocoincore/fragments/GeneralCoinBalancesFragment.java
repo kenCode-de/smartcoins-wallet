@@ -96,8 +96,8 @@ import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
-import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.QRCodeActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
@@ -1142,7 +1142,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             intent.putExtra(getString(R.string.to), account.getNextRecieveAddress());
             intent.putExtra(getString(R.string.account_id), Long.toString(account.getId()));
         }
-        intent.putExtra(getString(R.string.coin),coin);
+        intent.putExtra(getString(R.string.coin),coin.name());
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
@@ -1167,7 +1167,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     public void GoToSendActivity() {
         final Intent intent = new Intent(getActivity(), SendScreen.class);
         Bundle b = new Bundle();
-        b.putString("coin", this.coin.name());
+        b.putString(getString(R.string.coin), this.coin.name());
         intent.putExtras(b);
 
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
@@ -1265,6 +1265,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     public void QrCodeActivity() {
         final Intent intent = new Intent(getContext(), QRCodeActivity.class);
         intent.putExtra("id", 1);
+        intent.putExtra(getString(R.string.coin),coin.name());
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 

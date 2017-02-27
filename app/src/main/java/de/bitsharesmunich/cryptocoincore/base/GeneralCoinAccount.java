@@ -149,7 +149,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public abstract String getNextChangeAddress();
 
-    public abstract void send(String toAddress, Coin coin, long amount, Context context);
+    public abstract void send(String toAddress, Coin coin, long amount, String memo, Context context);
 
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
