@@ -617,15 +617,15 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             spBackupAsset.setAdapter(adapterAccountAssets);
 
             spBackupAsset.setSelection(0);
-
-            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
-            if(isBackupAsset) {
-                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
-                    if (posBackupAssets != -9) {
-                        spBackupAsset.setSelection(posBackupAssets);
-                    }
-                }
-            }
+            spBackupAsset.setEnabled(false);
+//            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
+//            if(isBackupAsset) {
+//                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
+//                    if (posBackupAssets != -9) {
+//                        spBackupAsset.setSelection(posBackupAssets);
+//                    }
+//                }
+//            }
         }
 
 

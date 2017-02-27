@@ -833,8 +833,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     void setBackUpAsset() {
         try {
-            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
-
+//            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
+            backupAsset = "";
             if (backupAsset.isEmpty()) {
                 llBackupAsset.setVisibility(View.GONE);
             } else {
@@ -1041,7 +1041,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     }
                 });
             } else {
-                findExchangeRate(id);
+                    findExchangeRate(id);
             }
         } else {
             findExchangeRate(id);
