@@ -1,10 +1,12 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import java.io.Serializable;
+
 /**
  * Created by henry on 05/02/2017.
  */
 
-public enum Coin {
+public enum Coin implements Serializable{
     BITCOIN("BTC",8,6), BITCOIN_TEST("BTC",8,6), LITECOIN("LTC",8,6), DASH("DASH",8,6), DOGECOIN("DOGE",8,6), BITSHARE("BTS",8,6);
 
     protected String label;
