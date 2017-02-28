@@ -103,6 +103,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ImportWifActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".PinActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>

@@ -18,6 +18,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+//import org.bitcoinj.core.Base58;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -647,5 +649,35 @@ public class Helper {
         } else {
             return currency.getCurrencyCode();
         }
+    }
+
+    /*
+     * WIF checksum checking.
+     * Ref.: https://en.bitcoin.it/wiki/Wallet_import_format
+     *
+     * @param wifText Wallet Import Format string
+     * @return true if valid wif format or false
+     */
+    public static Boolean wifChecksumChecking(String wifText) {
+        Log.d(TAG, "WIF: " + wifText);
+        //Using de.bitshares_munich.utils.Base58 instead of org.bitcoinj.core.Base58
+        //because it does return the value in array of byte format instead of String
+        byte[] testString = Base58.encode(wifText.getBytes());
+        Log.d(TAG, "Base58: "+testString);
+        String checksum = testString.substring(testString.length()-4, testString.length());
+        Log.d(TAG, "Checksum: "+checksum);
+        testString = testString.substring(0, testString.length()-4);
+        Log.d(TAG, "TestString: "+testString);
+        String hash = hash(testString, "SHA-256");
+        hash = hash(hash, "SHA-256");
+        Log.d(TAG, "Second hash: "+hash);
+        Log.d(TAG, "Checksum 2: "+hash.substring(0, 4));*/
+
+
+        /*if (wifText != null && wifText.length() > 0) {
+            str = str.substring(0, str.length()-1);
+        }*/
+
+        return true;
     }
 }

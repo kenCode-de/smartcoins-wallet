@@ -14,11 +14,21 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:text="@string/import_brainkey"/>
+
     <Button
         android:id="@+id/tvBackup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:text="@string/import_backup"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/btnWifBackup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="@string/import_wif"
         android:layout_marginTop="20dp"/>
+
 </LinearLayout>
