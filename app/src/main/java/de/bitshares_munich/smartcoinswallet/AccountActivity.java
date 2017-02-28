@@ -42,6 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
@@ -131,6 +132,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     /* Agreement License Dialog */
     private Dialog mLicenseDialog;
+
+    /* Database interface */
+    private SCWallDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,6 +386,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             String brainKeySuggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
+
+            /* Storing the newly created brainky */
+            database.insertKey(brainKey);
+
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
             Log.d(TAG, "brain key: "+brainKeySuggestion);
             Log.d(TAG, "address would be: "+address.toString());

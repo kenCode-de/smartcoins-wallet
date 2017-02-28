@@ -833,8 +833,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     void setBackUpAsset() {
         try {
-            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
-
+//            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
+            backupAsset = "";
             if (backupAsset.isEmpty()) {
                 llBackupAsset.setVisibility(View.GONE);
             } else {
@@ -1041,7 +1041,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     }
                 });
             } else {
-                findExchangeRate(id);
+                    findExchangeRate(id);
             }
         } else {
             findExchangeRate(id);
@@ -1574,9 +1574,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     private void showDialogPin(final Boolean fundTransfer) {
         final ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(SendScreen.this);
-        dialog.setTitle(R.string.pin_verification);
+        dialog.setTitle(R.string.title_prompt_pin);
         dialog.setContentView(R.layout.activity_alert_pin_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+        btnDone.setVisibility(View.VISIBLE);
         final EditText etPin = (EditText) dialog.findViewById(R.id.etPin);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override

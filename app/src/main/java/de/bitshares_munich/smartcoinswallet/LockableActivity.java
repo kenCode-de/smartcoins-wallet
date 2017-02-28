@@ -10,9 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -83,9 +81,7 @@ public abstract class LockableActivity extends AppCompatActivity {
         pinDialog = new Dialog(this);
         pinDialog.setTitle(R.string.txt_6_digits_pin);
         pinDialog.setContentView(R.layout.activity_alert_pin_dialog);
-        Button btnDone = (Button) pinDialog.findViewById(R.id.btnDone);
         final EditText etPin = (EditText) pinDialog.findViewById(R.id.etPin);
-        final TextView errorPin = (TextView) pinDialog.findViewById(R.id.warning);
         //Listening to changes
         etPin.addTextChangedListener(new TextWatcher() {
 

@@ -292,6 +292,8 @@
 
 <string name="pin_verification">UNLOCKED</string>
 
+<string name="title_prompt_pin">Por favor digite o seu PIN</string>
+
 <string name="send_screen_name">Enviar</string>
 
 <string name="rcv_screen_name">Receber</string>
@@ -415,6 +417,8 @@
 
 
     <string name="please_backup_your_brainkey">Por favor, backup de seu brainkey</string>
+
+    <string name="title_important">Importante</string>
 
     <string name="backup_brainkey_msg">Backup seu arquivo .bin em algum lugar seguro ou seus fundos poderiam ser perdidos!</string>
 

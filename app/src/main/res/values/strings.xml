@@ -211,6 +211,7 @@
     <string name="copy">Copy</string>
 
     <string name="pin_verification">UNLOCKED</string>
+    <string name="title_prompt_pin">Please enter PIN</string>
 
     // Screen Names
     <string name="send_screen_name">Send</string>
@@ -380,6 +381,7 @@
     // new strings
     <string name="please_backup_your_brainkey">Please backup your brainkey</string>
 
+    <string name="title_important">Important</string>
     <string name="backup_brainkey_msg">Backup your .bin file somewhere safe or your funds could be lost!</string>
     <string name="pref_backup_bin_exist">backup_bin_exist</string>
 

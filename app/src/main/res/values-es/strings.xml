@@ -290,6 +290,8 @@
 
 <string name="pin_verification">ABIERTO</string>
 
+<string name="title_prompt_pin">Por favor digite su PIN</string>
+
 <string name="send_screen_name">Enviar</string>
 
 <string name="rcv_screen_name">Recibir</string>
@@ -412,7 +414,9 @@
 
 
 
-    <string name="please_backup_your_brainkey">Por favor respalde sus brainkey</string>
+    <string name="please_backup_your_brainkey">Por favor respalde su brainkey</string>
+
+    <string name="title_important">Importante</string>
 
     <string name="backup_brainkey_msg">Haz una copia de seguridad de tu archivo .bin de respaldo en un lugar seguro o sus fondos podrían perderse!</string>
 

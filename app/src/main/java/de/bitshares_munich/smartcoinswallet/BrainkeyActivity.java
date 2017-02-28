@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,6 +30,7 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
@@ -77,6 +76,9 @@ public class BrainkeyActivity extends BaseActivity {
     @Bind(R.id.tvPinConfirmation)
     TextView tvPinConfirmation;
 
+    /* Database interface */
+    private SCWallDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,28 +87,13 @@ public class BrainkeyActivity extends BaseActivity {
         setBackButton(true);
         setTitle(getResources().getString(R.string.app_name));
 
+        database = new SCWallDatabase(this);
+
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
-        etBrainKey.addTextChangedListener(brainKeyWatcher);
-
     }
-
-    private final TextWatcher brainKeyWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {        }
-    };
 
     @OnClick(R.id.btnCancel)
     public void cancel(Button button) {
@@ -135,16 +122,16 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void load(String pinCode) {
-        String temp = etBrainKey.getText().toString();
-        if (temp.contains(" ")) {
-            String arr[] = temp.split(" ");
+        String brainKeyText = etBrainKey.getText().toString();
+        if (brainKeyText.contains(" ")) {
+            String arr[] = brainKeyText.split(" ");
             if (arr.length >= 12 && arr.length <= 16) {
 
-                if (checkBrainKeyExist(temp)) {
+                if (checkBrainKeyExist(brainKeyText)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));
-                    getAccountFromBrainkey(temp, pinCode);
+                    getAccountFromBrainkey(brainKeyText, pinCode);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
@@ -175,8 +162,12 @@ public class BrainkeyActivity extends BaseActivity {
     public void getAccountFromBrainkey(final String brainKey, final String pinCode) {
         try {
             BrainKey bKey = new BrainKey(brainKey, 0);
+
+            /* Storing brainkey in database */
+            database.insertKey(bKey);
+
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
-            final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
+            final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
             Log.d(TAG,String.format("Brain key: '%s'", bKey.getBrainKey()));
             Log.d(TAG, String.format("Brainkey would generate address: %s", address.toString()));
@@ -193,7 +184,7 @@ public class BrainkeyActivity extends BaseActivity {
                                 List<UserAccount> accounts = resp.get(0);
                                 if(accounts.size() > 0){
                                     for(UserAccount account : accounts) {
-                                        getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pinCode);
+                                        getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, brainKey, pinCode);
                                     }
                                 }else{
                                     hideDialog();

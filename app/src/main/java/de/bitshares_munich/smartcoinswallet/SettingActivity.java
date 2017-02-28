@@ -63,6 +63,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -175,6 +176,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
+
+    /* Database interface */
+    private SCWallDatabase database;
 
     /**
      * Listener called with the account data. This is done before the account authorities update
@@ -303,6 +307,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         tvMerchantPath.setText(MerchantEmail.getPath());
         updateBlockNumberHead();
 
+        database = new SCWallDatabase(this);
     }
 
     public void init() {
@@ -612,15 +617,15 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             spBackupAsset.setAdapter(adapterAccountAssets);
 
             spBackupAsset.setSelection(0);
-
-            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
-            if(isBackupAsset) {
-                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
-                    if (posBackupAssets != -9) {
-                        spBackupAsset.setSelection(posBackupAssets);
-                    }
-                }
-            }
+            spBackupAsset.setEnabled(false);
+//            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
+//            if(isBackupAsset) {
+//                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
+//                    if (posBackupAssets != -9) {
+//                        spBackupAsset.setSelection(posBackupAssets);
+//                    }
+//                }
+//            }
         }
 
 
@@ -912,6 +917,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             String dictionary = reader.readLine();
             String suggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(suggestion, 0);
+
+            /* Storing the newly created brainky */
+            database.insertKey(brainKey);
             Log.d(TAG,"new brain key: "+suggestion);
 
             /* Keeping this suggestion in shared preferences in case we get interrupted */

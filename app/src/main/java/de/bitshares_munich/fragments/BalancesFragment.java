@@ -809,7 +809,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tinyDB = new TinyDB(getContext());
-        Application.registerAssetDelegate(this);
         iSound = this;
         updateEquivalentAmount = new Handler();
         myWebSocketHelper = new webSocketCallHelper(getContext());
@@ -844,6 +843,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Override
     public void onStart() {
         super.onStart();
+        Application.registerAssetDelegate(this);
         if(getMissingAssets == null){
             Log.d(TAG, "Got no missing assets, checking for new transactions");
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE);
@@ -908,6 +908,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
 //        getLtmPrice(getActivity(), tvAccountName.getText().toString());
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Application.registerAssetDelegate(null);
     }
 
     private void setSortableTableViewHeight(View rootView, Handler handler, Runnable task) {
@@ -1248,38 +1254,38 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     @Override
     public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        ArrayList<AccountAssets> accountAssets = new ArrayList<>();
+        if(isAdded()){
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            ArrayList<AccountAssets> accountAssets = new ArrayList<>();
 
-        for (int i = 0; i < ids.size(); i++) {
-            long amount = Long.parseLong(am.get(i));
+            for (int i = 0; i < ids.size(); i++) {
+                long amount = Long.parseLong(am.get(i));
 
-            if (amount != 0) {
-                AccountAssets accountAsset = new AccountAssets();
-
-                accountAsset.id = ids.get(i);
-                if (pre.size() > i) accountAsset.precision = pre.get(i);
-                if (sym.size() > i) accountAsset.symbol = sym.get(i);
-                if (am.size() > i) accountAsset.ammount = am.get(i);
-
-                accountAssets.add(accountAsset);
-            }
-        }
-
-        try {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    accountDetails.get(i).AccountAssets = accountAssets;
-                    getEquivalentComponents(accountAssets);
-                    break;
+                if (amount != 0) {
+                    AccountAssets accountAsset = new AccountAssets();
+                    accountAsset.id = ids.get(i);
+                    if (pre.size() > i) accountAsset.precision = pre.get(i);
+                    if (sym.size() > i) accountAsset.symbol = sym.get(i);
+                    if (am.size() > i) accountAsset.ammount = am.get(i);
+                    accountAssets.add(accountAsset);
                 }
             }
-        } catch (Exception w) {
-            SupportMethods.testing("Assets", w, "Asset Activity");
-        }
 
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        BalanceAssetsUpdate(sym, pre, am, false);
+            try {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).AccountAssets = accountAssets;
+                        getEquivalentComponents(accountAssets);
+                        break;
+                    }
+                }
+            } catch (Exception w) {
+                SupportMethods.testing("Assets", w, "Asset Activity");
+            }
+
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            BalanceAssetsUpdate(sym, pre, am, false);
+        }
     }
 
     public BalanceItems getBalanceItems(){
