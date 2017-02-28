@@ -84,6 +84,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Bind(R.id.etPin)
     EditText etPin;
 
+    @Bind(R.id.tvOrAccount)
+    TextView tvOrAccount;
+
     @Bind(R.id.tvExistingAccount)
     Button tvExistingAccount;
 
@@ -170,6 +173,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         if (res != null) {
             if (res.containsKey("activity_id")) {
                 if (res.getInt("activity_id") == 919) {
+                    tvOrAccount.setVisibility(View.GONE);
                     tvExistingAccount.setVisibility(View.GONE);
                     setBackButton(true);
                 }
@@ -251,7 +255,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         hasNumber = false;
         validAccount = true;
         if (text.length() > 5 && containsDigit(text.toString()) && text.toString().contains("-")) {
-            Log.d(TAG,"Starting validation check..");
+            Log.d(TAG, "Starting validation check..");
             checkingValidation = true;
             hasNumber = true;
             myLowerCaseTimer.cancel();
@@ -263,8 +267,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-            if (etAccountName.getText().length() > 5)
-            {
+            if (etAccountName.getText().length() > 5) {
                 if (hasNumber) {
                     tvErrorAccountName.setText("");
                     tvErrorAccountName.setVisibility(View.GONE);
@@ -287,9 +290,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                         Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                     }
                 }), 0).start();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
                 checkingValidation = false;
             }
@@ -299,7 +300,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     @Override
     public void onResume() {
         super.onResume();
-        if ( (!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && ( mLicenseDialog == null || !mLicenseDialog.isShowing() )  ) {
+        if ((!Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_agreement))) && (mLicenseDialog == null || !mLicenseDialog.isShowing())) {
             showDialogLicence();
         }
     }
@@ -308,7 +309,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     protected void onPause() {
         super.onPause();
         //Dismiss the License agreement dialog when the Activity is paused (to avoid activity memory leak)
-        if(mLicenseDialog != null && mLicenseDialog.isShowing()){
+        if (mLicenseDialog != null && mLicenseDialog.isShowing()) {
             mLicenseDialog.dismiss();
         }
         mLicenseDialog = null;
@@ -391,26 +392,26 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             database.insertKey(brainKey);
 
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
-            Log.d(TAG, "brain key: "+brainKeySuggestion);
-            Log.d(TAG, "address would be: "+address.toString());
+            Log.d(TAG, "brain key: " + brainKeySuggestion);
+            Log.d(TAG, "address would be: " + address.toString());
             mAddress = address.toString();
             brainPrivKey = brainKeySuggestion;
             try {
                 wifPrivKey = Crypt.getInstance().encrypt_string(brainKey.getWalletImportFormat());
                 createAccount(address);
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(),R.string.error_wif , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.error_wif, Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
-            Log.e(TAG, "IOException while trying to generate key. Msg: "+e.getMessage());
-            Toast.makeText(getApplicationContext(),R.string.error_read_dict_file , Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "IOException while trying to generate key. Msg: " + e.getMessage());
+            Toast.makeText(getApplicationContext(), R.string.error_read_dict_file, Toast.LENGTH_SHORT).show();
             this.hideDialog();
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "IOException while trying to close BufferedReader. Msg: "+e.getMessage());
+                    Log.e(TAG, "IOException while trying to close BufferedReader. Msg: " + e.getMessage());
                 }
             }
         }
@@ -441,58 +442,58 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
                 @Override
                 public void onResponse(Call<RegisterAccountResponse> call, Response<RegisterAccountResponse> response) {
-                    Log.d(TAG,"onResponse");
+                    Log.d(TAG, "onResponse");
                     if (response.isSuccessful()) {
-                        Log.d(TAG,"success");
+                        Log.d(TAG, "success");
                         RegisterAccountResponse resp = response.body();
                         if (resp.account != null) {
                             try {
-                                if(resp.account.name.equals(accountName)) {
+                                if (resp.account.name.equals(accountName)) {
                                     getAccountId(accountName);
                                     tvErrorAccountName.setVisibility(View.GONE);
-                                }else{
-                                    Log.w(TAG,"Response account name differs from 'accountName'");
-                                    Log.w(TAG,"r: "+resp.account.name+", accountName: "+accountName);
+                                } else {
+                                    Log.w(TAG, "Response account name differs from 'accountName'");
+                                    Log.w(TAG, "r: " + resp.account.name + ", accountName: " + accountName);
                                 }
                             } catch (Exception e) {
-                                Log.e(TAG, "Exception. Msg: "+e.getMessage());
-                                Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "Exception. Msg: " + e.getMessage());
+                                Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
                                 hideDialog();
                             }
-                        }else{
-                            if(resp.error != null && resp.error.base != null && resp.error.base.length > 0){
+                        } else {
+                            if (resp.error != null && resp.error.base != null && resp.error.base.length > 0) {
                                 String errorMessage = getResources().getString(R.string.error_with_message);
                                 Toast.makeText(AccountActivity.this, String.format(errorMessage, resp.error.base[0]), Toast.LENGTH_LONG).show();
-                            }else{
+                            } else {
                                 Toast.makeText(AccountActivity.this, getResources().getString(R.string.error_no_message), Toast.LENGTH_SHORT).show();
                             }
                             hideDialog();
                         }
-                    }else{
-                        Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
                         hideDialog();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<RegisterAccountResponse> call, Throwable t) {
-                    Log.e(TAG, "onFailure. Msg: "+t.getMessage());
+                    Log.e(TAG, "onFailure. Msg: " + t.getMessage());
                     hideDialog();
-                    for(StackTraceElement element : t.getStackTrace()){
-                        Log.e(TAG, "at "+element.getClassName()+":"+element.getMethodName()+":"+element.getLineNumber());
+                    for (StackTraceElement element : t.getStackTrace()) {
+                        Log.e(TAG, "at " + element.getClassName() + ":" + element.getMethodName() + ":" + element.getLineNumber());
                     }
-                    Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            Log.e(TAG, "Exception. Msg: "+e.getMessage());
-            Toast.makeText(getApplicationContext(),R.string.try_again , Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Exception. Msg: " + e.getMessage());
+            Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnFocusChange(R.id.etAccountName)
-    void onFocusChanged(boolean hasFocus){
-        if(!hasFocus) {
+    void onFocusChanged(boolean hasFocus) {
+        if (!hasFocus) {
             if (etAccountName.getText().length() <= 5) {
                 Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
             } else if (etAccountName.getText().length() > 5 && !containsDigit(etAccountName.getText().toString())) {
@@ -510,42 +511,42 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @OnClick(R.id.btnCreate)
     public void create(Button button) {
-            if (checkingValidation) {
-                Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
-            } else if (etAccountName.getText().toString().length() == 0) {
-                Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
-            } else if (etAccountName.getText().toString().length() <= 5) {
-                Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
-            } else if (checkLastIndex()) {
-                tvErrorAccountName.setVisibility(View.VISIBLE);
-                tvErrorAccountName.setText(R.string.last_letter_cannot);
-            } else if (!checkHyphen()) {
-                tvErrorAccountName.setVisibility(View.VISIBLE);
-                tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
-            } else if (!containsDigit(etAccountName.getText().toString())) {
-                tvErrorAccountName.setVisibility(View.VISIBLE);
-                tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
+        if (checkingValidation) {
+            Toast.makeText(getApplicationContext(), R.string.validation_in_progress, Toast.LENGTH_SHORT).show();
+        } else if (etAccountName.getText().toString().length() == 0) {
+            Toast.makeText(getApplicationContext(), R.string.kindly_create_account, Toast.LENGTH_SHORT).show();
+        } else if (etAccountName.getText().toString().length() <= 5) {
+            Toast.makeText(getApplicationContext(), R.string.account_name_should_be_longer, Toast.LENGTH_SHORT).show();
+        } else if (checkLastIndex()) {
+            tvErrorAccountName.setVisibility(View.VISIBLE);
+            tvErrorAccountName.setText(R.string.last_letter_cannot);
+        } else if (!checkHyphen()) {
+            tvErrorAccountName.setVisibility(View.VISIBLE);
+            tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
+        } else if (!containsDigit(etAccountName.getText().toString())) {
+            tvErrorAccountName.setVisibility(View.VISIBLE);
+            tvErrorAccountName.setText(R.string.account_name_must_include_dash_and_a_number);
+        } else {
+            if (etPin.getText().length() == 0) {
+                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
+            }
+            //PIN must have minimum of 6-digit
+            else if (etPin.getText().length() < 6) {
+                Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
+            } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {
-                if (etPin.getText().length() == 0) {
-                    Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-                }
-                //PIN must have minimum of 6-digit
-                else if (etPin.getText().length() < 6) {
-                    Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
-                } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-                } else {
-                    if (validAccount) {
-                        if (!checkingValidation) {
-                            showDialog("", "");
-                            generateKeys();
-                        }
-                    }else{
-                        Log.d(TAG, "Not a valid account");
-                        Toast.makeText(this, getResources().getString(R.string.error_invalid_account), Toast.LENGTH_SHORT).show();
+                if (validAccount) {
+                    if (!checkingValidation) {
+                        showDialog("", "");
+                        generateKeys();
                     }
+                } else {
+                    Log.d(TAG, "Not a valid account");
+                    Toast.makeText(this, getResources().getString(R.string.error_invalid_account), Toast.LENGTH_SHORT).show();
                 }
             }
+        }
     }
 
     @OnClick(R.id.tvExistingAccount)
@@ -576,21 +577,23 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     }
 
     @Override
-    public void checkAccount(JSONObject jsonObject) {}
+    public void checkAccount(JSONObject jsonObject) {
+    }
 
     /**
      * Checks if the proposed account name is valid.
+     *
      * @param existingAccounts
      */
-    public void checkAccount(List<UserAccount> existingAccounts){
+    public void checkAccount(List<UserAccount> existingAccounts) {
         boolean found = false;
-        for(UserAccount existingAccount : existingAccounts){
-            if(existingAccount.getAccountName().equals(etAccountName.getText().toString())){
+        for (UserAccount existingAccount : existingAccounts) {
+            if (existingAccount.getAccountName().equals(etAccountName.getText().toString())) {
                 found = true;
                 break;
             }
         }
-        if(found){
+        if (found) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -601,7 +604,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
                     tvErrorAccountName.setVisibility(View.VISIBLE);
                 }
             });
-        }else{
+        } else {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -635,12 +638,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
         Intent intent;
 
-        if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
-        {
+        if (myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1) {
             intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
-        }
-        else
-        {
+        } else {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
 
@@ -658,20 +658,21 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     /**
      * Retrieves the id for the newly created account.
+     *
      * @param accountName: Account name
      */
-    private void getAccountId(final String accountName){
+    private void getAccountId(final String accountName) {
         new WebsocketWorkerThread(new GetAccountByName(accountName, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
                 AccountProperties accountProperties = (AccountProperties) response.result;
-                Log.d(TAG,"onSuccess. account id: "+accountProperties.id);
+                Log.d(TAG, "onSuccess. account id: " + accountProperties.id);
                 addWallet(accountProperties.id);
             }
 
             @Override
             public void onError(BaseResponse.Error error) {
-                Log.e(TAG,"onError. Msg: "+error.message);
+                Log.e(TAG, "onError. Msg: " + error.message);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -682,6 +683,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             }
         })).start();
     }
+
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 
@@ -691,9 +693,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             @Override
             public void run() {
                 if (Application.isConnected()) {
-                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
-                        tvBlockNumberHead.setText(Application.blockHead);
-                        ivSocketConnected.clearAnimation();
+                    ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                    tvBlockNumberHead.setText(Application.blockHead);
+                    ivSocketConnected.clearAnimation();
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
