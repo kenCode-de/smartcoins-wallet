@@ -115,10 +115,10 @@ public class RecieveActivity extends BaseActivity {
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
-        if (this.getIntent().getExtras().getString(getString(R.string.coin)) == null){
-            this.coin = Coin.BITSHARE;
+        if (intent.hasExtra(getString(R.string.coin))){
+            this.coin = Coin.valueOf(this.getIntent().getStringExtra(getString(R.string.coin)));
         } else {
-            this.coin = Coin.valueOf(this.getIntent().getExtras().getString(getString(R.string.coin), "BITSHARE"));
+            this.coin = Coin.BITSHARE;
         }
 
         if (intent.hasExtra(getString(R.string.to))) {
@@ -321,7 +321,7 @@ public class RecieveActivity extends BaseActivity {
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
-        intent.putExtra(getString(R.string.coin), coin);
+        intent.putExtra(getString(R.string.coin), coin.name());
         intent.putExtra(SplashActivity.KEY_ASK_FOR_PIN, false);
         this.onInternalAppMove();
         startActivity(intent);

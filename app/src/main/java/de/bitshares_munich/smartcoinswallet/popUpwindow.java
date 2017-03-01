@@ -20,6 +20,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.bitsharesmunich.cryptocoincore.base.Coin;
+
 
 public class popUpwindow {
 
@@ -27,24 +29,34 @@ public class popUpwindow {
     PopupWindow popupWindow;
     Context context;
     TextView textView;
+    Coin coin;
 
-    public popUpwindow(Context c,TextView textview) {
+    public popUpwindow(Context c,TextView textview, Coin coin) {
         context = c;
+
+        this.coin = coin;
+
         ArrayList<String> optionsList = new ArrayList<String>();
-        optionsList.add("AUD");
-        optionsList.add("BTC");
-        optionsList.add("BTS");
-        optionsList.add("CHF");
-        optionsList.add("CNY");
-        optionsList.add("EUR");
-        optionsList.add("GOLD");
-        optionsList.add("HKD");
-        optionsList.add("KRW");
-        optionsList.add("MXN");
-        optionsList.add("SGD");
-        optionsList.add("SILVER");
-        optionsList.add("TRY");
-        optionsList.add("USD");
+
+
+        if (this.coin == Coin.BITSHARE) {
+            optionsList.add("AUD");
+            optionsList.add("BTC");
+            optionsList.add("BTS");
+            optionsList.add("CHF");
+            optionsList.add("CNY");
+            optionsList.add("EUR");
+            optionsList.add("GOLD");
+            optionsList.add("HKD");
+            optionsList.add("KRW");
+            optionsList.add("MXN");
+            optionsList.add("SGD");
+            optionsList.add("SILVER");
+            optionsList.add("TRY");
+            optionsList.add("USD");
+        } else {
+            optionsList.add(this.coin.getLabel());
+        }
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(c);
         optionsList = assetsSymbols.updatedList(optionsList);
