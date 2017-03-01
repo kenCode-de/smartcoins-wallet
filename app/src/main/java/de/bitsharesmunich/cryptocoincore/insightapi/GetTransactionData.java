@@ -64,14 +64,14 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
             transaction.setDate(new Date(txi.time * 1000));
-            transaction.setFee((long) (txi.fee * InsightApiConstants.amountMultiplier));
+            transaction.setFee((long) (txi.fee * Math.pow(10,account.getCoin().getPrecision())));
             transaction.setConfirm(txi.confirmations);
             transaction.setType(account.getCoin());
             transaction.setBlockHeight(txi.blockheight);
 
             for (Vin vin : txi.vin) {
                 GIOTx input = new GIOTx();
-                input.setAmount(vin.valueSat);
+                input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
                 input.setTransaction(transaction);
                 input.setOut(true);
                 input.setType(account.getCoin());
@@ -93,7 +93,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
 
             for (Vout vout : txi.vout) {
                 GIOTx output = new GIOTx();
-                output.setAmount((long) (vout.value * InsightApiConstants.amountMultiplier));
+                output.setAmount((long) (vout.value * Math.pow(10,account.getCoin().getPrecision())));
                 output.setTransaction(transaction);
                 output.setOut(false);
                 output.setType(account.getCoin());

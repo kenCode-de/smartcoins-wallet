@@ -10,7 +10,6 @@ import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 abstract class InsightApiConstants {
     static final String protocol = "http";
-    static final long amountMultiplier = 100000000;
     private static final HashMap<Coin,AddressPort> serverAddressPort = new HashMap();
     static final String changeAddressRoom = "bitcoind/addresstxid";
     static final String subscribeEmmit = "subscribe";

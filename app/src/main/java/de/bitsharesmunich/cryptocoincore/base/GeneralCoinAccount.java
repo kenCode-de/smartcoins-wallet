@@ -83,6 +83,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     }
 
     public List<GeneralCoinAddress> getAddresses(SCWallDatabase db) {
+        this.getNextRecieveAddress();
+        this.getNextChangeAddress();
         calculateGapExternal();
         calculateGapChange();
 
@@ -131,6 +133,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
                 db.updateGeneralCoinAddress(changeAddress);
             }
         }
+
+        db.updateGeneralCoinAccount(this);
     }
 
     public int getAccountNumber() {

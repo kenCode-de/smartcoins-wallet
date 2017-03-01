@@ -33,18 +33,15 @@ import retrofit2.Response;
 public class GetTransactionByAddress extends Thread implements Callback<AddressTxi> {
 
 
-    private Coin coin;
-    private NetworkParameters param;
+    private GeneralCoinAccount account;
     private List<GeneralCoinAddress> addresses = new ArrayList();
     private InsightApiServiceGenerator serviceGenerator;
     private Context context;
 
 
-    public GetTransactionByAddress(NetworkParameters param, Coin coin, Context context) {
-
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(coin) + ":" + InsightApiConstants.getPort(coin);
-        this.param = param;
-        this.coin = coin;
+    public GetTransactionByAddress(GeneralCoinAccount account, Context context) {
+        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
+        this.account = account;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
         this.context = context;
     }
@@ -56,7 +53,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
     @Override
     public void onResponse(Call<AddressTxi> call, Response<AddressTxi> response) {
         if (response.isSuccessful()) {
-            HashSet<GeneralCoinAccount> accountsChanged = new HashSet();
+            boolean changed = false;
             AddressTxi addressTxi = response.body();
 
             for (Txi txi : addressTxi.items) {
@@ -65,31 +62,31 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 transaction.setTxid(txi.txid);
                 transaction.setBlock(txi.blockheight);
                 transaction.setDate(new Date(txi.time * 1000));
-                transaction.setFee((long) (txi.fee * InsightApiConstants.amountMultiplier));
+                transaction.setFee((long) (txi.fee * Math.pow(10,account.getCoin().getPrecision())));
                 transaction.setConfirm(txi.confirmations);
-                transaction.setType(coin);
+                transaction.setType(account.getCoin());
                 transaction.setBlockHeight(txi.blockheight);
 
                 for (Vin vin : txi.vin) {
                     GIOTx input = new GIOTx();
-                    input.setAmount(vin.valueSat);
+                    input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
                     input.setTransaction(transaction);
                     input.setOut(true);
-                    input.setType(coin);
+                    input.setType(account.getCoin());
                     String addr = vin.addr;
                     input.setAddressString(addr);
                     input.setIndex(vin.n);
                     input.setScriptHex(vin.scriptSig.hex);
                     input.setOriginalTxid(vin.txid);
                     for (GeneralCoinAddress address : addresses) {
-                        if (address.getAddressString(param).equals(addr)) {
+                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                             input.setAddress(address);
                             tempAccount = address.getAccount();
 
-                            if (!address.hasOutputTransaction(input, this.param)) {
+                            if (!address.hasOutputTransaction(input, account.getNetworkParam())) {
                                 address.getOutputTransaction().add(input);
-                                accountsChanged.add(address.getAccount());
                             }
+                            changed = true;
                         }
                     }
                     transaction.getTxInputs().add(input);
@@ -97,23 +94,23 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
                 for (Vout vout : txi.vout) {
                     GIOTx output = new GIOTx();
-                    output.setAmount((long) (vout.value * InsightApiConstants.amountMultiplier));
+                    output.setAmount((long) (vout.value * Math.pow(10,account.getCoin().getPrecision())));
                     output.setTransaction(transaction);
                     output.setOut(false);
-                    output.setType(coin);
+                    output.setType(account.getCoin());
                     String addr = vout.scriptPubKey.addresses[0];
                     output.setAddressString(addr);
                     output.setIndex(vout.n);
                     output.setScriptHex(vout.scriptPubKey.hex);
                     for (GeneralCoinAddress address : addresses) {
-                        if (address.getAddressString(param).equals(addr)) {
+                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                             output.setAddress(address);
                             tempAccount = address.getAccount();
 
-                            if (!address.hasInputTransaction(output, this.param)) {
+                            if (!address.hasInputTransaction(output, account.getNetworkParam())) {
                                 address.getInputTransaction().add(output);
-                                accountsChanged.add(address.getAccount());
                             }
+                            changed = true;
                         }
                     }
 
@@ -127,7 +124,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     transaction.setId(idTransaction);
                     db.updateGeneralTransaction(transaction);
                 }
-                if (tempAccount != null && transaction.getConfirm() < coin.getConfirmationsNeeded()) {
+                if (tempAccount != null && transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                     new GetTransactionData(transaction.getTxid(), tempAccount, context, true).start();
                 }
                 for (GeneralCoinAddress address : addresses) {
@@ -136,8 +133,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     }
                 }
             }
-
-            for (GeneralCoinAccount account : accountsChanged) {
+            if(changed) {
                 account.balanceChange();
             }
         }
@@ -153,7 +149,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
         if (addresses.size() > 0) {
             StringBuilder addressToQuery = new StringBuilder();
             for (GeneralCoinAddress address : addresses) {
-                addressToQuery.append(address.getAddressString(param)).append(",");
+                addressToQuery.append(address.getAddressString(account.getNetworkParam())).append(",");
             }
             addressToQuery.deleteCharAt(addressToQuery.length() - 1);
             InsightApiService service = serviceGenerator.getService(InsightApiService.class);

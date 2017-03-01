@@ -50,7 +50,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_NAME = "name";
     }
 
-    //CrypotoCore
+    //CryptoCoinCore Section
 
     public static class Seeds implements BaseColumns {
         public static final String TABLE_NAME = "seeds";
@@ -140,4 +140,23 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_FEE = "fee"; //the amount of the comission
         public static final String COLUMN_CONFIRMS = "confirm"; //the last confirm reader, this only matters when is lower than 6
     }
+
+    // Contacts Section
+
+    public static class Contacs implements BaseColumns{
+        public static final String TABLE_NAME = "contact";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_ACCOUNT = "account";
+        public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_EMAIL = "email";
+    }
+
+    public static class ContacAddress implements BaseColumns{
+        public static final String TABLE_NAME = "contact_address";
+        public static final String COLUMN_COIN_TYPE = "coin_type";
+        public static final String COLUMN_CONTACT_ID = "contact_id";
+        public static final String COLUMN_ADDRESS = "address";
+    }
+
 }

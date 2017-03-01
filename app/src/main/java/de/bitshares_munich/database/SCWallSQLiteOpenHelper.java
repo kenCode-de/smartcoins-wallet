@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 12;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -129,6 +129,21 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             " CONSTRAINT genOutputsContraint UNIQUE (" + SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE + "," + SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING + "," + SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION + ") " +
             ")";
 
+    private static final String SQL_CREATE_CONTACT_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Contacs.TABLE_NAME + " (" +
+            SCWallDatabaseContract.Contacs.COLUMN_ID + " INTEGER PRIMARY KEY, " +
+            SCWallDatabaseContract.Contacs.COLUMN_NAME + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Contacs.COLUMN_NOTE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.Contacs.COLUMN_EMAIL + TYPE_TEXT + ", " +
+            " CONSTRAINT genOutputsContraint UNIQUE (" + SCWallDatabaseContract.Contacs.COLUMN_NAME + ") " +
+            ")";
+
+    private static final String SQL_CREATE_CONTACT_ADDRESS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.ContacAddress.TABLE_NAME + " (" +
+            SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + " INTEGER PRIMARY KEY, " +
+            SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE + TYPE_TEXT + " PRIMARY KEY, " +
+            SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS + TYPE_TEXT + ", " +
+            " FOREIGN KEY(" + SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + ") REFERENCES " + SCWallDatabaseContract.Contacs.TABLE_NAME + "(" + SCWallDatabaseContract.Contacs.COLUMN_ID + ")," +
+            ")";
 
     public SCWallSQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -195,6 +210,13 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_GENERAL_TRANSACTION_TABLE);
             db.execSQL(SQL_CREATE_INPUT_TX_TABLE);
             db.execSQL(SQL_CREATE_OUTPUT_TX_TABLE);
+        }
+
+        if (oldVersion < 12) {
+            db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Contacs.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.ContacAddress.TABLE_NAME);
+            db.execSQL(SQL_CREATE_CONTACT_TABLE);
+            db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
         }
     }
 }

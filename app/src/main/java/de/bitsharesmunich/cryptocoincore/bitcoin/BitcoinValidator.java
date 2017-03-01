@@ -85,9 +85,9 @@ public class BitcoinValidator extends GeneralCoinValidator {
             if(amountIndex>=0){
                 uri = uri.substring(amountIndex+uriAmountStart.length());
                 if(uri.contains(uriAnd)){
-                    return Double.parseDouble(uri.substring(0,uri.indexOf(uriAnd)))* Coin.BITCOIN.getPrecision();
+                    return Double.parseDouble(uri.substring(0,uri.indexOf(uriAnd)))* Math.pow(10,Coin.BITCOIN.getPrecision());
                 }
-                return Double.parseDouble(uri)* Coin.BITCOIN.getPrecision();
+                return Double.parseDouble(uri)* Math.pow(10,Coin.BITCOIN.getPrecision());
             }
         }
         return -1;

@@ -1389,7 +1389,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
             //Start the GetTransactionByAddress to get the transaction previously obtained by the server
-            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin, getContext());
+            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
             for(GeneralCoinAddress address: addresses){
                 getTransactionByAddress.addAddress(address);
             }
