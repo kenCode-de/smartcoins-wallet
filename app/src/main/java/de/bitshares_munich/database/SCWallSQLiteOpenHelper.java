@@ -143,7 +143,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE + TYPE_TEXT + " , " +
             SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS + TYPE_TEXT + ", " +
             " PRIMARY KEY ("+SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID +","+SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE +"), "+
-            " FOREIGN KEY(" + SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + ") REFERENCES " + SCWallDatabaseContract.Contacs.TABLE_NAME + "(" + SCWallDatabaseContract.Contacs.COLUMN_ID + ")," +
+            " FOREIGN KEY(" + SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + ") REFERENCES " + SCWallDatabaseContract.Contacs.TABLE_NAME + "(" + SCWallDatabaseContract.Contacs.COLUMN_ID + ")" +
             ")";
 
     public SCWallSQLiteOpenHelper(Context context) {
