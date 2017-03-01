@@ -1291,4 +1291,9 @@ public class SCWallDatabase {
         return transactions;
     }
 
+    //List Contacts
+    //Add Contact
+    //Update Contact
+    //Remove Contact
+
 }
