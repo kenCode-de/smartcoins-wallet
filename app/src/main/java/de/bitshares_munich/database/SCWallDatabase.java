@@ -1045,15 +1045,16 @@ public class SCWallDatabase {
 
     private long putGITx(final GIOTx gitx, GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        //String newId = UUID.randomUUID().toString();
 
-        //contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID, newId);
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE, gitx.getType().name());
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING, gitx.getAddressString());
 
         if (gitx.getAddress() != null && gitx.getAddress().getId() != -1) {
             contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, gitx.getAddress().getId());
+        }else{
+            contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, -1);
         }
+
 
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION, transaction.getId());
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_AMOUNT, gitx.getAmount());
@@ -1074,14 +1075,14 @@ public class SCWallDatabase {
 
     private long putGOTx(final GIOTx gotx, GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        //String newId = UUID.randomUUID().toString();
 
-        //contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID, newId);
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE, gotx.getType().name());
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING, gotx.getAddressString());
 
         if (gotx.getAddress() != null && gotx.getAddress().getId() != -1) {
             contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, gotx.getAddress().getId());
+        }else{
+            contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, -1);
         }
 
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION, transaction.getId());
@@ -1120,9 +1121,8 @@ public class SCWallDatabase {
 
     public long putGeneralTransaction(final GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        //String newId = UUID.randomUUID().toString();
 
-        //contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_ID, newId);
+
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE, transaction.getType().name());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID, transaction.getTxid());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE, transaction.getDate().getTime());
