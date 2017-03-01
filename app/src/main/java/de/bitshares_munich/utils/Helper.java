@@ -671,12 +671,12 @@ public class Helper {
         String hash = hash(testString, "SHA-256");
         hash = hash(hash, "SHA-256");
         Log.d(TAG, "Second hash: "+hash);
-        Log.d(TAG, "Checksum 2: "+hash.substring(0, 4));*/
+        Log.d(TAG, "Checksum 2: "+hash.substring(0, 4));
 
 
-        /*if (wifText != null && wifText.length() > 0) {
+        if (wifText != null && wifText.length() > 0) {
             str = str.substring(0, str.length()-1);
-        }*/
+        }
 
         return true;
     }
