@@ -112,7 +112,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
 
         //Finding the next unused address
-        while(changeKeys.get(lastChangeIndex).getOutputTransaction().size()>0){
+        while(changeKeys.get(lastChangeIndex).getInputTransaction().size()>0){
             ++lastChangeIndex;
             if (!changeKeys.containsKey(lastChangeIndex)) {
                 changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));

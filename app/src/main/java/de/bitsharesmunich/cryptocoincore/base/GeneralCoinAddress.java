@@ -106,7 +106,7 @@ public class GeneralCoinAddress {
 
     public boolean hasOutputTransaction(GIOTx outputToFind, NetworkParameters param) {
         for (GIOTx output : outputTransaction) {
-            if ((output.getTransaction().getTxid() == outputToFind.getTransaction().getTxid())
+            if ((output.getTransaction().getTxid().equals(outputToFind.getTransaction().getTxid()))
                     && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress().getAddressString(param)))
                     ) {
                 return true;
