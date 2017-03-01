@@ -71,10 +71,13 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
 
         Intent intent = getIntent();
-        if (this.getIntent().getExtras().getString(getString(R.string.coin)) == null){
-            this.coin = Coin.BITSHARE;
+
+        if (intent.hasExtra(getString(R.string.coin))) {
+            this.coin = Coin.valueOf(intent.getStringExtra(getString(R.string.coin)));
+
+            popwin.setText(this.coin.getLabel());
         } else {
-            this.coin = Coin.valueOf(this.getIntent().getExtras().getString(getString(R.string.coin), "BITSHARE"));
+            this.coin = Coin.BITSHARE;
         }
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
@@ -96,7 +99,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
         intent.putExtra(getString(R.string.currency), popwin.getText().toString());
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
-        intent.putExtra(getString(R.string.coin), coin);
+        intent.putExtra(getString(R.string.coin), coin.name());
         startActivity(intent);
         finish();
     }
@@ -112,7 +115,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
                 intent.putExtra(getString(R.string.to), to);
                 intent.putExtra(getString(R.string.price), amount);
                 intent.putExtra(getString(R.string.account_id), account_id);
-                intent.putExtra(getString(R.string.coin), coin);
+                intent.putExtra(getString(R.string.coin), coin.name());
                 startActivity(intent);
                 finish();
             } else {
@@ -157,16 +160,16 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void popupwindow(View v, TextView textview) {
-        popUpwindow p = new popUpwindow(this, textview);
+        popUpwindow p = new popUpwindow(this, textview, this.coin);
         p.show(v);
     }
 
     public void showpop(View v) {
-        if(coin == Coin.BITSHARE) {
+        //if(coin == Coin.BITSHARE) {
             popupwindow(v, popwin);
-        }else{
-            System.out.println("RequestActivity not bitshare");
-        }
+        //}else{
+        //    System.out.println("RequestActivity not bitshare");
+        //}
     }
 
     @Override
