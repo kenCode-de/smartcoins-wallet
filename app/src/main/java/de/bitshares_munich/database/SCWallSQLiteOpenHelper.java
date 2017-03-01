@@ -139,9 +139,10 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             ")";
 
     private static final String SQL_CREATE_CONTACT_ADDRESS_TABLE = "CREATE TABLE " + SCWallDatabaseContract.ContacAddress.TABLE_NAME + " (" +
-            SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + " INTEGER PRIMARY KEY, " +
-            SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE + TYPE_TEXT + " PRIMARY KEY, " +
+            SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + TYPE_INTEGER+ ", " +
+            SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE + TYPE_TEXT + " , " +
             SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS + TYPE_TEXT + ", " +
+            " PRIMARY KEY ("+SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID +","+SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE +"), "+
             " FOREIGN KEY(" + SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + ") REFERENCES " + SCWallDatabaseContract.Contacs.TABLE_NAME + "(" + SCWallDatabaseContract.Contacs.COLUMN_ID + ")," +
             ")";
 
