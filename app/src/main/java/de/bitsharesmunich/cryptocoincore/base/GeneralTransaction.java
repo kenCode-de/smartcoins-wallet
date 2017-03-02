@@ -18,6 +18,7 @@ public class GeneralTransaction {
     private int confirm;
     private Date date;
     private int blockHeight;
+    private String memo = null;
 
     private List<GIOTx> txInputs = new ArrayList();
     private List<GIOTx> txOutputs = new ArrayList();
@@ -94,6 +95,14 @@ public class GeneralTransaction {
 
     public void setBlockHeight(int blockHeight) {
         this.blockHeight = blockHeight;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public List<GIOTx> getTxInputs() {

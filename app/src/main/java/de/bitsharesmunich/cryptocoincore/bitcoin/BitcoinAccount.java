@@ -155,6 +155,18 @@ public class BitcoinAccount extends GeneralCoinAccount {
             Address toAddr = Address.fromBase58(param, toAddress);
             tx.addOutput(Coin.valueOf(amount), toAddr);
 
+            if(memo != null && !memo.isEmpty()){
+                if(memo.length()>40){
+                    memo = memo.substring(0,40);
+                }
+                byte[]scriptByte = new byte[memo.length()+2];
+                scriptByte[0] = 0x6a;
+                scriptByte[1] = (byte) memo.length();
+                System.arraycopy(memo.getBytes(),0,scriptByte,2,memo.length());
+                Script memoScript = new Script(scriptByte);
+                tx.addOutput(Coin.valueOf(0),memoScript);
+            }
+
             //Change address
             long remain = currentAmount - amount - fee;
             if( remain > 0 ) {
@@ -178,8 +190,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
             }
 
-            if(memo != null && !memo.isEmpty()){
-            }
+
 
             System.out.println("SENDTEST: " + Util.bytesToHex(tx.bitcoinSerialize()));
 

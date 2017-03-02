@@ -242,6 +242,7 @@ public class GeneralCoinAddress {
                 gitx.getTransaction().setBlock(transaction.getBlock());
                 gitx.getTransaction().setBlockHeight(transaction.getBlockHeight());
                 gitx.getTransaction().setDate(transaction.getDate());
+                gitx.getTransaction().setMemo(transaction.getMemo());
                 return true;
             }
         }
@@ -252,6 +253,7 @@ public class GeneralCoinAddress {
                 gotx.getTransaction().setBlock(transaction.getBlock());
                 gotx.getTransaction().setBlockHeight(transaction.getBlockHeight());
                 gotx.getTransaction().setDate(transaction.getDate());
+                gotx.getTransaction().setMemo(transaction.getMemo());
                 return true;
             }
         }

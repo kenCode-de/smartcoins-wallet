@@ -93,28 +93,43 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 }
 
                 for (Vout vout : txi.vout) {
-                    GIOTx output = new GIOTx();
-                    output.setAmount((long) (vout.value * Math.pow(10,account.getCoin().getPrecision())));
-                    output.setTransaction(transaction);
-                    output.setOut(false);
-                    output.setType(account.getCoin());
-                    String addr = vout.scriptPubKey.addresses[0];
-                    output.setAddressString(addr);
-                    output.setIndex(vout.n);
-                    output.setScriptHex(vout.scriptPubKey.hex);
-                    for (GeneralCoinAddress address : addresses) {
-                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
-                            output.setAddress(address);
-                            tempAccount = address.getAccount();
-
-                            if (!address.hasInputTransaction(output, account.getNetworkParam())) {
-                                address.getInputTransaction().add(output);
+                    if(vout.scriptPubKey.addresses == null || vout.scriptPubKey.addresses.length <= 0){
+                     //memo
+                        String hex = vout.scriptPubKey.hex;
+                        int opReturnIndex = hex.indexOf("6a");
+                        if(opReturnIndex >= 0) {
+                            byte[] memoBytes = new byte[Integer.parseInt(hex.substring(opReturnIndex+2,opReturnIndex+4))];
+                            for(int i = 0; i < memoBytes.length;i++){
+                                memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+(i*2)),16);
                             }
-                            changed = true;
+                            transaction.setMemo(new String(memoBytes));
+                            System.out.println("Memo read : " + transaction.getMemo());
                         }
-                    }
 
-                    transaction.getTxOutputs().add(output);
+                    }else {
+                        GIOTx output = new GIOTx();
+                        output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
+                        output.setTransaction(transaction);
+                        output.setOut(false);
+                        output.setType(account.getCoin());
+                        String addr = vout.scriptPubKey.addresses[0];
+                        output.setAddressString(addr);
+                        output.setIndex(vout.n);
+                        output.setScriptHex(vout.scriptPubKey.hex);
+                        for (GeneralCoinAddress address : addresses) {
+                            if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                                output.setAddress(address);
+                                tempAccount = address.getAccount();
+
+                                if (!address.hasInputTransaction(output, account.getNetworkParam())) {
+                                    address.getInputTransaction().add(output);
+                                }
+                                changed = true;
+                            }
+                        }
+
+                        transaction.getTxOutputs().add(output);
+                    }
                 }
                 SCWallDatabase db = new SCWallDatabase(this.context);
                 long idTransaction = db.getGeneralTransactionId(transaction);
