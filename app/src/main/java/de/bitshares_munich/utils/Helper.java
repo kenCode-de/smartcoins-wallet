@@ -18,7 +18,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
-//import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Utils;
+import org.bitcoinj.core.AddressFormatException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +36,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
@@ -659,25 +665,41 @@ public class Helper {
      * @return true if valid wif format or false
      */
     public static Boolean wifChecksumChecking(String wifText) {
-        Log.d(TAG, "WIF: " + wifText);
-        //Using de.bitshares_munich.utils.Base58 instead of org.bitcoinj.core.Base58
-        //because it does return the value in array of byte format instead of String
-        byte[] testString = Base58.encode(wifText.getBytes());
-        Log.d(TAG, "Base58: "+testString);
-        String checksum = testString.substring(testString.length()-4, testString.length());
-        Log.d(TAG, "Checksum: "+checksum);
-        testString = testString.substring(0, testString.length()-4);
-        Log.d(TAG, "TestString: "+testString);
-        String hash = hash(testString, "SHA-256");
-        hash = hash(hash, "SHA-256");
-        Log.d(TAG, "Second hash: "+hash);
-        Log.d(TAG, "Checksum 2: "+hash.substring(0, 4));
 
+        byte[] testbytes;
 
-        if (wifText != null && wifText.length() > 0) {
-            str = str.substring(0, str.length()-1);
+        // Fail of Input is have invalid format or it is too short.
+        try {
+            testbytes = Base58.decode(wifText);
+        } catch (AddressFormatException e) {
+            Log.d(TAG, "WIF Format Invalid: " + e );
+            return false;
+        }
+        // Test decode of empty String.
+        if(testbytes.length == 0) return false;
+
+        // Checksum should fail.
+        try {
+            Base58.decodeChecked(wifText);
+        } catch (AddressFormatException e) {
+            Log.d(TAG, "WIF Checksum failed: " + e );
+            return false;
         }
 
         return true;
+    }
+
+    /*
+     * WIF to Key.
+     * Ref.: https://en.bitcoin.it/wiki/Wallet_import_format
+     *
+     * @param wifText Wallet Import Format string
+     * @return key
+     */
+    public static ECKey getKeyFromWif(String wifText){
+        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wifText).getKey();
+        Log.d(TAG, "Private Key " + Utils.HEX.encode(key.getPrivKeyBytes()) );
+        Log.d(TAG, "WIF " + key.getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toString() );
+        return key;
     }
 }

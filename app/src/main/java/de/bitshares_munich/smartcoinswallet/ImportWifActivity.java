@@ -55,23 +55,31 @@ public class ImportWifActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.btnWallet)
     public void wallet(Button button) {
+        //WIF must not be empty
         if (etWif.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_wif, Toast.LENGTH_SHORT).show();
         }
         else {
-            String trimmedBrainKey = etWif.getText().toString().trim();
-            etWif.setText(trimmedBrainKey);
+            String trimmedWif = etWif.getText().toString().trim();
+            etWif.setText(trimmedWif);
             if (etPin.getText().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
             }
             //PIN must have minimum of 6-digit
             else if (etPin.getText().length() < 6) {
                 Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
-            } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
+            }
+            //PIN and confirm must be equal
+            else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            //WIF Checksum Checking
+            else if ( !(Helper.wifChecksumChecking(trimmedWif)) ) {
+                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+            }
+            //If correct continue
+            else {
                 load(etPin.getText().toString());
             }
         }
