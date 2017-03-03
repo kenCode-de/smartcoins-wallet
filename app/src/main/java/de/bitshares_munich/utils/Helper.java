@@ -666,6 +666,8 @@ public class Helper {
      */
     public static Boolean wifChecksumChecking(String wifText) {
 
+        Log.d(TAG, "Checksum Checking " + wifText );
+
         byte[] testbytes;
 
         // Fail of Input is have invalid format or it is too short.
@@ -686,6 +688,7 @@ public class Helper {
             return false;
         }
 
+        Log.d(TAG, "Checksum Checking OK");
         return true;
     }
 

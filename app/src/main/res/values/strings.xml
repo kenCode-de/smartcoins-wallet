@@ -360,6 +360,14 @@
 
     <string name="please_enter_wif">Please enter private key (wif)</string>
 
+    <string name="invalid_wif">Invalid WIF</string>
+
+    <string name="wif_error_invalid_account">Invalid account, please check your WIF for typing errors</string>
+
+
+    <string name="unable_to_load_wif">Unable to load WIF</string>
+    <string name="unable_to_get_account_properties">Didn't get Account properties</string>
+
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
     <string name="please_make_sure_your_pin_file">Please make sure your pin is correct or correct pin file is selected</string>
 

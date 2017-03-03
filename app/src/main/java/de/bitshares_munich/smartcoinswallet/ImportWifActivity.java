@@ -1,6 +1,7 @@
 package de.bitshares_munich.smartcoinswallet;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -17,25 +18,50 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
+
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
+import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 /**
  * Created by Vinícius on 2/28/17.
  */
 public class ImportWifActivity extends BaseActivity {
     private String TAG = this.getClass().getName();
-
+    ProgressDialog progressDialog;
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
-    Boolean isBackupKey = false;
+
 
     @Bind(R.id.etWif)
     TextView etWif;
@@ -46,6 +72,9 @@ public class ImportWifActivity extends BaseActivity {
     @Bind(R.id.etPinConfirmation)
     EditText etPinConfirmation;
 
+    /* Database interface */
+    private SCWallDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +82,12 @@ public class ImportWifActivity extends BaseActivity {
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
 
+        progressDialog = new ProgressDialog(this);
+        database = new SCWallDatabase(this);
+
     }
 
+    @OnClick(R.id.btnWallet)
     public void wallet(Button button) {
         //WIF must not be empty
         if (etWif.getText().length() == 0) {
@@ -76,36 +109,183 @@ public class ImportWifActivity extends BaseActivity {
             }
             //WIF Checksum Checking
             else if ( !(Helper.wifChecksumChecking(trimmedWif)) ) {
-                Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.invalid_wif, Toast.LENGTH_SHORT).show();
             }
-            //If correct continue
+            //If an account with this WIF already exists
+            else if (checkWifExist(trimmedWif)) {
+                Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
+            }
+            //If success at all validations
             else {
-                load(etPin.getText().toString());
+                //showDialog("", getString(R.string.importing_your_wallet));
+                getAccountFromWif(trimmedWif, etPin.getText().toString());
             }
         }
     }
 
-    void load(String pinCode) {
-        String wifText = etWif.getText().toString();
-        Helper.wifChecksumChecking(wifText);
-        /*
-        if (brainKeyText.contains(" ")) {
-            String arr[] = brainKeyText.split(" ");
-            if (arr.length >= 12 && arr.length <= 16) {
+    /*
+     * Check if an account with the passed WIF already exists.
+     *
+     * @param wif Wallet Import Format string
+     * @return boolean
+     */
+    private boolean checkWifExist(String wif) {
+        boolean isWif = false;
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-                if (checkBrainKeyExist(brainKeyText)) {
-                    Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
-                } else {
-                    showDialog("", getString(R.string.importing_your_wallet));
-                    getAccountFromBrainkey(brainKeyText, pinCode);
+        for (int i = 0; i < accountDetails.size(); i++) {
+            try {
+                if (wif.equals(accountDetails.get(i).wif_key)) {
+                    isWif = true;
+                    break;
                 }
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
+            } catch (Exception ignored) {
             }
+        }
+        return isWif;
 
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
-        }*/
+    }
+
+    public void getAccountFromWif(final String wif, final String pinCode) {
+        try {
+
+            /* Storing wif in database (Used to insert any key in the WIF format,
+            regardless of which key generation scheme was used. */
+            database.insertKey(wif);
+
+            ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif).getKey();
+
+            Address address = new Address(ECKey.fromPublicOnly(key.getPubKey()));
+            final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(wif);
+            final String pubkey = address.toString();
+            Log.d(TAG,String.format("WIF: '%s'",wif));
+            Log.d(TAG, String.format("WIF would generate address: %s", address.toString()));
+
+            new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    final List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
+                    Log.d(TAG, "getAccountByAddress.onSuccess");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(resp.size() > 0){
+                                List<UserAccount> accounts = resp.get(0);
+                                if(accounts.size() > 0){
+                                    //It must be only one
+                                    for(UserAccount account : accounts) {
+                                        Log.d(TAG, String.format("Account: %s", account.toString()));
+                                        //getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, brainKey, pinCode);
+                                    }
+                                }else{
+                                    hideDialog();
+                                    Toast.makeText(getApplicationContext(), R.string.wif_error_invalid_account, Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                hideDialog();
+                                Toast.makeText(getApplicationContext(), R.string.wif_error_invalid_account, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    hideDialog();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }), 0).start();
+        } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | InvalidAlgorithmParameterException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (NoSuchPaddingException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String wif, final String pinCode){
+        try {
+            new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == AccountProperties.class) {
+                                AccountProperties accountProperties = (AccountProperties) list.get(0);
+                                AccountDetails accountDetails = new AccountDetails();
+                                accountDetails.account_name = accountProperties.name;
+                                accountDetails.account_id = accountProperties.id;
+                                accountDetails.wif_key = privaKey;
+                                accountDetails.pub_key = pubKey;
+                                accountDetails.brain_key = "";
+                                accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
+                                accountDetails.isSelected = true;
+                                accountDetails.status = "success";
+                                accountDetails.pinCode = pinCode;
+                                addWallet(accountDetails, wif, pinCode);
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
+                }
+            })),0).start();
+            //mWebSocket.connect();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void addWallet(AccountDetails accountDetail) {
+
+        //Success Import(Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
+        BinHelper myBinHelper = new BinHelper();
+        myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
+
+    }
+
+    private void showDialog(String title, String msg) {
+        if (progressDialog != null) {
+            if (!progressDialog.isShowing()) {
+                progressDialog.setTitle(title);
+                progressDialog.setMessage(msg);
+                progressDialog.show();
+            }
+        }
+    }
+
+    private void hideDialog() {
+
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
+        }
+
     }
 
 }
