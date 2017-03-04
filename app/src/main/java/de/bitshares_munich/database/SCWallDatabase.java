@@ -1129,6 +1129,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK, transaction.getBlock());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE, transaction.getFee());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO, transaction.getMemo());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT, transaction.getBlockHeight());
 
         try{
@@ -1159,6 +1160,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK, transaction.getBlock());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE, transaction.getFee());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO, transaction.getMemo());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT, transaction.getBlockHeight());
         db.beginTransaction();
         int affected = db.update(table,contentValues,whereClause,whereArgs);
@@ -1261,6 +1263,7 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
@@ -1278,7 +1281,8 @@ public class SCWallDatabase {
                 long fee = cursor.getLong(4);
                 int confirms = cursor.getInt(5);
                 int blockHeight = cursor.getInt(6);
-                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight);
+                String memo = cursor.getString(7);
+                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
                 transaction.setTxInputs(getGTIx(transaction,account));
                 transaction.setTxOutputs(getGTOx(transaction,account));
                 transactions.add(transaction);

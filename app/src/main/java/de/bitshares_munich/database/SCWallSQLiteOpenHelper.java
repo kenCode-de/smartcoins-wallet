@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 14;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -98,6 +98,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO + TYPE_TEXT + ", " +
             " CONSTRAINT generalTransactionContraint UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + "))";
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
@@ -218,6 +219,10 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.ContacAddress.TABLE_NAME);
             db.execSQL(SQL_CREATE_CONTACT_TABLE);
             db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
+        }
+
+        if (oldVersion < 14) {
+            db.execSQL("ALTER TABLE " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + " ADD "+SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO+" "+ TYPE_TEXT);
         }
     }
 }

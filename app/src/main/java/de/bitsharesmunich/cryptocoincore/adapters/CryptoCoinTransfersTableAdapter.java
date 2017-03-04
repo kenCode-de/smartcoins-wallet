@@ -160,10 +160,10 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
         fromUser.setText(fromMessage);
 
-        /*if(!operation.getMemo().getPlaintextMessage().equals("")){
+        if((historicalTransfer.getMemo() != null) && (!historicalTransfer.getMemo().equals(""))){
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
-            memoTextView.setText(operation.getMemo().getPlaintextMessage());
-        }*/
+            memoTextView.setText(historicalTransfer.getMemo());
+        }
         return v;
     }
 

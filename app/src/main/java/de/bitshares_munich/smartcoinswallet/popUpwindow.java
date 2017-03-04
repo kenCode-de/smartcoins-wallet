@@ -31,6 +31,11 @@ public class popUpwindow {
     TextView textView;
     Coin coin;
 
+    public popUpwindow(Context c, TextView textview){
+        this(c, textview, Coin.BITSHARE);
+    }
+
+
     public popUpwindow(Context c,TextView textview, Coin coin) {
         context = c;
 

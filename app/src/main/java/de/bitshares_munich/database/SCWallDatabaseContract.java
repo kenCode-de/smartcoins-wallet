@@ -139,6 +139,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_DATE = "date"; //receive date
         public static final String COLUMN_FEE = "fee"; //the amount of the comission
         public static final String COLUMN_CONFIRMS = "confirm"; //the last confirm reader, this only matters when is lower than 6
+        public static final String COLUMN_MEMO = "memo";
     }
 
     // Contacts Section

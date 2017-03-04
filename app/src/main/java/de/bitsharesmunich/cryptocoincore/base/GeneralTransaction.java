@@ -26,7 +26,7 @@ public class GeneralTransaction {
     public GeneralTransaction() {
     }
 
-    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight) {
+    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight, String memo) {
         this.id = id;
         this.txid = txid;
         this.type = type;
@@ -35,6 +35,7 @@ public class GeneralTransaction {
         this.confirm = confirm;
         this.date = date;
         this.blockHeight = blockHeight;
+        this.memo = memo;
     }
 
     public long getId() {
