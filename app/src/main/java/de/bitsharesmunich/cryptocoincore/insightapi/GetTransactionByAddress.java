@@ -4,17 +4,12 @@ import android.content.Context;
 
 import android.util.Log;
 
-import org.bitcoinj.core.NetworkParameters;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
-import de.bitsharesmunich.cryptocoincore.base.Coin;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
@@ -68,7 +63,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                 transaction.setBlockHeight(txi.blockheight);
 
                 for (Vin vin : txi.vin) {
-                    GIOTx input = new GIOTx();
+                    GTxIO input = new GTxIO();
                     input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
                     input.setTransaction(transaction);
                     input.setOut(true);
@@ -83,8 +78,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                             input.setAddress(address);
                             tempAccount = address.getAccount();
 
-                            if (!address.hasOutputTransaction(input, account.getNetworkParam())) {
-                                address.getOutputTransaction().add(input);
+                            if (!address.hasTransactionOutput(input, account.getNetworkParam())) {
+                                address.getTransactionOutput().add(input);
                             }
                             changed = true;
                         }
@@ -107,7 +102,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         }
 
                     }else {
-                        GIOTx output = new GIOTx();
+                        GTxIO output = new GTxIO();
                         output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
                         output.setTransaction(transaction);
                         output.setOut(false);
@@ -121,8 +116,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                                 output.setAddress(address);
                                 tempAccount = address.getAccount();
 
-                                if (!address.hasInputTransaction(output, account.getNetworkParam())) {
-                                    address.getInputTransaction().add(output);
+                                if (!address.hasTransactionInput(output, account.getNetworkParam())) {
+                                    address.getTransactionInput().add(output);
                                 }
                                 changed = true;
                             }

@@ -18,6 +18,14 @@ public class Contact {
     public Contact() {
     }
 
+    public Contact(long id, String name, String account, String note, String email) {
+        this.id = id;
+        this.name = name;
+        this.account = account;
+        this.note = note;
+        this.email = email;
+    }
+
     public long getId() {
         return id;
     }

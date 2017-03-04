@@ -2,16 +2,13 @@ package de.bitsharesmunich.cryptocoincore.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,16 +16,10 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.Util;
 import de.codecrafters.tableview.TableDataAdapter;
 
 

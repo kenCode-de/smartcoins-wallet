@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
 
 /**
  * Created by henry on 05/02/2017.
@@ -168,12 +167,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     public List<GeneralTransaction> getTransactions() {
         List<GeneralTransaction> transactions = new ArrayList();
         for (GeneralCoinAddress address : externalKeys.values()) {
-            for (GIOTx giotx : address.getInputTransaction()) {
+            for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for (GIOTx giotx : address.getOutputTransaction()) {
+            for (GTxIO giotx : address.getTransactionOutput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
@@ -181,12 +180,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
 
         for (GeneralCoinAddress address : changeKeys.values()) {
-            for (GIOTx giotx : address.getInputTransaction()) {
+            for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for (GIOTx giotx : address.getOutputTransaction()) {
+            for (GTxIO giotx : address.getTransactionOutput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }

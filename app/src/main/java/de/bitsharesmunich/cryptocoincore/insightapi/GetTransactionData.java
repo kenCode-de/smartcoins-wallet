@@ -1,12 +1,11 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Date;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
@@ -70,7 +69,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             transaction.setBlockHeight(txi.blockheight);
 
             for (Vin vin : txi.vin) {
-                GIOTx input = new GIOTx();
+                GTxIO input = new GTxIO();
                 input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
                 input.setTransaction(transaction);
                 input.setOut(true);
@@ -83,8 +82,8 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);
-                        if (!address.hasOutputTransaction(input, account.getNetworkParam())) {
-                            address.getOutputTransaction().add(input);
+                        if (!address.hasTransactionOutput(input, account.getNetworkParam())) {
+                            address.getTransactionOutput().add(input);
                         }
                     }
                 }
@@ -106,7 +105,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                     }
 
                 }else {
-                    GIOTx output = new GIOTx();
+                    GTxIO output = new GTxIO();
                     output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
                     output.setTransaction(transaction);
                     output.setOut(false);
@@ -118,8 +117,8 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                     for (GeneralCoinAddress address : account.getAddresses()) {
                         if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                             output.setAddress(address);
-                            if (!address.hasInputTransaction(output, account.getNetworkParam())) {
-                                address.getInputTransaction().add(output);
+                            if (!address.hasTransactionInput(output, account.getNetworkParam())) {
+                                address.getTransactionInput().add(output);
                             }
                         }
                     }

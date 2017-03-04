@@ -1,10 +1,14 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
 /**
+ * General Coin Transaction Input/Output
+ *
+ * This class represent each Input or Output Transaction of a General Coin Transaction
+ *
  * Created by henry on 06/02/2017.
  */
 
-public class GIOTx {
+public class GTxIO {
     private long id = -1;
     private Coin type;
     private int index;
@@ -16,12 +20,27 @@ public class GIOTx {
     private String scriptHex;
     private String originalTxid;
 
-
-    public GIOTx() {
+    /**
+     * Empty Constructor
+     */
+    public GTxIO() {
 
     }
 
-    public GIOTx(long id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString, int index, String scriptHex) {
+    /**
+     * General Constructor, used by the DB.
+     *
+     * @param id The id in the dataabase
+     * @param type The coin type
+     * @param address The addres fo an account on the wallet, or null if the address is external
+     * @param transaction The transaction where this belongs
+     * @param amount The amount with the lowest precision
+     * @param isOut if this is an output
+     * @param addressString The string of the General Coin address, this can't be null
+     * @param index The index on the transaction
+     * @param scriptHex The script in hex String
+     */
+    public GTxIO(long id, Coin type, GeneralCoinAddress address, GeneralTransaction transaction, long amount, boolean isOut, String addressString, int index, String scriptHex) {
         this.id = id;
         this.type = type;
         this.address = address;

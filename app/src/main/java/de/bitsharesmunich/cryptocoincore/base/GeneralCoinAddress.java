@@ -1,7 +1,5 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
-import android.util.Log;
-
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -25,8 +23,8 @@ public class GeneralCoinAddress {
     private final int index;
     private ECKey key;
 
-    private List<GIOTx> inputTransaction = new ArrayList();
-    private List<GIOTx> outputTransaction = new ArrayList();
+    private List<GTxIO> transactionInput = new ArrayList();
+    private List<GTxIO> transactionOutput = new ArrayList();
 
 
     public GeneralCoinAddress(long id, GeneralCoinAccount account, boolean isChange, int index, String publicHexKey) {
@@ -81,16 +79,16 @@ public class GeneralCoinAddress {
         return key.toAddress(param);
     }
 
-    public List<GIOTx> getInputTransaction() {
-        return inputTransaction;
+    public List<GTxIO> getTransactionInput() {
+        return transactionInput;
     }
 
-    public void setInputTransaction(List<GIOTx> inputTransaction) {
-        this.inputTransaction = inputTransaction;
+    public void setTransactionInput(List<GTxIO> transactionInput) {
+        this.transactionInput = transactionInput;
     }
 
-    public boolean hasInputTransaction(GIOTx inputToFind, NetworkParameters param) {
-        for (GIOTx input : inputTransaction) {
+    public boolean hasTransactionInput(GTxIO inputToFind, NetworkParameters param) {
+        for (GTxIO input : transactionInput) {
             if ((input.getTransaction().getTxid().equals(inputToFind.getTransaction().getTxid()))
                     && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress().getAddressString(param)))
                     ) {
@@ -100,12 +98,12 @@ public class GeneralCoinAddress {
         return false;
     }
 
-    public List<GIOTx> getOutputTransaction() {
-        return outputTransaction;
+    public List<GTxIO> getTransactionOutput() {
+        return transactionOutput;
     }
 
-    public boolean hasOutputTransaction(GIOTx outputToFind, NetworkParameters param) {
-        for (GIOTx output : outputTransaction) {
+    public boolean hasTransactionOutput(GTxIO outputToFind, NetworkParameters param) {
+        for (GTxIO output : transactionOutput) {
             if ((output.getTransaction().getTxid().equals(outputToFind.getTransaction().getTxid()))
                     && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress().getAddressString(param)))
                     ) {
@@ -115,19 +113,19 @@ public class GeneralCoinAddress {
         return false;
     }
 
-    public void setOutputTransaction(List<GIOTx> outputTransaction) {
-        this.outputTransaction = outputTransaction;
+    public void setTransactionOutput(List<GTxIO> outputTransaction) {
+        this.transactionOutput = outputTransaction;
     }
 
     public long getUnconfirmedBalance() {
         long answer = 0;
-        for (GIOTx input : inputTransaction) {
+        for (GTxIO input : transactionInput) {
             if (input.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
-        for (GIOTx output : outputTransaction) {
+        for (GTxIO output : transactionOutput) {
             if (output.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
@@ -138,13 +136,13 @@ public class GeneralCoinAddress {
 
     public long getConfirmedBalance() {
         long answer = 0;
-        for (GIOTx input : inputTransaction) {
+        for (GTxIO input : transactionInput) {
             if (input.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
-        for (GIOTx output : outputTransaction) {
+        for (GTxIO output : transactionOutput) {
             if (output.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
@@ -155,12 +153,12 @@ public class GeneralCoinAddress {
 
     public Date getLastDate() {
         Date lastDate = null;
-        for (GIOTx input : inputTransaction) {
+        for (GTxIO input : transactionInput) {
             if (lastDate == null || lastDate.before(input.getTransaction().getDate())) {
                 lastDate = input.getTransaction().getDate();
             }
         }
-        for (GIOTx output : outputTransaction) {
+        for (GTxIO output : transactionOutput) {
             if (lastDate == null || lastDate.before(output.getTransaction().getDate())) {
                 lastDate = output.getTransaction().getDate();
             }
@@ -170,13 +168,13 @@ public class GeneralCoinAddress {
 
     public int getLessConfirmed(){
         int lessConfirm = -1;
-        for (GIOTx input : inputTransaction) {
+        for (GTxIO input : transactionInput) {
             if (lessConfirm == -1 || input.getTransaction().getConfirm() < lessConfirm) {
                 lessConfirm = input.getTransaction().getConfirm();
             }
         }
 
-        for (GIOTx output : outputTransaction) {
+        for (GTxIO output : transactionOutput) {
             if (lessConfirm == -1 || output.getTransaction().getConfirm() < lessConfirm) {
                 lessConfirm = output.getTransaction().getConfirm();
             }
@@ -184,11 +182,11 @@ public class GeneralCoinAddress {
         return lessConfirm;
     }
 
-    public List<GIOTx> getUTXos(){
-        List<GIOTx> utxo = new ArrayList();
-        for(GIOTx gitx : inputTransaction){
+    public List<GTxIO> getUTXos(){
+        List<GTxIO> utxo = new ArrayList();
+        for(GTxIO gitx : transactionInput){
             boolean find = false;
-            for(GIOTx gotx : outputTransaction){
+            for(GTxIO gotx : transactionOutput){
                 if(gitx.getTransaction().getTxid().equals(gotx.getOriginalTxid())){
                     find = true;
                     break;
@@ -217,9 +215,9 @@ public class GeneralCoinAddress {
         if (id != -1) return false;
         if (account != null ? !account.equals(that.account) : that.account != null) return false;
         if (key != null ? !key.equals(that.key) : that.key != null) return false;
-        if (inputTransaction != null ? !inputTransaction.equals(that.inputTransaction) : that.inputTransaction != null)
+        if (transactionInput != null ? !transactionInput.equals(that.transactionInput) : that.transactionInput != null)
             return false;
-        return outputTransaction != null ? outputTransaction.equals(that.outputTransaction) : that.outputTransaction == null;
+        return transactionOutput != null ? transactionOutput.equals(that.transactionOutput) : that.transactionOutput == null;
 
     }
 
@@ -230,13 +228,13 @@ public class GeneralCoinAddress {
         result = 31 * result + (isChange ? 1 : 0);
         result = 31 * result + index;
         result = 31 * result + (key != null ? key.hashCode() : 0);
-        result = 31 * result + (inputTransaction != null ? inputTransaction.hashCode() : 0);
-        result = 31 * result + (outputTransaction != null ? outputTransaction.hashCode() : 0);
+        result = 31 * result + (transactionInput != null ? transactionInput.hashCode() : 0);
+        result = 31 * result + (transactionOutput != null ? transactionOutput.hashCode() : 0);
         return result;
     }
 
     public boolean updateTransaction(GeneralTransaction transaction){
-        for(GIOTx gitx : inputTransaction){
+        for(GTxIO gitx : transactionInput){
             if(gitx.getTransaction().equals(transaction)){
                 gitx.getTransaction().setConfirm(transaction.getConfirm());
                 gitx.getTransaction().setBlock(transaction.getBlock());
@@ -247,7 +245,7 @@ public class GeneralCoinAddress {
             }
         }
 
-        for(GIOTx gotx : outputTransaction){
+        for(GTxIO gotx : transactionOutput){
             if(gotx.getTransaction().equals(transaction)){
                 gotx.getTransaction().setConfirm(transaction.getConfirm());
                 gotx.getTransaction().setBlock(transaction.getBlock());

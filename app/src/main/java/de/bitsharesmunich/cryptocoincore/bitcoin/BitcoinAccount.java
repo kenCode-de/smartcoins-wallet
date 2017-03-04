@@ -18,7 +18,7 @@ import java.util.List;
 
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Balance;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
@@ -97,7 +97,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
 
         //Finding the next unused address
-        while(externalKeys.get(lastExternalIndex).getInputTransaction().size()>0){
+        while(externalKeys.get(lastExternalIndex).getTransactionInput().size()>0){
             ++lastExternalIndex;
             if (!externalKeys.containsKey(lastExternalIndex)) {
                 externalKeys.put(lastExternalIndex, new GeneralCoinAddress(this, false, lastExternalIndex, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false))));
@@ -112,7 +112,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
 
         //Finding the next unused address
-        while(changeKeys.get(lastChangeIndex).getInputTransaction().size()>0){
+        while(changeKeys.get(lastChangeIndex).getTransactionInput().size()>0){
             ++lastChangeIndex;
             if (!changeKeys.containsKey(lastChangeIndex)) {
                 changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
@@ -130,10 +130,10 @@ public class BitcoinAccount extends GeneralCoinAccount {
             long fee = 10000; //TODO calculate fee
 
             List<GeneralCoinAddress> addresses = getAddresses();
-            List<GIOTx> utxos = new ArrayList();
+            List<GTxIO> utxos = new ArrayList();
             for(GeneralCoinAddress address : addresses){
-                List<GIOTx> addrUtxos = address.getUTXos();
-                for(GIOTx addrUtxo : addrUtxos){
+                List<GTxIO> addrUtxos = address.getUTXos();
+                for(GTxIO addrUtxo : addrUtxos){
                     utxos.add(addrUtxo);
                     currentAmount += addrUtxo.getAmount();
                     if(currentAmount >= amount+ fee){
@@ -176,7 +176,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 tx.addOutput(Coin.valueOf(remain), changeAddr);
             }
 
-            for(GIOTx utxo: utxos) {
+            for(GTxIO utxo: utxos) {
                 Sha256Hash txHash = Sha256Hash.wrap(utxo.getTransaction().getTxid());
                 Script script = new Script(Util.hexToBytes(utxo.getScriptHex()));
                 TransactionOutPoint outPoint = new TransactionOutPoint(param, utxo.getIndex(), txHash);
