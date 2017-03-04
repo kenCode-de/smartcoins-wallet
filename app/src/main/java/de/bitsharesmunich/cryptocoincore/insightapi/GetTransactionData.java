@@ -99,7 +99,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                     if(opReturnIndex >= 0) {
                         byte[] memoBytes = new byte[Integer.parseInt(hex.substring(opReturnIndex+2,opReturnIndex+4),16)];
                         for(int i = 0; i < memoBytes.length;i++){
-                            memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+i));
+                            memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+i),16);
                         }
                         transaction.setMemo(new String(memoBytes));
                         System.out.println("Memo read : " + transaction.getMemo());
