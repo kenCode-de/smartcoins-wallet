@@ -98,7 +98,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         String hex = vout.scriptPubKey.hex;
                         int opReturnIndex = hex.indexOf("6a");
                         if(opReturnIndex >= 0) {
-                            byte[] memoBytes = new byte[Integer.parseInt(hex.substring(opReturnIndex+2,opReturnIndex+4))];
+                            byte[] memoBytes = new byte[Integer.parseInt(hex.substring(opReturnIndex+2,opReturnIndex+4),16)];
                             for(int i = 0; i < memoBytes.length;i++){
                                 memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+(i*2)),16);
                             }
