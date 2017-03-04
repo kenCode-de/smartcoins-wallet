@@ -1263,8 +1263,8 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
-                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO,
-                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE+ " = '" + account.getCoin().name() + "'", null, null, null, null, null);
