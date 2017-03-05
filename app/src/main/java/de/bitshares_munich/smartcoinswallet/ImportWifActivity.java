@@ -175,7 +175,7 @@ public class ImportWifActivity extends BaseActivity {
                                     //It must be only one
                                     for(UserAccount account : accounts) {
                                         Log.d(TAG, String.format("Account: %s", account.toString()));
-                                        //getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, brainKey, pinCode);
+                                        getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, pinCode);
                                     }
                                 }else{
                                     hideDialog();
@@ -213,7 +213,7 @@ public class ImportWifActivity extends BaseActivity {
 
     }
 
-    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String wif, final String pinCode){
+    private void getAccountById(String accountId, final String wif, final String pubKey,  final String pinCode){
         try {
             new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
                 @Override
@@ -226,14 +226,26 @@ public class ImportWifActivity extends BaseActivity {
                                 AccountDetails accountDetails = new AccountDetails();
                                 accountDetails.account_name = accountProperties.name;
                                 accountDetails.account_id = accountProperties.id;
-                                accountDetails.wif_key = privaKey;
+                                accountDetails.wif_key = wif;
                                 accountDetails.pub_key = pubKey;
                                 accountDetails.brain_key = "";
                                 accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
                                 accountDetails.isSelected = true;
                                 accountDetails.status = "success";
                                 accountDetails.pinCode = pinCode;
-                                addWallet(accountDetails, wif, pinCode);
+
+                                //Success Import(Set app lock to false)
+                                Application app = (Application) getApplicationContext();
+                                app.setLock(false);
+
+                                BinHelper myBinHelper = new BinHelper();
+                                myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportWifActivity.this);
+                                Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
@@ -259,7 +271,6 @@ public class ImportWifActivity extends BaseActivity {
     }
 
     void addWallet(AccountDetails accountDetail) {
-
         //Success Import(Set app lock to false)
         Application app = (Application) getApplicationContext();
         app.setLock(false);
