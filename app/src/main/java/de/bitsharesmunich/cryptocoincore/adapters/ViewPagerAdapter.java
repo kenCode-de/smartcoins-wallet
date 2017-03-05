@@ -13,6 +13,7 @@ import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinBalancesFragment;
 import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 
+import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinContactsFragment;
 import de.bitsharesmunich.cryptocoincore.fragments.NoCurrencyAccountFragment;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 
@@ -24,6 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private Context mContext;
     private FragmentManager mFragmentManager;
     private Fragment fragmentAtBitcoin;
+    private Fragment fragmentAtBitcoinContacts;
 
     public ViewPagerAdapter(Context context, FragmentManager manager) {
         super(manager);
@@ -33,12 +35,15 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        final SCWallDatabase db;
+        GeneralCoinAccount account;
+
         switch(position){
             case 0:
                 return GeneralCoinBalancesFragment.newInstance(Coin.BITSHARE);
             case 1:
-                final SCWallDatabase db = new SCWallDatabase(mContext);
-                GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+                db = new SCWallDatabase(mContext);
+                account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
 
                 if (account != null){
                     this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
@@ -48,7 +53,18 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return this.fragmentAtBitcoin;
                 //return GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
             case 2:
-                return new ContactsFragment();
+                return GeneralCoinContactsFragment.newInstance(Coin.BITSHARE);
+            case 3:
+                db = new SCWallDatabase(mContext);
+                account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+
+                if (account != null){
+                    this.fragmentAtBitcoinContacts = GeneralCoinContactsFragment.newInstance(Coin.BITCOIN);
+                } else {
+                    this.fragmentAtBitcoinContacts = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
+                }
+                return this.fragmentAtBitcoinContacts;
+            //return GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
             default:
                 return null;
         }
@@ -63,6 +79,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getResources().getString(R.string.bitcoin);
             case 2:
                 return mContext.getResources().getString(R.string.contacts);
+            case 3:
+                return mContext.getResources().getString(R.string.bitcoin)+" "+mContext.getResources().getString(R.string.contacts);
         }
         return null;
     }
@@ -74,13 +92,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         if (object instanceof NoCurrencyAccountFragment && this.fragmentAtBitcoin instanceof GeneralCoinBalancesFragment) {
             return POSITION_NONE;
         }
+
         return POSITION_UNCHANGED;
     }
 
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -92,7 +111,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     public void changeBitcoinFragment(){
         mFragmentManager.beginTransaction().remove(this.fragmentAtBitcoin).commit();
+        mFragmentManager.beginTransaction().remove(this.fragmentAtBitcoinContacts).commit();
         this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
+        this.fragmentAtBitcoinContacts = GeneralCoinContactsFragment.newInstance(Coin.BITCOIN);
         notifyDataSetChanged();
     }
 
