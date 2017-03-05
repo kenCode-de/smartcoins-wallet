@@ -3,6 +3,7 @@ package de.bitshares_munich.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -1321,6 +1322,10 @@ public class SCWallDatabase {
         Log.i("SCWalldatabase","There are "+contacts.size()+" total Contacts.");
 
         return contacts;
+    }
+
+    public long getContactCount(){
+        return DatabaseUtils.queryNumEntries(db,SCWallDatabaseContract.Contacs.TABLE_NAME);
     }
 
     public long putContact(final Contact contact){

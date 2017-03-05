@@ -122,6 +122,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private static final String TAG = "SendScreen";
 
     TinyDB tinyDB;
+    SCWallDatabase db;
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
     AccountAssets loyaltyAsset;
@@ -411,6 +412,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
             startupTasks();
         } else {
+            db = new SCWallDatabase(this);
+
             cbAlwaysDonate.setText(getString(R.string.checkbox_donate_general_coin,1.0,this.coin.getLabel()) + " BitShares Munich");
             Intent intent = getIntent();
             Bundle res = intent.getExtras();
@@ -1818,16 +1821,22 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.contactButton)
     void OnClickContactBtn(View view) {
+        long contactsCount = 0;
 
-        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
+        if (this.coin == Coin.BITSHARE) {
+            ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", GeneralCoinContactListAdapter.ListviewContactItem.class);
+            contactsCount = contacts.size();
+        } else {
+            contactsCount = this.db.getContactCount();
+        }
 
-        if (contacts.size() > 0) {
+        if (contactsCount > 0) {
             contactListDialog = new Dialog(this);
 //            contactListDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             contactListDialog.setTitle(getString(R.string.contacts));
             contactListDialog.setContentView(R.layout.contacts_list_send_screen);
             ListView listView = (ListView) contactListDialog.findViewById(R.id.contactsListSendScreen);
-            listView.setAdapter(new ContactListDialogAdapter(this, this));
+            listView.setAdapter(new GeneralCoinContactListDialogAdapter(this, this, this.coin));
             int childCount = listView.getAdapter().getCount();
             setListViewHeightBasedOnChildren(listView, Math.min(5, childCount));
             contactListDialog.show();
