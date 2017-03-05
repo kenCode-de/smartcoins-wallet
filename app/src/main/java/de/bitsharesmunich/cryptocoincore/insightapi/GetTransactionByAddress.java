@@ -22,25 +22,45 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by henry on 12/02/2017.
+ * Get all the transaction data of the addresses of an account
+ *
  */
 
 public class GetTransactionByAddress extends Thread implements Callback<AddressTxi> {
-
-
+    /**
+     * The account to be query
+     */
     private GeneralCoinAccount account;
-    private List<GeneralCoinAddress> addresses = new ArrayList();
+    /**
+     * The list of address to query
+     */
+    private List<GeneralCoinAddress> addresses = new ArrayList<>();
+    /**
+     * The serviceGenerator to call
+     */
     private InsightApiServiceGenerator serviceGenerator;
+    /**
+     * This app context, used to save on the DB
+     */
     private Context context;
 
 
+    /**
+     * Basic consturcotr
+     * @param account The account to be query
+     * @param context This app context
+     */
     public GetTransactionByAddress(GeneralCoinAccount account, Context context) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
+        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
         this.account = account;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
         this.context = context;
     }
 
+    /**
+     * add an address to be query
+     * @param address the address to be query
+     */
     public void addAddress(GeneralCoinAddress address) {
         addresses.add(address);
     }
@@ -89,7 +109,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
                 for (Vout vout : txi.vout) {
                     if(vout.scriptPubKey.addresses == null || vout.scriptPubKey.addresses.length <= 0){
-                     //memo
+                        // The address is null, this must be a memo
                         String hex = vout.scriptPubKey.hex;
                         int opReturnIndex = hex.indexOf("6a");
                         if(opReturnIndex >= 0) {
@@ -98,9 +118,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                                 memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+(i*2)),16);
                             }
                             transaction.setMemo(new String(memoBytes));
-                            System.out.println("Memo read : " + transaction.getMemo());
                         }
-
                     }else {
                         GTxIO output = new GTxIO();
                         output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
@@ -163,7 +181,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
             }
             addressToQuery.deleteCharAt(addressToQuery.length() - 1);
             InsightApiService service = serviceGenerator.getService(InsightApiService.class);
-            Call<AddressTxi> addressTxiCall = service.getTransactionByAddress(addressToQuery.toString());
+            Call<AddressTxi> addressTxiCall = service.getTransactionByAddress(InsightApiConstants.getPath(account.getCoin()),addressToQuery.toString());
             addressTxiCall.enqueue(this);
         }
     }
