@@ -21,19 +21,46 @@ import retrofit2.Response;
  */
 
 public class GetTransactionData extends Thread implements Callback<Txi> {
-
+    /**
+     * The account to be query
+     */
     private final GeneralCoinAccount account;
+    /**
+     * The transaction txid to be query
+     */
     private String txid;
+    /**
+     * The serviceGenerator to call
+     */
     private InsightApiServiceGenerator serviceGenerator;
+    /**
+     * This app context, used to save on the DB
+     */
     private Context context;
+    /**
+     * If has to wait for another confirmation
+     */
     private boolean mustWait = false;
 
+    /**
+     * Constructor used to query for a transaction with unknown confirmations
+     * @param txid The txid of the transaciton to be query
+     * @param account The account to be query
+     * @param context This app Context
+     */
     public GetTransactionData(String txid, GeneralCoinAccount account, Context context) {
         this(txid, account, context, false);
     }
 
+    /**
+     * Consturctor to be used qhen the confirmations of the transaction are known
+     * @param txid The txid of the transaciton to be query
+     * @param account The account to be query
+     * @param context This app Context
+     * @param mustWait If there is less confirmation that needed
+     */
     public GetTransactionData(String txid, GeneralCoinAccount account, Context context, boolean mustWait) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
+        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
         this.account = account;
         this.txid = txid;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
@@ -41,6 +68,9 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
         this.mustWait = mustWait;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         if (mustWait) {
@@ -50,7 +80,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             }
         }
         InsightApiService service = serviceGenerator.getService(InsightApiService.class);
-        Call<Txi> txiCall = service.getTransaction(txid);
+        Call<Txi> txiCall = service.getTransaction(InsightApiConstants.getPath(account.getCoin()),txid);
         txiCall.enqueue(this);
     }
 
@@ -92,7 +122,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
 
             for (Vout vout : txi.vout) {
                 if(vout.scriptPubKey.addresses == null || vout.scriptPubKey.addresses.length <= 0){
-                    //memo
+                    // The address is null, this must be a memo
                     String hex = vout.scriptPubKey.hex;
                     int opReturnIndex = hex.indexOf("6a");
                     if(opReturnIndex >= 0) {

@@ -10,19 +10,35 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
+ * Holds each call to the insigh api server
  * Created by henry on 13/02/2017.
  */
 
-public interface InsightApiService {
+interface InsightApiService {
 
-    @GET("/insight-api/tx/{txid}")
-    Call<Txi> getTransaction(@Path(value = "txid", encoded = true) String txid);
+    /**
+     * The query for the info of a single transaction
+     * @param path The path of the insight api without the server address
+     * @param txid the transasction to be query
+     */
+    @GET("{path}/tx/{txid}")
+    Call<Txi> getTransaction(@Path(value = "path", encoded = true) String path, @Path(value = "txid", encoded = true) String txid);
 
-    @GET("/insight-api/addrs/{addrs}/txs")
-    Call<AddressTxi> getTransactionByAddress(@Path(value = "addrs", encoded = true) String addrs);
+    /**
+     * The query for the transasctions of multiples addresses
+     * @param path     The path of the insight api without the server address
+     * @param addrs the addresses to be query each separated with a ","
+     */
+    @GET("{path}/addrs/{addrs}/txs")
+    Call<AddressTxi> getTransactionByAddress(@Path(value = "path", encoded = true) String path, @Path(value = "addrs", encoded = true) String addrs);
 
+    /**
+     * Broadcast Transaction
+     * @param path The path of the insight api without the server address
+     * @param rawtx the rawtx to send in Hex String
+     */
     @FormUrlEncoded
-    @POST("/insight-api/tx/send")
-    Call<Txi> broadcastTransaction(@Field("rawtx") String rawtx);
+    @POST("{path}/tx/send")
+    Call<Txi> broadcastTransaction(@Path(value = "path", encoded = true) String path, @Field("rawtx") String rawtx);
 
 }
