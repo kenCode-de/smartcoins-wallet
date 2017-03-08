@@ -58,6 +58,7 @@
         android:id="@+id/tvPinBin"
         android:textStyle="bold"
         android:layout_marginTop="30dp"/>
+
     <EditText
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -67,8 +68,7 @@
         android:background="@drawable/edittext_bg"
         android:singleLine="true"
         android:maxLines="1"
-        android:layout_height="40dp"
-        android:maxLength="8"/>
+        android:layout_height="40dp" />
 
     <LinearLayout
         android:layout_marginLeft="@dimen/activity_horizontal_margin"

@@ -47,6 +47,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import de.bitshares_munich.interfaces.GravatarDelegate;
 import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.database.HistoricalTransferEntry;
@@ -60,6 +61,10 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.Contact;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
@@ -166,6 +171,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
     ProgressDialog progressDialog;
     boolean loadComplete = false;
     boolean btnPress = false;
+    Coin coin;
 
     /* Reference to the class containing all blockchain details about this transaction */
     private HistoricalTransferEntry historicalTransferEntry;
@@ -173,6 +179,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
     /* Legacy persistent storage */
     private TinyDB tinyDB;
+
+    private SCWallDatabase db;
 
     /* Database interface reference */
     private SCWallDatabase database;
@@ -182,6 +190,8 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
     /* Transaction id */
     String transactionId = "";
+
+    GeneralTransaction generalTransaction;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -201,6 +211,7 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
 
         // Retrieving the currently active account from the legacy tinyDB implementation
         tinyDB = new TinyDB(this);
+        db = new SCWallDatabase(this);
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         for(AccountDetails accountDetail : accountDetails){
             if(accountDetail.isSelected){
@@ -208,23 +219,43 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
             }
         }
 
-        // Deserializing the HistoricalTransferEntry object, which contains all
-        // detailed information about this transfer.
-        Gson gson = new Gson();
-        String jsonOperation = getIntent().getExtras().getString(TableViewClickListener.KEY_OPERATION_ENTRY);
-        historicalTransferEntry = gson.fromJson(jsonOperation, HistoricalTransferEntry.class);
+        Intent intent = getIntent();
 
-        // Setting the memo message
-        TransferOperation transfer = historicalTransferEntry.getHistoricalTransfer().getOperation();
-        memo.setText(String.format(memo.getText().toString(), transfer.getMemo().getPlaintextMessage()));
+        if (intent.hasExtra("coin")) {
+            this.coin = Coin.valueOf(intent.getStringExtra("coin"));
+        } else {
+            this.coin = Coin.BITSHARE;
+        }
 
-        transactionId = historicalTransferEntry.getHistoricalTransfer().getId();
+
+        if (this.coin == Coin.BITSHARE) {
+            // Deserializing the HistoricalTransferEntry object, which contains all
+            // detailed information about this transfer.
+            Gson gson = new Gson();
+            String jsonOperation = intent.getExtras().getString(TableViewClickListener.KEY_OPERATION_ENTRY);
+            historicalTransferEntry = gson.fromJson(jsonOperation, HistoricalTransferEntry.class);
+
+            // Setting the memo message
+            TransferOperation transfer = historicalTransferEntry.getHistoricalTransfer().getOperation();
+            memo.setText(String.format(memo.getText().toString(), transfer.getMemo().getPlaintextMessage()));
+
+            transactionId = historicalTransferEntry.getHistoricalTransfer().getId();
+        } else {
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
+            long generalTransactionId = intent.getLongExtra("TransactionId",-1);
+
+            generalTransaction = db.getGeneralTransactionByIdAccount(account,generalTransactionId);
+            transactionId = Long.toString(generalTransactionId);
+        }
+
+
+
 
         progressDialog = new ProgressDialog(this);
         Application.registerBalancesDelegateEReceipt(this);
         setTitle(getResources().getString(R.string.e_receipt_activity_name));
         hideProgressBar();
-        Intent intent = getIntent();
+
         String eReciept = intent.getStringExtra(getResources().getString(R.string.e_receipt));
 
         memoMsg = intent.getStringExtra("Memo");
@@ -232,80 +263,140 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
         time = intent.getStringExtra("Time");
         timeZone = intent.getStringExtra("TimeZone");
 
-        UserAccount fromUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getFrom();
-        UserAccount toUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getTo();
-        if(fromUser.getObjectId().equals(user.getObjectId())){
-            ivImageTag.setImageResource(R.drawable.send);
-            tvUserStatus.setText(getString(R.string.sender_account));
-            tvOtherStatus.setText(getString(R.string.receiver_account));
-            otherName = toUser.getAccountName();
-            userName = fromUser.getAccountName();
-        }else{
-            tvUserStatus.setText(getString(R.string.receiver_account));
-            tvOtherStatus.setText(getString(R.string.sender_account));
-            ivImageTag.setImageResource(R.drawable.receive);
-            otherName = fromUser.getAccountName();
-            userName = toUser.getAccountName();
+
+
+        if (this.coin == Coin.BITSHARE) {
+            UserAccount fromUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getFrom();
+            UserAccount toUser = historicalTransferEntry.getHistoricalTransfer().getOperation().getTo();
+            if (fromUser.getObjectId().equals(user.getObjectId())) {
+                ivImageTag.setImageResource(R.drawable.send);
+                tvUserStatus.setText(getString(R.string.sender_account));
+                tvOtherStatus.setText(getString(R.string.receiver_account));
+                otherName = toUser.getAccountName();
+                userName = fromUser.getAccountName();
+            } else {
+                tvUserStatus.setText(getString(R.string.receiver_account));
+                tvOtherStatus.setText(getString(R.string.sender_account));
+                ivImageTag.setImageResource(R.drawable.receive);
+                otherName = fromUser.getAccountName();
+                userName = toUser.getAccountName();
+            }
+
+            tvOtherName.setText(otherName);
+            tvUserName.setText(userName);
+            //        TvBlockNum.setText(date);
+            tvTime.setText(time + " " + timeZone);
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+
+            ivOtherGravatar.requestLayout();
+
+            ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+            ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+
+
+            fetchGravatarInfo(get_email(otherName));
+
+            setBackButton(true);
+
+            HistoricalTransfer historicalTransfer = historicalTransferEntry.getHistoricalTransfer();
+            tvBlockNumber.setText(String.format("%d", historicalTransfer.getBlockNum()));
+            tvTrxInBlock.setText(String.format("%s", historicalTransfer.getId()));
+
+            double amount = Util.fromBase(historicalTransfer.getOperation().getTransferAmount());
+            String symbol = historicalTransfer.getOperation().getTransferAmount().getAsset().getSymbol();
+            int precision = historicalTransfer.getOperation().getTransferAmount().getAsset().getPrecision();
+            String textFormat = String.format("%%.%df %%s", precision);
+            tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
+
+            if(historicalTransferEntry.getEquivalentValue() != null){
+                double eqValueAmount = Util.fromBase(historicalTransferEntry.getEquivalentValue());
+                String eqValueSymbol = historicalTransferEntry.getEquivalentValue().getAsset().getSymbol();
+                tvPaymentEquivalent.setText(String.format("%.2f %s", eqValueAmount, eqValueSymbol));
+            }
+        } else {
+            Contact otherContact = null;
+
+            if (generalTransaction.getAccountBalanceChange() < 0){
+                ivImageTag.setImageResource(R.drawable.send);
+                tvUserStatus.setText(getString(R.string.sender_account));
+                tvOtherStatus.setText(getString(R.string.receiver_account));
+                otherName = generalTransaction.getTxOutputs().get(0).getAddressString();
+                userName = generalTransaction.getTxInputs().get(0).getAddressString();
+                otherContact = db.getContactByAddress(otherName);
+            } else {
+                tvUserStatus.setText(getString(R.string.receiver_account));
+                tvOtherStatus.setText(getString(R.string.sender_account));
+                ivImageTag.setImageResource(R.drawable.receive);
+                otherName = generalTransaction.getTxInputs().get(0).getAddressString();
+                userName = generalTransaction.getTxOutputs().get(0).getAddressString();
+            }
+
+            tvOtherName.setText(otherName);
+            tvUserName.setText(userName);
+            tvTime.setText(time + " " + timeZone);
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+
+            ivOtherGravatar.requestLayout();
+            ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
+            ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
+
+
+            if (otherContact != null){
+                fetchGravatarInfo(otherContact.getEmail());
+            }
+
+            setBackButton(true);
+
+
+            tvBlockNumber.setText(String.format("%d", generalTransaction.getBlock()));
+            tvTrxInBlock.setText(String.format("%s", generalTransaction.getTxid()));
+
+            double amount = generalTransaction.getAccountBalanceChange()/Math.pow(10,this.coin.getPrecision());
+            double fee = generalTransaction.getFee()/Math.pow(10,this.coin.getPrecision());
+            String symbol = this.coin.getLabel();
+            String textFormat = String.format("%%.%df %%s",this.coin.getPrecision());
+            tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
+
+            tvAmount.setText(String.format("%.4f %s",amount-fee,symbol));
+            tvFee.setText(String.format("%.4f %s",fee,symbol));
+            tvTotal.setText(String.format("%.4f %s",amount,symbol));
+            memo.setText(String.format(memo.getText().toString(), generalTransaction.getMemo()));
         }
 
-        tvOtherName.setText(otherName);
-        tvUserName.setText(userName);
-//        TvBlockNum.setText(date);
-        tvTime.setText(time + " " + timeZone);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-        ivOtherGravatar.requestLayout();
-
-        ivOtherGravatar.getLayoutParams().height = (width * 40) / 100;
-        ivOtherGravatar.getLayoutParams().width = (width * 40) / 100;
-
-
-        fetchGravatarInfo(get_email(otherName));
-
-        setBackButton(true);
-
-        HistoricalTransfer historicalTransfer = historicalTransferEntry.getHistoricalTransfer();
-        tvBlockNumber.setText(String.format("%d", historicalTransfer.getBlockNum()));
-        tvTrxInBlock.setText(String.format("%s", historicalTransfer.getId()));
-
-        double amount = Util.fromBase(historicalTransfer.getOperation().getTransferAmount());
-        String symbol = historicalTransfer.getOperation().getTransferAmount().getAsset().getSymbol();
-        int precision = historicalTransfer.getOperation().getTransferAmount().getAsset().getPrecision();
-        String textFormat = String.format("%%.%df %%s", precision);
-        tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
-
-        if(historicalTransferEntry.getEquivalentValue() != null){
-            double eqValueAmount = Util.fromBase(historicalTransferEntry.getEquivalentValue());
-            String eqValueSymbol = historicalTransferEntry.getEquivalentValue().getAsset().getSymbol();
-            tvPaymentEquivalent.setText(String.format("%.2f %s", eqValueAmount, eqValueSymbol));
-        }
     }
 
     @Override
     public void OnUpdate(String s, int id) {
-        if (id == 18) {
-            assets_id_in_work = 0;
-            get_asset(Assetid.get(assets_id_in_work), "19");
-        } else if (id == 19) {
-            if (assets_id_in_work < assets_id_total_size) {
-                String result = SupportMethods.ParseJsonObject(s, "result");
-                String assetObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
-                String symbol = SupportMethods.ParseJsonObject(assetObject, "symbol");
-                String precision = SupportMethods.ParseJsonObject(assetObject, "precision");
-                HashMap<String, String> de = new HashMap<>();
-                de.put("symbol", symbol);
-                de.put("precision", precision);
-                SymbolsPrecisions.put(Assetid.get(assets_id_in_work), de);
-                if (assets_id_in_work == (assets_id_total_size - 1)) {
-                    onLastCall();
+        if (this.coin == Coin.BITSHARE) {
+            if (id == 18) {
+                assets_id_in_work = 0;
+                get_asset(Assetid.get(assets_id_in_work), "19");
+            } else if (id == 19) {
+                if (assets_id_in_work < assets_id_total_size) {
+                    String result = SupportMethods.ParseJsonObject(s, "result");
+                    String assetObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
+                    String symbol = SupportMethods.ParseJsonObject(assetObject, "symbol");
+                    String precision = SupportMethods.ParseJsonObject(assetObject, "precision");
+                    HashMap<String, String> de = new HashMap<>();
+                    de.put("symbol", symbol);
+                    de.put("precision", precision);
+                    SymbolsPrecisions.put(Assetid.get(assets_id_in_work), de);
+                    if (assets_id_in_work == (assets_id_total_size - 1)) {
+                        onLastCall();
+                    }
+                    assets_id_in_work++;
+                    if (assets_id_in_work < Assetid.size())
+                        get_asset(Assetid.get(assets_id_in_work), "19");
                 }
-                assets_id_in_work++;
-                if (assets_id_in_work < Assetid.size())
-                    get_asset(Assetid.get(assets_id_in_work), "19");
             }
         }
     }
@@ -652,7 +743,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                     email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
                     email.setType("application/pdf");
                     email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    (eReceipt.this).onInternalAppMove();
                     startActivity(email);
                 }
             });

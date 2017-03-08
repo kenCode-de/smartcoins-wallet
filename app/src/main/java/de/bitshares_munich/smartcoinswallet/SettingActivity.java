@@ -63,8 +63,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
@@ -75,6 +75,9 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.AccountOptions;
 import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
 import de.bitsharesmunich.graphenej.Address;
@@ -351,7 +354,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void onClickSecurePinbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -469,6 +471,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
                 langArray.add(langCode);
             }
+            else if( getLangCode.get(i).equalsIgnoreCase("pt-rBR") || getLangCode.get(i).equalsIgnoreCase("pt") )
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rBR";
+                langCode.lang = "Português"+ "; " + "pt-rBR" +  " (Português do Brasil)";
+                langArray.add(langCode);
+            }
+            else if(getLangCode.get(i).equalsIgnoreCase("pt-rPT"))
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rPT";
+                langCode.lang = "Português"+ "; " + "pt-rPT" +  " (Português de Portugal)";
+                langArray.add(langCode);
+            }
             else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
@@ -489,6 +505,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 LangCode lc = langArray.get(i);
 
                 if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
+                {
+                    spLanguage.setSelection(i);
+                }
+                else if ( langCode.equalsIgnoreCase("pt") && lc.code.equalsIgnoreCase("pt-rbr") )
                 {
                     spLanguage.setSelection(i);
                 }
@@ -783,6 +803,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
             String brainKey = getBrainKey();
+
+            /*If there is a master seed, then add it to the mnemonics*/
+            SCWallDatabase db = new SCWallDatabase(getApplicationContext());
+            List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+            if (seeds.size() > 0){
+                AccountSeed masterSeed = (BIP39)seeds.get(0);
+                if (!brainKey.isEmpty()) {
+                    brainKey += " "+masterSeed.getMnemonicCodeString().toUpperCase();
+                }
+            }
+
             if (brainKey.isEmpty()) {
                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
                 return;
@@ -997,7 +1028,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
-            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
@@ -1007,7 +1037,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -1016,7 +1045,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
         alertMsg.setText(getString(R.string.help_message));
@@ -1083,7 +1112,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void showDialog() {
 
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -1267,7 +1296,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         String _pinCode = getPin();
 
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile(_brnKey,_accountName,_pinCode);
+        myBinHelper.createBackupBinFile(_brnKey,_accountName,_pinCode,getApplicationContext());
     }
 
     @Override

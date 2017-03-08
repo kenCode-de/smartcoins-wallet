@@ -10,6 +10,5 @@ public abstract class GeneralCoinManager<T extends GeneralCoinAccount> {
 
     public abstract T importAccount(AccountSeed seed, String name);
 
-    public abstract T getAccount(String id, String name, AccountSeed seed, int accountIndex, int externalIndex, int changeIndex);
-
+    public abstract T getAccount(long id, String name, AccountSeed seed, int accountIndex, int externalIndex, int changeIndex);
 }

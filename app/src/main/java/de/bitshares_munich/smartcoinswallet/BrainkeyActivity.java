@@ -32,12 +32,15 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.UserAccount;
@@ -123,10 +126,12 @@ public class BrainkeyActivity extends BaseActivity {
         } else {
             String trimmedBrainKey = etBrainKey.getText().toString().trim();
             etBrainKey.setText(trimmedBrainKey);
-            if (etPin.getText().length() < 5) {
+            if (etPin.getText().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+            }
+            //PIN must have minimum of 6-digit
+            else if (etPin.getText().length() < 6) {
+                Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
             } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {
@@ -139,8 +144,46 @@ public class BrainkeyActivity extends BaseActivity {
         String temp = etBrainKey.getText().toString();
         if (temp.contains(" ")) {
             String arr[] = temp.split(" ");
-            if (arr.length >= 12 && arr.length <= 16) {
+            if (arr.length >= 24 && arr.length <= 28) { //Importing brainkey (first 12 to 16 words) and master seed (last 12 words)
+                SCWallDatabase db = new SCWallDatabase(getApplicationContext());
 
+                /*Extracting the brainkey*/
+                String brainkeyString = "";
+                for (int i=0;i<arr.length-12;i++){
+                    brainkeyString += " "+arr[i];
+                }
+                brainkeyString = brainkeyString.trim();
+
+                /*Extracting the master seed*/
+                String masterSeed = "";
+                for (int i=arr.length-12;i<arr.length;i++){
+                    masterSeed += " "+arr[i];
+                }
+                masterSeed = masterSeed.trim().toLowerCase();
+
+                /*Checking if brainkey exists, if not, importing the account*/
+                boolean brainkeyExists = false;
+                if (checkBrainKeyExist(brainkeyString)) {
+                    brainkeyExists = true;
+                } else {
+                    showDialog("", getString(R.string.importing_your_wallet));
+                    getAccountFromBrainkey(brainkeyString, pinCode);
+                }
+
+                /*Checking if master seed exists, if not, importing the account*/
+                AccountSeed seed = new BIP39(masterSeed,"");
+                if (db.getIdSeed(seed) != -1) {
+                    if (brainkeyExists){//If this is true, then the brainkey and the master seed already exists
+                        Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (brainkeyExists) {//If this is true, then the brainkey exists but the master seed not, so lets show the dialog
+                        showDialog("", getString(R.string.importing_your_wallet));
+                    }
+                    db.putSeed(seed);
+                }
+
+            } else if (arr.length >= 12 && arr.length <= 16) {//Importing only brainkey
                 if (checkBrainKeyExist(temp)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
@@ -319,6 +362,10 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
+
+        //Success Import(Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
 
@@ -333,7 +380,6 @@ public class BrainkeyActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }

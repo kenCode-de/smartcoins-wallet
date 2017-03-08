@@ -25,23 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.bitsharesmunich.graphenej.AccountOptions;
-import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
-import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.Authority;
-import de.bitsharesmunich.graphenej.BrainKey;
-import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.Transaction;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.api.GetAccounts;
-import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
-
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
@@ -56,18 +39,33 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
-import de.bitshares_munich.interfaces.LockListener;
-import de.bitshares_munich.interfaces.UpdatedAccountListener;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
 import de.bitshares_munich.fragments.PromptUpdateDialog;
 import de.bitshares_munich.fragments.UpdatingAccountsDialog;
+import de.bitshares_munich.interfaces.BackupBinDelegate;
+import de.bitshares_munich.interfaces.LockListener;
+import de.bitshares_munich.interfaces.UpdatedAccountListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
+import de.bitsharesmunich.graphenej.Address;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BrainKey;
+import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.api.GetAccounts;
+import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, LockListener {
     private String TAG = this.getClass().getName();
@@ -286,7 +284,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
                                 /* Creating automatic bin backup */
                                 BinHelper myBinHelper = new BinHelper(TabActivity.this, TabActivity.this);
-                                myBinHelper.get_bin_bytes_from_brainkey(localAccountDetail.brain_key, localAccountDetail.account_name, localAccountDetail.pinCode);
+                                myBinHelper.get_bin_bytes_from_brainkey(localAccountDetail.brain_key, localAccountDetail.account_name, localAccountDetail.pinCode,getApplicationContext());
                             }catch(Exception e){
                                 Log.e(TAG, String.format("Exception while trying to update local copy of authority keys from account %s. Msg: %s", localAccountDetail.account_name, e.getMessage()));
                             }
@@ -623,12 +621,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @OnClick(R.id.OnClickSettings_TabActivity)
     void OnClickSettings() {
-        this.onInternalAppMove();
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment currentFragment = adapter.getRegisteredFragment(viewPager.getCurrentItem());
-        if(currentFragment instanceof  InternalMovementListener){
-            ((InternalMovementListener) currentFragment).onInternalAppMove();
-        }
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }

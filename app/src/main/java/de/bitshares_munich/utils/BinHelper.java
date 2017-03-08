@@ -124,12 +124,12 @@ public class BinHelper {
         return success;
     }
 
-    public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName)
+    public void get_bin_bytes_from_brainkey(final String pin, final String brnKey, final String _accountName,Context context)
     {
         Log.d(TAG, "get_bin_bytes_from_brainkey. pin: "+pin+", brnKey: "+brnKey);
         Log.d(TAG, "account name: "+_accountName);
         try {
-            byte[] results = FileBin.getBytesFromBrainKey(brnKey,pin,_accountName);
+            byte[] results = FileBin.getBytesFromBrainKey(brnKey,pin,_accountName,context);
             List<Integer> resultFile = new ArrayList<>();
             for(byte result: results){
                 resultFile.add(result&0xff);
@@ -202,7 +202,7 @@ public class BinHelper {
         }
     }
 
-    public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode)
+    public void createBackupBinFile(final String _brnKey,final String _accountName,final String pinCode,final Context context)
     {
         showDialog(myActivity.getResources().getString(R.string.creating_backup_file), myActivity.getResources().getString(R.string.fetching_key));
 
@@ -226,7 +226,7 @@ public class BinHelper {
             @Override
             public void run()
             {
-                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName);
+                get_bin_bytes_from_brainkey(pinCode,_brnKey,_accountName,context);
             }
         };
 
@@ -272,7 +272,7 @@ public class BinHelper {
         return "";
     }
 
-    public void createBackupBinFile()
+    public void createBackupBinFile(Context context)
     {
         TinyDB tinyDB = new TinyDB(myActivity);
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(myActivity.getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -280,7 +280,7 @@ public class BinHelper {
         String _accountName = getAccountName(accountDetails);
         String _pinCode = getPin(accountDetails);
 
-        get_bin_bytes_from_brainkey(_pinCode, _brnKey, _accountName);
+        get_bin_bytes_from_brainkey(_pinCode, _brnKey, _accountName,context);
     }
 
     public int numberOfWalletAccounts(Context _context)

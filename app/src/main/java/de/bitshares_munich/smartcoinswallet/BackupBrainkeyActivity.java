@@ -18,17 +18,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 
 /**
@@ -51,14 +55,14 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile();
+        myBinHelper.createBackupBinFile(getApplicationContext());
 
     }
 
     private void showDialogBackupBrainKey() {
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         dialog.setCancelable(false);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -111,7 +115,6 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
             Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            ((InternalMovementListener)this).onInternalAppMove();
             startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.please_backup_your_brainkey), Toast.LENGTH_SHORT).show();
@@ -127,6 +130,17 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
             String brainKey = getBrainKey();
+
+            /*If there is a master seed, then add it to the mnemonics*/
+            SCWallDatabase db = new SCWallDatabase(getApplicationContext());
+            List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+            if (seeds.size() > 0){
+                AccountSeed masterSeed = (BIP39)seeds.get(0);
+                if (!brainKey.isEmpty()) {
+                    brainKey += " "+masterSeed.getMnemonicCodeString().toUpperCase();
+                }
+            }
+
             if (brainKey.isEmpty()) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.unable_to_load_brainkey), Toast.LENGTH_LONG).show();
                 return;

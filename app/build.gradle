@@ -17,6 +17,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        debug {
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
@@ -27,15 +31,22 @@ android {
     }
     buildTypes {
         debug {
-            // enable crashlytics
+            // disable crashlytics
             buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            ext.enableCrashlytics = false
+            signingConfig signingConfigs.debug
+        }
+        preRelease {
+            // enable crashlytics
+            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
             ext.enableCrashlytics = true
+            debuggable true
+            signingConfig signingConfigs.debug
         }
         release {
-            // disable crashlytics
+            // enable crashlytics
             buildConfigField "boolean", "USE_CRASHLYTICS", "true"
-            ext.enableCrashlytics = false
-
+            ext.enableCrashlytics = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -90,6 +101,10 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
+    compile ('io.socket:socket.io-client:0.8.3') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
 }
 
 afterEvaluate {

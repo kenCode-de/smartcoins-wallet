@@ -10,6 +10,8 @@ public class BalanceItem {
     String symbol;
     String precision;
     String ammount;
+
+    int confirmations;
     String fait;
     TextView symbolTextView;
     TextView ammountTextView;
@@ -18,6 +20,15 @@ public class BalanceItem {
         this.symbol = symbol;
         this.precision = precision;
         this.ammount = ammount;
+        this.confirmations = -1;
+        this.fait = "";
+    }
+
+    public BalanceItem(String symbol, String precision, String ammount, int confirmations){
+        this.symbol = symbol;
+        this.precision = precision;
+        this.ammount = ammount;
+        this.confirmations = confirmations;
         this.fait = "";
     }
 
@@ -51,6 +62,14 @@ public class BalanceItem {
 
     public void setFait(String fait){
         this.fait = fait;
+    }
+
+    public int getConfirmations() {
+        return confirmations;
+    }
+
+    public void setConfirmations(int confirmations) {
+        this.confirmations = confirmations;
     }
 
     public BalanceItem clone(){

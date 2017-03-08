@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/txt_brain_key"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:id="@+id/brainkey_title" />
     <EditText
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
