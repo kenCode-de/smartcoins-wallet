@@ -21,14 +21,12 @@ public class ExistingAccountActivity extends BaseActivity {
     @OnClick(R.id.tvImportBrainKey)
     public void importBrainKey(Button button) {
         Intent intent=new Intent(getApplicationContext(),BrainkeyActivity.class);
-        this.onInternalAppMove();
         startActivity(intent);
     }
 
     @OnClick(R.id.tvBackup)
     public void importBackup(Button button) {
         Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
-        this.onInternalAppMove();
         startActivity(intent);
     }
 }

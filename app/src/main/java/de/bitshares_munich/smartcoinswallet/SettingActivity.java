@@ -65,7 +65,6 @@ import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.LangCode;
@@ -355,7 +354,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void onClickSecurePinbtn(View v) {
         designMethod();
         Intent intent = new Intent(getApplicationContext(), PinActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -473,6 +471,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
                 langArray.add(langCode);
             }
+            else if( getLangCode.get(i).equalsIgnoreCase("pt-rBR") || getLangCode.get(i).equalsIgnoreCase("pt") )
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rBR";
+                langCode.lang = "Português"+ "; " + "pt-rBR" +  " (Português do Brasil)";
+                langArray.add(langCode);
+            }
+            else if(getLangCode.get(i).equalsIgnoreCase("pt-rPT"))
+            {
+                LangCode langCode = new LangCode();
+                langCode.code = "pt-rPT";
+                langCode.lang = "Português"+ "; " + "pt-rPT" +  " (Português de Portugal)";
+                langArray.add(langCode);
+            }
             else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
@@ -493,6 +505,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 LangCode lc = langArray.get(i);
 
                 if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
+                {
+                    spLanguage.setSelection(i);
+                }
+                else if ( langCode.equalsIgnoreCase("pt") && lc.code.equalsIgnoreCase("pt-rbr") )
                 {
                     spLanguage.setSelection(i);
                 }
@@ -1012,7 +1028,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
-            ((InternalMovementListener) this).onInternalAppMove();
             startActivity(intent);
         }else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
@@ -1022,7 +1037,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.import_new_account)
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
     }
 
@@ -1031,7 +1045,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
         alertMsg.setText(getString(R.string.help_message));
@@ -1098,7 +1112,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void showDialog() {
 
         final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
         TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);

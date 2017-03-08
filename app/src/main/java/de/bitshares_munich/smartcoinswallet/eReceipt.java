@@ -47,6 +47,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import de.bitshares_munich.interfaces.GravatarDelegate;
 import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.database.HistoricalTransferEntry;
@@ -742,7 +743,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate,Gravatar
                     email.putExtra(Intent.EXTRA_SUBJECT, "eReceipt "+date);
                     email.setType("application/pdf");
                     email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    (eReceipt.this).onInternalAppMove();
                     startActivity(email);
                 }
             });

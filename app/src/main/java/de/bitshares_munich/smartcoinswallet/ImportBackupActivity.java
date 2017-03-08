@@ -22,8 +22,8 @@ import ar.com.daidalos.afiledialog.FileChooserLabels;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.AccountDetails;
+import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.PermissionManager;
@@ -238,6 +238,10 @@ public class ImportBackupActivity extends BaseActivity {
                                 accountDetails.pinCode = pinCode;
                                 accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
+                                //Success Import(Set app lock to false)
+                                Application app = (Application) getApplicationContext();
+                                app.setLock(false);
+
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(),myActivity);
                                 Intent intent;
@@ -250,7 +254,6 @@ public class ImportBackupActivity extends BaseActivity {
                                 }
 
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                ((InternalMovementListener) ImportBackupActivity.this).onInternalAppMove();
                                 startActivity(intent);
                                 finish();
                             } else {

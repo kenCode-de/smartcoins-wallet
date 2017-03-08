@@ -10,33 +10,24 @@
     android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.bitshares_munich.smartcoinswallet.TabActivity">
+
     <EditText
         android:id="@+id/etPin"
         android:layout_width="250dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:background="@drawable/edittext_bg"
         android:inputType="number"
         android:maxLines="1"
-        android:singleLine="true"/>
-    <LinearLayout
-        android:layout_width="250dp"
+        android:singleLine="true"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btnDone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:background="@color/green"
-            android:padding="10dp"
-            android:text="@string/done"
-            android:textColor="@color/white"/>
-    </LinearLayout>
+        android:id="@+id/warning"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal" />
+
 </LinearLayout>

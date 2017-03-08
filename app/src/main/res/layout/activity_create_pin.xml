@@ -14,13 +14,13 @@
         android:layout_marginTop="10dp"
         android:text="@string/old_pin"
         android:textStyle="bold"/>
+
     <EditText
         android:id="@+id/etOldPin"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/edittext_bg"
         android:inputType="number"
-        android:maxLength="6"
         android:maxLines="1"
         android:singleLine="true"/>
 
@@ -30,13 +30,13 @@
         android:layout_marginTop="10dp"
         android:text="@string/txt_6_digits_pin"
         android:textStyle="bold"/>
+
     <EditText
         android:id="@+id/etPin"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/edittext_bg"
         android:inputType="number"
-        android:maxLength="6"
         android:maxLines="1"
         android:singleLine="true"/>
 
@@ -46,15 +46,16 @@
         android:layout_marginTop="10dp"
         android:text="@string/txt_6_digits_pin_confirm"
         android:textStyle="bold"/>
+
     <EditText
         android:id="@+id/etPinConfirmation"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/edittext_bg"
         android:inputType="number"
-        android:maxLength="6"
         android:maxLines="1"
         android:singleLine="true"/>
+
     <Button
         android:id="@+id/btnEdit"
         android:layout_width="wrap_content"

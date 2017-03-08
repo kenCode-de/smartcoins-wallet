@@ -12,7 +12,7 @@
         android:layout_width="match_parent">
 
         <WebView
-            android:id="@+id/webviewLisense"
+            android:id="@+id/webviewLicense"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:padding="10dp"

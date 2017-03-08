@@ -126,10 +126,12 @@ public class BrainkeyActivity extends BaseActivity {
         } else {
             String trimmedBrainKey = etBrainKey.getText().toString().trim();
             etBrainKey.setText(trimmedBrainKey);
-            if (etPin.getText().length() < 5) {
+            if (etPin.getText().length() == 0) {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-            } else if (etPinConfirmation.getText().length() < 5) {
-                Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin_confirm, Toast.LENGTH_SHORT).show();
+            }
+            //PIN must have minimum of 6-digit
+            else if (etPin.getText().length() < 6) {
+                Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
             } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             } else {
@@ -360,6 +362,10 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void addWallet(AccountDetails accountDetail, String brainKey, String pinCode) {
+
+        //Success Import(Set app lock to false)
+        Application app = (Application) getApplicationContext();
+        app.setLock(false);
         BinHelper myBinHelper = new BinHelper();
         myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
 
@@ -374,7 +380,6 @@ public class BrainkeyActivity extends BaseActivity {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ((InternalMovementListener) this).onInternalAppMove();
         startActivity(intent);
         finish();
     }
