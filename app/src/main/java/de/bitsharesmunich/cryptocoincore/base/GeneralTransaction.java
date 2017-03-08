@@ -10,21 +10,23 @@ import java.util.List;
 
 public class GeneralTransaction {
 
-    private String id;
+    private long id = -1;
     private String txid;
     private Coin type;
     private long block;
     private long fee;
     private int confirm;
     private Date date;
+    private int blockHeight;
+    private String memo = null;
 
-    private List<GIOTx> txInputs = new ArrayList();
-    private List<GIOTx> txOutputs = new ArrayList();
+    private List<GTxIO> txInputs = new ArrayList();
+    private List<GTxIO> txOutputs = new ArrayList();
 
     public GeneralTransaction() {
     }
 
-    public GeneralTransaction(String id, String txid, Coin type, long block, long fee, int confirm, Date date) {
+    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight, String memo) {
         this.id = id;
         this.txid = txid;
         this.type = type;
@@ -32,13 +34,15 @@ public class GeneralTransaction {
         this.fee = fee;
         this.confirm = confirm;
         this.date = date;
+        this.blockHeight = blockHeight;
+        this.memo = memo;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -86,19 +90,35 @@ public class GeneralTransaction {
         this.date = date;
     }
 
-    public List<GIOTx> getTxInputs() {
+    public int getBlockHeight() {
+        return blockHeight;
+    }
+
+    public void setBlockHeight(int blockHeight) {
+        this.blockHeight = blockHeight;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public List<GTxIO> getTxInputs() {
         return txInputs;
     }
 
-    public void setTxInputs(List<GIOTx> txInputs) {
+    public void setTxInputs(List<GTxIO> txInputs) {
         this.txInputs = txInputs;
     }
 
-    public List<GIOTx> getTxOutputs() {
+    public List<GTxIO> getTxOutputs() {
         return txOutputs;
     }
 
-    public void setTxOutputs(List<GIOTx> txOutputs) {
+    public void setTxOutputs(List<GTxIO> txOutputs) {
         this.txOutputs = txOutputs;
     }
 
@@ -125,14 +145,14 @@ public class GeneralTransaction {
         double balance = 0;
         boolean theresAccountInput = false;
 
-        for (GIOTx txInputs : this.getTxInputs()){
+        for (GTxIO txInputs : this.getTxInputs()){
             if (txInputs.isOut() && (txInputs.getAddress() != null)){
                 balance += -txInputs.getAmount();
                 theresAccountInput = true;
             }
         }
 
-        for (GIOTx txOutput : this.getTxOutputs()){
+        for (GTxIO txOutput : this.getTxOutputs()){
             if (!txOutput.isOut() && (txOutput.getAddress() != null)){
                 balance += txOutput.getAmount();
             }

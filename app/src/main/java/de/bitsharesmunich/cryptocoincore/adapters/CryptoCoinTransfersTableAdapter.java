@@ -2,32 +2,24 @@ package de.bitsharesmunich.cryptocoincore.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.Util;
 import de.codecrafters.tableview.TableDataAdapter;
 
 
@@ -44,6 +36,30 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
         super(context, data);
         this.locale = locale;
         this.account = account;
+    }
+
+    public void addOrReplaceData(GeneralTransaction[] data){
+        List<GeneralTransaction> oldData = this.getData();
+        GeneralTransaction oldTransactionFound;
+
+        for (GeneralTransaction newTransaction : data){
+            oldTransactionFound = null;
+
+            for (GeneralTransaction oldTransaction : oldData){
+                if (oldTransaction.equals(newTransaction)){
+                    oldTransactionFound = oldTransaction;
+                    break;
+                }
+            }
+
+            if (oldTransactionFound != null) {
+                oldData.set(oldData.indexOf(oldTransactionFound), newTransaction);
+            } else {
+                oldData.add(newTransaction);
+            }
+        }
+
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -121,18 +137,24 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
-        /*String toMessage = getContext().getText(R.string.to_capital) + ": " + historicalTransfer.getAddressString()  operation.getTo().getAccountName();
+        String to = historicalTransfer.getTxOutputs().get(0).getAddressString();
+        to = to.substring(0,2)+"..."+to.substring(to.length()-4,to.length());
+
+        String toMessage = getContext().getText(R.string.to_capital) + ": " + to;
         TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
 
-        String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
-        TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
-        fromUser.setText(fromMessage);*/
+        String from = historicalTransfer.getTxInputs().get(0).getAddressString();
+        from = from.substring(0,2)+"..."+from.substring(from.length()-4,from.length());
 
-        /*if(!operation.getMemo().getPlaintextMessage().equals("")){
+        String fromMessage = getContext().getText(R.string.from_capital) + ": " + from;
+        TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
+        fromUser.setText(fromMessage);
+
+        if((historicalTransfer.getMemo() != null) && (!historicalTransfer.getMemo().equals(""))){
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
-            memoTextView.setText(operation.getMemo().getPlaintextMessage());
-        }*/
+            memoTextView.setText(historicalTransfer.getMemo());
+        }
         return v;
     }
 
@@ -148,7 +170,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
 
 //        String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language), Constants.DEFAULT_LANGUAGE_CODE);
 //        Locale locale = new Locale(language);
-        String symbol = historicalTransfer.getType().name();
+        String symbol = historicalTransfer.getType().getLabel();
         //if(transferAmount.getAsset() != null){
         //    symbol = transferAmount.getAsset().getSymbol();
         //}
@@ -163,7 +185,7 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
             // User sent this transfer
             transferAmountTextView.setTextColor(redColor);
             fiatAmountTextView.setTextColor(lightRed);
-            String amount = Helper.setLocaleNumberFormat(locale, balanceChange/Math.pow(10,historicalTransfer.getType().getPrecision()));
+            String amount = Helper.setLocaleNumberFormat(locale, -balanceChange/Math.pow(10,historicalTransfer.getType().getPrecision()));
             transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
@@ -173,18 +195,35 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<GeneralTra
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
-        /*if(smartcoinAmount != null){
-            Log.d(TAG,"Using smartcoin: "+smartcoinAmount.getAsset().getObjectId());
-            final Currency currency = Currency.getInstance(smartcoinAmount.getAsset().getSymbol());
-            NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
-            String eqValue = currencyFormatter.format(Util.fromBase(smartcoinAmount));
+        if (historicalTransfer.getConfirm() < historicalTransfer.getType().getConfirmationsNeeded()){
+            int percentageDone = (historicalTransfer.getConfirm()+1)*100/historicalTransfer.getType().getConfirmationsNeeded();
+            int confirmationColor = 0;
 
-//            String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
-//            String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
-            fiatAmountTextView.setText(eqValue);
-        }else{
-            Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
-        }*/
+            if (percentageDone < 34){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+            } else if (percentageDone < 67){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+            } else {
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+            }
+
+            fiatAmountTextView.setTextColor(confirmationColor);
+            fiatAmountTextView.setText(historicalTransfer.getConfirm()+" of "+historicalTransfer.getType().getConfirmationsNeeded()+" conf");
+        } else {
+
+            /*if(smartcoinAmount != null){
+                Log.d(TAG,"Using smartcoin: "+smartcoinAmount.getAsset().getObjectId());
+                final Currency currency = Currency.getInstance(smartcoinAmount.getAsset().getSymbol());
+                NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
+                String eqValue = currencyFormatter.format(Util.fromBase(smartcoinAmount));
+
+    //            String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
+    //            String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
+                fiatAmountTextView.setText(eqValue);
+            }else{
+                Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
+            }*/
+        }
         return root;
     }
 

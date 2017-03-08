@@ -19,20 +19,19 @@ public class BalanceItems {
     }
 
     public BalanceItem addBalanceItem(String symbol, String precision, String ammount){
-        //TODO eliminate the "bit" string from the logic, this should only be in the view
-        symbol = symbol.replace("bit","");
-
-        BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
-        this.items.add(newBalanceItem);
-        this._fireOnNewBalanceItemEvent(newBalanceItem, false);
-        return newBalanceItem;
+        return this.addDetailedBalanceItem(symbol, precision, ammount, -1, false);
     }
 
     public BalanceItem addBalanceItem(String symbol, String precision, String ammount, boolean initialLoad){
+        return this.addDetailedBalanceItem(symbol, precision, ammount, -1, initialLoad);
+    }
+
+    public BalanceItem addDetailedBalanceItem(String symbol, String precision, String ammount, int confirmations, boolean initialLoad) {
         //TODO eliminate the "bit" string from the logic, this should only be in the view
         symbol = symbol.replace("bit","");
 
         BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
+        newBalanceItem.setConfirmations(confirmations);
         this.items.add(newBalanceItem);
         this._fireOnNewBalanceItemEvent(newBalanceItem, initialLoad);
         return newBalanceItem;
@@ -79,6 +78,10 @@ public class BalanceItems {
     }
 
     public void addOrUpdateBalanceItem(String symbol, String precision, String ammount){
+        addOrUpdateDetailedBalanceItem(symbol,precision,ammount,-1);
+    }
+
+    public void addOrUpdateDetailedBalanceItem(String symbol, String precision, String ammount, int confirmations) {
         BalanceItem balanceItem = this.findBalanceItemBySymbol(symbol);
 
         //TODO eliminate the "bit" string from the logic, this should only be in the view
@@ -92,6 +95,7 @@ public class BalanceItems {
             balanceItem.setSymbol(symbol);
             balanceItem.setPrecision(precision);
             balanceItem.setAmmount(ammount);
+            balanceItem.setConfirmations(confirmations);
 
             this._fireOnBalanceItemUpdatedEvent(oldBalanceItem, balanceItem, index);
         }

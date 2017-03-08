@@ -16,13 +16,13 @@ import de.bitsharesmunich.cryptocoincore.base.SeedType;
 public class Brainkey extends AccountSeed {
 
     public Brainkey(String words, int sequence) {
-        this.id = "";
+        this.id = -1;
         this.type = SeedType.BRAINKEY;
         this.mnemonicCode = Arrays.asList(words.split(" "));
         this.additional = Integer.toString(sequence);
     }
 
-    public Brainkey(String id, List<String> mnemonicCode, String additional) {
+    public Brainkey(long id, List<String> mnemonicCode, String additional) {
         this.id = id;
         this.type = SeedType.BRAINKEY;
         this.mnemonicCode = mnemonicCode;

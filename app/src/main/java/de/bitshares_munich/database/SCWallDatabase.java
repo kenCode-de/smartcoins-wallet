@@ -3,6 +3,7 @@ package de.bitshares_munich.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -18,13 +19,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.Contact;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
@@ -619,28 +620,28 @@ public class SCWallDatabase {
 
     // Account Seed Section
 
-    public String putSeed(final AccountSeed seed){
+    public long putSeed(final AccountSeed seed){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
-        contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ID, newId);
+        //String newId = UUID.randomUUID().toString();
+        //contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ID, newId);
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE, seed.getType().name());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_ADDITIONAL, seed.getAdditional());
         try{
-            db.insertOrThrow(SCWallDatabaseContract.Seeds.TABLE_NAME, null, contentValues);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.Seeds.TABLE_NAME, null, contentValues);
             seed.setId(newId);
             Log.d(TAG,String.format("Inserted %s seed seuccesfully transactions in database", newId));
             return newId;
             }catch (SQLException e){
             }
         Log.d(TAG,"Error inserting seed in database");
-        return null;
+        return -1;
     }
 
     public boolean updateSeed(AccountSeed seed){
         String table = SCWallDatabaseContract.Seeds.TABLE_NAME;
         String whereClause = SCWallDatabaseContract.Seeds.COLUMN_ID + "=?";
-        String[] whereArgs = new String[]{ seed.getId() };
+        String[] whereArgs = new String[]{ ""+seed.getId() };
         ContentValues contentValues = new ContentValues();
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE, seed.getType().name());
         contentValues.put(SCWallDatabaseContract.Seeds.COLUMN_MNEMONIC, seed.getMnemonicCodeString());
@@ -661,7 +662,7 @@ public class SCWallDatabase {
         if(cursor.moveToFirst()){
             AccountSeed seed;
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
                 String additional = cursor.getString(2);
                 switch (type.name()) {
@@ -681,7 +682,7 @@ public class SCWallDatabase {
         return seeds;
     }
 
-    public AccountSeed getSeed(String idSeed) {
+    public AccountSeed getSeed(long idSeed) {
         AccountSeed seed = null;
         String[] columns = {
                 SCWallDatabaseContract.Seeds.COLUMN_ID,
@@ -690,11 +691,11 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Seeds.COLUMN_SEED_TYPE
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Seeds.TABLE_NAME, columns,
-                SCWallDatabaseContract.Seeds.COLUMN_ID + " = '" + idSeed + "'",
+                SCWallDatabaseContract.Seeds.COLUMN_ID + " = " + idSeed + "",
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
                 String additional = cursor.getString(2);
                 String type = cursor.getString(3);
@@ -716,7 +717,7 @@ public class SCWallDatabase {
         return null;
     }
 
-    public String getIdSeed(AccountSeed seed) {
+    public long getIdSeed(AccountSeed seed) {
         String[] columns = {
                 SCWallDatabaseContract.Seeds.COLUMN_ID,
         };
@@ -726,13 +727,13 @@ public class SCWallDatabase {
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 cursor.close();
                 return id;
             }while(cursor.moveToNext());
         }
         cursor.close();
-        return null;
+        return -1;
     }
 
     public List<AccountSeed> getSeeds() {
@@ -747,7 +748,7 @@ public class SCWallDatabase {
         if(cursor.moveToFirst()){
             AccountSeed seed;
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 List<String> mnemonic = Arrays.asList(cursor.getString(1).split(" "));
                 String additional = cursor.getString(2);
                 String type = cursor.getString(3);
@@ -771,23 +772,23 @@ public class SCWallDatabase {
 
     //General Coin Account section
 
-    public String putGeneralCoinAccount(final GeneralCoinAccount account){
+    public long putGeneralCoinAccount(final GeneralCoinAccount account){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
-        contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ID, newId);
+        //String newId = UUID.randomUUID().toString();
+        //contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_ID, newId);
         contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE, account.getCoin().name());
         if(account.getSeed() == null){
             Log.d(TAG,"Error inserting account  null seed in database");
-            return null;
+            return -1;
         }
-        String idSeed = account.getSeed().getId();
-        if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")){
+        long idSeed = account.getSeed().getId();
+        if(idSeed == -1){
             idSeed = getIdSeed(account.getSeed());
-            if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")){
+            if(idSeed == -1){
                 idSeed = putSeed(account.getSeed());
-                if(idSeed == null || idSeed.isEmpty() || idSeed.equalsIgnoreCase("null")) {
+                if(idSeed == -1) {
                     Log.d(TAG,"Error inserting account  null id seed in database");
-                    return null;
+                    return -1;
                 }
             }
             account.getSeed().setId(idSeed);
@@ -798,20 +799,20 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_CHANGE_INDEX, account.getLastChangeIndex());
         contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_EXTERNAL_INDEX, account.getLastExternalIndex());
         try{
-            db.insertOrThrow(SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, null, contentValues);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, null, contentValues);
             account.setId(newId);
             Log.d(TAG,String.format("Inserted %s account seuccesfully transactions in database", newId));
             return newId;
         }catch (SQLException e){
         }
         Log.d(TAG,"Error inserting account in database");
-        return null;
+        return -1;
     }
 
     public boolean updateGeneralCoinAccount(GeneralCoinAccount account){
         String table = SCWallDatabaseContract.GeneralAccounts.TABLE_NAME;
         String whereClause = SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + "=?";
-        String[] whereArgs = new String[]{ account.getId()};
+        String[] whereArgs = new String[]{ ""+account.getId()};
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SCWallDatabaseContract.GeneralAccounts.COLUMN_NAME, account.getName());
@@ -837,10 +838,10 @@ public class SCWallDatabase {
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 Coin type = Coin.valueOf(cursor.getString(2));
-                String idSeed = cursor.getString(3);
+                long idSeed = cursor.getLong(3);
                 AccountSeed seed = getSeed(idSeed);
                 if (seed == null) {
                     continue;
@@ -854,6 +855,7 @@ public class SCWallDatabase {
                                 externalIndex, changeIndex);
                 account.loadAddresses(getGeneralCoinAddress(account));
                 account.setTransactions(getGeneralTransactionByAccount(account));
+                Log.i("SCWalldatabase","The account have "+account.getTransactions().size()+" transactions");
                 cursor.close();
                 return account;
             }while(cursor.moveToNext());
@@ -875,7 +877,7 @@ public class SCWallDatabase {
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 Coin type = Coin.valueOf(coinType);
                 int accountIndex = cursor.getInt(2);
@@ -912,7 +914,7 @@ public class SCWallDatabase {
                 null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 Coin type = Coin.valueOf(cursor.getString(2));
                 int accountIndex = cursor.getInt(3);
@@ -948,10 +950,10 @@ public class SCWallDatabase {
                 null, null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String name = cursor.getString(1);
                 Coin type = Coin.valueOf(cursor.getString(2));
-                String idSeed = cursor.getString(3);
+                long idSeed = cursor.getLong(3);
                 AccountSeed seed = getSeed(idSeed);
                 if (seed == null) {
                     continue;
@@ -974,14 +976,14 @@ public class SCWallDatabase {
 
     // General Account Coin Address Section
 
-    public String putGeneralCoinAddress(final GeneralCoinAddress address){
+    public long putGeneralCoinAddress(final GeneralCoinAddress address){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
-        contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID, newId);
+        //long newId = UUID.randomUUID().toString();
+        //contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID, newId);
 
-        if(address.getAccount() == null || address.getAccount().getId() == null){
+        if(address.getAccount() == null || address.getAccount().getId() == -1){
             Log.d(TAG,"Error inserting address null account in database");
-            return null;
+            return -1;
         }
 
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT, address.getAccount().getId());
@@ -990,7 +992,7 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY, address.getKey().getPublicKeyAsHex());
 
         try{
-            db.insertOrThrow(SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME, null, contentValues);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME, null, contentValues);
             address.setId(newId);
             Log.d(TAG,String.format("Inserted %s address succesfully transactions in database", newId));
             return newId;
@@ -998,13 +1000,13 @@ public class SCWallDatabase {
             Log.e(TAG,e.toString());
         }
         Log.d(TAG,"Error inserting address in database ");
-        return null;
+        return -1;
     }
 
     public boolean updateGeneralCoinAddress(GeneralCoinAddress address){
         String table = SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME;
         String whereClause = SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID + "=?";
-        String[] whereArgs = new String[]{ address.getId()};
+        String[] whereArgs = new String[]{ ""+address.getId()};
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY, address.getKey().getPublicKeyAsHex());
@@ -1024,11 +1026,11 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralCoinAddress.COLUMN_PUBLIC_KEY,
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralCoinAddress.TABLE_NAME, columns,
-                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT+ " = '" + account.getId() + "'", null, null, null, null, null);
+                SCWallDatabaseContract.GeneralCoinAddress.COLUMN_ID_ACCOUNT+ " = " + account.getId() + "", null, null, null, null, null);
         if(cursor.moveToFirst()){
             GeneralCoinAddress addr ;
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 int index = cursor.getInt(1);
                 int isChange = cursor.getInt(2);
                 String pubHexKey = cursor.getString(3);
@@ -1040,59 +1042,104 @@ public class SCWallDatabase {
         return addrs;
     }
 
-    private String putGITx(final GIOTx gitx, GeneralTransaction transaction){
+    // Transaction Section
+
+    private long putGTxI(final GTxIO gtxi, GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
 
-        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID, newId);
-        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE, gitx.getType().name());
-        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING, gitx.getAddressString());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_COIN_TYPE, gtxi.getType().name());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING, gtxi.getAddressString());
 
-        if (gitx.getAddress() != null && gitx.getAddress().getId() != null) {
-            contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, gitx.getAddress().getId());
+        if (gtxi.getAddress() != null && gtxi.getAddress().getId() != -1) {
+            contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, gtxi.getAddress().getId());
+        }else{
+            contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS, -1);
         }
 
         contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION, transaction.getId());
-        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_AMOUNT, gitx.getAmount());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_AMOUNT, gtxi.getAmount());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_INDEX, gtxi.getIndex());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX, gtxi.getScriptHex());
+        contentValues.put(SCWallDatabaseContract.Inputs.COLUMN_ORIGIN_TXID, gtxi.getOriginalTxid());
 
         try{
-            db.insertOrThrow(SCWallDatabaseContract.Inputs.TABLE_NAME, null, contentValues);
-            gitx.setId(newId);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.Inputs.TABLE_NAME, null, contentValues);
+            gtxi.setId(newId);
             Log.d(TAG,String.format("Inserted %s General Input Transaction succesfully in database", newId));
             return newId;
         }catch (SQLException ignored){
         }
         Log.d(TAG,"Error inserting General Input Transaction in database");
-        return null;
+        return -1;
     }
 
-    private String putGOTx(final GIOTx gotx, GeneralTransaction transaction){
+    private long putGTxO(final GTxIO gtxo, GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
 
-        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID, newId);
-        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE, gotx.getType().name());
-        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING, gotx.getAddressString());
+        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE, gtxo.getType().name());
+        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING, gtxo.getAddressString());
 
-        if (gotx.getAddress() != null && gotx.getAddress().getId() != null) {
-            contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, gotx.getAddress().getId());
+        if (gtxo.getAddress() != null && gtxo.getAddress().getId() != -1) {
+            contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, gtxo.getAddress().getId());
+        }else{
+            contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS, -1);
         }
 
         contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION, transaction.getId());
-        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_AMOUNT, gotx.getAmount());
+        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_AMOUNT, gtxo.getAmount());
+        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_INDEX, gtxo.getIndex());
+        contentValues.put(SCWallDatabaseContract.Outputs.COLUMN_SCRIPT_HEX, gtxo.getScriptHex());
 
         try{
-            db.insertOrThrow(SCWallDatabaseContract.Outputs.TABLE_NAME, null, contentValues);
-            gotx.setId(newId);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.Outputs.TABLE_NAME, null, contentValues);
+            gtxo.setId(newId);
             Log.d(TAG,String.format("Inserted %s General Output Transaction succesfully in database", newId));
             return newId;
         }catch (SQLException ignored){
         }
         Log.d(TAG,"Error inserting General Output Transaction in database");
+        return -1;
+    }
+
+    public GeneralTransaction getGeneralTransactionByIdAccount(final GeneralCoinAccount account, long transactionId){
+        List<GeneralTransaction> transactions = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE+ " = '" + account.getCoin().name() + "'"
+                +" AND "+SCWallDatabaseContract.GeneralTransaction.COLUMN_ID+ " = " + transactionId, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            GeneralTransaction transaction ;
+
+            long id = cursor.getLong(0);
+            String txid = cursor.getString(1);
+            Date date = new Date(cursor.getLong(2));
+            long block = cursor.getLong(3);
+            long fee = cursor.getLong(4);
+            int confirms = cursor.getInt(5);
+            int blockHeight = cursor.getInt(6);
+            String memo = cursor.getString(7);
+            transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
+            transaction.setTxInputs(getGTxI(transaction,account));
+            transaction.setTxOutputs(getGTxO(transaction,account));
+            cursor.close();
+            return transaction;
+        } else {
+            cursor.close();
+        }
+
         return null;
     }
 
-    public String getGeneralTransactionId(final GeneralTransaction transaction){
+    public long getGeneralTransactionId(final GeneralTransaction transaction){
         String[] columns = {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
         };
@@ -1100,49 +1147,48 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID+ " = '" + transaction.getTxid() + "'", null, null, null, null, null);
         if(cursor.moveToFirst()){
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 cursor.close();
                 return id;
 
             }while(cursor.moveToNext());
         }
         cursor.close();
-        return null;
+        return -1;
     }
 
-    public String putGeneralTransaction(final GeneralTransaction transaction){
+    public long putGeneralTransaction(final GeneralTransaction transaction){
         ContentValues contentValues = new ContentValues();
-        String newId = UUID.randomUUID().toString();
-
-        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_ID, newId);
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE, transaction.getType().name());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID, transaction.getTxid());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE, transaction.getDate().getTime());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK, transaction.getBlock());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE, transaction.getFee());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO, transaction.getMemo());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT, transaction.getBlockHeight());
 
         try{
-            db.insertOrThrow(SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, null, contentValues);
+            long newId = db.insertOrThrow(SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, null, contentValues);
             transaction.setId(newId);
-            for(GIOTx gitx : transaction.getTxInputs()){
-                putGITx(gitx,transaction);
+            for(GTxIO gtxi : transaction.getTxInputs()){
+                putGTxI(gtxi,transaction);
             }
-            for(GIOTx gotx : transaction.getTxOutputs()){
-                putGOTx(gotx,transaction);
+            for(GTxIO gtxo : transaction.getTxOutputs()){
+                putGTxO(gtxo,transaction);
             }
             Log.d(TAG,String.format("Inserted %s General Transaction succesfully in database", newId));
             return newId;
         }catch (SQLException ignored){
         }
         Log.d(TAG,"Error inserting General Transaction in database");
-        return null;
+        return -1;
     }
 
     public boolean updateGeneralTransaction(GeneralTransaction transaction){
         String table = SCWallDatabaseContract.GeneralTransaction.TABLE_NAME;
         String whereClause = SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + "=?";
-        String[] whereArgs = new String[]{ transaction.getId()};
+        String[] whereArgs = new String[]{ ""+transaction.getId()};
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID, transaction.getTxid());
@@ -1150,84 +1196,98 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK, transaction.getBlock());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE, transaction.getFee());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO, transaction.getMemo());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT, transaction.getBlockHeight());
         db.beginTransaction();
         int affected = db.update(table,contentValues,whereClause,whereArgs);
+        db.setTransactionSuccessful();
         db.endTransaction();
         return affected > 0;
     }
 
-    private List<GIOTx> getGTIx(GeneralTransaction transaction, final GeneralCoinAccount account){
-        List<GIOTx> gtixs = new ArrayList();
+    private List<GTxIO> getGTxI(GeneralTransaction transaction, final GeneralCoinAccount account){
+        List<GTxIO> gtxis = new ArrayList();
         String[] columns = {
                 SCWallDatabaseContract.Inputs.COLUMN_ID,
                 SCWallDatabaseContract.Inputs.COLUMN_ADDRESS_STRING,
                 SCWallDatabaseContract.Inputs.COLUMN_ID_ADDRESS,
                 SCWallDatabaseContract.Inputs.COLUMN_AMOUNT,
+                SCWallDatabaseContract.Inputs.COLUMN_INDEX,
+                SCWallDatabaseContract.Inputs.COLUMN_SCRIPT_HEX,
+                SCWallDatabaseContract.Inputs.COLUMN_ORIGIN_TXID
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Inputs.TABLE_NAME, columns,
                 SCWallDatabaseContract.Inputs.COLUMN_ID_TRANSACTION+ " = '" + transaction.getId() + "'", null, null, null, null, null);
         if(cursor.moveToFirst()){
-            GIOTx gtix ;
+            GTxIO gtxi ;
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String addressString = cursor.getString(1);
-                String idAddress = cursor.getString(2);
+                long idAddress = cursor.getLong(2);
                 GeneralCoinAddress address = null;
-                if(idAddress != null){
+                if(idAddress != -1){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
-                        if(address1.getId().equals(idAddress)){
+                        if(address1.getId() == idAddress){
                             address = address1;
                             break;
                         }
                     }
                 }
                 long amount = cursor.getLong(3);
-                gtix = new GIOTx(id,transaction.getType(),address,transaction,amount,true,addressString);
+                int index = cursor.getInt(4);
+                String scriptHex = cursor.getString(5);
+                String originalTxid = cursor.getString(6);
+                gtxi = new GTxIO(id,transaction.getType(),address,transaction,amount,true,addressString,index,scriptHex);
+                gtxi.setOriginalTxid(originalTxid);
                 if(address != null){
-                    address.getOutputTransaction().add(gtix);
+                    address.getTransactionOutput().add(gtxi);
                 }
-                gtixs.add(gtix);
+                gtxis.add(gtxi);
             }while(cursor.moveToNext());
         }
         cursor.close();
-        return gtixs;
+        return gtxis;
     }
 
-    private List<GIOTx> getGTOx(GeneralTransaction transaction,final GeneralCoinAccount account){
-        List<GIOTx> gtoxs = new ArrayList();
+    private List<GTxIO> getGTxO(GeneralTransaction transaction, final GeneralCoinAccount account){
+        List<GTxIO> gtxos = new ArrayList();
         String[] columns = {
                 SCWallDatabaseContract.Outputs.COLUMN_ID,
                 SCWallDatabaseContract.Outputs.COLUMN_ADDRESS_STRING,
                 SCWallDatabaseContract.Outputs.COLUMN_ID_ADDRESS,
                 SCWallDatabaseContract.Outputs.COLUMN_AMOUNT,
+                SCWallDatabaseContract.Outputs.COLUMN_INDEX,
+                SCWallDatabaseContract.Outputs.COLUMN_SCRIPT_HEX
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.Outputs.TABLE_NAME, columns,
                 SCWallDatabaseContract.Outputs.COLUMN_ID_TRANSACTION+ " = '" + transaction.getId() + "'", null, null, null, null, null);
         if(cursor.moveToFirst()){
-            GIOTx gtox ;
+            GTxIO gtxo ;
             do{
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String addressString = cursor.getString(1);
-                String idAddress = cursor.getString(2);
+                long idAddress = cursor.getLong(2);
                 GeneralCoinAddress address = null;
-                if(idAddress != null){
+                if(idAddress != -1){
                     for(GeneralCoinAddress address1 : account.getAddresses()){
-                        if(address1.getId().equals(idAddress)){
+                        if(address1.getId() == idAddress){
                             address = address1;
                             break;
                         }
                     }
                 }
                 long amount = cursor.getLong(3);
-                gtox = new GIOTx(id,transaction.getType(),address,transaction,amount,false,addressString);
+                int index = cursor.getInt(4);
+                String scriptHex = cursor.getString(5);
+                gtxo = new GTxIO(id,transaction.getType(),address,transaction,amount,false,addressString,index,scriptHex);
                 if(address != null){
-                    address.getInputTransaction().add(gtox);
+                    address.getTransactionInput().add(gtxo);
                 }
-                gtoxs.add(gtox);
+                gtxos.add(gtxo);
             }while(cursor.moveToNext());
         }
         cursor.close();
-        return gtoxs;
+        return gtxos;
     }
 
     public List<GeneralTransaction> getGeneralTransactionByAccount(final GeneralCoinAccount account){
@@ -1238,28 +1298,151 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
-                SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO
         };
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE+ " = '" + account.getCoin().name() + "'", null, null, null, null, null);
+        Log.i("SCWalldatabase","Reading transactions from database");
         if(cursor.moveToFirst()){
             GeneralTransaction transaction ;
             do{
+                Log.i("SCWalldatabase","1 Readed...");
 
-                String id = cursor.getString(0);
+                long id = cursor.getLong(0);
                 String txid = cursor.getString(1);
                 Date date = new Date(cursor.getLong(2));
                 long block = cursor.getLong(3);
                 long fee = cursor.getLong(4);
                 int confirms = cursor.getInt(5);
-                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date);
-                transaction.setTxInputs(getGTIx(transaction,account));
-                transaction.setTxOutputs(getGTOx(transaction,account));
+                int blockHeight = cursor.getInt(6);
+                String memo = cursor.getString(7);
+                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
+                transaction.setTxInputs(getGTxI(transaction,account));
+                transaction.setTxOutputs(getGTxO(transaction,account));
                 transactions.add(transaction);
+                Log.i("SCWalldatabase","And added...");
             }while(cursor.moveToNext());
         }
         cursor.close();
+        Log.i("SCWalldatabase","There are "+transactions.size()+" total transactions.");
+
         return transactions;
+    }
+
+    public List<Contact> getContacts(){
+        List<Contact> contacts = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.Contacs.COLUMN_ID,
+                SCWallDatabaseContract.Contacs.COLUMN_NAME,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT,
+                SCWallDatabaseContract.Contacs.COLUMN_NOTE,
+                SCWallDatabaseContract.Contacs.COLUMN_EMAIL
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Contacs.TABLE_NAME, columns,null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            Contact contact ;
+            do{
+
+                long id = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String account = cursor.getString(2);
+                String note = cursor.getString(3);
+                String email = cursor.getString(4);
+
+                contact = new Contact(id,name,account,note,email);
+                //TODO read addresses
+                contacts.add(contact);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        Log.i("SCWalldatabase","There are "+contacts.size()+" total Contacts.");
+
+        return contacts;
+    }
+
+
+    public Contact getContactByAddress(String address){
+        List<Contact> contacts = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.Contacs.COLUMN_ID,
+                SCWallDatabaseContract.Contacs.COLUMN_NAME,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT,
+                SCWallDatabaseContract.Contacs.COLUMN_NOTE,
+                SCWallDatabaseContract.Contacs.COLUMN_EMAIL
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Contacs.TABLE_NAME, columns,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT+ " = '" + address + "'",null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            Contact contact ;
+
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String account = cursor.getString(2);
+            String note = cursor.getString(3);
+            String email = cursor.getString(4);
+
+            contact = new Contact(id,name,account,note,email);
+            cursor.close();
+            return contact;
+        }
+        cursor.close();
+
+        return null;
+    }
+
+    public long getContactCount(){
+        return DatabaseUtils.queryNumEntries(db,SCWallDatabaseContract.Contacs.TABLE_NAME);
+    }
+
+    public long putContact(final Contact contact){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_NAME, contact.getName());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT, contact.getAccount());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_NOTE, contact.getNote());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_EMAIL, contact.getEmail());
+
+        try{
+            long newId = db.insertOrThrow(SCWallDatabaseContract.Contacs.TABLE_NAME, null, contentValues);
+            contact.setId(newId);
+            //TODO add addresses
+            Log.d(TAG,String.format("Inserted %s Contact succesfully in database", newId));
+            return newId;
+        }catch (SQLException ignored){
+        }
+        Log.d(TAG,"Error inserting Contacct in database");
+        return -1;
+    }
+
+    public boolean updateContact(final Contact contact){
+        String table = SCWallDatabaseContract.Contacs.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.Contacs.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ ""+contact.getId()};
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_NAME, contact.getName());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT, contact.getAccount());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_NOTE, contact.getNote());
+        contentValues.put(SCWallDatabaseContract.Contacs.COLUMN_EMAIL, contact.getEmail());
+        //TODO update addresses
+        db.beginTransaction();
+        int affected = db.update(table,contentValues,whereClause,whereArgs);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return affected > 0;
+    }
+
+    public boolean removeContact(final Contact contact){
+        String table = SCWallDatabaseContract.Contacs.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.Contacs.COLUMN_ID + "=?";
+        String[] whereArgs = new String[]{ ""+contact.getId()};
+        db.beginTransaction();
+        int affected = db.delete(table,whereClause,whereArgs);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return affected > 0;
     }
 
 }

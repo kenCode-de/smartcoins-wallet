@@ -1,5 +1,6 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
 
 /**
  * Created by henry on 05/02/2017.
@@ -37,7 +37,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     private final static int ADDRESS_GAP = 20;
 
-    public GeneralCoinAccount(String id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, coin, seed);
         this.accountNumber = accountNumber;
         this.lastExternalIndex = lastExternalIndex;
@@ -82,6 +82,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     }
 
     public List<GeneralCoinAddress> getAddresses(SCWallDatabase db) {
+        this.getNextRecieveAddress();
+        this.getNextChangeAddress();
         calculateGapExternal();
         calculateGapChange();
 
@@ -111,9 +113,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public void saveAddresses(SCWallDatabase db) {
         for (GeneralCoinAddress externalAddress : externalKeys.values()) {
-            if (externalAddress.getId() == null || externalAddress.getId().isEmpty() || externalAddress.getId().equalsIgnoreCase("null")) {
-                String id = db.putGeneralCoinAddress(externalAddress);
-                if(id != null)
+            if (externalAddress.getId() == -1) {
+                long id = db.putGeneralCoinAddress(externalAddress);
+                if(id != -1)
                 externalAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(externalAddress);
@@ -121,15 +123,17 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
 
         for (GeneralCoinAddress changeAddress : changeKeys.values()) {
-            if (changeAddress.getId() == null || changeAddress.getId().isEmpty() || changeAddress.getId().equalsIgnoreCase("null")) {
+            if (changeAddress.getId() == -1) {
                 Log.i("SCW","change address id " + changeAddress.getId());
-                String id = db.putGeneralCoinAddress(changeAddress);
-                if(id != null)
+                long id = db.putGeneralCoinAddress(changeAddress);
+                if(id != -1)
                 changeAddress.setId(id);
             } else {
                 db.updateGeneralCoinAddress(changeAddress);
             }
         }
+
+        db.updateGeneralCoinAccount(this);
     }
 
     public int getAccountNumber() {
@@ -144,6 +148,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return lastChangeIndex;
     }
 
+    public abstract String getNextRecieveAddress();
+
+    public abstract String getNextChangeAddress();
+
+    public abstract void send(String toAddress, Coin coin, long amount, String memo, Context context);
+
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
         answer.addProperty("type", this.coin.name());
@@ -157,12 +167,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     public List<GeneralTransaction> getTransactions() {
         List<GeneralTransaction> transactions = new ArrayList();
         for (GeneralCoinAddress address : externalKeys.values()) {
-            for (GIOTx giotx : address.getInputTransaction()) {
+            for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for (GIOTx giotx : address.getOutputTransaction()) {
+            for (GTxIO giotx : address.getTransactionOutput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
@@ -170,12 +180,12 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
 
         for (GeneralCoinAddress address : changeKeys.values()) {
-            for (GIOTx giotx : address.getInputTransaction()) {
+            for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
             }
-            for (GIOTx giotx : address.getOutputTransaction()) {
+            for (GTxIO giotx : address.getTransactionOutput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
                 }
@@ -233,5 +243,19 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         int result = accountNumber;
         result = 31 * result + (accountKey != null ? accountKey.hashCode() : 0);
         return result;
+    }
+
+    public void updateTransaction(GeneralTransaction transaction){
+        for (GeneralCoinAddress address : externalKeys.values()) {
+            if(address.updateTransaction(transaction)){
+                return;
+            }
+        }
+
+        for (GeneralCoinAddress address : changeKeys.values()) {
+            if(address.updateTransaction(transaction)){
+                return;
+            }
+        }
     }
 }

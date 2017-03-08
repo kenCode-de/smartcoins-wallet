@@ -123,6 +123,7 @@
                                         android:textSize="15sp"
                                         android:visibility="gone"></Spinner>
 
+
                                     <TextView
                                         android:id="@+id/tvFrom"
                                         android:layout_width="match_parent"
@@ -209,7 +210,7 @@
                                         android:layout_centerInParent="true"
                                         android:gravity="center" />
                                 </RelativeLayout>
-
+                              
                                 <EditText
                                     android:id="@+id/etReceiverAccount"
                                     android:layout_width="match_parent"
@@ -241,6 +242,21 @@
                                         android:layout_centerVertical="true"
                                         android:src="@drawable/share_group" />
                                 </RelativeLayout>
+
+                                <EditText
+                                    android:id="@+id/etReceiverAccount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5sp"
+                                    android:layout_marginRight="5sp"
+                                    android:background="@drawable/edittext_background_layer"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:textSize="16sp"
+                                    android:textColor="#000"
+                                    android:paddingLeft="10dp"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_toStartOf="@+id/contactActivity" />
                             </RelativeLayout>
 
                             <ImageButton

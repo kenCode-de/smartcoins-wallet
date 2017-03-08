@@ -35,4 +35,8 @@
     <color name="color_preloader_start">#000000</color>
     <color name="color_preloader_center">#000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
+
+    <color name="color_confirmations_starting">#FF0000</color>
+    <color name="color_confirmations_half">#ff9900</color>
+    <color name="color_confirmations_almost_complete">#f1c232</color>
 </resources>

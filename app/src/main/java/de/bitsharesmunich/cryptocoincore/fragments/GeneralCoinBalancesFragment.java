@@ -21,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -77,7 +79,6 @@ import de.bitshares_munich.adapters.TransferSendReceiveComparator;
 import de.bitshares_munich.adapters.TransfersTableAdapter;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.ISound;
 import de.bitshares_munich.interfaces.InternalMovementListener;
@@ -95,10 +96,10 @@ import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
-import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.RecieveActivity;
-import de.bitshares_munich.smartcoinswallet.SendScreen;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.QRCodeActivity;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
@@ -116,19 +117,17 @@ import de.bitsharesmunich.cryptocoincore.adapters.CryptoCoinTransfersTableAdapte
 import de.bitsharesmunich.cryptocoincore.base.Balance;
 import de.bitsharesmunich.cryptocoincore.base.ChangeBalanceListener;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.AccountActivityWatcher;
 import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionByAddress;
-import de.bitsharesmunich.cryptocoincore.insightapi.GetTransactionData;
 import de.bitsharesmunich.cryptocoincore.utils.CryptoCoinTableViewClickListener;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.Converter;
 import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
@@ -156,7 +155,7 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 /**
  * Created by qasim on 5/10/16.
  */
-public class BalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
+public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
@@ -244,18 +243,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public static ISound iSound;
 
-    public BalancesFragment() {
+    public GeneralCoinBalancesFragment() {
         // Required empty public constructor
     }
 
-    public static BalancesFragment newInstance(Coin coin) {
-        BalancesFragment balancesFragment = new BalancesFragment();
+    public static GeneralCoinBalancesFragment newInstance(Coin coin) {
+        GeneralCoinBalancesFragment generalCoinBalancesFragment = new GeneralCoinBalancesFragment();
 
         Bundle args = new Bundle();
         args.putString("coin",coin.toString());
-        balancesFragment.setArguments(args);
+        generalCoinBalancesFragment.setArguments(args);
 
-        return balancesFragment;
+        return generalCoinBalancesFragment;
     }
 
     //Cache for equivalent component BTS to EUR
@@ -957,7 +956,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
         } else {
             cryptoCoinTransfersView = (SortableTableView<GeneralTransaction>) rootView.findViewById(R.id.tableView);
-            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
+            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), (InternalMovementListener) getActivity(), this.coin));
         }
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -1089,39 +1088,42 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         scrollViewBalances.fullScroll(View.FOCUS_UP);
         scrollViewBalances.pageScroll(View.FOCUS_UP);
         onClicked = false;
-        final String hide_donations_isChanged = "hide_donations_isChanged";
-        Boolean isHideDonationsChanged = false;
-        if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
-            if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
-                isHideDonationsChanged = true;
-                Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
+
+        if (this.coin == Coin.BITSHARE) {
+            final String hide_donations_isChanged = "hide_donations_isChanged";
+            Boolean isHideDonationsChanged = false;
+            if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
+                if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
+                    isHideDonationsChanged = true;
+                    Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
+                }
             }
-        }
-        Boolean isCheckedTimeZone = false;
-        isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
-        Boolean accountNameChange = checkIfAccountNameChange();
+            Boolean isCheckedTimeZone = false;
+            isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
+            Boolean accountNameChange = checkIfAccountNameChange();
 
-        String smartcoinSymbol = mSmartcoin.getSymbol();
-        if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
-            llBalances.removeAllViews();
+            String smartcoinSymbol = mSmartcoin.getSymbol();
+            if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
+                llBalances.removeAllViews();
 
-        if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
-            if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
-                loadBasic(true, accountNameChange, true);
+            if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
+                if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
+                    loadBasic(true, accountNameChange, true);
+                } else {
+                    loadBasic(true, accountNameChange, false);
+                }
+            }
+
+            if (!accountId.equals("")) {
+                UserAccount me = new UserAccount(accountId);
+                start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+                stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+                Log.i(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();
             } else {
-                loadBasic(true, accountNameChange, false);
+                Log.d(TAG, "account id is empty");
             }
-        }
-
-        if (!accountId.equals("")) {
-            UserAccount me = new UserAccount(accountId);
-            start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
-            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-            Log.i(TAG,String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-            transferHistoryThread.start();
-        } else {
-            Log.d(TAG, "account id is empty");
         }
 
         // Loading transfers from database
@@ -1131,8 +1133,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @OnClick(R.id.recievebtn)
     public void GoToRecieveActivity() {
         final Intent intent = new Intent(getActivity(), RecieveActivity.class);
-        intent.putExtra(getString(R.string.to), to);
-        intent.putExtra(getString(R.string.account_id), accountId);
+        if(coin == Coin.BITSHARE) {
+            intent.putExtra(getString(R.string.to), to);
+            intent.putExtra(getString(R.string.account_id), accountId);
+        }else{
+            SCWallDatabase db = new SCWallDatabase(getContext());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
+            intent.putExtra(getString(R.string.to), account.getNextRecieveAddress());
+            intent.putExtra(getString(R.string.account_id), Long.toString(account.getId()));
+        }
+        intent.putExtra(getString(R.string.coin),coin.name());
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
@@ -1156,6 +1166,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @OnClick(R.id.sendbtn)
     public void GoToSendActivity() {
         final Intent intent = new Intent(getActivity(), SendScreen.class);
+        Bundle b = new Bundle();
+        b.putString(getString(R.string.coin), this.coin.name());
+        intent.putExtras(b);
+
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
@@ -1251,6 +1265,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void QrCodeActivity() {
         final Intent intent = new Intent(getContext(), QRCodeActivity.class);
         intent.putExtra("id", 1);
+        intent.putExtra(getString(R.string.coin),coin.name());
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
         coinAnimation.setAnimationListener(new Animation.AnimationListener() {
 
@@ -1339,26 +1354,48 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         } else {
             SCWallDatabase db = new SCWallDatabase(getContext());
-            final GeneralCoinAccount account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
             List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
+            getBalanceItems().addDetailedBalanceItem(coin.getLabel(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
             account.addChangeBalanceListener(new ChangeBalanceListener() {
                 @Override
                 public void balanceChange(Balance balance) {
                     if (account != null) {
-                        getBalanceItems().addOrUpdateBalanceItem(coin.name(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getAmmount());
+                        getBalanceItems().addOrUpdateDetailedBalanceItem(coin.getLabel(), "" + coin.getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                updateTableView(false);
+                            }
+                        });
                     }
                 }
             });
+
             Log.i("test","account balance " + account.getBalance().get(0).getAmmount());
 
-            account.balanceChange();
-            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account.getNetworkParam(),this.coin, getContext());
+
+            //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
+            //try {
+                AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
+
+                for(GeneralCoinAddress address: addresses){
+                    Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
+                    watcher.addAddress(address.getAddressString(account.getNetworkParam()));
+                }
+                watcher.connect();
+            //} catch (URISyntaxException e) {
+            //    e.printStackTrace();
+            //}
+
+            //Start the GetTransactionByAddress to get the transaction previously obtained by the server
+            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
             for(GeneralCoinAddress address: addresses){
                 getTransactionByAddress.addAddress(address);
             }
-
             getTransactionByAddress.start();
+
+            //account.send("n1nyxWEQ7av9fWRuR5QZ5vCVcH9C7JFrzd",account.getCoin(),2000000,getContext());
         }
     }
 
@@ -1724,6 +1761,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         TextView textView2 = null;
         TextView symbolTextView;
         final TextView ammountTextView;
+        final TextView faitTextView;
         View lastChild = null;
         boolean theresNoChild = true;
 
@@ -1741,21 +1779,25 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             View customView = layoutInflater.inflate(R.layout.items_rows_balances, null);
             symbolTextView = (TextView) customView.findViewById(R.id.symbol_child_one);
             ammountTextView = (TextView) customView.findViewById(R.id.amount_child_one);
+            faitTextView =  (TextView) customView.findViewById(R.id.fait_child_one);
 
             TextView rightSymbolTextView = (TextView) customView.findViewById(R.id.symbol_child_two);
             TextView rightAmmountTextView = (TextView) customView.findViewById(R.id.amount_child_two);
+            TextView rightFaitTextView = (TextView) customView.findViewById(R.id.fait_child_two);
             rightSymbolTextView.setText("");
             rightAmmountTextView.setText("");
+            rightFaitTextView.setText("");
 
             llBalances.addView(customView);
         } else {
             //In this point the right side is free, so we can use it
             symbolTextView = (TextView) lastChild.findViewById(R.id.symbol_child_two);
             ammountTextView = (TextView) lastChild.findViewById(R.id.amount_child_two);
+            faitTextView = (TextView) lastChild.findViewById(R.id.fait_child_two);
         }
 
         String finalSymbol = "";
-        if (SMARTCOINS.contains(item.getSymbol())) {
+        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol()))) {
             finalSymbol = "bit" + item.getSymbol();
         } else {
             finalSymbol = item.getSymbol();
@@ -1766,13 +1808,31 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
         float b = powerInFloat(item.getPrecision(), item.getAmmount());
-        if (SMARTCOINS.contains(item.getSymbol().replace("bit", ""))) {
+        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
         } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.4f", b));
         else if (assetsSymbols.isSmartCoinSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.2f", b));
         else ammountTextView.setText(String.format(locale, "%.4f", b));
+
+        //If there are confirmations needed, then print how many in the equivalent value text
+        if ((item.getConfirmations() != -1) && (item.getConfirmations() < this.coin.getConfirmationsNeeded())){
+            int percentageDone = (item.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+            int confirmationColor = 0;
+
+            if (percentageDone < 34){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+            } else if (percentageDone < 67){
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+            } else {
+                confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+            }
+
+            faitTextView.setTextColor(confirmationColor);
+            faitTextView.setText(item.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+
+        }
 
         //if it's not the initial load, then is a balance received, then we must show an animation and sound
         if (!initialLoad){
@@ -1846,7 +1906,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
             String finalSymbol = "";
-            if (SMARTCOINS.contains(newItem.getSymbol())) {
+            if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
                 finalSymbol = "bit" + newItem.getSymbol();
             } else {
                 finalSymbol = newItem.getSymbol();
@@ -1970,8 +2030,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
             }
 
-            //Now, we update the fait (EquivalentComponent)
-            if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {
+            if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < this.coin.getConfirmationsNeeded())){
+                int percentageDone = (newItem.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+                int confirmationColor = 0;
+
+                if (percentageDone < 34){
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
+                } else if (percentageDone < 67){
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+                } else {
+                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+                }
+
+                faitTextView.setTextColor(confirmationColor);
+                faitTextView.setText(newItem.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+
+            } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
+                faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.receive_amount));
+
                 try {
                     final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
                     double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
@@ -2366,76 +2442,87 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     String transactionsLoadedAccountName = "";
 
     void loadViews(Boolean onResume, Boolean accountNameChanged, boolean faitCurrencyChanged) {
+        if (this.coin == Coin.BITSHARE) {
+            if (firstTimeLoad) {
 
-        if (firstTimeLoad) {
+                //            tableViewparent.setVisibility(View.GONE);
+                //            myTransactions = new ArrayList<>();
+                //TODO: Implement this
+                //            updateSortTableView(tableView, myTransactions);
 
-//            tableViewparent.setVisibility(View.GONE);
-//            myTransactions = new ArrayList<>();
-            //TODO: Implement this
-//            updateSortTableView(tableView, myTransactions);
+                //TODO: Implement this
+                //            tableView.addDataClickListener(new TableViewClickListener(getContext()));
+                //            progressBar.setVisibility(View.VISIBLE);
 
-            //TODO: Implement this
-//            tableView.addDataClickListener(new TableViewClickListener(getContext()));
-//            progressBar.setVisibility(View.VISIBLE);
+                firstTimeLoad = false;
+            }
 
-            firstTimeLoad = false;
-        }
+            whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
-        whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
+            if (myAssetsActivity == null) {
+                myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
+                myAssetsActivity.registerDelegate();
+            }
 
-        if (myAssetsActivity == null) {
-            myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
-            myAssetsActivity.registerDelegate();
-        }
-
-        // get transactions from sharedPref
+            // get transactions from sharedPref
 
 
-//        myTransactions = getTransactions(to);
+            //        myTransactions = getTransactions(to);
 
-        if (!onResume || accountNameChanged || faitCurrencyChanged) {
-//            progressBar1.setVisibility(View.VISIBLE);
-            myAssetsActivity.loadBalances(to);
+            if (!onResume || accountNameChanged || faitCurrencyChanged) {
+                //            progressBar1.setVisibility(View.VISIBLE);
+                myAssetsActivity.loadBalances(to);
 
-//            number_of_transactions_loaded = 0;
-//            number_of_transactions_to_load = 20;
-//            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+                //            number_of_transactions_loaded = 0;
+                //            number_of_transactions_to_load = 20;
+                //            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
+            }
+        } else {
+            if (firstTimeLoad) {
+                firstTimeLoad = false;
+            }
+
+            whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
         }
     }
 
     void loadBasic(boolean onResume, boolean accountNameChanged, boolean faitCurrencyChanged) {
-        Log.d(TAG,"loadBasic");
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        if (accountDetails.size() == 1) {
-            accountDetailsId = 0;
-            accountDetails.get(0).isSelected = true;
-            to = accountDetails.get(0).account_name;
-            accountId = accountDetails.get(0).account_id;
-            wifkey = accountDetails.get(0).wif_key;
-            showHideLifeTime(accountDetails.get(0).isLifeTime);
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        } else {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).isSelected) {
-                    accountDetailsId = i;
-                    to = accountDetails.get(i).account_name;
-                    accountId = accountDetails.get(i).account_id;
-                    wifkey = accountDetails.get(i).wif_key;
-                    showHideLifeTime(accountDetails.get(i).isLifeTime);
-                    break;
+        if (this.coin == Coin.BITSHARE) {
+            Log.d(TAG, "loadBasic");
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            if (accountDetails.size() == 1) {
+                accountDetailsId = 0;
+                accountDetails.get(0).isSelected = true;
+                to = accountDetails.get(0).account_name;
+                accountId = accountDetails.get(0).account_id;
+                wifkey = accountDetails.get(0).wif_key;
+                showHideLifeTime(accountDetails.get(0).isLifeTime);
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            } else {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetailsId = i;
+                        to = accountDetails.get(i).account_name;
+                        accountId = accountDetails.get(i).account_id;
+                        wifkey = accountDetails.get(i).wif_key;
+                        showHideLifeTime(accountDetails.get(i).isLifeTime);
+                        break;
+                    }
                 }
             }
-        }
-        Application.monitorAccountId = accountId;
-        tvAccountName.setText(to);
-        isLifeTime(accountId, "15");
+            Application.monitorAccountId = accountId;
+            tvAccountName.setText(to);
+            isLifeTime(accountId, "15");
 
-        if (onResume && accountNameChanged) {
-            loadBalancesFromSharedPref();
-//            TransactionUpdateOnStartUp(to);
-        }
+            if (onResume && accountNameChanged) {
+                loadBalancesFromSharedPref();
+                //            TransactionUpdateOnStartUp(to);
+            }
 
-        loadViews(onResume, accountNameChanged, faitCurrencyChanged);
+            loadViews(onResume, accountNameChanged, faitCurrencyChanged);
+        } else {
+            loadViews(onResume, false, false);
+        }
     }
 
     Boolean checkIfAccountNameChange() {
@@ -2686,8 +2773,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             List<GeneralTransaction> transactions = account.getTransactions();
 
             if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
-
+                Log.d(TAG,"updating "+this.coin.name()+" table view");
+                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+                cryptoCoinTableAdapter.addOrReplaceData(transactions.toArray(new GeneralTransaction[0]));
             } else {
+                Log.d(TAG, "resetting "+this.coin.name()+" table view");
                 cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), account, locale, transactions.toArray(new GeneralTransaction[0]));
                 cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
             }

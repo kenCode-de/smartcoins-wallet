@@ -101,7 +101,10 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
-    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile ('io.socket:socket.io-client:0.8.3') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
 }
 
 afterEvaluate {

@@ -1,4 +1,5 @@
-package de.bitshares_munich.smartcoinswallet;
+package de.bitsharesmunich.cryptocoincore.smartcoinwallets;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +12,11 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
@@ -32,14 +33,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
+import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.interfaces.InternalMovementListener;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.AddEditContacts;
+import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.Contact;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/18/16.
  */
-public class ContactListAdapter extends BaseAdapter {
+public class GeneralCoinContactListAdapter extends BaseAdapter {
     private ArrayList<ListviewContactItem> listContact;
     private HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
     private HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
@@ -48,10 +56,19 @@ public class ContactListAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater mInflater;
     private TinyDB tinyDB;
+    private SCWallDatabase db;
+    private Coin coin;
 
-    public ContactListAdapter(Context _context) {
+    public GeneralCoinContactListAdapter(Context _context) {
+        this(_context, Coin.BITSHARE);
+    }
+
+    public GeneralCoinContactListAdapter(Context _context, Coin coin) {
+        this.coin = coin;
+
         context = _context;
         tinyDB = new TinyDB(context);
+        db = new SCWallDatabase(context);
         mInflater = LayoutInflater.from(context);
         listContact = GetlistContact();
         imageLoader.init(ImageLoaderConfiguration.createDefault(context));
@@ -101,9 +118,17 @@ public class ContactListAdapter extends BaseAdapter {
         ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
         ibEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                ((InternalMovementListener)context).onInternalAppMove();
                 int index = position;
                 Intent intent = new Intent(context, AddEditContacts.class);
-                intent.putExtra("id", index);
+
+                intent.putExtra("coin", coin.name());
+
+                if (coin == Coin.BITSHARE) {
+                    intent.putExtra("id", (long)index);
+                } else {
+                    intent.putExtra("id", listContact.get(index).GetId());
+                }
                 intent.putExtra("name", listContact.get(index).GetName());
                 intent.putExtra("account", listContact.get(index).GetAccount());
                 intent.putExtra("note", listContact.get(index).GetNote());
@@ -127,23 +152,43 @@ public class ContactListAdapter extends BaseAdapter {
 
     private ArrayList<ListviewContactItem> GetlistContact(){
         ArrayList<ListviewContactItem> contactlist = new ArrayList<ListviewContactItem>();
+        ListviewContactItem contact;
 
-        ListviewContactItem contact = new ListviewContactItem();
+        if (this.coin == Coin.BITSHARE) {
+            contact = new ListviewContactItem();
 
-        ArrayList<ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ListviewContactItem.class);
+            ArrayList<ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", ListviewContactItem.class);
             for (int i = 0; i < contacts.size(); i++) {
                 contact = new ListviewContactItem();
                 contact.SetName(contacts.get(i).name);
                 contact.SetAccount(contacts.get(i).account);
                 contact.SaveNote(contacts.get(i).note);
-                if(!contacts.get(i).email.isEmpty()) {
+                if (!contacts.get(i).email.isEmpty()) {
                     contact.isImage = true;
                     contact.SaveEmail(contacts.get(i).email);
                 }
                 contactlist.add(contact);
             }
-        Collections.sort(contactlist, new ContactNameComparator());
 
+        } else {
+            List<Contact> contactsList = db.getContacts();
+            Contact nextContact;
+            for (int i = 0; i < contactsList.size(); i++) {
+                nextContact = contactsList.get(i);
+                contact = new ListviewContactItem();
+                contact.SetName(nextContact.getName());
+                contact.SetAccount(nextContact.getAccount());
+                contact.SaveNote(nextContact.getNote());
+                contact.SetId(nextContact.getId());
+                if (!nextContact.getEmail().isEmpty()) {
+                    contact.isImage = true;
+                    contact.SaveEmail(nextContact.getEmail());
+                }
+                contactlist.add(contact);
+            }
+        }
+
+        Collections.sort(contactlist, new ContactNameComparator());
         return contactlist;
     }
 
@@ -153,6 +198,7 @@ public class ContactListAdapter extends BaseAdapter {
         public String account;
         public String note;
         public Boolean isImage = false;
+        public long id;
 
         public void SetName(String n){
             name = n;
@@ -165,6 +211,9 @@ public class ContactListAdapter extends BaseAdapter {
         }
         public void SaveEmail(String n){
             email = n;
+        }
+        public void SetId(long n){
+            id = n;
         }
 
         String GetName(){
@@ -179,6 +228,9 @@ public class ContactListAdapter extends BaseAdapter {
         String GetEmail(){
             return email;
         }
+        long GetId(){
+            return id;
+        }
     }
 
 
@@ -190,10 +242,16 @@ public class ContactListAdapter extends BaseAdapter {
     }
 
 
-    void removeFromlist(int id){
-        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
-        contacts.remove(id);
-        tinyDB.putContactsObject("Contacts", contacts);
+    void removeFromlist(long id){
+        if (coin == Coin.BITSHARE) {
+            ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", GeneralCoinContactListAdapter.ListviewContactItem.class);
+            contacts.remove(id);
+            tinyDB.putGeneralCoinContactsObject("Contacts", contacts);
+        } else {
+            Contact contact = new Contact();
+            contact.setId(id);
+            db.removeContact(contact);
+        }
     }
 
     public void loadmore(){
@@ -202,47 +260,45 @@ public class ContactListAdapter extends BaseAdapter {
     }
 
     public void showDialog(final int position){
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.alert_confirmation_dialog);
-        Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
-        btnDone.setText(context.getString(R.string.delete));
-        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
-        TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
-
-
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.alert_delete_dialog);
+                Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
+                Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+                TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
         String alertMsg =  context.getString(R.string.delete);
         String accountName = listContact.get(position).GetAccount();
-        alertMsg = alertMsg + " \"" + accountName + "\" ?";
+            alertMsg = alertMsg + " \"" + accountName + "\" ?";
         textView.setText(alertMsg);
 
-        Log.e("Error", alertMsg);
-
-
         btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listContact.remove(position);
-
-                removeFromlist(position);
-                notifyDataSetChanged();
-                dialog.cancel();
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+                    @Override
+                    public void onClick(View v) {
+                        if (coin == Coin.BITSHARE) {
+                            listContact.remove(position);
+                            removeFromlist(position);
+                        } else {
+                            long id = listContact.get(position).GetId();
+                            listContact.remove(position);
+                            removeFromlist(id);
+                        }
+                        notifyDataSetChanged();
+                        dialog.cancel();
+                    }
+                });
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                      public void onClick(View v) {
+                            dialog.cancel();
+                         }
+                   });
+                dialog.show();
 
 
     }
 
-    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem>
+    public static class ContactNameComparator implements Comparator<GeneralCoinContactListAdapter.ListviewContactItem>
     {
-        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
+        public int compare(GeneralCoinContactListAdapter.ListviewContactItem left, GeneralCoinContactListAdapter.ListviewContactItem right) {
             return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }

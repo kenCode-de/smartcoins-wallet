@@ -8,12 +8,12 @@ import java.util.List;
 
 public abstract class CryptoCoinAccount {
 
-    protected String id;
+    protected long id = -1;
     protected String name;
     protected Coin coin;
     protected AccountSeed seed;
 
-    public CryptoCoinAccount(String id, String name, Coin coin, AccountSeed seed) {
+    public CryptoCoinAccount(long id, String name, Coin coin, AccountSeed seed) {
         this.id = id;
         this.name = name;
         this.coin = coin;
@@ -25,11 +25,11 @@ public abstract class CryptoCoinAccount {
         return this.seed;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

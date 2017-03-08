@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.Date;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitsharesmunich.cryptocoincore.base.GIOTx;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
@@ -21,21 +21,46 @@ import retrofit2.Response;
  */
 
 public class GetTransactionData extends Thread implements Callback<Txi> {
-
+    /**
+     * The account to be query
+     */
     private final GeneralCoinAccount account;
+    /**
+     * The transaction txid to be query
+     */
     private String txid;
+    /**
+     * The serviceGenerator to call
+     */
     private InsightApiServiceGenerator serviceGenerator;
+    /**
+     * This app context, used to save on the DB
+     */
     private Context context;
+    /**
+     * If has to wait for another confirmation
+     */
     private boolean mustWait = false;
 
-
-
-    public GetTransactionData(String txid, GeneralCoinAccount account,Context context) {
-        this(txid,account,context,false);
+    /**
+     * Constructor used to query for a transaction with unknown confirmations
+     * @param txid The txid of the transaciton to be query
+     * @param account The account to be query
+     * @param context This app Context
+     */
+    public GetTransactionData(String txid, GeneralCoinAccount account, Context context) {
+        this(txid, account, context, false);
     }
 
-    public GetTransactionData(String txid, GeneralCoinAccount account,Context context, boolean mustWait) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) + ":" + InsightApiConstants.getPort(account.getCoin());
+    /**
+     * Consturctor to be used qhen the confirmations of the transaction are known
+     * @param txid The txid of the transaciton to be query
+     * @param account The account to be query
+     * @param context This app Context
+     * @param mustWait If there is less confirmation that needed
+     */
+    public GetTransactionData(String txid, GeneralCoinAccount account, Context context, boolean mustWait) {
+        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
         this.account = account;
         this.txid = txid;
         serviceGenerator = new InsightApiServiceGenerator(serverUrl);
@@ -43,6 +68,9 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
         this.mustWait = mustWait;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         if (mustWait) {
@@ -52,67 +80,93 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             }
         }
         InsightApiService service = serviceGenerator.getService(InsightApiService.class);
-        Call<Txi> txiCall = service.getTransaction(txid);
+        Call<Txi> txiCall = service.getTransaction(InsightApiConstants.getPath(account.getCoin()),txid);
         txiCall.enqueue(this);
     }
 
     @Override
     public void onResponse(Call<Txi> call, Response<Txi> response) {
-        if(response.isSuccessful()){
+        if (response.isSuccessful()) {
             Txi txi = response.body();
 
             GeneralTransaction transaction = new GeneralTransaction();
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
-            transaction.setDate(new Date(txi.time));
-            transaction.setFee((long)(txi.fee*InsightApiConstants.amountMultiplier));
+            transaction.setDate(new Date(txi.time * 1000));
+            transaction.setFee((long) (txi.fee * Math.pow(10,account.getCoin().getPrecision())));
             transaction.setConfirm(txi.confirmations);
             transaction.setType(account.getCoin());
+            transaction.setBlockHeight(txi.blockheight);
 
             for (Vin vin : txi.vin) {
-                GIOTx input = new GIOTx();
-                input.setAmount(vin.valueSat);
+                GTxIO input = new GTxIO();
+                input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
                 input.setTransaction(transaction);
                 input.setOut(true);
                 input.setType(account.getCoin());
                 String addr = vin.addr;
                 input.setAddressString(addr);
+                input.setIndex(vin.n);
+                input.setScriptHex(vin.scriptSig.hex);
+                input.setOriginalTxid(vin.txid);
                 for (GeneralCoinAddress address : account.getAddresses()) {
                     if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);
-                        address.getOutputTransaction().add(input);
+                        if (!address.hasTransactionOutput(input, account.getNetworkParam())) {
+                            address.getTransactionOutput().add(input);
+                        }
                     }
                 }
                 transaction.getTxInputs().add(input);
             }
 
-            for (Vout vout : txi.vout){
-                GIOTx output = new GIOTx();
-                output.setAmount((long)(vout.value*InsightApiConstants.amountMultiplier));
-                output.setTransaction(transaction);
-                output.setOut(false);
-                output.setType(account.getCoin());
-                String addr = vout.scriptPubKey.addresses[0];
-                output.setAddressString(addr);
-                for (GeneralCoinAddress address : account.getAddresses()) {
-                    if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
-                        output.setAddress(address);
-                        address.getInputTransaction().add(output);
+            for (Vout vout : txi.vout) {
+                if(vout.scriptPubKey.addresses == null || vout.scriptPubKey.addresses.length <= 0){
+                    // The address is null, this must be a memo
+                    String hex = vout.scriptPubKey.hex;
+                    int opReturnIndex = hex.indexOf("6a");
+                    if(opReturnIndex >= 0) {
+                        byte[] memoBytes = new byte[Integer.parseInt(hex.substring(opReturnIndex+2,opReturnIndex+4),16)];
+                        for(int i = 0; i < memoBytes.length;i++){
+                            memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+(i*2)),16);
+                        }
+                        transaction.setMemo(new String(memoBytes));
+                        System.out.println("Memo read : " + transaction.getMemo());
                     }
+
+                }else {
+                    GTxIO output = new GTxIO();
+                    output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
+                    output.setTransaction(transaction);
+                    output.setOut(false);
+                    output.setType(account.getCoin());
+                    String addr = vout.scriptPubKey.addresses[0];
+                    output.setAddressString(addr);
+                    output.setIndex(vout.n);
+                    output.setScriptHex(vout.scriptPubKey.hex);
+                    for (GeneralCoinAddress address : account.getAddresses()) {
+                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                            output.setAddress(address);
+                            if (!address.hasTransactionInput(output, account.getNetworkParam())) {
+                                address.getTransactionInput().add(output);
+                            }
+                        }
+                    }
+                    transaction.getTxOutputs().add(output);
                 }
-                transaction.getTxOutputs().add(output);
             }
 
             SCWallDatabase db = new SCWallDatabase(this.context);
-            String idTransaction =db.getGeneralTransactionId(transaction);
-            if(idTransaction == null) {
+            long idTransaction = db.getGeneralTransactionId(transaction);
+            if (idTransaction == -1) {
                 db.putGeneralTransaction(transaction);
-            }else{
+            } else {
                 transaction.setId(idTransaction);
                 db.updateGeneralTransaction(transaction);
             }
+            account.updateTransaction(transaction);
             account.balanceChange();
-            if (transaction.getConfirm() < InsightApiConstants.MIN_CONFIRM) {
+            if (transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
                 new GetTransactionData(txid, account, context, true).start();
             }
         }

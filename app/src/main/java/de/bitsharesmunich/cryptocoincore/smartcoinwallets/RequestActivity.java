@@ -1,4 +1,4 @@
-package de.bitshares_munich.smartcoinswallet;
+package de.bitsharesmunich.cryptocoincore.smartcoinwallets;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +16,9 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.smartcoinswallet.BaseActivity;
+import de.bitshares_munich.smartcoinswallet.R;
+import de.bitshares_munich.smartcoinswallet.popUpwindow;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 
@@ -27,6 +30,8 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
     @Bind(R.id.popwin1)
     TextView popwin;
+
+    Coin coin;
 
     String to = "";
     String account_id = "";
@@ -52,6 +57,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("RequestActivity new ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.request_screen);
         ButterKnife.bind(this);
@@ -63,13 +69,23 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
         format = NumberFormat.getInstance(locale);
         fieldsReference();
 
+
         Intent intent = getIntent();
+
+        if (intent.hasExtra(getString(R.string.coin))) {
+            this.coin = Coin.valueOf(intent.getStringExtra(getString(R.string.coin)));
+
+            popwin.setText(this.coin.getLabel());
+        } else {
+            this.coin = Coin.BITSHARE;
+        }
         if (intent.hasExtra(getString(R.string.to))) {
             to = intent.getStringExtra(getString(R.string.to));
         }
         if (intent.hasExtra(getString(R.string.account_id))) {
             account_id = intent.getStringExtra(getString(R.string.account_id));
         }
+        System.out.println("RequestActivity toi " + to + " accountId " + account_id + " coin " + coin.name());
     }
 
     @OnClick(R.id.backbutton)
@@ -79,10 +95,11 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
     @OnClick(R.id.tvCancel)
     void cancel() {
-        Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+        Intent intent = new Intent(getApplicationContext(), de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity.class);
         intent.putExtra(getString(R.string.currency), popwin.getText().toString());
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
+        intent.putExtra(getString(R.string.coin), coin.name());
         startActivity(intent);
         finish();
     }
@@ -93,11 +110,12 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
             Number number = format.parse(removeSpecialCharacters());
             if (number.doubleValue() > 0) {
                 String amount = number.toString();
-                Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+                Intent intent = new Intent(getApplicationContext(), de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity.class);
                 intent.putExtra(getString(R.string.currency), popwin.getText().toString());
                 intent.putExtra(getString(R.string.to), to);
                 intent.putExtra(getString(R.string.price), amount);
                 intent.putExtra(getString(R.string.account_id), account_id);
+                intent.putExtra(getString(R.string.coin), coin.name());
                 startActivity(intent);
                 finish();
             } else {
@@ -142,12 +160,16 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void popupwindow(View v, TextView textview) {
-        popUpwindow p = new popUpwindow(this, textview, Coin.BITSHARE);
+        popUpwindow p = new popUpwindow(this, textview, this.coin);
         p.show(v);
     }
 
     public void showpop(View v) {
-        popupwindow(v, popwin);
+        //if(coin == Coin.BITSHARE) {
+            popupwindow(v, popwin);
+        //}else{
+        //    System.out.println("RequestActivity not bitshare");
+        //}
     }
 
     @Override

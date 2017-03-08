@@ -50,7 +50,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_NAME = "name";
     }
 
-    //CrypotoCore
+    //CryptoCoinCore Section
 
     public static class Seeds implements BaseColumns {
         public static final String TABLE_NAME = "seeds";
@@ -58,6 +58,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_SEED_TYPE = "derived_seed_type";
         public static final String COLUMN_MNEMONIC = "mnemonic";
         public static final String COLUMN_ADDITIONAL = "additional";
+        public static final String CONSTRAINT_SEED = "seedContraint";
     }
 
     public static class GeneralAccounts implements BaseColumns {
@@ -69,6 +70,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ACCOUNT_INDEX = "account_index"; // the account index used
         public static final String COLUMN_EXTERNAL_INDEX = "external_index"; // the last external address index used
         public static final String COLUMN_CHANGE_INDEX = "change_index"; // the last change address index used
+        public static final String CONSTRAINT_ACCOUNT = "accountContraint";
     }
 
     /**
@@ -90,6 +92,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_NAME = "name"; //this is only to tag this key
         public static final String COLUMN_COIN_TYPE = "coin_type";//bitcoin,litecoin,Dash,Dogecoin
         public static final String COLUMN_WIF = "wif";
+        public static final String CONSTRAINT_KEY = "generalOprhanContraint";
     }
 
     //TODO GrapheneOrphanKeys
@@ -102,6 +105,7 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_IS_CHANGE = "is_change";
         public static final String COLUMN_INDEX = "address_index";
         public static final String COLUMN_PUBLIC_KEY = "pub_key";
+        public static final String CONSTRAINT_ADDRESS = "genAddressContraint";
     }
 
     public static class Inputs implements BaseColumns {
@@ -112,6 +116,10 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
+        public static final String COLUMN_SCRIPT_HEX = "script_hex";
+        public static final String COLUMN_INDEX = "tx_index";
+        public static final String COLUMN_ORIGIN_TXID = "origin_txid";
+        public static final String CONSTRAINT_ADDRESS = "genInputsContraint";
     }
 
     public static class Outputs implements BaseColumns {
@@ -122,6 +130,9 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_ADDRESS_STRING = "address_string"; //point to a GeneralCoinAddress
         public static final String COLUMN_ID_TRANSACTION = "id_transaction"; //point to a BitcoinTransaction
         public static final String COLUMN_AMOUNT = "amount";
+        public static final String COLUMN_SCRIPT_HEX = "script_hex";
+        public static final String COLUMN_INDEX = "tx_index";
+        public static final String CONSTRAINT_ADDRESS = "genOutputsContraint";
     }
 
     public static class GeneralTransaction implements BaseColumns {
@@ -130,8 +141,31 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_TXID = "txid";
         public static final String COLUMN_COIN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
         public static final String COLUMN_BLOCK = "block"; //the number of the block where is include
+        public static final String COLUMN_BLOCK_HEIGHT = "block_height";
         public static final String COLUMN_DATE = "date"; //receive date
         public static final String COLUMN_FEE = "fee"; //the amount of the comission
         public static final String COLUMN_CONFIRMS = "confirm"; //the last confirm reader, this only matters when is lower than 6
+        public static final String COLUMN_MEMO = "memo";
+        public static final String CONSTRAINT_TRANSACTION = "generalTransactionContraint";
     }
+
+    // Contacts Section
+
+    public static class Contacs implements BaseColumns{
+        public static final String TABLE_NAME = "contact";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_ACCOUNT = "account";
+        public static final String COLUMN_NOTE = "note";
+        public static final String COLUMN_EMAIL = "email";
+        public static final String CONSTRAINT_NAME ="contactsNameConstrain";
+    }
+
+    public static class ContacAddress implements BaseColumns{
+        public static final String TABLE_NAME = "contact_address";
+        public static final String COLUMN_COIN_TYPE = "coin_type";
+        public static final String COLUMN_CONTACT_ID = "contact_id";
+        public static final String COLUMN_ADDRESS = "address";
+    }
+
 }
