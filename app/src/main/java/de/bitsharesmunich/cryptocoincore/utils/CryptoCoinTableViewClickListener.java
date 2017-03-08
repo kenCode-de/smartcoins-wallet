@@ -2,6 +2,7 @@ package de.bitsharesmunich.cryptocoincore.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -13,6 +14,7 @@ import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.eReceipt;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
@@ -34,10 +36,16 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
 
     private Context myContext;
     private InternalMovementListener mListener;
+    private Coin coin;
 
-    public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener) {
+    //public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener) {
+    //    this(_context, listener, Coin.BITSHARE);
+    //}
+
+    public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener, Coin coin) {
         this.myContext = _context;
         this.mListener = listener;
+        this.coin = coin;
     }
 
     @Override
@@ -46,9 +54,6 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
             //TransferOperation operation = historicalTransferEntry.getHistoricalTransfer().getOperation();
             BalancesFragment.onClicked = true;
             long timestamp = historicalTransferEntry.getDate().getTime();
-
-            Gson gson = new Gson();
-            String jsonTransfer = gson.toJson(historicalTransferEntry);
 
             Intent intent = new Intent(myContext, eReceipt.class);
             intent.putExtra(myContext.getResources().getString(R.string.e_receipt), historicalTransferEntry.toString());
@@ -59,7 +64,17 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
             intent.putExtra("To", "");//operation.getTo().getAccountName());
             intent.putExtra("From", "");//operation.getFrom().getAccountName());
             intent.putExtra("Sent", true);
-            intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
+
+            intent.putExtra("coin", this.coin.name());
+
+            if (this.coin == Coin.BITSHARE) {
+                Gson gson = new Gson();
+                String jsonTransfer = gson.toJson(historicalTransferEntry);
+                intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
+            } else {
+                intent.putExtra("TransactionId", historicalTransferEntry.getId());
+            }
+
             mListener.onInternalAppMove();
             myContext.startActivity(intent);
         }

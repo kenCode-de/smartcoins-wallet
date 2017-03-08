@@ -956,7 +956,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
         } else {
             cryptoCoinTransfersView = (SortableTableView<GeneralTransaction>) rootView.findViewById(R.id.tableView);
-            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
+            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), (InternalMovementListener) getActivity(), this.coin));
         }
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -1376,7 +1376,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
 
             //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
-            try {
+            //try {
                 AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
 
                 for(GeneralCoinAddress address: addresses){
@@ -1384,9 +1384,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                     watcher.addAddress(address.getAddressString(account.getNetworkParam()));
                 }
                 watcher.connect();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
+            //} catch (URISyntaxException e) {
+            //    e.printStackTrace();
+            //}
 
             //Start the GetTransactionByAddress to get the transaction previously obtained by the server
             GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());

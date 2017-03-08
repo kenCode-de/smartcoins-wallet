@@ -1101,6 +1101,44 @@ public class SCWallDatabase {
         return -1;
     }
 
+    public GeneralTransaction getGeneralTransactionByIdAccount(final GeneralCoinAccount account, long transactionId){
+        List<GeneralTransaction> transactions = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE+ " = '" + account.getCoin().name() + "'"
+                +" AND "+SCWallDatabaseContract.GeneralTransaction.COLUMN_ID+ " = " + transactionId, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            GeneralTransaction transaction ;
+
+            long id = cursor.getLong(0);
+            String txid = cursor.getString(1);
+            Date date = new Date(cursor.getLong(2));
+            long block = cursor.getLong(3);
+            long fee = cursor.getLong(4);
+            int confirms = cursor.getInt(5);
+            int blockHeight = cursor.getInt(6);
+            String memo = cursor.getString(7);
+            transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
+            transaction.setTxInputs(getGTxI(transaction,account));
+            transaction.setTxOutputs(getGTxO(transaction,account));
+            cursor.close();
+            return transaction;
+        } else {
+            cursor.close();
+        }
+
+        return null;
+    }
+
     public long getGeneralTransactionId(final GeneralTransaction transaction){
         String[] columns = {
                 SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
@@ -1322,6 +1360,36 @@ public class SCWallDatabase {
         Log.i("SCWalldatabase","There are "+contacts.size()+" total Contacts.");
 
         return contacts;
+    }
+
+
+    public Contact getContactByAddress(String address){
+        List<Contact> contacts = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.Contacs.COLUMN_ID,
+                SCWallDatabaseContract.Contacs.COLUMN_NAME,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT,
+                SCWallDatabaseContract.Contacs.COLUMN_NOTE,
+                SCWallDatabaseContract.Contacs.COLUMN_EMAIL
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Contacs.TABLE_NAME, columns,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT+ " = '" + address + "'",null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            Contact contact ;
+
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String account = cursor.getString(2);
+            String note = cursor.getString(3);
+            String email = cursor.getString(4);
+
+            contact = new Contact(id,name,account,note,email);
+            cursor.close();
+            return contact;
+        }
+        cursor.close();
+
+        return null;
     }
 
     public long getContactCount(){
