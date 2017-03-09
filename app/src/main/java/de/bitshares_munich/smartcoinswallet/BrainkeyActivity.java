@@ -244,7 +244,7 @@ public class BrainkeyActivity extends BaseActivity {
                                 accountDetails.pinCode = pinCode;
                                 addWallet(accountDetails, brainkey, pinCode);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             hideDialog();

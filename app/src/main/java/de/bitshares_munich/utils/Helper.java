@@ -19,10 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Utils;
 import org.bitcoinj.core.AddressFormatException;
 
 import java.io.File;
@@ -36,7 +32,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
@@ -690,19 +685,5 @@ public class Helper {
 
         Log.d(TAG, "Checksum Checking OK");
         return true;
-    }
-
-    /*
-     * WIF to Key.
-     * Ref.: https://en.bitcoin.it/wiki/Wallet_import_format
-     *
-     * @param wifText Wallet Import Format string
-     * @return key
-     */
-    public static ECKey getKeyFromWif(String wifText){
-        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wifText).getKey();
-        Log.d(TAG, "Private Key " + Utils.HEX.encode(key.getPrivKeyBytes()) );
-        Log.d(TAG, "WIF " + key.getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toString() );
-        return key;
     }
 }

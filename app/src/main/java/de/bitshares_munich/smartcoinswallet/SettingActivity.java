@@ -1105,6 +1105,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     public void showDialog() {
 
         final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alert_confirmation_dialog);
         Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);

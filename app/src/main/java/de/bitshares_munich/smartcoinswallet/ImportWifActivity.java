@@ -1,20 +1,11 @@
 package de.bitshares_munich.smartcoinswallet;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +35,6 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.graphenej.Address;
-import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
 import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
@@ -237,6 +227,8 @@ public class ImportWifActivity extends BaseActivity {
                                 //Success Import(Set app lock to false)
                                 Application app = (Application) getApplicationContext();
                                 app.setLock(false);
+                                //Don't force backup screen
+                                Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
 
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportWifActivity.this);
@@ -268,15 +260,6 @@ public class ImportWifActivity extends BaseActivity {
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    void addWallet(AccountDetails accountDetail) {
-        //Success Import(Set app lock to false)
-        Application app = (Application) getApplicationContext();
-        app.setLock(false);
-        BinHelper myBinHelper = new BinHelper();
-        myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
-
     }
 
     private void showDialog(String title, String msg) {

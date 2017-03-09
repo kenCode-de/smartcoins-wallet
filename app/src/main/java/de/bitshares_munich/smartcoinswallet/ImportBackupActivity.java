@@ -274,7 +274,7 @@ public class ImportBackupActivity extends BaseActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
