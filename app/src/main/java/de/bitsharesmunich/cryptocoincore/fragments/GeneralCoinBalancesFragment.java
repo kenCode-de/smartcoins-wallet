@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -81,7 +82,6 @@ import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.ISound;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -953,10 +953,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
         if (this.coin == Coin.BITSHARE) {
             transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
-            transfersView.addDataClickListener(new TableViewClickListener(getContext(), (InternalMovementListener) getActivity()));
+            transfersView.addDataClickListener(new TableViewClickListener(getContext()));
         } else {
             cryptoCoinTransfersView = (SortableTableView<GeneralTransaction>) rootView.findViewById(R.id.tableView);
-            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), (InternalMovementListener) getActivity(), this.coin));
+            cryptoCoinTransfersView.addDataClickListener(new CryptoCoinTableViewClickListener(getContext(), this.coin));
         }
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -1148,7 +1148,6 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -1175,7 +1174,6 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener) getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 
@@ -1195,7 +1193,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.alert_delete_dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
         alertMsg.setText(getString(R.string.help_message));
@@ -1271,7 +1270,6 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ((InternalMovementListener)getActivity()).onInternalAppMove();
                 startActivity(intent);
             }
 

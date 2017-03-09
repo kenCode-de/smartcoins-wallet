@@ -2,21 +2,17 @@ package de.bitsharesmunich.cryptocoincore.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.Date;
 
-import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.fragments.BalancesFragment;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.eReceipt;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 /**
@@ -35,16 +31,14 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
     public static final String KEY_OPERATION_ENTRY = "operation_entry";
 
     private Context myContext;
-    private InternalMovementListener mListener;
     private Coin coin;
 
     //public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener) {
     //    this(_context, listener, Coin.BITSHARE);
     //}
 
-    public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener, Coin coin) {
+    public CryptoCoinTableViewClickListener(Context _context,  Coin coin) {
         this.myContext = _context;
-        this.mListener = listener;
         this.coin = coin;
     }
 
@@ -75,7 +69,6 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
                 intent.putExtra("TransactionId", historicalTransferEntry.getId());
             }
 
-            mListener.onInternalAppMove();
             myContext.startActivity(intent);
         }
     }

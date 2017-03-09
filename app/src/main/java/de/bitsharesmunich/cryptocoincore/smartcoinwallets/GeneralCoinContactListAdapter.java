@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.AddEditContacts;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
@@ -118,7 +117,6 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
         ibEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((InternalMovementListener)context).onInternalAppMove();
                 int index = position;
                 Intent intent = new Intent(context, AddEditContacts.class);
 
@@ -261,7 +259,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
 
     public void showDialog(final int position){
                 final Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.alert_delete_dialog);
+                dialog.setContentView(R.layout.alert_confirmation_dialog);
                 Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
                 Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
                 TextView textView = (TextView) dialog.findViewById(R.id.alertMsg);
