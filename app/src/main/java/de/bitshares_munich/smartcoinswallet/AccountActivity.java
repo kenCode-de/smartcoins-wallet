@@ -145,6 +145,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
         tinyDB = new TinyDB(this);
+        database = new SCWallDatabase(this);
         setTitle(getResources().getString(R.string.app_name));
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
