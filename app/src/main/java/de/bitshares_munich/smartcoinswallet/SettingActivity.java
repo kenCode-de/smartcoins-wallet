@@ -194,21 +194,21 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     Log.d(TAG, "getAccounts. onSuccess");
                     ArrayList<AccountDetails> details = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
                     AccountDetails currentAccount = null;
-                    for(AccountDetails accountDetails : details){
-                        if(accountDetails.isSelected){
+                    for (AccountDetails accountDetails : details) {
+                        if (accountDetails.isSelected) {
                             currentAccount = accountDetails;
                             break;
                         }
                     }
                     List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
-                    for(AccountProperties properties : accountProperties){
-                        if(properties.name.equals(currentAccount.account_name)){
-                            if(properties.active.equals(properties.owner)){
+                    for (AccountProperties properties : accountProperties) {
+                        if (properties.name.equals(currentAccount.account_name)) {
+                            if (properties.active.equals(properties.owner)) {
                                 updateAllRoles = true;
                             }
                         }
                     }
-                    Log.d(TAG, "Update all roles: "+updateAllRoles);
+                    Log.d(TAG, "Update all roles: " + updateAllRoles);
                     updateAccountAuthorities(currentAccount);
                 }
             });
@@ -216,7 +216,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "getAccounts.onError. Msg: "+error.message);
+            Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
         }
     };
 
@@ -230,14 +230,14 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG,"onSuccess");
+                    Log.d(TAG, "onSuccess");
                     Toast.makeText(SettingActivity.this, R.string.refresh_keys_success, Toast.LENGTH_LONG).show();
                     String suggestion = "";
-                    for(AccountDetails accountDetail : accountDetails){
-                        if(accountDetail.account_id.equals(updatedAccount.account_id)){
+                    for (AccountDetails accountDetail : accountDetails) {
+                        if (accountDetail.account_id.equals(updatedAccount.account_id)) {
                             accountDetail.wif_key = updatedAccount.wif_key;
                             accountDetail.brain_key = updatedAccount.brain_key;
-                            Log.d(TAG,"updating account with name: "+accountDetail.account_name+", id: "+accountDetail.account_id+", key: "+accountDetail.brain_key);
+                            Log.d(TAG, "updating account with name: " + accountDetail.account_name + ", id: " + accountDetail.account_id + ", key: " + accountDetail.brain_key);
 
                             suggestion = accountDetail.brain_key;
                         }
@@ -260,24 +260,24 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.d(TAG, "onError. Msg: "+error.message);
+            Log.d(TAG, "onError. Msg: " + error.message);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     updatedAccount = null;
-                    if(updateKeyRetryCount < UPDATE_KEY_MAX_RETRIES){
-                        Log.d(TAG, "Retrying. count: "+ updateKeyRetryCount +", max: "+ UPDATE_KEY_MAX_RETRIES);
+                    if (updateKeyRetryCount < UPDATE_KEY_MAX_RETRIES) {
+                        Log.d(TAG, "Retrying. count: " + updateKeyRetryCount + ", max: " + UPDATE_KEY_MAX_RETRIES);
                         ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                        for(AccountDetails accountDetails : arrayList){
+                        for (AccountDetails accountDetails : arrayList) {
                             nodeIndex = (nodeIndex + 1) % Application.urlsSocketConnection.length;
-                            Log.d(TAG,"account id: '"+accountDetails.account_id+"', name: "+accountDetails.account_name+", wif: "+accountDetails.wif_key);
-                            if(accountDetails.isSelected){
+                            Log.d(TAG, "account id: '" + accountDetails.account_id + "', name: " + accountDetails.account_name + ", wif: " + accountDetails.wif_key);
+                            if (accountDetails.isSelected) {
                                 updateAccountAuthorities(accountDetails);
                                 updateKeyRetryCount++;
                                 break;
                             }
                         }
-                    }else{
+                    } else {
                         Toast.makeText(SettingActivity.this, R.string.refresh_keys_fail, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -409,13 +409,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                if ( selectedItemView != null )
-                {
-                    if ( dontCallCountryChangedOnStart )
-                    {
+                if (selectedItemView != null) {
+                    if (dontCallCountryChangedOnStart) {
                         dontCallCountryChangedOnStart = false;
-                    }
-                    else {
+                    } else {
                         spCountryItemSelected(position);
                     }
                 }
@@ -429,20 +426,17 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         });
 
         ArrayList<String> countries = Helper.getCountriesArray();
-        ArrayAdapter<String> adapterCountry = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, countries);
+        ArrayAdapter<String> adapterCountry = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, countries);
         adapterCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spCountry.setAdapter(adapterCountry);
 
         Boolean isCountry = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_country));
-        if (isCountry)
-        {
+        if (isCountry) {
             String countryCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country));
             String spinnertext = Helper.getSpinnertextCountry(countryCode);
             int index = countries.indexOf(spinnertext);
             spCountry.setSelection(index);
-        }
-        else
-        {
+        } else {
             Locale locale = Locale.GERMANY;
             final int index = countries.indexOf(locale.getDisplayCountry() + " (EUR)");
             if (index > 0) {
@@ -462,34 +456,27 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             if (getLangCode.get(i).equalsIgnoreCase("zh-rTW")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rTW";
-                langCode.lang = "Chinese"+ "; " + "zh-rTW" +  " (繁體中文)";
+                langCode.lang = "Chinese" + "; " + "zh-rTW" + " (繁體中文)";
                 langArray.add(langCode);
-            }
-            else if(getLangCode.get(i).equalsIgnoreCase("zh-rCN") || getLangCode.get(i).equalsIgnoreCase("zh"))
-            {
+            } else if (getLangCode.get(i).equalsIgnoreCase("zh-rCN") || getLangCode.get(i).equalsIgnoreCase("zh")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "zh-rCN";
-                langCode.lang = "Chinese"+ "; " + "zh-rCN" +  " (简体中文)";
+                langCode.lang = "Chinese" + "; " + "zh-rCN" + " (简体中文)";
                 langArray.add(langCode);
-            }
-            else if( getLangCode.get(i).equalsIgnoreCase("pt-rBR") || getLangCode.get(i).equalsIgnoreCase("pt") )
-            {
+            } else if (getLangCode.get(i).equalsIgnoreCase("pt-rBR") || getLangCode.get(i).equalsIgnoreCase("pt")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "pt-rBR";
-                langCode.lang = "Português"+ "; " + "pt-rBR" +  " (Português do Brasil)";
+                langCode.lang = "Português" + "; " + "pt-rBR" + " (Português do Brasil)";
                 langArray.add(langCode);
-            }
-            else if(getLangCode.get(i).equalsIgnoreCase("pt-rPT"))
-            {
+            } else if (getLangCode.get(i).equalsIgnoreCase("pt-rPT")) {
                 LangCode langCode = new LangCode();
                 langCode.code = "pt-rPT";
-                langCode.lang = "Português"+ "; " + "pt-rPT" +  " (Português de Portugal)";
+                langCode.lang = "Português" + "; " + "pt-rPT" + " (Português de Portugal)";
                 langArray.add(langCode);
-            }
-            else {
+            } else {
                 LangCode langCode = new LangCode();
                 Locale locale = new Locale(getLangCode.get(i));
-                langCode.lang = locale.getDisplayName() + "; " + locale.toString() + " ("+locale.getDisplayLanguage(locale)+")" ;
+                langCode.lang = locale.getDisplayName() + "; " + locale.toString() + " (" + locale.getDisplayLanguage(locale) + ")";
                 langCode.code = getLangCode.get(i);
                 langArray.add(langCode);
             }
@@ -500,27 +487,19 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         inittLocale = false;
         spLanguage.setAdapter(adapterLanguage);
         String langCode = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-        if (langCode != "")
-        {
+        if (langCode != "") {
             for (int i = 0; i < langArray.size(); i++) {
                 LangCode lc = langArray.get(i);
 
-                if ( langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn") )
-                {
+                if (langCode.equalsIgnoreCase("zh") && lc.code.equalsIgnoreCase("zh-rcn")) {
                     spLanguage.setSelection(i);
-                }
-                else if ( langCode.equalsIgnoreCase("pt") && lc.code.equalsIgnoreCase("pt-rbr") )
-                {
+                } else if (langCode.equalsIgnoreCase("pt") && lc.code.equalsIgnoreCase("pt-rbr")) {
                     spLanguage.setSelection(i);
-                }
-                else if (lc.code.equalsIgnoreCase(langCode))
-                {
+                } else if (lc.code.equalsIgnoreCase(langCode)) {
                     spLanguage.setSelection(i);
                 }
             }
-        }
-        else
-        {
+        } else {
             spLanguage.setSelection(13);
             Helper.setLocale("de", getResources());
         }
@@ -562,13 +541,13 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
 
         String accountName = "";
-        int posBackupAssets=-9;
+        int posBackupAssets = -9;
         for (int i = 0; i < accountDetails.size(); i++) {
             arrayAccountName.add(accountDetails.get(i).account_name);
             tvAccounts.setText(accountDetails.get(i).account_name);
             if (accountDetails.get(i).isSelected) {
                 accountName = accountDetails.get(i).account_name;
-                posBackupAssets=accountDetails.get(i).posBackupAsset;
+                posBackupAssets = accountDetails.get(i).posBackupAsset;
             }
             if (accountDetails.get(i).isLifeTime) {
                 ivLifeTime.setVisibility(View.VISIBLE);
@@ -610,7 +589,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             AssetsSymbols assetsSymbols = new AssetsSymbols(getApplicationContext());
             arrayAccountAssets = assetsSymbols.updatedList(arrayAccountAssets);
 
-            arrayAccountAssets.add(0,"-------");
+            arrayAccountAssets.add(0, "-------");
 
             ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayAccountAssets);
             adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -649,12 +628,10 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         return result;
     }
-    private String getPin()
-    {
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
-            if (accountDetails.get(i).isSelected)
-            {
+
+    private String getPin() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).pinCode;
             }
         }
@@ -662,12 +639,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         return "";
     }
 
-    private String getBrainKey()
-    {
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
-            if (accountDetails.get(i).isSelected)
-            {
+    private String getBrainKey() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).brain_key;
             }
         }
@@ -675,12 +649,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         return "";
     }
 
-    private String getAccountName()
-    {
-        for (int i = 0; i < accountDetails.size(); i++)
-        {
-            if (accountDetails.get(i).isSelected)
-            {
+    private String getAccountName() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).account_name;
             }
         }
@@ -718,8 +689,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     }
 
-    private void spCountryItemSelected(int position)
-    {
+    private void spCountryItemSelected(int position) {
         designMethod();
         String countryCode = Helper.getCountryCode(spCountry.getSelectedItem().toString());
         Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_fade_currency), spCountry.getSelectedItem().toString());
@@ -743,7 +713,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     @OnItemSelected(R.id.spBackupAsset)
     void onItemSelectedBackupAsset(int position) {
-        if(!isFirstTime) {
+        if (!isFirstTime) {
             designMethod();
             if (position > 0) {
                 Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), true);
@@ -756,9 +726,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     }
                 }
                 tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-            }
-        else  if (position == 0)
-            {
+            } else if (position == 0) {
                 Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected), false);
                 Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_backup_symbol), "");
                 for (int i = 0; i < accountDetails.size(); i++) {
@@ -768,8 +736,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 }
                 tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
             }
-        }else {
-            isFirstTime=false;
+        } else {
+            isFirstTime = false;
         }
     }
 
@@ -805,7 +773,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         try {
             String brainKey = getBrainKey();
             if (brainKey.isEmpty()) {
-                Toast.makeText(getApplicationContext(),getResources().getString(R.string.unable_to_load_brainkey),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.unable_to_load_brainkey), Toast.LENGTH_LONG).show();
                 return;
             } else {
                 etBrainKey.setText(brainKey);
@@ -825,7 +793,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingActivity.this, R.string.copied_to_clipboard , Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingActivity.this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                 clipboard.setPrimaryClip(clip);
@@ -847,9 +815,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             public void run() {
                 if (Application.isConnected()) {
 
-                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
-                        tvBlockNumberHead.setText(Application.blockHead);
-                        ivSocketConnected.clearAnimation();
+                    ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                    tvBlockNumberHead.setText(Application.blockHead);
+                    ivSocketConnected.clearAnimation();
 
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
@@ -868,32 +836,32 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     }
 
     @OnClick(R.id.refresh_account_keys)
-    void onRefreshAccountKeysPressed(){
+    void onRefreshAccountKeysPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
-            .setTitle(getResources().getString(R.string.refresh_keys_title))
-            .setMessage(getResources().getString(R.string.refresh_keys_summary))
-            .setPositiveButton(getResources().getString(R.string.dialog_proceed), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Log.d(TAG, "onClick");
-                    ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                    for(AccountDetails accountDetails : arrayList){
-                        if(accountDetails.isSelected){
-                            checkAccountPermissions(accountDetails.account_id);
-                            break;
+                .setTitle(getResources().getString(R.string.refresh_keys_title))
+                .setMessage(getResources().getString(R.string.refresh_keys_summary))
+                .setPositiveButton(getResources().getString(R.string.dialog_proceed), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick");
+                        ArrayList<AccountDetails> arrayList = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                        for (AccountDetails accountDetails : arrayList) {
+                            if (accountDetails.isSelected) {
+                                checkAccountPermissions(accountDetails.account_id);
+                                break;
+                            }
                         }
                     }
-                }
-            }).setNegativeButton(getResources().getString(R.string.dialog_later), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+                }).setNegativeButton(getResources().getString(R.string.dialog_later), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         builder.create().show();
     }
 
-    private void checkAccountPermissions(String accountId){
+    private void checkAccountPermissions(String accountId) {
         /* Asking for all account details */
         getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountId, this.getAccountsListener));
         getAccountsWorker.start();
@@ -906,7 +874,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
      * @param accountDetails: The account whose key we want to update.
      */
     private void updateAccountAuthorities(AccountDetails accountDetails) {
-        Log.d(TAG,"account to update. current brain key: "+accountDetails.brain_key);
+        Log.d(TAG, "account to update. current brain key: " + accountDetails.brain_key);
         updatedAccount = accountDetails;
         try {
             String currentWif = Crypt.getInstance().decrypt_string(updatedAccount.wif_key);
@@ -920,7 +888,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
             /* Storing the newly created brainky */
             database.insertKey(brainKey);
-            Log.d(TAG,"new brain key: "+suggestion);
+            Log.d(TAG, "new brain key: " + suggestion);
 
             /* Keeping this suggestion in shared preferences in case we get interrupted */
             storeSuggestion(suggestion);
@@ -942,7 +910,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                     .setActive(authority)
                     .setOptions(options);
 
-            if(updateAllRoles){
+            if (updateAllRoles) {
                 builder.setOwner(authority);
             }
 
@@ -950,36 +918,37 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mAuthorityChangeListener), nodeIndex);
             refreshKeyWorker.start();
         } catch (MalformedTransactionException e) {
-            Log.e(TAG, "MalformedTransactionException. Msg: "+e.getMessage());
+            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "NoSuchAlgorithmException. Msg: "+e.getMessage());
+            Log.e(TAG, "NoSuchAlgorithmException. Msg: " + e.getMessage());
         } catch (IOException e) {
-            Log.e(TAG, "IOException. Msg: "+e.getMessage());
+            Log.e(TAG, "IOException. Msg: " + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            Log.e(TAG, "NoSuchPaddingException. Msg: "+e.getMessage());
+            Log.e(TAG, "NoSuchPaddingException. Msg: " + e.getMessage());
         } catch (InvalidKeyException e) {
-            Log.e(TAG, "InvalidKeyException. Msg: "+e.getMessage());
+            Log.e(TAG, "InvalidKeyException. Msg: " + e.getMessage());
         } catch (InvalidAlgorithmParameterException e) {
-            Log.e(TAG, "InvalidAlgorithmParameterException. Msg: "+e.getMessage());
+            Log.e(TAG, "InvalidAlgorithmParameterException. Msg: " + e.getMessage());
         } catch (IllegalBlockSizeException e) {
-            Log.e(TAG, "IllegalBlockSizeException. Msg: "+e.getMessage());
+            Log.e(TAG, "IllegalBlockSizeException. Msg: " + e.getMessage());
         } catch (BadPaddingException e) {
-            Log.e(TAG, "BadPaddingException. Msg: "+e.getMessage());
+            Log.e(TAG, "BadPaddingException. Msg: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.e(TAG, "ClassNotFoundException. Msg: "+e.getMessage());
+            Log.e(TAG, "ClassNotFoundException. Msg: " + e.getMessage());
         }
     }
 
     /**
      * We use this method to store a brain key suggestion in shared preferences
      * just in case the update procedure is interrupted.
+     *
      * @param suggestion
      */
-    private void storeSuggestion(String suggestion){
-        Log.d(TAG,"storeSuggestion. suggestion: "+suggestion);
+    private void storeSuggestion(String suggestion) {
+        Log.d(TAG, "storeSuggestion. suggestion: " + suggestion);
         ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
-        if(suggestionList.size() > 0){
-            Log.w(TAG,"Already have a previous suggestion!");
+        if (suggestionList.size() > 0) {
+            Log.w(TAG, "Already have a previous suggestion!");
         }
         suggestionList.add(suggestion);
         tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, suggestionList);
@@ -988,42 +957,43 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     /**
      * Once the brain key procedure has finished, we no longer need to keep this brain key suggestion
      * in here.
+     *
      * @param suggestion
      */
-    private void removeSuggestion(String suggestion){
-        Log.d(TAG,"removeSuggestion. suggestion: "+suggestion);
+    private void removeSuggestion(String suggestion) {
+        Log.d(TAG, "removeSuggestion. suggestion: " + suggestion);
         /* Checking that suggestion matches our memory-stored brain key */
         ArrayList<String> savedSuggestions = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
-        if(savedSuggestions.size() > 0){
-            if(savedSuggestions.size() > 1){
-                Log.w(TAG,"Have more than one suggestion in memory");
+        if (savedSuggestions.size() > 0) {
+            if (savedSuggestions.size() > 1) {
+                Log.w(TAG, "Have more than one suggestion in memory");
             }
-            for(int i = 0; i < savedSuggestions.size(); i++){
-                if(savedSuggestions.get(i).equals(suggestion)){
+            for (int i = 0; i < savedSuggestions.size(); i++) {
+                if (savedSuggestions.get(i).equals(suggestion)) {
                     savedSuggestions.remove(i);
                     break;
                 }
             }
-            if(savedSuggestions.size() == 0){
-                Log.d(TAG,"saving empty suggestion list, this is expected");
-            }else{
-                Log.w(TAG,"even after removing suggestion, the list was not empty, signaling that a previous account update operation could have been interrupted");
+            if (savedSuggestions.size() == 0) {
+                Log.d(TAG, "saving empty suggestion list, this is expected");
+            } else {
+                Log.w(TAG, "even after removing suggestion, the list was not empty, signaling that a previous account update operation could have been interrupted");
             }
             tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, savedSuggestions);
-        }else{
-            Log.w(TAG,"No saved suggestion");
+        } else {
+            Log.w(TAG, "No saved suggestion");
         }
     }
 
     @OnClick(R.id.register_new_account)
     void setRegisterNewAccount() {
-        if(Application.accountCanCreate()) {
+        if (Application.accountCanCreate()) {
             Intent intent = new Intent(this, AccountActivity.class);
             intent.putExtra("activity_name", "setting_screen");
             intent.putExtra("activity_id", 919);
             startActivity(intent);
-        }else {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg) , Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.account_create_msg), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -1038,6 +1008,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         final boolean[] balanceValid = {true};
         final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alert_confirmation_dialog);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -1053,7 +1024,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 //Check Balance
                 String ltmAmount = Helper.fetchStringSharePref(getApplicationContext(), "ltmAmount");
                 if (btnDone.getText().equals(getString(R.string.next))) {
-                    alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + spAccounts.getSelectedItem().toString() + getString(R.string.account).toLowerCase()+".");
+                    alertMsg.setText(getString(R.string.upgrade_to_ltm) + ltmAmount + getString(R.string.bts_will_be_deducted) + spAccounts.getSelectedItem().toString() + getString(R.string.account).toLowerCase() + ".");
 
                     btnDone.setText(getString(R.string.txt_yes));
                     btnCancel.setText(getString(R.string.txt_no));
@@ -1140,27 +1111,19 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     }
 
-    void deleteAccount()
-    {
-        if (accountDetails.size() > 1)
-        {
-            for (int i = 0; i < accountDetails.size(); i++)
-            {
-                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name))
-                {
+    void deleteAccount() {
+        if (accountDetails.size() > 1) {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (spAccounts.getSelectedItem().toString().equals(accountDetails.get(i).account_name)) {
                     accountDetails.remove(i);
                     break;
                 }
             }
 
-            for (int i = 0; i < accountDetails.size(); i++)
-            {
-                if ( i == 0 )
-                {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (i == 0) {
                     accountDetails.get(i).isSelected = true;
-                }
-                else
-                {
+                } else {
                     accountDetails.get(i).isSelected = false;
                 }
             }
@@ -1257,10 +1220,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     }
 
     private void changeDialogMsg(String msg) {
-        if (progressDialog != null)
-        {
-            if (progressDialog.isShowing())
-            {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
                 progressDialog.setMessage(msg);
             }
         }
@@ -1282,22 +1243,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     }
 
     @OnClick(R.id.backup_ic)
-    public void onClickBackupDotBin()
-    {
+    public void onClickBackupDotBin() {
 
         String _brnKey = getBrainKey();
         String _accountName = getAccountName();
         String _pinCode = getPin();
 
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile(_brnKey,_accountName,_pinCode);
+        myBinHelper.createBackupBinFile(_brnKey, _accountName, _pinCode);
     }
 
     @Override
     public void backupComplete(boolean success) {
-        Log.d("Backup Complete","done");
+        Log.d("Backup Complete", "done");
     }
-
 
 
     FileChooserDialog dialog;
@@ -1335,7 +1294,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             @Override
             public void onCancel(DialogInterface dialog) {
                 dialog.dismiss();
-                if(itemSelected.contains(getString(R.string.change))){
+                if (itemSelected.contains(getString(R.string.change))) {
                     initAudioPath();
                 }
             }
@@ -1349,7 +1308,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
         public void onFileSelected(Dialog source, File file) {
             source.hide();
-            onSuccess(file.getAbsolutePath(),file.getName());
+            onSuccess(file.getAbsolutePath(), file.getName());
         }
 
         public void onFileSelected(Dialog source, File folder, String name) {
@@ -1357,7 +1316,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
     };
 
-    void onSuccess(String filepath,String fileName){
+    void onSuccess(String filepath, String fileName) {
         dialog = null;
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         audioFilePath.storeAudioFilePath(filepath);
@@ -1365,31 +1324,33 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         audioFilePath.storeAudioEnabled(false);
         initAudioPath();
     }
-    void setAudioFilePath(){
+
+    void setAudioFilePath() {
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         selected = audioFilePath.userAudioFileNameIfExist();
     }
 
-    Boolean checkAudioStatus(){
+    Boolean checkAudioStatus() {
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         return audioFilePath.fetchAudioEnabled();
     }
-    void initAudioPath(){
+
+    void initAudioPath() {
 
         setAudioFilePath();
 
         list.clear();
 
-        if(checkAudioStatus()) {
+        if (checkAudioStatus()) {
             list.add(0, "-------");
             list.add(1, selected);
-        }else {
+        } else {
             list.add(0, selected);
             list.add(1, "-------");
         }
 
 
-        list.add(2,getString(R.string.change));
+        list.add(2, getString(R.string.change));
 
 
         ArrayAdapter<String> adapterAccountAssets = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
@@ -1397,12 +1358,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         spFolderPath.setAdapter(adapterAccountAssets);
 
     }
+
     Boolean startup = false;
 
     @OnItemSelected(R.id.spFolderPath)
-    public void onItemSelectedAudio()
-    {
-        if(startup) {
+    public void onItemSelectedAudio() {
+        if (startup) {
             AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
             String selectedString = spFolderPath.getSelectedItem().toString();
             itemSelected = selectedString;
@@ -1413,7 +1374,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             } else {
                 audioFilePath.storeAudioEnabled(false);
             }
-        }else{
+        } else {
             startup = true;
         }
 
