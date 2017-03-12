@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">ліцензія</string>
+<resources>
+    <string name="license">ліцензія</string>
+    <string name="import_wif">"Імпорт з секретного ключа (WIF)"</string>
+    <string name="txt_wif_activity">Гаманець Імпорт Формат - WIF</string>
+    <string name="txt_wif_paste">Private Key (WIF)</string>
+    <string name="please_enter_wif">Будь ласка, введіть секретний ключ (WIF)</string>
+    <string name="invalid_wif">Invalid WIF</string>
+    <string name="wif_error_invalid_account">Невірний рахунок, будь ласка, перевірте WIF для помилок</string>
+    <string name="unable_to_load_wif">Неможливо завантажити WIF</string>
+    <string name="error_wif">Помилка при створенні ключа WIF</string>
+    <string name="error_brainkey_wif_export">WIF імпортований рахунок не підтримує brainkey резервне копіювання</string>
  <string name="pin_number_warning">Контактний номер повинен бути не менше 6 цифр</string>
  <string name="old_pin_number_warning">Старий пін-код повинен бути не менше 6 цифр</string>
 

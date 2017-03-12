@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
- <string name="pin_number_warning">ピン数は少なくとも6桁の数字でなければなりません</string>
+    <string name="import_wif">「秘密鍵（WIF）からのインポート」</string>
+    <string name="txt_wif_activity">ウォレットのインポートフォーマット -  WIF</string>
+    <string name="txt_wif_paste">秘密鍵（WIF）</string>
+    <string name="please_enter_wif">秘密鍵（WIF）を入力してください。</string>
+    <string name="invalid_wif">無効なWIF</string>
+    <string name="wif_error_invalid_account">無効なアカウントには、エラーを入力するためのあなたのWIFを確認してください</string>
+    <string name="unable_to_load_wif">WIFを読み込むことができません</string>
+    <string name="error_wif">WIFキーを作成中にエラーが発生しまし</string>
+    <string name="error_brainkey_wif_export">WIFはbrainkeyバックアップをサポートしていないアカウントをインポート</string>
+
+    <string name="pin_number_warning">ピン数は少なくとも6桁の数字でなければなりません</string>
  <string name="old_pin_number_warning">古いピン数は少なくとも6桁の数字でなければなりません</string>
 
 <string name="license">ライセンス</string>

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="import_wif">"Εισαγωγή από ιδιωτικό κλειδί (WIF)"</string>
+    <string name="txt_wif_activity">Πορτοφόλι Μορφή Εισαγωγές - WIF</string>
+    <string name="txt_wif_paste">Ιδιωτικού κλειδιού (WIF)</string>
+    <string name="please_enter_wif">Παρακαλούμε, εισάγετε ιδιωτικό κλειδί (WIF)</string>
+    <string name="invalid_wif">Μη έγκυρη WIF</string>
+    <string name="wif_error_invalid_account">Μη έγκυρο λογαριασμό, ελέγξτε WIF σας για τυπογραφικά λάθη</string>
+    <string name="unable_to_load_wif">Δεν είναι δυνατή η φόρτωση WIF</string>
+    <string name="error_wif">Σφάλμα κατά τη δημιουργία βασικών WIF</string>
+    <string name="error_brainkey_wif_export">WIF εισάγονται λογαριασμός δεν υποστηρίζει brainkey αντιγράφων ασφαλείας</string>
  <string name="pin_number_warning">Ο αριθμός pin θα πρέπει να είναι τουλάχιστον 6 ψηφία</string>
  <string name="old_pin_number_warning">Το παλιό αριθμό PIN πρέπει να είναι τουλάχιστον 6 ψηφία</string>
 

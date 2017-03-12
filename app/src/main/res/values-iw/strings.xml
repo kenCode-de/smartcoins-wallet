@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">רישיון</string>
+<resources>
+    <string name="license">רישיון</string>
+    <string name="import_wif">"ייבוא ​​המפתח הפרטי (WIF)"</string>
+    <string name="txt_wif_activity">פורמט ייבוא ​​ארנק - WIF</string>
+    <string name="txt_wif_paste">מפתח פרטי (WIF)</string>
+    <string name="please_enter_wif">נא להזין את המפתח הפרטי (wif)</string>
+    <string name="invalid_wif">WIF לא חוקי</string>
+    <string name="wif_error_invalid_account">חשבון לא חוקי, אנא בדוק WIF שלך עבור שגיאות הקלדה</string>
+    <string name="unable_to_load_wif">לא ניתן לטעון WIF</string>
+    <string name="error_wif">שגיאה ביצירת מפתח WIF</string>
+    <string name="error_brainkey_wif_export">WIF מיובא חשבון אינו תומך גיבוי brainkey</string>
  <string name="pin_number_warning">מספר הפינים חייב להיות לפחות 6 ספרות</string>
  <string name="old_pin_number_warning">מספר הפינים הישן חייב להיות לפחות 6 ספרות</string>
 

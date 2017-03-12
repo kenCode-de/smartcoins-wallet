@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">लाइसेंस</string>
- <string name="pin_number_warning">पिन नंबर कम से कम 6 अंकों का होना चाहिए</string>
+<resources>
+    <string name="license">लाइसेंस</string>
+    <string name="import_wif">"निजी कुंजी से आयात (WIF)"</string>
+    <string name="txt_wif_activity">वॉलेट आयात प्रारूप - WIF</string>
+    <string name="txt_wif_paste">निजी कुंजी (WIF)</string>
+    <string name="please_enter_wif">निजी कुंजी (WIF) दर्ज करें</string>
+    <string name="invalid_wif">अमान्य WIF</string>
+    <string name="wif_error_invalid_account">अवैध खाते, त्रुटियों टाइपिंग के लिए अपने WIF की जाँच करें</string>
+    <string name="unable_to_load_wif">WIF लोड करने में असमर्थ</string>
+    <string name="error_wif">WIF कुंजी बनाने में त्रुटि</string>
+    <string name="error_brainkey_wif_export">WIF brainkey बैकअप का समर्थन नहीं करता खाते का आयात</string>
+
+    <string name="pin_number_warning">पिन नंबर कम से कम 6 अंकों का होना चाहिए</string>
  <string name="old_pin_number_warning">वर्ष पिन नंबर कम से कम 6 अंकों का होना चाहिए</string>
 
 <string name="send_capital">पैसे भेजौ</string>

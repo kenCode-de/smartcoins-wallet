@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+
+   <string name="import_wif">"Import z privátny kľúč (WIF)"</string>
+   <string name="txt_wif_activity">Peňaženka import Format - WIF</string>
+   <string name="txt_wif_paste">Súkromný kľúč (WIF)</string>
+   <string name="please_enter_wif">Prosím, zadajte súkromný kľúč (wif)</string>
+   <string name="invalid_wif">neplatný WIF</string>
+   <string name="wif_error_invalid_account">Neplatný účet, skontrolujte wif za preklepy</string>
+   <string name="unable_to_load_wif">Nemožno načítať wif</string>
+   <string name="error_wif">Chyba pri vytváraní kľúča wif</string>
+   <string name="error_brainkey_wif_export">WIF dovážať účet nepodporuje brainkey zálohu</string>
+
  <string name="pin_number_warning">Číslo pin musí byť aspoň 6 číslic</string>
  <string name="old_pin_number_warning">Starý PIN musí byť aspoň 6 číslic</string>
 

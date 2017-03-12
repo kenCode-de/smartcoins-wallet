@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="import_wif">"استيراد من المفتاح الخاص (WIF)"</string>
+    <string name="txt_wif_activity">محفظة تنسيق استيراد - WIF</string>
+    <string name="txt_wif_paste">المفتاح الخاص (WIF)</string>
+    <string name="please_enter_wif">الرجاء إدخال المفتاح الخاص (WIF)</string>
+    <string name="invalid_wif">WIF غير صالح</string>
+    <string name="wif_error_invalid_account">حساب غير صالح، يرجى مراجعة WIF الخاصة بك لأخطاء الكتابة</string>
+    <string name="unable_to_load_wif">غير قادر على تحميل WIF</string>
+    <string name="error_wif">خطأ في إنشاء مفتاح WIF</string>
+    <string name="error_brainkey_wif_export">المستوردة WIF حساب لا يدعم النسخ الاحتياطي brainkey</string>
  <string name="pin_number_warning">يجب أن يكون الرقم السري لا يقل عن 6 ارقام</string>
  <string name="old_pin_number_warning">يجب أن يكون الرقم السري القديم لا يقل عن 6 ارقام</string>
 

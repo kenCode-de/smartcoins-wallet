@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
- <string name="pin_number_warning">หมายเลข PIN ต้องมีอย่างน้อย 6 หลัก</string>
+    <string name="import_wif">"นำเข้าจากคีย์ส่วนตัว (กับ)"</string>
+    <string name="txt_wif_activity">กระเป๋าสตางค์นำเข้ารูปแบบ - WIF</string>
+    <string name="txt_wif_paste">คีย์ส่วนตัว (กับ)</string>
+    <string name="please_enter_wif">กรุณาใส่กุญแจส่วนตัว (กับ)</string>
+    <string name="invalid_wif">WIF ไม่ถูกต้อง</string>
+    <string name="wif_error_invalid_account">บัญชีไม่ถูกต้องโปรดตรวจสอบ WIF ของคุณสำหรับการพิมพ์ผิดพลาด</string>
+    <string name="unable_to_load_wif">ไม่สามารถโหลด WIF</string>
+    <string name="error_wif">ข้อผิดพลาดที่สำคัญการสร้าง WIF</string>
+    <string name="error_brainkey_wif_export">WIF นำเข้าบัญชีไม่สนับสนุนการสำรองข้อมูล brainkey</string>
+
+    <string name="pin_number_warning">หมายเลข PIN ต้องมีอย่างน้อย 6 หลัก</string>
  <string name="old_pin_number_warning">จำนวนขาเก่าต้องมีอย่างน้อย 6 หลัก</string>
 
 <string name="license">การอนุญาต</string>

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">특허</string>
+<resources>
+    <string name="license">특허</string>
+    <string name="import_wif">"개인 키에서 가져 오기 (WIF)"</string>
+    <string name="txt_wif_activity">지갑 가져 오기 형식 - WIF</string>
+    <string name="txt_wif_paste">개인 키 (WIF)</string>
+    <string name="please_enter_wif">개인 키 (WIF)를 입력하세요</string>
+    <string name="invalid_wif">잘못된 WIF</string>
+    <string name="wif_error_invalid_account">잘못된 계정 오류 입력에 대한 귀하의 WIF를 확인하시기 바랍니다</string>
+    <string name="unable_to_load_wif">WIF를로드 할 수 없습니다</string>
+    <string name="error_wif">오류 WIF 키를 생성</string>
+    <string name="error_brainkey_wif_export">WIF는 brainkey 백업을 지원하지 않는 계정을 가져</string>
  <string name="pin_number_warning">핀 번호는 최소 6 자리 숫자 여야합니다</string>
  <string name="old_pin_number_warning">기존의 핀 번호는 최소 6 자리 숫자 여야합니다</string>
 

@@ -4,6 +4,16 @@
  <string name="pin_number_warning">Број пински мора бити најмање 6 цифара</string>
  <string name="old_pin_number_warning">Стари ПИН број мора бити најмање 6 цифара</string>
 
+    <string name="import_wif">"Увоз из приватног кључа (ВИФ)"</string>
+    <string name="txt_wif_activity">Новчаник Увоз Формат - ВИФ</string>
+    <string name="txt_wif_paste">Приватног кључа (ВИФ)</string>
+    <string name="please_enter_wif">Унесите приватни кључ (ВИФ)</string>
+    <string name="invalid_wif">неважећи ВИФ</string>
+    <string name="wif_error_invalid_account">Инвалид рачун, проверите ВИФ за куцање грешке</string>
+    <string name="unable_to_load_wif">Није могуће учитати ВиФ</string>
+    <string name="error_wif">Грешка при стварању ВиФ кључ</string>
+    <string name="error_brainkey_wif_export">ВИФ увезени налог не подржава браинкеи бацкуп</string>
+
 <!--<string name="license">лиценца</string>-->
 
 <!--<string name="send_capital">послати</string>-->

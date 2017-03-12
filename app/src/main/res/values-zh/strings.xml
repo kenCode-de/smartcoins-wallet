@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="import_wif">“从导入私有密钥（WIF）”</string>
+    <string name="txt_wif_activity">钱包导入格式 -  WIF</string>
+    <string name="txt_wif_paste">私钥（WIF）</string>
+    <string name="please_enter_wif">请输入私有密钥（WIF）</string>
+    <string name="invalid_wif">WIF无效</string>
+    <string name="wif_error_invalid_account">无效帐户，请检查您的WIF打字错误</string>
+    <string name="unable_to_load_wif">无法加载WIF</string>
+    <string name="error_wif">错误创建WIF关键</string>
+    <string name="error_brainkey_wif_export">WIF进口的帐户不支持brainkey备份</string>
  <string name="pin_number_warning">PIN号码必须至少6位数</string>
  <string name="old_pin_number_warning">旧的针数必须至少6位数</string>
 

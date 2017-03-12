@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="import_wif">«Import մասնավոր բանալին (կ)"</string>
+    <string name="txt_wif_activity">Դրամապանակը Import Format - կ</string>
+    <string name="txt_wif_paste">Անձնական Key (կ)</string>
+    <string name="please_enter_wif">Խնդրում ենք մուտք գործել անձնական բանալին (կ)</string>
+    <string name="invalid_wif">Անվավեր կ</string>
+    <string name="wif_error_invalid_account">Սխալ հաշիվ, խնդրում ենք ստուգել Ձեր կ մուտքագրման սխալներ</string>
+    <string name="unable_to_load_wif">Անհնար է բեռնել կ</string>
+    <string name="error_wif">Սխալ ստեղծելով կ բանալին</string>
+    <string name="error_brainkey_wif_export">Տղաների ներմուծվել հաշիվ չի աջակցում brainkey կրկնօրնկ</string>
  <string name="pin_number_warning">Փին համարը պետք է լինի առնվազն 6 նիշերն</string>
  <string name="old_pin_number_warning">Հին PIN համարը պետք է լինի առնվազն 6 նիշերն</string>
 

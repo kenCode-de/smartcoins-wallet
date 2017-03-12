@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <string name="import_wif">"Внос от частен ключ (WIF)"</string>
+    <string name="txt_wif_activity">Wallet Внос формат - WIF</string>
+    <string name="txt_wif_paste">Private Key (WIF)</string>
+    <string name="please_enter_wif">Моля, въведете частен ключ (WIF)</string>
+    <string name="invalid_wif">Невалиден WIF</string>
+    <string name="wif_error_invalid_account">Невалиден сметка, моля, проверете си WIF за печатни грешки</string>
+    <string name="unable_to_load_wif">Не може да се зареди WIF</string>
+    <string name="error_wif">Грешка при създаване на WIF ключ</string>
+    <string name="error_brainkey_wif_export">WIF внесени сметка не поддържа brainkey архивиране</string>
  <string name="pin_number_warning">ПИН кодът трябва да бъде най-малко 6 цифри</string>
  <string name="old_pin_number_warning">стария ПИН номер трябва да бъде най-малко 6 цифри</string>
 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">licenze</string>
+<resources>
+    <string name="license">licenze</string>
+    <string name="import_wif">"Importēt no privāto atslēgu (DAIF)"</string>
+    <string name="txt_wif_activity">Maku Import formāts - DAIF</string>
+    <string name="txt_wif_paste">Privātās atslēgas (DAIF)</string>
+    <string name="please_enter_wif">Ievadiet privāto atslēgu (DAIF)</string>
+    <string name="invalid_wif">Nederīga DAIF</string>
+    <string name="wif_error_invalid_account">Nederīga konts, lūdzu, pārbaudiet savu DAIF par drukas kļūdu</string>
+    <string name="unable_to_load_wif">Nevar ielādēt DAIF</string>
+    <string name="error_wif">Kļūda izveidojot DAIF taustiņu</string>
+    <string name="error_brainkey_wif_export">DAIF importēta kontu neatbalsta brainkey backup</string>
  <string name="pin_number_warning">Pin skaitam jābūt vismaz 6 cipari</string>
  <string name="old_pin_number_warning">Vecais pin skaitam jābūt vismaz 6 cipari</string>
 

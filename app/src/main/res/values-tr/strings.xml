@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">Lisans</string>
- <string name="pin_number_warning">pin numarası en az 6 basamaklı olmalıdır</string>
+<resources>
+    <string name="license">Lisans</string>
+    <string name="import_wif">"Özel anahtarı içe (WIF)"</string>
+    <string name="txt_wif_activity">Cüzdan İthalat Biçimi - WIF</string>
+    <string name="txt_wif_paste">Özel Anahtar (WIF)</string>
+    <string name="please_enter_wif">özel anahtarı (wif) girin</string>
+    <string name="invalid_wif">geçersiz WIF</string>
+    <string name="wif_error_invalid_account">Geçersiz hesap, yazım hataları için WIF kontrol edin</string>
+    <string name="unable_to_load_wif">WIF yüklenemedi</string>
+    <string name="error_wif">Hata WIF anahtar oluşturma</string>
+    <string name="error_brainkey_wif_export">WIF brainkey yedekleme desteklemiyor hesabı ithal</string>
+
+    <string name="pin_number_warning">pin numarası en az 6 basamaklı olmalıdır</string>
  <string name="old_pin_number_warning">Eski pin numarası en az 6 basamaklı olmalıdır</string>
 
 <string name="send_capital">göndermek</string>

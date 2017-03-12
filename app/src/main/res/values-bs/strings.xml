@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+
+    <string name="import_wif">"Uvoz iz privatnog ključa (WIF)"</string>
+    <string name="txt_wif_activity">Novčanik Import Format - WIF</string>
+    <string name="txt_wif_paste">Privatni ključ (WIF)</string>
+    <string name="please_enter_wif">Unesite privatni ključ (wif)</string>
+    <string name="invalid_wif">Invalid WIF</string>
+    <string name="wif_error_invalid_account">Nevažeći račun, molimo vas da provjerite WIF za unos greške</string>
+    <string name="unable_to_load_wif">Nije moguće učitati WIF</string>
+    <string name="error_wif">Greška stvaranje WIF ključ</string>
+    <string name="error_brainkey_wif_export">WIF uvezene račun ne podržava brainkey backup</string>
  <string name="pin_number_warning">Broj pin mora biti najmanje 6 cifara</string>
  <string name="old_pin_number_warning">Stari PIN broj mora biti najmanje 6 cifara</string>
 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">licenca</string>
+<resources>
+    <string name="license">licenca</string>
+    <string name="import_wif">"Uvoz iz zasebnega ključa (ženo)"</string>
+    <string name="txt_wif_activity">Denarnica Import Format - ženo</string>
+    <string name="txt_wif_paste">Zasebni ključ (ženo)</string>
+    <string name="please_enter_wif">Vnesite zasebni ključ (ženo)</string>
+    <string name="invalid_wif">Neveljavna ženo</string>
+    <string name="wif_error_invalid_account">Neveljavna račun, preverite svojo ženo za tipkarske napake</string>
+    <string name="unable_to_load_wif">Ne morem naložiti ženo</string>
+    <string name="error_wif">Napaka pri ustvarjanju ključa ženo</string>
+    <string name="error_brainkey_wif_export">Ženo uvožene račun ne podpira brainkey backup</string>
  <string name="pin_number_warning">Število pin mora biti vsaj 6 številk</string>
  <string name="old_pin_number_warning">Stara številka pin mora biti vsaj 6 številk</string>
 

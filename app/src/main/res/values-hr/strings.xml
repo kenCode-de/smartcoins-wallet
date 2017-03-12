@@ -9,6 +9,15 @@
 <!--<string name="account_create_register_or_import">Izradi račun / Registracija ili uvoz</string>-->
 
 <resources>
+    <string name="import_wif">"Uvoz iz privatnog ključa (WIF)"</string>
+    <string name="txt_wif_activity">Novčanik Import Format - WIF</string>
+    <string name="txt_wif_paste">Privatni ključ (WIF)</string>
+    <string name="please_enter_wif">Unesite privatni ključ (WIF)</string>
+    <string name="invalid_wif">Pogrešna WIF</string>
+    <string name="wif_error_invalid_account">Nevažeći račun, provjerite wif tipfelera</string>
+    <string name="unable_to_load_wif">Nije moguće učitati wif</string>
+    <string name="error_wif">Pogreška pri izradi WIF ključ</string>
+    <string name="error_brainkey_wif_export">WIF uvezeni račun ne podržava brainkey backup</string>
  <string name="pin_number_warning">Broj pin mora biti najmanje 6 znamenaka</string>
  <string name="old_pin_number_warning">Stari PIN broj mora biti najmanje 6 znamenaka</string>
 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">Engedély</string>
+<resources>
+    <string name="license">Engedély</string>
+    <string name="import_wif">"Importálás privát kulcs (WIF)"</string>
+    <string name="txt_wif_activity">Pénztárca Import Format - WIF</string>
+    <string name="txt_wif_paste">Privát kulcs (WIF)</string>
+    <string name="please_enter_wif">Kérjük, adja meg a személyes kulcs (wif)</string>
+    <string name="invalid_wif">érvénytelen WIF</string>
+    <string name="wif_error_invalid_account">Érvénytelen számla, ellenőrizze a WIF gépelési hibák</string>
+    <string name="unable_to_load_wif">Nem sikerült betölteni a WIF</string>
+    <string name="error_wif">Nem sikerült létrehozni a WIF kulcs</string>
+    <string name="error_brainkey_wif_export">WIF importált fiók nem támogatja brainkey mentés</string>
  <string name="pin_number_warning">A PIN-kódot kell legalább 6 számjegy</string>
  <string name="old_pin_number_warning">A régi PIN-kódot kell legalább 6 számjegy</string>
 

@@ -1,4 +1,13 @@
 <resources>
+   <string name="import_wif">"Tuo yksityinen avain (WIF)"</string>
+   <string name="txt_wif_activity">Wallet Tuo Format - WIF</string>
+   <string name="txt_wif_paste">Yksityinen avain (WIF)</string>
+   <string name="please_enter_wif">Anna yksityisen avaimen (wif)</string>
+   <string name="invalid_wif">Virheellinen WIF</string>
+   <string name="wif_error_invalid_account">Virheellinen tilin, tarkista WIF kirjoitusvirheitä</string>
+   <string name="unable_to_load_wif">Lataaminen ei onnistu WIF</string>
+   <string name="error_wif">Virhe luotaessa WIF avain</string>
+   <string name="error_brainkey_wif_export">WIF tuotu tili ei tue brainkey backup</string>
  <string name="pin_number_warning">PIN-koodi on oltava vähintään 6 numeroa</string>
  <string name="old_pin_number_warning">Vanha tunnusluku on oltava vähintään 6 numeroa</string>
 

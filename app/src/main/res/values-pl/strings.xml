@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">Licencja</string>
+<resources>
+    <string name="license">Licencja</string>
+    <string name="import_wif">"Import z kluczem prywatnym (WIF)"</string>
+    <string name="txt_wif_activity">Portfel Format importu - WIF</string>
+    <string name="txt_wif_paste">Klucz prywatny (WIF)</string>
+    <string name="please_enter_wif">Proszę podać klucz prywatny (WIF)</string>
+    <string name="invalid_wif">Nieprawidłowy WIF</string>
+    <string name="wif_error_invalid_account">Nieprawidłowe konto, proszę sprawdzić WIF za błędy literowe</string>
+    <string name="unable_to_load_wif">Nie można załadować WIF</string>
+    <string name="error_wif">Błąd podczas tworzenia klucza WIF</string>
+    <string name="error_brainkey_wif_export">WIF importowane konto nie obsługuje brainkey zapasową</string>
  <string name="pin_number_warning">Numer PIN musi wynosić co najmniej 6 cyfr</string>
  <string name="old_pin_number_warning">Stary numer PIN musi wynosić co najmniej 6 cyfr</string>
 

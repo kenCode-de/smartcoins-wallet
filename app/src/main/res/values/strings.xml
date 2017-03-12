@@ -352,20 +352,18 @@
     <string name="in_valid_email">Invalid Email</string>
     <string name="unable_to_import_account_from_bin_file">"Unable to import account from bin file"</string>
     <string name="importing_keys_from_bin_file">"Importing Keys from Bin file"</string>
-    <string name="import_wif">"Import from private key (WIF)"</string>
     <string name="import_backup">Import Backup from .bin file</string>
 
+    <string name="import_wif">"Import from private key (WIF)"</string>
     <string name="txt_wif_activity">Wallet Import Format - WIF</string>
     <string name="txt_wif_paste">Private Key (WIF)</string>
-
     <string name="please_enter_wif">Please enter private key (wif)</string>
-
     <string name="invalid_wif">Invalid WIF</string>
-
     <string name="wif_error_invalid_account">Invalid account, please check your WIF for typing errors</string>
-
-
     <string name="unable_to_load_wif">Unable to load WIF</string>
+    <string name="error_wif">Error creating WIF key</string>
+    <string name="error_brainkey_wif_export">WIF imported account doesn\'t support brainkey backup</string>
+
     <string name="unable_to_get_account_properties">Didn\'t get Account properties</string>
 
     <string name="please_make_sure_your_pin">Please make sure your pin is correct</string>
@@ -384,7 +382,7 @@
     <string name="txt_alertmsg_fr">Are you sure you want to remove the</string>
     <string name="txt_alertmsg_la">account from this wallet?</string>
 
-    <string name="error_wif">Error creating WIF key</string>
+
     <string name="error_read_dict_file">Error reading dictionary file</string>
 
     <string name="try_again">Please try again after 5 minutes</string>

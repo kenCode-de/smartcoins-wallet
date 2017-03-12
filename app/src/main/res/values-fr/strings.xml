@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">Licence</string>
+<resources>
+    <string name="license">Licence</string>
+    <string name="import_wif">"Importer à partir de clé privée (WIF)"</string>
+    <string name="txt_wif_activity">Porte-monnaie Format d\'importation - WIF</string>
+    <string name="txt_wif_paste">Clé privée (WIF)</string>
+    <string name="please_enter_wif">S\'il vous plaît entrez la clé privée (avec)</string>
+    <string name="invalid_wif">Invalid WIF</string>
+    <string name="wif_error_invalid_account">compte non valide, s\'il vous plaît vérifier votre WIF pour les fautes de frappe</string>
+    <string name="unable_to_load_wif">Impossible de charger WIF</string>
+    <string name="error_wif">Erreur de création clé WIF</string>
+    <string name="error_brainkey_wif_export">WIF importé compte ne prend pas en charge la sauvegarde brainkey</string>
  <string name="pin_number_warning">Le nombre de broches doit être d\'au moins 6 chiffres</string>
  <string name="old_pin_number_warning">L\'ancien numéro de broche doit être d\'au moins 6 chiffres</string>
 

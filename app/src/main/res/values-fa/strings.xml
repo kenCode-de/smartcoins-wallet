@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">مجوز</string>
+<resources>
+    <string name="license">مجوز</string>
+    <string name="import_wif">"واردات از کلید خصوصی (WIF)"</string>
+    <string name="txt_wif_activity">کیف پول واردات قالب - WIF</string>
+    <string name="txt_wif_paste">کلید خصوصی (WIF)</string>
+    <string name="please_enter_wif">لطفا کلید خصوصی (WIF) را وارد کنید</string>
+    <string name="invalid_wif">نامعتبر WIF</string>
+    <string name="wif_error_invalid_account">حساب اشتباه است، لطفا WIF خود را چک کنید برای تایپ کردن خطا</string>
+    <string name="unable_to_load_wif">قادر به بارگیری WIF</string>
+    <string name="error_wif">خطا در ایجاد کلید WIF</string>
+    <string name="error_brainkey_wif_export">WIF وارد حساب پشتیبان گیری brainkey را پشتیبانی نمی کند</string>
  <string name="pin_number_warning">تعداد پین باید حداقل 6 رقم باشد</string>
  <string name="old_pin_number_warning">تعداد پین های قدیمی باید حداقل 6 رقم باشد</string>
 

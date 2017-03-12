@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">licencija</string>
+<resources>
+    <string name="license">licencija</string>
+    <string name="import_wif">"Importuoti iš privataus rakto (WIF)</string>
+    <string name="txt_wif_activity">Piniginė Importas Formatas - WIF</string>
+    <string name="txt_wif_paste">Asmeninis raktas (WIF)</string>
+    <string name="please_enter_wif">Prašome įvesti privatų raktą (WIF)</string>
+    <string name="invalid_wif">Neteisingas WIF</string>
+    <string name="wif_error_invalid_account">Neteisingas vartotojas, prašome patikrinti savo WIF už spausdinimo klaidos</string>
+    <string name="unable_to_load_wif">Nepavyko įkelti WIF</string>
+    <string name="error_wif">Klaida kuriant WIF raktą</string>
+    <string name="error_brainkey_wif_export">WIF importuoti sąskaitą nepalaiko brainkey atsarginę kopiją</string>
  <string name="pin_number_warning">Pin skaičius turi būti ne mažesnis kaip 6 skaitmenys</string>
  <string name="old_pin_number_warning">Senas PIN kodas turi būti bent 6 skaitmenys</string>
 

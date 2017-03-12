@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">Litsents</string>
+<resources>
+    <string name="license">Litsents</string>
+    <string name="import_wif">"Impordi isikliku võtme (WIFI)"</string>
+    <string name="txt_wif_activity">Rahakott Import Format - WIFI</string>
+    <string name="txt_wif_paste">Private Key (WIFI)</string>
+    <string name="please_enter_wif">Palun sisesta isikliku võtme (naisega)</string>
+    <string name="invalid_wif">Vale WIF</string>
+    <string name="wif_error_invalid_account">Vale, kontrollige oma WIF kirjutades vigu</string>
+    <string name="unable_to_load_wif">Ei saa laadida WIF</string>
+    <string name="error_wif">Viga WIF võti</string>
+    <string name="error_brainkey_wif_export">WIFI imporditud konto ei toeta brainkey backup</string>
  <string name="pin_number_warning">PIN-koodi peab olema vähemalt 6 numbrit</string>
  <string name="old_pin_number_warning">Vana pin number peab olema vähemalt 6 numbrit</string>
 

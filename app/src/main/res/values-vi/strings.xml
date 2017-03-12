@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources><string name="license">giấy phép</string>
+<resources>
+    <string name="license">giấy phép</string>
+    <string name="import_wif">"Nhập từ khóa riêng (WIF)"</string>
+    <string name="txt_wif_activity">Wallet nhập Format - WIF</string>
+    <string name="txt_wif_paste">Private Key (WIF)</string>
+    <string name="please_enter_wif">Vui lòng nhập khóa riêng (wif)</string>
+    <string name="invalid_wif">WIF không hợp lệ</string>
+    <string name="wif_error_invalid_account">tài khoản không hợp lệ, xin vui lòng kiểm tra WIF của bạn về lỗi đánh máy</string>
+    <string name="unable_to_load_wif">Không thể tải WIF</string>
+    <string name="error_wif">Lỗi tạo khóa WIF</string>
+    <string name="error_brainkey_wif_export">WIF nhập tài khoản không hỗ trợ sao lưu brainkey</string>
  <string name="pin_number_warning">Số lượng pin phải có ít nhất 6 chữ số</string>
  <string name="old_pin_number_warning">Số lượng pin cũ phải có ít nhất 6 chữ số</string>
 
