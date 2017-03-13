@@ -649,6 +649,19 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         return "";
     }
 
+    /*
+     *   Get WIF from the active logged account
+     */
+    private String getWif() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                return accountDetails.get(i).wif_key;
+            }
+        }
+
+        return "";
+    }
+
     private String getAccountName() {
         for (int i = 0; i < accountDetails.size(); i++) {
             if (accountDetails.get(i).isSelected) {
@@ -1250,7 +1263,19 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         String _pinCode = getPin();
 
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile(_brnKey, _accountName, _pinCode);
+
+        //Normal Accounts
+        if (!_brnKey.isEmpty()) {
+            myBinHelper.createBackupBinFile(_brnKey, _accountName, _pinCode);
+        }
+        //Brainkey is empty only for WIF imported accounts
+        {
+            String _wif = getWif();
+            myBinHelper.createBackupBinFileFromWif(_wif, _accountName, _pinCode);
+        }
+
+
+
     }
 
     @Override

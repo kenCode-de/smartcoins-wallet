@@ -152,6 +152,37 @@ public class BinHelper {
         }
     }
 
+    public void getBinBytesFromWif(final String pin, final String wif, final String accountName) {
+
+        try {
+            ArrayList<Wallet> wallets = new ArrayList<>();
+            ArrayList<LinkedAccount> accounts = new ArrayList<>();
+            ArrayList<PrivateKeyBackup> keys = new ArrayList<>();
+
+            /*Wallet wallet = new Wallet(accountName, brainKey.getBrainKey(), brainKey.getSequenceNumber(), Chains.BITSHARES.CHAIN_ID, pin);
+            wallets.add(wallet);
+
+            PrivateKeyBackup keyBackup = new PrivateKeyBackup(brainKey.getPrivateKey().getPrivKeyBytes(),
+                    brainKey.getSequenceNumber(), brainKey.getSequenceNumber(), wallet.getEncryptionKey(pin));
+            keys.add(keyBackup);
+
+            LinkedAccount linkedAccount = new LinkedAccount(accountName, Chains.BITSHARES.CHAIN_ID);
+            accounts.add(linkedAccount);
+
+            WalletBackup backup = new WalletBackup(wallets, keys, accounts);
+            byte[] results = FileBin.serializeWalletBackup(backup, pin);
+            List<Integer> resultFile = new ArrayList<>();
+            for (byte result : results) {
+                resultFile.add(result & 0xff);
+            }
+            saveBinContentToFile(resultFile, accountName);*/
+        } catch (Exception e) {
+            hideDialog(false);
+            Log.e(TAG, "Exception. Msg: " + e.getMessage());
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.unable_to_generate_bin_format_for_key), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     public void saveBinContentToFile(List<Integer> content, String _accountName) {
         changeDialogMsg(myActivity.getResources().getString(R.string.saving_bin_file_to) + " : " + myActivity.getResources().getString(R.string.folder_name));
@@ -225,6 +256,36 @@ public class BinHelper {
             @Override
             public void run() {
                 getBinBytesFromBrainkey(pinCode, _brnKey, _accountName);
+            }
+        };
+
+        mHandler.postDelayed(getFormat, 200);
+    }
+
+    /*
+     * Create the backup bin file for WIF imported account
+     */
+    public void createBackupBinFileFromWif(final String _wif, final String _accountName, final String pinCode) {
+        showDialog(myActivity.getResources().getString(R.string.creating_backup_file), myActivity.getResources().getString(R.string.fetching_key));
+
+        if (_wif.isEmpty()) {
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.unable_to_load_wif), Toast.LENGTH_LONG).show();
+            hideDialog(false);
+            return;
+        }
+
+        if (pinCode.isEmpty()) {
+            hideDialog(false);
+            Toast.makeText(myActivity, myActivity.getResources().getString(R.string.invalid_pin), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        changeDialogMsg(myActivity.getResources().getString(R.string.generating_bin_format));
+
+        Runnable getFormat = new Runnable() {
+            @Override
+            public void run() {
+                getBinBytesFromBrainkey(pinCode, _wif, _accountName);
             }
         };
 
