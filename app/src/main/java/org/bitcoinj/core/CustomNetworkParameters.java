@@ -10,28 +10,16 @@ import java.util.Objects;
 import de.bitsharesmunich.cryptocoincore.base.CoinDefinitions;
 import de.bitsharesmunich.cryptocoincore.dash.DashNetworkParameters;
 
-import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
-import static de.bitsharesmunich.cryptocoincore.base.Coin.DASH;
-
 /**
  *
  */
 
 public abstract class CustomNetworkParameters extends NetworkParameters {
-    protected CoinDefinitions coinDefinitions;
-    protected String strSporkKey;
-    String strMasternodePaymentsPubKey;
-    String strDarksendPoolDummyAddress;
-    long nStartMasternodePayments;
-
-    public String getSporkKey() {
-        return strSporkKey;
-    }
 
     protected CustomNetworkParameters(CoinDefinitions coinDefinitions) {
         super();
         alertSigningKey = Utils.HEX.decode(coinDefinitions.satoshiKey);
-        this.coinDefinitions = coinDefinitions;
+        CoinDefinitions coinDefinitions1 = coinDefinitions;
         genesisBlock = createGenesis(this, coinDefinitions);
     }
     //TODO:  put these bytes into the CoinDefinition
@@ -61,9 +49,7 @@ public abstract class CustomNetworkParameters extends NetworkParameters {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        return getId().equals(((NetworkParameters)o).getId());
+        return this == o || !(o == null || getClass() != o.getClass()) && getId().equals(((NetworkParameters) o).getId());
     }
 
     @Override
@@ -77,7 +63,7 @@ public abstract class CustomNetworkParameters extends NetworkParameters {
                 return NetworkParameters.fromID(ID_MAINNET);
             case DASH:
                 return new DashNetworkParameters();
-        };
+        }
         return null;
     }
 }

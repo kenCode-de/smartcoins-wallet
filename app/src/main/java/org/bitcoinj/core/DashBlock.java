@@ -15,52 +15,48 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-import de.bitsharesmunich.cryptocoincore.dash.X11;
-
-import static org.bitcoinj.core.Coin.FIFTY_COINS;
+import static de.bitsharesmunich.cryptocoincore.dash.X11.*;
 import static org.bitcoinj.core.Sha256Hash.hashTwice;
 
 /**
+ *
+ *
  * Created by hvarona on 14/03/2017.
  */
 
-public class DashBlock extends Block {
-    static final long ALLOWED_TIME_DRIFT = 2 * 60 * 60; // Same value as Bitcoin Core.
+class DashBlock extends Block {
+    private static final long ALLOWED_TIME_DRIFT = 2 * 60 * 60; // Same value as Bitcoin Core.
 
     /**
      * A constant shared by the entire network: how large in bytes a block is allowed to be. One day we may have to
      * upgrade everyone to change this, so Bitcoin can continue to grow. For now it exists as an anti-DoS measure to
      * avoid somebody creating a titanically huge but valid block and forcing everyone to download/store it forever.
      */
-    public static final int MAX_BLOCK_SIZE = 1000000;
+    private static final int MAX_BLOCK_SIZE = 1000000;
     /**
      * A "sigop" is a signature verification operation. Because they're expensive we also impose a separate limit on
      * the number in a block to prevent somebody mining a huge block that has way more sigops than normal, so is very
      * expensive/slow to verify.
      */
-    public static final int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE / 50;
-
-    /** A value for difficultyTarget (nBits) that allows half of all possible hash solutions. Used in unit testing. */
-    public static final long EASIEST_DIFFICULTY_TARGET = 0x207fFFFFL;
+    private static final int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE / 50;
 
     /** Value to use if the block height is unknown */
-    public static final int BLOCK_HEIGHT_UNKNOWN = -1;
+    private static final int BLOCK_HEIGHT_UNKNOWN = -1;
     /** Height of the first block */
-    public static final int BLOCK_HEIGHT_GENESIS = 0;
+    private static final int BLOCK_HEIGHT_GENESIS = 0;
 
-    public static final long BLOCK_VERSION_GENESIS = 1;
+    private static final long BLOCK_VERSION_GENESIS = 1;
     /** Block version introduced in BIP 34: Height in coinbase */
-    public static final long BLOCK_VERSION_BIP34 = 2;
+    private static final long BLOCK_VERSION_BIP34 = 2;
     /** Block version introduced in BIP 66: Strict DER signatures */
-    public static final long BLOCK_VERSION_BIP66 = 3;
+    private static final long BLOCK_VERSION_BIP66 = 3;
     /** Block version introduced in BIP 65: OP_CHECKLOCKTIMEVERIFY */
-    public static final long BLOCK_VERSION_BIP65 = 4;
+    private static final long BLOCK_VERSION_BIP65 = 4;
 
     // Fields defined as part of the protocol format.
     private long version;
@@ -73,18 +69,19 @@ public class DashBlock extends Block {
     // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
     @Nullable
+    private
     List<Transaction> transactions;
 
     /** Stores the hash of the block. If null, getHash() will recalculate it. */
     private Sha256Hash hash;
 
-    protected boolean headerBytesValid;
-    protected boolean transactionBytesValid;
+    private boolean headerBytesValid;
+    private boolean transactionBytesValid;
 
     // Blocks can be encoded in a way that will use more bytes than is optimal (due to VarInts having multiple encodings)
     // MAX_BLOCK_SIZE must be compared to the optimal encoding, not the actual encoding, so when parsing, we keep track
     // of the size of the ideal encoding in addition to the actual message size (which Message needs)
-    protected int optimalEncodingMessageSize;
+    private int optimalEncodingMessageSize;
 
     /** Special case constructor, used for the genesis node, cloneAsHeader and unit tests. */
     DashBlock(NetworkParameters params, long setVersion) {
@@ -99,88 +96,6 @@ public class DashBlock extends Block {
     }
 
     /**
-     * Constructs a block object from the Bitcoin wire format.
-     * @deprecated Use {@link BitcoinSerializer#makeBlock(byte[])} instead.
-     */
-    @Deprecated
-    public DashBlock(NetworkParameters params, byte[] payloadBytes) throws ProtocolException {
-        super(params, payloadBytes);
-    }
-
-    /**
-     * Construct a block object from the Bitcoin wire format.
-     * @param params NetworkParameters object.
-     * @param payloadBytes the payload to extract the block from.
-     * @param serializer the serializer to use for this message.
-     * @param length The length of message if known.  Usually this is provided when deserializing of the wire
-     * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
-     * @throws ProtocolException
-     */
-    public DashBlock(NetworkParameters params, byte[] payloadBytes, MessageSerializer serializer, int length)
-            throws ProtocolException {
-        super(params, payloadBytes, serializer, length);
-    }
-
-    /**
-     * Construct a block object from the Bitcoin wire format.
-     * @param params NetworkParameters object.
-     * @param payloadBytes the payload to extract the block from.
-     * @param offset The location of the first payload byte within the array.
-     * @param serializer the serializer to use for this message.
-     * @param length The length of message if known.  Usually this is provided when deserializing of the wire
-     * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
-     * @throws ProtocolException
-     */
-    public DashBlock(NetworkParameters params, byte[] payloadBytes, int offset, MessageSerializer serializer, int length)
-            throws ProtocolException {
-        super(params, payloadBytes, offset, serializer, length);
-    }
-
-    /**
-     * Construct a block object from the Bitcoin wire format. Used in the case of a block
-     * contained within another message (i.e. for AuxPoW header).
-     *
-     * @param params NetworkParameters object.
-     * @param payloadBytes Bitcoin protocol formatted byte array containing message content.
-     * @param offset The location of the first payload byte within the array.
-     * @param parent The message element which contains this block, maybe null for no parent.
-     * @param serializer the serializer to use for this block.
-     * @param length The length of message if known.  Usually this is provided when deserializing of the wire
-     * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
-     * @throws ProtocolException
-     */
-    public DashBlock(NetworkParameters params, byte[] payloadBytes, int offset, @Nullable Message parent, MessageSerializer serializer, int length)
-            throws ProtocolException {
-        // TODO: Keep the parent
-        super(params, payloadBytes, offset, parent,serializer, length);
-    }
-
-    /**
-     * Construct a block initialized with all the given fields.
-     * @param params Which network the block is for.
-     * @param version This should usually be set to 1 or 2, depending on if the height is in the coinbase input.
-     * @param prevBlockHash Reference to previous block in the chain or {@link Sha256Hash#ZERO_HASH} if genesis.
-     * @param merkleRoot The root of the merkle tree formed by the transactions.
-     * @param time UNIX time when the block was mined.
-     * @param difficultyTarget Number which this block hashes lower than.
-     * @param nonce Arbitrary number to make the block hash lower than the target.
-     * @param transactions List of transactions including the coinbase.
-     */
-    public DashBlock(NetworkParameters params, long version, Sha256Hash prevBlockHash, Sha256Hash merkleRoot, long time,
-                     long difficultyTarget, long nonce, List<Transaction> transactions) {
-        super(params,version,prevBlockHash,merkleRoot,time,difficultyTarget,nonce,transactions);
-        this.version = version;
-        this.prevBlockHash = prevBlockHash;
-        this.merkleRoot = merkleRoot;
-        this.time = time;
-        this.difficultyTarget = difficultyTarget;
-        this.nonce = nonce;
-        this.transactions = new LinkedList<>();
-        this.transactions.addAll(transactions);
-    }
-
-
-    /**
      * <p>A utility method that calculates how much new Bitcoin would be created by the block at the given height.
      * The inflation of Bitcoin is predictable and drops roughly every 4 years (210,000 blocks). At the dawn of
      * the system it was 50 coins per block, in late 2012 it went to 25 coins per block, and so on. The size of
@@ -191,7 +106,6 @@ public class DashBlock extends Block {
      */
 
     public Coin getBlockInflation(int height) {
-        int COIN = 1;
         Coin nSubsidy = Coin.valueOf(100, 0);
         if (height == 1)
             nSubsidy = Coin.valueOf(420000, 0);
@@ -228,15 +142,6 @@ public class DashBlock extends Block {
         transactionBytesValid = serializer.isParseRetainMode();
     }
 
-    private static final long START_MASTERNODE_PAYMENTS_1 = 1401033600L; //Sun, 25 May 2014 16:00:00 GMT
-    private static final long START_MASTERNODE_PAYMENTS_STOP_1 = 1401134533L; // Mon, 26 May 2014 20:02:13 GMT
-
-    private static final long START_MASTERNODE_PAYMENTS = 1403728576L; //Fri, 20 Jun 2014 16:00:00 GMT
-    //private static final long START_MASTERNODE_PAYMENTS_STOP = ?
-
-    private static final long START_MASTERNODE_PAYMENTS_TESTNET_1 = 1401757793;
-    private static final long START_MASTERNODE_PAYMENTS_TESTNET = 1403568776L;
-
     @Override
     protected void parse() throws ProtocolException {
         // header
@@ -247,7 +152,7 @@ public class DashBlock extends Block {
         time = readUint32();
         difficultyTarget = readUint32();
         nonce = readUint32();
-        hash = Sha256Hash.wrapReversed(X11.x11Digest(payload, offset, cursor - offset));
+        hash = Sha256Hash.wrapReversed(x11Digest(payload, offset, cursor - offset));
         headerBytesValid = serializer.isParseRetainMode();
 
         // transactions
@@ -291,11 +196,9 @@ public class DashBlock extends Block {
             return;
         }
 
-        if (transactions != null) {
-            stream.write(new VarInt(transactions.size()).encode());
-            for (Transaction tx : transactions) {
-                tx.bitcoinSerialize(stream);
-            }
+        stream.write(new VarInt(transactions.size()).encode());
+        for (Transaction tx : transactions) {
+            tx.bitcoinSerialize(stream);
         }
         //writeMasterNodeVotes(stream);
     }
@@ -303,7 +206,6 @@ public class DashBlock extends Block {
      * Special handling to check if we have a valid byte array for both header
      * and transactions
      *
-     * @throws IOException
      */
     @Override
     public byte[] bitcoinSerialize() {
@@ -394,7 +296,7 @@ public class DashBlock extends Block {
         try {
             ByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(HEADER_SIZE);
             writeHeader(bos);
-            return Sha256Hash.wrapReversed(X11.x11Digest(bos.toByteArray()));
+            return Sha256Hash.wrapReversed(x11Digest(bos.toByteArray()));
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
         }
@@ -557,6 +459,7 @@ public class DashBlock extends Block {
         // Check there aren't too many signature verifications in the block. This is an anti-DoS measure, see the
         // comments for MAX_BLOCK_SIGOPS.
         int sigOps = 0;
+        assert transactions != null;
         for (Transaction tx : transactions) {
             sigOps += tx.getSigOpCount();
         }
@@ -607,8 +510,9 @@ public class DashBlock extends Block {
         //    2     3    4  4
         //  / \   / \   / \
         // t1 t2 t3 t4 t5 t5
-        ArrayList<byte[]> tree = new ArrayList<byte[]>();
+        ArrayList<byte[]> tree = new ArrayList<>();
         // Start by adding all the hashes of the transactions as leaves of the tree.
+        assert transactions != null;
         for (Transaction t : transactions) {
             tree.add(t.getHash().getBytes());
         }
@@ -640,8 +544,10 @@ public class DashBlock extends Block {
     private void checkTransactions(final int height, final EnumSet<VerifyFlag> flags)
             throws VerificationException {
         // The first transaction in a block must always be a coinbase transaction.
-        if (!transactions.get(0).isCoinBase())
+        assert transactions != null;
+        if (!transactions.get(0).isCoinBase()) {
             throw new VerificationException("First tx is not coinbase");
+        }
         if (flags.contains(Block.VerifyFlag.HEIGHT_IN_COINBASE) && height >= BLOCK_HEIGHT_GENESIS) {
             transactions.get(0).checkCoinBaseHeight(height);
         }
@@ -684,6 +590,7 @@ public class DashBlock extends Block {
         // an invalid block, but if we didn't validate this then an untrusted man-in-the-middle could obtain the next
         // valid block from the network and simply replace the transactions in it with their own fictional
         // transactions that reference spent or non-existant inputs.
+        assert transactions != null;
         if (transactions.isEmpty())
             throw new VerificationException("Block had no transactions");
         if (this.getOptimalEncodingMessageSize() > MAX_BLOCK_SIZE)
@@ -710,9 +617,7 @@ public class DashBlock extends Block {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        return getHash().equals(((Block)o).getHash());
+        return this == o || !(o == null || getClass() != o.getClass()) && getHash().equals(((Block) o).getHash());
     }
 
     @Override
@@ -748,7 +653,7 @@ public class DashBlock extends Block {
     void addTransaction(Transaction t, boolean runSanityChecks) {
         unCacheTransactions();
         if (transactions == null) {
-            transactions = new ArrayList<Transaction>();
+            transactions = new ArrayList<>();
         }
         t.setParent(this);
         if (runSanityChecks && transactions.size() == 0 && !t.isCoinBase())
@@ -855,7 +760,7 @@ public class DashBlock extends Block {
     @VisibleForTesting
     void addCoinbaseTransaction(byte[] pubKeyTo, Coin value, final int height) {
         unCacheTransactions();
-        transactions = new ArrayList<Transaction>();
+        transactions = new ArrayList<>();
         Transaction coinbase = new Transaction(params);
         final ScriptBuilder inputBuilder = new ScriptBuilder();
 
@@ -879,7 +784,7 @@ public class DashBlock extends Block {
         adjustLength(transactions.size(), coinbase.length);
     }
 
-    static final byte[] EMPTY_BYTES = new byte[32];
+    private static final byte[] EMPTY_BYTES = new byte[32];
 
     // It's pretty weak to have this around at runtime: fix later.
     private static final byte[] pubkeyForTesting = new ECKey().getPubKey();
@@ -889,7 +794,7 @@ public class DashBlock extends Block {
      */
     @VisibleForTesting
     public Block createNextBlock(Address to, long version, long time, int blockHeight) {
-        return createNextBlock(to, version, null, time, pubkeyForTesting, FIFTY_COINS, blockHeight);
+        return createNextBlock(to, version, null, time, pubkeyForTesting, Coin.FIFTY_COINS, blockHeight);
     }
 
     /**
@@ -909,7 +814,7 @@ public class DashBlock extends Block {
         if (to != null) {
             // Add a transaction paying 50 coins to the "to" address.
             Transaction t = new Transaction(params);
-            t.addOutput(new TransactionOutput(params, t, FIFTY_COINS, to));
+            t.addOutput(new TransactionOutput(params, t, Coin.FIFTY_COINS, to));
             // The input does not really need to be a valid signature, as long as it has the right general form.
             TransactionInput input;
             if (prevOut == null) {
@@ -947,7 +852,7 @@ public class DashBlock extends Block {
 
     @VisibleForTesting
     public Block createNextBlock(@Nullable Address to, TransactionOutPoint prevOut) {
-        return createNextBlock(to, BLOCK_VERSION_GENESIS, prevOut, getTimeSeconds() + 5, pubkeyForTesting, FIFTY_COINS, BLOCK_HEIGHT_UNKNOWN);
+        return createNextBlock(to, BLOCK_VERSION_GENESIS, prevOut, getTimeSeconds() + 5, pubkeyForTesting, Coin.FIFTY_COINS, BLOCK_HEIGHT_UNKNOWN);
     }
 
     @VisibleForTesting
@@ -957,12 +862,12 @@ public class DashBlock extends Block {
 
     @VisibleForTesting
     public Block createNextBlock(@Nullable Address to) {
-        return createNextBlock(to, FIFTY_COINS);
+        return createNextBlock(to, Coin.FIFTY_COINS);
     }
 
     @VisibleForTesting
     public Block createNextBlockWithCoinbase(long version, byte[] pubKey, Coin coinbaseValue, final int height) {
-        return createNextBlock(null, version, (TransactionOutPoint) null,
+        return createNextBlock(null, version, null,
                 Utils.currentTimeSeconds(), pubKey, coinbaseValue, height);
     }
 
@@ -972,8 +877,8 @@ public class DashBlock extends Block {
      */
     @VisibleForTesting
     Block createNextBlockWithCoinbase(long version, byte[] pubKey, final int height) {
-        return createNextBlock(null, version, (TransactionOutPoint) null,
-                Utils.currentTimeSeconds(), pubKey, FIFTY_COINS, height);
+        return createNextBlock(null, version, null,
+                Utils.currentTimeSeconds(), pubKey, Coin.FIFTY_COINS, height);
     }
 
     @VisibleForTesting
@@ -993,6 +898,7 @@ public class DashBlock extends Block {
      * purely a header).
      */
     public boolean hasTransactions() {
+        assert this.transactions != null;
         return !this.transactions.isEmpty();
     }
 
