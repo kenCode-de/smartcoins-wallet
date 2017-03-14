@@ -16,7 +16,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.interfaces.ContactsDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.AddEditContacts;
 import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
 import de.bitshares_munich.smartcoinswallet.R;
@@ -89,7 +88,6 @@ public class GeneralCoinContactsFragment extends Fragment implements ContactsDel
     }
     @OnClick(R.id.addcontact)
     public void AddContact(){
-        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), AddEditContacts.class);
         intent.putExtra("activity",99999);
         intent.putExtra("coin",this.coin.name());
@@ -103,7 +101,6 @@ public class GeneralCoinContactsFragment extends Fragment implements ContactsDel
     }
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
-        ((InternalMovementListener)getActivity()).onInternalAppMove();
         Intent intent = new Intent(getActivity(), ShareContact.class);
         startActivity(intent);
     }

@@ -999,7 +999,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         Intent intent = new Intent(this, QRCodeActivity.class);
         intent.putExtra("id", 0);
         startActivityForResult(intent, 90);
-        this.onInternalAppMove();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1796,7 +1795,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.OnClickSettings_send_screen_activity)
     void OnClickSettings() {
-        this.onInternalAppMove();
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }

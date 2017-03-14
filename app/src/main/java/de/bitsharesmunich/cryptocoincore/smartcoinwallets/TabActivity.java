@@ -65,7 +65,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.interfaces.LockListener;
 import de.bitshares_munich.interfaces.UpdatedAccountListener;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
@@ -631,12 +630,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
 
     @OnClick(R.id.OnClickSettings_TabActivity)
     void OnClickSettings() {
-        this.onInternalAppMove();
         ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
         Fragment currentFragment = adapter.getRegisteredFragment(viewPager.getCurrentItem());
-        if(currentFragment instanceof  InternalMovementListener){
-            ((InternalMovementListener) currentFragment).onInternalAppMove();
-        }
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }

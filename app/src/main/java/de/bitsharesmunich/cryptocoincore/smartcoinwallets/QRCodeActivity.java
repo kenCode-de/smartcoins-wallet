@@ -136,7 +136,6 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
         intent.putExtras(conData);
         intent.putExtra("id",5);
         intent.putExtra(getString(R.string.coin),coin.name());
-        this.onInternalAppMove();
         startActivity(intent);
         finish();
     }

@@ -35,7 +35,6 @@ import java.util.UUID;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.bitshares_munich.interfaces.InternalMovementListener;
 import de.bitshares_munich.models.TransactionSmartCoin;
 import de.bitshares_munich.smartcoinswallet.BaseActivity;
 import de.bitshares_munich.smartcoinswallet.BuildConfig;
@@ -240,7 +239,6 @@ public class RecieveActivity extends BaseActivity {
             // because we don't want to keep asking the user for the pin number again when he returns
             // from the sharing scree. Perhaps this should be renamed to "intentionalAppMove" to
             // better reflect this situation.
-            this.onInternalAppMove();
             startActivity(Intent.createChooser(sharingIntent, this.getString(R.string.share_qr_code)));
         } catch (Exception ignored) {
 
@@ -317,13 +315,11 @@ public class RecieveActivity extends BaseActivity {
     @OnClick(R.id.ivGotoKeypad)
     void gotoKeypad() {
         System.out.println("RecieveActivity Keypad activity");
-        this.onInternalAppMove();
         Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
         intent.putExtra(getString(R.string.coin), coin.name());
         intent.putExtra(SplashActivity.KEY_ASK_FOR_PIN, false);
-        this.onInternalAppMove();
         startActivity(intent);
         finish();
     }
@@ -345,7 +341,6 @@ public class RecieveActivity extends BaseActivity {
                         intent.putExtra("trx", transactions[0].trx);
                         intent.putExtra("receiver_id", transactions[0].account_id);
                         intent.putExtra("sender_id", transactions[0].sender_id);
-                        ((InternalMovementListener) RecieveActivity.this).onInternalAppMove();
                         startActivity(intent);
                         finish();
                     } else {
@@ -396,7 +391,6 @@ public class RecieveActivity extends BaseActivity {
     @OnClick(R.id.OnClickSettings_rcv_screen_activity)
     void OnClickSettings() {
         Intent intent = new Intent(this, SettingActivity.class);
-        this.onInternalAppMove();
         startActivity(intent);
     }
 }

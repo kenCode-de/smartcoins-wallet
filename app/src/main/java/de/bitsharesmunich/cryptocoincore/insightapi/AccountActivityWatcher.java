@@ -113,6 +113,8 @@ public class AccountActivityWatcher {
         this.context = context;
         System.out.println("accountActivityWatcher " + serverUrl);
         try {
+            IO.Options opts = new IO.Options();
+            System.out.println("accountActivityWatcher default path " + opts.path);
             this.socket = IO.socket(serverUrl);
             this.socket.on(Socket.EVENT_CONNECT, onConnect);
             this.socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
