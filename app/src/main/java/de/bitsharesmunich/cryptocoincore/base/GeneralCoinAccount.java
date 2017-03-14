@@ -37,8 +37,11 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     private final static int ADDRESS_GAP = 20;
 
-    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    private final int coinNumber;
+
+    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed,int coinNumber, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
         super(id, name, coin, seed);
+        this.coinNumber = coinNumber;
         this.accountNumber = accountNumber;
         this.lastExternalIndex = lastExternalIndex;
         this.lastChangeIndex = lastChangeIndex;
@@ -53,7 +56,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         //BIP44
         DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(seed.getSeed());
         DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(masterKey, new ChildNumber(44, true));
-        DeterministicKey coinKey = HDKeyDerivation.deriveChildKey(purposeKey, new ChildNumber(0, true));
+        DeterministicKey coinKey = HDKeyDerivation.deriveChildKey(purposeKey, new ChildNumber(coinNumber, true));
         accountKey = HDKeyDerivation.deriveChildKey(coinKey, new ChildNumber(accountNumber, true));
         externalKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(0, false));
         changeKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(1, false));

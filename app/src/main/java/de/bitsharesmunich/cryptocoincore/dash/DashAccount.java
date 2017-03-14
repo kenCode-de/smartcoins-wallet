@@ -1,7 +1,20 @@
-package de.bitsharesmunich.cryptocoincore.bitcoin;
+package de.bitsharesmunich.cryptocoincore.dash;
 
 import android.content.Context;
 
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.Balance;
+import static de.bitsharesmunich.cryptocoincore.base.Coin.DASH;
+import org.bitcoinj.core.CustomNetworkParameters;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
+import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
+import de.bitsharesmunich.graphenej.Util;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
@@ -12,41 +25,26 @@ import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.script.Script;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
-import de.bitsharesmunich.cryptocoincore.base.Balance;
-import de.bitsharesmunich.cryptocoincore.base.GTxIO;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
-import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
-import de.bitsharesmunich.graphenej.Util;
-
-import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
-
 /**
- * Created by henry on 05/02/2017.
+ * Created by hvarona on 14/03/2017.
  */
 
-public class BitcoinAccount extends GeneralCoinAccount {
+public class DashAccount extends GeneralCoinAccount {
 
-    private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
+    private NetworkParameters param = CustomNetworkParameters.fromCoin(DASH);
 
-    private final static int BITCOIN_ACCOUNT_NUMBER =0;
+    private static final int DASH_COIN_NUMBER = 5;
 
-    BitcoinAccount(long id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
-        super(id, name, BITCOIN, seed, BITCOIN_ACCOUNT_NUMBER, accountNumber, lastExternalIndex, lastChangeIndex);
-
+    DashAccount(long id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+        super(id, name, DASH, seed, DASH_COIN_NUMBER, accountNumber, lastExternalIndex, lastChangeIndex);
     }
 
-    public BitcoinAccount(final AccountSeed seed, String name) {
+    public DashAccount(final AccountSeed seed, String name) {
         this(seed, name, false);
     }
 
-    BitcoinAccount(final AccountSeed seed, String name, boolean importing) {
-        super(-1, name, BITCOIN, seed, BITCOIN_ACCOUNT_NUMBER, 0, 0, 0);
+    DashAccount(final AccountSeed seed, String name, boolean importing) {
+        super(-1, name, DASH, seed, DASH_COIN_NUMBER, 0, 0, 0);
         if (importing) {
             //TODO calculate the number of account
         }
@@ -83,7 +81,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
 
         Balance balance = new Balance();
-        balance.setType(BITCOIN);
+        balance.setType(DASH);
         balance.setDate(lastDate);
         balance.setConfirmedAmount(confirmedAmount);
         balance.setUnconfirmedAmount(unconfirmedAmount);
@@ -93,6 +91,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         return balances;
     }
 
+    @Override
     public String getNextRecieveAddress() {
         if (!externalKeys.containsKey(lastExternalIndex)) {
             externalKeys.put(lastExternalIndex, new GeneralCoinAddress(this, false, lastExternalIndex, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false))));
@@ -108,6 +107,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
         return externalKeys.get(lastExternalIndex).getAddressString(param);
     }
 
+    @Override
     public String getNextChangeAddress() {
         if (!changeKeys.containsKey(lastChangeIndex)) {
             changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
@@ -125,11 +125,11 @@ public class BitcoinAccount extends GeneralCoinAccount {
 
     @Override
     public void send(String toAddress, de.bitsharesmunich.cryptocoincore.base.Coin coin, long amount, String memo, Context context) {
-        if(coin.name().equalsIgnoreCase("bitcoin")){
+        if(coin.equals(DASH)){
             Transaction tx = new Transaction(param);
 
             long currentAmount = 0;
-            long fee = 10000; //TODO calculate fee
+            long fee = 1000000; //always instant send
 
             List<GeneralCoinAddress> addresses = getAddresses();
             List<GTxIO> utxos = new ArrayList();
@@ -191,9 +191,6 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 }
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
             }
-
-
-
             System.out.println("SENDTEST: " + Util.bytesToHex(tx.bitcoinSerialize()));
 
             BroadcastTransaction brTrans = new BroadcastTransaction(Util.bytesToHex(tx.bitcoinSerialize()),this,context);
