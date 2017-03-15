@@ -785,8 +785,11 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
             String brainKey = getBrainKey();
+            //Active account is a WIF Imported account
+            //(Assume that if have no brainkey is a WIF account, not sure if an import error can cause
+            // brain key to be empty).
             if (brainKey.isEmpty()) {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.unable_to_load_brainkey), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_brainkey_wif_export), Toast.LENGTH_LONG).show();
                 return;
             } else {
                 etBrainKey.setText(brainKey);
@@ -1269,6 +1272,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             myBinHelper.createBackupBinFile(_brnKey, _accountName, _pinCode);
         }
         //Brainkey is empty only for WIF imported accounts
+        //(Assume that if have no brainkey is a WIF account, not sure if an import error can cause
+        // brain key to be empty).
         {
             String _wif = getWif();
             myBinHelper.createBackupBinFileFromWif(_wif, _accountName, _pinCode);
