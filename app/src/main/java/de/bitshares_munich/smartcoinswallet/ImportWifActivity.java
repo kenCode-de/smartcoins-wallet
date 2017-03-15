@@ -107,7 +107,7 @@ public class ImportWifActivity extends BaseActivity {
             }
             //If success at all validations
             else {
-                //showDialog("", getString(R.string.importing_your_wallet));
+                showDialog("", getString(R.string.importing_your_wallet));
                 getAccountFromWif(trimmedWif, etPin.getText().toString());
             }
         }
@@ -258,6 +258,7 @@ public class ImportWifActivity extends BaseActivity {
             })),0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
+            hideDialog();
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
