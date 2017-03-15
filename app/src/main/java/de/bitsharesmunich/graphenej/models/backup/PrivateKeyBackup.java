@@ -27,17 +27,6 @@ public class PrivateKeyBackup {
         deriveAddress(privateKey);
     }
 
-    /*
-     * From WIF Imported account.
-     */
-    public PrivateKeyBackup(String wif, String wif_key){
-        this.encrypted_key = wif_key;
-        this.brainkey_sequence = 0;
-        this.id = 0;
-        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif ).getKey();
-        this.pubkey = new Address(ECKey.fromPublicOnly(key.getPubKey())).toString();
-    }
-
     public byte[] decryptPrivateKey(byte[] encryptionKey){
         return Util.decryptAES(Util.hexToBytes(encrypted_key), encryptionKey);
     }

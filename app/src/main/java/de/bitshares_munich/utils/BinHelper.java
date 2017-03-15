@@ -157,26 +157,33 @@ public class BinHelper {
         }
     }
 
+    /*
+     * Create the backup bin file version for WIF Imported accounts.
+     *
+     * @param pin: Wallet PIN string.
+     * @param wif_key: Encrypted WIF string.
+     * @param accountName: Name of the account string.
+     *
+     */
     public void getBinBytesFromWif(final String pin, final String wif_key, final String accountName) {
-
-        Log.e(TAG, "getBinBytesFromWif. WIF: " + wif_key);
+        BrainKey brainKey = new BrainKey("", 0);
         try {
             ArrayList<Wallet> wallets = new ArrayList<>();
             ArrayList<LinkedAccount> accounts = new ArrayList<>();
             ArrayList<PrivateKeyBackup> keys = new ArrayList<>();
 
-            String wif = "";
-            try{
-                wif = Crypt.getInstance().decrypt_string(wif_key);
-            }
-            catch (Exception e) {
-                Log.e(TAG, "Exception. Msg: " + e.getMessage());
-            }
-
-            Wallet wallet = new Wallet(accountName, wif_key, wif, Chains.BITSHARES.CHAIN_ID, pin);
+            Wallet wallet = new Wallet(accountName,
+                    brainKey.getSequenceNumber(),
+                    Chains.BITSHARES.CHAIN_ID, pin);
             wallets.add(wallet);
 
-            PrivateKeyBackup keyBackup = new PrivateKeyBackup(wif, wif_key);
+            String wif = Crypt.getInstance().decrypt_string(wif_key);
+            ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif ).getKey();
+
+            PrivateKeyBackup keyBackup = new PrivateKeyBackup(key.getPrivKeyBytes(),
+                    brainKey.getSequenceNumber(),
+                    brainKey.getSequenceNumber(),
+                    wallet.getEncryptionKey(pin));
             keys.add(keyBackup);
 
             LinkedAccount linkedAccount = new LinkedAccount(accountName, Chains.BITSHARES.CHAIN_ID);

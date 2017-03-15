@@ -85,31 +85,28 @@ public class Wallet {
     }
 
     /**
-     * WIF Imported account Wallet constructor.
+     * Wallet constructor version for WIF Imported account.
      * @param name: The name of this wallet.
-     * @param wif_key: WIF (Wallet Import Format https://en.bitcoin.it/wiki/Wallet_import_format) encrypted (private key).
-     * @param wif: WIF.
+     * @param brainkeySequence: The brain key sequence (used just for not break logic since
+     *                        brainkey is empty for WIF imported accounts).
      * @param chainId: The chain id
      * @param password: Password used to encrypt all sensitive data.
      */
-    public Wallet(String name, String wif_key, String wif, String chainId, String password){
+    public Wallet(String name, int brainkeySequence, String chainId, String password){
         this(name);
         SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
         byte[] decryptedKey = new byte[Util.KEY_LENGTH];
         secureRandom.nextBytes(decryptedKey);
-
-        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif).getKey();
-
-        this.encryption_key = wif_key;
-        this.encrypted_brainkey = "";
-        this.brainkey_sequence = 0;
+        this.encryption_key = Util.bytesToHex(Util.encryptAES(decryptedKey, password.getBytes()));
+        this.encrypted_brainkey = null;
+        this.brainkey_pubkey = null;
+        this.brainkey_sequence = brainkeySequence;
         this.chain_id = chainId;
-
-        this.brainkey_pubkey = new Address(ECKey.fromPublicOnly(key.getPubKey())).toString();
 
         try {
             byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));
-            this.password_pubkey = new Address(ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
+            this.password_pubkey = new Address(
+                    ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
