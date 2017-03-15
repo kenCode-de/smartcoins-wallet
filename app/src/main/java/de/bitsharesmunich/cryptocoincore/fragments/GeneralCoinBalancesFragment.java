@@ -97,6 +97,8 @@ import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.QRCodeActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
@@ -1392,7 +1394,6 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 getTransactionByAddress.addAddress(address);
             }
             getTransactionByAddress.start();
-
             //account.send("n1nyxWEQ7av9fWRuR5QZ5vCVcH9C7JFrzd",account.getCoin(),2000000,getContext());
         }
     }
