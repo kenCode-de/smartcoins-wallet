@@ -8,6 +8,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
+
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -20,6 +24,7 @@ import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.Chains;
 import de.bitsharesmunich.graphenej.FileBin;
@@ -152,18 +157,26 @@ public class BinHelper {
         }
     }
 
-    public void getBinBytesFromWif(final String pin, final String wif, final String accountName) {
+    public void getBinBytesFromWif(final String pin, final String wif_key, final String accountName) {
 
+        Log.e(TAG, "getBinBytesFromWif. WIF: " + wif_key);
         try {
             ArrayList<Wallet> wallets = new ArrayList<>();
             ArrayList<LinkedAccount> accounts = new ArrayList<>();
             ArrayList<PrivateKeyBackup> keys = new ArrayList<>();
 
-            /*Wallet wallet = new Wallet(accountName, brainKey.getBrainKey(), brainKey.getSequenceNumber(), Chains.BITSHARES.CHAIN_ID, pin);
+            String wif = "";
+            try{
+                wif = Crypt.getInstance().decrypt_string(wif_key);
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Exception. Msg: " + e.getMessage());
+            }
+
+            Wallet wallet = new Wallet(accountName, wif_key, wif, Chains.BITSHARES.CHAIN_ID, pin);
             wallets.add(wallet);
 
-            PrivateKeyBackup keyBackup = new PrivateKeyBackup(brainKey.getPrivateKey().getPrivKeyBytes(),
-                    brainKey.getSequenceNumber(), brainKey.getSequenceNumber(), wallet.getEncryptionKey(pin));
+            PrivateKeyBackup keyBackup = new PrivateKeyBackup(wif, wif_key);
             keys.add(keyBackup);
 
             LinkedAccount linkedAccount = new LinkedAccount(accountName, Chains.BITSHARES.CHAIN_ID);
@@ -175,7 +188,7 @@ public class BinHelper {
             for (byte result : results) {
                 resultFile.add(result & 0xff);
             }
-            saveBinContentToFile(resultFile, accountName);*/
+            saveBinContentToFile(resultFile, accountName);
         } catch (Exception e) {
             hideDialog(false);
             Log.e(TAG, "Exception. Msg: " + e.getMessage());
@@ -285,7 +298,7 @@ public class BinHelper {
         Runnable getFormat = new Runnable() {
             @Override
             public void run() {
-                getBinBytesFromBrainkey(pinCode, _wif, _accountName);
+                getBinBytesFromWif(pinCode, _wif, _accountName);
             }
         };
 

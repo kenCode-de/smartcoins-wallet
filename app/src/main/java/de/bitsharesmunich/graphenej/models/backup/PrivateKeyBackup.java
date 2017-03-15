@@ -1,8 +1,12 @@
 package de.bitsharesmunich.graphenej.models.backup;
 
+import de.bitshares_munich.utils.Crypt;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Util;
+
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 /**
  * Class used to represent an entry in the "private_keys" array field in the JSON-formatted
@@ -21,6 +25,17 @@ public class PrivateKeyBackup {
         this.brainkey_sequence = brainkeySequence;
         this.id = id;
         deriveAddress(privateKey);
+    }
+
+    /*
+     * From WIF Imported account.
+     */
+    public PrivateKeyBackup(String wif, String wif_key){
+        this.encrypted_key = wif_key;
+        this.brainkey_sequence = 0;
+        this.id = 0;
+        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif ).getKey();
+        this.pubkey = new Address(ECKey.fromPublicOnly(key.getPubKey())).toString();
     }
 
     public byte[] decryptPrivateKey(byte[] encryptionKey){

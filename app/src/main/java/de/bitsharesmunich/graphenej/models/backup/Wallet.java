@@ -1,9 +1,13 @@
 package de.bitsharesmunich.graphenej.models.backup;
 
+import de.bitshares_munich.utils.Crypt;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
+
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.spongycastle.crypto.digests.SHA256Digest;
 
@@ -69,6 +73,44 @@ public class Wallet {
             byte[] brainkeyHash = Sha256Hash.hash(brainKey.getBytes("UTF8"));
             this.brainkey_pubkey = new Address(ECKey.fromPublicOnly(ECKey.fromPrivate(brainkeyHash).getPubKey())).toString();
         } catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+
+        Date now = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Util.TIME_DATE_FORMAT);
+        this.created = dateFormat.format(now);
+        this.last_modified = created;
+        this.backup_date = created;
+        this.brainkey_backup_date = created;
+    }
+
+    /**
+     * WIF Imported account Wallet constructor.
+     * @param name: The name of this wallet.
+     * @param wif_key: WIF (Wallet Import Format https://en.bitcoin.it/wiki/Wallet_import_format) encrypted (private key).
+     * @param wif: WIF.
+     * @param chainId: The chain id
+     * @param password: Password used to encrypt all sensitive data.
+     */
+    public Wallet(String name, String wif_key, String wif, String chainId, String password){
+        this(name);
+        SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+        byte[] decryptedKey = new byte[Util.KEY_LENGTH];
+        secureRandom.nextBytes(decryptedKey);
+
+        ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif).getKey();
+
+        this.encryption_key = wif_key;
+        this.encrypted_brainkey = "";
+        this.brainkey_sequence = 0;
+        this.chain_id = chainId;
+
+        this.brainkey_pubkey = new Address(ECKey.fromPublicOnly(key.getPubKey())).toString();
+
+        try {
+            byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));
+            this.password_pubkey = new Address(ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
