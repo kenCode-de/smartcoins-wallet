@@ -107,6 +107,7 @@ import de.bitshares_munich.utils.PermissionManager;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -1321,7 +1322,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
     public BalanceItems getBalanceItems(){
         if (this.balanceItems == null){
-            this.balanceItems = new BalanceItems();
+            this.balanceItems = new BalanceItems(Coin.BITSHARE);
             this.balanceItems.addListener(this);
         }
 

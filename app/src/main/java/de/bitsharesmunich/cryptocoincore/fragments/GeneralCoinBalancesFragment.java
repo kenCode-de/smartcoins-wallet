@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,10 +35,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +49,13 @@ import com.google.common.primitives.UnsignedLong;
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -89,6 +95,7 @@ import de.bitshares_munich.models.BalanceItem;
 import de.bitshares_munich.models.BalanceItems;
 import de.bitshares_munich.models.BalanceItemsEvent;
 import de.bitshares_munich.models.BalanceItemsListener;
+import de.bitshares_munich.models.BalancesItems;
 import de.bitshares_munich.models.Smartcoins;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
@@ -97,6 +104,14 @@ import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
+import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
+import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
+import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.QRCodeActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.RecieveActivity;
 import de.bitsharesmunich.cryptocoincore.smartcoinwallets.SendScreen;
@@ -235,7 +250,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
     Boolean sentCallForTransactions = false;
 
-    BalanceItems balanceItems;
+    BalancesItems balancesItems;
 
     Locale locale;
     NumberFormat format;
@@ -1341,7 +1356,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                                 am.add(j, accountAsset.get(j).ammount);
                             }
 
-                            BalanceAssetsUpdate(sym, pre, am, true);
+                            BalanceAssetsUpdate(Coin.BITSHARE, sym, pre, am, true);
                         }
 
                         break;
@@ -1350,50 +1365,47 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             } catch (Exception e) {
 
             }
-        } else {
+        } //else {
             SCWallDatabase db = new SCWallDatabase(getContext());
-            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
-            List<GeneralCoinAddress> addresses = account.getAddresses(db);
+            List<GeneralCoinAccount> accountList = db.getActiveAccounts();
 
-            getBalanceItems().addDetailedBalanceItem(coin.getLabel(), "" + coin.getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
-            account.addChangeBalanceListener(new ChangeBalanceListener() {
-                @Override
-                public void balanceChange(Balance balance) {
-                    if (account != null) {
-                        getBalanceItems().addOrUpdateDetailedBalanceItem(coin.getLabel(), "" + coin.getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                updateTableView(false);
-                            }
-                        });
+            for (final GeneralCoinAccount account : accountList) {
+                List<GeneralCoinAddress> addresses = account.getAddresses(db);
+
+                getBalanceItems().addBalancesItems(account.getCoin()).addDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
+                account.addChangeBalanceListener(new ChangeBalanceListener() {
+                    @Override
+                    public void balanceChange(Balance balance) {
+                        if (account != null) {
+                            getBalanceItems().getBalancesItems(account.getCoin()).addOrUpdateDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    updateTableView(false);
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
 
-            Log.i("test","account balance " + account.getBalance().get(0).getAmmount());
+                Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
 
 
-            //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
-            //try {
-                AccountActivityWatcher watcher = new AccountActivityWatcher(account,getContext());
+                //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
+                AccountActivityWatcher watcher = new AccountActivityWatcher(account, getContext());
 
-                for(GeneralCoinAddress address: addresses){
-                    Log.i("test","address : " + address.getAddressString(account.getNetworkParam()));
+                for (GeneralCoinAddress address : addresses) {
+                    Log.i("test", "address : " + address.getAddressString(account.getNetworkParam()));
                     watcher.addAddress(address.getAddressString(account.getNetworkParam()));
                 }
                 watcher.connect();
-            //} catch (URISyntaxException e) {
-            //    e.printStackTrace();
+
+                //Start the GetTransactionByAddress to get the transaction previously obtained by the server
+                GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
+                for (GeneralCoinAddress address : addresses) {
+                    getTransactionByAddress.addAddress(address);
+                }
+                getTransactionByAddress.start();
             //}
-
-            //Start the GetTransactionByAddress to get the transaction previously obtained by the server
-            GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
-            for(GeneralCoinAddress address: addresses){
-                getTransactionByAddress.addAddress(address);
-            }
-            getTransactionByAddress.start();
-
-            //account.send("n1nyxWEQ7av9fWRuR5QZ5vCVcH9C7JFrzd",account.getCoin(),2000000,getContext());
         }
     }
 
@@ -1432,19 +1444,19 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
 
         tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        BalanceAssetsUpdate(sym, pre, am, false);
+        BalanceAssetsUpdate(Coin.BITSHARE, sym, pre, am, false);
     }
 
-    public BalanceItems getBalanceItems(){
-        if (this.balanceItems == null){
-            this.balanceItems = new BalanceItems();
-            this.balanceItems.addListener(this);
+    public BalancesItems getBalanceItems(){
+        if (this.balancesItems == null){
+            this.balancesItems = new BalancesItems();
+            this.balancesItems.addListener(this);
         }
 
-        return this.balanceItems;
+        return this.balancesItems;
     }
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
+    public void BalanceAssetsUpdate(Coin coin, final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
         int count = llBalances.getChildCount();
 
         // use standard asset names (like add bit etc)
@@ -1460,7 +1472,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         if (count <= 0)
             BalanceAssetsLoad(symbols, pre, am, onStartUp);
         if (count > 0)
-            BalanceAssetsUpdate(symbols, pre, am);
+            BalanceAssetsUpdate(coin, symbols, pre, am);
     }
 
     public void processAssets(final HashMap<String, ArrayList<String>> currencies, final HashMap<String, Asset> assets, final Runnable getEquivalentCompRunnable){
@@ -1549,8 +1561,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     private void updateEquivalentValue(String assetName, String value, Runnable getEquivalentCompRunnable) {
-        if (this.balanceItems.findBalanceItemBySymbol(assetName) != null){
-            this.balanceItems.updateFaitBalanceItem(assetName, value);
+        BalanceItems bitshareBalanceItems = this.getBalanceItems().getBalancesItems(Coin.BITSHARE);
+
+        if (bitshareBalanceItems.findBalanceItemBySymbol(assetName) != null){
+            bitshareBalanceItems.updateFaitBalanceItem(assetName, value);
         } else {
             updateEquivalentAmount.postDelayed(getEquivalentCompRunnable, 500);
         }
@@ -1643,21 +1657,114 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
-    private void updateBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, boolean startUp) {
+    private void updateBitshareBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, boolean startUp) {
         try {
-            this.getBalanceItems().clear();
+            BalanceItems bitshareBalanceItems = this.getBalanceItems().addBalancesItems(Coin.BITSHARE);
+            bitshareBalanceItems.clear();
 
             for (int i = 0; i < sym.size(); i++) {
                 Long _amount = Long.parseLong(am.get(i));
 
                 // remove balances which are zero
                 if (_amount != 0) {
-                    this.getBalanceItems().addBalanceItem(sym.get(i), pre.get(i), am.get(i), startUp);
+                    bitshareBalanceItems.addBalanceItem(sym.get(i), pre.get(i), am.get(i), startUp);
                 }
             }
         } catch (Exception e) {
 
         }
+    }
+
+    @OnClick(R.id.addCoinAccountButton)
+    public void onAddCoinAccountButton() {
+        this.showNewCoinAccountDialog();
+    }
+
+    public void showNewCoinAccountDialog(){
+        final Dialog dialogNewCoin = new Dialog(getContext(), R.style.stylishDialog);
+        dialogNewCoin.setTitle(getString(R.string.add_new_coin_account_dialog));
+        dialogNewCoin.setContentView(R.layout.add_new_currency_account);
+
+        Spinner coinSpinner = (Spinner)dialogNewCoin.findViewById(R.id.coinSpinner);
+        Button createButton = (Button)dialogNewCoin.findViewById(R.id.createCurrencyAccount);
+
+        ArrayList<Coin> data = new ArrayList<Coin>();
+
+        for (Coin coin : Coin.values()){
+            data.add(coin);
+        }
+
+        final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this.getActivity(),R.layout.coin_spinner_row,data,getResources());
+        coinSpinner.setAdapter(coinAdapter);
+
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final SCWallDatabase db = new SCWallDatabase(getContext());
+                List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+
+                if (seeds.size() == 0) {
+                    final Dialog dialog = new Dialog(getContext(), R.style.stylishDialog);
+                    dialog.setTitle(getString(R.string.backup_master_seed));
+                    dialog.setContentView(R.layout.activity_copybrainkey);
+                    final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
+                    final AccountSeed newSeed;
+                    try {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(getContext().getAssets().open("bip39dict.txt"), "UTF-8"));
+                        String dictionary = reader.readLine();
+                        newSeed = new BIP39(dictionary.split(","));
+
+                        String masterSeedWords = newSeed.getMnemonicCodeString().toUpperCase();
+                        String brainKey = getBrainKey();
+                        if (masterSeedWords.isEmpty() || brainKey.isEmpty()) {
+                            Toast.makeText(getContext(), getResources().getString(R.string.unable_to_create_master_seed), Toast.LENGTH_LONG).show();
+                            return;
+                        } else {
+                            etBrainKey.setText(brainKey + " " + masterSeedWords);
+                        }
+
+
+                        Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
+                        btnCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.cancel();
+                            }
+                        });
+                        Button btnCopy = (Button) dialog.findViewById(R.id.btnCopy);
+                        btnCopy.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                db.putSeed(newSeed);
+
+                                need to take coinSpinner selected value and create new account
+                                //BitcoinAccount bitcoinAccount = new BitcoinAccount(newSeed, "BTC Account");
+                                //db.putGeneralCoinAccount(bitcoinAccount);
+
+                                Toast.makeText(getContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
+                                clipboard.setPrimaryClip(clip);
+                                dialog.cancel();
+                            }
+                        });
+                        dialog.setCancelable(false);
+
+                        dialog.show();
+                    } catch (Exception e) {
+
+                    }
+                } else {
+                    need to take coinSpinner selected value and create new account
+
+                    BitcoinAccount bitcoinAccount = new BitcoinAccount(seeds.get(0), "BTC Account");
+                    db.putGeneralCoinAccount(bitcoinAccount);
+                }
+            }
+        });
+
+
+        dialogNewCoin.show();
     }
 
     public void onNewBalanceItem(BalanceItemsEvent event){
@@ -1703,7 +1810,17 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     public void removeBalanceItemView(BalanceItem item, int index, int newSize){
-        if (index < llBalances.getChildCount()*2){
+        LinearLayout balanceGroup = null;
+
+        //Find if coin section its already in llBalances
+        for (int i=0;i<llBalances.getChildCount();i++) {
+            View boxBase = llBalances.getChildAt(i);
+            if (((Coin)boxBase.getTag()) == item.getCoin()){
+                balanceGroup = (LinearLayout)boxBase.findViewById(R.id.coin_balance);
+            }
+        }
+
+        if (index < balanceGroup.getChildCount()*2){
             TextView symbolTextViewToOccupy;
             TextView ammountTextViewToOccupy;
             TextView faitTextViewToOccupy;
@@ -1711,8 +1828,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             TextView ammountTextViewToMoveOut;
             TextView faitTextViewToMoveOut;
 
-            for(int i=index;i<llBalances.getChildCount()*2-1;i++){
-                View rowView = llBalances.getChildAt(i/2);
+            for(int i=index;i<balanceGroup.getChildCount()*2-1;i++){
+                View rowView = balanceGroup.getChildAt(i/2);
 
                 if (i % 2 == 0){
                     symbolTextViewToOccupy = (TextView) rowView.findViewById(R.id.symbol_child_one);
@@ -1726,7 +1843,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                     ammountTextViewToOccupy = (TextView) rowView.findViewById(R.id.amount_child_two);
                     faitTextViewToOccupy = (TextView) rowView.findViewById(R.id.fait_child_two);
 
-                    View nextRowView = llBalances.getChildAt((i/2)+1);
+                    View nextRowView = balanceGroup.getChildAt((i/2)+1);
 
                     symbolTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.symbol_child_one);
                     ammountTextViewToMoveOut = (TextView) nextRowView.findViewById(R.id.amount_child_one);;
@@ -1745,10 +1862,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
             if (newSize % 2 == 0){
-                View rowView = llBalances.getChildAt(llBalances.getChildCount()-1);
-                llBalances.removeView(rowView);
+                View rowView = balanceGroup.getChildAt(balanceGroup.getChildCount()-1);
+                balanceGroup.removeView(rowView);
 
-                if (llBalances.getChildCount() == 0) {
+                if (balanceGroup.getChildCount() == 0) {
                     whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
                 }
             }
@@ -1756,6 +1873,30 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
+        LinearLayout balanceGroup = null;
+
+        //Find if coin section its already in llBalances
+        for (int i=0;i<llBalances.getChildCount();i++) {
+            View boxBase = llBalances.getChildAt(i);
+            if (((Coin)boxBase.getTag()) == item.getCoin()){
+                balanceGroup = (LinearLayout)boxBase.findViewById(R.id.coin_balance);
+            }
+        }
+
+        if (balanceGroup == null){
+            LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            balanceGroup = (LinearLayout)layoutInflater.inflate(R.layout.items_balances_box, null);
+            balanceGroup.setTag(item.getCoin());
+            TextView balanceGroupTitle = (TextView)balanceGroup.findViewById(R.id.coin_title);
+            ImageView balanceGroupIcon = (ImageView)balanceGroup.findViewById(R.id.coin_icon);
+
+            balanceGroupTitle.setText(item.getCoin().name());
+            balanceGroupIcon.setImageResource(item.getCoin().getIcon());
+
+            llBalances.addView(balanceGroup);
+            balanceGroup = (LinearLayout)balanceGroup.findViewById(R.id.coin_balance);
+        }
+
         TextView textView2 = null;
         TextView symbolTextView;
         final TextView ammountTextView;
@@ -1763,9 +1904,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         View lastChild = null;
         boolean theresNoChild = true;
 
-        if (llBalances.getChildCount() > 0) {//if there's items in balances
+        if (balanceGroup.getChildCount() > 0) {//if there's items in balances
             //we take the right side of the last child of the balances
-            lastChild = llBalances.getChildAt(llBalances.getChildCount() - 1);
+            lastChild = balanceGroup.getChildAt(balanceGroup.getChildCount() - 1);
             textView2 = (TextView) lastChild.findViewById(R.id.symbol_child_two);
             theresNoChild = false;
         }
@@ -1786,7 +1927,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             rightAmmountTextView.setText("");
             rightFaitTextView.setText("");
 
-            llBalances.addView(customView);
+            balanceGroup.addView(customView);
         } else {
             //In this point the right side is free, so we can use it
             symbolTextView = (TextView) lastChild.findViewById(R.id.symbol_child_two);
@@ -1795,7 +1936,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
 
         String finalSymbol = "";
-        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol()))) {
+        if ((item.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol()))) {
             finalSymbol = "bit" + item.getSymbol();
         } else {
             finalSymbol = item.getSymbol();
@@ -1806,7 +1947,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
         float b = powerInFloat(item.getPrecision(), item.getAmmount());
-        if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
+        if ((item.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
         } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
             ammountTextView.setText(String.format(locale, "%.4f", b));
@@ -1815,8 +1956,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         else ammountTextView.setText(String.format(locale, "%.4f", b));
 
         //If there are confirmations needed, then print how many in the equivalent value text
-        if ((item.getConfirmations() != -1) && (item.getConfirmations() < this.coin.getConfirmationsNeeded())){
-            int percentageDone = (item.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+        if ((item.getConfirmations() != -1) && (item.getConfirmations() < item.getCoin().getConfirmationsNeeded())){
+            int percentageDone = (item.getConfirmations()+1)*100/item.getCoin().getConfirmationsNeeded();
             int confirmationColor = 0;
 
             if (percentageDone < 34){
@@ -1828,7 +1969,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
             faitTextView.setTextColor(confirmationColor);
-            faitTextView.setText(item.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+            faitTextView.setText(item.getConfirmations()+" of "+item.getCoin().getConfirmationsNeeded()+" conf");
 
         }
 
@@ -1880,15 +2021,25 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
 
     public void updateBalanceItem(final BalanceItem oldItem, final BalanceItem newItem, final int index){
+        LinearLayout balanceGroup = null;
+
+        //Find if coin section its already in llBalances
+        for (int i=0;i<llBalances.getChildCount();i++) {
+            View boxBase = llBalances.getChildAt(i);
+            if (((Coin)boxBase.getTag()) == newItem.getCoin()){
+                balanceGroup = (LinearLayout)boxBase.findViewById(R.id.coin_balance);
+            }
+        }
+
         final Runnable reloadBalances = new Runnable() {
             @Override
             public void run() {
-                removeZeroedBalanceViews();
+                removeZeroedBalanceViews(newItem.getCoin());
             }
         };
 
-        if (index < llBalances.getChildCount() * 2) {
-            View rowView = llBalances.getChildAt(index / 2);
+        if (index < balanceGroup.getChildCount() * 2) {
+            View rowView = balanceGroup.getChildAt(index / 2);
             final TextView symbolTextView;
             final TextView ammountTextView;
             final TextView faitTextView;
@@ -1904,7 +2055,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
             String finalSymbol = "";
-            if ((this.coin == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
+            if ((newItem.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
                 finalSymbol = "bit" + newItem.getSymbol();
             } else {
                 finalSymbol = newItem.getSymbol();
@@ -2028,8 +2179,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
             }
 
-            if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < this.coin.getConfirmationsNeeded())){
-                int percentageDone = (newItem.getConfirmations()+1)*100/this.coin.getConfirmationsNeeded();
+            if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < newItem.getCoin().getConfirmationsNeeded())){
+                int percentageDone = (newItem.getConfirmations()+1)*100/newItem.getCoin().getConfirmationsNeeded();
                 int confirmationColor = 0;
 
                 if (percentageDone < 34){
@@ -2041,7 +2192,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
 
                 faitTextView.setTextColor(confirmationColor);
-                faitTextView.setText(newItem.getConfirmations()+" of "+this.coin.getConfirmationsNeeded()+" conf");
+                faitTextView.setText(newItem.getConfirmations()+" of "+newItem.getCoin().getConfirmationsNeeded()+" conf");
 
             } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
                 faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.receive_amount));
@@ -2074,7 +2225,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
 
 
-        updateBalanceArrays(sym, pre, am, onStartUp);
+        updateBitshareBalanceArrays(sym, pre, am, onStartUp);
 
         //TODO this shouldn't be loading in the UI Thread, there's nothing UI here
         getActivity().runOnUiThread(new Runnable() {
@@ -2134,19 +2285,19 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         animator.start();
     }
 
-    public void removeZeroedBalanceViews() {
-        this.getBalanceItems().removeZeroBalanceItems();
+    public void removeZeroedBalanceViews(Coin coin) {
+        this.getBalanceItems().getBalancesItems(coin).removeZeroBalanceItems();
     }
 
     Handler animateNsoundHandler = new Handler();
 
-    public void BalanceAssetsUpdate(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
+    public void BalanceAssetsUpdate(Coin coin, final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am) {
         for (int i = 0; i < sym.size(); i++) {
             Long _amount = Long.parseLong(am.get(i));
-            BalanceItem balanceItem = this.getBalanceItems().findBalanceItemBySymbol(sym.get(i));
+            BalanceItem balanceItem = this.getBalanceItems().getBalancesItems(coin).findBalanceItemBySymbol(sym.get(i));
 
             if ((balanceItem != null) || (_amount != 0)) {
-                this.getBalanceItems().addOrUpdateBalanceItem(sym.get(i), pre.get(i), am.get(i));
+                this.getBalanceItems().getBalancesItems(coin).addOrUpdateBalanceItem(sym.get(i), pre.get(i), am.get(i));
             }
         }
     }

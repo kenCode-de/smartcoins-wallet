@@ -16,6 +16,8 @@ public class CryptoCoinFactory {
         switch(coin){
             case BITCOIN:
                 return BitcoinManager.getInstance();
+            case DASH:
+                return DashManager.getInstance();
         }
 
         return null;

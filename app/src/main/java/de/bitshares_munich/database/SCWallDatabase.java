@@ -823,6 +823,30 @@ public class SCWallDatabase {
         return affected > 0;
     }
 
+    public List<GeneralCoinAccount> getActiveAccounts(){
+        ArrayList<Coin> activeCoins = new ArrayList<Coin>();
+        ArrayList<GeneralCoinAccount> activeAccounts = new ArrayList<GeneralCoinAccount>();
+
+        String[] columns = {
+                SCWallDatabaseContract.GeneralAccounts.COLUMN_COIN_TYPE
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralAccounts.TABLE_NAME, columns,
+                null, null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            do{
+                Coin type = Coin.valueOf(cursor.getString(0));
+                activeCoins.add(type);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        for (Coin coin : activeCoins) {
+            activeAccounts.add(this.getGeneralCoinAccount(coin.name()));
+        }
+
+        return activeAccounts;
+    }
+
     public GeneralCoinAccount getGeneralCoinAccount(String coinType) {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
