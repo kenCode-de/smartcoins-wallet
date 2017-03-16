@@ -199,6 +199,8 @@ public class ImportBackupActivity extends BaseActivity {
                             if (resp.size() > 0) {
                                 List<UserAccount> accounts = resp.get(0);
                                 if (accounts.size() == 0) {
+                                    //If Account size equal zero there is a possibility that
+                                    //it is an WIF imported backup type
                                     Log.w(TAG, "Found no account using the key given by backup.");
                                     Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
                                 } else {
