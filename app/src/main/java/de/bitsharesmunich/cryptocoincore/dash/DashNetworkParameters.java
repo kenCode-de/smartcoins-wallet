@@ -71,7 +71,7 @@ public class DashNetworkParameters extends CustomNetworkParameters{
         httpSeeds = dashDefinitions.httpSeeds;
         addrSeeds = dashDefinitions.addrSeeds;
 
-        strSporkKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+        //strSporkKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
     }
 
     private static DashNetworkParameters instance;

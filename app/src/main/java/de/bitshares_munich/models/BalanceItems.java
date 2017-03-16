@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.bitshares_munich.fragments.BalancesFragment;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 /**
  * Created by javier on 28/12/2016.
@@ -13,9 +14,11 @@ import de.bitshares_munich.fragments.BalancesFragment;
 public class BalanceItems {
     ArrayList<BalanceItem> items;
     private List<BalanceItemsListener> _listeners = new ArrayList<BalanceItemsListener>();
+    Coin coin;
 
-    public BalanceItems(){
+    public BalanceItems(Coin coin){
         this.items = new ArrayList<BalanceItem>();
+        this.coin = coin;
     }
 
     public BalanceItem addBalanceItem(String symbol, String precision, String ammount){
@@ -30,7 +33,7 @@ public class BalanceItems {
         //TODO eliminate the "bit" string from the logic, this should only be in the view
         symbol = symbol.replace("bit","");
 
-        BalanceItem newBalanceItem = new BalanceItem(symbol, precision, ammount);
+        BalanceItem newBalanceItem = new BalanceItem(this.coin, symbol, precision, ammount);
         newBalanceItem.setConfirmations(confirmations);
         this.items.add(newBalanceItem);
         this._fireOnNewBalanceItemEvent(newBalanceItem, initialLoad);
@@ -107,6 +110,10 @@ public class BalanceItems {
 
     public int count(){
         return this.items.size();
+    }
+
+    public Coin getCoin(){
+        return this.coin;
     }
 
     public BalanceItem getBalanceItem(int index){

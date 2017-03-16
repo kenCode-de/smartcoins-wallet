@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:text="@string/which_new_currency_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/noCurrencyAccountText"
+        android:gravity="center_horizontal" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/coinSpinner"
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/createCurrencyAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="@string/create_currency_account"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
