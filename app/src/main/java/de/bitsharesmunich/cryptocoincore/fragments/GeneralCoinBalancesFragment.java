@@ -104,6 +104,8 @@ import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
