@@ -10,11 +10,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 import java.io.File;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import ar.com.daidalos.afiledialog.FileChooserDialog;
 import ar.com.daidalos.afiledialog.FileChooserLabels;
@@ -26,11 +37,13 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
+import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.PermissionManager;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
 import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
@@ -55,6 +68,11 @@ public class ImportBackupActivity extends BaseActivity {
 
     /* Database interface */
     private SCWallDatabase database;
+
+    /* Private Key in WIF format */
+    private String mWif;
+    /* Wallet PIN */
+    private String mPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,8 +188,14 @@ public class ImportBackupActivity extends BaseActivity {
             }
             String brainKey;
             brainKey = FileBin.getBrainkeyFromByte(byteArray, existingPassword);
+
             if (brainKey == null) {
                 WalletBackup walletBackup = FileBin.deserializeWalletBackup(byteArray, existingPassword);
+                mWif = ECKey.fromPrivate(walletBackup.getPrivateKeys()[0].
+                        decryptPrivateKey( walletBackup.getWallet(0).
+                                getEncryptionKey(existingPassword))).
+                        getPrivateKeyAsWiF(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+                mPin = pin;
 
                 if (walletBackup.getKeyCount() > 0) {
                     brainKey = walletBackup.getWallet(0).decryptBrainKey(existingPassword);
@@ -201,8 +225,10 @@ public class ImportBackupActivity extends BaseActivity {
                                 if (accounts.size() == 0) {
                                     //If Account size equal zero there is a possibility that
                                     //it is an WIF imported backup type
-                                    Log.w(TAG, "Found no account using the key given by backup.");
-                                    Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
+                                    getAccountFromWif(mWif,mPin);
+                                    //To avoid execute the hideDialog()
+                                    return;
+
                                 } else {
                                     for (UserAccount account : accounts) {
                                         getAccountById(account.getObjectId(), privkey, pubkey, finalBrainKey, pin);
@@ -233,6 +259,77 @@ public class ImportBackupActivity extends BaseActivity {
             hideDialog();
             Toast.makeText(this, getString(R.string.please_make_sure_your_bin_file), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void getAccountFromWif(final String wif, final String pinCode) {
+        try {
+
+            /* Storing wif in database (Used to insert any key in the WIF format,
+            regardless of which key generation scheme was used. */
+            database.insertKey(wif);
+
+            ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif).getKey();
+
+            Address address = new Address(ECKey.fromPublicOnly(key.getPubKey()));
+            final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(wif);
+            final String pubkey = address.toString();
+            Log.d(TAG,String.format("WIF: '%s'",wif));
+            Log.d(TAG, String.format("WIF would generate address: %s", address.toString()));
+
+            new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    final List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;
+                    Log.d(TAG, "getAccountByAddress.onSuccess");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(resp.size() > 0){
+                                List<UserAccount> accounts = resp.get(0);
+                                if(accounts.size() > 0){
+                                    //It must be only one
+                                    for(UserAccount account : accounts) {
+                                        Log.d(TAG, String.format("Account: %s", account.toString()));
+                                        getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, pinCode);
+                                    }
+                                }else{
+                                    hideDialog();
+
+                                    Log.w(TAG, "Found no account using the key given by backup.");
+                                    Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
+                                }
+                            }else{
+                                hideDialog();
+
+                                Log.w(TAG, "Found no account using the key given by backup.");
+                                Toast.makeText(ImportBackupActivity.this, getResources().getString(R.string.backup_no_keys_found_error), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    hideDialog();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }), 0).start();
+        } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException | InvalidAlgorithmParameterException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (NoSuchPaddingException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void getAccountById(final String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode) {
@@ -295,6 +392,67 @@ public class ImportBackupActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void getAccountById(String accountId, final String wif, final String pubKey,  final String pinCode){
+        try {
+            new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    if (response.result.getClass() == ArrayList.class) {
+                        List list = (List) response.result;
+                        if (list.size() > 0) {
+                            if (list.get(0).getClass() == AccountProperties.class) {
+                                AccountProperties accountProperties = (AccountProperties) list.get(0);
+                                AccountDetails accountDetails = new AccountDetails();
+                                accountDetails.account_name = accountProperties.name;
+                                accountDetails.account_id = accountProperties.id;
+                                accountDetails.wif_key = wif;
+                                accountDetails.pub_key = pubKey;
+                                accountDetails.brain_key = "";
+                                accountDetails.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
+                                accountDetails.isSelected = true;
+                                accountDetails.status = "success";
+                                accountDetails.pinCode = pinCode;
+
+                                //Success Import(Set app lock to false)
+                                Application app = (Application) getApplicationContext();
+                                app.setLock(false);
+                                //Don't force backup screen
+                                Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
+
+                                BinHelper myBinHelper = new BinHelper();
+                                myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportBackupActivity.this);
+                                Intent intent = new Intent(getApplicationContext(), TabActivity.class);
+
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            hideDialog();
+                            Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        hideDialog();
+                        Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
+                }
+            })),0).start();
+            //mWebSocket.connect();
+        } catch (Exception e) {
+            hideDialog();
+            Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @OnClick(R.id.btnCancelBin)
     public void OnCancel(Button button) {
