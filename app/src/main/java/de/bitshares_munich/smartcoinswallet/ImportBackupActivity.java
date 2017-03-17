@@ -369,6 +369,9 @@ public class ImportBackupActivity extends BaseActivity {
                                 Application app = (Application) getApplicationContext();
                                 app.setLock(false);
 
+                                //Avoid view leak
+                                hideDialog();
+
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportBackupActivity.this);
                                 Intent intent;
@@ -391,14 +394,17 @@ public class ImportBackupActivity extends BaseActivity {
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.try_again, Toast.LENGTH_SHORT).show();
                     }
+                    hideDialog();
                 }
 
                 @Override
                 public void onError(BaseResponse.Error error) {
+                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
             })), 0).start();
         } catch (Exception e) {
+            hideDialog();
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
@@ -430,6 +436,9 @@ public class ImportBackupActivity extends BaseActivity {
                                 //Don't force backup screen
                                 Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
 
+                                //Avoid view leak
+                                hideDialog();
+
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportBackupActivity.this);
                                 Intent intent = new Intent(getApplicationContext(), TabActivity.class);
@@ -439,6 +448,7 @@ public class ImportBackupActivity extends BaseActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
+                                hideDialog();
                                 Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -453,6 +463,7 @@ public class ImportBackupActivity extends BaseActivity {
 
                 @Override
                 public void onError(BaseResponse.Error error) {
+                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
                 }
             })),0).start();
