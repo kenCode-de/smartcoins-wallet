@@ -109,53 +109,6 @@ public abstract class FileBin {
     }
 
     /**
-     * Method to get the WIF fron an input of bytes
-     *
-     * @param input Array of bytes of the file to be processed
-     * @param password the pin code
-     * @return the WIF string, or null if the file or the password are
-     * incorrect
-     *
-     */
-    public static String getWifFromByte(byte[] input, String password) {
-        try {
-            byte[] publicKey = new byte[PUBLIC_KEY_LENGTH];
-            byte[] rawDataEncripted = new byte[input.length - PUBLIC_KEY_LENGTH];
-
-            System.arraycopy(input, 0, publicKey, 0, PUBLIC_KEY_LENGTH);
-            System.arraycopy(input, PUBLIC_KEY_LENGTH, rawDataEncripted, 0, rawDataEncripted.length);
-
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            ECKey randomECKey = ECKey.fromPublicOnly(publicKey);
-            byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
-            MessageDigest md1 = MessageDigest.getInstance("SHA-512");
-            finalKey = md1.digest(finalKey);
-            byte[] decryptedData = Util.decryptAES(rawDataEncripted, Util.bytesToHex(finalKey).getBytes());
-
-            byte[] checksum = new byte[4];
-            System.arraycopy(decryptedData, 0, checksum, 0, 4);
-            byte[] compressedData = new byte[decryptedData.length - 4];
-            System.arraycopy(decryptedData, 4, compressedData, 0, compressedData.length);
-
-            byte[] wallet_object_bytes = Util.decompress(compressedData, Util.XZ);
-            if(wallet_object_bytes == null) return null;
-            String wallet_string = new String(wallet_object_bytes, "UTF-8");
-            JsonObject wallet = new JsonParser().parse(wallet_string).getAsJsonObject();
-            if (wallet.get("wallet").isJsonArray()) {
-                wallet = wallet.get("wallet").getAsJsonArray().get(0).getAsJsonObject();
-            } else {
-                wallet = wallet.get("wallet").getAsJsonObject();
-            }
-
-            return wallet.get("encryption_key").getAsString();
-        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
-
-        }
-        return null;
-    }
-
-    /**
      * Method to get the brainkey fron an input of bytes
      *
      * @param input Array of bytes of the file to be processed
@@ -178,7 +131,7 @@ public abstract class FileBin {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             ECKey randomECKey = ECKey.fromPublicOnly(publicKey);
-            byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getYCoord().getEncoded();
+            byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
             byte[] rawData = Util.decryptAES(rawDataEncripted, Util.bytesToHex(finalKey).getBytes());
