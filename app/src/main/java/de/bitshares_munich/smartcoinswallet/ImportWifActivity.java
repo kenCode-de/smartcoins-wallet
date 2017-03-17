@@ -234,7 +234,8 @@ public class ImportWifActivity extends BaseActivity {
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportWifActivity.this);
                                 Intent intent = new Intent(getApplicationContext(), TabActivity.class);
 
-
+                                hideDialog();
+                                
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
@@ -253,6 +254,7 @@ public class ImportWifActivity extends BaseActivity {
 
                 @Override
                 public void onError(BaseResponse.Error error) {
+                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
                 }
             })),0).start();

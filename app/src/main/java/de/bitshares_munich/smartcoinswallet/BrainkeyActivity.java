@@ -242,8 +242,11 @@ public class BrainkeyActivity extends BaseActivity {
                                 accountDetails.isSelected = true;
                                 accountDetails.status = "success";
                                 accountDetails.pinCode = pinCode;
+                                //Avoid window leak
+                                hideDialog();
                                 addWallet(accountDetails, brainkey, pinCode);
                             } else {
+                                hideDialog();
                                 Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
                         } else {
@@ -258,11 +261,13 @@ public class BrainkeyActivity extends BaseActivity {
 
                 @Override
                 public void onError(BaseResponse.Error error) {
+                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
             })),0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
+            hideDialog();
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
