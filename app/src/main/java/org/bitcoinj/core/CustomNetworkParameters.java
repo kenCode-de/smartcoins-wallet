@@ -19,13 +19,11 @@ public abstract class CustomNetworkParameters extends NetworkParameters {
     protected CustomNetworkParameters(CoinDefinitions coinDefinitions) {
         super();
         alertSigningKey = Utils.HEX.decode(coinDefinitions.satoshiKey);
-        CoinDefinitions coinDefinitions1 = coinDefinitions;
         genesisBlock = createGenesis(this, coinDefinitions);
     }
     //TODO:  put these bytes into the CoinDefinition
     private static Block createGenesis(NetworkParameters n,CoinDefinitions coinDefinitions) {
-        Block genesisBlock = new DashBlock(n, Block.BLOCK_VERSION_GENESIS);
-        //Block genesisBlock = new Block(n, Block.BLOCK_VERSION_GENESIS,Sha256Hash.ZERO_HASH, Sha256Hash.ZERO_HASH, System.currentTimeMillis() / 1000, coinDefinitions.genesisBlockDifficultyTarget , 0, new ArrayList());
+        Block genesisBlock = coinDefinitions.getCoinBlock(n);
         Transaction t = new Transaction(n);
         try {
             // A script containing the difficulty bits and the following message:

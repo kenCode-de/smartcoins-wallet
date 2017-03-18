@@ -29,7 +29,7 @@ import static org.bitcoinj.core.Sha256Hash.hashTwice;
  * Created by hvarona on 14/03/2017.
  */
 
-class DashBlock extends Block {
+public class DashBlock extends Block {
     private static final long ALLOWED_TIME_DRIFT = 2 * 60 * 60; // Same value as Bitcoin Core.
 
     /**
@@ -84,7 +84,7 @@ class DashBlock extends Block {
     private int optimalEncodingMessageSize;
 
     /** Special case constructor, used for the genesis node, cloneAsHeader and unit tests. */
-    DashBlock(NetworkParameters params, long setVersion) {
+    public DashBlock(NetworkParameters params, long setVersion) {
         super(params, setVersion);
         // Set up a few basic things. We are not complete after this though.
         version = setVersion;
