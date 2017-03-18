@@ -43,4 +43,18 @@ public class CryptoCoinFactory {
         }
         return null;
     }
+
+    public static CryptoCoinAccount getAccountFromSeed(Coin coin, AccountSeed seed, String name){
+        switch(coin){
+            case BITCOIN:
+                return BitcoinManager.getInstance().newAccount(seed, name);
+            case DASH:
+                return DashManager.getInstance().newAccount(seed, name);
+            /*case LITECOIN:
+                return LiteCoinManager.getInstance().newAccount(seed, name);
+            case DOGECOIN:
+                return DogeCoinManager.getInstance().newAccount(seed, name);*/
+        }
+        return null;
+    }
 }
