@@ -1,6 +1,8 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinValidator;
+import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.dash.DashValidator;
 
 /**
@@ -15,6 +17,17 @@ public class GeneralCoinFactory {
                 return BitcoinValidator.getInstance();
             case DASH:
                 return DashValidator.getInstance();
+        }
+
+        return null;
+    }
+
+    public static GeneralCoinAccount getGeneralCoinAccount(Coin coin, final AccountSeed seed, String name){
+        switch (coin){
+            case BITCOIN:
+                return new BitcoinAccount(seed, name);
+            case DASH:
+                return new DashAccount(seed, name);
         }
 
         return null;

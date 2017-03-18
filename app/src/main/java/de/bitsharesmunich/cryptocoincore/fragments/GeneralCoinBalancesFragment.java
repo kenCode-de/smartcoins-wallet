@@ -105,6 +105,7 @@ import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
 import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
 import de.bitsharesmunich.cryptocoincore.adapters.ViewPagerAdapter;
@@ -1680,12 +1681,25 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         this.showNewCoinAccountDialog();
     }
 
+    private String getBrainKey() {
+        TinyDB tinyDB;
+        tinyDB = new TinyDB(getContext());
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        for (int i = 0; i < accountDetails.size(); i++) {
+            if (accountDetails.get(i).isSelected) {
+                return accountDetails.get(i).brain_key;
+            }
+        }
+
+        return "";
+    }
+
     public void showNewCoinAccountDialog(){
         final Dialog dialogNewCoin = new Dialog(getContext(), R.style.stylishDialog);
         dialogNewCoin.setTitle(getString(R.string.add_new_coin_account_dialog));
         dialogNewCoin.setContentView(R.layout.add_new_currency_account);
 
-        Spinner coinSpinner = (Spinner)dialogNewCoin.findViewById(R.id.coinSpinner);
+        final Spinner coinSpinner = (Spinner)dialogNewCoin.findViewById(R.id.coinSpinner);
         Button createButton = (Button)dialogNewCoin.findViewById(R.id.createCurrencyAccount);
 
         ArrayList<Coin> data = new ArrayList<Coin>();
@@ -1702,6 +1716,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             public void onClick(View view) {
                 final SCWallDatabase db = new SCWallDatabase(getContext());
                 List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+
+                final Coin coinSelected = (Coin)coinSpinner.getSelectedItem();
 
                 if (seeds.size() == 0) {
                     final Dialog dialog = new Dialog(getContext(), R.style.stylishDialog);
@@ -1737,9 +1753,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                             public void onClick(View v) {
                                 db.putSeed(newSeed);
 
-                                need to take coinSpinner selected value and create new account
-                                //BitcoinAccount bitcoinAccount = new BitcoinAccount(newSeed, "BTC Account");
-                                //db.putGeneralCoinAccount(bitcoinAccount);
+                                GeneralCoinAccount generalAccount = GeneralCoinFactory.getGeneralCoinAccount(coinSelected, newSeed, coinSelected.getLabel()+" Account");
+                                db.putGeneralCoinAccount(generalAccount);
 
                                 Toast.makeText(getContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
                                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
@@ -1755,10 +1770,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
                     }
                 } else {
-                    need to take coinSpinner selected value and create new account
-
-                    BitcoinAccount bitcoinAccount = new BitcoinAccount(seeds.get(0), "BTC Account");
-                    db.putGeneralCoinAccount(bitcoinAccount);
+                    GeneralCoinAccount generalAccount = GeneralCoinFactory.getGeneralCoinAccount(coinSelected, seeds.get(0), coinSelected.getLabel()+" Account");
+                    db.putGeneralCoinAccount(generalAccount);
                 }
             }
         });
