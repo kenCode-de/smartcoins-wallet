@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinManager;
 import de.bitsharesmunich.cryptocoincore.dash.DashManager;
+import de.bitsharesmunich.cryptocoincore.dogecoin.DogeCoinManager;
+import de.bitsharesmunich.cryptocoincore.litecoin.LiteCoinManager;
 
 /**
  * Created by henry on 05/02/2017.
@@ -40,6 +42,20 @@ public class CryptoCoinFactory {
                 int changeIndex = accountObject.get("changeIndex").getAsInt();
                 return DashManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
             }
+            case LITECOIN:
+            {
+                int accountNumber = accountObject.get("accountNumber").getAsInt();
+                int externalIndex = accountObject.get("externalIndex").getAsInt();
+                int changeIndex = accountObject.get("changeIndex").getAsInt();
+                return LiteCoinManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+            }
+            case DOGECOIN:
+            {
+                int accountNumber = accountObject.get("accountNumber").getAsInt();
+                int externalIndex = accountObject.get("externalIndex").getAsInt();
+                int changeIndex = accountObject.get("changeIndex").getAsInt();
+                return DogeCoinManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+            }
         }
         return null;
     }
@@ -50,10 +66,10 @@ public class CryptoCoinFactory {
                 return BitcoinManager.getInstance().newAccount(seed, name);
             case DASH:
                 return DashManager.getInstance().newAccount(seed, name);
-            /*case LITECOIN:
+            case LITECOIN:
                 return LiteCoinManager.getInstance().newAccount(seed, name);
             case DOGECOIN:
-                return DogeCoinManager.getInstance().newAccount(seed, name);*/
+                return DogeCoinManager.getInstance().newAccount(seed, name);
         }
         return null;
     }
