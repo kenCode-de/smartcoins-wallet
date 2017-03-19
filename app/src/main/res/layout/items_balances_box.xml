@@ -38,6 +38,23 @@
             android:layout_alignParentStart="true"
             android:elevation="0dp" />
 
+        <ImageView
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            app:srcCompat="@mipmap/icon_receive"
+            android:id="@+id/coin_receive_btn"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="false"
+            android:layout_toLeftOf="@+id/coin_send_btn" />
+
+        <ImageView
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            app:srcCompat="@mipmap/icon_send"
+            android:id="@+id/coin_send_btn"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true" />
+
     </RelativeLayout>
 
 </LinearLayout>

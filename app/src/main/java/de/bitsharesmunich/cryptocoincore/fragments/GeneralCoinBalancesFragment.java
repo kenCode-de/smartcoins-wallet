@@ -1147,14 +1147,18 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     @OnClick(R.id.recievebtn)
-    public void GoToRecieveActivity() {
+    public void GotoRecieveActivity(){
+        this.GoToRecieveActivity(this.coin);
+    }
+
+    public void GoToRecieveActivity(Coin coin) {
         final Intent intent = new Intent(getActivity(), RecieveActivity.class);
         if(coin == Coin.BITSHARE) {
             intent.putExtra(getString(R.string.to), to);
             intent.putExtra(getString(R.string.account_id), accountId);
         }else{
             SCWallDatabase db = new SCWallDatabase(getContext());
-            final GeneralCoinAccount account = db.getGeneralCoinAccount(this.coin.name());
+            final GeneralCoinAccount account = db.getGeneralCoinAccount(coin.name());
             intent.putExtra(getString(R.string.to), account.getNextRecieveAddress());
             intent.putExtra(getString(R.string.account_id), Long.toString(account.getId()));
         }
@@ -1180,9 +1184,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
     @OnClick(R.id.sendbtn)
     public void GoToSendActivity() {
+        this.GoToSendActivity(this.coin);
+    }
+
+    public void GoToSendActivity(Coin coin) {
         final Intent intent = new Intent(getActivity(), SendScreen.class);
         Bundle b = new Bundle();
-        b.putString(getString(R.string.coin), this.coin.name());
+        b.putString(getString(R.string.coin), coin.name());
         intent.putExtras(b);
 
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
@@ -1902,6 +1910,22 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             balanceGroup.setTag(item.getCoin());
             TextView balanceGroupTitle = (TextView)balanceGroup.findViewById(R.id.coin_title);
             ImageView balanceGroupIcon = (ImageView)balanceGroup.findViewById(R.id.coin_icon);
+            ImageView coinSendButton = (ImageView)balanceGroup.findViewById(R.id.coin_send_btn);
+            ImageView coinReceiveButton = (ImageView)balanceGroup.findViewById(R.id.coin_receive_btn);
+
+            coinSendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    GoToSendActivity(item.getCoin());
+                }
+            });
+
+            coinReceiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    GoToRecieveActivity(item.getCoin());
+                }
+            });
 
             balanceGroupTitle.setText(item.getCoin().name());
             balanceGroupIcon.setImageResource(item.getCoin().getIcon());
