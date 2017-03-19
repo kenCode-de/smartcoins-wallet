@@ -42,10 +42,10 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE + TYPE_INTEGER + ", " +
             "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID + ") REFERENCES " +
-            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID +"), " +
+            SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "), " +
             "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID + ") REFERENCES " +
             SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "), " +
-            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + ") REFERENCES "+
+            "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + ") REFERENCES " +
             SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "))";
 
     private static final String SQL_CREATE_USER_ACCOUNTS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.UserAccounts.TABLE_NAME + "(" +

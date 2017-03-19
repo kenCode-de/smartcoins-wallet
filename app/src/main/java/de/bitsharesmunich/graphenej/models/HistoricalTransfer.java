@@ -10,9 +10,9 @@ import de.bitsharesmunich.graphenej.TransferOperation;
  * those will be filtered out of the parsed result.
  */
 public class HistoricalTransfer {
+    public Object[] result;
     private String id;
     private TransferOperation op;
-    public Object[] result;
     private long block_num;
     private long trx_in_block;
     private long op_in_trx;
