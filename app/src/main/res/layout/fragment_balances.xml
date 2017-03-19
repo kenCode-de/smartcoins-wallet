@@ -75,13 +75,14 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:gravity="center">
+
                     <ImageView
-                        android:id="@+id/recievebtn"
+                        android:id="@+id/receivebtn"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:src="@drawable/icon_receive"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                 </LinearLayout>
                 <ImageView

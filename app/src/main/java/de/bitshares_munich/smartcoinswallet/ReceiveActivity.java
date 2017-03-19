@@ -48,7 +48,7 @@ import retrofit2.Response;
 /**
  * Created by Syed Muhammad Muzzammil on 5/16/16.
  */
-public class RecieveActivity extends BaseActivity {
+public class ReceiveActivity extends BaseActivity {
     private String TAG = this.getClass().getName();
 
     @Bind(R.id.username)

@@ -96,7 +96,7 @@ import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.QRCodeActivity;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitshares_munich.smartcoinswallet.RecieveActivity;
+import de.bitshares_munich.smartcoinswallet.ReceiveActivity;
 import de.bitshares_munich.smartcoinswallet.SendScreen;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitshares_munich.utils.Application;
@@ -204,8 +204,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Bind(R.id.account_name)
     TextView tvAccountName;
 
-    @Bind(R.id.recievebtn)
-    ImageView recievebtn;
+    @Bind(R.id.receivebtn)
+    ImageView receivebtn;
 
     @Bind(R.id.sendbtn)
     ImageView sendbtn;
@@ -1048,9 +1048,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         updateTableView(true);
     }
 
-    @OnClick(R.id.recievebtn)
-    public void GoToRecieveActivity() {
-        final Intent intent = new Intent(getActivity(), RecieveActivity.class);
+    @OnClick(R.id.receivebtn)
+    public void GoToReceiveActivity() {
+        final Intent intent = new Intent(getActivity(), ReceiveActivity.class);
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), accountId);
         Animation coinAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.coin_animation);
@@ -1069,7 +1069,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             public void onAnimationStart(Animation animation) {
             }
         });
-        recievebtn.startAnimation(coinAnimation);
+        receivebtn.startAnimation(coinAnimation);
     }
 
     @OnClick(R.id.sendbtn)
@@ -1697,7 +1697,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     try {
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
-                                rotateRecieveButton();
+                                rotateReceiveButton();
                             }
                         });
 
@@ -1823,7 +1823,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                         try {
                             getActivity().runOnUiThread(new Runnable() {
                                 public void run() {
-                                    rotateRecieveButton();
+                                    rotateReceiveButton();
                                 }
                             });
 
@@ -1931,8 +1931,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         });
     }
 
-    private void rotateRecieveButton() {
-        ImageView rcvBtn = (ImageView) getActivity().findViewById(R.id.recievebtn);
+    private void rotateReceiveButton() {
+        ImageView rcvBtn = (ImageView) getActivity().findViewById(R.id.receivebtn);
         final Animation rotAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotate360);
         rcvBtn.startAnimation(rotAnim);
     }
