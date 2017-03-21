@@ -78,7 +78,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
 
     @OnClick(R.id.tvCancel)
     void cancel() {
-        Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ReceiveActivity.class);
         intent.putExtra(getString(R.string.currency), popwin.getText().toString());
         intent.putExtra(getString(R.string.to), to);
         intent.putExtra(getString(R.string.account_id), account_id);
@@ -92,7 +92,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
             Number number = format.parse(removeSpecialCharacters());
             if (number.doubleValue() > 0) {
                 String amount = number.toString();
-                Intent intent = new Intent(getApplicationContext(), RecieveActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ReceiveActivity.class);
                 intent.putExtra(getString(R.string.currency), popwin.getText().toString());
                 intent.putExtra(getString(R.string.to), to);
                 intent.putExtra(getString(R.string.price), amount);
