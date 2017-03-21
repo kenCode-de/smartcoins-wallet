@@ -98,10 +98,17 @@ public class Wallet {
         byte[] decryptedKey = new byte[Util.KEY_LENGTH];
         secureRandom.nextBytes(decryptedKey);
         this.encryption_key = Util.bytesToHex(Util.encryptAES(decryptedKey, password.getBytes()));
-        this.encrypted_brainkey = null;
-        this.brainkey_pubkey = null;
+        this.encrypted_brainkey = Util.bytesToHex(Util.encryptAES(null, decryptedKey));
         this.brainkey_sequence = brainkeySequence;
         this.chain_id = chainId;
+
+        try {
+            byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));
+            this.password_pubkey = new Address(ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
+        } catch (UnsupportedEncodingException e) {
+            this.brainkey_pubkey = null;
+            e.printStackTrace();
+        }
 
         try {
             byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));

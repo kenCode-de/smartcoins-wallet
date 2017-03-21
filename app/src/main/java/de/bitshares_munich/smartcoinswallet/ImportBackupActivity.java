@@ -181,24 +181,28 @@ public class ImportBackupActivity extends BaseActivity {
             for (int i = 0; i < bytes.size(); i++) {
                 byteArray[i] = bytes.get(i).byteValue();
             }
-            String brainKey;
-            brainKey = FileBin.getBrainkeyFromByte(byteArray, existingPassword);
+
+            WalletBackup walletBackup = FileBin.deserializeWalletBackup(byteArray, existingPassword);
+
+            //Empty Backup, or only wallet backup without account
+            if (walletBackup.getKeyCount() == 0){
+                Toast.makeText(ImportBackupActivity.this,
+                        getResources().getString(R.string.backup_no_keys_found_error),
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+            //If not empty backup continue
 
             //Get the WIF directly from the informed private key inside the bin backup file
-            WalletBackup walletBackup = FileBin.deserializeWalletBackup(byteArray, existingPassword);
             String wif = ECKey.fromPrivate(walletBackup.getPrivateKeys()[0].
                     decryptPrivateKey( walletBackup.getWallet(0).
                             getEncryptionKey(existingPassword))).decompress().
                     getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).
                     toString();
 
-            if ((brainKey == null) && (walletBackup.getKeyCount() > 0)) {
-                brainKey = walletBackup.getWallet(0).decryptBrainKey(existingPassword);
-            }
+            String brainKey;
+            brainKey = walletBackup.getWallet(0).decryptBrainKey(existingPassword);
             BrainKey bKey = new BrainKey(brainKey, 0);
-
-            /* Storing brainkey information */
-            database.insertKey(bKey);
 
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             //Get the WIF from the derivation of the private key using the informed Brain Key
@@ -222,6 +226,9 @@ public class ImportBackupActivity extends BaseActivity {
             }
             //Normal Account, proceed as usual
             else{
+                /* Storing brainkey information */
+                database.insertKey(bKey);
+
                 Log.d(TAG, "Normal account.");
                 new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
                     @Override
