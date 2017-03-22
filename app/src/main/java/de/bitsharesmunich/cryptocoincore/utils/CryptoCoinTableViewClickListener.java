@@ -2,6 +2,7 @@ package de.bitsharesmunich.cryptocoincore.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -34,7 +35,7 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
     public static final String KEY_OPERATION_ENTRY = "operation_entry";
 
     private Context myContext;
-    private Coin coin;
+    //private Coin coin;
 
     //public CryptoCoinTableViewClickListener(Context _context, InternalMovementListener listener) {
     //    this(_context, listener, Coin.BITSHARE);
@@ -55,7 +56,9 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
             String jsonTransfer = "";
             String memoString = "";
             long transactionId = -1;
+            Coin coin = Coin.BITSHARE;
 
+            Intent intent = new Intent(myContext, eReceipt.class);
             switch (historicalTransfer.getType()){
                 case TRANSACTION_TYPE_BITSHARE:
                     HistoricalTransferEntry historicalTransferEntry = historicalTransfer.getBitshareTransactionLog();
@@ -67,6 +70,8 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
                     Gson gson = new Gson();
                     jsonTransfer = gson.toJson(historicalTransferEntry);
                     memoString = operation.getMemo().getPlaintextMessage();
+                    intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
+                    coin = Coin.BITSHARE;
 
                     break;
                 case TRANSACTION_TYPE_BITCOIN:
@@ -74,13 +79,16 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
                     timestamp = generalTransaction.getDate().getTime();
                     ereceiptString = generalTransaction.toString();
                     transactionId = generalTransaction.getId();
+                    coin = generalTransaction.getType();
+
+                    intent.putExtra("TransactionId", transactionId);
+
                     break;
             }
 
-
             BalancesFragment.onClicked = true;
 
-            Intent intent = new Intent(myContext, eReceipt.class);
+
             intent.putExtra(myContext.getResources().getString(R.string.e_receipt), ereceiptString);
             intent.putExtra("Memo", memoString);
             intent.putExtra("Date", Helper.convertDateToGMT(new Date(timestamp), myContext));
@@ -89,14 +97,13 @@ public class CryptoCoinTableViewClickListener implements TableDataClickListener<
             intent.putExtra("To", toString);
             intent.putExtra("From", fromString);
             intent.putExtra("Sent", true);
+            intent.putExtra("coin", coin.name());
 
-            intent.putExtra("coin", this.coin.name());
-
-            if (this.coin == Coin.BITSHARE) {
+            /*if (this.coin == Coin.BITSHARE) {
                 intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
             } else {
                 intent.putExtra("TransactionId", transactionId);
-            }
+            }*/
 
             myContext.startActivity(intent);
         }
