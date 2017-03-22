@@ -2069,192 +2069,197 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
         }
 
-        final Runnable reloadBalances = new Runnable() {
-            @Override
-            public void run() {
-                removeZeroedBalanceViews(newItem.getCoin());
-            }
-        };
-
-        if (index < balanceGroup.getChildCount() * 2) {
-            View rowView = balanceGroup.getChildAt(index / 2);
-            final TextView symbolTextView;
-            final TextView ammountTextView;
-            final TextView faitTextView;
-
-            if (index % 2 == 0) {
-                symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_one);
-                ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_one);
-                faitTextView = (TextView) rowView.findViewById(R.id.fait_child_one);
-            } else {
-                symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_two);
-                ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_two);
-                faitTextView = (TextView) rowView.findViewById(R.id.fait_child_two);
-            }
-
-            String finalSymbol = "";
-            if ((newItem.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
-                finalSymbol = "bit" + newItem.getSymbol();
-            } else {
-                finalSymbol = newItem.getSymbol();
-            }
-
-            final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-            assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
-
-            //Long oldAmmount = Long.parseLong(oldItem.getAmmount());
-            //Long newAmmount = Long.parseLong(newItem.getAmmount());
-            double oldAmmount = Double.parseDouble(oldItem.getAmmount());
-            double newAmmount = Double.parseDouble(newItem.getAmmount());
-
-            if (oldAmmount > newAmmount) {
-                ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
-                ammountTextView.setTextColor(getResources().getColor(R.color.red));
-
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
-
-                final Runnable updateTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
-                        } catch (Exception e) {
-
-                        }
-                    }
-                };
-                animateNsoundHandler.postDelayed(updateTask, 4000);
-
-                if (newAmmount == 0) {
-                    final Runnable zeroAmount = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ammountTextView.setText("");
-                                symbolTextView.setText("");
-                                faitTextView.setText("");
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    };
-
-                    animateNsoundHandler.postDelayed(zeroAmount, 4200);
-                    animateNsoundHandler.postDelayed(reloadBalances, 5000);
+        if (balanceGroup != null) {
+            final Runnable reloadBalances = new Runnable() {
+                @Override
+                public void run() {
+                    removeZeroedBalanceViews(newItem.getCoin());
                 }
+            };
 
-                Log.d("Balances Update", "Animation initiated");
-            } else if (oldAmmount < newAmmount) {
+            if (index < balanceGroup.getChildCount() * 2) {
+                View rowView = balanceGroup.getChildAt(index / 2);
+                final TextView symbolTextView;
+                final TextView ammountTextView;
+                final TextView faitTextView;
 
-                Log.d("Balances Update", "Balance received");
-
-                ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
-                ammountTextView.setTextColor(getResources().getColor(R.color.green));
-
-                // run animation
-                //if (animateOnce) {
-                AudioFilePath audioFilePath = new AudioFilePath(getContext());
-                if (!audioFilePath.fetchAudioEnabled()) {
-                    audioSevice = true;
-                    getActivity().startService(new Intent(getActivity(), MediaService.class));
-                }
-
-                final Runnable rotateTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    rotateRecieveButton();
-                                }
-                            });
-
-                        } catch (Exception e) {
-
-                        }
-                    }
-                };
-
-                animateNsoundHandler.postDelayed(rotateTask, 200);
-
-                //animateOnce = false;
-
-                Log.d("Balances Update", "Animation initiated");
-                //}
-
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
-
-                Log.d("Balances Update", "Text Animated");
-
-                final Runnable updateTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
-                        } catch (Exception e) {
-
-                        }
-                    }
-                };
-                animateNsoundHandler.postDelayed(updateTask, 4000);
-
-                if (newAmmount == 0) {
-                    final Runnable zeroAmount = new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                ammountTextView.setText("");
-                                symbolTextView.setText("");
-                                faitTextView.setText("");
-                            } catch (Exception e) {
-
-                            }
-                        }
-                    };
-
-                    animateNsoundHandler.postDelayed(zeroAmount, 4200);
-                    animateNsoundHandler.postDelayed(reloadBalances, 5000);
-                }
-            }
-
-            if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < newItem.getCoin().getConfirmationsNeeded())){
-                int percentageDone = (newItem.getConfirmations()+1)*100/newItem.getCoin().getConfirmationsNeeded();
-                int confirmationColor = 0;
-
-                if (percentageDone < 34){
-                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_starting);
-                } else if (percentageDone < 67){
-                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_half);
+                if (index % 2 == 0) {
+                    symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_one);
+                    ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_one);
+                    faitTextView = (TextView) rowView.findViewById(R.id.fait_child_one);
                 } else {
-                    confirmationColor = ContextCompat.getColor(getContext(),R.color.color_confirmations_almost_complete);
+                    symbolTextView = (TextView) rowView.findViewById(R.id.symbol_child_two);
+                    ammountTextView = (TextView) rowView.findViewById(R.id.amount_child_two);
+                    faitTextView = (TextView) rowView.findViewById(R.id.fait_child_two);
                 }
 
-                faitTextView.setTextColor(confirmationColor);
-                faitTextView.setText(newItem.getConfirmations()+" of "+newItem.getCoin().getConfirmationsNeeded()+" conf");
+                String finalSymbol = "";
+                if ((newItem.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
+                    finalSymbol = "bit" + newItem.getSymbol();
+                } else {
+                    finalSymbol = newItem.getSymbol();
+                }
 
-            } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
-                faitTextView.setTextColor(ContextCompat.getColor(getContext(),R.color.receive_amount));
+                final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
+                assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
-                try {
-                    final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
-                    double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
-                    final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
+                //Long oldAmmount = Long.parseLong(oldItem.getAmmount());
+                //Long newAmmount = Long.parseLong(newItem.getAmmount());
+                double oldAmmount = Double.parseDouble(oldItem.getAmmount());
+                double newAmmount = Double.parseDouble(newItem.getAmmount());
 
-                    NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
-                    Log.i(TAG, currencyFormatter.format(eqAmount));
+                if (oldAmmount > newAmmount) {
+                    ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+                    ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
-                    String fiatString = String.format(locale, "%s", currencyFormatter.format(eqAmount));
+                    animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
 
-                    faitTextView.setText(fiatString);
-                    faitTextView.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
-                    for (StackTraceElement element : e.getStackTrace()) {
-                        Log.e(TAG, element.toString());
+                    final Runnable updateTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    };
+                    animateNsoundHandler.postDelayed(updateTask, 4000);
+
+                    if (newAmmount == 0) {
+                        final Runnable zeroAmount = new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ammountTextView.setText("");
+                                    symbolTextView.setText("");
+                                    faitTextView.setText("");
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        };
+
+                        animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                        animateNsoundHandler.postDelayed(reloadBalances, 5000);
                     }
-                    faitTextView.setVisibility(View.GONE);
+
+                    Log.d("Balances Update", "Animation initiated");
+                } else if (oldAmmount < newAmmount) {
+
+                    Log.d("Balances Update", "Balance received");
+
+                    ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
+                    ammountTextView.setTextColor(getResources().getColor(R.color.green));
+
+                    // run animation
+                    //if (animateOnce) {
+                    AudioFilePath audioFilePath = new AudioFilePath(getContext());
+                    if (!audioFilePath.fetchAudioEnabled()) {
+                        audioSevice = true;
+                        getActivity().startService(new Intent(getActivity(), MediaService.class));
+                    }
+
+                    final Runnable rotateTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                getActivity().runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        rotateRecieveButton();
+                                    }
+                                });
+
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    };
+
+                    animateNsoundHandler.postDelayed(rotateTask, 200);
+
+                    //animateOnce = false;
+
+                    Log.d("Balances Update", "Animation initiated");
+                    //}
+
+                    animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
+
+                    Log.d("Balances Update", "Text Animated");
+
+                    final Runnable updateTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                ammountTextView.setTextColor(getResources().getColor(R.color.receive_amount));
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    };
+                    animateNsoundHandler.postDelayed(updateTask, 4000);
+
+                    if (newAmmount == 0) {
+                        final Runnable zeroAmount = new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ammountTextView.setText("");
+                                    symbolTextView.setText("");
+                                    faitTextView.setText("");
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        };
+
+                        animateNsoundHandler.postDelayed(zeroAmount, 4200);
+                        animateNsoundHandler.postDelayed(reloadBalances, 5000);
+                    }
+                }
+
+                if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < newItem.getCoin().getConfirmationsNeeded())) {
+                    int percentageDone = (newItem.getConfirmations() + 1) * 100 / newItem.getCoin().getConfirmationsNeeded();
+                    int confirmationColor = 0;
+
+                    if (percentageDone < 34) {
+                        confirmationColor = ContextCompat.getColor(getContext(), R.color.color_confirmations_starting);
+                    } else if (percentageDone < 67) {
+                        confirmationColor = ContextCompat.getColor(getContext(), R.color.color_confirmations_half);
+                    } else {
+                        confirmationColor = ContextCompat.getColor(getContext(), R.color.color_confirmations_almost_complete);
+                    }
+
+                    faitTextView.setTextColor(confirmationColor);
+                    faitTextView.setText(newItem.getConfirmations() + " of " + newItem.getCoin().getConfirmationsNeeded() + " conf");
+
+                } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
+                    faitTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.receive_amount));
+
+                    try {
+                        final Currency currency = Currency.getInstance(mSmartcoin.getSymbol());
+                        double d = convertLocalizeStringToDouble(returnFromPower(newItem.getPrecision(), newItem.getAmmount()));
+                        final Double eqAmount = d * convertLocalizeStringToDouble(newItem.getFait());
+
+                        NumberFormat currencyFormatter = Helper.newCurrencyFormat(getContext(), currency, locale);
+                        Log.i(TAG, currencyFormatter.format(eqAmount));
+
+                        String fiatString = String.format(locale, "%s", currencyFormatter.format(eqAmount));
+
+                        faitTextView.setText(fiatString);
+                        faitTextView.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error in updateEquivalentValue : " + e.getMessage());
+                        for (StackTraceElement element : e.getStackTrace()) {
+                            Log.e(TAG, element.toString());
+                        }
+                        faitTextView.setVisibility(View.GONE);
+                    }
                 }
             }
+        } else {
+            //for some reason there's no balance group for the coin, let's add it
+            this.addNewBalanceView(newItem, true);
         }
     }
 
@@ -2934,9 +2939,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 boolean found = true;
                 for(HistoricalTransferEntry newEntry : newData){
                     for(TransactionLog existingEntry : existingData){
-                        if(newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())){
-                            found = true;
-                            break;
+                        if (existingEntry.getType() == TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE) {
+                            if (newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())) {
+                                found = true;
+                                break;
+                            }
                         }
                     }
                     if(!found){
