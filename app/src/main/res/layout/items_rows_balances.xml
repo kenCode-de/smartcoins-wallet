@@ -67,7 +67,7 @@
 
                         android:text=""/>
                     <TextView
-                        android:id="@+id/fait_child_one"
+                        android:id="@+id/fiat_child_one"
                         android:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/receive_amount"/>
                   <TextView
-                      android:id="@+id/fait_child_two"
+                      android:id="@+id/fiat_child_two"
                       android:visibility="visible"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"

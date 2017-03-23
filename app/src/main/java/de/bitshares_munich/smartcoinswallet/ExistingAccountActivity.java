@@ -20,19 +20,19 @@ public class ExistingAccountActivity extends BaseActivity {
 
     @OnClick(R.id.tvImportBrainKey)
     public void importBrainKey(Button button) {
-        Intent intent=new Intent(getApplicationContext(),BrainkeyActivity.class);
+        Intent intent = new Intent(getApplicationContext(), BrainkeyActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.tvBackup)
     public void importBackup(Button button) {
-        Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ImportBackupActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.btnWifBackup)
     public void importWif(Button button) {
-        Intent intent=new Intent(getApplicationContext(),ImportWifActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ImportWifActivity.class);
         startActivity(intent);
     }
 }

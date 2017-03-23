@@ -9,68 +9,68 @@ import android.widget.TextView;
 public class BalanceItem {
     String symbol;
     String precision;
-    String ammount;
-    String fait;
+    String amount;
+    String fiat;
     TextView symbolTextView;
-    TextView ammountTextView;
+    TextView amountTextView;
 
-    public BalanceItem(String symbol, String precision, String ammount){
+    public BalanceItem(String symbol, String precision, String amount) {
         this.symbol = symbol;
         this.precision = precision;
-        this.ammount = ammount;
-        this.fait = "";
+        this.amount = amount;
+        this.fiat = "";
     }
 
-    public String getSymbol(){
+    public String getSymbol() {
         return this.symbol;
     }
 
-    public String getPrecision(){
+    public String getPrecision() {
         return this.precision;
     }
 
-    public String getAmmount(){
-        return this.ammount;
+    public String getAmount() {
+        return this.amount;
     }
 
-    public String getFait(){
-        return this.fait;
+    public String getFiat() {
+        return this.fiat;
     }
 
-    public void setSymbol(String symbol){
+    public void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
-    public void setPrecision(String precision){
+    public void setPrecision(String precision) {
         this.precision = precision;
     }
 
-    public void setAmmount(String ammount){
-        this.ammount = ammount;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
-    public void setFait(String fait){
-        this.fait = fait;
+    public void setFiat(String fiat) {
+        this.fiat = fiat;
     }
 
-    public BalanceItem clone(){
-        BalanceItem item = new BalanceItem(this.symbol, this.precision, this.ammount);
+    public BalanceItem clone() {
+        BalanceItem item = new BalanceItem(this.symbol, this.precision, this.amount);
         return item;
     }
 
-    public void setSymbolTextView(TextView symbolTextView){
+    public void setSymbolTextView(TextView symbolTextView) {
         this.symbolTextView = symbolTextView;
     }
 
-    public void setAmmountTextView(TextView ammountTextView){
-        this.ammountTextView = ammountTextView;
+    public void setAmountTextView(TextView amountTextView) {
+        this.amountTextView = amountTextView;
     }
 
-    public TextView getSymbolTextView(){
+    public TextView getSymbolTextView() {
         return this.symbolTextView;
     }
 
-    public TextView getAmmountTextView(){
-        return this.ammountTextView;
+    public TextView getAmountTextView() {
+        return this.amountTextView;
     }
 }

@@ -9,8 +9,7 @@ import de.bitshares_munich.utils.Helper;
 /**
  * Created by developer on 5/24/16.
  */
-public class TransactionDetails
-{
+public class TransactionDetails {
     public String id;
     public String blockNumber;
     public java.util.Date Date;
@@ -21,23 +20,20 @@ public class TransactionDetails
     public double Amount;
     public String assetSymbol;
     public double faitAmount;
-    public String faitAssetSymbol;
+    public String fiatAssetSymbol;
     public String eReceipt;
     private Context context;
 
-    public void updateContext(Context _context)
-    {
+    public void updateContext(Context _context) {
         context = _context;
     }
 
-    public TransactionDetails()
-    {
+    public TransactionDetails() {
 
     }
 
-    public TransactionDetails(String _id,String _blockNumber,Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
-                              String _assetSymbol, double _faitAmount, String _faitAssetSymbol , String _eReceipt)
-    {
+    public TransactionDetails(String _id, String _blockNumber, Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
+                              String _assetSymbol, double _faitAmount, String _fiatAssetSymbol, String _eReceipt) {
         this.id = _id;
         this.blockNumber = _blockNumber;
         this.Date = _date;
@@ -48,82 +44,72 @@ public class TransactionDetails
         this.Amount = _Amount;
         this.assetSymbol = _assetSymbol;
         this.faitAmount = _faitAmount;
-        this.faitAssetSymbol = _faitAssetSymbol;
+        this.fiatAssetSymbol = _fiatAssetSymbol;
         eReceipt = _eReceipt;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         //SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         //String formattedDate = df.format(Calendar.getInstance().getTime());
         return this.Date;//Calendar.getInstance().getTime();
     }
 
-    public String getDateString()
-    {
+    public String getDateString() {
         /*SimpleDateFormat df = new SimpleDateFormat("dd MMM");
         String formattedDate = df.format(this.Date);
         return formattedDate;//Calendar.getInstance().getTime();*/
-        return Helper.convertDateToGMT(this.Date,context);
+        return Helper.convertDateToGMT(this.Date, context);
 
     }
 
-    public String getDateStringWithYear()
-    {
-        return Helper.convertDateToGMTWithYear(this.Date,context);
+    public String getDateStringWithYear() {
+        return Helper.convertDateToGMTWithYear(this.Date, context);
 
     }
 
-    public String getTimeString()
-    {
+    public String getTimeString() {
      /*   SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
         String formattedDate = df.format(this.Date);
         return formattedDate;//Calendar.getInstance().getTime();*/
-        return Helper.convertTimeToGMT(this.Date,context);
+        return Helper.convertTimeToGMT(this.Date, context);
     }
 
-    public String getTimeZone()
-    {
+    public String getTimeZone() {
        /* //SimpleDateFormat df = new SimpleDateFormat("HH:mm a");
         //String formattedDate = df.format(this.Date);
         return "UTC";//Calendar.getInstance().getTime();*/
-        return Helper.convertTimeZoneToRegion(this.Date,context);
+        return Helper.convertTimeZoneToRegion(this.Date, context);
     }
 
-    public Boolean getSent ()
-    {
+    public Boolean getSent() {
         return this.Sent;
     }
 
-    public String getDetailsTo()
-    {
+    public String getDetailsTo() {
         return this.To;
     }
 
-    public String getDetailsFrom()
-    {
+    public String getDetailsFrom() {
         return this.From;
     }
 
-    public String getDetailsMemo()
-    {
+    public String getDetailsMemo() {
         return this.Memo;
     }
 
-    public double getAmount ()
-    {
+    public double getAmount() {
         return this.Amount;
     }
 
-    public String getAssetSymbol(){
+    public String getAssetSymbol() {
         return this.assetSymbol;
     }
 
-    public double getFaitAmount() {
+    public double getFiatAmount() {
         return this.faitAmount;
     }
 
-    public String getFaitAssetSymbol() {
-        return this.faitAssetSymbol;
+    public String getFiatAssetSymbol() {
+        return this.fiatAssetSymbol;
     }
 }
