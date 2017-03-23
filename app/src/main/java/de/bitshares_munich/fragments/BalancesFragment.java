@@ -1572,6 +1572,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         });
     }
 
+    @Override
+    public void onBalanceItemsRemoved(Coin coin) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
+                removeBalanceItemsView();
+                progressBar1.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
     public void onBalanceItemUpdated(BalanceItemsEvent event){
         final BalanceItem oldItem = event.getOldItem();
         final BalanceItem newItem = event.getBalanceItem();
@@ -1586,6 +1597,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         });
     }
+
+    public void removeBalanceItemsView() {
+        llBalances.removeAllViews();
+    };
 
     public void removeBalanceItemView(BalanceItem item, int index, int newSize){
         if (index < llBalances.getChildCount()*2){

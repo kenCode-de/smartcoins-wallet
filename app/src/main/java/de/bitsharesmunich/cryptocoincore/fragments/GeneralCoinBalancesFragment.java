@@ -1121,7 +1121,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
             String smartcoinSymbol = mSmartcoin.getSymbol();
             if (accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)))
-                llBalances.removeAllViews();
+                this.balancesItems.getBalancesItems(Coin.BITSHARE).clear();
+                //dfgdfgdsfllBalances.removeAllViews();
 
             if (isHideDonationsChanged || accountNameChange || (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(mSmartcoin.getSymbol()))) {
                 if (smartcoinSymbol != null && !Helper.getFadeCurrency(getContext()).equals(smartcoinSymbol)) {
@@ -1816,6 +1817,18 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
     }
 
+    @Override
+    public void onBalanceItemsRemoved(final Coin coin) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar1.setVisibility(View.VISIBLE);
+                removeBalanceItemsView(coin);
+                progressBar1.setVisibility(View.INVISIBLE);
+            }
+
+        });
+    }
+
     public void onBalanceItemUpdated(BalanceItemsEvent event){
         final BalanceItem oldItem = event.getOldItem();
         final BalanceItem newItem = event.getBalanceItem();
@@ -1829,6 +1842,22 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
 
         });
+    }
+
+    public void removeBalanceItemsView(Coin coin){
+        LinearLayout balanceGroup = null;
+
+        //Find if coin section its already in llBalances
+        for (int i=0;i<llBalances.getChildCount();i++) {
+            View boxBase = llBalances.getChildAt(i);
+            if (((Coin)boxBase.getTag()) == coin){
+                balanceGroup = (LinearLayout)boxBase.findViewById(R.id.coin_balance);
+            }
+        }
+
+        if (balanceGroup != null){
+            balanceGroup.removeAllViews();
+        }
     }
 
     public void removeBalanceItemView(BalanceItem item, int index, int newSize){

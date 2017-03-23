@@ -67,6 +67,13 @@ public class BalancesItems implements BalanceItemsListener {
         }
     }
 
+    private synchronized void _fireOnBalanceItemsRemovedEvent(Coin coin) {
+        Iterator listeners = _listeners.iterator();
+        while( listeners.hasNext() ) {
+            ( (BalanceItemsListener) listeners.next() ).onBalanceItemsRemoved(coin);
+        }
+    }
+
     private synchronized void _fireOnBalanceItemUpdatedEvent(BalanceItem oldBalanceItem, BalanceItem newBalanceItem, int index) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, newBalanceItem );
         balanceItemsEvent.setIndex(index);
@@ -90,5 +97,10 @@ public class BalancesItems implements BalanceItemsListener {
     @Override
     public void onBalanceItemUpdated(BalanceItemsEvent event) {
         this._fireOnBalanceItemUpdatedEvent(event.getOldItem(),event.getBalanceItem(),event.getIndex());
+    }
+
+    @Override
+    public void onBalanceItemsRemoved(Coin coin) {
+        this._fireOnBalanceItemsRemovedEvent(coin);
     }
 }

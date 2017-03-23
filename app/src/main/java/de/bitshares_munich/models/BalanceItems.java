@@ -106,6 +106,7 @@ public class BalanceItems {
 
     public void clear(){
         this.items.clear();
+        this._fireOnBalanceItemsRemovedEvent();
     }
 
     public int count(){
@@ -159,6 +160,13 @@ public class BalanceItems {
         Iterator listeners = _listeners.iterator();
         while( listeners.hasNext() ) {
             ( (BalanceItemsListener) listeners.next() ).onBalanceItemRemoved( balanceItemsEvent );
+        }
+    }
+
+    private synchronized void _fireOnBalanceItemsRemovedEvent() {
+        Iterator listeners = _listeners.iterator();
+        while( listeners.hasNext() ) {
+            ( (BalanceItemsListener) listeners.next() ).onBalanceItemsRemoved(this.coin);
         }
     }
 
