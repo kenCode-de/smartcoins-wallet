@@ -15,8 +15,8 @@ public class transactionsJsonSerializable {
     public String Memo;
     public double Amount;
     public String assetSymbol;
-    public double faitAmount;
-    public String faitAssetSymbol;
+    public double fiatAmount;
+    public String fiatAssetSymbol;
     public String eReceipt;
     private Context context;
 }

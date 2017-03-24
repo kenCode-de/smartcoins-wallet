@@ -945,12 +945,12 @@ public class TransactionsHelper implements IBalancesDelegate {
 
                                     // get fiat amount and symbol
                                     if (equivalentRatesHm.get(myTransactionDetails.assetSymbol) != null) {
-                                        myTransactionDetails.faitAmount = SupportMethods.convertAssetAmountToFiat(myTransactionDetails.Amount, equivalentRatesHm.get(myTransactionDetails.assetSymbol));
+                                        myTransactionDetails.fiatAmount = SupportMethods.convertAssetAmountToFiat(myTransactionDetails.Amount, equivalentRatesHm.get(myTransactionDetails.assetSymbol));
                                         if (context == null) return;
-                                        myTransactionDetails.faitAssetSymbol = Helper.getFadeCurrencySymbol(context);
+                                        myTransactionDetails.fiatAssetSymbol = Helper.getFadeCurrencySymbol(context);
                                     } else {
-                                        myTransactionDetails.faitAmount = 0;
-                                        myTransactionDetails.faitAssetSymbol = "";
+                                        myTransactionDetails.fiatAmount = 0;
+                                        myTransactionDetails.fiatAssetSymbol = "";
                                     }
                                 }
 

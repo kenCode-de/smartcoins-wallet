@@ -367,8 +367,8 @@ public class TinyDB {
             myObj.Memo = abc.Memo;
             myObj.Amount = abc.Amount;
             myObj.assetSymbol = abc.assetSymbol;
-            myObj.faitAmount = abc.faitAmount;
-            myObj.faitAssetSymbol = abc.faitAssetSymbol;
+            myObj.fiatAmount = abc.fiatAmount;
+            myObj.fiatAssetSymbol = abc.fiatAssetSymbol;
             myObj.eReceipt = abc.eReceipt;
 
             a.add(myObj);
@@ -395,7 +395,7 @@ public class TinyDB {
                 transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
 
                 TransactionDetails myObject = new TransactionDetails(value.id,value.blockNumber,value.Date, value.Sent, value.To, value.From, value.Memo,
-                        value.Amount, value.assetSymbol, value.faitAmount, value.faitAssetSymbol, value.eReceipt);
+                        value.Amount, value.assetSymbol, value.fiatAmount, value.fiatAssetSymbol, value.eReceipt);
 
                 objects.add(myObject);
             }

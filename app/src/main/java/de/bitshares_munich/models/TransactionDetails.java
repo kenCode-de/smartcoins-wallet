@@ -19,7 +19,7 @@ public class TransactionDetails {
     public String Memo;
     public double Amount;
     public String assetSymbol;
-    public double faitAmount;
+    public double fiatAmount;
     public String fiatAssetSymbol;
     public String eReceipt;
     private Context context;
@@ -33,7 +33,7 @@ public class TransactionDetails {
     }
 
     public TransactionDetails(String _id, String _blockNumber, Date _date, Boolean _Sent, String _to, String _from, String _memo, double _Amount,
-                              String _assetSymbol, double _faitAmount, String _fiatAssetSymbol, String _eReceipt) {
+                              String _assetSymbol, double _fiatAmount, String _fiatAssetSymbol, String _eReceipt) {
         this.id = _id;
         this.blockNumber = _blockNumber;
         this.Date = _date;
@@ -43,7 +43,7 @@ public class TransactionDetails {
         this.Memo = _memo;
         this.Amount = _Amount;
         this.assetSymbol = _assetSymbol;
-        this.faitAmount = _faitAmount;
+        this.fiatAmount = _fiatAmount;
         this.fiatAssetSymbol = _fiatAssetSymbol;
         eReceipt = _eReceipt;
     }
@@ -106,7 +106,7 @@ public class TransactionDetails {
     }
 
     public double getFiatAmount() {
-        return this.faitAmount;
+        return this.fiatAmount;
     }
 
     public String getFiatAssetSymbol() {
