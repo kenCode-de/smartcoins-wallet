@@ -85,48 +85,6 @@ public class Wallet {
     }
 
     /**
-     * Wallet constructor version for WIF Imported account.
-     * @param name: The name of this wallet.
-     * @param brainkeySequence: The brain key sequence (used just for not break logic since
-     *                        brainkey is empty for WIF imported accounts).
-     * @param chainId: The chain id
-     * @param password: Password used to encrypt all sensitive data.
-     */
-    public Wallet(String name, int brainkeySequence, String chainId, String password){
-        this(name);
-        SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
-        byte[] decryptedKey = new byte[Util.KEY_LENGTH];
-        secureRandom.nextBytes(decryptedKey);
-        this.encryption_key = Util.bytesToHex(Util.encryptAES(decryptedKey, password.getBytes()));
-        this.encrypted_brainkey = Util.bytesToHex(Util.encryptAES(null, decryptedKey));
-        this.brainkey_sequence = brainkeySequence;
-        this.chain_id = chainId;
-
-        try {
-            byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));
-            this.password_pubkey = new Address(ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
-        } catch (UnsupportedEncodingException e) {
-            this.brainkey_pubkey = null;
-            e.printStackTrace();
-        }
-
-        try {
-            byte[] passwordHash = Sha256Hash.hash(password.getBytes("UTF8"));
-            this.password_pubkey = new Address(
-                    ECKey.fromPublicOnly(ECKey.fromPrivate(passwordHash).getPubKey())).toString();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        Date now = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat(Util.TIME_DATE_FORMAT);
-        this.created = dateFormat.format(now);
-        this.last_modified = created;
-        this.backup_date = created;
-        this.brainkey_backup_date = created;
-    }
-
-    /**
      * Method that will return the decrypted version of the "encrypted_brainkey" field.
      * @param password: Password used to encrypt the encryption key.
      * @return: The brainkey in its plaintext version.

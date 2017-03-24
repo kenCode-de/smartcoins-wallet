@@ -127,6 +127,7 @@ public class BinHelper {
     }
 
     public void getBinBytesFromBrainkey(final String pin, final String brnKey, final String accountName) {
+        Log.d(TAG, "getBinBytesFromBrainkey. pin: " + pin + ", brnKey: " + brnKey + ", accountName: " + accountName);
         BrainKey brainKey = new BrainKey(brnKey, 0);
         try {
             ArrayList<Wallet> wallets = new ArrayList<>();
@@ -166,17 +167,16 @@ public class BinHelper {
      *
      */
     public void getBinBytesFromWif(final String pin, final String wif_key, final String accountName) {
-        BrainKey brainKey = new BrainKey("", 0);
+        Log.d(TAG, "getBinBytesFromWif. pin: " + pin + ", wif_key: " + wif_key + ", accountName: " + accountName);
+        //Fill with an invalid brainkey to not break the backup format (The presence of brainkey seems mandatory)
+        BrainKey brainKey = new BrainKey("NOT A VALID BRAINKEY (PREVIOUSLY WIF IMPORTED ACCOUNT)", 0);
         try {
             ArrayList<Wallet> wallets = new ArrayList<>();
             ArrayList<LinkedAccount> accounts = new ArrayList<>();
             ArrayList<PrivateKeyBackup> keys = new ArrayList<>();
 
-            Wallet wallet = new Wallet(accountName,
-                    brainKey.getSequenceNumber(),
-                    Chains.BITSHARES.CHAIN_ID, pin);
+            Wallet wallet = new Wallet(accountName, brainKey.getBrainKey(), brainKey.getSequenceNumber(), Chains.BITSHARES.CHAIN_ID, pin);
             wallets.add(wallet);
-
             String wif = Crypt.getInstance().decrypt_string(wif_key);
             ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif ).getKey();
 
