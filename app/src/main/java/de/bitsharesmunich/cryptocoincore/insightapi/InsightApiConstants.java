@@ -47,7 +47,7 @@ abstract class InsightApiConstants {
         //serverAddressPort.put(Coin.BITCOIN,new AddressPort("fr.blockpay.ch",3002,"node/btc/testnet","insight-api"));
         serverAddressPort.put(Coin.BITCOIN,new AddressPort("fr.blockpay.ch",3003,"node/btc/testnet","insight-api"));
         //serverAddressPort.put(Coin.BITCOIN_TEST,new AddressPort("fr.blockpay.ch",3003,"node/btc/testnet","insight-api"));
-        serverAddressPort.put(Coin.LITECOIN,new AddressPort("fr.blockpay.ch",3009,"node/litecoin","insight-lite-api"));
+        serverAddressPort.put(Coin.LITECOIN,new AddressPort("fr.blockpay.ch",3009,"node/ltc","insight-lite-api"));
         serverAddressPort.put(Coin.DASH,new AddressPort("fr.blockpay.ch",3005,"node/dash","insight-api-dash"));
         serverAddressPort.put(Coin.DOGECOIN,new AddressPort("fr.blockpay.ch",3006,"node/dogecoin","insight-api"));
     }
