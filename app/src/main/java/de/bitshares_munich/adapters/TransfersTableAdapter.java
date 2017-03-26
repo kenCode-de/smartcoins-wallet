@@ -69,7 +69,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TextView timeTextView = (TextView) v.findViewById(R.id.transactiontime);
         TextView timeZoneTextView = (TextView) v.findViewById(R.id.transactionttimezone);
 
-        if(historicalTransfer.getTimestamp() > 0){
+        if (historicalTransfer.getTimestamp() > 0) {
 
             Date date = new Date(historicalTransfer.getTimestamp() * 1000);
 
@@ -85,8 +85,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             // The following code does just that.
             Pattern pattern = Pattern.compile("(GMT[+-])(\\d)(\\d):(\\d\\d)");
             Matcher m = pattern.matcher(formattedTimeZone);
-            if(m.matches()){
-                if(m.group(4).equals("00")){
+            if (m.matches()) {
+                if (m.group(4).equals("00")) {
                     formattedTimeZone = m.group(1) + m.group(3);
                 }
             }
@@ -103,7 +103,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         LayoutInflater layoutInflater = getLayoutInflater();
         View v = layoutInflater.inflate(R.layout.transactionssendrecieve, null);
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
-        if (operation.getFrom().getObjectId().equals(userAccount.getObjectId()) ) {
+        if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
             imgView.setImageResource(R.drawable.send);
         } else {
             imgView.setImageResource(R.drawable.receive);
@@ -124,7 +124,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
         fromUser.setText(fromMessage);
 
-        if(!operation.getMemo().getPlaintextMessage().equals("")){
+        if (!operation.getMemo().getPlaintextMessage().equals("")) {
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
         }
@@ -144,21 +144,21 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         String language = Helper.fetchStringSharePref(getContext(), getContext().getString(R.string.pref_language), Constants.DEFAULT_LANGUAGE_CODE);
         Locale locale = new Locale(language);
         String symbol = "";
-        if(transferAmount.getAsset() != null){
+        if (transferAmount.getAsset() != null) {
             symbol = transferAmount.getAsset().getSymbol();
         }
-        int redColor = ContextCompat.getColor(getContext(),R.color.send_amount);
-        int greenColor = ContextCompat.getColor(getContext(),R.color.receive_amount);
+        int redColor = ContextCompat.getColor(getContext(), R.color.send_amount);
+        int greenColor = ContextCompat.getColor(getContext(), R.color.receive_amount);
         int lightRed = ContextCompat.getColor(getContext(), R.color.send_amount_light);
         int lightGreen = ContextCompat.getColor(getContext(), R.color.receive_amount_light);
 
-        if(operation.getFrom().getObjectId().equals(userAccount.getObjectId())){
+        if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
             // User sent this transfer
             transferAmountTextView.setTextColor(redColor);
             fiatAmountTextView.setTextColor(lightRed);
             String amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount));
             transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
-        }else{
+        } else {
             // User received this transfer
             transferAmountTextView.setTextColor(greenColor);
             fiatAmountTextView.setTextColor(lightGreen);
@@ -166,11 +166,11 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
-        if(smartcoinAmount != null){
+        if (smartcoinAmount != null) {
             String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
             String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
             fiatAmountTextView.setText(eqValue);
-        }else{
+        } else {
             Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
         }
         return root;

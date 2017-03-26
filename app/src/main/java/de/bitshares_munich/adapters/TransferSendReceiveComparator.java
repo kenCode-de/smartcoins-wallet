@@ -1,11 +1,10 @@
 package de.bitshares_munich.adapters;
 
-import de.bitsharesmunich.graphenej.TransferOperation;
-import de.bitsharesmunich.graphenej.UserAccount;
-
 import java.util.Comparator;
 
 import de.bitshares_munich.database.HistoricalTransferEntry;
+import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * Created by nelson on 12/14/16.
@@ -15,7 +14,7 @@ public class TransferSendReceiveComparator implements Comparator<HistoricalTrans
 
     private UserAccount me;
 
-    public TransferSendReceiveComparator(UserAccount userAccount){
+    public TransferSendReceiveComparator(UserAccount userAccount) {
         this.me = userAccount;
     }
 
@@ -23,7 +22,7 @@ public class TransferSendReceiveComparator implements Comparator<HistoricalTrans
     public int compare(HistoricalTransferEntry lhs, HistoricalTransferEntry rhs) {
         TransferOperation lhsOperation = lhs.getHistoricalTransfer().getOperation();
         boolean isOutgoing = lhsOperation.getFrom().getObjectId().equals(me.getObjectId());
-        if(isOutgoing)
+        if (isOutgoing)
             return -1;
         else
             return 1;

@@ -10,14 +10,11 @@ import android.util.Log;
  * Created by nelson on 12/13/16.
  */
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
-    private final String TAG = this.getClass().getName();
     public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "scwall.db";
-
     private static final String TYPE_TEXT = " TEXT";
     private static final String TYPE_INTEGER = " INTEGER";
     private static final String TYPE_REAL = " REAL";
-
     private static final String SQL_CREATE_ASSETS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.Assets.TABLE_NAME + " (" +
             SCWallDatabaseContract.Assets.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Assets.COLUMN_SYMBOL + TYPE_TEXT + ", " +
@@ -25,7 +22,6 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Assets.COLUMN_ISSUER + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION + TYPE_TEXT + ", " +
             SCWallDatabaseContract.Assets.COLUMN_MAX_SUPPLY + TYPE_INTEGER + ")";
-
     private static final String SQL_CREATE_TRANSFERS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.Transfers.TABLE_NAME + " (" +
             SCWallDatabaseContract.Transfers.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + TYPE_INTEGER + ", " +
@@ -47,16 +43,15 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "), " +
             "FOREIGN KEY (" + SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + ") REFERENCES " +
             SCWallDatabaseContract.Assets.TABLE_NAME + "(" + SCWallDatabaseContract.Assets.COLUMN_ID + "))";
-
     private static final String SQL_CREATE_USER_ACCOUNTS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.UserAccounts.TABLE_NAME + "(" +
             SCWallDatabaseContract.UserAccounts.COLUMN_ID + " TEXT PRIMARY KEY, " +
             SCWallDatabaseContract.UserAccounts.COLUMN_NAME + TYPE_TEXT + ")";
-
     private static final String SQL_CREATE_ACCOUNT_KEYS_TABLE = "CREATE TABLE IF NOT EXISTS " + SCWallDatabaseContract.AccountKeys.TABLE_NAME + "( " +
             SCWallDatabaseContract.BaseTable.COLUMN_CREATION_DATE + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.AccountKeys.COLUMN_BRAINKEY + TYPE_TEXT + ", " +
             SCWallDatabaseContract.AccountKeys.COLUMN_SEQUENCE_NUMBER + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.AccountKeys.COLUMN_WIF + TYPE_TEXT + " UNIQUE)";
+    private final String TAG = this.getClass().getName();
 
 
     public SCWallSQLiteOpenHelper(Context context) {

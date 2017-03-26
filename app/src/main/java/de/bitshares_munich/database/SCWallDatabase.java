@@ -35,19 +35,16 @@ import de.bitsharesmunich.graphenej.objects.Memo;
  * Created by nelson on 12/13/16.
  */
 public class SCWallDatabase {
-    private String TAG = this.getClass().getName();
-
     /**
      * Constant used to specify an unlimited amount of transactions for the
      * second argument of the getTransactions method.
      */
     public static final int UNLIMITED_TRANSACTIONS = -1;
-
     /**
      * The default number of transactions to load in the transaction list
      */
     public static final int DEFAULT_TRANSACTION_BATCH_SIZE = 50;
-
+    private String TAG = this.getClass().getName();
     private SCWallSQLiteOpenHelper dbHelper;
     private SQLiteDatabase db;
 
