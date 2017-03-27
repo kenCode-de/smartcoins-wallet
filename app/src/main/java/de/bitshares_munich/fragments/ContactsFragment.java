@@ -52,24 +52,27 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         ButterKnife.bind(this, view);
-        contactsDelegate=this;
+        contactsDelegate = this;
         adapter = new ContactListAdapter(getActivity());
         contactslist.setAdapter(adapter);
         return view;
 
     }
+
     @OnClick(R.id.addcontact)
-    public void AddContact(){
+    public void AddContact() {
         Intent intent = new Intent(getActivity(), AddEditContacts.class);
-        intent.putExtra("activity",99999);
+        intent.putExtra("activity", 99999);
         startActivity(intent);
     }
+
     @Override
-    public void OnUpdate(String s,int id){
+    public void OnUpdate(String s, int id) {
         adapter.loadmore();
         adapter = new ContactListAdapter(getActivity());
         contactslist.setAdapter(adapter);
     }
+
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
         Intent intent = new Intent(getActivity(), ShareContact.class);
@@ -81,10 +84,11 @@ public class ContactsFragment extends Fragment implements ContactsDelegate {
         super.onResume();
 
     }
+
     @Override
-    public void setUserVisibleHint(boolean visible){
+    public void setUserVisibleHint(boolean visible) {
         super.setUserVisibleHint(visible);
-        if (visible){
+        if (visible) {
             addcontact.setVisibility(View.INVISIBLE);
             final Animation animationRigthtoLeft = AnimationUtils.loadAnimation(getContext(), R.anim.animation);
             animationRigthtoLeft.setInterpolator(new AccelerateDecelerateInterpolator());

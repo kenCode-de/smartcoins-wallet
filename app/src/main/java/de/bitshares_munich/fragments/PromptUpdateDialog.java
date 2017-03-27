@@ -17,7 +17,6 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
-import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,11 +24,12 @@ import java.util.List;
 
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * Dialog that will be displayed to the users after the security update prompting to
  * update the potentially unsecure accounts.
- *
+ * <p>
  * Created by nelson on 12/16/16.
  */
 public class PromptUpdateDialog extends DialogFragment {
@@ -40,7 +40,7 @@ public class PromptUpdateDialog extends DialogFragment {
     private UpdateAccountsListListener mListener;
     private ListView accountListView;
 
-    public static PromptUpdateDialog newInstance(List<AccountDetails> accounts){
+    public static PromptUpdateDialog newInstance(List<AccountDetails> accounts) {
         PromptUpdateDialog dialog = new PromptUpdateDialog();
         Gson gson = new Gson();
         String json = gson.toJson(accounts);
@@ -59,9 +59,9 @@ public class PromptUpdateDialog extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof UpdateAccountsListListener){
+        if (activity instanceof UpdateAccountsListListener) {
             mListener = (UpdateAccountsListListener) activity;
-        }else{
+        } else {
             throw new RuntimeException("UpdateAccountsListListener not implemented by the activity");
         }
     }
@@ -93,15 +93,29 @@ public class PromptUpdateDialog extends DialogFragment {
         Gson gson = new Gson();
         String jsonAccounts = getArguments().getString(KEY_ACCOUNTS);
         accountList = gson.fromJson(jsonAccounts, AccountDetails[].class);
-        Log.d(TAG, "onCreate. accountList: "+accountList);
+        Log.d(TAG, "onCreate. accountList: " + accountList);
         accountListView.setAdapter(new AccountListAdapter(getActivity(), R.layout.account_update_prompt_item, accountList));
         return view;
     }
 
     /**
+     * Interface to be implemented by the class interested in receive the update from the user
+     * interaction with this fragment.
+     */
+    public interface UpdateAccountsListListener {
+
+        /**
+         * The list of accounts the user has selected to be updated, can be empty.
+         *
+         * @param accountList
+         */
+        public void onAccountList(List<UserAccount> accountList);
+    }
+
+    /**
      * Adapter used to fill in the list of accounts to be updated.
      */
-    private class AccountListAdapter extends ArrayAdapter<AccountDetails> implements CompoundButton.OnCheckedChangeListener{
+    private class AccountListAdapter extends ArrayAdapter<AccountDetails> implements CompoundButton.OnCheckedChangeListener {
 
         private HashMap<Integer, UserAccount> selectedAccounts;
 
@@ -110,7 +124,7 @@ public class PromptUpdateDialog extends DialogFragment {
             selectedAccounts = new HashMap<>();
 
             // All accounts selected by default
-            for(int i = 0; i < objects.length; i++){
+            for (int i = 0; i < objects.length; i++) {
                 Log.d(TAG, String.format("account id: %s, name: %s", objects[i].account_id, objects[i].account_name));
                 selectedAccounts.put(i, new UserAccount(objects[i].account_id, objects[i].account_name));
             }
@@ -119,7 +133,7 @@ public class PromptUpdateDialog extends DialogFragment {
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null){
+            if (convertView == null) {
                 LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.account_update_prompt_item, null);
@@ -134,34 +148,21 @@ public class PromptUpdateDialog extends DialogFragment {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             UserAccount userAccount = null;
-            if(isChecked){
-                AccountDetails details = accountList[((Integer)buttonView.getTag()).intValue()];
+            if (isChecked) {
+                AccountDetails details = accountList[((Integer) buttonView.getTag()).intValue()];
                 userAccount = new UserAccount(details.account_id, details.account_name);
             }
-            selectedAccounts.put(((Integer)buttonView.getTag()).intValue(), userAccount);
+            selectedAccounts.put(((Integer) buttonView.getTag()).intValue(), userAccount);
         }
 
-        public List<UserAccount> getSelectedAccounts(){
+        public List<UserAccount> getSelectedAccounts() {
             ArrayList<UserAccount> selectedAccountList = new ArrayList<>();
-            for(Integer position : selectedAccounts.keySet()){
-                if(selectedAccounts.get(position) != null){
+            for (Integer position : selectedAccounts.keySet()) {
+                if (selectedAccounts.get(position) != null) {
                     selectedAccountList.add(selectedAccounts.get(position));
                 }
             }
             return selectedAccountList;
         }
-    }
-
-    /**
-     * Interface to be implemented by the class interested in receive the update from the user
-     * interaction with this fragment.
-     */
-    public interface UpdateAccountsListListener {
-
-        /**
-         * The list of accounts the user has selected to be updated, can be empty.
-         * @param accountList
-         */
-        public void onAccountList(List<UserAccount> accountList);
     }
 }

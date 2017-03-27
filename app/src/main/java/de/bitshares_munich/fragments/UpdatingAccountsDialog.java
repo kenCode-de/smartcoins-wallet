@@ -17,12 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import de.bitsharesmunich.graphenej.UserAccount;
 
 import java.util.List;
 
 import de.bitshares_munich.interfaces.UpdatedAccountListener;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * Created by nelson on 12/17/16.
@@ -84,21 +84,21 @@ public class UpdatingAccountsDialog extends DialogFragment implements UpdatedAcc
     @Override
     public void onUpdateStatusChange(UserAccount account, int resultCode) {
         UserAccount[] accounts = adapter.getAccounts();
-        Log.d(TAG, "onUpdateStatusChange. account: "+account.getAccountName());
-        for(int i = 0; i < accounts.length; i++){
+        Log.d(TAG, "onUpdateStatusChange. account: " + account.getAccountName());
+        for (int i = 0; i < accounts.length; i++) {
             UserAccount userAccount = accounts[i];
-            if(userAccount.getAccountName().equals(account.getAccountName())){
+            if (userAccount.getAccountName().equals(account.getAccountName())) {
                 ImageView done = (ImageView) accountListView.getChildAt(i).findViewById(R.id.done);
                 ImageView error = (ImageView) accountListView.getChildAt(i).findViewById(R.id.error);
                 ProgressBar progress = (ProgressBar) accountListView.getChildAt(i).findViewById(R.id.progress);
-                if(resultCode == UPDATING){
+                if (resultCode == UPDATING) {
                     Log.d(TAG, "Setting progress view visible");
                     progress.setVisibility(View.VISIBLE);
-                }else if(resultCode == SUCCESS){
+                } else if (resultCode == SUCCESS) {
                     Log.d(TAG, "Setting check mark visible");
                     done.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
-                }else if(resultCode == FAILURE){
+                } else if (resultCode == FAILURE) {
                     error.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
                 }
@@ -135,7 +135,7 @@ public class UpdatingAccountsDialog extends DialogFragment implements UpdatedAcc
             return convertView;
         }
 
-        public UserAccount[] getAccounts(){
+        public UserAccount[] getAccounts() {
             return accounts;
         }
     }
