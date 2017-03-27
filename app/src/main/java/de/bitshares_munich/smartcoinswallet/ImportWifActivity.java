@@ -285,4 +285,9 @@ public class ImportWifActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.btnCancel)
+    public void OnCancel(Button button) {
+        this.finish();
+    }
+
 }
