@@ -24,6 +24,7 @@ import de.bitshares_munich.models.TransactionDetails;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.Contact;
+import de.bitsharesmunich.cryptocoincore.base.ContactAddress;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
@@ -1387,6 +1388,55 @@ public class SCWallDatabase {
     }
 
 
+    public Contact getContactById(long contactId){
+        String[] columns = {
+                SCWallDatabaseContract.Contacs.COLUMN_ID,
+                SCWallDatabaseContract.Contacs.COLUMN_NAME,
+                SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT,
+                SCWallDatabaseContract.Contacs.COLUMN_NOTE,
+                SCWallDatabaseContract.Contacs.COLUMN_EMAIL
+        };
+        Cursor cursor = db.query(true, SCWallDatabaseContract.Contacs.TABLE_NAME, columns,
+                SCWallDatabaseContract.Contacs.COLUMN_ID+ " = " + contactId + "",null, null, null, null, null);
+        if(cursor.moveToFirst()){
+            Contact contact ;
+
+            long id = cursor.getLong(0);
+            String name = cursor.getString(1);
+            String account = cursor.getString(2);
+            String note = cursor.getString(3);
+            String email = cursor.getString(4);
+
+            contact = new Contact(id,name,account,note,email);
+            cursor.close();
+            return contact;
+        }
+        cursor.close();
+
+        return null;
+    }
+
+    public void getContactAddresses(Contact contact){
+        String[] columns = {
+                SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID,
+                SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE,
+                SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS
+        };
+        Cursor cursor = db.query(false, SCWallDatabaseContract.ContacAddress.TABLE_NAME, columns,
+                SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID+ " = " + contact.getId() + "",null, null, null, null, null);
+        if(cursor.moveToFirst()){
+
+            ContactAddress address;
+            do{
+                Coin coin = Coin.valueOf(cursor.getString(1));
+                String addressString = cursor.getString(2);
+
+                contact.addAddress(coin,addressString);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+    }
+
     public Contact getContactByAddress(String address){
         List<Contact> contacts = new ArrayList();
         String[] columns = {
@@ -1431,13 +1481,47 @@ public class SCWallDatabase {
         try{
             long newId = db.insertOrThrow(SCWallDatabaseContract.Contacs.TABLE_NAME, null, contentValues);
             contact.setId(newId);
-            //TODO add addresses
+
+            if (deleteContactAddress(contact)){
+                for (ContactAddress address : contact.getAddresses()){
+                    putContactAddress(address, contact);
+                }
+            }
+
             Log.d(TAG,String.format("Inserted %s Contact succesfully in database", newId));
             return newId;
         }catch (SQLException ignored){
         }
         Log.d(TAG,"Error inserting Contacct in database");
         return -1;
+    }
+
+    public boolean deleteContactAddress(Contact contact){
+        String table = SCWallDatabaseContract.ContacAddress.TABLE_NAME;
+        String whereClause = SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID + "=?";
+        String[] whereArgs = new String[]{ ""+contact.getId()};
+        db.beginTransaction();
+        int affected = db.delete(table,whereClause,whereArgs);
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return true;
+    }
+
+    public boolean putContactAddress(ContactAddress address, Contact contact){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID, contact.getId());
+        contentValues.put(SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE, address.getCoin().name());
+        contentValues.put(SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS, address.getAddress());
+
+        try{
+            db.insertOrThrow(SCWallDatabaseContract.ContacAddress.TABLE_NAME, null, contentValues);
+            Log.d(TAG,String.format("Inserted Contact Address succesfully in database"));
+            return true;
+        }catch (SQLException ignored){
+        }
+        Log.d(TAG,"Error inserting Contacct in database");
+        return false;
     }
 
     public boolean updateContact(final Contact contact){
@@ -1455,6 +1539,13 @@ public class SCWallDatabase {
         int affected = db.update(table,contentValues,whereClause,whereArgs);
         db.setTransactionSuccessful();
         db.endTransaction();
+
+        if (deleteContactAddress(contact)){
+            for (ContactAddress address : contact.getAddresses()){
+                putContactAddress(address, contact);
+            }
+        }
+
         return affected > 0;
     }
 

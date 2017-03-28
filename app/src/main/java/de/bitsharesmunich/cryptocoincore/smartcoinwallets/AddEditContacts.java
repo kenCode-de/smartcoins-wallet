@@ -1,5 +1,6 @@
 package de.bitsharesmunich.cryptocoincore.smartcoinwallets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,13 +17,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +39,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,16 +59,22 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.Contact;
+import de.bitsharesmunich.cryptocoincore.base.ContactAddress;
+import de.bitsharesmunich.cryptocoincore.base.ContactEvent;
+import de.bitsharesmunich.cryptocoincore.base.ContactListener;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinValidator;
 import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinContactsFragment;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/25/16.
+ *
+ * Modified by Henry Varona on 3/20/2017
  */
-public class AddEditContacts extends BaseActivity implements IAccount {
+public class AddEditContacts extends BaseActivity implements IAccount, ContactListener {
     Boolean add = false;
     Boolean edit = false;
     TinyDB tinyDB;
@@ -71,10 +85,12 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     String note = "";
     Coin coin;
 
+    Contact contact;
+
     boolean validReceiver = false;
 
-    @Bind(R.id.web)
-    WebView web;
+    //@Bind(R.id.web)
+    //WebView web;
 
     @Bind(R.id.imageEmail)
     ImageView imageEmail;
@@ -91,8 +107,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     @Bind(R.id.note)
     EditText Note;
 
-    @Bind(R.id.Accountname)
-    EditText Accountname;
+    //@Bind(R.id.Accountname)
+    //EditText Accountname;
 
     @Bind(R.id.email)
     EditText etEmail;
@@ -109,8 +125,14 @@ public class AddEditContacts extends BaseActivity implements IAccount {
     @Bind(R.id.tvWarningEmail)
     TextView tvWarningEmail;
 
+    @Bind(R.id.accountsLayout)
+    LinearLayout accountsLayout;
+
     ContactsDelegate contactsDelegate;
     webSocketCallHelper myWebSocketHelper;
+
+
+    ContactAddress lastContactAddressAdded; //this is used to prevent reinserting addressView when the user types a new address
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +169,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             if (res.containsKey("activity")) {
                 if (res.getInt("activity") == 99999) {
                     add = true;
+                    this.contact = new Contact();
+                    this.contact.addListener(this);
                     setTitle(getResources().getString(R.string.add_contact_activity_name));
                     SaveContact.setText(R.string.add_contact);
                 }
@@ -155,7 +179,9 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 edit = true;
                 setTitle(getResources().getString(R.string.edit_contact_activity_name));
 
-                //contact_id = Integer.toString(res.getInt("id"));
+                this.contact = db.getContactById(res.getLong("id"));
+                this.contact.addListener(this);
+
                 contact_id = Long.toString(res.getLong("id"));
 
                 if (res.containsKey("name")) contactname = res.getString("name");
@@ -167,13 +193,12 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 if (res.containsKey("email")) emailtxt = res.getString("email");
 
                 Contactname.setText(contactname);
-                Accountname.setText(accountid);
+                //Accountname.setText(accountid);
                 Note.setText(note);
                 SaveContact.setText(R.string.edit_contact);
                 etEmail.setText(emailtxt);
                 setOnEmail();
             }
-
         }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -207,24 +232,24 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         SaveContact.setEnabled(false);
                     }
-                    if (!Accountname.getText().toString().equals(accountid) && validReceiver) {
+                    /*if (!Accountname.getText().toString().equals(accountid) && validReceiver) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                         SaveContact.setEnabled(true);
-                    }
+                    }*/
                 }
-                if (add) {
-                    if (validReceiver) {
+                //if (add) {
+                    //if (validReceiver) {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.green));
                         SaveContact.setEnabled(true);
-                    } else {
+                    /*} else {
                         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                         SaveContact.setEnabled(false);
                     }
-                }
-                if (Accountname.getText().length() == 0) {
+                }*/
+                /*if (Accountname.getText().length() == 0) {
                     SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                     SaveContact.setEnabled(false);
-                }
+                }*/
 
                 ColorDrawable buttonColor = (ColorDrawable) SaveContact.getBackground();
                 int colorId = buttonColor.getColor();
@@ -234,16 +259,18 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 handler.postDelayed(this, 2000);
             }
         }, 2000);
+
+        loadAddresses();
     }
 
     @OnClick(R.id.SaveContact)
-    public void AddContatcs() {
+    public void AddContacts() {
 
-        if (this.coin == Coin.BITSHARE) {
+        /*if (this.coin == Coin.BITSHARE) {
             ContactListAdapter.ListviewContactItem contact = new ContactListAdapter.ListviewContactItem();
             ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
             String _contactname = Contactname.getText().toString();
-            String _accountid = Accountname.getText().toString();
+            //String _accountid = Accountname.getText().toString();
             String _note = Note.getText().toString();
             String _email = etEmail.getText().toString();
             if (!SupportMethods.isEmailValid(_email)) {
@@ -253,7 +280,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             if (add) {
                 contact.SaveNote(_note);
                 contact.SetName(_contactname);
-                contact.SetAccount(_accountid);
+                //contact.SetAccount(_accountid);
                 contact.SaveEmail(_email);
                 contacts.add(contact);
                 Collections.sort(contacts, new ContactNameComparator());
@@ -261,8 +288,8 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             } else if (edit) {
                 if (!_contactname.equals(contactname))
                     contacts.get(Integer.parseInt(contact_id)).SetName(_contactname);
-                if (!_accountid.equals(accountid))
-                    contacts.get(Integer.parseInt(contact_id)).SetAccount(_accountid);
+                //if (!_accountid.equals(accountid))
+                //    contacts.get(Integer.parseInt(contact_id)).SetAccount(_accountid);
                 if (!_note.equals(note)) contacts.get(Integer.parseInt(contact_id)).SaveNote(_note);
                 if (!_email.equals(emailtxt))
                     contacts.get(Integer.parseInt(contact_id)).SaveEmail(_email);
@@ -270,16 +297,16 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 tinyDB.putContactsObject("Contacts", contacts);
             }
 
-        } else {
-            Contact contact = new Contact();
-            contact.setAccount(Accountname.getText().toString());
-            contact.setName(Contactname.getText().toString());
-            contact.setNote(Note.getText().toString());
+        } else {*/
+            //Contact contact = new Contact();
+            //contact.setAccount(Accountname.getText().toString());
+            this.contact.setName(Contactname.getText().toString());
+            this.contact.setNote(Note.getText().toString());
             String _email = etEmail.getText().toString();
             if (!SupportMethods.isEmailValid(_email)) {
-                contact.setEmail("");
+                this.contact.setEmail("");
             } else {
-                contact.setEmail(_email);
+                this.contact.setEmail(_email);
             }
 
             if (add) {
@@ -288,13 +315,161 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 contact.setId(Long.parseLong(contact_id));
                 db.updateContact(contact);
             }
-        }
+        //}
         contactsDelegate.OnUpdate("knysys", 29);
         finish();
     }
 
+    public void onContactAddressViewChange(View contactAddressView){
+        int childIndex = accountsLayout.indexOfChild(contactAddressView);
+        EditText accountName = (EditText) contactAddressView.findViewById(R.id.Accountname);
+        String accountNameString = accountName.getText().toString();
+        Spinner addressCoinSpinner = (Spinner) contactAddressView.findViewById(R.id.address_coin_spinner);
+        final Coin coinSelected = (Coin)addressCoinSpinner.getSelectedItem();
+
+        if (childIndex == accountsLayout.getChildCount()-1) {//If it is the last child
+            ContactAddress newContactAddress = new ContactAddress(coinSelected,accountName.getText().toString());
+            lastContactAddressAdded = newContactAddress;
+            this.contact.addAddress(newContactAddress);
+        } else { //then is an address already added to contact
+            ContactAddress contactAddress = this.contact.getAddressByIndex(childIndex);
+
+            if (accountNameString.equals("")){
+                this.contact.removeAddress(contactAddress);
+            } else {
+                contactAddress.setAddress(accountNameString);
+                contactAddress.setCoin(coinSelected);
+            }
+        }
+
+        addNewAccountForm();
+    }
+
+    @Override
+    public void onNewContactAddress(final ContactEvent event) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                addNewAddressView(event.getContactAddress());
+            }
+        });
+    }
+
+    @Override
+    public void onContactAddressModified(final ContactEvent event) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                updateAddressView(event.getContactAddress(), event.getIndex());
+            }
+        });
+    }
+
+    @Override
+    public void onContactAddressRemoved(final ContactEvent event) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                removeAddressView(event.getContactAddress(), event.getIndex());
+            }
+        });
+    }
+
+    public void addNewAddressView(ContactAddress address){
+        if ((lastContactAddressAdded == null) || (this.lastContactAddressAdded != address)) {
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View newAddress = (LinearLayout) layoutInflater.inflate(R.layout.general_contact_account, null);
+            EditText addressEdit = (EditText) newAddress.findViewById(R.id.Accountname);
+            Spinner coinSpinner = (Spinner) newAddress.findViewById(R.id.address_coin_spinner);
+
+            ArrayList<Coin> data = new ArrayList<Coin>();
+
+            for (Coin coin : Coin.values()) {
+                data.add(coin);
+            }
+
+            final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this, R.layout.coin_spinner_row, data, getResources());
+            coinSpinner.setAdapter(coinAdapter);
+
+            if (address != null) {
+                addressEdit.setText(address.getAddress());
+                coinSpinner.setSelection(data.indexOf(address.getCoin()));
+            }
+
+            addressEdit.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    onContactAddressViewChange(newAddress);
+                }
+            });
+
+            accountsLayout.addView(newAddress);
+        }
+    }
+
+    public void updateAddressView(ContactAddress address, int index){
+        final View addressView = accountsLayout.getChildAt(index);
+        EditText addressEdit = (EditText)addressView.findViewById(R.id.Accountname);
+        Spinner coinSpinner = (Spinner)addressView.findViewById(R.id.address_coin_spinner);
+
+        if (address != null){
+            addressEdit.setText(address.getAddress());
+            coinSpinner.setSelection(((ArrayListCoinAdapter)coinSpinner.getAdapter()).getPosition(address.getCoin().getLabel()));
+        }
+    }
+
+    public void removeAddressView(ContactAddress address, int index){
+        accountsLayout.removeViewAt(index);
+    }
+
+    public void loadAddresses(){
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        if (this.contact != null) {
+            /*List<ContactAddress> addresses = this.contact.getAddresses();
+            LinearLayout nextAddressLayout;
+
+            for (ContactAddress nextAddress : addresses) {
+                nextAddressLayout = (LinearLayout) layoutInflater.inflate(R.layout.general_contact_account, null);
+                EditText addressEdit = (EditText) nextAddressLayout.findViewById(R.id.Accountname);
+                addressEdit.setText(nextAddress.getAddress());
+                accountsLayout.addView(nextAddressLayout);
+            }*/
+            db.getContactAddresses(this.contact);
+        }
+
+        addNewAccountForm();
+    }
+
+    //Adds a new form to add a new address only if it's needed
+    public void addNewAccountForm(){
+        Boolean addNewView = false;
+        final Activity activity = this;
+        if (accountsLayout.getChildCount() == 0){
+            addNewView = true;
+        } else {
+            LinearLayout lastAddress = (LinearLayout)accountsLayout.getChildAt(accountsLayout.getChildCount()-1);
+            EditText addressEdit = (EditText)lastAddress.findViewById(R.id.Accountname);
+
+            if (!addressEdit.getText().toString().equals("")) {
+                addNewView = true;
+            }
+        }
+
+        if (addNewView){
+            addNewAddressView(null);
+        }
+    }
+
     Boolean checkIfAlreadyAdded() {
-        ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
+        /*ArrayList<ContactListAdapter.ListviewContactItem> contacts = tinyDB.getContactObject("Contacts", ContactListAdapter.ListviewContactItem.class);
         String _accountid = Accountname.getText().toString();
 
         for (int i = 0; i < contacts.size(); i++) {
@@ -303,20 +478,20 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 return true;
             }
 
-        }
+        }*/
 
 
         return false;
     }
 
     private void loadWebView(int size, String encryptText) {
-        String htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
+        /*tring htmlShareAccountName = "<html><head><style>body,html {margin:0; padding:0; text-align:center;}</style><meta name=viewport content=width=" + size + ",user-scalable=no/></head><body><canvas width=" + size + " height=" + size + " data-jdenticon-hash=" + encryptText + "></canvas><script src=https://cdn.jsdelivr.net/jdenticon/1.3.2/jdenticon.min.js async></script></body></html>";
         WebSettings webSettings = web.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        web.loadData(htmlShareAccountName, "text/html", "UTF-8");
+        web.loadData(htmlShareAccountName, "text/html", "UTF-8");*/
     }
 
-    @OnTextChanged(R.id.Accountname)
+    /*@OnTextChanged(R.id.Accountname)
     void onTextChangedTo(CharSequence text) {
         loadWebView(39, Helper.hash(Accountname.getText().toString(), Helper.SHA256));
         warning.setText(getString(R.string.txt_validating_account));
@@ -358,7 +533,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             warning.setText("");
         }
 
-    }
+    }*/
 
     @OnTextChanged(R.id.Contactname)
     void onTextChangedName(CharSequence text) {
@@ -390,7 +565,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         if (etEmail.getText().toString().length() > 0) {
             if (SupportMethods.isEmailValid(etEmail.getText().toString())) {
                 imageEmail.setVisibility(View.VISIBLE);
-                web.setVisibility(View.GONE);
+                //web.setVisibility(View.GONE);
                 tvWarningEmail.setText("");
                 setGravator(etEmail.getText().toString(), imageEmail);
             } else {
@@ -400,7 +575,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         }
         if (etEmail.getText().toString().length() <= 0) {
             imageEmail.setVisibility(View.GONE);
-            web.setVisibility(View.VISIBLE);
+            //web.setVisibility(View.VISIBLE);
             tvWarningEmail.setText("");
         }
 
@@ -445,10 +620,10 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         }
 
         public void onFinish() {
-            if (!Accountname.getText().toString().equals(Accountname.getText().toString().toLowerCase())) {
+            /*if (!Accountname.getText().toString().equals(Accountname.getText().toString().toLowerCase())) {
                 Accountname.setText(Accountname.getText().toString().toLowerCase());
                 Accountname.setSelection(Accountname.getText().toString().length());
-            }
+            }*/
         }
     };
     CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 1000) {
@@ -462,7 +637,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
-            if (Accountname.getText().length() > 2) {
+            /*if (Accountname.getText().length() > 2) {
                 if (!checkIfAlreadyAdded()) {
                     String socketText = getString(R.string.lookup_account_a);
                     String socketText2 = getString(R.string.lookup_account_b) + "\"" + Accountname.getText().toString() + "\"" + ",50]],\"id\": 6}";
@@ -478,7 +653,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 warning.setText("");
                 SaveContact.setEnabled(false);
                 SaveContact.setBackgroundColor(getResources().getColor(R.color.gray));
-            }
+            }*/
         }
     }
 
@@ -491,16 +666,16 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 boolean found = false;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     final String temp = jsonArray.getJSONArray(i).getString(0);
-                    if (temp.equals(Accountname.getText().toString())) {
+                    /*if (temp.equals(Accountname.getText().toString())) {
                         found = true;
                         validReceiver = true;
-                    }
+                    }*/
                 }
                 if (found) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (Accountname.getText().toString().equals(accountid)) {
+                            /*if (Accountname.getText().toString().equals(accountid)) {
                                 SaveContact.setEnabled(false);
                                 SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
                             } else {
@@ -509,7 +684,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                                 warning.setText(R.string.account_name_validate);
                                 warning.setVisibility(View.VISIBLE);
                                 warning.setTextColor(getColorWrapper(context, R.color.black));
-                            }
+                            }*/
                         }
                     });
                 }
@@ -520,9 +695,9 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
                             validReceiver = false;
                             try {
-                                String acName = getString(R.string.account_name_not_exist);
+                                /*String acName = getString(R.string.account_name_not_exist);
                                 String format = String.format(acName.toString(), Accountname.getText().toString());
-                                warning.setText(format);
+                                warning.setText(format);*/
                             } catch (Exception e) {
                                 warning.setText("");
                             }
@@ -549,7 +724,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
             return context.getResources().getColor(id);
         }
     }
-
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -574,7 +748,7 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         protected void onPostExecute(Bitmap result) {
             if (result == null) {
                 bmImage.setVisibility(View.GONE);
-                web.setVisibility(View.VISIBLE);
+                //web.setVisibility(View.VISIBLE);
             } else {
                 Bitmap corner = getRoundedCornerBitmap(result);
                 bmImage.setImageBitmap(corner);

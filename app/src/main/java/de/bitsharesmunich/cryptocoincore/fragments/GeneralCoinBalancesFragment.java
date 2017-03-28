@@ -1468,13 +1468,14 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     public void BalanceAssetsUpdate(Coin coin, final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, final Boolean onStartUp) {
-        BalanceItems bitshareBalanceItems = this.balancesItems.getBalancesItems(Coin.BITSHARE);
+
         int count = 0;
 
+        if (this.balancesItems != null) {
+            BalanceItems bitshareBalanceItems = this.balancesItems.getBalancesItems(Coin.BITSHARE);
         if (bitshareBalanceItems != null)
             count = bitshareBalanceItems.count();
-
-        //int count = llBalances.getChildCount();
+        }
 
         // use standard asset names (like add bit etc)
         ArrayList<String> symbols = new ArrayList();
