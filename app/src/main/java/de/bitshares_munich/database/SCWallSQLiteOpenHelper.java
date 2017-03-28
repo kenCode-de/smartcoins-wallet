@@ -12,7 +12,7 @@ import android.util.Log;
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
     //TODO on final revert to version 6
-    public static final int DATABASE_VERSION = 14;
+    public static final int DATABASE_VERSION = 15;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -220,15 +220,11 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(SQL_CREATE_OUTPUT_TX_TABLE);
         }
 
-        if (oldVersion < 12) {
+        if (oldVersion < 15) {
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.Contacs.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.ContacAddress.TABLE_NAME);
             db.execSQL(SQL_CREATE_CONTACT_TABLE);
             db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
-        }
-
-        if (oldVersion < 14) {
-            db.execSQL("ALTER TABLE " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + " ADD "+SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO+" "+ TYPE_TEXT);
         }
     }
 }
