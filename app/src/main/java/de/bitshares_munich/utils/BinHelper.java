@@ -24,7 +24,6 @@ import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.R;
-import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.Chains;
 import de.bitsharesmunich.graphenej.FileBin;
@@ -37,11 +36,11 @@ import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
  * Created by developer on 6/28/16.
  */
 public class BinHelper {
-    private String TAG = this.getClass().getName();
-    private Activity myActivity;
     Handler mHandler;
     ProgressDialog progressDialog;
     BackupBinDelegate backupBinDelegate;
+    private String TAG = this.getClass().getName();
+    private Activity myActivity;
 
     public BinHelper() {
     }
@@ -178,7 +177,7 @@ public class BinHelper {
             Wallet wallet = new Wallet(accountName, brainKey.getBrainKey(), brainKey.getSequenceNumber(), Chains.BITSHARES.CHAIN_ID, pin);
             wallets.add(wallet);
             String wif = Crypt.getInstance().decrypt_string(wif_key);
-            ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif ).getKey();
+            ECKey key = DumpedPrivateKey.fromBase58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET), wif).getKey();
 
             PrivateKeyBackup keyBackup = new PrivateKeyBackup(key.getPrivKeyBytes(),
                     brainKey.getSequenceNumber(),

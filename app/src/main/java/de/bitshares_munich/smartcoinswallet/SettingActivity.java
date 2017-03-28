@@ -93,7 +93,6 @@ import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
-    private final String TAG = this.getClass().getName();
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";
     final String require_pin = "require_pin";
@@ -102,9 +101,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String hide_donations = "hide_donations";
     final String hide_donations_isChanged = "hide_donations_isChanged";
     final String date_time = "date_time";
-    Boolean isFirstTime = true;
     final String register_new_account = "register_new_account";
-
+    private final String TAG = this.getClass().getName();
+    Boolean isFirstTime = true;
     @Bind(R.id.spCountry)
     Spinner spCountry;
 
@@ -164,7 +163,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     Activity activitySettings;
 
     String wifKey = "";
-
+    boolean dontCallCountryChangedOnStart = true;
+    FileChooserDialog dialog;
+    ArrayList<String> list = new ArrayList<>();
+    String itemSelected;
+    String selected;
+    Boolean startup = false;
     /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
     private boolean updateAllRoles;
     private String oldKey;
@@ -172,54 +176,11 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     private int UPDATE_KEY_MAX_RETRIES = 2;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
-
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
-
     /* Database interface */
     private SCWallDatabase database;
-
-    /**
-     * Listener called with the account data. This is done before the account authorities update
-     * just to know what keys to update for each account.
-     */
-    private WitnessResponseListener getAccountsListener = new WitnessResponseListener() {
-
-        @Override
-        public void onSuccess(final WitnessResponse response) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d(TAG, "getAccounts. onSuccess");
-                    ArrayList<AccountDetails> details = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
-                    AccountDetails currentAccount = null;
-                    for (AccountDetails accountDetails : details) {
-                        if (accountDetails.isSelected) {
-                            currentAccount = accountDetails;
-                            break;
-                        }
-                    }
-                    List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
-                    for (AccountProperties properties : accountProperties) {
-                        if (properties.name.equals(currentAccount.account_name)) {
-                            if (properties.active.equals(properties.owner)) {
-                                updateAllRoles = true;
-                            }
-                        }
-                    }
-                    Log.d(TAG, "Update all roles: " + updateAllRoles);
-                    updateAccountAuthorities(currentAccount);
-                }
-            });
-        }
-
-        @Override
-        public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
-        }
-    };
-
     /**
      * Listener called upon the 'account_update_operation' response.
      */
@@ -284,6 +245,74 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             });
         }
     };
+    /**
+     * Listener called with the account data. This is done before the account authorities update
+     * just to know what keys to update for each account.
+     */
+    private WitnessResponseListener getAccountsListener = new WitnessResponseListener() {
+
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "getAccounts. onSuccess");
+                    ArrayList<AccountDetails> details = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    AccountDetails currentAccount = null;
+                    for (AccountDetails accountDetails : details) {
+                        if (accountDetails.isSelected) {
+                            currentAccount = accountDetails;
+                            break;
+                        }
+                    }
+                    List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
+                    for (AccountProperties properties : accountProperties) {
+                        if (properties.name.equals(currentAccount.account_name)) {
+                            if (properties.active.equals(properties.owner)) {
+                                updateAllRoles = true;
+                            }
+                        }
+                    }
+                    Log.d(TAG, "Update all roles: " + updateAllRoles);
+                    updateAccountAuthorities(currentAccount);
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
+        }
+    };
+    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
+        public void onFileSelected(Dialog source, File file) {
+            source.hide();
+            onSuccess(file.getAbsolutePath(), file.getName());
+        }
+
+        public void onFileSelected(Dialog source, File folder, String name) {
+            source.hide();
+        }
+    };
+
+    private static String displayTimeZone(TimeZone tz) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(tz);
+        long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
+                - TimeUnit.HOURS.toMinutes(hours);
+        minutes = Math.abs(minutes);
+        String result = "";
+        if (hours > 0) {
+
+            result = String.format("%s (GMT+%d:%02d)", tz.getID(), hours, minutes);
+        } else {
+            result = String.format("%s (GMT%d:%02d)", tz.getID(), hours, minutes);
+        }
+
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -399,8 +428,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             checkBox.setChecked(true);
         }
     }
-
-    boolean dontCallCountryChangedOnStart = true;
 
     @SuppressLint("NewApi")
     private void populateDropDowns() {
@@ -608,25 +635,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
 
 
-    }
-
-    private static String displayTimeZone(TimeZone tz) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(tz);
-        long hours = TimeUnit.MILLISECONDS.toHours(tz.getRawOffset());
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(tz.getRawOffset())
-                - TimeUnit.HOURS.toMinutes(hours);
-        minutes = Math.abs(minutes);
-        String result = "";
-        if (hours > 0) {
-
-            result = String.format("%s (GMT+%d:%02d)", tz.getID(), hours, minutes);
-        } else {
-            result = String.format("%s (GMT%d:%02d)", tz.getID(), hours, minutes);
-        }
-
-        return result;
     }
 
     private String getPin() {
@@ -1280,20 +1288,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         }
 
 
-
     }
 
     @Override
     public void backupComplete(boolean success) {
         Log.d("Backup Complete", "done");
     }
-
-
-    FileChooserDialog dialog;
-    ArrayList<String> list = new ArrayList<>();
-    String itemSelected;
-    String selected;
-
 
     private void chooseAudioFile() {
         if (dialog == null) {
@@ -1304,7 +1304,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             dialog.setShowCancelButton(true);
             dialog.setShowOnlySelectable(false);
             dialog.setFilter(".*wav|.*mp3");
-
 
             // Activate the confirmation dialogs.
             dialog.setShowConfirmation(true, true);
@@ -1334,17 +1333,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         dialog.show();
 
     }
-
-    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
-        public void onFileSelected(Dialog source, File file) {
-            source.hide();
-            onSuccess(file.getAbsolutePath(), file.getName());
-        }
-
-        public void onFileSelected(Dialog source, File folder, String name) {
-            source.hide();
-        }
-    };
 
     void onSuccess(String filepath, String fileName) {
         dialog = null;
@@ -1388,8 +1376,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         spFolderPath.setAdapter(adapterAccountAssets);
 
     }
-
-    Boolean startup = false;
 
     @OnItemSelected(R.id.spFolderPath)
     public void onItemSelectedAudio() {
