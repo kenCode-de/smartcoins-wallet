@@ -182,6 +182,9 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_INPUT_TX_TABLE);
         db.execSQL(SQL_CREATE_OUTPUT_TX_TABLE);
 
+        db.execSQL(SQL_CREATE_CONTACT_TABLE);
+        db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
+
     }
 
     @Override

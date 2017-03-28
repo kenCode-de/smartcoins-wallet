@@ -122,11 +122,11 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
 
                 intent.putExtra("coin", coin.name());
 
-                if (coin == Coin.BITSHARE) {
-                    intent.putExtra("id", (long)index);
-                } else {
+                //if (coin == Coin.BITSHARE) {
+                //    intent.putExtra("id", (long)index);
+                //} else {
                     intent.putExtra("id", listContact.get(index).GetId());
-                }
+                //}
                 intent.putExtra("name", listContact.get(index).GetName());
                 intent.putExtra("account", listContact.get(index).GetAccount());
                 intent.putExtra("note", listContact.get(index).GetNote());
@@ -142,7 +142,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
             setGravator(listContact.get(position).GetEmail(),ivEmail);
         }else {
             final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
-            loadWebView(webView, 40, Helper.hash(accountnm, Helper.SHA256));
+            //loadWebView(webView, 40, Helper.hash(accountnm, Helper.SHA256));
         }
 
         return convertView;
@@ -152,7 +152,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         ArrayList<ListviewContactItem> contactlist = new ArrayList<ListviewContactItem>();
         ListviewContactItem contact;
 
-        if (this.coin == Coin.BITSHARE) {
+        /*if (this.coin == Coin.BITSHARE) {
             contact = new ListviewContactItem();
 
             ArrayList<ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", ListviewContactItem.class);
@@ -168,7 +168,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
                 contactlist.add(contact);
             }
 
-        } else {
+        } else {*/
             List<Contact> contactsList = db.getContacts();
             Contact nextContact;
             for (int i = 0; i < contactsList.size(); i++) {
@@ -184,7 +184,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
                 }
                 contactlist.add(contact);
             }
-        }
+        //}
 
         Collections.sort(contactlist, new ContactNameComparator());
         return contactlist;
