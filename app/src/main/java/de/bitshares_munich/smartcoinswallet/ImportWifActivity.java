@@ -47,21 +47,16 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
  * Created by Vinícius on 2/28/17.
  */
 public class ImportWifActivity extends BaseActivity {
-    private String TAG = this.getClass().getName();
     ProgressDialog progressDialog;
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
-
-
     @Bind(R.id.etWif)
     TextView etWif;
-
     @Bind(R.id.etPin)
     EditText etPin;
-
     @Bind(R.id.etPinConfirmation)
     EditText etPinConfirmation;
-
+    private String TAG = this.getClass().getName();
     /* Database interface */
     private SCWallDatabase database;
 
@@ -82,8 +77,7 @@ public class ImportWifActivity extends BaseActivity {
         //WIF must not be empty
         if (etWif.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_wif, Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             String trimmedWif = etWif.getText().toString().trim();
             etWif.setText(trimmedWif);
             if (etPin.getText().length() == 0) {
@@ -98,7 +92,7 @@ public class ImportWifActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();
             }
             //WIF Checksum Checking
-            else if ( !(Helper.wifChecksumChecking(trimmedWif)) ) {
+            else if (!(Helper.wifChecksumChecking(trimmedWif))) {
                 Toast.makeText(getApplicationContext(), R.string.invalid_wif, Toast.LENGTH_SHORT).show();
             }
             //If an account with this WIF already exists
@@ -148,7 +142,7 @@ public class ImportWifActivity extends BaseActivity {
             Address address = new Address(ECKey.fromPublicOnly(key.getPubKey()));
             final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(wif);
             final String pubkey = address.toString();
-            Log.d(TAG,String.format("WIF: '%s'",wif));
+            Log.d(TAG, String.format("WIF: '%s'", wif));
             Log.d(TAG, String.format("WIF would generate address: %s", address.toString()));
 
             new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
@@ -159,19 +153,19 @@ public class ImportWifActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(resp.size() > 0){
+                            if (resp.size() > 0) {
                                 List<UserAccount> accounts = resp.get(0);
-                                if(accounts.size() > 0){
+                                if (accounts.size() > 0) {
                                     //It must be only one
-                                    for(UserAccount account : accounts) {
+                                    for (UserAccount account : accounts) {
                                         Log.d(TAG, String.format("Account: %s", account.toString()));
                                         getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, pinCode);
                                     }
-                                }else{
+                                } else {
                                     hideDialog();
                                     Toast.makeText(getApplicationContext(), R.string.wif_error_invalid_account, Toast.LENGTH_SHORT).show();
                                 }
-                            }else{
+                            } else {
                                 hideDialog();
                                 Toast.makeText(getApplicationContext(), R.string.wif_error_invalid_account, Toast.LENGTH_SHORT).show();
                             }
@@ -203,7 +197,7 @@ public class ImportWifActivity extends BaseActivity {
 
     }
 
-    private void getAccountById(String accountId, final String wif, final String pubKey,  final String pinCode){
+    private void getAccountById(String accountId, final String wif, final String pubKey, final String pinCode) {
         try {
             new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
                 @Override
@@ -228,14 +222,14 @@ public class ImportWifActivity extends BaseActivity {
                                 Application app = (Application) getApplicationContext();
                                 app.setLock(false);
                                 //Don't force backup screen
-                                Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
+                                Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist), true);
 
                                 BinHelper myBinHelper = new BinHelper();
                                 myBinHelper.addWallet(accountDetails, getApplicationContext(), ImportWifActivity.this);
                                 Intent intent = new Intent(getApplicationContext(), TabActivity.class);
 
                                 hideDialog();
-                                
+
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
@@ -257,7 +251,7 @@ public class ImportWifActivity extends BaseActivity {
                     hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_wif, Toast.LENGTH_SHORT).show();
                 }
-            })),0).start();
+            })), 0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
             hideDialog();
