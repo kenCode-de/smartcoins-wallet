@@ -9,6 +9,8 @@ import java.util.Objects;
 
 import de.bitsharesmunich.cryptocoincore.base.CoinDefinitions;
 import de.bitsharesmunich.cryptocoincore.dash.DashNetworkParameters;
+import de.bitsharesmunich.cryptocoincore.dogecoin.DogeCoinNetworkParameters;
+import de.bitsharesmunich.cryptocoincore.litecoin.LiteCoinNetworkParameters;
 
 /**
  *
@@ -61,6 +63,10 @@ public abstract class CustomNetworkParameters extends NetworkParameters {
                 return NetworkParameters.fromID(ID_MAINNET);
             case DASH:
                 return new DashNetworkParameters();
+            case LITECOIN:
+                return new LiteCoinNetworkParameters();
+            case DOGECOIN:
+                return new DogeCoinNetworkParameters();
         }
         return null;
     }
