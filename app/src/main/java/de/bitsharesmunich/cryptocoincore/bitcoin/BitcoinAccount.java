@@ -12,6 +12,7 @@ import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.script.Script;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,7 @@ import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.GetEstimateFee;
 import de.bitsharesmunich.graphenej.Util;
 
 import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
@@ -129,7 +131,15 @@ public class BitcoinAccount extends GeneralCoinAccount {
             Transaction tx = new Transaction(param);
 
             long currentAmount = 0;
-            long fee = 10000; //TODO calculate fee
+            long fee = -1;
+            try {
+                fee = 226 * GetEstimateFee.getEstimateFee(BITCOIN)/1000;
+            } catch (IOException ex) {
+                //TODO error getting fee
+            }
+            if(fee == -1){
+                fee = (long)(0.0001 * Math.pow(10, BITCOIN.getPrecision()));
+            }
 
             List<GeneralCoinAddress> addresses = getAddresses();
             List<GTxIO> utxos = new ArrayList();

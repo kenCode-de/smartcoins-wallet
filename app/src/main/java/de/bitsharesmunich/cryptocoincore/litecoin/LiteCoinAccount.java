@@ -9,8 +9,10 @@ import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.GetEstimateFee;
 import de.bitsharesmunich.graphenej.Util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -129,7 +131,15 @@ public class LiteCoinAccount extends GeneralCoinAccount{
             Transaction tx = new Transaction(param);
 
             long currentAmount = 0;
-            long fee = 100000; //TODO calculate fee
+            long fee = -1;
+            try {
+                fee = 226 * GetEstimateFee.getEstimateFee(LITECOIN)/1000;
+            } catch (IOException ex) {
+                //TODO error getting fee
+            }
+            if(fee == -1){
+                fee = (long)(0.0001 * Math.pow(10, LITECOIN.getPrecision()));
+            }
 
             List<GeneralCoinAddress> addresses = getAddresses();
             List<GTxIO> utxos = new ArrayList();

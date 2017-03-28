@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
+import com.google.gson.JsonObject;
+
 import de.bitsharesmunich.cryptocoincore.insightapi.models.AddressTxi;
 import de.bitsharesmunich.cryptocoincore.insightapi.models.Txi;
 import retrofit2.Call;
@@ -40,5 +42,8 @@ interface InsightApiService {
     @FormUrlEncoded
     @POST("{path}/tx/send")
     Call<Txi> broadcastTransaction(@Path(value = "path", encoded = true) String path, @Field("rawtx") String rawtx);
+
+    @GET("{path}/utils/estimatefee?nbBlocks=2")
+    Call<JsonObject> estimateFee(@Path(value = "path", encoded = true) String path);
 
 }
