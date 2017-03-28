@@ -20,6 +20,11 @@ public class CryptoCoinFactory {
                 return BitcoinManager.getInstance();
             case DASH:
                 return DashManager.getInstance();
+            case LITECOIN:
+                return LiteCoinManager.getInstance();
+            case DOGECOIN:
+                return DogeCoinManager.getInstance();
+
         }
 
         return null;
