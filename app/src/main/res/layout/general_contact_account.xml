@@ -3,7 +3,7 @@
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60sp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:weightSum="3"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -20,15 +20,17 @@
             android:gravity="center"
             android:id="@+id/web"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_margin="5sp" />
 
         <Spinner
             android:layout_width="40sp"
             android:id="@+id/address_coin_spinner"
             android:layout_weight="1"
             android:layout_alignParentLeft="false"
-            android:layout_height="50sp"
-            android:layout_toRightOf="@+id/web" />
+            android:layout_toRightOf="@+id/web"
+            android:layout_height="40sp"
+            android:layout_margin="5sp" />
 
         <EditText
             android:layout_weight="2.5"
@@ -40,4 +42,15 @@
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/address_coin_spinner" />
     </RelativeLayout>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="2dp"
+            android:gravity="right"
+            android:id="@+id/address_warning"
+            />
+    </LinearLayout>
 </LinearLayout>

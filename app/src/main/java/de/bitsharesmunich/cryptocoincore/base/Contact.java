@@ -162,4 +162,7 @@ public class Contact {
         }
     }
 
+    public int getIndexOfAddress(ContactAddress contactAddress) {
+        return this.addresses.indexOf(contactAddress);
+    }
 }
