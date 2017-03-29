@@ -624,59 +624,67 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
             spBackupAsset.setSelection(0);
             spBackupAsset.setEnabled(false);
-//            Boolean isBackupAsset = Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected));
-//            if(isBackupAsset) {
-//                if (Helper.fetchBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_asset_selected))) {
-//                    if (posBackupAssets != -9) {
-//                        spBackupAsset.setSelection(posBackupAssets);
-//                    }
-//                }
-//            }
         }
 
 
     }
 
+    /*
+     *  Get PIN string from the active logged account.
+     *
+     *  @return: PIN String
+     */
     private String getPin() {
         for (int i = 0; i < accountDetails.size(); i++) {
             if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).pinCode;
             }
         }
-
-        return "";
-    }
-
-    private String getBrainKey() {
-        for (int i = 0; i < accountDetails.size(); i++) {
-            if (accountDetails.get(i).isSelected) {
-                return accountDetails.get(i).brain_key;
-            }
-        }
-
         return "";
     }
 
     /*
-     *   Get WIF from the active logged account
+     *  Get brain key string from the active logged account.
+     *
+     *  @return: Brain Key String
+     */
+    private String getBrainKey() {
+        for (int i = 0; i < accountDetails.size(); i++) {
+            //If it is the selected account
+            if (accountDetails.get(i).isSelected) {
+                return accountDetails.get(i).brain_key;
+            }
+        }
+        return "";
+    }
+
+    /*
+     *  Get WIF string from the active logged account.
+     *
+     *  @return: WIF String
      */
     private String getWif() {
         for (int i = 0; i < accountDetails.size(); i++) {
+            //If it is the selected account
             if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).wif_key;
             }
         }
-
         return "";
     }
 
+    /*
+     *   Get Account Name string from the active logged account.
+     *
+     *   @return: Account Name String
+     */
     private String getAccountName() {
         for (int i = 0; i < accountDetails.size(); i++) {
+            //If it is the selected account
             if (accountDetails.get(i).isSelected) {
                 return accountDetails.get(i).account_name;
             }
         }
-
         return "";
     }
 
@@ -1269,20 +1277,22 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     @OnClick(R.id.backup_ic)
     public void onClickBackupDotBin() {
 
+        //Get logged account data
         String _brnKey = getBrainKey();
         String _accountName = getAccountName();
         String _pinCode = getPin();
 
+        Log.d(TAG, "Start Backup. Active Account Data: { brainkey: " + _brnKey + ", accountName: " + _accountName + ", pinCode: " + _pinCode);
+
         BinHelper myBinHelper = new BinHelper(this, this);
 
-        //Normal Accounts
+        //Normal Account
         if (!_brnKey.isEmpty()) {
             myBinHelper.createBackupBinFile(_brnKey, _accountName, _pinCode);
-        }
-        //Brainkey is empty only for WIF imported accounts
-        //(Assume that if have no brainkey is a WIF account, not sure if an import error can cause
-        // brain key to be empty).
-        {
+        } else {
+            //Brainkey is empty only for WIF imported accounts
+            //(Assume that if have no brainkey is a WIF account, not sure if an import error can cause
+            // brain key to be empty).
             String _wif = getWif();
             myBinHelper.createBackupBinFileFromWif(_wif, _accountName, _pinCode);
         }

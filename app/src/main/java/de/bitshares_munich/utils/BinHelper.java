@@ -282,7 +282,7 @@ public class BinHelper {
     }
 
     /*
-     * Create the backup bin file for WIF imported account
+     * Create the backup bin file for WIF imported account.
      */
     public void createBackupBinFileFromWif(final String _wif, final String _accountName, final String pinCode) {
         showDialog(myActivity.getResources().getString(R.string.creating_backup_file), myActivity.getResources().getString(R.string.fetching_key));
