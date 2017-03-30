@@ -1470,6 +1470,67 @@ public class SCWallDatabase {
         return DatabaseUtils.queryNumEntries(db,SCWallDatabaseContract.Contacs.TABLE_NAME);
     }
 
+    public long getContactsCountByCoin(Coin coin) {
+        long count = 0;
+
+        final String query = "SELECT COUNT(*) FROM "+SCWallDatabaseContract.Contacs.TABLE_NAME+" c "
+                +" LEFT JOIN "+SCWallDatabaseContract.ContacAddress.TABLE_NAME+" ca "
+                +" ON ca."+SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID+" = c."+SCWallDatabaseContract.Contacs.COLUMN_ID+" "
+                +" WHERE ca."+SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE+" = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{coin.name()});
+
+        if (cursor.moveToFirst()){
+            count = cursor.getLong(0);
+        }
+        cursor.close();
+        return count;
+    }
+
+
+    //This assumes that every contact only have one address max for every coin
+    public List<Contact> getContactsByCoin(Coin coin){
+        final String query = "SELECT "
+                +SCWallDatabaseContract.Contacs.COLUMN_ID
+                +","+SCWallDatabaseContract.Contacs.COLUMN_NAME
+                +","+SCWallDatabaseContract.Contacs.COLUMN_ACCOUNT
+                +","+SCWallDatabaseContract.Contacs.COLUMN_NOTE
+                +","+SCWallDatabaseContract.Contacs.COLUMN_EMAIL
+                +","+SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE
+                +","+SCWallDatabaseContract.ContacAddress.COLUMN_ADDRESS
+                +" FROM "+SCWallDatabaseContract.Contacs.TABLE_NAME+" c "
+                +" LEFT JOIN "+SCWallDatabaseContract.ContacAddress.TABLE_NAME+" ca "
+                +" ON ca."+SCWallDatabaseContract.ContacAddress.COLUMN_CONTACT_ID+" = c."+SCWallDatabaseContract.Contacs.COLUMN_ID+" "
+                +" WHERE ca."+SCWallDatabaseContract.ContacAddress.COLUMN_COIN_TYPE+" = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{coin.name()});
+
+        if (cursor.moveToFirst()){
+            List<Contact> contactList = new ArrayList<Contact>();
+            Contact contact ;
+
+            do{
+                long id = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String account = cursor.getString(2);
+                String note = cursor.getString(3);
+                String email = cursor.getString(4);
+
+                Coin addressCoin = Coin.valueOf(cursor.getString(5));
+                String addressString = cursor.getString(6);
+
+                contact = new Contact(id,name,account,note,email);
+                contact.addAddress(addressCoin,addressString);
+                contactList.add(contact);
+            }while(cursor.moveToNext());
+
+            return contactList;
+
+        }
+        cursor.close();
+        return null;
+    };
+
     public long putContact(final Contact contact){
         ContentValues contentValues = new ContentValues();
 

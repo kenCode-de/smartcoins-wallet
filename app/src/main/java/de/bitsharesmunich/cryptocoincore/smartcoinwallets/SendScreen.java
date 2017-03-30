@@ -406,6 +406,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             updateBlockNumberHead();
 
             tinyDB = new TinyDB(this);
+            db = new SCWallDatabase(this);
             accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
             cbAlwaysDonate.setText(getString(R.string.checkbox_donate) + " BitShares Munich");
@@ -1819,14 +1820,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 
     @OnClick(R.id.contactButton)
     void OnClickContactBtn(View view) {
-        long contactsCount = 0;
-
-        if (this.coin == Coin.BITSHARE) {
-            ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", GeneralCoinContactListAdapter.ListviewContactItem.class);
-            contactsCount = contacts.size();
-        } else {
-            contactsCount = this.db.getContactCount();
-        }
+        long contactsCount = db.getContactsCountByCoin(this.coin);
 
         if (contactsCount > 0) {
             contactListDialog = new Dialog(this);

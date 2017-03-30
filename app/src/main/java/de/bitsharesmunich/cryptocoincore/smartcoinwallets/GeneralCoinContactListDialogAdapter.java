@@ -44,7 +44,7 @@ public class GeneralCoinContactListDialogAdapter extends BaseAdapter {
     private Context mContext;
     private ContactSelectionListener mClickListener;
     private LayoutInflater mInflater;
-    private TinyDB tinyDB;
+    //private TinyDB tinyDB;
     private SCWallDatabase db;
     private Coin coin;
 
@@ -55,7 +55,7 @@ public class GeneralCoinContactListDialogAdapter extends BaseAdapter {
     public GeneralCoinContactListDialogAdapter(Context context, ContactSelectionListener onClickListView, Coin coin) {
         this.mContext = context;
         mClickListener = onClickListView;
-        tinyDB = new TinyDB(this.mContext);
+        //tinyDB = new TinyDB(this.mContext);
         db = new SCWallDatabase(this.mContext);
         this.coin = coin;
         mInflater = LayoutInflater.from(this.mContext);
@@ -81,7 +81,21 @@ public class GeneralCoinContactListDialogAdapter extends BaseAdapter {
         ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contactlist = new ArrayList<GeneralCoinContactListAdapter.ListviewContactItem>();
         GeneralCoinContactListAdapter.ListviewContactItem contact;
 
-        if (this.coin == Coin.BITSHARE) {
+        List<Contact> dbContactList = db.getContactsByCoin(this.coin);
+
+        for (Contact nextContact : dbContactList){
+            contact = new GeneralCoinContactListAdapter.ListviewContactItem();
+            contact.SetName(nextContact.getName());
+            contact.SetAccount(nextContact.getAddressByIndex(0).getAddress());
+            contact.SaveNote(nextContact.getNote());
+            if (!nextContact.getEmail().isEmpty()) {
+                contact.isImage = true;
+                contact.SaveEmail(nextContact.getEmail());
+            }
+            contactlist.add(contact);
+        }
+
+        /*if (this.coin == Coin.BITSHARE) {
             ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", GeneralCoinContactListAdapter.ListviewContactItem.class);
             for (int i = 0; i < contacts.size(); i++) {
                 contact = new GeneralCoinContactListAdapter.ListviewContactItem();
@@ -110,7 +124,7 @@ public class GeneralCoinContactListDialogAdapter extends BaseAdapter {
                 }
                 contactlist.add(contact);
             }
-        }
+        }*/
         Collections.sort(contactlist, new ContactNameComparator());
 
         return contactlist;
@@ -133,11 +147,11 @@ public class GeneralCoinContactListDialogAdapter extends BaseAdapter {
         final String accountnm = listContact.get(position).GetAccount();
         final String contactname = listContact.get(position).GetName();
 
-        if (this.coin == Coin.BITSHARE) {
-            txtaccount.setText(accountnm);
-        } else {
+        //if (this.coin == Coin.BITSHARE) {
+        //    txtaccount.setText(accountnm);
+        //} else {
             txtaccount.setText(contactname);
-        }
+        //}
 
         if(listContact.get(position).isImage) {
             final ImageView ivEmail = (ImageView) convertView.findViewById(R.id.imageEmail);
