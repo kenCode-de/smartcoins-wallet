@@ -569,6 +569,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     Memo memo = op.getMemo();
 
                     if (memo.getByteMessage() != null) {
+
                         Address destinationAddress = memo.getDestination();
                         try {
                             if (destinationAddress.toString().equals(myAddress.toString())) {
@@ -588,7 +589,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 historicalTransferEntries.add(entry);
             }
 
+
             int inserted = database.putTransactions(historicalTransferEntries);
+            Log.d(TAG, String.format("Inserted %d out of %d obtained operations", inserted, resp.result.size()));
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
             // If we got exactly the requested amount of historical transfers, it means we
             // MUST have more to fetch.
@@ -1969,7 +1972,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Override
     public void soundFinish() {
         if (audioSevice) {
-            getActivity().stopService(new Intent(getActivity(), MediaService.class));
+            try{
+                getActivity().stopService(new Intent(getActivity(), MediaService.class));
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Error when stopping sound service. Exception Msg: " + e.getMessage());
+            }
         }
         audioSevice = false;
     }
