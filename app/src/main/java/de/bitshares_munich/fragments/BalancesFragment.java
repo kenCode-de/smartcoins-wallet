@@ -545,7 +545,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         @Override
         public void onSuccess(final WitnessResponse response) {
-            Log.v(TAG, "mTransferHistoryListener. onSuccess");
             if (getActivity() == null) {
                 Log.w(TAG, "Got no activity, quitting..");
                 return;
@@ -556,9 +555,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             // Getting decrypted private key in WIF format
             String wif = decryptWif();
-            Log.d(TAG, "mTransferHistoryListener. WIF: " + wif);
-            Log.d(TAG, "mTransferHistoryListener. Result: " + resp.result.toString());
-            Log.d(TAG, "mTransferHistoryListener. historicalTransferCount: " + historicalTransferCount);
 
             ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
             PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
@@ -567,15 +563,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             int xs = 1;
             // Decrypting memo messages
             for (HistoricalTransfer historicalTransfer : resp.result) {
-                //XS
-                Log.d(TAG, "mTransferHistoryListener. xs: " + xs);
                 HistoricalTransferEntry entry = new HistoricalTransferEntry();
                 TransferOperation op = historicalTransfer.getOperation();
                 if (op != null) {
                     Memo memo = op.getMemo();
 
                     if (memo.getByteMessage() != null) {
-
                         Address destinationAddress = memo.getDestination();
                         try {
                             if (destinationAddress.toString().equals(myAddress.toString())) {
@@ -595,9 +588,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 historicalTransferEntries.add(entry);
             }
 
-
             int inserted = database.putTransactions(historicalTransferEntries);
-            Log.d(TAG, String.format("Inserted %d out of %d obtained operations", inserted, resp.result.size()));
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
             // If we got exactly the requested amount of historical transfers, it means we
             // MUST have more to fetch.

@@ -46,19 +46,37 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
  * Created by Syed Muhammad Muzzammil on 5/20/16.
  */
 public class TransactionsHelper implements IBalancesDelegate {
-    private String TAG = this.getClass().getName();
+    final int time = 5000;
     public Context context;
+    public boolean finalBlockReceived = false;
     AssetDelegate assetDelegate;
-
     String accountid;
     String wifkey;
-    final int time = 5000;
-
     long numberOfTransactionsLoaded = 0;
     long numberOfTransactionsToLoad = 0;
 
     ArrayList<TransactionDetails> alreadyLoadedTransactions;
-
+    Handler handleHourlyTransactions;
+    boolean callInProgressForHourlyTransactions = false;
+    boolean callReceivedForHourlyTransactions = true;
+    Date transactionsTimeSpan;
+    long hourlyNumberOfTransactionsLoaded = 0;
+    String hourlyTransactionsAccountId;
+    String firstTransactionId = "";
+    // block number -> ids -> operation
+    HashMap<String, HashMap<String, JSONObject>> transactionsReceivedHm;
+    HashMap<String, JSONObject> assetsReceivedHm;
+    HashMap<String, JSONObject> namesToResolveHm;
+    HashMap<JSONObject, String> memosToDecodeHm;
+    List<String> headersTimeToFetch;
+    int indexHeadersTimeToFetch;
+    HashMap<String, Date> headerTimings;
+    JSONObject[] encryptedMemos;
+    int indexEncryptedMemos;
+    HashMap<String, String> equivalentRatesHm;
+    int retryGetEquivalentRates = 0;
+    int retryGetIndirectEquivalentRates = 0;
+    private String TAG = this.getClass().getName();
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions) {
         context = c;
         assetDelegate = instance;
@@ -88,7 +106,6 @@ public class TransactionsHelper implements IBalancesDelegate {
             get_relative_account_history(account_id, "8", _numberOfTransactionsLoaded, _numberOfTransactionsToLoad);
         }
     }
-
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final Date _transactionsTimeSpan) {
         context = c;
         assetDelegate = instance;
@@ -114,20 +131,6 @@ public class TransactionsHelper implements IBalancesDelegate {
         if (account_id != null) {
             get_relative_account_history(account_id, "20", hourlyNumberOfTransactionsLoaded);
         }
-    }
-
-    Handler handleHourlyTransactions;
-    boolean callInProgressForHourlyTransactions = false;
-    boolean callReceivedForHourlyTransactions = true;
-    Date transactionsTimeSpan;
-    long hourlyNumberOfTransactionsLoaded = 0;
-    String hourlyTransactionsAccountId;
-
-    public enum api_identifier {
-        database,
-        history,
-        network,
-        none
     }
 
     private void make_websocket_call(final String call_string_before_identifier, final String call_string_after_identifier, final api_identifier identifer) {
@@ -244,14 +247,6 @@ public class TransactionsHelper implements IBalancesDelegate {
             namesReceived(s);
         }
     }
-
-    String firstTransactionId = "";
-    // block number -> ids -> operation
-    HashMap<String, HashMap<String, JSONObject>> transactionsReceivedHm;
-    HashMap<String, JSONObject> assetsReceivedHm;
-    HashMap<String, JSONObject> namesToResolveHm;
-    HashMap<JSONObject, String> memosToDecodeHm;
-    public boolean finalBlockReceived = false;
 
     void hourlyTransactionsReceived(String result) {
         try {
@@ -560,10 +555,6 @@ public class TransactionsHelper implements IBalancesDelegate {
 
     }
 
-
-    List<String> headersTimeToFetch;
-    int indexHeadersTimeToFetch;
-
     void getTimeForTransactionsReceived() {
         try {
             get_block_header("21", headersTimeToFetch.get(indexHeadersTimeToFetch));
@@ -573,8 +564,6 @@ public class TransactionsHelper implements IBalancesDelegate {
             Log.d("Transactions Time", e.getMessage());
         }
     }
-
-    HashMap<String, Date> headerTimings;
 
     void blockNumberTimeReceivedHourly(String result) {
         Log.d(TAG, "blockNumberTimeReceivedHourly. result: " + result);
@@ -753,8 +742,8 @@ public class TransactionsHelper implements IBalancesDelegate {
                 get_names_transactions_recieved(values, "23");
             } else {
                 if (context == null) return;
-                String faitCurrency = Helper.getFadeCurrency(context);
-                getEquivalentFiatRates(faitCurrency);
+                String fiatCurrency = Helper.getFadeCurrency(context);
+                getEquivalentFiatRates(fiatCurrency);
             }
         } catch (Exception e) {
             if (context == null) return;
@@ -787,8 +776,8 @@ public class TransactionsHelper implements IBalancesDelegate {
             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.account_names_retrieved) + namesToResolveHm.size());
 
             if (context == null) return;
-            String faitCurrency = Helper.getFadeCurrency(context);
-            getEquivalentFiatRates(faitCurrency);
+            String fiatCurrency = Helper.getFadeCurrency(context);
+            getEquivalentFiatRates(fiatCurrency);
         } catch (Exception e) {
             if (context == null) return;
             assetDelegate.transactionsLoadFailure(context.getString(R.string.failure) + e.getMessage());
@@ -814,7 +803,6 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-
     private void decodeAllMemosInTransactionsReceived(final List<JSONObject> memosArray) {
         ECKey toKey;
         toKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifkey).getKey().getPrivKeyBytes());
@@ -834,9 +822,6 @@ public class TransactionsHelper implements IBalancesDelegate {
             }
         }
     }
-
-    JSONObject[] encryptedMemos;
-    int indexEncryptedMemos;
 
     private void loadMemoSListForDecoding() {
         try {
@@ -1027,9 +1012,6 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    HashMap<String, String> equivalentRatesHm;
-    int retryGetEquivalentRates = 0;
-
     private void reTryGetEquivalentComponents(final String fc) {
         if (retryGetEquivalentRates++ < 1) {
             new Timer().schedule(new TimerTask() {
@@ -1046,33 +1028,31 @@ public class TransactionsHelper implements IBalancesDelegate {
         }
     }
 
-    private void getEquivalentFiatRates(final String faitCurrency) {
+    private void getEquivalentFiatRates(final String fiatCurrency) {
         if (context == null) return;
         EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-        //myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
-        equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+        //myFiatStorage.saveEqHM(fiatCurrency,equivalentRatesHm);
+        equivalentRatesHm = myFiatStorage.getEqHM(fiatCurrency);
         decodeReceivedMemos();
     }
 
-    int retryGetIndirectEquivalentRates = 0;
-
-    private void reTryGetIndirectEquivalentComponents(final List<String> leftOvers, final String faitCurrency) {
+    private void reTryGetIndirectEquivalentComponents(final List<String> leftOvers, final String fiatCurrency) {
         if (retryGetIndirectEquivalentRates++ < 1) {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    getIndirectEquivalentFiatRates(leftOvers, faitCurrency);
+                    getIndirectEquivalentFiatRates(leftOvers, fiatCurrency);
                 }
             }, 100);
         } else {
             if (context == null) return;
             EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+            equivalentRatesHm = myFiatStorage.getEqHM(fiatCurrency);
             decodeReceivedMemos();
         }
     }
 
-    private void getIndirectEquivalentFiatRates(final List<String> leftOvers, final String faitCurrency) {
+    private void getIndirectEquivalentFiatRates(final List<String> leftOvers, final String fiatCurrency) {
         List<String> newPairs = new ArrayList<>();
 
         for (String pair : leftOvers) {
@@ -1092,12 +1072,12 @@ public class TransactionsHelper implements IBalancesDelegate {
         if (!currenciesChange.containsKey("BTS")) {
             currenciesChange.put("BTS", new ArrayList());
         }
-        currenciesChange.get("BTS").add(faitCurrency);
+        currenciesChange.get("BTS").add(fiatCurrency);
 
-        this.getEquivalentComponent(currenciesChange, faitCurrency);
+        this.getEquivalentComponent(currenciesChange, fiatCurrency);
 
 
-        newPairs.add("BTS" + ":" + faitCurrency);
+        newPairs.add("BTS" + ":" + fiatCurrency);
 
         String values = "";
 
@@ -1132,19 +1112,19 @@ public class TransactionsHelper implements IBalancesDelegate {
 
                             JSONObject rates = new JSONObject(resp.rates);
                             Iterator<String> keys = rates.keys();
-                            String btsToFait = "";
+                            String btsTofiat = "";
 
                             while (keys.hasNext())
                             {
                                 String key = keys.next();
 
-                                if (key.equals("BTS:" + faitCurrency)) {
-                                    btsToFait = rates.get("BTS:" + faitCurrency).toString();
+                                if (key.equals("BTS:" + fiatCurrency)) {
+                                    btsTofiat = rates.get("BTS:" + fiatCurrency).toString();
                                     break;
                                 }
                             }
 
-                            if (!btsToFait.isEmpty())
+                            if (!btsTofiat.isEmpty())
                             {
                                 keys = rates.keys();
 
@@ -1153,28 +1133,28 @@ public class TransactionsHelper implements IBalancesDelegate {
                                 {
                                     String key = keys.next();
 
-                                    if (!key.equals("BTS:" + faitCurrency))
+                                    if (!key.equals("BTS:" + fiatCurrency))
                                     {
                                         String asset = key.split(":")[0];
 
                                         String assetConversionToBTS = rates.get(key).toString();
 
-                                        double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+                                        double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsTofiat);
 
-                                        String assetToFaitConversion = Double.toString(newConversionRate);
+                                        String assetTofiatConversion = Double.toString(newConversionRate);
 
-                                        equivalentRatesHm.put(asset, assetToFaitConversion);
+                                        equivalentRatesHm.put(asset, assetTofiatConversion);
                                     }
                                 }
 
                                 if ( context == null ) return;
                                 EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-                                myFiatStorage.saveEqHM(faitCurrency,equivalentRatesHm);
+                                myFiatStorage.saveEqHM(fiatCurrency,equivalentRatesHm);
                             }
 
                             if ( context == null ) return;
                             EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-                            equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+                            equivalentRatesHm = myFiatStorage.getEqHM(fiatCurrency);
 
                             if ( context == null ) return;
                             assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
@@ -1183,29 +1163,29 @@ public class TransactionsHelper implements IBalancesDelegate {
                         }
                         catch (Exception e)
                         {
-                            reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
+                            reTryGetIndirectEquivalentComponents(leftOvers,fiatCurrency);
                         }
                     }
                     else
                     {
-                        reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
+                        reTryGetIndirectEquivalentComponents(leftOvers,fiatCurrency);
                     }
                 }
                 else
                 {
-                    reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
+                    reTryGetIndirectEquivalentComponents(leftOvers,fiatCurrency);
                 }
             }
 
             @Override
             public void onFailure(Throwable t)
             {
-                reTryGetIndirectEquivalentComponents(leftOvers,faitCurrency);
+                reTryGetIndirectEquivalentComponents(leftOvers,fiatCurrency);
             }
         });*/
     }
 
-    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String faitCurrency) {
+    public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String fiatCurrency) {
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -1272,41 +1252,41 @@ public class TransactionsHelper implements IBalancesDelegate {
                         }
                     }
 
-                    String btsToFait = "";
+                    String btsTofiat = "";
 
                     for (String key : rates.keySet()) {
                         if (key.equals("BTS")) {
                             for (String keypair : rates.get(key).keySet()) {
-                                if (faitCurrency.equals(keypair)) {
-                                    btsToFait = rates.get(key).get(keypair).toString();
+                                if (fiatCurrency.equals(keypair)) {
+                                    btsTofiat = rates.get(key).get(keypair).toString();
                                     break;
                                 }
                             }
                         }
                     }
 
-                    if (!btsToFait.isEmpty()) {
+                    if (!btsTofiat.isEmpty()) {
                         for (String asset : rates.keySet()) {
                             for (String keypair : rates.get(asset).keySet()) {
-                                if (!asset.equals("BTS") && !keypair.equals(faitCurrency)) {
+                                if (!asset.equals("BTS") && !keypair.equals(fiatCurrency)) {
                                     String assetConversionToBTS = rates.get(asset).get(keypair).toString();
 
-                                    double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsToFait);
+                                    double newConversionRate = convertLocalizeStringToDouble(assetConversionToBTS) * convertLocalizeStringToDouble(btsTofiat);
 
-                                    String assetToFaitConversion = Double.toString(newConversionRate);
+                                    String assetTofiatConversion = Double.toString(newConversionRate);
 
-                                    equivalentRatesHm.put(asset, assetToFaitConversion);
+                                    equivalentRatesHm.put(asset, assetTofiatConversion);
                                 }
                             }
                         }
                         if (context == null) return;
                         EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-                        myFiatStorage.saveEqHM(faitCurrency, equivalentRatesHm);
+                        myFiatStorage.saveEqHM(fiatCurrency, equivalentRatesHm);
                     }
 
                     if (context == null) return;
                     EquivalentFiatStorage myFiatStorage = new EquivalentFiatStorage(context);
-                    equivalentRatesHm = myFiatStorage.getEqHM(faitCurrency);
+                    equivalentRatesHm = myFiatStorage.getEqHM(fiatCurrency);
 
                     if (context == null) return;
                     assetDelegate.transactionsLoadMessageStatus(context.getString(R.string.fiat_exchange_rate_received));
@@ -1349,5 +1329,12 @@ public class TransactionsHelper implements IBalancesDelegate {
             }
         }
         return txtAmount_d;
+    }
+
+    public enum api_identifier {
+        database,
+        history,
+        network,
+        none
     }
 }
