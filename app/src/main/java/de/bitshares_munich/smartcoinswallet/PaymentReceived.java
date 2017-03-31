@@ -34,7 +34,7 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
-public class PaymentRecieved extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
+public class PaymentReceived extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
     private final String TAG = this.getClass().getName();
     String receiver_id;
     String sender_id;

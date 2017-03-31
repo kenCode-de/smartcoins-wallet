@@ -289,7 +289,7 @@ public class ReceiveActivity extends BaseActivity {
                 if (response.isSuccessful()) {
                     if (response.body().length > 0) {
                         TransactionSmartCoin[] transactions = response.body();
-                        Intent intent = new Intent(getApplicationContext(), PaymentRecieved.class);
+                        Intent intent = new Intent(getApplicationContext(), PaymentReceived.class);
                         intent.putExtra("block", transactions[0].block);
                         intent.putExtra("trx", transactions[0].trx);
                         intent.putExtra("receiver_id", transactions[0].account_id);

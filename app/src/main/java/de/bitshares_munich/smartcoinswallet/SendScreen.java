@@ -109,7 +109,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     AccountAssets loyaltyAsset;
     AccountAssets backupAssets;
 
-    //    boolean validReceiver = false;
     boolean validAmount = false;
     boolean sendBtnPressed = false;
     boolean alwaysDonate = false;
