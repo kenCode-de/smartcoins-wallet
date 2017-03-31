@@ -41,7 +41,6 @@ import com.google.common.primitives.UnsignedLong;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,17 +62,14 @@ import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.interfaces.IExchangeRate;
-import de.bitshares_munich.interfaces.IRelativeHistory;
 import de.bitshares_munich.interfaces.ContactSelectionListener;
+import de.bitshares_munich.interfaces.IExchangeRate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
-import de.bitshares_munich.utils.IWebService;
-import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
@@ -97,9 +93,6 @@ import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import de.bitsharesmunich.graphenej.objects.Memo;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
@@ -116,7 +109,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     AccountAssets loyaltyAsset;
     AccountAssets backupAssets;
 
-//    boolean validReceiver = false;
+    //    boolean validReceiver = false;
     boolean validAmount = false;
     boolean sendBtnPressed = false;
     boolean alwaysDonate = false;
@@ -125,119 +118,96 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, callbackURL;
-
-    private boolean mSendAttemptFail = false;
-
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
-
     @Bind(R.id.llLoyalty)
     LinearLayout llLoyalty;
-
     @Bind(R.id.llBackupAsset)
     LinearLayout llBackupAsset;
-
     @Bind(R.id.tvLoyaltyStatus)
     TextView tvLoyaltyStatus;
-
     @Bind(R.id.tvTotalStatus)
     TextView tvTotalStatus;
-
     @Bind(R.id.spAssets)
     Spinner spAssets;
-
     @Bind(R.id.tvLoyalty)
     TextView tvLoyalty;
-
     @Bind(R.id.tvBackupAsset)
     TextView tvBackupAsset;
-
     @Bind(R.id.tvBackupAssetBalanceValidate)
     TextView tvBackupAssetBalanceValidate;
-
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
-
     @Bind(R.id.webviewTo)
     WebView webviewTo;
-
     @Bind(R.id.etReceiverAccount)
     EditText etReceiverAccount;
-
     @Bind(R.id.tvErrorRecieverAccount)
     TextView tvErrorRecieverAccount;
-
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
-
-
     @Bind(R.id.cbAlwaysDonate)
     CheckBox cbAlwaysDonate;
-
     @Bind(R.id.etMemo)
     EditText etMemo;
-
     @Bind(R.id.etAmount)
     EditText etAmount;
-
     @Bind(R.id.etBackupAsset)
     EditText etBackupAsset;
-
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
-
     @Bind(R.id.btnSend)
     Button btnSend;
-
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
-
     @Bind(R.id.tvFrom)
     TextView tvFrom;
-
     int count = 0;
-
     @Bind(R.id.tvBlockNumberHead_send_screen_activity)
     TextView tvBlockNumberHead;
-
     @Bind(R.id.tvAppVersion_send_screen_activity)
     TextView tvAppVersion;
-
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+    webSocketCallHelper myWebSocketHelper;
+    Boolean runningSpinerForFirstTime = true;
+    CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
+        public void onTick(long millisUntilFinished) {
+        }
 
+        public void onFinish() {
+            if (!etReceiverAccount.getText().toString().equals(etReceiverAccount.getText().toString().toLowerCase())) {
+                etReceiverAccount.setText(etReceiverAccount.getText().toString().toLowerCase());
+                etReceiverAccount.setSelection(etReceiverAccount.getText().toString().length());
+            }
+        }
+    };
+    Dialog contactListDialog;
+    private boolean mSendAttemptFail = false;
     /**
      * Handler and delay
      */
     private int REQUEST_TRANSFER_HISTORY_DELAY = 1800;
-
     /**
      * Instance of the database interface
      */
     private SCWallDatabase database;
-
     /* Donation account and amount */
     private UserAccount bitsharesMunich = new UserAccount("1.2.90200");
     private AssetAmount donationAmount = new AssetAmount(UnsignedLong.valueOf(200000), new Asset("1.3.0"));
-
     /* Destination account */
     private UserAccount destinationAccount;
-
     /* Sender account */
     private UserAccount sourceAccount;
-
     /* Constant used to fix the number of historical transfers to fetch from the network in one batch */
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 50;
-
     /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
     private WebsocketWorkerThread donationBroadcaster;
     private WebsocketWorkerThread transferBroadcaster;
     private WebsocketWorkerThread getAccountByName;
-
     /* This is one of the of the recipient account's public key, it will be used for memo encoding */
     private PublicKey destinationPublicKey;
-
     /**
      * Callback fired when we get a response from the network with the transaction details.
      */
@@ -249,7 +219,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             List<HistoricalTransfer> transferList = (List<HistoricalTransfer>) response.result;
             Log.d(TAG, String.format("Got %d new transactions!", transferList.size()));
             ArrayList<HistoricalTransferEntry> transferEntries = new ArrayList<>();
-            for(HistoricalTransfer historicalTransfer : transferList){
+            for (HistoricalTransfer historicalTransfer : transferList) {
                 HistoricalTransferEntry entry = new HistoricalTransferEntry();
                 entry.setHistoricalTransfer(historicalTransfer);
 
@@ -257,17 +227,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                 UserAccount to = database.fillUserDetails(historicalTransfer.getOperation().getTo());
                 String id = historicalTransfer.getId();
                 long value = historicalTransfer.getOperation().getTransferAmount().getAmount().longValue();
-                Log.d(TAG,String.format("transferred %d from %s -> %s, id: %s", value, from.getAccountName(), to.getAccountName(), id));
+                Log.d(TAG, String.format("transferred %d from %s -> %s, id: %s", value, from.getAccountName(), to.getAccountName(), id));
             }
             database.putTransactions(transferEntries);
         }
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "mTransferHistoryListener.onError. Msg: "+error.message);
+            Log.e(TAG, "mTransferHistoryListener.onError. Msg: " + error.message);
         }
     };
-
     /**
      * Callback fired when we get a response from the transaction broadcast
      * sequence for the donation button.
@@ -280,10 +249,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "donation.onError. Msg: "+error.message);
+            Log.e(TAG, "donation.onError. Msg: " + error.message);
         }
     };
-
     /**
      * Callback that is fired when we get a response from a transaction broadcast sequence.
      */
@@ -304,13 +272,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
         @Override
         public void onError(BaseResponse.Error error) {
-            Log.e(TAG, "send.onError. msg: "+error.message);
+            Log.e(TAG, "send.onError. msg: " + error.message);
             //Try to pay free with asset instead of BTS (second try)
-            if(mSendAttemptFail){
+            if (mSendAttemptFail) {
                 Log.d(TAG, "Second send attempt using current asset");
                 sendFunds(false);
-            }
-            else{
+            } else {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -322,8 +289,73 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
         }
     };
+    /**
+     * Callback that obtains the response from the get_account_by_name API call.
+     * Here we're just interested in get one of the public keys from the recipient account
+     * in order to use it for memo encryption.
+     */
+    private WitnessResponseListener mAccountByNameListener = new WitnessResponseListener() {
 
-    webSocketCallHelper myWebSocketHelper;
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            Log.d(TAG, "mAccountByNameListener. onSuccess");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
+                    if (accountProperties != null) {
+                        Log.d(TAG, "Found account with name");
+                        Log.d(TAG, accountProperties.name);
+                        destinationPublicKey = accountProperties.active.getKeyAuths().keySet().iterator().next();
+                        destinationAccount = new UserAccount(accountProperties.id);
+                    } else {
+                        Log.i(TAG, "No account with that name");
+                        destinationPublicKey = null;
+                        destinationAccount = null;
+                    }
+
+                    validating = false;
+
+                    // Check whether we can enable the "send" button or not
+                    if (validateSend()) {
+                        btnSend.setEnabled(true);
+                    } else {
+                        btnSend.setEnabled(false);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.d(TAG, "mAccountByNameListener.onError. Msg: " + error.message);
+        }
+    };
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(1000, 1000) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            createBitShareAN(false);
+        }
+    };
+
+    public static int getColorWrapper(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
+        }
+    }
+
+    public static Drawable getDrawable(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>= API 21
+            return context.getDrawable(id);
+        } else {
+            return context.getResources().getDrawable(id);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,7 +396,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         if (res != null) {
             if (res.containsKey("sResult") && res.containsKey("id")) {
                 if (res.getInt("id") == 5) {
-                    decodeInvoiceData(res.getString("sResult"));
+                    try {
+                        decodeInvoiceData(res.getString("sResult"));
+                    } catch (Exception e) {
+                        Log.e(TAG, "Unable to Decode QR. Exception Msg: " + e.getMessage());
+                        Toast.makeText(SendScreen.this, SendScreen.this.getResources().getString(R.string.unable_to_decode_QR), Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         }
@@ -415,16 +453,15 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             myAccountNameValidationTimer.start();
         }
     }
+
     @OnTextChanged(R.id.etAmount)
     void onAmountChanged(CharSequence text) {
         onTransferAmountUpdated();
     }
 
-    Boolean runningSpinerForFirstTime = true;
-
     @OnItemSelected(R.id.spinnerFrom)
     void onItemSelected(int position) {
-        Log.d(TAG,"onItemSelected. position: "+position);
+        Log.d(TAG, "onItemSelected. position: " + position);
         if (!runningSpinerForFirstTime) {
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
 
@@ -558,7 +595,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         backupAssetCHanged(text.toString());
     }
 
-
     @OnClick(R.id.btnSend)
     public void onSendButtonClicked(View view) {
         sendBtnPressed = true;
@@ -596,7 +632,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     }
 
     public void sendFunds(boolean isTrade) {
-        Log.d(TAG, "sendFunds: "+isTrade);
+        Log.d(TAG, "sendFunds: " + isTrade);
         String transferFunds = this.getString(R.string.transfer_funds) + "...";
         showDialog("", transferFunds);
         if (isTrade) {
@@ -654,7 +690,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     }
 
     public void onTransferAmountUpdated() {
-        Log.d(TAG,"onTransferAmountUpdated");
+        Log.d(TAG, "onTransferAmountUpdated");
         try {
             tvAmountStatus.setTextColor(tvTotalStatus.getTextColors());
             String selectedAsset;
@@ -706,14 +742,14 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             tvAmountStatus.setTextColor(Color.RED); //shayan
             updateTotalStatus();
         } catch (Exception e) {
-            Log.e(TAG,"Exception. Msg: "+e.getMessage());
+            Log.e(TAG, "Exception. Msg: " + e.getMessage());
         }
 
         // Enabling or disabling the send button depending on
         // the result of the validation.
-        if(validateSend()){
+        if (validateSend()) {
             btnSend.setEnabled(true);
-        }else{
+        } else {
             btnSend.setEnabled(false);
         }
 
@@ -726,76 +762,11 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         webView.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
 
-    CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            if (!etReceiverAccount.getText().toString().equals(etReceiverAccount.getText().toString().toLowerCase())) {
-                etReceiverAccount.setText(etReceiverAccount.getText().toString().toLowerCase());
-                etReceiverAccount.setSelection(etReceiverAccount.getText().toString().length());
-            }
-        }
-    };
-
-    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(1000, 1000) {
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            createBitShareAN(false);
-        }
-    };
-
     private void lookupAccounts() {
         this.getAccountByName = new WebsocketWorkerThread(new GetAccountByName(etReceiverAccount.getText().toString(), mAccountByNameListener));
         this.getAccountByName.start();
         validating = true;
     }
-
-    /**
-     * Callback that obtains the response from the get_account_by_name API call.
-     * Here we're just interested in get one of the public keys from the recipient account
-     * in order to use it for memo encryption.
-     */
-    private WitnessResponseListener mAccountByNameListener = new WitnessResponseListener() {
-
-        @Override
-        public void onSuccess(final WitnessResponse response) {
-            Log.d(TAG,"mAccountByNameListener. onSuccess");
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AccountProperties accountProperties = ((WitnessResponse<AccountProperties>) response).result;
-                    if(accountProperties != null){
-                        Log.d(TAG,"Found account with name");
-                        Log.d(TAG,accountProperties.name);
-                        destinationPublicKey = accountProperties.active.getKeyAuths().keySet().iterator().next();
-                        destinationAccount = new UserAccount(accountProperties.id);
-                    }else{
-                        Log.i(TAG, "No account with that name");
-                        destinationPublicKey = null;
-                        destinationAccount = null;
-                    }
-
-                    validating = false;
-
-                    // Check whether we can enable the "send" button or not
-                    if(validateSend()){
-                        btnSend.setEnabled(true);
-                    }else{
-                        btnSend.setEnabled(false);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public void onError(BaseResponse.Error error) {
-            Log.d(TAG,"mAccountByNameListener.onError. Msg: "+error.message);
-        }
-    };
 
     public void createBitShareAN(boolean focused) {
         if (!focused) {
@@ -886,7 +857,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG,"onActivityResult");
+        Log.d(TAG, "onActivityResult");
         switch (requestCode) {
             case 90:
                 if (resultCode == RESULT_OK) {
@@ -899,12 +870,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     /**
      * Setups the correct fields with invoice data obtained from the QR-Code reader.
+     *
      * @param invoice: Invoice data read from the QR-Code in the JSON format.
      */
     void onScanResult(Invoice invoice) {
         try {
             callbackURL = invoice.getCallback();
-            if(!callbackURL.equals("") && !callbackURL.endsWith("/")){
+            if (!callbackURL.equals("") && !callbackURL.endsWith("/")) {
                 callbackURL = callbackURL + "/";
             }
             etReceiverAccount.setText(invoice.getTo());
@@ -957,7 +929,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                 tvLoyaltyStatus.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            Log.e(TAG,"Exception. Msg: "+e.getMessage());
+            Log.e(TAG, "Exception. Msg: " + e.getMessage());
         }
     }
 
@@ -1023,7 +995,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     }
 
     void setSpinner() {
-        Log.d(TAG,"setSpinner");
+        Log.d(TAG, "setSpinner");
         populateAccountsSpinner();
         populateAssetsSpinner();
         setBackUpAsset();
@@ -1041,7 +1013,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     }
                 });
             } else {
-                    findExchangeRate(id);
+                findExchangeRate(id);
             }
         } else {
             findExchangeRate(id);
@@ -1078,7 +1050,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         }
     }
 
-
     public boolean validateSend() {
         if (spinnerFrom.getSelectedItem().toString().equals("")) {
             return false;
@@ -1092,7 +1063,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             return false;
         } else if (checkIfZero()) {
             return false;
-        } else if(destinationPublicKey == null){
+        } else if (destinationPublicKey == null) {
             return false;
         }
         return true;
@@ -1115,13 +1086,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             }
         }
         String memoMessage = null;
-        if (!etMemo.getText().toString().isEmpty()){
+        if (!etMemo.getText().toString().isEmpty()) {
             memoMessage = etMemo.getText().toString();
-        }else{
+        } else {
             memoMessage = null;
         }
 
-        try{
+        try {
             long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
             String assetId = selectedAccountAsset.id;
             Asset transferAsset = new Asset(assetId);
@@ -1131,7 +1102,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             sourceAccount = new UserAccount(senderID);
 
 
-            if(mSendAttemptFail){
+            if (mSendAttemptFail) {
                 mSendAttemptFail = false;
                 TransferTransactionBuilder builder = new TransferTransactionBuilder()
                         .setSource(sourceAccount)
@@ -1139,7 +1110,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                         .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                         .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                         .setPrivateKey(currentPrivKey);
-                if(memoMessage != null) {
+                if (memoMessage != null) {
                     SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                     long nonce = secureRandom.nextLong();
                     byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
@@ -1168,8 +1139,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     donationBroadcaster.start();
                     Log.d(TAG, "started a donation message broadcast");
                 }
-            }
-            else{
+            } else {
                 mSendAttemptFail = true;
                 TransferTransactionBuilder builder = new TransferTransactionBuilder()
                         .setSource(sourceAccount)
@@ -1178,7 +1148,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                         .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
                         .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
                         .setPrivateKey(currentPrivKey);
-                if(memoMessage != null) {
+                if (memoMessage != null) {
                     SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                     long nonce = secureRandom.nextLong();
                     byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
@@ -1240,15 +1210,16 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             String base_amount = base.get("amount").toString();
             JSONObject quote = (JSONObject) sell_price.get("base");
             String quote_amount = quote.get("amount").toString();
-            if(backupAssets!=null){
-            Double baseWithPrecision = Double.parseDouble(base_amount) / Math.pow(10, Double.parseDouble(backupAssets.precision));
-            if (id == 200) {
-                Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(selectedAccountAsset.precision));
-                backAssetRate = quoteWithPrecision / baseWithPrecision;
-            } else if (id == 100) {
-                Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(loyaltyAsset.precision));
-                exchangeRate = quoteWithPrecision / baseWithPrecision;
-            }}
+            if (backupAssets != null) {
+                Double baseWithPrecision = Double.parseDouble(base_amount) / Math.pow(10, Double.parseDouble(backupAssets.precision));
+                if (id == 200) {
+                    Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(selectedAccountAsset.precision));
+                    backAssetRate = quoteWithPrecision / baseWithPrecision;
+                } else if (id == 100) {
+                    Double quoteWithPrecision = Double.parseDouble(quote_amount) / Math.pow(10, Double.parseDouble(loyaltyAsset.precision));
+                    exchangeRate = quoteWithPrecision / baseWithPrecision;
+                }
+            }
             runOnUiThread(new Runnable() {
                 public void run() {
                     updateTotalStatus();
@@ -1265,10 +1236,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     }
 
-    private void showDialog(String title, String msg)
-    {
-        try
-        {
+    private void showDialog(String title, String msg) {
+        try {
             if (progressDialog != null) {
                 if (!progressDialog.isShowing()) {
                     progressDialog.setTitle(title);
@@ -1276,9 +1245,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     progressDialog.show();
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }
@@ -1463,13 +1430,10 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     public void saveMerchantEmail(String string) {
         String accountName = SupportMethods.ParseJsonObject(string, "to");
         String note = SupportMethods.ParseJsonObject(string, "note");
-        if (!note.isEmpty())
-        {
-            String email = SupportMethods.ParseJsonObject(note,"merchant_email");
-            if (email.length() > 0)
-            {
-                if (SupportMethods.isEmailValid(email))
-                {
+        if (!note.isEmpty()) {
+            String email = SupportMethods.ParseJsonObject(note, "merchant_email");
+            if (email.length() > 0) {
+                if (SupportMethods.isEmailValid(email)) {
                     MerchantEmail merchantEmail = new MerchantEmail(getApplicationContext());
                     merchantEmail.saveMerchantEmail(accountName, email);
                 }
@@ -1487,9 +1451,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             @Override
             public void run() {
                 if (Application.isConnected()) {
-                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
-                        tvBlockNumberHead.setText(Application.blockHead);
-                        ivSocketConnected.clearAnimation();
+                    ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                    tvBlockNumberHead.setText(Application.blockHead);
+                    ivSocketConnected.clearAnimation();
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -1506,24 +1470,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
-
-    public static int getColorWrapper(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getColor(id);
-        } else {
-            return context.getResources().getColor(id);
-        }
-    }
-
-    public static Drawable getDrawable(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { //>= API 21
-            return context.getDrawable(id);
-        } else {
-            return context.getResources().getDrawable(id);
-        }
-    }
-
-    Dialog contactListDialog;
 
     @OnClick(R.id.contactButton)
     void OnClickContactBtn(View view) {
