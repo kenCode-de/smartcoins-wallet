@@ -4,8 +4,10 @@
     <style name="stylishDialog" parent="android:Theme.Dialog">
         <item name="android:windowBackground">@color/whiteColor</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:gravity">center</item>
     </style>
-
 
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 

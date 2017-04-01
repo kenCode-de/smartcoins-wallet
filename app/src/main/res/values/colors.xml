@@ -12,6 +12,7 @@
 
     <color name="black">#000000</color>
     <color name="skyblue">#BFD1FF</color>
+    <color name="light_blue">#f2f6ff</color>
     <color name="greencolor">#70882E</color>
     <color name="red">#ff0000</color>
     <color name="pinkColor">#FF4081</color>

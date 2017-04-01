@@ -21,37 +21,17 @@ import io.fabric.sdk.android.Fabric;
 public class BaseActivity extends LockableActivity {
     public final String TAG = "BaseActivity";
 
-    public static final long DISCONNECT_TIMEOUT = (3*60*1000);
+    public static final long DISCONNECT_TIMEOUT = (3 * 60 * 1000);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(BuildConfig.USE_CRASHLYTICS){
+        if (BuildConfig.USE_CRASHLYTICS) {
             Fabric.with(this, new Crashlytics());
             Log.d(TAG, "Using crashlytics");
-        }else{
+        } else {
             Log.d(TAG, "Not using crashlytics");
         }
-
-        //If app language preferences aren't set, get language device language
-        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-
-        if(!language.equals(""))
-        {
-            Helper.setLocale(language,getResources());
-        }
-        else {
-            language = Locale.getDefault().getLanguage();
-            Helper.storeStringSharePref(getApplicationContext(), getString(R.string.pref_language) , language);
-            Helper.setLocale(language,getResources());
-        }
-        //Check automatically close app behavior (after 3 min) is set and if not, put true by default
-        Boolean closeAppPref = Helper.checkSharedPref(getApplicationContext(), "close_bitshare");
-        if(!closeAppPref)
-        {
-            Helper.storeBoolianSharePref(getApplicationContext(), "close_bitshare", true);
-        }
-
     }
 
     public void setBackButton(Boolean isBackButton) {
@@ -76,16 +56,12 @@ public class BaseActivity extends LockableActivity {
 
     private Runnable disconnectCallback = new Runnable() {
         @Override
-        public void run()
-        {
+        public void run() {
             String close_bitshare = "close_bitshare";
             Boolean cb = Helper.fetchBoolianSharePref(getApplicationContext(), close_bitshare);
-            if (cb)
-            {
+            if (cb) {
                 finishAffinity();
-            }
-            else
-            {
+            } else {
                 resetDisconnectTimer();
             }
         }

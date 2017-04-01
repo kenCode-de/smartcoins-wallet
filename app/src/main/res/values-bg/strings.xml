@@ -1,239 +1,489 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+    <string name="import_wif">"Внос от частен ключ (WIF)"</string>
+    <string name="txt_wif_activity">Wallet Внос формат - WIF</string>
+    <string name="txt_wif_paste">Private Key (WIF)</string>
+    <string name="please_enter_wif">Моля, въведете частен ключ (WIF)</string>
+    <string name="invalid_wif">Невалиден WIF</string>
+    <string name="wif_error_invalid_account">Невалиден сметка, моля, проверете си WIF за печатни грешки</string>
+    <string name="unable_to_load_wif">Не може да се зареди WIF</string>
+    <string name="error_wif">Грешка при създаване на WIF ключ</string>
+    <string name="error_brainkey_wif_export">WIF внесени сметка не поддържа brainkey архивиране</string>
+ <string name="pin_number_warning">ПИН кодът трябва да бъде най-малко 6 цифри</string>
+ <string name="old_pin_number_warning">стария ПИН номер трябва да бъде най-малко 6 цифри</string>
+
     <string name="license">Лиценз</string>
+
 <string name="send_capital">изпращам</string>
+
 <string name="account_create_register_or_import">СЪЗДАВАНЕ/РЕГИСТРАЦИЯ НА ПОТРЕБИТЕЛ или ИМПОРТ</string>
+
 <string name="txt_account_name">Име на потребител</string>
+
 <string name="time_stamp">времеви печат</string>
+
 <string name="email_pdf">Email PDF</string>
+
 <string name="account">Сметка</string>
+
 <string name="friendly_name">Съкратено Име</string>
+
 <string name="notes">бележки</string>
+
 <string name="note">бележка</string>
+
 <string name="payment_received">Получено плащане</string>
+
 <string name="import_brainkey">Импорт на BrainKey</string>
+
 <string name="import_backup_old">Импорт на резервно копие</string>
+
 <string name="choose_backup">Изберете резервно копие</string>
+
 <string name="choose_file">Изберете файл</string>
+
 <string name="no_file_chosen">Няма избран файл</string>
+
 <string name="account_label">Етикет на сметка</string>
+
 <string name="loading_msg">Моля, изчакайте, докато Вашите баланси се зареждат</string>
-<string name="txt_6_digits_pin">6-цифрен ПИН</string>
-<string name="txt_6_digits_pin_confirm">потвърдете 6-цифреният ПИН</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ цифри)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN потвърждават</string>
+ 
 <string name="create">СЪЗДАЙ</string>
+
 <string name="existing_account">Съществуващ потребител</string>
+
 <string name="agreement">Споразумение</string>
+
     <string name="please_make_sure_your_pin">Моля, уверете се, че вашият ПИН е правилен</string>
+
     <string name="please_make_sure_your_pin_file">Моля, уверете се че вашият ПИН файл са правилни</string>
+
     <string name="unable_to_import_account_from_bin_file">Сметката не може да бъде импортирана от .bin файла</string>
+
     <string name="importing_keys_from_bin_file">Импорт на ключове от .bin файл</string>
+
     <string name="import_backup">Импорт на бекъп</string>
+
     <string name="is_already_added">вече е добавен</string>
+
     <string name="in_valid_email">Невалиден имейл</string>
+
     <string name="select">Изберете</string>
+
     <string name="are_you_sure">Сигурен ли сте?</string>
 
+
+
     <string name="cancel_and_exit">Отказ и Изход</string>
+
 <string name="i_agree">Съгласен съм</string>
+
 <string name="kindly_create_account">любезно създаване на акаунт</string>
-<string name="please_enter_old_6_digit_pin">Моля, въведете стария 6-цифрен ПИН</string>
-<string name="please_enter_6_digit_pin">Моля, въведете 6-цифрен ПИН</string>
-<string name="please_enter_6_digit_pin_confirm">Моля, потвърдете 6-цифрен ПИН</string>
+
+ <string name="please_enter_old_6_digit_pin">Моля, въведете стария PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">Моля, въведете PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Моля, въведете потвърждение PIN</string>
+ 
 <string name="mismatch_pin">несъответствие на пинове</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Принтирайте, или препишете Brainkey информацията</string>
+
 <string name="create_wallet">създаване на портфейл</string>
 
+
+
 <string name="save">ЗАПАЗИ</string>
+
 <string name="next">ПРОДЪЛЖИ</string>
+
 <string name="please_enter_brainkey">Моля, въведете Brainkey</string>
+
 <string name="please_enter_correct_brainkey">Моля, въведете правилен Brainkey</string>
+
 <string name="balances">Баланси</string>
+
 <string name="contacts">Контакти</string>
+
 <string name="receive_uppercase">ПОЛУЧИ</string>
+
 <string name="send_uppercase">ИЗПРАТИ</string>
+
 <string name="transactions">Транзакции</string>
+
 <string name="title_activity_setting">SettingActivity</string>
+
 <string name="backup_asset">Резервно копие на активите</string>
+
 <string name="taxable_country">Държава по данъчно облагане</string>
+
 <string name="date_time">дата и час</string>
+
 <string name="check_for_updates">Проверка за актуализации</string>
+
 <string name="automatically_install">Автоматично инсталиране</string>
+
 <string name="require_pin">Изискване на ПИН</string>
+
 <string name="close_bitshare">Автоматично затваряне на Bitshares</string>
+
 <string name="always_donate">Винаги Дарявайте по 2 BTS в подкрепа на разработчиците от BitShares Мюнхен (bitshares-munich)</string>
+
 <string name="hide_donations">Скриване на Даренията от списъка с транзакции в началния екран Сделки</string>
+
 <string name="backup">BACKUP .bin</string>
+
 <string name="checkbox_donate_old">Дарете 2 BTS в подкрепа на разработчиците от BitShares Мюнхен</string>
+
 <string name="backup_brainkey">Резервно копие на BRAINKEY</string>
+
 <string name="imported_created_accounts">Импортирани / създадени профили</string>
+
 <string name="register_new_account">РЕГИСТРАЦИЯ на нов акаунт</string>
+
 <string name="secure_pin">EDIT PIN</string>
+
     <string name="checkbox_donate">Дарете 2 BTS за разработчиците</string>
+
 <string name="export">Експорт</string>
+
 <string name="show_more">Покажи повече</string>
+
 <string name="share_text">Току-що открих Smartcoins Wallet, с който можеш да изпращаш и получаваш Smartcoins. Приложението е страхотно!</string>
+
 <string name="share_info">Поканете вашите приятели да изпробват Smartcoins Wallet! Имейл адресите не се записват и поверителността е гарантирана.</string>
+
 <string name="share_subject">Страхотен Smartcoins Wallet</string>
+
 <string name="share_heading">Сподели с приятел</string>
+
 <string name="share_btn_text">ОТВОРИ приложение за електронна поща</string>
+
 <string name="action_settings">Настройки</string>
+
 <string name="txt_validating_account">Валидиране на сметка ...</string>
+
 <string name="validating_account">Валидиране на сметка ...</string>
+
 <string name="account_name_should_be_longer">Имет на титуляра на сметката трябва да бъде по-дълъг</string>
+
     <string name="account_name_already_exist">Името на сметка
+
         %s вече съществува</string>
+
     <string name="account_name_not_exist">Сметка
+
         %s не съществува</string>
+
 <string name="add_contact">Добави</string>
+
 <string name="edit_contact">Редактирай</string>
+
 <string name="empty_list">Списъкът с контакти е празен</string>
+
 <string name="account_name_validate">Името на сметката е валидно</string>
+
 <string name="txt_no_internet_connection">Няма връзка с интернет</string>
+
 <string name="unable_to_create_account_from_brainkey">Не може да се създаде профил от Brainkey</string>
+
 <string name="importing_your_wallet">Импортирай портфейла си ...</string>
+
 <string name="str_trading_pair_not_exist">Търговската двойка не съществува</string>
+
 <string name="unable_to_create_qr_code">Не може да се създаде QR код</string>
+
 <string name="price">цена</string>
+
 <string name="currency">валута</string>
+
 <string name="please_enter_amount">Моля въведете сума</string>
+
 <string name="amount_should_be_greater_than_zero">Сумата трябва да бъде по-голяма от нула</string>
+
 <string name="no_amount_requested">Не исканата сума</string>
+
 <string name="to_capital">До</string>
+
 <string name="from_capital">От</string>
+
 <string name="memo_capital">Забележка</string>
+
 <string name="empty_file_created">Създаден е празен файл</string>
+
 <string name="date">Дата</string>
+
 <string name="all">Всички</string>
+
 <string name="to_from">До/От</string>
+
     <string name="bts_will_be_deducted">BTS ще бъде приспадната от</string>
 
+
+
     <string name="amount">Количество</string>
+
 <string name="message">Съобщение</string>
+
 <string name="pdf_generated_msg">PDF генериран и записан:</string>
+
 <string name="pdf_generated_msg_error">Не може да се генерира PDF. Моля, опитайте отново. Грешка:</string>
+
 <string name="raw_transactions">Транзакция:</string>
+
 <string name="extensions">Разширения</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Изпратени / Получени</string>
+
 <string name="details">Детайли</string>
+
 <string name="share_qr_code">Сподели QR код</string>
+
 <string name="done">Готово </string>
+
 <string name="id_s">Документ за самоличност</string>
+
 <string name="time">време</string>
+
 <string name="operations">операции</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">символ</string>
+
 <string name="fee_capital">Такса</string>
+
 <string name="ok">Добре</string>
+
 <string name="loading">Зарежда се ...</string>
+
 <string name="pay_to">Плати на</string>
+
 <string name="requested">исканата</string>
+
 <string name="failed_transaction">Неуспешна транзакция</string>
+
 <string name="str_invalid_amount">Моля, въведете валидна сума</string>
+
 <string name="str_invalid_receiver">Моля, въведете валиден Получател</string>
+
 <string name="str_transaction_failed">Транзакцията е неуспешна</string>
+
 <string name="please_enter_valid_amount">Моля, въведете валидна сума</string>
+
 <string name="select_timezone">Изберете Времева Зона</string>
-<string name="old_pin">Стар 6-цифрен ПИН</string>
-<string name="pin_created_successfully">ПИНът е създаден успешно</string>
-<string name="edit_pin">Смени ПИН</string>
+
+ <string name="old_pin">Стар ПИН</string>
+ 
+ <string name="pin_created_successfully">PIN създаден успешно</string>
+ 
+ <string name="edit_pin">Edit PIN</string>
+ 
 <string name="txt_edit">ЗАПАЗИ</string>
-<string name="create_pin">Създаване на ПИН</string>
+
+ <string name="create_pin">Създаване на ПИН</string>
+ 
 <string name="pin_changed_successfully">ПИНът е променен успешно</string>
+
 <string name="incorrect_old_pin">Неправилен стар ПИН</string>
+
 <string name="copy">копие</string>
+
 <string name="pin_verification">ОТКЛЮЧЕНО</string>
+
 <string name="send_screen_name">изпращам</string>
+
 <string name="rcv_screen_name">получавам</string>
+
 <string name="request_amount_screen_name">Количество</string>
+
 <string name="payment_rcvd_screen_name">Благодаря</string>
+
 <string name="e_receipt_activity_name">ел.разписка</string>
+
 <string name="settings_activity_name">Настройки</string>
+
 <string name="qr_code_activity_name">Сканирай QR</string>
+
 <string name="share_account_activity_name">Сподели с приятели</string>
+
 <string name="add_contact_activity_name">Добави контакт</string>
+
 <string name="str_trade_not_available">Сделката е невъзможна</string>
+
     <string name="preferred_lang">предпочитан език</string>
+
     <string name="got_it">Разбрах</string>
+
     <string name="upgrade_to_ltm">Ъпгрейд до LTM</string>
+
     <string formatted="false" name="help_message">Вземи 80% обратно от таксите! Lifetime Членовете (LTM) получават 80% кешбек за всяка такса-транзакция която те плащат, и също така отговарят на изискванията, за да генерират доход от потребителите, които са поканили в системата. Членството сега е под 20000 BTS!</string>
+
     <string name="txt_yes">Да</string>
+
     <string name="txt_no">Не</string>
+
     <string name="txt_confirmation">потвърждаване</string>
+
     <string name="txt_confirmation_msg">Сигурен ли си?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">Папката е създадена</string>
+
     <string name="upgrade_failed">Ъпгрейдът е неуспешен</string>
+
     <string name="upgrading">Ъпгрейд ...</string>
+
     <string name="import_new_account">Импорт на акаунт</string>
+
     <string name="upgrade_account">Ъпгрейд на профила</string>
+
     <string name="remove_account">Премахване на профила</string>
+
     <string name="txt_alertmsg">Сигурни ли сте, че искате да изтриете този профил</string>
+
     <string name="validation_in_progress">Валидиране в ход ..</string>
+
     <string name="last_letter_cannot">последната буква не може да бъде -</string>
+
     <string name="account_name_shoud_have">Името на профила трябва да има поне една -</string>
+
     <string name="default_currency">Евро</string>
+
     <string name="account_already_exist">Профилът вече съществува</string>
+
     <string name="txt_back">обратно</string>
+
     <string name="please_pay">Моля заплати</string>
+
     <string name="transfer_funds">прехвърляне на средства</string>
+
     <string name="unable_to_process">Не може да се обработи</string>
+
     <string name="cancel">ОТКАЗ</string>
+
     <string name="donation">дарение</string>
+
     <string name="insufficient_funds">Недостатъчни средства</string>
+
     <string name="txt_wallet_atleast_one_account">Съжаляваме, но в портфейла ви, трябва да има поне един профил</string>
+
     <string name="updating_transaction_id">Актуализиране на транзакциите, моля изчакайте</string>
+
     <string name="email_name">За да добавите снимка за този контакт, въведете Gravatar.com електронната му поща тук</string>
+
     <string name="upgrade_success">Ъпгрейдът е успешен!</string>
+
     <string name="copied_to_clipboard">Копирано в клипборда</string>
 
+
+
     <string name="unable_to_load_brainkey">Не може да се зареди Brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Не може да се генерира бин формат за ключ</string>
+
     <string name="creating_backup_file">Създаване на резервно копие</string>
+
     <string name="fetching_key">извличане на ключ</string>
+
     <string name="generating_bin_format">Генериране на бин формат</string>
+
     <string name="invalid_pin">Невалиден ПИН</string>
+
     <string name="saving_bin_file_to">Запазване на бин файла в</string>
+
     <string name="bin_file_saved_successfully_to">Бин файл, записан успешно в</string>
+
     <string name="unable_to_save_bin_file">Не може да се запази бин файл</string>
 
+
+
     <string name="txt_alertmsg_fr">Сигурни ли сте, че искате да премахнете</string>
+
     <string name="txt_alertmsg_la">акаунт от този портфейл?</string>
+
     <string name="bugs_or_errors">Бъгове или грешки?</string>
+
     <string name="please_let_us_know">Моля да ни уведомите:</string>
+
     <string name="try_again">Моля, опитайте отново след 5 минути</string>
+
     <string name="warning_msg_same_account">Не можете да изпращате сума в същия профил</string>
 
+
+
     <string name="please_backup_your_brainkey">Моля направете резервно копие на вашия Brainkey</string>
+
     <string name="backup_brainkey_msg">Направете резервно копие на вашият .bin файл! В противен случай наличностите ви може да бъдат изгубени!</string>
+
     <string name="unable_to_trade_bAssets">Не може да се търгуват на Backup активи</string>
+
     <string name="unable_to_send_amount">Сумата не може да бъде изпратена.</string>
+
     <string name="unable_to_decode_QR">Не може да се декодира QR кода.</string>
 
+
+
     <string name="loyalty_points">точки за лоялност</string>
+
     <string name="str_warning_only_available">Внимание! Само %1$s %2$s и е на разположение</string>
+
     <string name="str_balance_available">%1$s %2$s и достъпно</string>
 
+
+
     <string name="select_backup_asset">Изберете Backup Асет</string>
+
     <string name="sender_account">Sender профил</string>
+
     <string name="receiver_account">приемник на профила</string>
+
     <string name="total">Обща сума</string>
+
     <string name="payment_method">Начин на плащане</string>
+
     <string name="thankyou_string">Благодаря за помощта на Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Аудио Folder Path</string>
+
     <string name="please_make_sure_your_bin_file">Моля, уверете се, че вашият пин се е избран правилно или правилен бин файл</string>
+
     <string name="change">Промяна на ...</string>
 
+
+
     <string name="connected_to">Свързан с</string>
+
     <string name="account_create_msg">Само един акаунт на всеки 10 минути могат да бъдат регистрирани</string>
+
     <string name="names_must_include_a_number">Имената трябва да включват редица</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Имената трябва да включват тире (-) и редица</string>
+
     <string name="import_gravatar">внос Gravatar</string>
+
     <string name="please_import_the_correct_file">Моля внасят правилния файл</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant имейл е внесен успешно</string>
 
+
+
 </resources>
+

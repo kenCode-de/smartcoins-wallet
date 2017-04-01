@@ -1,239 +1,489 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+    <string name="import_wif">«Import մասնավոր բանալին (կ)"</string>
+    <string name="txt_wif_activity">Դրամապանակը Import Format - կ</string>
+    <string name="txt_wif_paste">Անձնական Key (կ)</string>
+    <string name="please_enter_wif">Խնդրում ենք մուտք գործել անձնական բանալին (կ)</string>
+    <string name="invalid_wif">Անվավեր կ</string>
+    <string name="wif_error_invalid_account">Սխալ հաշիվ, խնդրում ենք ստուգել Ձեր կ մուտքագրման սխալներ</string>
+    <string name="unable_to_load_wif">Անհնար է բեռնել կ</string>
+    <string name="error_wif">Սխալ ստեղծելով կ բանալին</string>
+    <string name="error_brainkey_wif_export">Տղաների ներմուծվել հաշիվ չի աջակցում brainkey կրկնօրնկ</string>
+ <string name="pin_number_warning">Փին համարը պետք է լինի առնվազն 6 նիշերն</string>
+ <string name="old_pin_number_warning">Հին PIN համարը պետք է լինի առնվազն 6 նիշերն</string>
+
+
 
 <string name="license">Լիցենզիա</string>
+
 <string name="send_capital">Ուղարկել</string>
+
     <string name="bts_will_be_deducted">BTS չի հանվում</string>
+
     <string name="account_create_register_or_import">ՍՏԵՂԾԵԼ ՀԱՇԻՎ/ ԳՐԱՆՑՎԵԼ ԿԱՄ ՆԵՐՄՈՒԾԵԼ</string>
+
 <string name="txt_account_name">Օգտագործողի անունը</string>
+
 <string name="time_stamp">Ժամային գոտին</string>
+
 <string name="email_pdf">Ուղարկել PDF ֆայլ</string>
+
 <string name="account">Հաշիվ</string>
+
 <string name="friendly_name">Անուն</string>
+
 <string name="notes">Նշումներ</string>
+
     <!--<string name="please_make_sure_your_pin">Խնդրում ենք համոզվել, որ Ձեր PIN-ը ճիշտ է</string>-->
+
     <!--<string name="please_make_sure_your_pin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ է կամ ճիշտ PIN ֆայլ է ընտրվել</string>-->
+
 <string name="note">Նշում</string>
+
 <string name="payment_received">Վճարումը ստացվել է</string>
+
 <string name="import_brainkey">Ներմուծել բանալի BrainKey</string>
+
 <string name="import_backup_old">Ներբեռնել պահպանված օրինակը</string>
+
 <string name="choose_backup">Ընտրել պահպանված օրինակը</string>
+
 <string name="choose_file">Ընտրել ֆայլը</string>
+
 <string name="loading_msg">Խնդրում ենք սպասել, հաշվեկշիռը ներբեռնվում է</string>
-<string name="txt_6_digits_pin">6-անիշ PIN-ծածկագիր</string>
-<string name="txt_6_digits_pin_confirm">PIN-ծածկագիրը հաստատված է</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ նիշ)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN հաստատում</string>
+ 
 <string name="create">Ստեղծել</string>
+
     <string name="unable_to_import_account_from_bin_file">Հնարավոր չէ ներբեռնել հաշիվը .bin ֆայլից</string>
+
     <string name="importing_keys_from_bin_file"> .bin ֆայլից բանալիների ներբեռնում</string>
+
     <string name="import_backup">Վերականգնել ֆայլերը  .bin ֆայլի պահուստային պատճենից</string>
+
     <string name="is_already_added">Արդեն ավելացված է</string>
+
     <string name="in_valid_email">Էլեկտրոնային փոստի սխալ հասցե</string>
+
     <string name="select">Ընտրել</string>
+
     <string name="are_you_sure">Դուք համոզված եք?</string>
+
     <string name="please_make_sure_your_pin">Համոզվեք, որ PIN-ծածկագիրը ճիշտ է</string>
+
     <string name="please_make_sure_your_pin_file">Խնդրում ենք` համոզվեք, որ PIN-ծածկագիրը ճիշտ է մուտքագրված, կամ էլ մուտքագրեք ճիշտ PIN-ծածկագիրը</string>
+
     <string name="existing_account">Գոյություն ունեցող հաշիվ</string>
+
 <string name="agreement">համաձայնություն</string>
+
 <string name="cancel_and_exit">Չեղարկել և դուրս գալ</string>
+
 <string name="i_agree">Ես համաձայն եմ</string>
+
 <string name="kindly_create_account">Ստեղծել անձնական հաշիվ</string>
-<string name="please_enter_old_6_digit_pin">Խնդրում ենք` ներմուծեք հին 6-նիշանոց PIN-ծածկագիրը</string>
-<string name="please_enter_6_digit_pin">Ներմուծեք նոր 6-նիշանոց PIN-ծածկագիրը</string>
-<string name="please_enter_6_digit_pin_confirm">Ներմուծեք նոր 6-նիշանոց PIN ծածկագիրը ևս մեկ անգամ</string>
+
+ <string name="please_enter_old_6_digit_pin">Խնդրում ենք մուտք գործել հին PIN- ը</string>
+ 
+ <string name="please_enter_6_digit_pin">Խնդրում ենք մուտք գործել PIN- ը</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Խնդրում ենք մուտքագրեք PIN հաստատումը</string>
+ 
 <string name="mismatch_pin">Սխալ PIN-ծածկագիր</string>
+
 <string name="txt_brain_key">Բանալի</string>
+
 <string name="txt_brain_key_info">Տպեք բանալին կամ գրի առեք այն: Սանկացած անձ, ով կիմանա վերականգնման ձեր բանալին, կկարողանա օգտվել Ձեր դրամապանակից.</string>
+
 <string name="create_wallet">ՍՏԵՂԾԵԼ ԴՐԱՄԱՊԱՆԱԿ</string>
+
 <string name="cance">Չեղարկել</string>
+
 <string name="save">Պահպանել</string>
+
 <string name="next">Շարունակել</string>
+
 <string name="please_enter_brainkey">Խնդրում ենք` մուտքագրեք բանալին</string>
+
 <string name="please_enter_correct_brainkey">Խնդրում ենք` մուտքագրեք ճիշտ բանալին</string>
+
 <string name="balances">Հաշվեկշիռ</string>
+
 <string name="contacts">Կոնտակտներ</string>
+
 <string name="receive_uppercase">ՍՏԱՆԱԼ</string>
+
 <string name="send_uppercase">ՈՒՂԱՐԿԵԼ</string>
+
 <string name="transactions">Գործարք</string>
+
 <string name="title_activity_setting">Գործողությունների կարգավորումներ</string>
+
 <string name="backup_asset">Ստեղծել ակտիվների պահուստային պատճեններ</string>
+
 <string name="taxable_country">Հարկման ենթակա երկիր</string>
+
 <string name="date_time">Ցույց տալ ամսաթիվն ու ժամը ինչպես</string>
+
 <string name="check_for_updates">Սկսելիս ստուգել թարմացումների առկայությունը</string>
+
 <string name="automatically_install"> Հիմնական տարբերակի ավտոմատ ներբեռնում</string>
+
 <string name="require_pin">Հարցնել PIN-ծածկագիրը գործարք կատարելիս կամ նշումները նայելիս</string>
+
 <string name="close_bitshare">Ավտոմատ կերպով փակել դրամապանակը, եթե 3 րոպե որևէ գործողություն չի կատարվել </string>
+
 <string name="always_donate">Միշտ որպես նվիրատվություն վճարել 2 BTS ի աջակցություն ծրագրավորողների </string>
+
 <string name="hide_donations">Նվիրատվությունները չցուցադրել գործարքների ցուցակում</string>
+
 <string name="backup">ՊԱՀՈՒՍՏԱՅԻՆ ՊԱՏՃԵՆ .bin</string>
+
 <string name="checkbox_donate_old">Միշտ որպես նվիրատվություն վճարել 2 BTS ի աջակցություն ծրագրավորողների</string>
+
 <string name="backup_brainkey">Կրկնօրինակել BRAINKEY</string>
+
 <string name="imported_created_accounts">Ներբեռնված/Ստեղծված անձնական էջեր</string>
+
 <string name="register_new_account">Նոր անձնական էջի ստեղծում</string>
+
 <string name="secure_pin">ՓՈԽԵԼ PIN</string>
+
 <string name="export">Արտահանում</string>
+
 <string name="show_more">Եվս մեկ անգամ...</string>
+
 <string name="share_text">Ես հենց նոր եմ բացել այդ հոյակապ դրամապանակ Smartcoins-ը, որը թույլ է տալիս հեշտությամբ ուղարկել և ստանալ Smartcoins: Տեսեք!</string>
+
 <string name="share_info">Հրավիրել մեկ կամ մի քանի ընկերների, որպեսզի փորձեն Smartcoins դրամապանակը: Էլեկտրոնային փոստի հասցեները չեն պահպանվելու որևէ մեկի կողմից, ուստի դրանց գաղտնիությունը երաշխավորվում է:</string>
+
 <string name="share_subject">Հրաշալի Smartcoins դրամապանակ</string>
+
 <string name="share_heading">Կիսվել ընկերոջ հետ</string>
+
 <string name="share_btn_text">Բացել էլեկտրոնային փոստի հավելվածը</string>
+
 <string name="action_settings">Կարգավորումներ</string>
+
 <string name="checkbox_donate">Վճարեք 2 BTS ի աջակցություն ծրագրավորողների</string>
+
 <string name="txt_validating_account">Անձնական էջի ստուգում ...</string>
+
 <string name="validating_account">Անձնական էջի ստուգում ...</string>
+
 <string name="account_name_should_be_longer">Անձնական էջի անունը պետք է լինի ավելի երկար</string>
+
 <string name="account_name_already_exist">Անձնական էջը  %s արդեն գոյություն ունի</string>
+
 <string name="account_name_not_exist">Անձնական էջը %s ազատ է</string>
+
 <string name="add_contact">Ավելացնել</string>
+
 <string name="edit_contact">Փոխել</string>
+
 <string name="empty_list">Կոնտակտների ցուցակը դատարկ է</string>
+
 <string name="account_name_validate">Անձնական էջի անվանումը իրական է</string>
+
 <string name="txt_no_internet_connection">Համացանցին միացված չէ</string>
+
 <string name="unable_to_create_account_from_brainkey">Դուք չեք կարող ստեղծել անձնական էջ` օգտագործելով բանալին</string>
+
 <string name="importing_your_wallet">Դրամապանակը ներբեռնվում է ...</string>
+
 <string name="str_trading_pair_not_exist">Այդպիսի առևտրային զույգ գոյություն չունի</string>
+
 <string name="unable_to_create_qr_code">Անհնար է ստեղծել QR-ծածկագիր</string>
+
 <string name="price">գին</string>
+
 <string name="currency">արտարժույթ</string>
+
 <string name="please_enter_amount">Խնդրում ենք` մուտքագրեք գումարը</string>
+
 <string name="amount_should_be_greater_than_zero">Գումարը պետք է զրոյից ավելի լինի</string>
+
 <string name="no_amount_requested">Պահանջվող գումարը բացակայում է</string>
+
 <string name="to_capital">դեպի</string>
+
 <string name="from_capital">-ից</string>
+
 <string name="memo_capital">նշում</string>
+
 <string name="empty_file_created">Ստեղծվել է դատարկ ֆայլ</string>
+
 <string name="date">Ամսաթիվ</string>
+
 <string name="all">Ամբողջը</string>
+
 <string name="to_from">դեպի</string>
+
 <string name="amount">Քանակ</string>
+
 <string name="message">Հաղորդագրություն</string>
+
 <string name="pdf_generated_msg">PDF ստեղծվել է և պահպանվել:</string>
+
 <string name="pdf_generated_msg_error">Հնարավոր չէ ստեղծել PDF-ֆայլ. Խնդրում ենք` փորձեք ևս մեկ անգամ: Սխալ: :</string>
+
 <string name="raw_transactions">Սովորական գործարքներ:</string>
+
 <string name="extensions">ընդլայնում</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">գործարքի արդյունքները</string>
+
 <string name="sent_rcv">Ուղարկվել է/Ստացվել է</string>
+
 <string name="details">Մանրամասներ</string>
+
 <string name="share_qr_code">Կիսվել QR-ծածկագրով</string>
+
 <string name="done">Պատրաստ է</string>
+
 <string name="id_s">id</string>
+
 <string name="time">ժամանակ</string>
+
 <string name="operations">գործարքներ</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Արտարժույթի նշանը</string>
+
 <string name="fee_capital">վճար</string>
+
 <string name="ok">ОК</string>
+
 <string name="loading">Ներբեռնվում է ...</string>
+
 <string name="pay_to">վճարել</string>
+
 <string name="requested">արգելված</string>
+
 <string name="failed_transaction">Փոխանցումը չի կատարվել</string>
 
+
+
 <string name="str_invalid_amount">Խնդրում ենք մուտքագրեք ճիշտ գումարը</string>
+
 <string name="str_invalid_receiver">Խնդրում ենք մուտքագրեք ստացողի ճշգրիտ անձնական էջը</string>
+
 <string name="str_transaction_failed">Փոխանցումը չի կատարվել</string>
+
 <string name="please_enter_valid_amount">Խնդրում ենք մուտքագրեք ճիշտ գումարը</string>
+
 <string name="select_timezone">Ընտրեք ժամային գոտին</string>
-<string name="old_pin">Հին 6-նիշանոց PIN-ծածկագիրը</string>
-<string name="pin_created_successfully">PIN-ծածկագիրը հաջողությամբ հաստատվեց</string>
-<string name="edit_pin">Փոխել PIN-ծածկագիրը</string>
+
+ <string name="old_pin">հին PIN</string>
+ 
+ <string name="pin_created_successfully">PIN ստեղծվել հաջողությամբ</string>
+ 
+ <string name="edit_pin">Խմբագրել PIN</string>
+ 
 <string name="txt_edit">ՊԱՀՊԱՆԵԼ</string>
-<string name="create_pin">Ստեղծել PIN-ծածկագիր</string>
+
+ <string name="create_pin">Ստեղծել PIN- ը</string>
+ 
 <string name="pin_changed_successfully">PIN-ծածկագիրը հաջողությամբ փոխված է</string>
+
 <string name="incorrect_old_pin">Հին PIN-ծածկագիրը սխալ է</string>
+
 <string name="copy">պատճեն</string>
+
 <string name="pin_verification">Վերաբացված է</string>
+
 <string name="send_screen_name">ուղարկել</string>
+
 <string name="rcv_screen_name">Ստանալ</string>
+
 <string name="request_amount_screen_name">Քանակ</string>
+
 <string name="payment_rcvd_screen_name">Շնորհակալություն</string>
+
 <string name="e_receipt_activity_name">Անդորրագիր</string>
+
 <string name="settings_activity_name">Կարգավորումներ</string>
+
 <string name="qr_code_activity_name"> QR-ծածկագրի ընթերցում </string>
+
 <string name="share_account_activity_name">Կիսվել ընկերների հետ</string>
+
 <string name="add_contact_activity_name">Ավելացնել կոնտակտ</string>
+
 <string name="str_trade_not_available">Առևտրային գործարքը հնարավոր չէ</string>
+
     <string name="preferred_lang">նախընտրելի լեզուն</string>
+
     <string name="got_it">Հասկանալի է</string>
+
     <string name="upgrade_to_ltm">Բարձրացնել մինչև LTM (Lifetime Members) աստիճանը</string>
+
     <string formatted="false" name="help_message">Ստացեք մինչև 80% քեշբեք: Lifetime Members (LTM) ստանում են քեշբեք 80% յուրաքանչյուր գործարքի համար կատարած վճարումից, և ուղղորդումներից եկամուտ ստանալու իրավունք: Lifetime Member-ի արժեքը 20000 BTS!</string>
+
     <string name="txt_yes">Այո</string>
+
     <string name="txt_no">Ոչ</string>
+
     <string name="txt_confirmation">հաստատում</string>
+
     <string name="txt_confirmation_msg">Դուք համոզված եք?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">Թղթապանակը ստեղծված է</string>
+
     <string name="upgrade_failed">Թարմացման սխալ</string>
+
     <string name="upgrading">Թարմացում ...</string>
+
     <string name="import_new_account">Անձնական ԷՋԻ ՆԵՐԲԵՌՆՈՒՄ</string>
+
     <string name="upgrade_account">ԹԱՐՄԱՑՆԵԼ ԱՆՁՆԱԿԱՆ ԷՋԸ</string>
+
     <string name="remove_account">ՋՆՋԵԼ ԱՆՁՆԱԿԱՆ ԷՋԸ</string>
+
     <string name="txt_alertmsg">Դուք համոզված եք, որ ցանկանում եք ջնջել այս անձնական էջը?</string>
+
     <string name="validation_in_progress">Ստուգումն ընթացքի մեջ է ...</string>
+
     <string name="last_letter_cannot">Վերջին նիշը չի կարող լինել գծիկ - </string>
+
     <string name="account_name_shoud_have">Անձնական էջի անվանումը պետք է պարունակի նվազագույնը մեկ գծիկ - </string>
+
     <string name="default_currency">եվրո</string>
+
     <string name="account_already_exist">Նման անձնական էջ արդեն գոյություն ունի</string>
+
     <string name="txt_back">հետ</string>
+
     <string name="please_pay">Խնդրում ենք` վճարում կատարեք </string>
+
     <string name="transfer_funds">Միջոցների փոխանցում</string>
+
     <string name="unable_to_process">Հնարավոր չէ մշակել</string>
+
     <string name="cancel">ՉԵՂԱՐԿԵԼ</string>
+
     <string name="donation">ՆՎԻՐԱՏՎՈՒԹՅՈՒՆ</string>
+
     <string name="insufficient_funds">Չկան բավարար միջոցներ</string>
+
     <string name="txt_wallet_atleast_one_account"> Ցավոք Դուք դրամապանակում պետք է ունենաք նվազագույնը մեկ անձնական հաշիվ</string>
+
     <string name="updating_transaction_id">ID գործարքի թարմացում, խնդրում ենք սպասել:</string>
+
     <string name="email_name"> Որպեսզի երևա այս կոնտակտի նկարը, դուք պետք է դրա Gravatar հասցեն մուտքագրեք այստեղ</string>
+
     <string name="upgrade_success">Թարմացված է </string>
+
     <string name="copied_to_clipboard">Պատճենահանված է փոխանակման բուֆերի մեջ</string>
 
+
+
     <string name="unable_to_load_brainkey">Հնարավոր չէ ներբեռնել բանալին</string>
+
     <string name="unable_to_generate_bin_format_for_key">Հնարավոր չէ բանալիի համար ստեղծել .bin ֆորմատ</string>
+
     <string name="creating_backup_file">Պահուստային պատճենի ֆայլի ստեղծում</string>
+
     <string name="fetching_key">Ստանալ բանալին</string>
+
     <string name="generating_bin_format">Ստեղծել .bin ֆորմատի ֆայլ</string>
+
     <string name="invalid_pin">Սխալ PIN-ծածկագիր</string>
+
     <string name="saving_bin_file_to">Պահել .bin ֆայլը այստեղ </string>
+
     <string name="bin_file_saved_successfully_to">.bin ֆայլը հաջողությամբ պահպանված է այստեղ</string>
+
     <string name="unable_to_save_bin_file">Հնարավոր չէ պահպանել .bin ֆայլը</string>
 
+
+
     <string name="txt_alertmsg_fr">Դուք վստահ եք, որ ցանկանում եք ջնջել</string>
+
     <string name="txt_alertmsg_la">հաշիվը այս դրամապանակից?</string>
+
     <string name="bugs_or_errors">Սխալներ թե բագեր?</string>
+
     <string name="please_let_us_know">Խնդրում ենք մեզ տեղեկացնել դրանց մասին:</string>
+
     <string name="try_again">Խնդրում ենք կրկին փորձեք 5 րոպեից</string>
+
     <string name="warning_msg_same_account">Դուք չեք կարող ուղարկել գումարը նույն հաշվին</string>
 
+
+
     <string name="please_backup_your_brainkey">Խնդրում ենք ստեղծել բանալիի պահուստային պատճենը</string>
+
     <string name="backup_brainkey_msg">Ստեղծեք .bin ֆայլի պահուստային պատճենը ապահով տեղում, հակառակ դեպքում Ձեր միջոցները հնարավոր է կորեն.</string>
+
     <string name="unable_to_trade_bAssets">Հնարավոր չէ վաճառել պահուստային ռեսուրսները</string>
+
     <string name="unable_to_send_amount">Հնարավոր չէ ուղարկել գումարը:</string>
+
     <string name="unable_to_decode_QR">Հնարավոր չէ ճանաչել QR-ծածկագիրը:</string>
 
+
+
     <string name="loyalty_points">հավատարմություն միավոր</string>
+
     <string name="str_warning_only_available">Զգուշացում! ՄԻԱՅՆ %1$s %2$s հասանելի է</string>
+
     <string name="str_balance_available">%1$s %2$s հասանելի</string>
 
+
+
     <string name="select_backup_asset">Ընտրել Backup ակտիվի</string>
+
     <string name="sender_account">Ուղարկողի Հաշվի</string>
+
     <string name="receiver_account">ընդունիչ Հաշվի</string>
+
     <string name="total">ընդհանուր</string>
+
     <string name="payment_method">Վճարման եղանակ</string>
+
     <string name="thankyou_string">Thankyou օգտագործելու համար Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Աուդիո Թղթապանակ Path</string>
+
+
 
     <string name="please_make_sure_your_bin_file">Խնդրում ենք համոզվել, որ Ձեր PIN ճիշտ կամ ճիշտ bin ֆայլ է ընտրվել</string>
 
+
+
     <string name="change">Փոխեք ...</string>
 
+
+
     <string name="connected_to">Կապված</string>
+
     <string name="account_create_msg">Միայն մեկ հաշիվ յուրաքանչյուր 10 րոպե կարող է գրանցվել</string>
+
     <string name="names_must_include_a_number">Անուններ պետք է ներառի մի շարք</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Անուններ պետք է ներառի Dash (-) եւ մի շարք</string>
+
     <string name="import_gravatar">Ներմուծում Gravatar</string>
+
     <string name="please_import_the_correct_file">Խնդրում ենք ներմուծել ճիշտ ֆայլը</string>
+
     <string name="merchant_email_has_been_imported_successfully">Առեւտրականների նամակ է ներմուծվել հաջողությամբ</string>
 
+
+
 </resources>
+
