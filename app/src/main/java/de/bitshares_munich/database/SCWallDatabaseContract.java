@@ -50,6 +50,13 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_NAME = "name";
     }
 
+    public static class AccountKeys extends BaseTable {
+        public static final String TABLE_NAME = "account_keys";
+        public static final String COLUMN_BRAINKEY = "brainkey";
+        public static final String COLUMN_SEQUENCE_NUMBER = "sequence_number";
+        public static final String COLUMN_WIF = "wif";
+    }
+
     //CryptoCoinCore Section
 
     public static class Seeds implements BaseColumns {

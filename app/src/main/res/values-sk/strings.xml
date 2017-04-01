@@ -1,234 +1,481 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
+   <string name="import_wif">"Import z privátny kľúč (WIF)"</string>
+   <string name="txt_wif_activity">Peňaženka import Format - WIF</string>
+   <string name="txt_wif_paste">Súkromný kľúč (WIF)</string>
+   <string name="please_enter_wif">Prosím, zadajte súkromný kľúč (wif)</string>
+   <string name="invalid_wif">neplatný WIF</string>
+   <string name="wif_error_invalid_account">Neplatný účet, skontrolujte wif za preklepy</string>
+   <string name="unable_to_load_wif">Nemožno načítať wif</string>
+   <string name="error_wif">Chyba pri vytváraní kľúča wif</string>
+   <string name="error_brainkey_wif_export">WIF dovážať účet nepodporuje brainkey zálohu</string>
+
+ <string name="pin_number_warning">Číslo pin musí byť aspoň 6 číslic</string>
+ <string name="old_pin_number_warning">Starý PIN musí byť aspoň 6 číslic</string>
+
     <string name="license">licencia</string>
+
     <string name="send_capital">odoslať</string>
+
     <string name="account_create_register_or_import">Účet Vytvoriť / Registrácia alebo importovať</string>
+
     <string name="txt_account_name">Názov účtu</string>
+
     <string name="time_stamp">Časová pečiatka</string>
+
     <string name="email_pdf">E-mail PDF</string>
+
     <string name="account">Účet</string>
+
     <string name="friendly_name">Meno</string>
+
     <string name="notes">Poznámky</string>
+
     <string name="note">Poznámka</string>
+
     <string name="bts_will_be_deducted">BTS bude odpočítaný od</string>
+
     <string name="payment_received">Platba prijatá</string>
+
     <string name="import_brainkey">Import z BrainKey</string>
+
     <string name="import_backup_old">Obnovenie zálohy</string>
+
     <string name="choose_backup">Vyberte si zálohu</string>
+
     <string name="choose_file">Vyberte súbor</string>
+
     <string name="no_file_chosen">Žiadny súbor vybraný</string>
+
     <string name="account_label">Vyberte súbor</string>
+
     <string name="unable_to_import_account_from_bin_file">Nemožno importovať účet z Bin súboru</string>
+
     <string name="importing_keys_from_bin_file">Import kľúča zo súboru Bin</string>
+
     <string name="import_backup">Import zálohovanie zo Bin súboru</string>
+
     <string name="is_already_added">je už pridané</string>
+
     <string name="in_valid_email">Neplatný email</string>
+
     <string name="select">vybrať</string>
+
     <string name="are_you_sure">Ste si istý?</string>
 
+
+
     <string name="please_make_sure_your_pin">Prosím uistite sa, že je PIN správny</string>
+
     <string name="please_make_sure_your_pin_file">Prosím uistite sa, že je PIN správny alebo správny súbor pin je vybraná</string>
 
+
+
     <string name="loading_msg">Počkajte, kým Váhy sú načítanie</string>
-    <string name="txt_6_digits_pin">6-miestny PIN</string>
-    <string name="txt_6_digits_pin_confirm">Potvrďte 6-miestny PIN</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ číslic)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN confirm</string>
+ 
     <string name="create">VYTVORIŤ</string>
+
     <string name="existing_account">existujúci účet</string>
+
     <string name="agreement">Súhlas</string>
+
     <string name="cancel_and_exit">Zrušiť a zavrieť</string>
+
     <string name="i_agree">Súhlasím</string>
+
     <string name="kindly_create_account">Láskavo vytvorenie účtu</string>
-    <string name="please_enter_old_6_digit_pin">Prosím zadajte starý 6-miestny PIN</string>
-    <string name="please_enter_6_digit_pin">Prosím zadajte 6-miestny PIN</string>
-    <string name="please_enter_6_digit_pin_confirm">Prosím potvrďte zadaný 6-miestny PIN</string>
+
+ <string name="please_enter_old_6_digit_pin">Prosím, zadajte starý PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">Zadajte kód PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Prosím, zadajte potvrdenie PIN</string>
+ 
     <string name="mismatch_pin">PIN sa nezhoduje</string>
+
     <string name="txt_brain_key">Brainkey</string>
+
     <string name="txt_brain_key_info">Tento kľúč si vytlačte alebo si ho poznačte. Každý, kto má prístup k Vášmu kľúču pre obnovenie, bude mať prístup k finančným prostriedkom v tejto peňaženke.</string>
+
     <string name="create_wallet">VYTVORIŤ PEŇAŽENKU</string>
+
     <string name="cance">ZRUŠIŤ</string>
+
     <string name="save">ULOŽIŤ</string>
+
     <string name="next">ĎALŠIE</string>
+
     <string name="please_enter_brainkey">Prosím, zadajte brainkey</string>
+
     <string name="please_enter_correct_brainkey">Prosím zadajte správny brainkey</string>
+
     <string name="balances">Zostatky</string>
+
     <string name="contacts">Kontakty</string>
+
     <string name="receive_uppercase">PRIJAŤ</string>
+
     <string name="send_uppercase">ZAPLATIŤ</string>
+
     <string name="transactions">Transakcie</string>
+
     <string name="title_activity_setting">Nastavenia</string>
+
     <string name="backup_asset">Zálohovanie aktívum</string>
+
     <string name="taxable_country">Krajina zdanenia</string>
+
     <string name="date_time">Zobrazenie dátumu a času</string>
+
     <string name="check_for_updates">Skontrolovať aktualizácie pri štarte</string>
+
     <string name="automatically_install">Automatická inštalácia hlavných verzií</string>
+
     <string name="require_pin">Vyžadovať PIN / Pattern posielať finančné prostriedky &amp; Zobraziť poznámky</string>
+
     <string name="close_bitshare">Automaticky zatvoriť peňaženku po 3 minútach nečinnosti</string>
+
     <string name="always_donate">Vždy darovať 2 BTS vývojárom z BitShares Mníchov</string>
+
     <string name="hide_donations">Skryť dary v zozname na úvodnej obrazovke</string>
+
     <string name="backup">VYTVORIŤ ZÁLOHU</string>
+
     <string name="checkbox_donate_old">Darovať 2 BTS vývojárom z BitShares Mníchov</string>
+
     <string name="backup_brainkey">ZÁLOHOVAŤ BRAINKEY</string>
+
     <string name="imported_created_accounts">Importované / vytvorené účty</string>
+
     <string name="register_new_account">Registrovať nový účet</string>
+
     <string name="secure_pin">ZMENIŤ PIN</string>
+
     <string name="export">Exportovať</string>
+
     <string name="show_more">Zobraziť viac</string>
+
     <string name="share_text">Práve som našiel túto super mobilnú peňaženku, ktorá umožňuje odosielať a prijímať Smartcoins. Pozri si to!</string>
+
     <string name="share_info">Pozvite vašich priateľov aby vyskúšali túto peňaženku! E-mailové adresy nie sú nikde uložené ani nikým zhromažďované takže ich súkromie je zaistené.</string>
+
     <string name="share_subject">Super mobilná peňaženka</string>
+
     <string name="share_heading">zdieľať s priateľmi</string>
+
     <string name="share_btn_text">Otvoriť e-mailovú aplikáciu</string>
+
     <string name="action_settings">Nastavenia</string>
+
     <string name="txt_validating_account">Overovanie účtu ...</string>
+
     <string name="validating_account">Overovanie účtu ...</string>
+
     <string name="account_name_should_be_longer">Názov účtu by nemal byť dlhší</string>
+
     <string name="account_name_already_exist">Účet %s už existuje</string>
+
     <string name="account_name_not_exist">Účet %s neexistuje</string>
+
     <string name="add_contact">Pridať</string>
+
     <string name="checkbox_donate">Darovať 2 BTS na podporu vývojárov</string>
+
     <string name="edit_contact">Zmeniť</string>
+
     <string name="empty_list">Zoznam kontaktov je prázdny</string>
+
     <string name="account_name_validate">Názov účtu je platný</string>
+
     <string name="txt_no_internet_connection">Žiadne pripojenie k internetu</string>
+
     <string name="unable_to_create_account_from_brainkey">Nemožno vytvoriť účet z brainkey</string>
+
     <string name="importing_your_wallet">Import peňaženky ...</string>
+
     <string name="str_trading_pair_not_exist">Obchodovaný pár neexistuje</string>
+
     <string name="unable_to_create_qr_code">Nemožno generovať QR kód</string>
+
     <string name="price">Cena</string>
+
     <string name="currency">Mena</string>
+
     <string name="please_enter_amount">Prosím zadajte čiastku</string>
+
     <string name="amount_should_be_greater_than_zero">Suma by mala byť väčšia ako nula</string>
+
     <string name="no_amount_requested">Žiadna suma požadovaná</string>
+
     <string name="to_capital">Komu</string>
+
     <string name="from_capital">Od</string>
+
     <string name="memo_capital">Poznámka</string>
+
     <string name="empty_file_created">Prázdny súbor vytvorený</string>
+
     <string name="date">Dátum</string>
+
     <string name="all">Všetko</string>
+
     <string name="to_from">Komu/Od</string>
+
     <string name="amount">Čiastka</string>
+
     <string name="message">Správa</string>
+
     <string name="pdf_generated_msg">Súbor PDF vygenerovaný a uložený:</string>
+
     <string name="pdf_generated_msg_error">Nemožno vytvoriť súbor PDF. Prosím skúste to znova. Chyba:</string>
+
     <string name="raw_transactions">Raw transakcie:</string>
+
     <string name="extensions">Rozšírenie</string>
+
     <string name="op_in_trx">op_in_trx</string>
+
     <string name="virtual_op">virtual_op</string>
+
     <string name="operation_results">operation_results</string>
+
     <string name="sent_rcv">Odoslané / prijaté</string>
+
     <string name="details">podrobnosti</string>
+
     <string name="share_qr_code">Zdieľať QR kód</string>
+
     <string name="done">Hotovo</string>
+
     <string name="id_s">id</string>
+
     <string name="time">Čas</string>
+
     <string name="operations">operácie</string>
+
     <string name="trx_in_block">trx_in_block</string>
+
     <string name="symbol_capital">Symbol</string>
+
     <string name="fee_capital">Poplatok</string>
+
     <string name="ok">OK</string>
+
     <string name="loading">Načítavanie...</string>
+
     <string name="pay_to">Platiť</string>
+
     <string name="requested">Požadované</string>
+
     <string name="failed_transaction">Transakcia zlyhala</string>
 
+
+
     <string name="str_invalid_amount">Zadajte platnú čiastku</string>
+
     <string name="str_invalid_receiver">Prosím zadajte platný účet</string>
+
     <string name="str_transaction_failed">Transakcia zlyhala</string>
+
     <string name="please_enter_valid_amount">Zadajte platnú čiastku</string>
+
     <string name="select_timezone">Zvoľte si časovú zónu</string>
-    <string name="old_pin">Starý 6-miestny PIN</string>
-    <string name="pin_created_successfully">PIN úspešne vytvorený</string>
-    <string name="edit_pin">Zmeniť PIN</string>
+
+ <string name="old_pin">starý PIN</string>
+ 
+ <string name="pin_created_successfully">PIN úspešne vytvorený</string>
+ 
+ <string name="edit_pin">edit PIN</string>
+ 
     <string name="txt_edit">SAVE</string>
-    <string name="create_pin">Vytvorenie kódu PIN</string>
+
+ <string name="create_pin">vytvorenie kódu PIN</string>
+ 
     <string name="pin_changed_successfully">PIN bol úspešne zmenený</string>
+
     <string name="incorrect_old_pin">Nesprávny starý PIN</string>
+
     <string name="copy">kópie</string>
+
     <string name="pin_verification">UNLOCKED</string>
+
     <string name="send_screen_name">odoslať</string>
+
     <string name="rcv_screen_name">obdržať</string>
+
     <string name="request_amount_screen_name">čiastka</string>
+
     <string name="payment_rcvd_screen_name">Ďakujem</string>
+
     <string name="e_receipt_activity_name">e-Príjem</string>
+
     <string name="settings_activity_name">Nastavenia</string>
+
     <string name="qr_code_activity_name">Skenovanie QR kódu</string>
+
     <string name="share_account_activity_name">Zdieľaj s priateľmi</string>
+
     <string name="add_contact_activity_name">Pridať kontakt</string>
+
     <string name="str_trade_not_available">Obchod nie je k dispozícii</string>
+
     <string name="preferred_lang">Uprednostňovaný jazyk</string>
+
     <string name="got_it">Mám to</string>
+
     <string name="upgrade_to_ltm">Získať doživotné členstvo</string>
+
     <string formatted="false" name="help_message">Získajte 80% cashback na poplatkoch! Doživotní členovia získajú 80% cashback z každého zaplateného poplatku a z poplatkov od užívateľov, ktorých zaregistrujú.</string>
+
     <string name="txt_yes">áno</string>
+
     <string name="txt_no">nie</string>
+
     <string name="txt_confirmation">Potvrdenie</string>
+
     <string name="txt_confirmation_msg">Ste si istý?</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">zložky vytvorené</string>
+
     <string name="upgrade_failed">Upgrade zlyhal</string>
+
     <string name="upgrading">Aktualizácie ...</string>
+
     <string name="import_new_account">IMPORTOVAŤ ÚČET</string>
+
     <string name="upgrade_account">UPGRADOVAŤ ÚČET</string>
+
     <string name="remove_account">Odstrániť účet</string>
+
     <string name="txt_alertmsg">Naozaj chcete zmazať tento účet?</string>
+
     <string name="validation_in_progress">Prebieha overenie...</string>
+
     <string name="last_letter_cannot">Posledné písmeno nemôže byť -</string>
+
     <string name="account_name_shoud_have">Názov účtu by mal obsahovať aspoň jedno -</string>
+
     <string name="default_currency">eur</string>
+
     <string name="account_already_exist">Účet už existuje</string>
+
     <string name="txt_back">späť</string>
+
     <string name="please_pay">venujte</string>
+
     <string name="transfer_funds">preniesť prostriedky</string>
+
     <string name="unable_to_process">nemožno spracovať</string>
+
     <string name="cancel">ZRUŠIŤ</string>
+
     <string name="donation">dar</string>
+
     <string name="insufficient_funds">Nedostatok finančných prostriedkov</string>
+
     <string name="txt_wallet_atleast_one_account">Ospravedlňujeme sa, ale vaša peňaženka musí mať aspoň 1 účet v ňom</string>
+
     <string name="updating_transaction_id">Aktualizácia ID transakcie, prosím počkajte</string>
+
     <string name="email_name">Ak chcete zobraziť fotografiu pre tento kontakt, zadajte jeho Gravatar e-mail</string>
+
     <string name="upgrade_success">Upgrade bol úspešný!</string>
+
     <string name="copied_to_clipboard">Bol skopírovaný do schránky</string>
 
+
+
     <string name="unable_to_load_brainkey">Nemožno načítať brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Nemožno vygenerovať kľúč vo formáte bin</string>
+
     <string name="creating_backup_file">Vytvorenie záložného súboru</string>
+
     <string name="fetching_key">Načítanie kľúča</string>
+
     <string name="generating_bin_format">Generovanie formátu bin</string>
+
     <string name="invalid_pin">Neplatný PIN</string>
+
     <string name="saving_bin_file_to">Ukladanie súboru bin do</string>
+
     <string name="bin_file_saved_successfully_to">Súbor bin bol úspešne uložený do</string>
+
     <string name="unable_to_save_bin_file">Nie je možné uložiť súbor bin</string>
 
+
+
     <string name="txt_alertmsg_fr">Ste si istí, že chcete odstrániť účet</string>
+
     <string name="txt_alertmsg_la">z tejto peňaženky?</string>
+
     <string name="bugs_or_errors">Chyby?</string>
+
     <string name="please_let_us_know">Prosím dajte nám vedieť:</string>
+
     <string name="try_again">Skúste to znovu o 5 minút</string>
+
     <string name="warning_msg_same_account">Nemôžete poslať prostriedky na rovnaký účet</string>
 
+
+
     <string name="please_backup_your_brainkey">Prosím zálohujte svoj brainkey</string>
+
     <string name="backup_brainkey_msg">Uložte si súbor bin niekam do bezpečia, inak by vaše finančné prostriedky mohli byť stratené!</string>
+
     <string name="unable_to_trade_bAssets">Nemožno obchodovať záložné aktíva.</string>
+
     <string name="unable_to_send_amount">Nemožno odoslať čiastku.</string>
+
     <string name="unable_to_decode_QR">Nemožno dekódovať QR kód.</string>
 
+
+
     <string name="loyalty_points">vernostné body</string>
+
     <string name="str_warning_only_available">Výstraha! Iba %1$s %2$s je k dispozícii</string>
+
     <string name="str_balance_available">%1$s %2$s dostupné</string>
 
+
+
     <string name="select_backup_asset">Vyberte záložný podklad</string>
+
     <string name="sender_account">odosielateľ Account</string>
+
     <string name="receiver_account">prijímač Account</string>
+
     <string name="total">celkom</string>
+
     <string name="payment_method">Spôsob platby</string>
+
     <string name="thankyou_string">Ďakujem za použitia Smartcoins Peňaženka</string>
+
     <string name="audio_folder_path">Audio Cesta zložky</string>
+
     <string name="please_make_sure_your_bin_file">Prosím, uistite sa, že pin je správny alebo správny súbor priehradka je vybraná</string>
+
     <string name="change">Zmeniť ...</string>
+
     <string name="names_must_include_a_number">Názvy musia zahŕňať rad</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Názvy musí obsahovať pomlčku (-) a číslo</string>
+
     <string name="import_gravatar">import Gravatar</string>
+
     <string name="please_import_the_correct_file">Prosím importovať správny súbor</string>
+
     <string name="merchant_email_has_been_imported_successfully">Obchodník e-mail bol úspešne importovaný</string>
+
 </resources>
+

@@ -63,6 +63,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_confirmation_dialog);
+        dialog.setTitle(R.string.title_important);
         dialog.setCancelable(false);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -124,7 +125,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
 
     private void showDialogCopyBrainKey() {
         isBackupKey = true;
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        final Dialog dialog = new Dialog(this);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);

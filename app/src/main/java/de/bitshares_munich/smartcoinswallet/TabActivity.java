@@ -40,6 +40,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.adapters.ViewPagerAdapter;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.fragments.PromptUpdateDialog;
 import de.bitshares_munich.fragments.UpdatingAccountsDialog;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
@@ -94,6 +95,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     ImageView ivSocketConnected;
 
     private TinyDB tinyDB;
+
+    /* Database interface */
+    private SCWallDatabase database;
 
     /* Currently active user account */
     private UserAccount currentlyActive;
@@ -363,6 +367,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
 
+        database = new SCWallDatabase(this);
+
         this.setLockListener(this);
     }
 
@@ -508,10 +514,14 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             String dictionary = reader.readLine();
             String suggestion = BrainKey.suggest(dictionary);
             newBrainKey = new BrainKey(suggestion, 0);
-            Log.d(TAG,"new brain key: "+suggestion);
 
             /* Keeping this suggestion in shared preferences in case we get interrupted */
             storeSuggestion(suggestion);
+
+            /* Storing the key in the database for long-term */
+            database.insertKey(newBrainKey);
+
+            Log.d(TAG,"new brain key: "+suggestion);
 
             // Keeping a reference of the account to be changed, with the updated values
             Address address = new Address(ECKey.fromPublicOnly(newBrainKey.getPrivateKey().getPubKey()));

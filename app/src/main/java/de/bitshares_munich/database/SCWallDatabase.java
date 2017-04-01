@@ -35,6 +35,7 @@ import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
@@ -117,7 +118,7 @@ public class SCWallDatabase {
                 //Ignoring exception, usually throwed becase the UNIQUE constraint failed.
             }
         }
-        Log.d(TAG,String.format("Inserved %d transactions in database", count));
+        Log.d(TAG,String.format("Inserted %d transactions in database", count));
         return count;
     }
 
@@ -578,7 +579,7 @@ public class SCWallDatabase {
     }
 
     /**
-     * Legacy method introduced in order to support the current infraestructure.
+     * Legacy method introduced in order to support the current infrastructure.
      * @return
      */
     public List<TransactionDetails> getTransactionDetails(){
@@ -600,6 +601,44 @@ public class SCWallDatabase {
             }
         }
         return count;
+    }
+
+    /**
+     * Used to insert a new key generated used the brainkey derivation scheme.
+     * @param brainKey: The corresponding brainkey
+     */
+    public void insertKey(BrainKey brainKey){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.BaseTable.COLUMN_CREATION_DATE, (System.currentTimeMillis() / 1000));
+        contentValues.put(SCWallDatabaseContract.AccountKeys.COLUMN_BRAINKEY, brainKey.getBrainKey());
+        contentValues.put(SCWallDatabaseContract.AccountKeys.COLUMN_SEQUENCE_NUMBER, brainKey.getSequenceNumber());
+        contentValues.put(SCWallDatabaseContract.AccountKeys.COLUMN_WIF, brainKey.getWalletImportFormat());
+        db.insert(SCWallDatabaseContract.AccountKeys.TABLE_NAME, null, contentValues);
+    }
+
+    /**
+     * Used to insert any key in the WIF format, regardless of which key generation scheme was used.
+     * @param wif
+     */
+    public void insertKey(String wif){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.BaseTable.COLUMN_CREATION_DATE, (System.currentTimeMillis() / 1000));
+        db.insert(SCWallDatabaseContract.AccountKeys.TABLE_NAME, null, contentValues);
+    }
+
+    public List<String> getAllWifKeys(){
+        String tableName = SCWallDatabaseContract.AccountKeys.TABLE_NAME;
+        String[] columns = new String[]{ SCWallDatabaseContract.AccountKeys.COLUMN_WIF };
+        Cursor cursor = db.query(tableName, columns, null, null, null, null, null);
+        ArrayList<String> result = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            do {
+                String wif = cursor.getString(0);
+                result.add(wif);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return result;
     }
 
     /**

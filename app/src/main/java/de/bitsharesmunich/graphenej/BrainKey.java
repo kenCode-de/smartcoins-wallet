@@ -55,7 +55,7 @@ public class BrainKey {
             stringBuilder.append(word);
             stringBuilder.append(" ");
         }
-        return stringBuilder.toString().trim();
+        return stringBuilder.toString().trim().toLowerCase();
     }
 
     /**

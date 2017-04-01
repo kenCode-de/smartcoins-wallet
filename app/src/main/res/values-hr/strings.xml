@@ -1,243 +1,497 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--<resources><string name="license">licenca</string>-->
+
     <!--<string name="bts_will_be_deducted">BTS će se odbiti od</string>-->
+
     <!--<string name="send_capital">Poslati</string>-->
+
 <!--<string name="account_create_register_or_import">Izradi račun / Registracija ili uvoz</string>-->
+
 <resources>
+    <string name="import_wif">"Uvoz iz privatnog ključa (WIF)"</string>
+    <string name="txt_wif_activity">Novčanik Import Format - WIF</string>
+    <string name="txt_wif_paste">Privatni ključ (WIF)</string>
+    <string name="please_enter_wif">Unesite privatni ključ (WIF)</string>
+    <string name="invalid_wif">Pogrešna WIF</string>
+    <string name="wif_error_invalid_account">Nevažeći račun, provjerite wif tipfelera</string>
+    <string name="unable_to_load_wif">Nije moguće učitati wif</string>
+    <string name="error_wif">Pogreška pri izradi WIF ključ</string>
+    <string name="error_brainkey_wif_export">WIF uvezeni račun ne podržava brainkey backup</string>
+ <string name="pin_number_warning">Broj pin mora biti najmanje 6 znamenaka</string>
+ <string name="old_pin_number_warning">Stari PIN broj mora biti najmanje 6 znamenaka</string>
+
     <string name="bts_will_be_deducted">BTS će se odbiti od</string>
+
     <string name="license">Licenca</string>
+
 <string name="send_capital">Pošalji</string>
+
 <string name="account_create_register_or_import">IZRADI RAČUN/ REGISTRACIJA ili UVOZ</string>
+
 <string name="txt_account_name">Korisničko ime</string>
+
 <string name="time_stamp">Vrijeme</string>
+
 <string name="email_pdf">E-mail PDF</string>
+
 <string name="account">Račun</string>
+
 <string name="friendly_name">Lako pamtljivo ime</string>
+
 <string name="notes">Bilješke</string>
+
 <string name="note">Bilješka</string>
+
 <string name="payment_received">Uplata zaprimljena</string>
+
 <string name="import_brainkey">Uvoz iz BrainKey-a</string>
+
 <string name="import_backup_old">Uvoz Backupa iz bin.file</string>
+
 <string name="choose_backup">Odaberite Backup</string>
+
 <string name="choose_file">Odaberite datoteku</string>
+
 <string name="no_file_chosen">Nije odabrana datoteka</string>
+
 <string name="account_label">Izaberite datoteku</string>
+
 <string name="loading_msg">Molimo pričekajte dok se bilance učitavaju</string>
-<string name="txt_6_digits_pin">PIN (6 znamenki)</string>
-<string name="txt_6_digits_pin_confirm">Potvrdite PIN (6 znamenki)</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ znamenaka)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN confirm</string>
+ 
 <string name="create">KREIRAJ</string>
+
     <string name="please_make_sure_your_pin">Provjerite pin</string>
+
     <string name="please_make_sure_your_pin_file">Provjerite je li vaš pin ispravan / jeste li odabrali ispravnu pin datoteku </string>
+
 <string name="existing_account">Postojeći račun</string>
+
 <string name="agreement">Sporazum</string>
+
 <string name="cancel_and_exit">Otkaži i izađi</string>
+
     <string name="unable_to_import_account_from_bin_file">Nije moguće uvesti račun iz bin datoteke</string>
+
     <string name="importing_keys_from_bin_file">Uvoz ključeva iz bin datoteke</string>
+
     <string name="import_backup">Uvoz backupa iz .bin file</string>
+
     <string name="is_already_added">je već dodan</string>
+
     <string name="in_valid_email">Neispravan email</string>
+
     <string name="select">Odaberi</string>
+
     <string name="are_you_sure">Jeste li sigurni?</string>
 
 
+
+
+
     <string name="i_agree">Slažem se</string>
+
 <string name="kindly_create_account">Molimo stvorite račun</string>
-<string name="please_enter_old_6_digit_pin">Unesite stari pin (6 znamenki)</string>
-<string name="please_enter_6_digit_pin">Unesite novi pin (6 znamenki)</string>
-<string name="please_enter_6_digit_pin_confirm">Potvrdite pin (6 znamenki)</string>
+
+ <string name="please_enter_old_6_digit_pin">Unesite stari PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">Unesite PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Unesite PIN potvrdu</string>
+ 
 <string name="mismatch_pin">Pin se ne podudara</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Isprintaj ili zapiši. Svatko tko ima pristup ključu za oporavak će imati pristup sredstvima unutar ovog novčanika.</string>
+
 <string name="create_wallet">KREIRAJ NOVČANIK</string>
+
 <string name="cance">OTKAŽI</string>
+
 <string name="save">SPREMI</string>
+
 <string name="next">DALJE</string>
+
 <string name="please_enter_brainkey">Molimo unesite brainkey</string>
+
 <string name="please_enter_correct_brainkey">Molimo unesite ispravan brainkey</string>
+
 <string name="balances">Stanje</string>
+
 <string name="contacts">Kontakti</string>
+
 <string name="receive_uppercase">ZAPRIMI</string>
+
 <string name="send_uppercase">POŠALJI</string>
+
 <string name="transactions">Transakcije</string>
+
 <string name="title_activity_setting">Postavke aktivnosti</string>
+
 <string name="backup_asset">Backup imovine</string>
+
 <string name="taxable_country">Oporeziva država</string>
+
 <string name="date_time">Prikaži datum i vrijeme kao</string>
+
 <string name="check_for_updates">Provjeri ažuriranja pri pokretanju</string>
+
 <string name="automatically_install">Automatski instaliraj glavnu verziju</string>
+
 <string name="require_pin">Zahtijevaj PIN</string>
+
 <string name="close_bitshare">Automatski zatvori Bitshares novčanik nakon 3 minute neaktivnosti</string>
+
 <string name="always_donate">Uvijek doniraj 2 BTS kao potporu za programere iz BitShares München (bitshares Munich)</string>
+
 <string name="hide_donations">Sakrij donacije iz popisa transakcija na početnom zaslonu</string>
+
 <string name="backup">BACKUP .bin</string>
+
 <string name="checkbox_donate_old">Donirajte 2 BTS za programersku podršku Bitshares Münchenu</string>
+
 <string name="backup_brainkey">NAPRAVI BACKUP BRAINKEY-a</string>
+
 <string name="imported_created_accounts">Uvezeni / kreirani računi</string>
+
 <string name="register_new_account">REGISTRIRAJTE NOVI KORISNIČKI RAČUN</string>
+
 <string name="secure_pin">EDITIRAJ PIN</string>
+
 <string name="export">Izvoz</string>
+
 <string name="show_more">Prikaži više</string>
+
 <string name="share_text">Upravo sam pronašao ovaj odličan Smartcoins novčanik koji Vam omogućuje slanje i primanje Smartcoinsa. Provjerite!</string>
+
 <string name="share_info">Pozovite jednog ili više svojih prijatelja da isprobaju Smartcoins novčanik! E-mail adrese se ne spremaju, vaša privatnost je osigurana!.</string>
+
 <string name="share_subject">Odličan Smartcoins novčanik</string>
+
 <string name="share_heading">Podijeli s prijateljem</string>
+
 <string name="share_btn_text">OTVORI E-MAIL APLIKACIJU</string>
+
 <string name="action_settings">Postavke</string>
+
 <string name="txt_validating_account">Provjera valjanosti računa ...</string>
+
 <string name="validating_account">Provjera valjanosti računa ...</string>
+
 <string name="account_name_should_be_longer">Naziv računa treba biti duži</string>
+
 <string name="account_name_already_exist">Naziv računa: %s već postoji</string>
+
 <string name="account_name_not_exist">Naziv računa %s ne postoji</string>
+
 <string name="add_contact">Dodaj</string>
+
     <string name="checkbox_donate">Donirajte 2 BTS za podršku za programere</string>
+
 <string name="edit_contact">Uredi</string>
+
 <string name="empty_list">Popis kontakata je prazan</string>
+
 <string name="account_name_validate">Naziv računa vrijedi</string>
+
 <string name="txt_no_internet_connection">Nema internet konekcije</string>
+
 <string name="unable_to_create_account_from_brainkey">Nije moguće stvoriti račun iz brainkey-a</string>
+
 <string name="importing_your_wallet">Uvozim Vaš novčanik ...</string>
+
 <string name="str_trading_pair_not_exist">Trgovanski par ne postoji</string>
+
 <string name="unable_to_create_qr_code">Nije moguće generirati QR kod</string>
+
 <string name="price">cijena</string>
+
 <string name="currency">valuta</string>
+
 <string name="please_enter_amount">Molimo unesite iznos</string>
+
 <string name="amount_should_be_greater_than_zero">Iznos mora biti veći od nule</string>
+
 <string name="no_amount_requested">Nije zatražen iznos</string>
+
 <string name="to_capital">Do</string>
+
 <string name="from_capital">OD</string>
+
 <string name="memo_capital">Bilješka</string>
+
 <string name="empty_file_created">Prazna datoteka kreirana</string>
+
 <string name="date">Datum</string>
+
 <string name="all">Sve</string>
+
 <string name="to_from">Do/Od</string>
+
 <string name="amount">Iznos</string>
+
 <string name="message">Poruka</string>
+
 <string name="pdf_generated_msg">PDF generiran i spremljen:</string>
+
 <string name="pdf_generated_msg_error">Nije moguće generirati pdf. Pokušajte ponovno. Pogreška:</string>
+
 <string name="raw_transactions">\'Raw\' transakcija:</string>
+
 <string name="extensions">Proširenja</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Poslao / primio</string>
+
 <string name="details">Detalji</string>
+
 <string name="share_qr_code">Podijeli QR kod</string>
+
 <string name="done">Gotovo</string>
+
 <string name="id_s">ID</string>
+
 <string name="time">vrijeme</string>
+
 <string name="operations">operacije</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Simbol</string>
+
 <string name="fee_capital">Naknada</string>
+
 <string name="ok">OK</string>
+
 <string name="loading">Učitavanje ...</string>
+
 <string name="pay_to">Plati </string>
+
 <string name="requested">zatraženo</string>
+
 <string name="failed_transaction">Transakcija neuspješna</string>
 
+
+
 <string name="str_invalid_amount">Unesite važeći iznos</string>
+
 <string name="str_invalid_receiver">Unesite važeći račun primatelja</string>
+
 <string name="str_transaction_failed">Transakcija nije uspjela</string>
+
 <string name="please_enter_valid_amount">Unesite važeći iznos</string>
+
 <string name="select_timezone">Odaberite vremensku zonu</string>
-<string name="old_pin">Stari PIN (6 znamenki)</string>
-<string name="pin_created_successfully">PIN je uspješno izrađen</string>
-<string name="edit_pin">Uredi PIN</string>
+
+ <string name="old_pin">Stari PIN</string>
+ 
+ <string name="pin_created_successfully">PIN je uspješno izrađen</string>
+ 
+ <string name="edit_pin">Uredi PIN</string>
+ 
 <string name="txt_edit">SPREMI</string>
-<string name="create_pin">Kreiraj PIN</string>
+
+ <string name="create_pin">Izrada PIN-a</string>
+ 
 <string name="pin_changed_successfully">PIN uspješno promijenjen</string>
+
 <string name="incorrect_old_pin">Neispravan stari PIN</string>
+
 <string name="copy">Kopiraj</string>
+
 <string name="pin_verification">OTKLJUČANO</string>
+
 <string name="send_screen_name">Pošalji</string>
+
 <string name="rcv_screen_name">Zaprimi</string>
+
 <string name="request_amount_screen_name">Iznos</string>
+
 <string name="payment_rcvd_screen_name">Hvala</string>
+
 <string name="e_receipt_activity_name">E-Potvrda</string>
+
 <string name="settings_activity_name">Postavke</string>
+
 <string name="qr_code_activity_name">Skenirajte QR kod</string>
+
 <string name="share_account_activity_name">Podijeli sa prijateljima</string>
+
 <string name="add_contact_activity_name">Dodaj kontakt</string>
+
 <string name="str_trade_not_available">Trgovina nije dostupna</string>
+
     <string name="preferred_lang">Preferirani jezik</string>
+
     <string name="got_it">Imam ga!</string>
+
     <string name="upgrade_to_ltm">Nadogradnja na LTM</string>
+
     <string formatted="false" name="help_message">Uzmite 80% povrata novca na sve naknade! Doživotni članovi(LTM) dobivaju povrat 80% svih naknada na svaku transakciju: registrirajte se sada za manje od 20,000 BTS!</string>
+
     <string name="txt_yes">Da</string>
+
     <string name="txt_no">Ne</string>
+
     <string name="txt_confirmation">Potvrda</string>
+
     <string name="txt_confirmation_msg">Nadogradi na LTM? S Vašeg računa: %s će biti naplaćeno 18000 BTS.</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">Mapa je izrađena</string>
+
     <string name="upgrade_failed">Nadogradnja nije uspjela</string>
+
     <string name="upgrading">Nadograđujem ...</string>
+
     <string name="import_new_account">UVOZ RAČUNA</string>
+
     <string name="upgrade_account">NADOGRADNJA RAČUNA</string>
+
     <string name="remove_account">UKLANJANJE RAČUNA</string>
+
     <string name="txt_alertmsg">Jeste li sigurni da želite izbrisati ovaj račun</string>
+
     <string name="validation_in_progress">Validacija u tijeku..</string>
+
     <string name="last_letter_cannot">Posljednje pismo ne može biti -</string>
+
     <string name="account_name_shoud_have">naziv računa bi trebao imati najmanje jednog -</string>
+
     <string name="default_currency">EUR</string>
+
     <string name="account_already_exist">Račun već postoji</string>
+
     <string name="txt_back">Nazad</string>
+
     <string name="please_pay">Molimo platite</string>
+
     <string name="transfer_funds">Prijenos sredstava</string>
+
     <string name="unable_to_process">Nije moguće obraditi</string>
+
     <string name="cancel">OTKAŽI</string>
+
     <string name="donation">Donacija</string>
+
     <string name="insufficient_funds">Nedostatna sredstva</string>
+
     <string name="txt_wallet_atleast_one_account">Žao nam je, ali vaš novčanik mora imati najmanje 1 račun</string>
+
     <string name="updating_transaction_id">Ažuriranje ID-a transakcije, pričekajte</string>
+
     <string name="email_name">Unesite Gravatar e-mail adresu za dodavanje fotografije</string>
+
     <string name="upgrade_success">Nadogradnja uspješna!</string>
+
     <string name="copied_to_clipboard">Kopirano u međuspremnik</string>
 
+
+
     <string name="unable_to_load_brainkey">Nije moguće učitati brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Nije moguće generirati bin format za ključ</string>
+
     <string name="creating_backup_file">Stvaranje datoteke sigurnosne kopije</string>
+
     <string name="fetching_key">Dohvaćanje ključa</string>
+
     <string name="generating_bin_format">Generiranje bin formata</string>
+
     <string name="invalid_pin">Neispravan PIN</string>
+
     <string name="saving_bin_file_to">Spremanje Bin datoteke u</string>
+
     <string name="bin_file_saved_successfully_to">Bin Datoteka je uspješno spremljena u</string>
+
     <string name="unable_to_save_bin_file">Nije moguće spremiti bin datoteku</string>
 
+
+
     <string name="txt_alertmsg_fr">Jeste li sigurni da želite ukloniti</string>
+
     <string name="txt_alertmsg_la">račun iz ovog novčanika?</string>
+
     <string name="bugs_or_errors">Nedostaci ili pogreške?</string>
+
     <string name="please_let_us_know">Javite nam se:</string>
+
     <string name="try_again">Pokušajte ponovno nakon 5 minuta</string>
+
     <string name="warning_msg_same_account">Ne možete poslati iznos na isti račun</string>
 
+
+
     <string name="please_backup_your_brainkey">Molimo spremite svoj brainkey</string>
+
     <string name="backup_brainkey_msg">Napravite sigurnosnu kopiju Vaše .bin datoteke negdje na sigurno ili bi sredstva mogla biti izgubljena!</string>
+
     <string name="unable_to_trade_bAssets">Ne može se trgovati Backup imovine</string>
+
     <string name="unable_to_send_amount">Ne možemo poslati iznos.</string>
+
     <string name="unable_to_decode_QR">Nije moguće dekodirati QR kod.</string>
 
 
+
+
+
     <string name="loyalty_points">loyalty Points</string>
+
     <string name="str_warning_only_available">Upozorenje! Samo %1$s %2$s je dostupan</string>
+
     <string name="str_balance_available">%1$s %2$s dostupni</string>
 
+
+
     <string name="select_backup_asset">Odaberite Backup Imovina</string>
+
     <string name="sender_account">pošiljatelj račun</string>
+
     <string name="receiver_account">Primatelj računa</string>
+
     <string name="total">ukupno</string>
+
     <string name="payment_method">Metoda plaćanja</string>
+
     <string name="thankyou_string">Hvala što koristite Smartcoins novčanik</string>
+
     <string name="audio_folder_path">Audio Put do mape</string>
+
     <string name="please_make_sure_your_bin_file">Molimo provjerite je li igla je ispravan ili ispraviti bin datoteke je odabran</string>
+
     <string name="change">Promijeniti...</string>
 
+
+
     <string name="connected_to">Spojen na</string>
+
     <string name="account_create_msg">Samo jedan račun svakih 10 minuta može se registrirati</string>
+
     <string name="names_must_include_a_number">Imena moraju sadržavati broj</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Imena moraju uključivati ​​crticu (-) i broj</string>
+
     <string name="import_gravatar">Uvoz Gravatar</string>
+
     <string name="please_import_the_correct_file">Molimo uvesti ispravnu datoteku</string>
+
     <string name="merchant_email_has_been_imported_successfully">Merchant e-mail je uspješno uvezena</string>
 
+
+
 </resources>
+

@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:src="@mipmap/icon_receive"
+                        android:src="@drawable/icon_receive"
                         android:visibility="visible"/>
 
                 </LinearLayout>
@@ -89,7 +89,7 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:src="@mipmap/icon_receive"
+                    android:src="@drawable/icon_receive"
                     android:visibility="gone"/>
                 <TextView
                     android:layout_width="100dp"
@@ -106,7 +106,7 @@
                 android:layout_height="75dp"
                 android:layout_gravity="center"
                 android:layout_weight="0.6"
-                android:src="@mipmap/icon_camera"
+                android:src="@drawable/icon_camera"
                 android:visibility="invisible"/>
 
             <View android:id="@+id/backLine"
@@ -133,7 +133,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:src="@mipmap/icon_send"/>
+                        android:src="@drawable/icon_send"/>
                 </LinearLayout>
 
                 <TextView
