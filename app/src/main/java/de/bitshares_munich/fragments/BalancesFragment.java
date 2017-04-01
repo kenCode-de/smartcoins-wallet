@@ -89,7 +89,7 @@ import de.bitshares_munich.models.BalanceItemsEvent;
 import de.bitshares_munich.models.BalanceItemsListener;
 import de.bitshares_munich.models.Smartcoins;
 import de.bitshares_munich.models.TransactionDetails;
-import de.bitshares_munich.smartcoinswallet.AssestsActivty;
+import de.bitshares_munich.smartcoinswallet.AssetsActivity;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
@@ -213,7 +213,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     int counterRepeatTransactionLoad = 0;
     Handler loadOndemand = new Handler();
     boolean updateTriggerFromNetworkBroadcast = false;
-    AssestsActivty myAssetsActivity;
+    AssetsActivity myAssetsActivity;
     boolean firstTimeLoad = true;
     String transactionsLoadedAccountName = "";
     /**
@@ -983,6 +983,16 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
 
         }
+        else {
+            //If Balance change (send funds) this will run to update it.
+            Application app = (Application)this.getContext().getApplicationContext();
+            if((app.getUpdateFunds())){
+                Log.d(TAG, "Updating funds (getUpdateFunds() is true)");
+                app.setUpdateFunds(false);
+                loadBasic(false, true, false);
+            }
+        }
+
 
         if (!accountId.equals("")) {
             UserAccount me = new UserAccount(accountId);
@@ -997,6 +1007,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         // Loading transfers from database
         updateTableView(true);
+
+
+
+        //loadBalancesFromSharedPref();
+
     }
 
     @OnClick(R.id.receivebtn)
@@ -2062,7 +2077,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     @Override
     public void transactionsLoadFailure(String reason) {
         Log.d("LogTransactions", "transactionsLoadFailure");
-
         sentCallForTransactions = false;
     }
 
@@ -2215,22 +2229,12 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         whiteSpaceAfterBalances.setVisibility(View.VISIBLE);
 
         if (myAssetsActivity == null) {
-            myAssetsActivity = new AssestsActivty(getContext(), to, this, null);
+            myAssetsActivity = new AssetsActivity(getContext(), to, this, null);
             myAssetsActivity.registerDelegate();
         }
 
-        // get transactions from sharedPref
-
-
-//        myTransactions = getTransactions(to);
-
         if (!onResume || accountNameChanged || fiatCurrencyChanged) {
-//            progressBar1.setVisibility(View.VISIBLE);
             myAssetsActivity.loadBalances(to);
-
-//            number_of_transactions_loaded = 0;
-//            number_of_transactions_to_load = 20;
-//            loadTransactions(getContext(), accountId, this, wifkey, number_of_transactions_loaded, number_of_transactions_to_load, myTransactions);
         }
     }
 
@@ -2263,7 +2267,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         if (onResume && accountNameChanged) {
             loadBalancesFromSharedPref();
-//            TransactionUpdateOnStartUp(to);
         }
 
         loadViews(onResume, accountNameChanged, fiatCurrencyChanged);

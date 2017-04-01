@@ -257,6 +257,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     private WitnessResponseListener broadcastTransactionListener = new WitnessResponseListener() {
         @Override
         public void onSuccess(WitnessResponse response) {
+            Application app = (Application) getApplicationContext();
+            app.setUpdateFunds(true);
+            Log.d(TAG, "Updating funds variable (setUpdateFunds(true) )");
             Log.d(TAG, "send.onSuccess");
             mSendAttemptFail = false;
             runOnUiThread(new Runnable() {

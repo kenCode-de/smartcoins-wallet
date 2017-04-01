@@ -22,17 +22,20 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
  */
-public class AssestsActivty implements IBalancesDelegate {
+public class AssetsActivity implements IBalancesDelegate {
+    final Handler handler = new Handler(Looper.getMainLooper());
+    final int time = 5000;
     ArrayList<String> ids;
     ArrayList<String> precisons;
     ArrayList<String> symbols;
     ArrayList<String> ammount;
     Context context;
     AssetDelegate assetDelegate;
-
     webSocketCallHelper myWebSocketCallHelper;
+    Boolean sentCallForBalances = false;
+    Boolean sentCallForAssets = false;
 
-    public AssestsActivty(Context c, String account_name, AssetDelegate instance, Application app) {
+    public AssetsActivity(Context c, String account_name, AssetDelegate instance, Application app) {
         context = c;
         ids = new ArrayList<>();
         precisons = new ArrayList<>();
@@ -50,19 +53,12 @@ public class AssestsActivty implements IBalancesDelegate {
         get_json_account_balances(account_name, "999");
     }
 
-    final Handler handler = new Handler(Looper.getMainLooper());
-
-    Boolean sentCallForBalances = false;
-    final int time = 5000;
-
     void get_json_account_balances(final String account_name, final String id) {
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
         myWebSocketCallHelper.make_websocket_call(getDetails, "", webSocketCallHelper.api_identifier.none);
 
 
     }
-
-    Boolean sentCallForAssets = false;
 
     void get_asset(final String asset, final String id) {
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\"" + asset + "\"]]}";

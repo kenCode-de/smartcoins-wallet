@@ -26,6 +26,8 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
+import de.bitshares_munich.autobahn.WebSocketConnection;
+import de.bitshares_munich.autobahn.WebSocketException;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.interfaces.IAccountID;
@@ -35,8 +37,6 @@ import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.interfaces.IExchangeRate;
 import de.bitshares_munich.interfaces.IRelativeHistory;
 import de.bitshares_munich.interfaces.ITransactionObject;
-import de.bitshares_munich.autobahn.WebSocketConnection;
-import de.bitshares_munich.autobahn.WebSocketException;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.R;
 
@@ -45,75 +45,20 @@ import de.bitshares_munich.smartcoinswallet.R;
  */
 public class Application extends android.app.Application implements de.bitshares_munich.autobahn.WebSocket.WebSocketConnectionObserver,
         android.app.Application.ActivityLifecycleCallbacks {
-    private static String TAG = "Application";
     public static Context context;
-    static IAccount iAccount;
-    static IExchangeRate iExchangeRate;
-    static IBalancesDelegate iBalancesDelegate_transactionActivity;
-    static IBalancesDelegate iBalancesDelegate_ereceiptActivity;
-    static IBalancesDelegate iBalancesDelegate_assetsActivity;
-    static AssetDelegate iAssetDelegate;
-    static IAccountID iAccountID;
-    static ITransactionObject iTransactionObject;
-    static IAccountObject iAccountObject;
-    static IAssetObject iAssetObject;
-    static IRelativeHistory iRelativeHistory;
     public static String blockHead = "";
     public static int refBlockNum;
     public static long refBlockPrefix;
     public static long blockTime;
-    private static Activity currentActivity;
-
-    /* Internal attribute used to keep track of the application state */
-    private boolean mAppLock = true;
-
-    /**
-     * Constant used to specify how long will the app wait for another activity to go through its starting life
-     * cycle events before create the lock pin screen.
-     * <p>
-     * This is used as a means to detect whether or not the user has left the app.
-     */
-    private final int LOCK_DELAY = 10000;
-
-    /**
-     * Handler instance used to schedule tasks back to the main thread
-     */
-    private Handler mHandler;
-
-    /**
-     * Runnable that will set to lock the app with the PIN.
-     */
-    private Runnable lockApp = new Runnable() {
-        @Override
-        public void run() {
-            mAppLock = true;
-            Log.i(TAG, "App Locked");
-        }
-    };
-
-    /*
-     * Return the state of the application(If locked or not).
-     */
-    public Boolean getLock() {
-        return mAppLock;
-    }
-
-    /*
-     * Set the state of the application(If locked or not).
-     */
-    public void setLock(Boolean value) {
-        mAppLock = value;
-    }
-
     public static String urlsSocketConnection[] =
             {
 // i think we need to set the 7 regions here via the user country selection. see job doc
 // example: public_nodes_asia, public_nodes_africa, public_nodes_europe, etc
-            
+
 //                    "ws://api.devling.xyz:8088",
-                      "wss://de.blockpay.ch/node",               // German node
-                      "wss://fr.blockpay.ch/node",               // France node
-                      "wss://bitshares.openledger.info/ws",      // Openledger node
+                    "wss://de.blockpay.ch/node",               // German node
+                    "wss://fr.blockpay.ch/node",               // France node
+                    "wss://bitshares.openledger.info/ws",      // Openledger node
 
 //                    "wss://bit.btsabc.org/ws",
 //                    "wss://bts.transwiser.com/ws",
@@ -125,95 +70,61 @@ public class Application extends android.app.Application implements de.bitshares
 //                    "https://dele-puppy.com/ws",
 //                    "https://valen-tin.fr:8090"
             };
-
     public static String monitorAccountId;
-
+    public static int nodeIndex = 0;
+    public static Boolean isReady = false;
+    static IAccount iAccount;
+    static IExchangeRate iExchangeRate;
+    static IBalancesDelegate iBalancesDelegate_transactionActivity;
+    static IBalancesDelegate iBalancesDelegate_ereceiptActivity;
+    static IBalancesDelegate iBalancesDelegate_assetsActivity;
+    static AssetDelegate iAssetDelegate;
+    static IAccountID iAccountID;
+    static ITransactionObject iTransactionObject;
+    static IAccountObject iAccountObject;
+    static IAssetObject iAssetObject;
+    static IRelativeHistory iRelativeHistory;
+    static String connectedSocket;
+    private static String TAG = "Application";
+    private static Activity currentActivity;
     private static Handler warningHandler = new Handler();
-
-
-    public static void setCurrentActivity(Activity _activity) {
-        Application.currentActivity = _activity;
-    }
+    private static boolean mIsConnected = false;
+    private static WebSocketConnection mConnection;
+    private static URI mServerURI;
+    /**
+     * Constant used to specify how long will the app wait for another activity to go through its starting life
+     * cycle events before create the lock pin screen.
+     * <p>
+     * This is used as a means to detect whether or not the user has left the app.
+     */
+    private final int LOCK_DELAY = 10000;
+    Handler connectionHandler = new Handler();
+    /* Attribute used to indicate that funds must be updated (primarilly used at SendScreen and BalanceFragments */
+    private boolean mUpdateFunds = false;
+    /* Internal attribute used to keep track of the application state */
+    private boolean mAppLock = true;
+    /**
+     * Handler instance used to schedule tasks back to the main thread
+     */
+    private Handler mHandler;
+    /**
+     * Runnable that will set to lock the app with the PIN.
+     */
+    private Runnable lockApp = new Runnable() {
+        @Override
+        public void run() {
+            mAppLock = true;
+            Log.i(TAG, "App Locked");
+        }
+    };
 
     public static Activity getCurrentActivity() {
         return Application.currentActivity;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        MultiDex.install(this);
-        ButterKnife.setDebug(true);
-        context = getApplicationContext();
-        blockHead = "";
-
-        mHandler = new Handler();
-        /*
-        * Registering this class as a listener to all activitie's callback cycle events, in order to
-        * better estimate when the user has left the app and it is safe to lock the app or not
-        */
-        registerActivityLifecycleCallbacks(this);
-
-
-        //SETUP LOCALE AND DEFAULT PREFERENCES
-
-        //Setup Country
-        String country = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country), "");
-        //If not at preferences yet it will setup device country or constant default
-        //(It is expected that this "if" will be executed only one time, at first start up)
-        if (country.equals("")) {
-            Log.w(TAG, "Could not resolve country information, trying with the telephony manager");
-            //If the locale mechanism fails to give us a country, we try
-            //to get it from the TelephonyManager.
-            country = Helper.getDeviceCountry(getApplicationContext());
-            //If device don't respond with any country set it to the default (app constant)
-            if (country == null || country.equals("")) {
-                Log.w(TAG, "Could not resolve country information again, falling back to the default");
-                country = Constants.DEFAULT_COUNTRY_CODE;
-            }
-        }
-        Helper.setCountry(getApplicationContext(), country);
-
-        //Setup Language
-        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
-        //If app language preferences aren't set, set default as device/os language (telephony language)
-        //(It is expected that this "if" will be executed only one time, at first start up)
-        if (language.equals("")) {
-            language = Locale.getDefault().getLanguage();
-            //Just checking if we still don't have a language setup in the locale, in which
-            //case we fallback to english as the default (the app constant .
-            if (language.equals("")) {
-                Log.w(TAG, "Could not resolve language information, falling back to english");
-                language = Constants.DEFAULT_LANGUAGE_CODE;
-            }
-        }
-        Helper.setLanguage(getApplicationContext(), language);
-
-
-        //Check automatically close app behavior (after 3 min) is set and if not, put true by default
-        Boolean closeAppPref = Helper.checkSharedPref(getApplicationContext(), "close_bitshare");
-        if (!closeAppPref) {
-            Helper.storeBoolianSharePref(getApplicationContext(), "close_bitshare", true);
-        }
-
-
-        init();
-        accountCreateInit();
+    public static void setCurrentActivity(Activity _activity) {
+        Application.currentActivity = _activity;
     }
-
-    public void init() {
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mConnection == null) {
-                    mConnection = new WebSocketConnection();
-                    checkConnection();
-                }
-            }
-        }, 1000);
-
-    }
-
 
     public static void registerCallback(IAccount callbackClass) {
         iAccount = callbackClass;
@@ -269,27 +180,6 @@ public class Application extends android.app.Application implements de.bitshares
             });
         }
     }
-
-    public static int nodeIndex = 0;
-
-    private void webSocketConnection() {
-        isReady = false;
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                nodeIndex = nodeIndex % urlsSocketConnection.length;
-
-                Log.i(TAG, "preparing to connect to:" + urlsSocketConnection[nodeIndex]);
-
-                connect(urlsSocketConnection[nodeIndex]);
-                nodeIndex++;
-
-            }
-        }, 500);
-
-    }
-
-    public static Boolean isReady = false;
 
     public static void stringTextRecievedWs(String s) {
         try {
@@ -500,14 +390,170 @@ public class Application extends android.app.Application implements de.bitshares
         }
     }
 
-    private static boolean mIsConnected = false;
-    static String connectedSocket;
-
     public static void disconnect() {
         Log.i("internetBlockpay", "Disconnect");
         if (mConnection != null) {
             mConnection.disconnect();
         }
+    }
+
+    @NonNull
+    public static Boolean isConnected() {
+        return mConnection != null && (mConnection.isConnected());
+    }
+
+    public static void timeStamp() {
+
+        Helper.storeBoolianSharePref(context, "account_can_create", false);
+        setTimeStamp();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Helper.storeBoolianSharePref(context, "account_can_create", true);
+
+            }
+        }, 10 * 60000);
+    }
+
+    @NonNull
+    public static Boolean accountCanCreate() {
+        return Helper.fetchBoolianSharePref(context, "account_can_create");
+    }
+
+    static void setTimeStamp() {
+        Calendar c = Calendar.getInstance();
+        long time = c.getTimeInMillis();
+        Helper.storeLongSharePref(context, "account_create_timestamp", time);
+    }
+
+    static void getTimeStamp() {
+        try {
+            Calendar c = Calendar.getInstance();
+            long currentTime = c.getTimeInMillis();
+            ;
+            long oldTime = Helper.fetchLongSharePref(context, "account_create_timestamp");
+            long diff = currentTime - oldTime;
+            if (diff < TimeUnit.MINUTES.toMillis(10)) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Helper.storeBoolianSharePref(context, "account_can_create", true);
+                    }
+                }, TimeUnit.MINUTES.toMillis(10) - diff);
+            } else {
+                Helper.storeBoolianSharePref(context, "account_can_create", true);
+            }
+        } catch (Exception e) {
+            Helper.storeBoolianSharePref(context, "account_can_create", true);
+        }
+    }
+
+    /*
+     * Return the state of the application(If locked or not).
+     */
+    public Boolean getLock() {
+        return mAppLock;
+    }
+
+    /*
+     * Set the state of the application(If locked or not).
+     */
+    public void setLock(Boolean value) {
+        mAppLock = value;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MultiDex.install(this);
+        ButterKnife.setDebug(true);
+        context = getApplicationContext();
+        blockHead = "";
+
+        mHandler = new Handler();
+        /*
+        * Registering this class as a listener to all activitie's callback cycle events, in order to
+        * better estimate when the user has left the app and it is safe to lock the app or not
+        */
+        registerActivityLifecycleCallbacks(this);
+
+
+        //SETUP LOCALE AND DEFAULT PREFERENCES
+
+        //Setup Country
+        String country = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_country), "");
+        //If not at preferences yet it will setup device country or constant default
+        //(It is expected that this "if" will be executed only one time, at first start up)
+        if (country.equals("")) {
+            Log.w(TAG, "Could not resolve country information, trying with the telephony manager");
+            //If the locale mechanism fails to give us a country, we try
+            //to get it from the TelephonyManager.
+            country = Helper.getDeviceCountry(getApplicationContext());
+            //If device don't respond with any country set it to the default (app constant)
+            if (country == null || country.equals("")) {
+                Log.w(TAG, "Could not resolve country information again, falling back to the default");
+                country = Constants.DEFAULT_COUNTRY_CODE;
+            }
+        }
+        Helper.setCountry(getApplicationContext(), country);
+
+        //Setup Language
+        String language = Helper.fetchStringSharePref(getApplicationContext(), getString(R.string.pref_language));
+        //If app language preferences aren't set, set default as device/os language (telephony language)
+        //(It is expected that this "if" will be executed only one time, at first start up)
+        if (language.equals("")) {
+            language = Locale.getDefault().getLanguage();
+            //Just checking if we still don't have a language setup in the locale, in which
+            //case we fallback to english as the default (the app constant .
+            if (language.equals("")) {
+                Log.w(TAG, "Could not resolve language information, falling back to english");
+                language = Constants.DEFAULT_LANGUAGE_CODE;
+            }
+        }
+        Helper.setLanguage(getApplicationContext(), language);
+
+
+        //Check automatically close app behavior (after 3 min) is set and if not, put true by default
+        Boolean closeAppPref = Helper.checkSharedPref(getApplicationContext(), "close_bitshare");
+        if (!closeAppPref) {
+            Helper.storeBoolianSharePref(getApplicationContext(), "close_bitshare", true);
+        }
+
+
+        init();
+        accountCreateInit();
+    }
+
+    public void init() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mConnection == null) {
+                    mConnection = new WebSocketConnection();
+                    checkConnection();
+                }
+            }
+        }, 1000);
+
+    }
+
+    private void webSocketConnection() {
+        isReady = false;
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                nodeIndex = nodeIndex % urlsSocketConnection.length;
+
+                Log.i(TAG, "preparing to connect to:" + urlsSocketConnection[nodeIndex]);
+
+                connect(urlsSocketConnection[nodeIndex]);
+                nodeIndex++;
+
+            }
+        }, 500);
+
     }
 
     @Override
@@ -517,8 +563,6 @@ public class Application extends android.app.Application implements de.bitshares
 //        Toast.makeText(context, getResources().getString(R.string.connected_to)+ ": "+connectedSocket,Toast.LENGTH_SHORT).show();
         sendInitialSocket(context);
     }
-
-    Handler connectionHandler = new Handler();
 
     public void checkConnection() {
         connectionHandler.removeCallbacksAndMessages(null);
@@ -538,7 +582,6 @@ public class Application extends android.app.Application implements de.bitshares
         }, 500);
     }
 
-
     @Override
     public void onClose(WebSocketCloseNotification code, String reason) {
         Log.i("internetBlockpay", "close internet");
@@ -557,14 +600,6 @@ public class Application extends android.app.Application implements de.bitshares
 
     @Override
     public void onBinaryMessage(byte[] payload) {
-    }
-
-    private static WebSocketConnection mConnection;
-    private static URI mServerURI;
-
-    @NonNull
-    public static Boolean isConnected() {
-        return mConnection != null && (mConnection.isConnected());
     }
 
     private void connect(String node) {
@@ -599,26 +634,6 @@ public class Application extends android.app.Application implements de.bitshares
                 activeNetwork.isConnectedOrConnecting();
     }
 
-    public static void timeStamp() {
-
-        Helper.storeBoolianSharePref(context, "account_can_create", false);
-        setTimeStamp();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                Helper.storeBoolianSharePref(context, "account_can_create", true);
-
-            }
-        }, 10 * 60000);
-    }
-
-    @NonNull
-    public static Boolean accountCanCreate() {
-        return Helper.fetchBoolianSharePref(context, "account_can_create");
-    }
-
     void accountCreateInit() {
         if (Helper.containKeySharePref(context, "account_can_create")) {
             if (!accountCanCreate()) {
@@ -629,32 +644,22 @@ public class Application extends android.app.Application implements de.bitshares
         }
     }
 
-    static void setTimeStamp() {
-        Calendar c = Calendar.getInstance();
-        long time = c.getTimeInMillis();
-        Helper.storeLongSharePref(context, "account_create_timestamp", time);
+    /*
+     * Get attribute used to indicate if UI should update the funds or not after an update (Send funds primarily)
+     *
+     * @return The boolean value of update UI state
+     */
+    public boolean getUpdateFunds() {
+        return this.mUpdateFunds;
     }
 
-    static void getTimeStamp() {
-        try {
-            Calendar c = Calendar.getInstance();
-            long currentTime = c.getTimeInMillis();
-            ;
-            long oldTime = Helper.fetchLongSharePref(context, "account_create_timestamp");
-            long diff = currentTime - oldTime;
-            if (diff < TimeUnit.MINUTES.toMillis(10)) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Helper.storeBoolianSharePref(context, "account_can_create", true);
-                    }
-                }, TimeUnit.MINUTES.toMillis(10) - diff);
-            } else {
-                Helper.storeBoolianSharePref(context, "account_can_create", true);
-            }
-        } catch (Exception e) {
-            Helper.storeBoolianSharePref(context, "account_can_create", true);
-        }
+    /*
+     * Set attribute used to indicate if UI should update the funds or not after an update (Send funds primarily)
+     *
+     * @param update The boolean value of update UI state
+     */
+    public void setUpdateFunds(boolean update) {
+        this.mUpdateFunds = update;
     }
 
     @Override

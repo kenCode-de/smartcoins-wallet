@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import de.bitshares_munich.fragments.BalancesFragment;
-
 /**
  * Created by javier on 28/12/2016.
  */
