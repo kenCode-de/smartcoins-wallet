@@ -1381,43 +1381,48 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             List<GeneralCoinAccount> accountList = db.getActiveAccounts();
 
             for (final GeneralCoinAccount account : accountList) {
-                List<GeneralCoinAddress> addresses = account.getAddresses(db);
-
-                getBalanceItems().addBalancesItems(account.getCoin()).addDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
-                account.addChangeBalanceListener(new ChangeBalanceListener() {
-                    @Override
-                    public void balanceChange(Balance balance) {
-                        if (account != null) {
-                            getBalanceItems().getBalancesItems(account.getCoin()).addOrUpdateDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    updateTableView(false);
-                                }
-                            });
-                        }
-                    }
-                });
-
-                Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
-
-
-                //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
-                AccountActivityWatcher watcher = new AccountActivityWatcher(account, getContext());
-
-                for (GeneralCoinAddress address : addresses) {
-                    Log.i("test", "address : " + address.getAddressString(account.getNetworkParam()));
-                    watcher.addAddress(address.getAddressString(account.getNetworkParam()));
-                }
-                watcher.connect();
-
-                //Start the GetTransactionByAddress to get the transaction previously obtained by the server
-                GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
-                for (GeneralCoinAddress address : addresses) {
-                    getTransactionByAddress.addAddress(address);
-                }
-                getTransactionByAddress.start();
+                loadGeneralCoinAccount(account);
             }
         //}
+    }
+
+    public void loadGeneralCoinAccount(final GeneralCoinAccount account){
+        SCWallDatabase db = new SCWallDatabase(getContext());
+        List<GeneralCoinAddress> addresses = account.getAddresses(db);
+
+        getBalanceItems().addBalancesItems(account.getCoin()).addDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
+        account.addChangeBalanceListener(new ChangeBalanceListener() {
+            @Override
+            public void balanceChange(Balance balance) {
+                if (account != null) {
+                    getBalanceItems().getBalancesItems(account.getCoin()).addOrUpdateDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            updateTableView(false);
+                        }
+                    });
+                }
+            }
+        });
+
+        Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
+
+
+        //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
+        AccountActivityWatcher watcher = new AccountActivityWatcher(account, getContext());
+
+        for (GeneralCoinAddress address : addresses) {
+            Log.i("test", "address : " + address.getAddressString(account.getNetworkParam()));
+            watcher.addAddress(address.getAddressString(account.getNetworkParam()));
+        }
+        watcher.connect();
+
+        //Start the GetTransactionByAddress to get the transaction previously obtained by the server
+        GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
+        for (GeneralCoinAddress address : addresses) {
+            getTransactionByAddress.addAddress(address);
+        }
+        getTransactionByAddress.start();
     }
 
     Handler updateEquivalentAmount;
@@ -1778,6 +1783,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                                 ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                                 clipboard.setPrimaryClip(clip);
                                 dialog.cancel();
+                                dialogNewCoin.cancel();
+                                loadGeneralCoinAccount(generalAccount);
                             }
                         });
                         dialog.setCancelable(false);
@@ -1789,6 +1796,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 } else {
                     GeneralCoinAccount generalAccount = GeneralCoinFactory.getGeneralCoinAccount(coinSelected, seeds.get(0), coinSelected.getLabel()+" Account");
                     db.putGeneralCoinAccount(generalAccount);
+                    dialogNewCoin.cancel();
+                    loadGeneralCoinAccount(generalAccount);
                 }
             }
         });
