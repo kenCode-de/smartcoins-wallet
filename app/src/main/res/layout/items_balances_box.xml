@@ -41,7 +41,7 @@
         <ImageView
             android:layout_width="50sp"
             android:layout_height="50sp"
-            app:srcCompat="@mipmap/icon_receive"
+            app:srcCompat="@drawable/icon_receive"
             android:id="@+id/coin_receive_btn"
             android:layout_alignParentTop="false"
             android:layout_alignParentRight="false"
@@ -50,7 +50,7 @@
         <ImageView
             android:layout_width="50sp"
             android:layout_height="50sp"
-            app:srcCompat="@mipmap/icon_send"
+            app:srcCompat="@drawable/icon_send"
             android:id="@+id/coin_send_btn"
             android:layout_alignParentTop="false"
             android:layout_alignParentRight="true" />

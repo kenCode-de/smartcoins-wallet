@@ -134,43 +134,43 @@ public class BrainkeyActivity extends BaseActivity {
 
                 if (checkBrainKeyExist(brainKeyText)) {
                 /*Extracting the brainkey*/
-                String brainkeyString = "";
-                for (int i=0;i<arr.length-12;i++){
-                    brainkeyString += " "+arr[i];
-                }
-                brainkeyString = brainkeyString.trim();
+                    String brainkeyString = "";
+                    for (int i = 0; i < arr.length - 12; i++) {
+                        brainkeyString += " " + arr[i];
+                    }
+                    brainkeyString = brainkeyString.trim();
 
                 /*Extracting the master seed*/
-                String masterSeed = "";
-                for (int i=arr.length-12;i<arr.length;i++){
-                    masterSeed += " "+arr[i];
-                }
-                masterSeed = masterSeed.trim().toLowerCase();
+                    String masterSeed = "";
+                    for (int i = arr.length - 12; i < arr.length; i++) {
+                        masterSeed += " " + arr[i];
+                    }
+                    masterSeed = masterSeed.trim().toLowerCase();
 
                 /*Checking if brainkey exists, if not, importing the account*/
-                boolean brainkeyExists = false;
-                if (checkBrainKeyExist(brainkeyString)) {
-                    brainkeyExists = true;
-                } else {
-                    showDialog("", getString(R.string.importing_your_wallet));
-                    getAccountFromBrainkey(brainkeyString, pinCode);
-                }
-
-                /*Checking if master seed exists, if not, importing the account*/
-                AccountSeed seed = new BIP39(masterSeed,"");
-                if (db.getIdSeed(seed) != -1) {
-                    if (brainkeyExists){//If this is true, then the brainkey and the master seed already exists
-                        Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (brainkeyExists) {//If this is true, then the brainkey exists but the master seed not, so lets show the dialog
+                    boolean brainkeyExists = false;
+                    if (checkBrainKeyExist(brainkeyString)) {
+                        brainkeyExists = true;
+                    } else {
                         showDialog("", getString(R.string.importing_your_wallet));
+                        getAccountFromBrainkey(brainkeyString, pinCode);
                     }
-                    db.putSeed(seed);
-                }
 
+                    /*Checking if master seed exists, if not, importing the account*/
+                    AccountSeed seed = new BIP39(masterSeed, "");
+                    if (db.getIdSeed(seed) != -1) {
+                        if (brainkeyExists) {//If this is true, then the brainkey and the master seed already exists
+                            Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (brainkeyExists) {//If this is true, then the brainkey exists but the master seed not, so lets show the dialog
+                            showDialog("", getString(R.string.importing_your_wallet));
+                        }
+                        db.putSeed(seed);
+                    }
+                }
             } else if (arr.length >= 12 && arr.length <= 16) {//Importing only brainkey
-                if (checkBrainKeyExist(temp)) {
+                if (checkBrainKeyExist(brainKeyText)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));

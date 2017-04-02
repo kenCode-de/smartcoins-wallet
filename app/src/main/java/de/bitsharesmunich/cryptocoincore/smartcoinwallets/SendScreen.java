@@ -73,8 +73,6 @@ import de.bitshares_munich.models.MerchantEmail;
 import de.bitshares_munich.smartcoinswallet.AssetsSymbols;
 import de.bitshares_munich.smartcoinswallet.BaseActivity;
 import de.bitshares_munich.smartcoinswallet.BuildConfig;
-import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
-import de.bitshares_munich.smartcoinswallet.ContactListDialogAdapter;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.SettingActivity;
 import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
@@ -88,7 +86,6 @@ import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinValidator;
 import de.bitsharesmunich.graphenej.Address;
@@ -201,8 +198,8 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     @Bind(R.id.btnSend)
     LinearLayout btnSend;
 
-    @Bind(R.id.sendicon)
-    ImageView sendicon;
+    //@Bind(R.id. sendicon)
+    //ImageView sendicon;
 
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
@@ -447,12 +444,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 if (validateSend() && ((coin != Coin.BITSHARE) || validReceiver)) {
                     btnSend.setEnabled(true);
                     btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.redcolor));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.mipmap.icon_send));
+                    //sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.icon_send));
 
                 } else {
 //                    btnSend.setEnabled(false);
                     btnSend.setBackgroundColor(getColorWrapper(getApplicationContext(), R.color.gray));
-                    sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
+                    //sendicon.setImageDrawable(getDrawable(getApplicationContext(), R.drawable.sendicon2));
                 }
                 handler.postDelayed(this, 200);
             }

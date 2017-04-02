@@ -908,7 +908,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             Log.w(TAG, "Could not resolve country information, trying with the telephony manager");
             // If the locale mechanism fails to give us a country, we try
             // to get it from the TelephonyManager.
-            String telephonyCountry = Helper.getUserCountry(getContext());
+            //String telephonyCountry = Helper.getUserCountry(getContext());
+            String telephonyCountry = "";
             if(telephonyCountry == null || telephonyCountry.equals("")){
                 Log.w(TAG,"Could not resolve country information again, falling back to the default");
                 telephonyCountry = Constants.DEFAULT_COUNTRY_CODE;
