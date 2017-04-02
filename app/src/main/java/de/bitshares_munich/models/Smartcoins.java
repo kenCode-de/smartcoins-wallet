@@ -7,7 +7,7 @@ import de.bitsharesmunich.graphenej.Asset;
 
 /**
  * Smartcoins are special assets designed to keep track of the value of an external 'real world' asset.
- *
+ * <p>
  * Created by nelson on 12/24/16.
  */
 public class Smartcoins {
@@ -17,7 +17,7 @@ public class Smartcoins {
      * existing smartcoins. If no smartcoin exists for a specific country's fiat currency, we
      * fall back to the USD.
      */
-    public static DefaultHashMap<String, Asset> getMap(){
+    public static DefaultHashMap<String, Asset> getMap() {
         // Here we instantiate a DefaultHashMap specifying the bitUSD as the default value.
         DefaultHashMap<String, Asset> map = new DefaultHashMap<>(new Asset("1.3.121"));
 
@@ -86,6 +86,7 @@ public class Smartcoins {
     /**
      * Given a smartcoin asset, this method should return the associated fiat currency symbol.
      * So for the if the bitEUR is passed as argument, this method should return the '€' symbol for instance.
+     *
      * @param smartcoin The smartcoin asset.
      * @return The corresponding symbol.
      */

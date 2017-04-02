@@ -8,6 +8,7 @@ public interface PdfGeneratorListener {
 
     /**
      * Called when we have an update on the progress of the operation.
+     *
      * @param percentage
      */
     public void onUpdate(float percentage);

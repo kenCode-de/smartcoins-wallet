@@ -13,16 +13,16 @@ import org.json.JSONObject;
 
 
 public class AccountAssets {
-    private String TAG = "AccountAssets";
     public String id;
     public String precision;
     public String account_id;
     public String symbol;
     public String account;
     public String ammount;
+    private String TAG = "AccountAssets";
 
     @Override
-    public String toString(){
+    public String toString() {
         JSONObject obj = new JSONObject();
         try {
             obj.put("id", id);

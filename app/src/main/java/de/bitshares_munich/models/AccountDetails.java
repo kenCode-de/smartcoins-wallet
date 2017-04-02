@@ -14,10 +14,9 @@ import java.util.ArrayList;
  * Created by qasim on 5/18/16.
  */
 public class AccountDetails {
-    private final String TAG = "AccountDetails";
     public static final int PRE_SECURITY_UPDATE = 0;
     public static final int POST_SECURITY_UPDATE = 1;
-
+    private final String TAG = "AccountDetails";
     public String status;
     public String brain_key;
     public String address;
@@ -29,12 +28,12 @@ public class AccountDetails {
     public int posBackupAsset;
     public ArrayList<AccountAssets> AccountAssets;
     public Boolean isSelected;
-    public Boolean isLifeTime=false;
+    public Boolean isLifeTime = false;
     public String account_name;
     public int securityUpdateFlag;
 
     @Override
-    public String toString(){
+    public String toString() {
         JSONObject obj = new JSONObject();
         try {
             obj.put("status", status);
@@ -82,8 +81,8 @@ public class AccountDetails {
             Log.e(TAG, "JSONException while trying to serialize posBackupAsset");
         }
         JSONArray array = new JSONArray();
-        if(AccountAssets != null){
-            for(AccountAssets asset : AccountAssets){
+        if (AccountAssets != null) {
+            for (AccountAssets asset : AccountAssets) {
                 array.put(asset);
             }
             try {

@@ -10,7 +10,7 @@ public class GenerateKeys {
     public String status;
 
     @Override
-    public String toString(){
+    public String toString() {
         Gson gson = new Gson();
         return gson.toJson(this);
     }

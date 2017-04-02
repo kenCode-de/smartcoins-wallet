@@ -25,28 +25,28 @@ public class BalanceItem {
         return this.symbol;
     }
 
-    public String getPrecision() {
-        return this.precision;
-    }
-
-    public String getAmount() {
-        return this.amount;
-    }
-
-    public String getFiat() {
-        return this.fiat;
-    }
-
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public String getPrecision() {
+        return this.precision;
     }
 
     public void setPrecision(String precision) {
         this.precision = precision;
     }
 
+    public String getAmount() {
+        return this.amount;
+    }
+
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getFiat() {
+        return this.fiat;
     }
 
     public void setFiat(String fiat) {
@@ -58,19 +58,19 @@ public class BalanceItem {
         return item;
     }
 
-    public void setSymbolTextView(TextView symbolTextView) {
-        this.symbolTextView = symbolTextView;
-    }
-
-    public void setAmountTextView(TextView amountTextView) {
-        this.amountTextView = amountTextView;
-    }
-
     public TextView getSymbolTextView() {
         return this.symbolTextView;
     }
 
+    public void setSymbolTextView(TextView symbolTextView) {
+        this.symbolTextView = symbolTextView;
+    }
+
     public TextView getAmountTextView() {
         return this.amountTextView;
+    }
+
+    public void setAmountTextView(TextView amountTextView) {
+        this.amountTextView = amountTextView;
     }
 }

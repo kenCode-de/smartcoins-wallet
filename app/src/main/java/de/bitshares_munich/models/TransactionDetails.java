@@ -24,10 +24,6 @@ public class TransactionDetails {
     public String eReceipt;
     private Context context;
 
-    public void updateContext(Context _context) {
-        context = _context;
-    }
-
     public TransactionDetails() {
 
     }
@@ -46,6 +42,10 @@ public class TransactionDetails {
         this.fiatAmount = _fiatAmount;
         this.fiatAssetSymbol = _fiatAssetSymbol;
         eReceipt = _eReceipt;
+    }
+
+    public void updateContext(Context _context) {
+        context = _context;
     }
 
     public Date getDate() {

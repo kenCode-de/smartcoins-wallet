@@ -13,8 +13,8 @@ public class BalanceItemsEvent extends EventObject {
     private int newSize;
     private boolean initialLoad;
 
-    public BalanceItemsEvent( Object source, BalanceItem item ) {
-        super( source );
+    public BalanceItemsEvent(Object source, BalanceItem item) {
+        super(source);
         this.item = item;
         this.initialLoad = false;
     }
@@ -23,35 +23,35 @@ public class BalanceItemsEvent extends EventObject {
         return this.item;
     }
 
-    public void setOldItem(BalanceItem oldItem){
-        this.oldItem = oldItem;
-    }
-
-    public BalanceItem getOldItem(){
+    public BalanceItem getOldItem() {
         return this.oldItem;
     }
 
-    public void setIndex(int index){
-        this.index = index;
+    public void setOldItem(BalanceItem oldItem) {
+        this.oldItem = oldItem;
     }
 
-    public int getIndex(){
+    public int getIndex() {
         return this.index;
     }
 
-    public void setNewSize(int newSize){
-        this.newSize = newSize;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
-    public int getNewSize(){
+    public int getNewSize() {
         return this.newSize;
     }
 
-    public boolean isInitialLoad(){
+    public void setNewSize(int newSize) {
+        this.newSize = newSize;
+    }
+
+    public boolean isInitialLoad() {
         return this.initialLoad;
     }
 
-    public void setInitialLoad(boolean initialLoad){
+    public void setInitialLoad(boolean initialLoad) {
         this.initialLoad = initialLoad;
     }
 }

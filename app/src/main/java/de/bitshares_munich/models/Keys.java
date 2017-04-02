@@ -11,7 +11,7 @@ public class Keys {
     public String brain_priv_key;
 
     @Override
-    public String toString(){
+    public String toString() {
         Gson gson = new Gson();
         return gson.toJson(this);
     }

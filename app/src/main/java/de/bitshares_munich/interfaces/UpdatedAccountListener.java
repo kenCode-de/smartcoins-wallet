@@ -18,8 +18,9 @@ public interface UpdatedAccountListener {
 
     /**
      * Method called upon the result of a single account update operation.
+     *
      * @param account: The account that was updated
-     * @param status: The current status of the update operation.
+     * @param status:  The current status of the update operation.
      */
     public void onUpdateStatusChange(UserAccount account, int status);
 
