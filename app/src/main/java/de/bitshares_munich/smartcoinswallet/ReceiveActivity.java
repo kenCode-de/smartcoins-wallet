@@ -49,44 +49,46 @@ import retrofit2.Response;
  * Created by Syed Muhammad Muzzammil on 5/16/16.
  */
 public class ReceiveActivity extends BaseActivity {
-    private String TAG = this.getClass().getName();
-
-    @Bind(R.id.username)
-    TextView tvUsername;
-
-    @Bind(R.id.notfound)
-    TextView notfound;
-
-    @Bind(R.id.qrimage)
-    ImageView qrimage;
-
-    @Bind(R.id.tvBlockNumberHead_rcv_screen_activity)
-    TextView tvBlockNumberHead;
-
-    @Bind(R.id.tvAppVersion_rcv_screen_activity)
-    TextView tvAppVersion;
-
-    @Bind(R.id.ivSocketConnected_rcv_screen_activity)
-    ImageView ivSocketConnected;
-
-    ProgressDialog progressDialog;
-
-    String price = "";
-    String currency = "";
-
-    String to = "";
-    String account_id = "";
-    String orderId = "";
-
-
-    Call<TransactionSmartCoin[]> transactionSmartcoinService;
-
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    @Bind(R.id.username)
+    TextView tvUsername;
+    @Bind(R.id.notfound)
+    TextView notfound;
+    @Bind(R.id.qrimage)
+    ImageView qrimage;
+    @Bind(R.id.tvBlockNumberHead_rcv_screen_activity)
+    TextView tvBlockNumberHead;
+    @Bind(R.id.tvAppVersion_rcv_screen_activity)
+    TextView tvAppVersion;
+    @Bind(R.id.ivSocketConnected_rcv_screen_activity)
+    ImageView ivSocketConnected;
+    ProgressDialog progressDialog;
+    String price = "";
+    String currency = "";
+    String to = "";
+    String account_id = "";
+    String orderId = "";
+    Call<TransactionSmartCoin[]> transactionSmartcoinService;
+    private String TAG = this.getClass().getName();
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,27 +143,13 @@ public class ReceiveActivity extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        LineItem[] items = new LineItem[]{ new LineItem("transfer", 1, Double.valueOf(price))};
-        Invoice invoice = new Invoice(to, "", "", currency.replace("bit",""), items, "", "");
+        LineItem[] items = new LineItem[]{new LineItem("transfer", 1, Double.valueOf(price))};
+        Invoice invoice = new Invoice(to, "", "", currency.replace("bit", ""), items, "", "");
         try {
             Bitmap bitmap = encodeAsBitmap(Invoice.toQrCode(invoice), "#006500");
             qrimage.setImageBitmap(bitmap);
         } catch (WriterException e) {
-            Log.e(TAG, "WriterException while trying to encode QR-code data. Msg: "+e.getMessage());
-        }
-    }
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
+            Log.e(TAG, "WriterException while trying to encode QR-code data. Msg: " + e.getMessage());
         }
     }
 
@@ -180,13 +168,10 @@ public class ReceiveActivity extends BaseActivity {
 
             String shareText = "";
 
-            if ( !price.isEmpty() && price != "0" )
-            {
+            if (!price.isEmpty() && price != "0") {
                 shareText = this.getString(R.string.please_pay) + " " + price + " " + currency + " " + this.getString(R.string.to) + " " + to;
-            }
-            else
-            {
-                shareText =  this.getString(R.string.please_pay) + ": " + to;
+            } else {
+                shareText = this.getString(R.string.please_pay) + ": " + to;
             }
 
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -204,7 +189,7 @@ public class ReceiveActivity extends BaseActivity {
     }
 
     private File savebitmap(Bitmap bmp) {
-        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() +  File.separator + getResources().getString(R.string.folder_name);
+        String extStorageDirectory = Environment.getExternalStorageDirectory().toString() + File.separator + getResources().getString(R.string.folder_name);
         OutputStream outStream = null;
         File file = new File(extStorageDirectory, "QrImage" + ".png");
         if (file.exists()) {
@@ -278,7 +263,7 @@ public class ReceiveActivity extends BaseActivity {
     }
 
     public void callIPNSmartCoins(final Activity activity) {
-        Log.d(TAG, "callIPNSmartCoins. account id: "+account_id+", order id: "+orderId);
+        Log.d(TAG, "callIPNSmartCoins. account id: " + account_id + ", order id: " + orderId);
         ServiceGenerator sg = new ServiceGenerator(getString(R.string.node_server_url));
         IWebService service = sg.getService(IWebService.class);
         transactionSmartcoinService = service.getTransactionSmartCoin(account_id, orderId);
@@ -327,9 +312,9 @@ public class ReceiveActivity extends BaseActivity {
             @Override
             public void run() {
                 if (Application.isConnected()) {
-                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
-                        tvBlockNumberHead.setText(Application.blockHead);
-                        ivSocketConnected.clearAnimation();
+                    ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                    tvBlockNumberHead.setText(Application.blockHead);
+                    ivSocketConnected.clearAnimation();
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);

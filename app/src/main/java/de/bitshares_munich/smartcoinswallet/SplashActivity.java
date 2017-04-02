@@ -16,8 +16,6 @@ import de.bitshares_munich.utils.TinyDB;
  * Created by qasim on 5/19/16.
  */
 public class SplashActivity extends Activity {
-    private String TAG = "SplashActivity";
-
     /*
     * Key used to store a flag value in the Bundle passed with the Intent that will open
     * up the TabActivity. This activity is the main entry point for this app, and since it
@@ -25,6 +23,7 @@ public class SplashActivity extends Activity {
     * wheter or not to display the pin dialog at the onStart life-cycle method.
     */
     public static final String KEY_ASK_FOR_PIN = "ask_for_pin";
+    private String TAG = "SplashActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +43,10 @@ public class SplashActivity extends Activity {
         if (arrayList != null && arrayList.size() > 0) {
             Log.d(TAG, "we have at least one account!");
             if (Helper.containKeySharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist))) {
-                Log.d(TAG,"backup bin exists");
+                Log.d(TAG, "backup bin exists");
                 moveToMainScreen(tinyDB);
             } else {
-                Log.d(TAG,"backup bin does not exist");
+                Log.d(TAG, "backup bin does not exist");
                 moveToBackupBrainKey();
             }
         } else {

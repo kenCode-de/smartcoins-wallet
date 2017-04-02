@@ -32,14 +32,12 @@ import de.bitshares_munich.utils.TinyDB;
  * Created by qasim on 7/13/16.
  */
 public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDelegate {
-    private String TAG = this.getClass().getName();
-
     TinyDB tinyDB;
     ArrayList<AccountDetails> accountDetails;
     Boolean isBackupKey = false;
-
     @Bind(R.id.btnDone)
     Button btnDone;
+    private String TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +104,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
     public void btnDone(Button button) {
 
         if (isBackupKey) {
-            Helper.storeBoolianSharePref(getApplicationContext(),getString(R.string.pref_backup_bin_exist),true);
+            Helper.storeBoolianSharePref(getApplicationContext(), getString(R.string.pref_backup_bin_exist), true);
             Intent intent = new Intent(getApplicationContext(), TabActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

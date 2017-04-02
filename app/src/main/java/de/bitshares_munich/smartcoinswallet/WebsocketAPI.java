@@ -21,7 +21,7 @@ public class WebsocketAPI {
                 try {
                     webSocket.connect();
                 } catch (WebSocketException e) {
-                    Log.e(TAG,"WebSocketException. Msg: "+e.getMessage());
+                    Log.e(TAG, "WebSocketException. Msg: " + e.getMessage());
                 }
             }
         });

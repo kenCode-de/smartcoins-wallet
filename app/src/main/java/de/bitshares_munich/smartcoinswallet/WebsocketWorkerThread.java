@@ -18,20 +18,20 @@ public class WebsocketWorkerThread extends Thread {
     private final String TAG = this.getClass().getName();
     private WebSocket mWebSocket;
 
-    public WebsocketWorkerThread(WebSocketListener webSocketListener){
-        this(webSocketListener,0);
+    public WebsocketWorkerThread(WebSocketListener webSocketListener) {
+        this(webSocketListener, 0);
     }
 
-    public WebsocketWorkerThread(WebSocketListener webSocketListener, int socketIndex){
+    public WebsocketWorkerThread(WebSocketListener webSocketListener, int socketIndex) {
 
         WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
         try {
             mWebSocket = factory.createSocket(Application.urlsSocketConnection[socketIndex]);
             mWebSocket.addListener(webSocketListener);
         } catch (IOException e) {
-            Log.e(TAG, "IOException. Msg: "+e.getMessage());
-        } catch(NullPointerException e){
-            Log.e(TAG, "NullPointerException at WebsocketWorkerThreas. Msg: "+e.getMessage());
+            Log.e(TAG, "IOException. Msg: " + e.getMessage());
+        } catch (NullPointerException e) {
+            Log.e(TAG, "NullPointerException at WebsocketWorkerThreas. Msg: " + e.getMessage());
         }
     }
 
@@ -42,9 +42,9 @@ public class WebsocketWorkerThread extends Thread {
         try {
             mWebSocket.connect();
         } catch (WebSocketException e) {
-            Log.e(TAG, "WebSocketException. Msg: "+e.getMessage());
-        } catch(NullPointerException e){
-            Log.e(TAG, "NullPointerException. Msg: "+e.getMessage());
+            Log.e(TAG, "WebSocketException. Msg: " + e.getMessage());
+        } catch (NullPointerException e) {
+            Log.e(TAG, "NullPointerException. Msg: " + e.getMessage());
         }
     }
 }

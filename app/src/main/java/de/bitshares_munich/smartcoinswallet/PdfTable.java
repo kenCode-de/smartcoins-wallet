@@ -28,8 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.database.HistoricalTransferEntry;
+import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.TransferOperation;
@@ -58,8 +58,7 @@ public class PdfTable {
         return file2.getPath();
     }
 
-    private void createEmptyFile(String path)
-    {
+    private void createEmptyFile(String path) {
         try {
             File gpxfile = new File(path);
             FileWriter writer = new FileWriter(gpxfile);
@@ -73,10 +72,10 @@ public class PdfTable {
     public String createTable(Context context, List<HistoricalTransferEntry> myTransactions, UserAccount me) {
         Document document = new Document();
         try {
-            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() +  File.separator + myContext.getResources().getString(R.string.folder_name);
+            String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + myContext.getResources().getString(R.string.folder_name);
             final String filePath = combinePath(extStorage, filename + ".pdf");
             createEmptyFile(filePath);
-            PdfWriter.getInstance(document,new FileOutputStream(filePath));
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
 
             document.open();
 
@@ -92,7 +91,7 @@ public class PdfTable {
             table.addCell(cell3);
             table.addCell(cell4);
 
-            for(int i = 0; i < myTransactions.size(); i++){
+            for (int i = 0; i < myTransactions.size(); i++) {
                 table.completeRow();
                 HistoricalTransferEntry transferEntry = myTransactions.get(i);
                 TransferOperation operation = transferEntry.getHistoricalTransfer().getOperation();
@@ -118,11 +117,11 @@ public class PdfTable {
                     byte[] imageInByte = stream.toByteArray();
                     Image myImage = Image.getInstance(imageInByte);
                     myImage.scalePercent(25);
-                    PdfPCell sendReceiveCell = new PdfPCell(myImage,false);
+                    PdfPCell sendReceiveCell = new PdfPCell(myImage, false);
                     sendReceiveCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     sendReceiveCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                     table.addCell(sendReceiveCell);
-                } catch(IOException ex) {
+                } catch (IOException ex) {
                     mListener.onError(ex.getMessage());
                     return ex.getMessage();
                 }
@@ -131,7 +130,7 @@ public class PdfTable {
                 String to = myContext.getString(R.string.to_capital);
                 String memo = myContext.getString(R.string.memo_capital);
 
-                String detailsText = String.format(""+to+": %s\n"+from+": %s\n"+memo+": %s", operation.getTo().getAccountName(),operation.getFrom().getAccountName(), operation.getMemo().getPlaintextMessage());
+                String detailsText = String.format("" + to + ": %s\n" + from + ": %s\n" + memo + ": %s", operation.getTo().getAccountName(), operation.getFrom().getAccountName(), operation.getMemo().getPlaintextMessage());
 
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);
@@ -140,7 +139,7 @@ public class PdfTable {
                 AssetAmount assetAmount = operation.getTransferAmount();
                 String preFormat = "%%.%df %%s";
                 String format = String.format(preFormat, assetAmount.getAsset().getPrecision());
-                if ( operation.getFrom().getObjectId().equals(me.getObjectId())) {
+                if (operation.getFrom().getObjectId().equals(me.getObjectId())) {
                     amountText = "- " + String.format(format, Util.fromBase(assetAmount), assetAmount.getAsset().getSymbol());
                 } else {
                     amountText = "+ " + String.format(format, Util.fromBase(assetAmount), assetAmount.getAsset().getSymbol());
@@ -150,7 +149,7 @@ public class PdfTable {
                 table.addCell(amountsCell);
 
                 /* Updating progress */
-                if(mListener != null && i % 8 == 0){
+                if (mListener != null && i % 8 == 0) {
                     float ratio = ((float) i) / ((float) myTransactions.size());
                     mListener.onUpdate(ratio);
                 }
@@ -158,24 +157,24 @@ public class PdfTable {
             document.add(table);
             document.close();
             return myContext.getResources().getString(R.string.pdf_generated_msg) + filePath;
-        } catch(Exception e){
-            Log.e(TAG, "Exception while trying to generate a PDF. Msg: "+e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception while trying to generate a PDF. Msg: " + e.getMessage());
             mListener.onError(e.getMessage());
             return "";
         }
     }
 
-    public void createTransactionpdf (HashMap<String,String> map, ImageView imageView) {
+    public void createTransactionpdf(HashMap<String, String> map, ImageView imageView) {
         Document document = new Document();
         try {
             String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
             String filePath = combinePath(extStorage, filename + ".pdf");
             createEmptyFile(filePath);
-            PdfWriter.getInstance(document,new FileOutputStream(filePath));
+            PdfWriter.getInstance(document, new FileOutputStream(filePath));
 
             document.open();
 
-            if(imageView!=null) {
+            if (imageView != null) {
                 try {
                     PdfPTable table1 = new PdfPTable(1); // 2 columns.
                     imageView.buildDrawingCache();
@@ -206,21 +205,21 @@ public class PdfTable {
             String symbol = myContext.getString(R.string.symbol);
 
 
-            document.add(addforCell(myContext.getString(R.string.id_s),map.get("id")));
-            document.add(addforCell(myContext.getString(R.string.time),map.get("time")));
-            document.add(addforCell(myContext.getString(R.string.trx_in_block),map.get("trx_in_block")));
-            document.add(addforCell(myContext.getString(R.string.operations),"----"));
-            String detailsFee = String.format(""+amount+": %s\n"+symbol+"symbol: %s",map.get("amountFee"),map.get("symbolFee"));
-            document.add(addforCell(myContext.getString(R.string.fee),detailsFee));
-            document.add(addforCell(myContext.getString(R.string.from_capital),map.get("from")));
-            document.add(addforCell(myContext.getString(R.string.to_capital),map.get("to")));
-            String detailsAmount = String.format(""+amount+": %s\n"+symbol+"symbol: %s",map.get("amountAmount"),map.get("symbolAmount"));
-            document.add(addforCell(myContext.getString(R.string.amount),detailsAmount));
-            document.add(addforCell(myContext.getString(R.string.memo_capital),map.get("memo")));
-            document.add(addforCell(myContext.getString(R.string.extensions),map.get("extensions")));
-            document.add(addforCell(myContext.getString(R.string.op_in_trx),map.get("op_in_trx")));
-            document.add(addforCell(myContext.getString(R.string.virtual_op),map.get("virtual_op")));
-            document.add(addforCell(myContext.getString(R.string.operation_results),map.get("operation_results")));
+            document.add(addforCell(myContext.getString(R.string.id_s), map.get("id")));
+            document.add(addforCell(myContext.getString(R.string.time), map.get("time")));
+            document.add(addforCell(myContext.getString(R.string.trx_in_block), map.get("trx_in_block")));
+            document.add(addforCell(myContext.getString(R.string.operations), "----"));
+            String detailsFee = String.format("" + amount + ": %s\n" + symbol + "symbol: %s", map.get("amountFee"), map.get("symbolFee"));
+            document.add(addforCell(myContext.getString(R.string.fee), detailsFee));
+            document.add(addforCell(myContext.getString(R.string.from_capital), map.get("from")));
+            document.add(addforCell(myContext.getString(R.string.to_capital), map.get("to")));
+            String detailsAmount = String.format("" + amount + ": %s\n" + symbol + "symbol: %s", map.get("amountAmount"), map.get("symbolAmount"));
+            document.add(addforCell(myContext.getString(R.string.amount), detailsAmount));
+            document.add(addforCell(myContext.getString(R.string.memo_capital), map.get("memo")));
+            document.add(addforCell(myContext.getString(R.string.extensions), map.get("extensions")));
+            document.add(addforCell(myContext.getString(R.string.op_in_trx), map.get("op_in_trx")));
+            document.add(addforCell(myContext.getString(R.string.virtual_op), map.get("virtual_op")));
+            document.add(addforCell(myContext.getString(R.string.operation_results), map.get("operation_results")));
             document.close();
             Intent email = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(new File(extStorage, filename + ".pdf"));
@@ -228,12 +227,12 @@ public class PdfTable {
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             myContext.startActivity(email);
-        } catch(Exception e){
+        } catch (Exception e) {
             mListener.onError(e.getMessage());
         }
     }
 
-    PdfPTable addforCell(String subject , String detail){
+    PdfPTable addforCell(String subject, String detail) {
         PdfPTable table = new PdfPTable(2); // 2 columns.
         PdfPCell cell1 = new PdfPCell(new Paragraph(subject));
         PdfPCell cell2 = new PdfPCell(new Paragraph(detail));
@@ -243,10 +242,10 @@ public class PdfTable {
         return table;
     }
 
-    String getAmount(Double amount){
-        if(!amount.equals(0.0)) {
+    String getAmount(Double amount) {
+        if (!amount.equals(0.0)) {
             return String.format("%.5f", amount);
         }
-        return  "";
+        return "";
     }
 }

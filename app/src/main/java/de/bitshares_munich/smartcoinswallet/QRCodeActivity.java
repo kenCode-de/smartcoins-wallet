@@ -20,25 +20,21 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
 public class QRCodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
-    private static String TAG = "QRCodeActivity";
-    private ZXingScannerView mScannerView;
-
-    /* Pin pinDialog */
-    private Dialog pinDialog;
-
-    /* Internal attribute used to keep track of the activity state */
-    private boolean mRestarting;
-
-    /* TinyDB instance */
-    private TinyDB tinyDB;
-
-    int id;
-
     // Camera Permissions
     private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static String TAG = "QRCodeActivity";
     private static String[] PERMISSIONS_CAMERA = {
             Manifest.permission.CAMERA
     };
+    int id;
+    ProgressDialog progressDialog;
+    private ZXingScannerView mScannerView;
+    /* Pin pinDialog */
+    private Dialog pinDialog;
+    /* Internal attribute used to keep track of the activity state */
+    private boolean mRestarting;
+    /* TinyDB instance */
+    private TinyDB tinyDB;
 
     public static void verifyCameraPermissions(Activity activity) {
         // Check if we have write permission
@@ -64,7 +60,7 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
         verifyCameraPermissions(this);
 
         Intent intent = getIntent();
-        id = intent.getIntExtra("id",-1);
+        id = intent.getIntExtra("id", -1);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
 
@@ -86,20 +82,17 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
-    ProgressDialog progressDialog;
-
     @Override
-    public void handleResult(final Result rawResult)
-    {
-        showDialog("","");
+    public void handleResult(final Result rawResult) {
+        showDialog("", "");
 
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
                 mScannerView.stopCamera();
-                if (id==0) {
+                if (id == 0) {
                     finishWithResult(rawResult.toString());
-                } else if(id==1) {
+                } else if (id == 1) {
                     StartWithfinishWithResult(rawResult.toString());
                 }
             }
@@ -128,20 +121,21 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
 
     private void finishWithResult(String parseddata) {
         Bundle conData = new Bundle();
-        conData.putSerializable("sResult",parseddata);
+        conData.putSerializable("sResult", parseddata);
         Intent intent = new Intent();
         intent.putExtras(conData);
         setResult(RESULT_OK, intent);
         finish();
     }
+
     private void StartWithfinishWithResult(String parseddata) {
         Log.d(TAG, "StartWithfinishWithResult");
-        Log.d(TAG, "parsed data: "+parseddata);
+        Log.d(TAG, "parsed data: " + parseddata);
         Bundle conData = new Bundle();
-        conData.putSerializable("sResult",parseddata);
+        conData.putSerializable("sResult", parseddata);
         Intent intent = new Intent(QRCodeActivity.this, SendScreen.class);
         intent.putExtras(conData);
-        intent.putExtra("id",5);
+        intent.putExtra("id", 5);
         startActivity(intent);
         finish();
     }

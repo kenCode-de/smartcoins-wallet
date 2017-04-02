@@ -3,6 +3,7 @@ package de.bitshares_munich.smartcoinswallet;
 /**
  * Created by Syed Muhammad Muzzammil on 5/9/16.
  */
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -28,7 +29,7 @@ public class popUpwindow {
     Context context;
     TextView textView;
 
-    public popUpwindow(Context c,TextView textview) {
+    public popUpwindow(Context c, TextView textview) {
         context = c;
         ArrayList<String> optionsList = new ArrayList<String>();
         optionsList.add("AUD");
@@ -50,10 +51,10 @@ public class popUpwindow {
         optionsList = assetsSymbols.updatedList(optionsList);
 
         ArrayList<String> optionsNewList = new ArrayList<String>();
-        int count = 0 ;
-        for(String s : optionsList){
+        int count = 0;
+        for (String s : optionsList) {
             count++;
-            optionsNewList.add(s+"::"+count);
+            optionsNewList.add(s + "::" + count);
         }
 
         textView = textview;
@@ -64,7 +65,8 @@ public class popUpwindow {
         popupWindow = popupWindow();
 //add
     }
-    public popUpwindow(Context c,TextView textview,List<String> optionsList) {
+
+    public popUpwindow(Context c, TextView textview, List<String> optionsList) {
         context = c;
         textView = textview;
         popUpContents = new String[optionsList.size()];
@@ -132,6 +134,9 @@ public class popUpwindow {
         return adapter;
     }
 
+    public void show(View v) {
+        popupWindow.showAsDropDown(v, -5, 0);
+    }
 
     public class DropdownOnItemClickListener implements AdapterView.OnItemClickListener {
 
@@ -153,9 +158,6 @@ public class popUpwindow {
             String selectedItemText = ((TextView) v).getText().toString();
             textView.setText(selectedItemText);
         }
-    }
-    public void show(View v){
-        popupWindow.showAsDropDown(v, -5, 0);
     }
 
 

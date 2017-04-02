@@ -47,11 +47,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import de.bitshares_munich.interfaces.GravatarDelegate;
-import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.interfaces.GravatarDelegate;
+import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.EquivalentFiatStorage;
 import de.bitshares_munich.models.Gravatar;
@@ -70,86 +69,65 @@ import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 public class eReceipt extends BaseActivity implements IBalancesDelegate, GravatarDelegate {
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     public final String TAG = this.getClass().getName();
-
     @Bind(R.id.ivOtherGravatar)
     ImageView ivOtherGravatar;
-
     @Bind(R.id.tvOtherCompany)
     TextView tvOtherCompany;
-
     @Bind(R.id.tvTime)
     TextView tvTime;
-
     @Bind(R.id.tvOtherName)
     TextView tvOtherName;
-
     @Bind(R.id.tvUserName)
     TextView tvUserName;
-
     @Bind(R.id.tvUserId)
     TextView tvUserId;
-
     @Bind(R.id.memo)
     TextView memo;
-
     @Bind(R.id.tvAmount)
     TextView tvAmount;
-
     @Bind(R.id.tvAddress)
     TextView tvAddress;
-
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
-
     @Bind(R.id.tvBlockNumber)
     TextView tvBlockNumber;
-
     @Bind(R.id.tvTrxInBlock)
     TextView tvTrxInBlock;
-
     @Bind(R.id.tvFee)
     TextView tvFee;
-
     @Bind(R.id.tvFeeEquivalent)
     TextView tvFeeEquivalent;
-
     @Bind(R.id.tvPaymentAmount)
     TextView tvPaymentAmount;
-
     @Bind(R.id.tvPaymentEquivalent)
     TextView tvPaymentEquivalent;
-
     @Bind(R.id.tvTotalEquivalent)
     TextView tvTotalEquivalent;
-
     @Bind(R.id.tvTotal)
     TextView tvTotal;
-
     @Bind(R.id.tvOtherStatus)
     TextView tvOtherStatus;
-
     @Bind(R.id.tvUserStatus)
     TextView tvUserStatus;
-
     @Bind(R.id.ivImageTag)
     ImageView ivImageTag;
-
     @Bind(R.id.buttonSend)
     ImageButton buttonSend;
-
     @Bind(R.id.scrollView)
     ScrollView scrollView;
-
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
-
     @Bind(R.id.llall)
     LinearLayout llall;
-
     int assets_id_in_work;
     int assets_id_total_size;
-
     HashMap<String, String> Freemap = new HashMap<>();
     HashMap<String, String> Amountmap = new HashMap<>();
     List<String> Assetid = new ArrayList<>();
@@ -167,29 +145,53 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
     ProgressDialog progressDialog;
     boolean loadComplete = false;
     boolean btnPress = false;
-
+    /* Transaction id */
+    String transactionId = "";
+    String finalFiatCurrency;
     /* Reference to the class containing all blockchain details about this transaction */
     private HistoricalTransferEntry historicalTransferEntry;
-
-
     /* Legacy persistent storage */
     private TinyDB tinyDB;
-
     /* Database interface reference */
     private SCWallDatabase database;
-
     /* Current user */
     private UserAccount user;
 
-    /* Transaction id */
-    String transactionId = "";
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
 
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = 90;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -410,55 +412,6 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
         Gravatar.getInstance(instance()).fetch(email);
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            if (result == null) bmImage.setVisibility(View.GONE);
-            else {
-                bmImage.setImageBitmap(result);
-            }
-        }
-    }
-
-    String finalFiatCurrency;
-
-
-    private class EquivalentComponents {
-        int id;
-        float Amount;
-        String assetSymbol;
-        float fiatAmount;
-        Boolean available;
-        String fiatAssetSymbol;
-
-        float getAmount() {
-            return this.Amount;
-        }
-
-        String getAssetSymbol() {
-            return this.assetSymbol;
-        }
-    }
-
-
     private void getEquivalentComponents(final ArrayList<EquivalentComponents> equivalentComponentses) {
 
         String fiatCurrency = Helper.getFadeCurrency(this);
@@ -578,46 +531,10 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
                 .execute(emailGravatarUrl);
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = 90;
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
-    }
-
     void setWeight(TextView textView) {
         ViewGroup.LayoutParams params = textView.getLayoutParams();
         params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         textView.setLayoutParams(params);
-    }
-
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 
     private void generatePdf() {
@@ -716,5 +633,50 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
             }
         });
         t.start();
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (result == null) bmImage.setVisibility(View.GONE);
+            else {
+                bmImage.setImageBitmap(result);
+            }
+        }
+    }
+
+    private class EquivalentComponents {
+        int id;
+        float Amount;
+        String assetSymbol;
+        float fiatAmount;
+        Boolean available;
+        String fiatAssetSymbol;
+
+        float getAmount() {
+            return this.Amount;
+        }
+
+        String getAssetSymbol() {
+            return this.assetSymbol;
+        }
     }
 }

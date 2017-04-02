@@ -17,12 +17,34 @@ import de.bitshares_munich.models.MerchantEmail;
  * Created by afnan on 10/11/16.
  */
 public class MerchantEmailActivity implements BackupBinDelegate {
+    static public BackupBinDelegate backupBinDelegate;
     Activity context;
     FileChooserDialog dialog;
     ProgressDialog progressDialog;
-    static public BackupBinDelegate backupBinDelegate;
+    String msg;
+    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
+        public void onFileSelected(Dialog source, final File file) {
+            source.hide();
 
-    public MerchantEmailActivity(Activity _context){
+            showDialog();
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    MerchantEmail merchantEmail = new MerchantEmail(context);
+                    merchantEmail.readFromFile(file.getAbsolutePath());
+                }
+            });
+            thread.start();
+//            onSuccess(file.getAbsolutePath(),file.getName());
+        }
+
+        public void onFileSelected(Dialog source, File folder, String name) {
+            source.hide();
+        }
+    };
+
+    public MerchantEmailActivity(Activity _context) {
         context = _context;
         progressDialog = new ProgressDialog(context);
         backupBinDelegate = this;
@@ -66,28 +88,6 @@ public class MerchantEmailActivity implements BackupBinDelegate {
 
     }
 
-    private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
-        public void onFileSelected(Dialog source, final File file) {
-            source.hide();
-
-            showDialog();
-
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    MerchantEmail merchantEmail = new MerchantEmail(context);
-                    merchantEmail.readFromFile(file.getAbsolutePath());
-                }
-            });
-            thread.start();
-//            onSuccess(file.getAbsolutePath(),file.getName());
-        }
-
-        public void onFileSelected(Dialog source, File folder, String name) {
-            source.hide();
-        }
-    };
-
     private void hideDialog() {
 
         context.runOnUiThread(new Runnable() {
@@ -107,28 +107,26 @@ public class MerchantEmailActivity implements BackupBinDelegate {
             @Override
             public void run() {
                 if (progressDialog != null) {
-            if (!progressDialog.isShowing()) {
-                progressDialog.show();
-            }
+                    if (!progressDialog.isShowing()) {
+                        progressDialog.show();
+                    }
                 }
             }
         });
     }
 
-    String msg;
-
     @Override
     public void backupComplete(boolean success) {
         hideDialog();
-        if(success) {
+        if (success) {
             msg = context.getResources().getString(R.string.merchant_email_has_been_imported_successfully);
-        }else{
+        } else {
             msg = context.getResources().getString(R.string.please_import_the_correct_file);
         }
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, msg , Toast.LENGTH_LONG).show();
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
             }
         });
     }

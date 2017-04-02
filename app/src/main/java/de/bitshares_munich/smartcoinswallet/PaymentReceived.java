@@ -34,7 +34,7 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
  */
-public class PaymentReceived extends BaseActivity implements ITransactionObject,IAccountObject,IAssetObject {
+public class PaymentReceived extends BaseActivity implements ITransactionObject, IAccountObject, IAssetObject {
     private final String TAG = this.getClass().getName();
     String receiver_id;
     String sender_id;
@@ -62,8 +62,8 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
 
     Locale locale;
     String language;
-    String block="";
-    String trx="";
+    String block = "";
+    String trx = "";
     webSocketCallHelper myWebSocketHelper;
 
     @Override
@@ -90,49 +90,51 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
         getAccountObject();
 
 
-
-
     }
+
     @OnClick(R.id.backbutton)
-    void onBackButtonPressed(){
+    void onBackButtonPressed() {
         super.onBackPressed();
     }
+
     @OnClick(R.id.btnOk)
-    void onOkPressed(){
+    void onOkPressed() {
 
         finish();
     }
-    public void getAccountObject()
-    {
+
+    public void getAccountObject() {
         String params = "{\"id\":13,\"method\":\"call\",\"params\":[";
-        String params2 = ",\"get_objects\",[[\""+sender_id+"\",\""+receiver_id+"\"],0]]}";
-        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+        String params2 = ",\"get_objects\",[[\"" + sender_id + "\",\"" + receiver_id + "\"],0]]}";
+        myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.database);
 
     }
-    public void getTransactionObject(String block, String trx)
-    {
+
+    public void getTransactionObject(String block, String trx) {
         String params = "{\"id\":12,\"method\":\"call\",\"params\":[";
-        String params2 = ",\"get_transaction\",[\""+block+"\","+trx+"]]}";
-        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+        String params2 = ",\"get_transaction\",[\"" + block + "\"," + trx + "]]}";
+        myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.database);
     }
-    public void getAssetObject(String amountAsset, String feeAsset)
-    {
+
+    public void getAssetObject(String amountAsset, String feeAsset) {
         String params = "{\"id\":14,\"method\":\"call\",\"params\":[";
-        String params2 = ",\"get_objects\",[[\""+amountAsset+"\",\""+feeAsset+"\"],0]]}";
-        myWebSocketHelper.make_websocket_call(params,params2, webSocketCallHelper.api_identifier.database);
+        String params2 = ",\"get_objects\",[[\"" + amountAsset + "\",\"" + feeAsset + "\"],0]]}";
+        myWebSocketHelper.make_websocket_call(params, params2, webSocketCallHelper.api_identifier.database);
     }
+
     public void playSound() {
         try {
             AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
             MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
-            if(mediaPlayer != null)
-            mediaPlayer.start();
+            if (mediaPlayer != null)
+                mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
-    public void accountObjectCallback(JSONObject jsonObject){
+    public void accountObjectCallback(JSONObject jsonObject) {
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray resultArr = (JSONArray) jsonObject.get("result");
@@ -141,9 +143,9 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            if (resultObj.get("id").equals(sender_id)){
+                            if (resultObj.get("id").equals(sender_id)) {
                                 tvFrom.setText(resultObj.get("name").toString());
-                            }else if (resultObj.get("id").equals(receiver_id)){
+                            } else if (resultObj.get("id").equals(receiver_id)) {
                                 tvTo.setText(resultObj.get("name").toString());
                             }
                         } catch (JSONException e) {
@@ -153,15 +155,15 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
                 });
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        getTransactionObject(block,trx);
+        getTransactionObject(block, trx);
     }
 
     @Override
-    public void checkTransactionObject(JSONObject jsonObject){
+    public void checkTransactionObject(JSONObject jsonObject) {
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONObject result = (JSONObject) jsonObject.get("result");
@@ -170,13 +172,13 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
             JSONObject resultObj = (JSONObject) operationsInner.get(1);
             amountObj = (JSONObject) resultObj.get("amount");
             feeObj = (JSONObject) resultObj.get("fee");
-            getAssetObject(amountObj.get("asset_id").toString(),feeObj.get("asset_id").toString());
-            if (resultObj.has("memo")){
-                decodeMemo(resultObj.get("memo").toString(),resultObj.get("to").toString());
-            }else {
+            getAssetObject(amountObj.get("asset_id").toString(), feeObj.get("asset_id").toString());
+            if (resultObj.has("memo")) {
+                decodeMemo(resultObj.get("memo").toString(), resultObj.get("to").toString());
+            } else {
                 llMemo.setVisibility(View.GONE);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -185,13 +187,13 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
         String privateKey = "";
         TinyDB tinyDB = new TinyDB(getApplicationContext());
         ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        for (int i=0; i<accountDetails.size(); i++){
+        for (int i = 0; i < accountDetails.size(); i++) {
             AccountDetails accountDetail = accountDetails.get(i);
-            if (accountDetail.account_id.equals(accountId)){
+            if (accountDetail.account_id.equals(accountId)) {
                 try {
                     privateKey = Crypt.getInstance().decrypt_string(accountDetail.wif_key);
                 } catch (Exception e) {
-                    Log.e(TAG, "Exception while trying to get private key from shared pref. Msg: "+e.getMessage());
+                    Log.e(TAG, "Exception while trying to get private key from shared pref. Msg: " + e.getMessage());
                     return;
                 }
             }
@@ -211,7 +213,7 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
     }
 
     @Override
-    public void assetObjectCallback(JSONObject jsonObject){
+    public void assetObjectCallback(JSONObject jsonObject) {
         myWebSocketHelper.cleanUpTransactionsHandler();
         try {
             JSONArray resultArr = (JSONArray) jsonObject.get("result");
@@ -220,18 +222,18 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
                 runOnUiThread(new Runnable() {
                     public void run() {
                         try {
-                            if (resultObj.get("id").equals(amountObj.get("asset_id").toString())){
+                            if (resultObj.get("id").equals(amountObj.get("asset_id").toString())) {
                                 Double amount = Double.parseDouble(amountObj.get("amount").toString());
                                 amount = amount / Math.pow(10, Integer.parseInt(resultObj.get("precision").toString()));
 
                                 tvMainAmount.setText(Helper.setLocaleNumberFormat(locale, amount));
                                 tvMainAsset.setText(resultObj.get("symbol").toString());
-                                tvAmount.setText(String.format("%.4f",amount)+resultObj.get("symbol").toString());
+                                tvAmount.setText(String.format("%.4f", amount) + resultObj.get("symbol").toString());
                             }
-                            if (resultObj.get("id").equals(feeObj.get("asset_id").toString())){
+                            if (resultObj.get("id").equals(feeObj.get("asset_id").toString())) {
                                 Double fee = Double.parseDouble(feeObj.get("amount").toString());
                                 fee = fee / Math.pow(10, Integer.parseInt(resultObj.get("precision").toString()));
-                                tvFee.setText(String.format("%.4f",fee)+resultObj.get("symbol").toString());
+                                tvFee.setText(String.format("%.4f", fee) + resultObj.get("symbol").toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -240,7 +242,7 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
                 });
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

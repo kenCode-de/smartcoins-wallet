@@ -169,7 +169,7 @@ public class BrainkeyActivity extends BaseActivity {
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
             final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
-            Log.d(TAG,String.format("Brain key: '%s'", bKey.getBrainKey()));
+            Log.d(TAG, String.format("Brain key: '%s'", bKey.getBrainKey()));
             Log.d(TAG, String.format("Brainkey would generate address: %s", address.toString()));
 
             new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
@@ -180,17 +180,17 @@ public class BrainkeyActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(resp.size() > 0){
+                            if (resp.size() > 0) {
                                 List<UserAccount> accounts = resp.get(0);
-                                if(accounts.size() > 0){
-                                    for(UserAccount account : accounts) {
+                                if (accounts.size() > 0) {
+                                    for (UserAccount account : accounts) {
                                         getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, brainKey, pinCode);
                                     }
-                                }else{
+                                } else {
                                     hideDialog();
                                     Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                                 }
-                            }else{
+                            } else {
                                 hideDialog();
                                 Toast.makeText(getApplicationContext(), R.string.error_invalid_account, Toast.LENGTH_SHORT).show();
                             }
@@ -222,7 +222,7 @@ public class BrainkeyActivity extends BaseActivity {
 
     }
 
-    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode){
+    private void getAccountById(String accountId, final String privaKey, final String pubKey, final String brainkey, final String pinCode) {
         try {
             new WebsocketWorkerThread((new GetAccounts(accountId, new WitnessResponseListener() {
                 @Override
@@ -264,7 +264,7 @@ public class BrainkeyActivity extends BaseActivity {
                     hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
-            })),0).start();
+            })), 0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
             hideDialog();
@@ -299,9 +299,9 @@ public class BrainkeyActivity extends BaseActivity {
             @Override
             public void run() {
                 if (Application.isConnected()) {
-                        ivSocketConnected.setImageResource(R.drawable.icon_connecting);
-                        tvBlockNumberHead.setText(Application.blockHead);
-                        ivSocketConnected.clearAnimation();
+                    ivSocketConnected.setImageResource(R.drawable.icon_connecting);
+                    tvBlockNumberHead.setText(Application.blockHead);
+                    ivSocketConnected.clearAnimation();
                 } else {
                     ivSocketConnected.setImageResource(R.drawable.icon_disconnecting);
                     Animation myFadeInAnimation = AnimationUtils.loadAnimation(myActivity.getApplicationContext(), R.anim.flash);
@@ -319,16 +319,13 @@ public class BrainkeyActivity extends BaseActivity {
         Application app = (Application) getApplicationContext();
         app.setLock(false);
         BinHelper myBinHelper = new BinHelper();
-        myBinHelper.addWallet(accountDetail, getApplicationContext(),this);
+        myBinHelper.addWallet(accountDetail, getApplicationContext(), this);
 
 
         Intent intent;
-        if ( myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1 )
-        {
+        if (myBinHelper.numberOfWalletAccounts(getApplicationContext()) <= 1) {
             intent = new Intent(getApplicationContext(), BackupBrainkeyActivity.class);
-        }
-        else
-        {
+        } else {
             intent = new Intent(getApplicationContext(), TabActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

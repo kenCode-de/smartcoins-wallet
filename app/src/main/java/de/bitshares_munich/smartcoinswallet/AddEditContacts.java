@@ -10,7 +10,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -40,9 +39,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.interfaces.ContactsDelegate;
 import de.bitshares_munich.interfaces.IAccount;
-import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
@@ -101,6 +100,55 @@ public class AddEditContacts extends BaseActivity implements IAccount {
 
     ContactsDelegate contactsDelegate;
     webSocketCallHelper myWebSocketHelper;
+    CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            if (!Accountname.getText().toString().equals(Accountname.getText().toString().toLowerCase())) {
+                Accountname.setText(Accountname.getText().toString().toLowerCase());
+                Accountname.setSelection(Accountname.getText().toString().length());
+            }
+        }
+    };
+    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 1000) {
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+            createBitShareAN(false);
+        }
+    };
+
+    public static int getColorWrapper(Context context, int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(id);
+        } else {
+            return context.getResources().getColor(id);
+        }
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = 20;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -387,26 +435,6 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         finish();
     }
 
-    CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            if (!Accountname.getText().toString().equals(Accountname.getText().toString().toLowerCase())) {
-                Accountname.setText(Accountname.getText().toString().toLowerCase());
-                Accountname.setSelection(Accountname.getText().toString().length());
-            }
-        }
-    };
-    CountDownTimer myAccountNameValidationTimer = new CountDownTimer(3000, 1000) {
-        public void onTick(long millisUntilFinished) {
-        }
-
-        public void onFinish() {
-            createBitShareAN(false);
-        }
-    };
-
     public void createBitShareAN(boolean focused) {
         if (!focused) {
             if (Accountname.getText().length() > 2) {
@@ -487,11 +515,15 @@ public class AddEditContacts extends BaseActivity implements IAccount {
         }
     }
 
-    public static int getColorWrapper(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return context.getColor(id);
-        } else {
-            return context.getResources().getColor(id);
+    void setGravator(String email, ImageView imageEmail) {
+        String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
+        new DownloadImageTask(imageEmail)
+                .execute(emailGravatarUrl);
+    }
+
+    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem> {
+        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
+            return left.name.toLowerCase().compareTo(right.name.toLowerCase());
         }
     }
 
@@ -525,39 +557,5 @@ public class AddEditContacts extends BaseActivity implements IAccount {
                 bmImage.setImageBitmap(corner);
             }
         }
-    }
-
-    void setGravator(String email, ImageView imageEmail) {
-        String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
-        new DownloadImageTask(imageEmail)
-                .execute(emailGravatarUrl);
-    }
-
-    public static class ContactNameComparator implements Comparator<ContactListAdapter.ListviewContactItem> {
-        public int compare(ContactListAdapter.ListviewContactItem left, ContactListAdapter.ListviewContactItem right) {
-            return left.name.toLowerCase().compareTo(right.name.toLowerCase());
-        }
-    }
-
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundPx = 20;
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
     }
 }

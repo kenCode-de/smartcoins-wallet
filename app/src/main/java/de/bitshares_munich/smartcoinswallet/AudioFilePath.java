@@ -18,51 +18,48 @@ public class AudioFilePath {
 
     Context context;
 
-    public AudioFilePath(Context _context){
+    public AudioFilePath(Context _context) {
         context = _context;
     }
 
-    public void storeAudioFilePath(String path){
+    public void storeAudioFilePath(String path) {
         Helper.storeStringSharePref(context, context.getString(R.string.audio_file_path), path);
     }
 
-    public String fetchAudioFilePathFromPref(){
+    public String fetchAudioFilePathFromPref() {
         return Helper.fetchStringSharePref(context, context.getString(R.string.audio_file_path));
     }
 
-    public void storeAudioFileName(String name){
+    public void storeAudioFileName(String name) {
         Helper.storeStringSharePref(context, context.getString(R.string.audio_file_name), name);
     }
 
-    public String fetchAudioFileNameFromPref(){
+    public String fetchAudioFileNameFromPref() {
         return Helper.fetchStringSharePref(context, context.getString(R.string.audio_file_name));
     }
 
-    public void storeAudioEnabled(Boolean enabled){
+    public void storeAudioEnabled(Boolean enabled) {
         Helper.storeBoolianSharePref(context, context.getString(R.string.audio_file_mute), enabled);
     }
 
-    public Boolean fetchAudioEnabled(){
+    public Boolean fetchAudioEnabled() {
         return Helper.fetchBoolianSharePref(context, context.getString(R.string.audio_file_mute));
     }
 
-    public String fetchAudioFile(){
+    public String fetchAudioFile() {
         String path = fetchAudioFilePathFromPref();
         File audioFile = new File(path);
-        if(audioFile.exists()){
+        if (audioFile.exists()) {
             return path;
-        }
-
-        else
-        {
+        } else {
             return "";
         }
     }
 
-    public MediaPlayer fetchMediaPlayer(){
-        if(fetchAudioEnabled()){
+    public MediaPlayer fetchMediaPlayer() {
+        if (fetchAudioEnabled()) {
             return null;
-        }else {
+        } else {
             String audioFilePath = fetchAudioFile();
             MediaPlayer mediaPlayer;
             if (audioFilePath.isEmpty()) mediaPlayer = MediaPlayer.create(context, R.raw.woohoo);
@@ -71,7 +68,7 @@ public class AudioFilePath {
         }
     }
 
-    Boolean defaultAudioFilePath(){
+    Boolean defaultAudioFilePath() {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator + context.getResources().getString(R.string.folder_name));
         File file2 = new File(folder.getAbsolutePath(), "Woohoo.wav");
         if (file2.exists()) {
@@ -80,21 +77,21 @@ public class AudioFilePath {
         }
         return false;
     }
-        public String userAudioFileNameIfExist(){
+
+    public String userAudioFileNameIfExist() {
         String userFileName = fetchAudioFileNameFromPref();
-        if(userFileName.isEmpty()){
+        if (userFileName.isEmpty()) {
             return "Woohoo.wav";
-        }
-        else {
+        } else {
             return userFileName;
         }
     }
 
-    void audioService(Boolean enabled){
+    void audioService(Boolean enabled) {
 
-        if(enabled){
+        if (enabled) {
             BalancesFragment.balanceActivity.stopService(new Intent(BalancesFragment.balanceActivity, MediaService.class));
-        }else {
+        } else {
             BalancesFragment.balanceActivity.startService(new Intent(BalancesFragment.balanceActivity, MediaService.class));
         }
     }

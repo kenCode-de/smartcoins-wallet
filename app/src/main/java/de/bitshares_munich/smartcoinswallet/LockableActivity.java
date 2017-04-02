@@ -138,9 +138,9 @@ public abstract class LockableActivity extends AppCompatActivity {
         imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 
         if (imm.isAcceptingText()) {
-            Log.d(TAG,"Software Keyboard was shown");
+            Log.d(TAG, "Software Keyboard was shown");
         } else {
-            Log.d(TAG,"Software Keyboard was not shown.");
+            Log.d(TAG, "Software Keyboard was not shown.");
             //Sometimes the android doesn't show the keyboard at start up. Scheduling a new open solved for all tested cases
             if (view.getVisibility() == View.VISIBLE) {
                 Log.d(TAG, "View is still visible. Scheduling a new input opening attempt...");
@@ -165,12 +165,12 @@ public abstract class LockableActivity extends AppCompatActivity {
         return accountDetails.size() > 0;
     }
 
-    public void setLockListener(LockListener listener) {
-        this.mLockListener = listener;
-    }
-
     public LockListener getLockListener() {
         return this.mLockListener;
+    }
+
+    public void setLockListener(LockListener listener) {
+        this.mLockListener = listener;
     }
 
 

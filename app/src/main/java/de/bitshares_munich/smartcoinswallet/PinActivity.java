@@ -62,8 +62,7 @@ public class PinActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), R.string.old_pin_number_warning, Toast.LENGTH_SHORT).show();
         } else if (etPin.getText().length() == 0) {
             Toast.makeText(getApplicationContext(), R.string.please_enter_6_digit_pin, Toast.LENGTH_SHORT).show();
-        }
-        else if (etPin.getText().length() < 6) {
+        } else if (etPin.getText().length() < 6) {
             Toast.makeText(getApplicationContext(), R.string.pin_number_warning, Toast.LENGTH_SHORT).show();
         } else if (!etPinConfirmation.getText().toString().equals(etPin.getText().toString())) {
             Toast.makeText(getApplicationContext(), R.string.mismatch_pin, Toast.LENGTH_SHORT).show();

@@ -12,7 +12,7 @@ public class UpdateAccountTask {
     private boolean updateOwner;
     private boolean updateMemo;
 
-    UpdateAccountTask(UserAccount account, BrainKey brainKey){
+    UpdateAccountTask(UserAccount account, BrainKey brainKey) {
         this.account = account;
         this.brainKey = brainKey;
     }
@@ -33,13 +33,15 @@ public class UpdateAccountTask {
         this.updateOwner = updateOwner;
     }
 
-    public boolean isUpdateMemo(){ return updateMemo; }
+    public boolean isUpdateMemo() {
+        return updateMemo;
+    }
 
-    public void setUpdateMemo(boolean updateMemo){
+    public void setUpdateMemo(boolean updateMemo) {
         this.updateMemo = updateMemo;
     }
 
-    public BrainKey getBrainKey(){
+    public BrainKey getBrainKey() {
         return brainKey;
     }
 }

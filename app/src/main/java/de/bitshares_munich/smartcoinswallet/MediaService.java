@@ -19,25 +19,25 @@ public class MediaService extends Service {
         // TODO Auto-generated method stub
         return null;
     }
-    public void onCreate()
-    {
+
+    public void onCreate() {
         AudioFilePath audioFilePath = new AudioFilePath(getApplicationContext());
         mp = audioFilePath.fetchMediaPlayer();
-            mp.setLooping(false);
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
-                    BalancesFragment.iSound.soundFinish();
-                }
-            });
+        mp.setLooping(false);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+                BalancesFragment.iSound.soundFinish();
+            }
+        });
     }
-    public void onDestroy()
-    {
+
+    public void onDestroy() {
 
     }
 
-    public void onStart(Intent intent,int startid){
+    public void onStart(Intent intent, int startid) {
         mp.start();
     }
 }
