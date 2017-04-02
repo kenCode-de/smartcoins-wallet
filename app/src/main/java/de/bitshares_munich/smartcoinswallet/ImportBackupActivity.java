@@ -183,7 +183,7 @@ public class ImportBackupActivity extends BaseActivity {
             for (int i = 0; i < bytes.size(); i++) {
                 byteArray[i] = bytes.get(i).byteValue();
             }
-            final String brainKey = FileBin.getBrainkeyFromByte(byteArray, pin,getApplicationContext());
+            String brainKey = FileBin.getBrainkeyFromByte(byteArray, pin,getApplicationContext());
             //Get the WIF directly from the informed private key inside the bin backup file
             WalletBackup walletBackup = FileBin.deserializeWalletBackup(byteArray, existingPassword);
             String wif = ECKey.fromPrivate(walletBackup.getPrivateKeys()[0].
