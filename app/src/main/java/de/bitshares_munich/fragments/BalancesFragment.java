@@ -560,7 +560,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
             Address myAddress = new Address(publicKey.getKey());
 
-            int xs = 1;
             // Decrypting memo messages
             for (HistoricalTransfer historicalTransfer : resp.result) {
                 HistoricalTransferEntry entry = new HistoricalTransferEntry();
@@ -1007,10 +1006,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         // Loading transfers from database
         updateTableView(true);
-
-
-
-        //loadBalancesFromSharedPref();
 
     }
 

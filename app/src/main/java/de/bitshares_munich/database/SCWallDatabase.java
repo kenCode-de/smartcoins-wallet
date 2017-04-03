@@ -43,7 +43,7 @@ public class SCWallDatabase {
     /**
      * The default number of transactions to load in the transaction list
      */
-    public static final int DEFAULT_TRANSACTION_BATCH_SIZE = 50;
+    public static final int DEFAULT_TRANSACTION_BATCH_SIZE = 5;
     private String TAG = this.getClass().getName();
     private SCWallSQLiteOpenHelper dbHelper;
     private SQLiteDatabase db;
