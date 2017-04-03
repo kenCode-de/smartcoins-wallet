@@ -132,7 +132,7 @@ public class BrainkeyActivity extends BaseActivity {
             if (arr.length >= 24 && arr.length <= 28) { //Importing brainkey (first 12 to 16 words) and master seed (last 12 words)
                 SCWallDatabase db = new SCWallDatabase(getApplicationContext());
 
-                if (checkBrainKeyExist(brainKeyText)) {
+                if (!checkBrainKeyExist(brainKeyText)) {
                 /*Extracting the brainkey*/
                     String brainkeyString = "";
                     for (int i = 0; i < arr.length - 12; i++) {
