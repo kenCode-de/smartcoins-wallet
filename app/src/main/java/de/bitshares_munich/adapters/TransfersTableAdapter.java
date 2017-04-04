@@ -46,15 +46,19 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         View renderedView = null;
         HistoricalTransferEntry transferEntry = getRowData(rowIndex);
         switch (columnIndex) {
+            //Datetime
             case 0:
                 renderedView = renderDateView(transferEntry);
                 break;
+            //Image send/receive drawable
             case 1:
-                renderedView = renderSendRecieve(transferEntry);
+                renderedView = renderSendReceive(transferEntry);
                 break;
+            //Transfer details
             case 2:
                 renderedView = renderDetails(transferEntry);
                 break;
+            //Amount
             case 3:
                 renderedView = renderAmount(transferEntry);
                 break;
@@ -98,10 +102,10 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         return v;
     }
 
-    private View renderSendRecieve(HistoricalTransferEntry historicalTransfer) {
+    private View renderSendReceive(HistoricalTransferEntry historicalTransfer) {
         TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater layoutInflater = getLayoutInflater();
-        View v = layoutInflater.inflate(R.layout.transactionssendrecieve, null);
+        View v = layoutInflater.inflate(R.layout.transactionssendreceive, null);
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
         if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
             imgView.setImageResource(R.drawable.send);
@@ -119,11 +123,14 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         String toMessage = getContext().getText(R.string.to_capital) + ": " + operation.getTo().getAccountName();
         TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
+        Log.d(TAG,"toMessage: " + toMessage);
 
         String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
         fromUser.setText(fromMessage);
+        Log.d(TAG,"fromMessage: " + fromMessage);
 
+        Log.d(TAG,"memo: " + operation.getMemo().getPlaintextMessage());
         if (!operation.getMemo().getPlaintextMessage().equals("")) {
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
