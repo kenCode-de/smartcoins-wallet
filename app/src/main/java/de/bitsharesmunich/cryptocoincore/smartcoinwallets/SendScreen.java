@@ -196,7 +196,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     Spinner spinnerFrom;
 
     @Bind(R.id.btnSend)
-    LinearLayout btnSend;
+    Button btnSend;
 
     //@Bind(R.id. sendicon)
     //ImageView sendicon;
