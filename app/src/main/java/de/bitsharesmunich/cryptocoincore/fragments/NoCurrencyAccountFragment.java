@@ -141,7 +141,7 @@ public class NoCurrencyAccountFragment extends Fragment {
                                     ClipData clip = ClipData.newPlainText("label", etBrainKey.getText().toString());
                                     clipboard.setPrimaryClip(clip);
                                     dialog.cancel();
-                                    ((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
+                                    //((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
                                 }
                             });
                             dialog.setCancelable(false);
@@ -153,7 +153,7 @@ public class NoCurrencyAccountFragment extends Fragment {
                     } else {
                         BitcoinAccount bitcoinAccount = new BitcoinAccount(seeds.get(0), "BTC Account");
                         db.putGeneralCoinAccount(bitcoinAccount);
-                        ((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
+                        //((ViewPagerAdapter) pager.getAdapter()).changeBitcoinFragment();
                     }
                 }
 

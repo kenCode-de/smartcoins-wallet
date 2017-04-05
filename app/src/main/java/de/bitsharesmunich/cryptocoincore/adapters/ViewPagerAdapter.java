@@ -24,8 +24,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     private Context mContext;
     private FragmentManager mFragmentManager;
-    private Fragment fragmentAtBitcoin;
-    private Fragment fragmentAtBitcoinContacts;
+    //private Fragment fragmentAtBitcoin;
+    //private Fragment fragmentAtBitcoinContacts;
 
     public ViewPagerAdapter(Context context, FragmentManager manager) {
         super(manager);
@@ -42,29 +42,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return GeneralCoinBalancesFragment.newInstance(Coin.BITSHARE);
             case 1:
-                db = new SCWallDatabase(mContext);
-                account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
-
-                if (account != null){
-                    this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
-                } else {
-                    this.fragmentAtBitcoin = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
-                }
-                return this.fragmentAtBitcoin;
-                //return GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
-            case 2:
                 return GeneralCoinContactsFragment.newInstance(Coin.BITSHARE);
-            case 3:
-                db = new SCWallDatabase(mContext);
-                account = db.getGeneralCoinAccount(Coin.BITCOIN.name());
-
-                if (account != null){
-                    this.fragmentAtBitcoinContacts = GeneralCoinContactsFragment.newInstance(Coin.BITCOIN);
-                } else {
-                    this.fragmentAtBitcoinContacts = NoCurrencyAccountFragment.newInstance(Coin.BITCOIN);
-                }
-                return this.fragmentAtBitcoinContacts;
-            //return GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
             default:
                 return null;
         }
@@ -76,17 +54,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mContext.getResources().getString(R.string.balances);
             case 1:
-                return mContext.getResources().getString(R.string.bitcoin);
-            case 2:
                 return mContext.getResources().getString(R.string.contacts);
-            case 3:
-                return mContext.getResources().getString(R.string.bitcoin)+" "+mContext.getResources().getString(R.string.contacts);
         }
         return null;
     }
 
 
-    @Override
+    /*@Override
     public int getItemPosition(Object object)
     {
         if (object instanceof NoCurrencyAccountFragment && this.fragmentAtBitcoin instanceof GeneralCoinBalancesFragment) {
@@ -94,12 +68,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
 
         return POSITION_UNCHANGED;
-    }
+    }*/
 
 
     @Override
     public int getCount() {
-        return 4;
+        return 2;
     }
 
     @Override
@@ -109,13 +83,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return fragment;
     }
 
-    public void changeBitcoinFragment(){
+    /*public void changeBitcoinFragment(){
         mFragmentManager.beginTransaction().remove(this.fragmentAtBitcoin).commit();
         mFragmentManager.beginTransaction().remove(this.fragmentAtBitcoinContacts).commit();
         this.fragmentAtBitcoin = GeneralCoinBalancesFragment.newInstance(Coin.BITCOIN);
         this.fragmentAtBitcoinContacts = GeneralCoinContactsFragment.newInstance(Coin.BITCOIN);
         notifyDataSetChanged();
-    }
+    }*/
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
