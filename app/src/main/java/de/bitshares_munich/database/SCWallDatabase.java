@@ -226,8 +226,10 @@ public class SCWallDatabase {
                     }
                     assetCursor.close();
                 } else {
-                    cursor.moveToNext();
-                    continue;
+                    //cursor.moveToNext();
+                    //continue;
+                    Date date = new Date(transferEntry.getTimestamp() * 1000);
+                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
                 }
 
                 // Adding historical transfer entry to array

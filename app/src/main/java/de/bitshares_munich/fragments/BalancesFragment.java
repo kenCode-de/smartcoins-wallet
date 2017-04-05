@@ -251,7 +251,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     /*
     * This is the smartcoin that matches the user's selected fiat currency.
     * If no smartcoin exists for a user's specific local currency, the bitUSD
-    * will be used instead.*/
+    * will be used instead. */
     private Asset mSmartcoin;
     /* List of transactions for which we don't have the equivalent value data */
     private LinkedList<HistoricalTransferEntry> missingEquivalentValues;
@@ -545,6 +545,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         @Override
         public void onSuccess(final WitnessResponse response) {
+            Log.d(TAG, "mTransferHistoryListener.onSuccess");
             if (getActivity() == null) {
                 Log.w(TAG, "Got no activity, quitting..");
                 return;
@@ -595,17 +596,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
 
             // Updating table view
-            getActivity().runOnUiThread(new Runnable() {
+            /*getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.v(TAG, String.format("Calling updateTableView inside mTransferHistoryListener"));
                     updateTableView(true);
                 }
-            });
+            });*/
 
             // If we got exactly the requested amount of historical transfers, it means we
             // MUST have more to fetch.
-            if (resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
+            if (false){//(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
                 Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
@@ -788,12 +789,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
 
         // Setting the "base" smartcoin for this user
-        String countryCode = Helper.fetchStringSharePref(getContext(), getString(R.string.pref_country));
+        String countryCode = Helper.getCountry(getContext());
+
+        Log.d(TAG, "Selected Country Code: " + countryCode);
 
         this.mSmartcoin = Smartcoins.getMap().get(countryCode.toUpperCase());
 
         // Getting the system's configuration locale
         locale = getResources().getConfiguration().locale;
+
+
+        Log.e(TAG, "mSmartcoin: " + mSmartcoin.getSymbol());
+        Log.e(TAG, "Locale: " + locale);
 
         HashMap<String, Asset> knownAssets = database.getAssetMap();
         if (!knownAssets.containsKey(this.mSmartcoin.getObjectId())) {
@@ -805,6 +812,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         } else {
             mSmartcoin = database.fillAssetDetails(mSmartcoin);
         }
+        Log.e(TAG, "mSmartcoin: " + mSmartcoin.getSymbol());
+
     }
 
     @Override
@@ -1225,7 +1234,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         } catch (Exception e) {
 
         }
-        
+
     }
 
 
@@ -2495,7 +2504,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         UserAccount account = new UserAccount(accountId);
 
         if (reset) {
-            Log.d(TAG, "updateTableView Reset");
             loadMoreCounter = 1;
         }
 
