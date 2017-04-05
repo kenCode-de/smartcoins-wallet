@@ -807,26 +807,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Application.registerAssetDelegate(this);
-        //TODO: Evaluate removal after finish refactoring transactions logic
-        // getMissingAssets is a WebsocketWorkerThread and should be null only at first
-        // time BalanceFragment run, at creation
-        /*if (getMissingAssets == null) {
-            Log.d(TAG, "Got no missing assets, checking for new transactions");
-            List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE);
-            start = transactions.size();
-            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-            Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-            transferHistoryThread.start();
-        } else {
-            Log.w(TAG, "getMissingAssets is not null");
-        }*/
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_balances, container, false);
@@ -877,6 +857,68 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
 //        getLtmPrice(getActivity(), tvAccountName.getText().toString());
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Application.registerAssetDelegate(this);
+        Log.d(TAG, "onResume");
+        // Inflate the layout for this fragment
+        scrollViewBalances.fullScroll(View.FOCUS_UP);
+        scrollViewBalances.pageScroll(View.FOCUS_UP);
+        onClicked = false;
+        final String hide_donations_isChanged = "hide_donations_isChanged";
+        Boolean isHideDonationsChanged = false;
+        if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
+            if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
+                isHideDonationsChanged = true;
+                Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
+            }
+        }
+        Boolean isCheckedTimeZone = false;
+        isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
+        Boolean accountNameChange = checkIfAccountNameChange();
+
+        if (accountNameChange || (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency)))
+            llBalances.removeAllViews();
+
+        if (isHideDonationsChanged || accountNameChange || (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency))) {
+            if (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency)) {
+                loadBasic(true, accountNameChange, true);
+            } else {
+                loadBasic(true, accountNameChange, false);
+            }
+
+        }
+        else {
+            //If Balance change (send funds) this will run to update it.
+            Application app = (Application)this.getContext().getApplicationContext();
+            if((app.getUpdateFunds())){
+                Log.d(TAG, "Updating funds (getUpdateFunds() is true)");
+                app.setUpdateFunds(false);
+                //Update Balances
+                loadBasic(false, true, false);
+                //Update Table Views getting data from database
+                updateTableView(true);
+            }
+        }
+
+
+        if (!accountId.equals("")) {
+            UserAccount me = new UserAccount(accountId);
+            start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+            Log.i(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+            transferHistoryThread.start();
+        } else {
+            Log.d(TAG, "account id is empty");
+        }
+
+        // Loading transfers from database
+        //updateTableView(true);
+
     }
 
     @Override
@@ -960,67 +1002,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             });
         } catch (Exception e) {
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume");
-        // Inflate the layout for this fragment
-        scrollViewBalances.fullScroll(View.FOCUS_UP);
-        scrollViewBalances.pageScroll(View.FOCUS_UP);
-        onClicked = false;
-        final String hide_donations_isChanged = "hide_donations_isChanged";
-        Boolean isHideDonationsChanged = false;
-        if (Helper.containKeySharePref(getContext(), hide_donations_isChanged)) {
-            if (Helper.fetchBoolianSharePref(getContext(), hide_donations_isChanged)) {
-                isHideDonationsChanged = true;
-                Helper.storeBoolianSharePref(getContext(), hide_donations_isChanged, false);
-            }
-        }
-        Boolean isCheckedTimeZone = false;
-        isCheckedTimeZone = Helper.fetchBoolianSharePref(getActivity(), getString(R.string.pre_ischecked_timezone));
-        Boolean accountNameChange = checkIfAccountNameChange();
-
-        if (accountNameChange || (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency)))
-            llBalances.removeAllViews();
-
-        if (isHideDonationsChanged || accountNameChange || (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency))) {
-            if (finalFiatCurrency != null && !Helper.getFadeCurrency(getContext()).equals(finalFiatCurrency)) {
-                loadBasic(true, accountNameChange, true);
-            } else {
-                loadBasic(true, accountNameChange, false);
-            }
-
-        }
-        else {
-            //If Balance change (send funds) this will run to update it.
-            Application app = (Application)this.getContext().getApplicationContext();
-            if((app.getUpdateFunds())){
-                Log.d(TAG, "Updating funds (getUpdateFunds() is true)");
-                app.setUpdateFunds(false);
-                //Update Balances
-                loadBasic(false, true, false);
-                //Update Table Views getting data from database
-                updateTableView(true);
-            }
-        }
-
-
-        if (!accountId.equals("")) {
-            UserAccount me = new UserAccount(accountId);
-            start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
-            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-            Log.i(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-            transferHistoryThread.start();
-        } else {
-            Log.d(TAG, "account id is empty");
-        }
-
-        // Loading transfers from database
-        //updateTableView(true);
-
     }
 
     @OnClick(R.id.receivebtn)
