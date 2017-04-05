@@ -598,7 +598,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateTableView(false);
+                    Log.v(TAG, String.format("Calling updateTableView inside mTransferHistoryListener"));
+                    updateTableView(true);
                 }
             });
 
@@ -609,8 +610,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
                 Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-                transferHistoryThread.start();
+                //transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                //transferHistoryThread.start();
             } else {
                 // If we got less than the requested amount of historical transfers, it means we
                 // are done importing old transactions. We can proceed to get other missing attributes
@@ -741,7 +742,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateTableView(true);
+                    updateTableView(false);
                 }
             });
         }
@@ -906,6 +907,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
 
         if (!accountId.equals("")) {
+            //Update database with transaction list from the graphene blockchain
             UserAccount me = new UserAccount(accountId);
             start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
             stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
@@ -1175,6 +1177,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
     }
 
+    @OnClick(R.id.load_more_values)
+    public void loadMoreTransactions() {
+        loadMoreCounter++;
+        updateTableView(false);
+        int loadedTransaction = loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE;
+        //Gte transaction count from database
+        int transactionCount = database.getTransactionCount(new UserAccount(accountId));
+        //TODO: Hide only if not happening any updates running, otherwise they will be INVISIBLE, until we restart the app
+        if (loadedTransaction >= transactionCount) {
+            loadMoreButton.setVisibility(View.GONE);
+        }
+    }
+
     public void loadBalancesFromSharedPref() {
         try {
             ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
@@ -1210,45 +1225,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         } catch (Exception e) {
 
         }
-
-
+        
     }
 
-    @Override
-    public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
-        if (isAdded()) {
-            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-            ArrayList<AccountAssets> accountAssets = new ArrayList<>();
 
-            for (int i = 0; i < ids.size(); i++) {
-                long amount = Long.parseLong(am.get(i));
-
-                if (amount != 0) {
-                    AccountAssets accountAsset = new AccountAssets();
-                    accountAsset.id = ids.get(i);
-                    if (pre.size() > i) accountAsset.precision = pre.get(i);
-                    if (sym.size() > i) accountAsset.symbol = sym.get(i);
-                    if (am.size() > i) accountAsset.ammount = am.get(i);
-                    accountAssets.add(accountAsset);
-                }
-            }
-
-            try {
-                for (int i = 0; i < accountDetails.size(); i++) {
-                    if (accountDetails.get(i).isSelected) {
-                        accountDetails.get(i).AccountAssets = accountAssets;
-                        getEquivalentComponents(accountAssets);
-                        break;
-                    }
-                }
-            } catch (Exception w) {
-                SupportMethods.testing("Assets", w, "Asset Activity");
-            }
-
-            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-            BalanceAssetsUpdate(sym, pre, am, false);
-        }
-    }
 
     public BalanceItems getBalanceItems() {
         if (this.balanceItems == null) {
@@ -2016,9 +1996,95 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         return mySavedList;
     }
 
+
+
+    /********************************************************************************
+     *
+     *  AssetDelegate RELATED METHODS
+     *
+     *********************************************************************************/
+
+    @Override
+    public void isUpdate(ArrayList<String> ids, ArrayList<String> sym, ArrayList<String> pre, ArrayList<String> am) {
+        if (isAdded()) {
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+            ArrayList<AccountAssets> accountAssets = new ArrayList<>();
+
+            for (int i = 0; i < ids.size(); i++) {
+                long amount = Long.parseLong(am.get(i));
+
+                if (amount != 0) {
+                    AccountAssets accountAsset = new AccountAssets();
+                    accountAsset.id = ids.get(i);
+                    if (pre.size() > i) accountAsset.precision = pre.get(i);
+                    if (sym.size() > i) accountAsset.symbol = sym.get(i);
+                    if (am.size() > i) accountAsset.ammount = am.get(i);
+                    accountAssets.add(accountAsset);
+                }
+            }
+
+            try {
+                for (int i = 0; i < accountDetails.size(); i++) {
+                    if (accountDetails.get(i).isSelected) {
+                        accountDetails.get(i).AccountAssets = accountAssets;
+                        getEquivalentComponents(accountAssets);
+                        break;
+                    }
+                }
+            } catch (Exception w) {
+                SupportMethods.testing("Assets", w, "Asset Activity");
+            }
+
+            tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+            BalanceAssetsUpdate(sym, pre, am, false);
+        }
+    }
+
+    public void isAssets() {
+//        progressBar.setVisibility(View.GONE);
+        progressBar1.setVisibility(View.GONE);
+    }
+
     @Override
     public void TransactionUpdate(final List<TransactionDetails> transactionDetails, final int number_of_transactions_in_queue) {
 
+    }
+
+    @Override
+    public void getLifetime(String s, int id) {
+        myWebSocketHelper.cleanUpTransactionsHandler();
+
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+
+        String result = SupportMethods.ParseJsonObject(s, "result");
+        String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
+        String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date1 = dateFormat.parse(expiration);
+            Date date2 = dateFormat.parse("1969-12-31T23:59:59");
+            if (date2.getTime() >= date1.getTime()) {
+                if (accountDetails.size() > accountDetailsId) {
+                    accountDetails.get(accountDetailsId).isLifeTime = true;
+                    showHideLifeTime(true);
+                } else if (accountDetails.size() == 1) {
+                    accountDetails.get(0).isLifeTime = true;
+                    showHideLifeTime(true);
+                }
+                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+
+            }
+        } catch (Exception e) {
+            SupportMethods.testing("getLifetime", e, "Exception");
+
+        }
+
+    }
+
+    @Override
+    public void loadAll() {
+        updateTriggerFromNetworkBroadcast = true;
+        loadOnDemand(getActivity());
     }
 
     @Override
@@ -2077,16 +2143,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
     }
 
-    @OnClick(R.id.load_more_values)
-    public void loadMoreTransactions() {
-        loadMoreCounter++;
-        updateTableView(false);
-        int loadedTransaction = loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE;
-        int transactionCount = database.getTransactionCount(new UserAccount(accountId));
-        if (loadedTransaction >= transactionCount) {
-            loadMoreButton.setVisibility(View.GONE);
-        }
-    }
+    /********************************************************************************
+     *
+     *  END OF AssetDelegate RELATED METHODS
+     *
+     *********************************************************************************/
+
+
 
     void isLifeTime(final String name_id, final String id) {
 
@@ -2095,36 +2158,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         myWebSocketHelper.make_websocket_call(getDetails, getDetails2, webSocketCallHelper.api_identifier.database);
     }
 
-    @Override
-    public void getLifetime(String s, int id) {
-        myWebSocketHelper.cleanUpTransactionsHandler();
 
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-
-        String result = SupportMethods.ParseJsonObject(s, "result");
-        String nameObject = SupportMethods.ParseObjectFromJsonArray(result, 0);
-        String expiration = SupportMethods.ParseJsonObject(nameObject, "membership_expiration_date");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            Date date1 = dateFormat.parse(expiration);
-            Date date2 = dateFormat.parse("1969-12-31T23:59:59");
-            if (date2.getTime() >= date1.getTime()) {
-                if (accountDetails.size() > accountDetailsId) {
-                    accountDetails.get(accountDetailsId).isLifeTime = true;
-                    showHideLifeTime(true);
-                } else if (accountDetails.size() == 1) {
-                    accountDetails.get(0).isLifeTime = true;
-                    showHideLifeTime(true);
-                }
-                tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-
-            }
-        } catch (Exception e) {
-            SupportMethods.testing("getLifetime", e, "Exception");
-
-        }
-
-    }
 
     void startAnimation() {
         scrollViewBalances.fullScroll(View.FOCUS_UP);
@@ -2194,11 +2228,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
     }
 
-    @Override
-    public void loadAll() {
-        updateTriggerFromNetworkBroadcast = true;
-        loadOnDemand(getActivity());
-    }
+
 
     void loadViews(Boolean onResume, Boolean accountNameChanged, boolean fiatCurrencyChanged) {
 
@@ -2453,10 +2483,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         return txtAmount_d;
     }
 
-    public void isAssets() {
-//        progressBar.setVisibility(View.GONE);
-        progressBar1.setVisibility(View.GONE);
-    }
+
 
     /**
      * Refreshes table data by assigning a new adapter.
