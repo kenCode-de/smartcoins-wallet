@@ -28,6 +28,12 @@ public class CryptoCoinTransferDateComparator implements Comparator<TransactionL
         long firstTimestamp = getTimestampFromTransactionLog(lhs);
         long secondTimestamp = getTimestampFromTransactionLog(rhs);
 
-        return (int) (firstTimestamp - secondTimestamp);
+        if ((firstTimestamp - secondTimestamp) < 0){
+            return -1;
+        } else if (firstTimestamp == secondTimestamp){
+            return 0;
+        } else {
+            return 1;
+        }
     }
 }

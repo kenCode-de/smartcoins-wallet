@@ -259,6 +259,12 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<Transactio
                     String eqValue = currencyFormatter.format(Util.fromBase(smartcoinAmount));
 
                     fiatAmountText = eqValue;
+
+                    if (isSending){
+                        fiatAmountTextView.setTextColor(lightRed);
+                    } else {
+                        fiatAmountTextView.setTextColor(lightGreen);
+                    }
                 }else{
                     Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
                 }
@@ -311,12 +317,12 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<Transactio
         if(isSending){
             // User sent this transfer
             transferAmountTextView.setTextColor(redColor);
-            fiatAmountTextView.setTextColor(lightRed);
+            //fiatAmountTextView.setTextColor(lightRed);
             transferAmountTextView.setText(String.format("- %s %s", amount, symbol));
         }else{
             // User received this transfer
             transferAmountTextView.setTextColor(greenColor);
-            fiatAmountTextView.setTextColor(lightGreen);
+            //fiatAmountTextView.setTextColor(lightGreen);
             transferAmountTextView.setText(String.format("+ %s %s", amount, symbol));
         }
 
