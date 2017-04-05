@@ -810,9 +810,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public void onStart() {
         super.onStart();
         Application.registerAssetDelegate(this);
+        //TODO: Evaluate removal after finish refactoring transactions logic
         // getMissingAssets is a WebsocketWorkerThread and should be null only at first
         // time BalanceFragment run, at creation
-        if (getMissingAssets == null) {
+        /*if (getMissingAssets == null) {
             Log.d(TAG, "Got no missing assets, checking for new transactions");
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), HISTORICAL_TRANSFER_BATCH_SIZE);
             start = transactions.size();
@@ -822,7 +823,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             transferHistoryThread.start();
         } else {
             Log.w(TAG, "getMissingAssets is not null");
-        }
+        }*/
     }
 
     @Override
@@ -2486,6 +2487,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         UserAccount account = new UserAccount(accountId);
 
         if (reset) {
+            Log.d(TAG, "updateTableView Reset");
             loadMoreCounter = 1;
         }
 
