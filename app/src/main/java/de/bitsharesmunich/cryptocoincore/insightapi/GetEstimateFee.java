@@ -27,7 +27,7 @@ public abstract class GetEstimateFee {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 synchronized (SYNC) {
-                    answer.addProperty("answer", (response.body().get("2").getAsDouble() * Math.pow(10, coin.getPrecision())));
+                    answer.addProperty("answer", (long) (response.body().get("2").getAsDouble() * Math.pow(10, coin.getPrecision())));
                     SYNC.notifyAll();
                 }
             }
@@ -35,16 +35,14 @@ public abstract class GetEstimateFee {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 synchronized (SYNC) {
-                    answer.addProperty("answer", -1);
                     SYNC.notifyAll();
                 }
-
             }
         });
         synchronized (SYNC){
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 6; i++) {
                 try {
-                    SYNC.wait(1000);
+                    SYNC.wait(5000);
                 } catch (InterruptedException e) {
                 }
                 if(answer.get("answer")!=null){
@@ -53,7 +51,7 @@ public abstract class GetEstimateFee {
             }
         }
         if(answer.get("answer")==null){
-            answer.addProperty("answer", -1);
+            throw new IOException("");
         }
         return (long) (answer.get("answer").getAsDouble());
     }
