@@ -2279,6 +2279,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 faitTextView.setText(newItem.getConfirmations() + " of " + newItem.getCoin().getConfirmationsNeeded() + " conf");
 
             } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
+                faitTextView.setText("");
                 faitTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.receive_amount));
 
                 try {
@@ -2300,6 +2301,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                     }
                     faitTextView.setVisibility(View.GONE);
                 }
+            } else {
+                faitTextView.setText("");
             }
         }
     }
