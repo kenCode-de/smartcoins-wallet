@@ -334,28 +334,21 @@ public class TinyDB {
         ArrayList<AccountDetails> objects = new ArrayList<>();
 
         try {
-            for (String jObjString : objStrings)
-            {
-                try
-                {
+            for (String jObjString : objStrings) {
+                try {
                     AccountDetails value = (AccountDetails) gson.fromJson(jObjString, mClass);
                     objects.add(value);
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         }
         return objects;
     }
 
     public void putTransactions(String key, ArrayList<TransactionDetails> objArray) {
         ArrayList<transactionsJsonSerializable> a = new ArrayList<>();
-        for (TransactionDetails abc : objArray)
-        {
+        for (TransactionDetails abc : objArray) {
             transactionsJsonSerializable myObj = new transactionsJsonSerializable();
 
             myObj.id = abc.id;
@@ -394,14 +387,12 @@ public class TinyDB {
             for (String jObjString : objStrings) {
                 transactionsJsonSerializable value = gson.fromJson(jObjString, transactionsJsonSerializable.class);
 
-                TransactionDetails myObject = new TransactionDetails(value.id,value.blockNumber,value.Date, value.Sent, value.To, value.From, value.Memo,
+                TransactionDetails myObject = new TransactionDetails(value.id, value.blockNumber, value.Date, value.Sent, value.To, value.From, value.Memo,
                         value.Amount, value.assetSymbol, value.fiatAmount, value.fiatAssetSymbol, value.eReceipt);
 
                 objects.add(myObject);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             objects = new ArrayList<>();
         }
         return objects;
@@ -576,7 +567,7 @@ public class TinyDB {
     }
 
 /*    public void putListObject(String key, ArrayList<Object> objArray){
-    	checkForNullKey(key);
+        checkForNullKey(key);
     	Gson gson = new Gson();
     	ArrayList<String> objStrings = new ArrayList<String>();
     	for(Object obj : objArray){
@@ -623,14 +614,13 @@ public class TinyDB {
     }
 
 
-
-    public void putHashmapObject(String key, HashMap<String,String> map) {
+    public void putHashmapObject(String key, HashMap<String, String> map) {
         checkForNullKey(key);
         Gson gson = new Gson();
         putString(key, gson.toJson(map));
     }
 
-    public void putContactsObject(String key, ArrayList<ContactListAdapter.ListviewContactItem> objArray ) {
+    public void putContactsObject(String key, ArrayList<ContactListAdapter.ListviewContactItem> objArray) {
         checkForNullKey(key);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();

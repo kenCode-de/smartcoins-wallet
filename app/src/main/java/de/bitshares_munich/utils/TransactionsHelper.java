@@ -77,6 +77,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     int retryGetEquivalentRates = 0;
     int retryGetIndirectEquivalentRates = 0;
     private String TAG = this.getClass().getName();
+
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions) {
         context = c;
         assetDelegate = instance;
@@ -106,6 +107,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             get_relative_account_history(account_id, "8", _numberOfTransactionsLoaded, _numberOfTransactionsToLoad);
         }
     }
+
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final Date _transactionsTimeSpan) {
         context = c;
         assetDelegate = instance;

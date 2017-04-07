@@ -39,7 +39,7 @@ public class TableViewClickListener implements TableDataClickListener<Historical
     @Override
     public void onDataClicked(int rowIndex, HistoricalTransferEntry historicalTransferEntry) {
         Log.i(TAG, "onDataClicked: " + !BalancesFragment.onClicked);
-        if(!BalancesFragment.onClicked) {
+        if (!BalancesFragment.onClicked) {
             TransferOperation operation = historicalTransferEntry.getHistoricalTransfer().getOperation();
             BalancesFragment.onClicked = true;
             long timestamp = historicalTransferEntry.getTimestamp() * 1000;
@@ -52,7 +52,7 @@ public class TableViewClickListener implements TableDataClickListener<Historical
             intent.putExtra("Memo", operation.getMemo().getPlaintextMessage());
             intent.putExtra("Date", Helper.convertDateToGMT(new Date(timestamp), myContext));
             intent.putExtra("Time", Helper.convertDateToGMTWithYear(new Date(timestamp), myContext));
-            intent.putExtra("TimeZone", Helper.convertTimeToGMT(new Date(timestamp),myContext));
+            intent.putExtra("TimeZone", Helper.convertTimeToGMT(new Date(timestamp), myContext));
             intent.putExtra("To", operation.getTo().getAccountName());
             intent.putExtra("From", operation.getFrom().getAccountName());
             intent.putExtra("Sent", true);
