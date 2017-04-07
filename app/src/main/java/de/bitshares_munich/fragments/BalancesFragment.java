@@ -596,17 +596,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
 
             // Updating table view
-            /*getActivity().runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.v(TAG, String.format("Calling updateTableView inside mTransferHistoryListener"));
-                    updateTableView(true);
+                    updateTableView(false);
                 }
-            });*/
+            });
 
             // If we got exactly the requested amount of historical transfers, it means we
             // MUST have more to fetch.
             if (false){//(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
+            //if (resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
                 Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;

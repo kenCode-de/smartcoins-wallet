@@ -93,7 +93,7 @@ public class ReceiveActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recieve_activity);
+        setContentView(R.layout.receive_activity);
 
         ButterKnife.bind(this);
 

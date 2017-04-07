@@ -174,10 +174,10 @@ public class SCWallDatabase {
                 Asset feeAsset = assetMap.get(feeAssetId);
 
                 // Skipping transfer if we are missing transfer and fee asset information
-                if (transferAsset == null || feeAsset == null) {
+                /*if (transferAsset == null || feeAsset == null) {
                     cursor.moveToNext();
                     continue;
-                }
+                }*/
 
                 // Transfer and fee amounts
                 AssetAmount transferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
@@ -226,10 +226,8 @@ public class SCWallDatabase {
                     }
                     assetCursor.close();
                 } else {
-                    //cursor.moveToNext();
-                    //continue;
-                    Date date = new Date(transferEntry.getTimestamp() * 1000);
-                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
+                    cursor.moveToNext();
+                    continue;
                 }
 
                 // Adding historical transfer entry to array
