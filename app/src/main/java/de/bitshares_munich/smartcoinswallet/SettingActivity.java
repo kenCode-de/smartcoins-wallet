@@ -169,18 +169,23 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     String itemSelected;
     String selected;
     Boolean startup = false;
+
     /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
     private boolean updateAllRoles;
+
     private String oldKey;
     private AccountDetails updatedAccount;
     private int UPDATE_KEY_MAX_RETRIES = 2;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
+
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
+
     /* Database interface */
     private SCWallDatabase database;
+
     /**
      * Listener called upon the 'account_update_operation' response.
      */
@@ -245,6 +250,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             });
         }
     };
+
     /**
      * Listener called with the account data. This is done before the account authorities update
      * just to know what keys to update for each account.
@@ -284,6 +290,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
         }
     };
+
     private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
         public void onFileSelected(Dialog source, File file) {
             source.hide();

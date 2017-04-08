@@ -117,59 +117,88 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, callbackURL;
+
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
+
     @Bind(R.id.llLoyalty)
     LinearLayout llLoyalty;
+
     @Bind(R.id.llBackupAsset)
     LinearLayout llBackupAsset;
+
     @Bind(R.id.tvLoyaltyStatus)
     TextView tvLoyaltyStatus;
+
     @Bind(R.id.tvTotalStatus)
     TextView tvTotalStatus;
+
     @Bind(R.id.spAssets)
     Spinner spAssets;
+
     @Bind(R.id.tvLoyalty)
     TextView tvLoyalty;
+
     @Bind(R.id.tvBackupAsset)
     TextView tvBackupAsset;
+
     @Bind(R.id.tvBackupAssetBalanceValidate)
     TextView tvBackupAssetBalanceValidate;
+
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
+
     @Bind(R.id.webviewTo)
     WebView webviewTo;
+
     @Bind(R.id.etReceiverAccount)
     EditText etReceiverAccount;
+
     @Bind(R.id.tvErrorRecieverAccount)
     TextView tvErrorRecieverAccount;
+
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
+
     @Bind(R.id.cbAlwaysDonate)
     CheckBox cbAlwaysDonate;
+
     @Bind(R.id.etMemo)
     EditText etMemo;
+
     @Bind(R.id.etAmount)
     EditText etAmount;
+
     @Bind(R.id.etBackupAsset)
     EditText etBackupAsset;
+
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
+
     @Bind(R.id.btnSend)
     Button btnSend;
+
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
+
     @Bind(R.id.tvFrom)
     TextView tvFrom;
-    int count = 0;
+
     @Bind(R.id.tvBlockNumberHead_send_screen_activity)
     TextView tvBlockNumberHead;
+
     @Bind(R.id.tvAppVersion_send_screen_activity)
     TextView tvAppVersion;
+
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+
+    int count = 0;
+
     webSocketCallHelper myWebSocketHelper;
+
     Boolean runningSpinerForFirstTime = true;
+
     CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
         public void onTick(long millisUntilFinished) {
         }
@@ -181,32 +210,44 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             }
         }
     };
+
     Dialog contactListDialog;
+
     private boolean mSendAttemptFail = false;
+
     /**
      * Handler and delay
      */
     private int REQUEST_TRANSFER_HISTORY_DELAY = 1800;
+
     /**
      * Instance of the database interface
      */
     private SCWallDatabase database;
+
     /* Donation account and amount */
     private UserAccount bitsharesMunich = new UserAccount("1.2.90200");
+
     private AssetAmount donationAmount = new AssetAmount(UnsignedLong.valueOf(200000), new Asset("1.3.0"));
+
     /* Destination account */
     private UserAccount destinationAccount;
+
     /* Sender account */
     private UserAccount sourceAccount;
+
     /* Constant used to fix the number of historical transfers to fetch from the network in one batch */
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 50;
+
     /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
     private WebsocketWorkerThread donationBroadcaster;
     private WebsocketWorkerThread transferBroadcaster;
     private WebsocketWorkerThread getAccountByName;
+
     /* This is one of the of the recipient account's public key, it will be used for memo encoding */
     private PublicKey destinationPublicKey;
+
     /**
      * Callback fired when we get a response from the network with the transaction details.
      */
@@ -475,7 +516,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     accountDetail.isSelected = false;
                 }
             }
-//            startupTasks();
         } else {
             this.runningSpinerForFirstTime = false;
         }
@@ -806,7 +846,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     void setBackUpAsset() {
         try {
-//            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
             backupAsset = "";
             if (backupAsset.isEmpty()) {
                 llBackupAsset.setVisibility(View.GONE);
@@ -900,7 +939,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
-//                etAmount.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();

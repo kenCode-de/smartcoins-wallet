@@ -71,20 +71,29 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
 public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, LockListener {
     private final String TAG_DIALOG_PROMPT_ACCOUNT_UPDATE = "prompt_account_update";
     private final String TAG_DIALOG_UPDATING_ACCOUNTS = "updating_accounts";
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     @Bind(R.id.tabs)
     TabLayout tabLayout;
+
     @Bind(R.id.viewpager)
     ViewPager viewPager;
+
     @Bind(R.id.tvBlockNumberHead_TabActivity)
     TextView tvBlockNumberHead;
+
     @Bind(R.id.tvAppVersion_TabActivity)
     TextView tvAppVersion;
+
     @Bind(R.id.ivSocketConnected_TabActivity)
     ImageView ivSocketConnected;
+
     private String TAG = this.getClass().getName();
+
     private boolean DEBUG_ACCOUNT_UPDATE = false;
+
     private TinyDB tinyDB;
 
     /* Database interface */
@@ -207,6 +216,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             Log.e(TAG, "onError. Msg: " + error.message);
         }
     };
+
     /**
      * Listener called once a single account update operation is over.
      */
@@ -287,6 +297,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             });
         }
     };
+
     /**
      * Listener called only once with all the accounts data. This is done before the security update
      * and only once, just to know what keys to update for each account.
