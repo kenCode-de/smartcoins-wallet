@@ -144,6 +144,9 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         transaction.getTxOutputs().add(output);
                     }
                 }
+                if(txi.txlock && txi.confirmations< account.getCoin().getConfirmationsNeeded()){
+                    transaction.setConfirm(account.getCoin().getConfirmationsNeeded());
+                }
                 SCWallDatabase db = new SCWallDatabase(this.context);
                 long idTransaction = db.getGeneralTransactionId(transaction);
                 if (idTransaction == -1) {
