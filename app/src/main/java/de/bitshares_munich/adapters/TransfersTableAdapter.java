@@ -3,6 +3,7 @@ package de.bitshares_munich.adapters;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,17 +124,20 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         String toMessage = getContext().getText(R.string.to_capital) + ": " + operation.getTo().getAccountName();
         TextView toUser = (TextView) v.findViewById(R.id.destination_account);
         toUser.setText(toMessage);
+        toUser.setEllipsize(TruncateAt.END);
         Log.d(TAG,"toMessage: " + toMessage);
 
         String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
         TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
         fromUser.setText(fromMessage);
+        fromUser.setEllipsize(TruncateAt.END);
         Log.d(TAG,"fromMessage: " + fromMessage);
 
         Log.d(TAG,"memo: " + operation.getMemo().getPlaintextMessage());
         if (!operation.getMemo().getPlaintextMessage().equals("")) {
             TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
+            memoTextView.setEllipsize(TruncateAt.END);
         }
         return v;
     }
