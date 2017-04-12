@@ -1191,7 +1191,7 @@ public class SCWallDatabase {
             int confirms = cursor.getInt(5);
             int blockHeight = cursor.getInt(6);
             String memo = cursor.getString(7);
-            transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
+            transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo,account);
             transaction.setTxInputs(getGTxI(transaction,account));
             transaction.setTxOutputs(getGTxO(transaction,account));
             cursor.close();
@@ -1231,6 +1231,9 @@ public class SCWallDatabase {
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS, transaction.getConfirm());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO, transaction.getMemo());
         contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT, transaction.getBlockHeight());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID, transaction.getAccount().getId());
+        contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_BALANCE_CACHE, (int)transaction.getAccountBalanceChange());
+        //contentValues.put(SCWallDatabaseContract.GeneralTransaction.COLUMN_SPENT, );
 
         try{
             long newId = db.insertOrThrow(SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, null, contentValues);
@@ -1354,6 +1357,92 @@ public class SCWallDatabase {
         return gtxos;
     }
 
+
+
+    public enum GeneralTransactionOrder{DATE, IN_OUT, AMOUNT};
+
+    public long getGeneralTransactionCount() {
+        return DatabaseUtils.queryNumEntries(db,SCWallDatabaseContract.GeneralTransaction.TABLE_NAME);
+    }
+
+    public List<GeneralTransaction> getGeneralTransactions(List<GeneralCoinAccount> accounts, GeneralTransactionOrder order, boolean ascending, int offset, int limit){
+        List<GeneralTransaction> transactions = new ArrayList();
+        String[] columns = {
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_ID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_CONFIRMS,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID,
+                SCWallDatabaseContract.GeneralTransaction.COLUMN_BALANCE_CACHE
+        };
+
+        String accountInStatement = "";
+        for (GeneralCoinAccount nextAccount : accounts){
+            accountInStatement += ","+nextAccount.getId();
+        }
+        accountInStatement = " "+SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID+" IN ("+accountInStatement.substring(1)+") ";
+
+        String orderString = "";
+        switch (order){
+            case DATE:
+                orderString = SCWallDatabaseContract.GeneralTransaction.COLUMN_DATE;
+                break;
+            case IN_OUT:
+                orderString = SCWallDatabaseContract.GeneralTransaction.COLUMN_BALANCE_CACHE;
+                break;
+            case AMOUNT:
+                orderString = SCWallDatabaseContract.GeneralTransaction.COLUMN_BALANCE_CACHE;
+                break;
+        }
+        if (ascending){
+            orderString = orderString+" ASC";
+        } else {
+            orderString = orderString+" DESC";
+        }
+
+
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralTransaction.TABLE_NAME, columns,
+                accountInStatement, null, null, null, orderString, offset+","+limit);
+
+        if(cursor.moveToFirst()){
+            GeneralTransaction transaction ;
+            do{
+                long id = cursor.getLong(0);
+                String txid = cursor.getString(1);
+                Date date = new Date(cursor.getLong(2));
+                long block = cursor.getLong(3);
+                long fee = cursor.getLong(4);
+                int confirms = cursor.getInt(5);
+                int blockHeight = cursor.getInt(6);
+                String memo = cursor.getString(7);
+                Coin coin = Coin.valueOf(cursor.getString(8));
+                int accountId = cursor.getInt(9);
+
+                GeneralCoinAccount account = null;
+                for (GeneralCoinAccount nextAccount : accounts){
+
+                    if (accountId == nextAccount.getId()) {
+                        account = nextAccount;
+                        break;
+                    }
+                }
+
+                transaction = new GeneralTransaction(id,txid,coin,block,fee,confirms,date,blockHeight,memo,account);
+                transaction.setTxInputs(getGTxI(transaction,account));
+                transaction.setTxOutputs(getGTxO(transaction,account));
+                transactions.add(transaction);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        return transactions;
+    }
+
     public List<GeneralTransaction> getGeneralTransactionByAccount(final GeneralCoinAccount account){
         List<GeneralTransaction> transactions = new ArrayList();
         String[] columns = {
@@ -1382,7 +1471,7 @@ public class SCWallDatabase {
                 int confirms = cursor.getInt(5);
                 int blockHeight = cursor.getInt(6);
                 String memo = cursor.getString(7);
-                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo);
+                transaction = new GeneralTransaction(id,txid,account.getCoin(),block,fee,confirms,date,blockHeight,memo,account);
                 transaction.setTxInputs(getGTxI(transaction,account));
                 transaction.setTxOutputs(getGTxO(transaction,account));
                 transactions.add(transaction);

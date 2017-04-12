@@ -20,13 +20,23 @@ public class GeneralTransaction {
     private int blockHeight;
     private String memo = null;
 
+    public GeneralCoinAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(GeneralCoinAccount account) {
+        this.account = account;
+    }
+
+    private GeneralCoinAccount account;
+
     private List<GTxIO> txInputs = new ArrayList();
     private List<GTxIO> txOutputs = new ArrayList();
 
     public GeneralTransaction() {
     }
 
-    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight, String memo) {
+    public GeneralTransaction(long id, String txid, Coin type, long block, long fee, int confirm, Date date, int blockHeight, String memo, GeneralCoinAccount account) {
         this.id = id;
         this.txid = txid;
         this.type = type;
@@ -36,6 +46,7 @@ public class GeneralTransaction {
         this.date = date;
         this.blockHeight = blockHeight;
         this.memo = memo;
+        this.account = account;
     }
 
     public long getId() {

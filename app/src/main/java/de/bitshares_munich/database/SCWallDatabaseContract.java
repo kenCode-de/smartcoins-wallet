@@ -153,8 +153,18 @@ public class SCWallDatabaseContract {
         public static final String COLUMN_FEE = "fee"; //the amount of the comission
         public static final String COLUMN_CONFIRMS = "confirm"; //the last confirm reader, this only matters when is lower than 6
         public static final String COLUMN_MEMO = "memo";
+        public static final String COLUMN_ACCOUNT_ID = "account_id"; //The account id associated to this transaction. Even when a transaction can have many accounts involve, this account was the purpouse of having the transaction in the db.
+        public static final String COLUMN_BALANCE_CACHE = "balance_cache"; //Will hold the balance change for this transaction. Is a cache because this information can be calculated with the inputs and outputs associated.
+        public static final String COLUMN_SPENT = "spent"; //A boolean, true when the transaction was already spent and false on the contrary. 0 for false, 1 for true
         public static final String CONSTRAINT_TRANSACTION = "generalTransactionContraint";
     }
+
+    /*public static class GeneralTransactionBalanceCache implements BaseColumns {
+        public static final String TABLE_NAME = "general_account_balance_cache";
+        public static final String COLUMN_ACCOUNT_ID = "account_id";
+        public static final String COLUMN_BALANCE = "balance";
+        public static final String COLUMN_LAST_TRANSACTION_ID = "transaction_id";
+    }*/
 
     // Contacts Section
 

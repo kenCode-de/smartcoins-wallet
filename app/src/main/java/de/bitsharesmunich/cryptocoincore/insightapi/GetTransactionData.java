@@ -90,6 +90,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             Txi txi = response.body();
 
             GeneralTransaction transaction = new GeneralTransaction();
+            transaction.setAccount(this.account);
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
             transaction.setDate(new Date(txi.time * 1000));
