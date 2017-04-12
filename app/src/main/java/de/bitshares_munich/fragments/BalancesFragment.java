@@ -216,55 +216,74 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     AssetsActivity myAssetsActivity;
     boolean firstTimeLoad = true;
     String transactionsLoadedAccountName = "";
+
     /**
      * SortableTableView displaying the list of transactions.
      */
     private SortableTableView<HistoricalTransferEntry> transfersView;
+
     /**
      * Adapter for the transaction list.
      */
     private TransfersTableAdapter tableAdapter;
+
     /**
      * Counter used to keep track of how many times the 'load more' button was pressed
      */
     private int loadMoreCounter = 1;
+
     /* AsyncTask used to process the PDF generation job in the background */
     private PdfGeneratorTask pdfGeneratorTask;
+
     /* Dialog with a pdfProgress bar used to display pdfProgress while generating a new PDF file */
     private ProgressDialog pdfProgress;
+
     /* Constant used to fix the number of historical transfers to fetch from the network in one batch */
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 50;
+
     /* Parameters to be used as the start and stop arguments in the 'get_relative_account_history' API call */
     private int start = 1;
+
     private int stop = HISTORICAL_TRANSFER_BATCH_SIZE;
+
     private int historicalTransferCount = 0;
+
     private int HISTORICAL_TRANSFER_MAX = 10;
+
     /* Constant used to split the missing times and equivalent values in batches of constant time */
     private int SECONDARY_LOAD_BATCH_SIZE = 2;
+
     /*
     * Attribute used when trying to make a 2-step equivalent value calculation
     * This variable will hold the equivalent value of the UIA in BTS, that will in turn
     * have to be converted to the smartcoin of choice for the user */
     private AssetAmount coreCurrencyEqValue;
+
     /* Websocket handler */
     private GetMarketHistory getMarketHistory;
+
     /*
     * This is the smartcoin that matches the user's selected fiat currency.
     * If no smartcoin exists for a user's specific local currency, the bitUSD
     * will be used instead. */
     private Asset mSmartcoin;
+
     /* List of transactions for which we don't have the equivalent value data */
     private LinkedList<HistoricalTransferEntry> missingEquivalentValues;
+
     /* List of block numbers with missing date information in the database */
     private LinkedList<Long> missingTimes;
+
     /* Smarcoins Wallet database instance */
     private SCWallDatabase database;
+
     /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
     private WebsocketWorkerThread getMissingAccountsThread;
     private WebsocketWorkerThread getMissingAssets;
     private WebsocketWorkerThread getMissingTimes;
     private WebsocketWorkerThread getMissingEquivalentValues;
+
     /**
      * Callback activated once we get a block header response.
      */
@@ -319,6 +338,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
         }
     };
+
     /**
      * Called when we get a response from the 'get_market_history' API call
      */
@@ -664,6 +684,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
      */
     private void processNextEquivalentValue() {
         if (missingEquivalentValues.size() > 0) {
+            Log.d(TAG,"Missing equivalent value list size: " + missingEquivalentValues.size());
             List<Asset> missingAssets = database.getMissingAssets();
             if (missingAssets.size() == 0) {
                 HistoricalTransferEntry transferEntry = missingEquivalentValues.peek();
@@ -672,20 +693,28 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                         .getTransferAmount()
                         .getAsset();
 
-                while (transferredAsset.equals(mSmartcoin)) {
+                while (transferredAsset.equals(mSmartcoin) && !mSmartcoin.equals(Constants.getCoreCurrency())) {
                     // In case the transferred asset is the smartcoin itself, there is no need for
                     // a equivalent value calculation, and as such we just fill in the equivalent
-                    // value fields and .
+                    // value fields and proceed to fetch the next HistoricalTransferEntry from our
+                    // missingEquivalentValues list
+                    Log.d(TAG,"No need to lookup value of smartcoin: " + mSmartcoin.getObjectId());
                     transferEntry.setEquivalentValue(new AssetAmount(transferEntry.getHistoricalTransfer().getOperation().getTransferAmount().getAmount(), transferredAsset));
                     database.updateEquivalentValue(transferEntry);
 
                     missingEquivalentValues.poll();
 
                     transferEntry = missingEquivalentValues.peek();
-                    transferredAsset = transferEntry.getHistoricalTransfer()
-                            .getOperation()
-                            .getTransferAmount()
-                            .getAsset();
+                    if(transferEntry == null){
+                        // If we get a null value, it means we're done with this batch of missing equivalent values
+                        processNextMissingTime();
+                        return;
+                    } else{
+                        transferredAsset = transferEntry.getHistoricalTransfer()
+                                .getOperation()
+                                .getTransferAmount()
+                                .getAsset();
+                    }
                 }
 
                 Calendar calendar = Calendar.getInstance();
@@ -707,7 +736,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     base = database.fillAssetDetails(transferredAsset);
                     quote = database.fillAssetDetails(Constants.getCoreCurrency());
                 }
-//                Log.d(TAG, String.format("initial times. start: %d, end: %d", startDate.getTime(), endDate.getTime()));
+                Log.d(TAG, String.format("initial times. start: %d, end: %d", startDate.getTime(), endDate.getTime()));
                 if (base != null && quote != null) {
                     getMarketHistory = new GetMarketHistory(
                             base,
@@ -730,15 +759,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             // In case we're done loading missing times and equivalent values for this batch,
             // we can check if we have another batch of times and consequently missing equivalent
             // values to process.
-            missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
-            if (missingTimes.size() > 0) {
-                Log.d(TAG, String.format("Got a new batch of %d missing times, so we're now going to process them", missingTimes.size()));
-                Long blockNum = missingTimes.peek();
-                getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
-                getMissingTimes.start();
-            } else {
-                Log.d(TAG, "We're done with missing times, so this must be it...");
-            }
+            processNextMissingTime();
 
             // Updating table view either way
             getActivity().runOnUiThread(new Runnable() {
@@ -747,6 +768,23 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     updateTableView(false);
                 }
             });
+        }
+    }
+
+    /**
+     * Checks to see if we have a new batch of unprocessed missing times in our transfer list.
+     * If so, it loads a list of block numbers whose time we're missing and starts a thread that will
+     * sequentially get those block's headers in order to find out their universal time timestamp.
+     */
+    private void processNextMissingTime(){
+        missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
+        if (missingTimes.size() > 0) {
+            Log.d(TAG, String.format("Got a new batch of %d missing times, so we're now going to process them", missingTimes.size()));
+            Long blockNum = missingTimes.peek();
+            getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+            getMissingTimes.start();
+        } else {
+            Log.d(TAG, "We're done with missing times, so this must be it...");
         }
     }
 

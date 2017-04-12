@@ -150,7 +150,7 @@ public class SCWallDatabase {
                 String toId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO));
 
                 // Skipping transfer if we are missing users information
-                if (userMap.get(fromId) == null || userMap.get(toId) == null) {
+                /*if (userMap.get(fromId) == null || userMap.get(toId) == null) {
                     cursor.moveToNext();
                     continue;
                 }
@@ -160,7 +160,7 @@ public class SCWallDatabase {
                 if (t == 0) {
                     cursor.moveToNext();
                     continue;
-                }
+                }*/
 
                 // Building UserAccount instances
                 UserAccount from = new UserAccount(fromId, userMap.get(fromId));
@@ -226,8 +226,8 @@ public class SCWallDatabase {
                     }
                     assetCursor.close();
                 } else {
-                    cursor.moveToNext();
-                    continue;
+                    Date date = new Date(transferEntry.getTimestamp() * 1000);
+                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
                 }
 
                 // Adding historical transfer entry to array
