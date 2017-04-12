@@ -253,6 +253,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     /* Constant used to split the missing times and equivalent values in batches of constant time */
     private int SECONDARY_LOAD_BATCH_SIZE = 2;
 
+    /**/
+    private HistoricalTransfer lastHistoricalTransfer;
+
     /*
     * Attribute used when trying to make a 2-step equivalent value calculation
     * This variable will hold the equivalent value of the UIA in BTS, that will in turn
@@ -557,6 +560,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             Log.d(TAG, "missing accounts. onError");
         }
     };
+
     /**
      * Callback activated once we get a response back from the full node telling us about the
      * transfer history of the current account.
@@ -573,6 +577,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             historicalTransferCount++;
             WitnessResponse<List<HistoricalTransfer>> resp = response;
             List<HistoricalTransferEntry> historicalTransferEntries = new ArrayList<>();
+            //Store repeated transactions state
+            boolean foundRepeated = false;
 
             // Getting decrypted private key in WIF format
             String wif = decryptWif();
@@ -607,37 +613,22 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 entry.setHistoricalTransfer(historicalTransfer);
                 historicalTransferEntries.add(entry);
-            }
 
+                // Looking for a repeated operation in the current batch
+                if(lastHistoricalTransfer != null && historicalTransfer.getId().equals(lastHistoricalTransfer.getId())){
+                    foundRepeated = true;
+                }
+            }
 
             int inserted = database.putTransactions(historicalTransferEntries);
             Log.d(TAG, String.format("Inserted %d out of %d obtained operations", inserted, resp.result.size()));
             List<HistoricalTransferEntry> transactions = database.getTransactions(new UserAccount(accountId), loadMoreCounter * SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
 
-
-            // Updating table view
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.v(TAG, String.format("Calling updateTableView inside mTransferHistoryListener"));
-                    updateTableView(false);
-                }
-            });
-
-            // If we got exactly the requested amount of historical transfers, it means we
-            // MUST have more to fetch.
-            if (false){//(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
-            //if (resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
-                Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
-                start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
-                stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-                Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-                //transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-                //transferHistoryThread.start();
-            } else {
-                // If we got less than the requested amount of historical transfers, it means we
-                // are done importing old transactions. We can proceed to get other missing attributes
-                // like transaction timestamps, asset references and equivalent values.
+            if(foundRepeated) {
+                Log.w(TAG, "Got repeated data, not requesting more operations!");
+                // If we got a repeated historical transfer, it means we are done importing old
+                // transactions. We can proceed to get other missing attributes like transaction
+                // timestamps, asset references and equivalent values.
                 Log.d(TAG, String.format("Got %d transfers, which is less than what we asked for, so that must be it", resp.result.size()));
                 List<UserAccount> missingAccountNames = database.getMissingAccountNames();
                 if (missingAccountNames.size() > 0) {
@@ -662,7 +653,17 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
                 missingEquivalentValues = database.getMissingEquivalentValues();
                 processNextEquivalentValue();
+            } else{
+                // If we got exactly the requested amount of historical transfers, it means we
+                // MUST have more to fetch.
+                Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
+                start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
+                stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
+                Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
+                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();
             }
+
         }
 
         @Override
