@@ -19,4 +19,6 @@ public class Txi {
     public int size;
     public double valueIn;
     public double fee;
+    public boolean txlock=false;
+
 }
