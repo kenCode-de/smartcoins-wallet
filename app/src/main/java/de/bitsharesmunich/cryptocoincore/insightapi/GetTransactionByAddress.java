@@ -74,6 +74,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
             for (Txi txi : addressTxi.items) {
                 GeneralCoinAccount tempAccount = null;
                 GeneralTransaction transaction = new GeneralTransaction();
+                transaction.setAccount(this.account);
                 transaction.setTxid(txi.txid);
                 transaction.setBlock(txi.blockheight);
                 transaction.setDate(new Date(txi.time * 1000));

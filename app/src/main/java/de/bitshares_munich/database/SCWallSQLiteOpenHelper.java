@@ -12,7 +12,7 @@ import android.util.Log;
 public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
     private final String TAG = this.getClass().getName();
     //TODO on final revert to version 6
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 16;
     public static final String DATABASE_NAME = "scwall.db";
 
     private static final String TYPE_TEXT = " TEXT";
@@ -108,7 +108,18 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             SCWallDatabaseContract.GeneralTransaction.COLUMN_FEE + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_BLOCK_HEIGHT + TYPE_INTEGER + ", " +
             SCWallDatabaseContract.GeneralTransaction.COLUMN_MEMO + TYPE_TEXT + ", " +
-            " CONSTRAINT "+SCWallDatabaseContract.GeneralTransaction.CONSTRAINT_TRANSACTION+" UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_COIN_TYPE + "))";
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_BALANCE_CACHE + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.GeneralTransaction.COLUMN_SPENT + TYPE_INTEGER + " DEFAULT 0, " +
+            " FOREIGN KEY(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID + ") REFERENCES " + SCWallDatabaseContract.GeneralAccounts.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + ")," +
+            " CONSTRAINT "+SCWallDatabaseContract.GeneralTransaction.CONSTRAINT_TRANSACTION+" UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID + "))";
+
+    /*private static final String SQL_CREATE_GENERAL_ACCOUNT_BALANCE_CACHE_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralTransactionBalanceCache.TABLE_NAME + " (" +
+            SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_ACCOUNT_ID + TYPE_INTEGER + " PRIMARY KEY," +
+            SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_BALANCE + TYPE_INTEGER + ", " +
+            SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_LAST_TRANSACTION_ID + TYPE_INTEGER + ", " +
+            " FOREIGN KEY(" + SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_ACCOUNT_ID + ") REFERENCES " + SCWallDatabaseContract.GeneralAccounts.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + ")," +
+            " FOREIGN KEY(" + SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_LAST_TRANSACTION_ID + ") REFERENCES " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ID + ");";*/
 
     private static final String SQL_CREATE_INPUT_TX_TABLE = "CREATE TABLE " + SCWallDatabaseContract.Inputs.TABLE_NAME + " (" +
             SCWallDatabaseContract.Inputs.COLUMN_ID + TYPE_ID +
@@ -234,6 +245,13 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.ContacAddress.TABLE_NAME);
             db.execSQL(SQL_CREATE_CONTACT_TABLE);
             db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
+        }
+
+        if (oldVersion < 16) {
+            db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralTransaction.TABLE_NAME);
+            //db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralTransactionBalanceCache.TABLE_NAME);
+            db.execSQL(SQL_CREATE_GENERAL_TRANSACTION_TABLE);
+            //db.execSQL(SQL_CREATE_GENERAL_ACCOUNT_BALANCE_CACHE_TABLE);
         }
     }
 }

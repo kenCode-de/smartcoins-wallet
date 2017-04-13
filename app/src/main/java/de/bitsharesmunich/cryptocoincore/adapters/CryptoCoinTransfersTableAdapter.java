@@ -30,6 +30,9 @@ import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.Util;
 import de.codecrafters.tableview.TableDataAdapter;
 
+import static de.bitsharesmunich.cryptocoincore.base.TransactionLog.TransactionType.TRANSACTION_TYPE_BITCOIN;
+import static de.bitsharesmunich.cryptocoincore.base.TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE;
+
 
 /**
  * Created by henry on 12/02/17.
@@ -44,6 +47,26 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<Transactio
     public CryptoCoinTransfersTableAdapter(Context context, Locale locale, TransactionLog[] data) {
         super(context, data);
         this.locale = locale;
+    }
+
+    public void deleteTransactionsType(TransactionLog.TransactionType type){
+        List<TransactionLog> transactionData = this.getData();
+
+        for (TransactionLog nextTransaction : transactionData){
+            if (nextTransaction.getType() == type){
+                transactionData.remove(nextTransaction);
+            }
+        }
+
+        this.notifyDataSetChanged();
+    }
+
+    public void deleteBitcoinTypeTransactions(){
+        this.deleteTransactionsType(TRANSACTION_TYPE_BITCOIN);
+    }
+
+    public void deleteBitshareTypeTransactions(){
+        this.deleteTransactionsType(TRANSACTION_TYPE_BITSHARE);
     }
 
     public void addOrReplaceData(TransactionLog[] data){
