@@ -29,7 +29,6 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-light"
         android:maxLines="2"
-        android:textStyle="bold"
         android:paddingBottom="5dp"
         android:paddingLeft="1dp"
         android:paddingRight="0dp"
