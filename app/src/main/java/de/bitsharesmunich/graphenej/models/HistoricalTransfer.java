@@ -1,18 +1,19 @@
 package de.bitsharesmunich.graphenej.models;
 
-import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
+
 
 /**
  * This class offers support to deserialization of transfer operations received by the API
- * method 'get_relative_account_history'.
+ * method get_relative_account_history.
  *
  * More operations types might be listed in the response of that method, but by using this class
  * those will be filtered out of the parsed result.
  */
 public class HistoricalTransfer {
-    public Object[] result;
     private String id;
     private TransferOperation op;
+    public Object[] result;
     private long block_num;
     private long trx_in_block;
     private long op_in_trx;

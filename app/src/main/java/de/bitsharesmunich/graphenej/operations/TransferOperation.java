@@ -1,7 +1,6 @@
-package de.bitsharesmunich.graphenej;
+package de.bitsharesmunich.graphenej.operations;
 
 import com.google.common.primitives.Bytes;
-import com.google.common.primitives.UnsignedLong;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -14,18 +13,17 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.BaseOperation;
+import de.bitsharesmunich.graphenej.OperationType;
+import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.objects.Memo;
 
 /**
  * Class used to encapsulate the TransferOperation operation related functionalities.
- * TODO: Add extensions support
  */
 public class TransferOperation extends BaseOperation {
-    private static final String TAG = "TransferOperation";
-    public static final String KEY_FEE = "fee";
     public static final String KEY_AMOUNT = "amount";
-    public static final String KEY_EXTENSIONS = "extensions";
     public static final String KEY_FROM = "from";
     public static final String KEY_TO = "to";
     public static final String KEY_MEMO = "memo";
@@ -35,25 +33,9 @@ public class TransferOperation extends BaseOperation {
     private UserAccount from;
     private UserAccount to;
     private Memo memo;
-    private String[] extensions;
 
-    /**
-     * Empty constructor is needed in some situations where only part of the
-     * transfer operation data is relevant.
-     */
-    public TransferOperation(){
-        super(OperationType.transfer_operation);
-    }
-
-    /**
-     * Constructor used usually when we have all the transfer operation data, including the fee.
-     * @param from
-     * @param to
-     * @param transferAmount
-     * @param fee
-     */
     public TransferOperation(UserAccount from, UserAccount to, AssetAmount transferAmount, AssetAmount fee){
-        super(OperationType.transfer_operation);
+        super(OperationType.TRANSFER_OPERATION);
         this.from = from;
         this.to = to;
         this.amount = transferAmount;
@@ -61,24 +43,12 @@ public class TransferOperation extends BaseOperation {
         this.memo = new Memo();
     }
 
-    /**
-     * Constructor with the basic transfer operation. Use this if you will setup the fee later.
-     * @param from
-     * @param to
-     * @param transferAmount
-     */
     public TransferOperation(UserAccount from, UserAccount to, AssetAmount transferAmount){
-        super(OperationType.transfer_operation);
+        super(OperationType.TRANSFER_OPERATION);
         this.from = from;
         this.to = to;
         this.amount = transferAmount;
-        this.fee = new AssetAmount(UnsignedLong.valueOf(0), transferAmount.getAsset());
         this.memo = new Memo();
-    }
-
-    @Override
-    public void setFee(AssetAmount newFee){
-        this.fee = newFee;
     }
 
     public UserAccount getFrom(){
@@ -89,7 +59,7 @@ public class TransferOperation extends BaseOperation {
         return this.to;
     }
 
-    public AssetAmount getTransferAmount(){
+    public AssetAmount getAssetAmount(){
         return this.amount;
     }
 
@@ -97,16 +67,8 @@ public class TransferOperation extends BaseOperation {
         return this.fee;
     }
 
-    public void setMemo(Memo memo) {
-        this.memo = memo;
-    }
-
-    public Memo getMemo() {
-        return this.memo;
-    }
-
-    public void setAmount(AssetAmount amount) {
-        this.amount = amount;
+    public void setAssetAmount(AssetAmount assetAmount){
+        this.amount = assetAmount;
     }
 
     public void setFrom(UserAccount from) {
@@ -117,6 +79,19 @@ public class TransferOperation extends BaseOperation {
         this.to = to;
     }
 
+    public void setMemo(Memo memo) {
+        this.memo = memo;
+    }
+
+    public Memo getMemo() {
+        return this.memo;
+    }
+
+    @Override
+    public void setFee(AssetAmount newFee){
+        this.fee = newFee;
+    }
+
     @Override
     public byte[] toBytes() {
         byte[] feeBytes = fee.toBytes();
@@ -124,7 +99,8 @@ public class TransferOperation extends BaseOperation {
         byte[] toBytes = to.toBytes();
         byte[] amountBytes = amount.toBytes();
         byte[] memoBytes = memo.toBytes();
-        return Bytes.concat(feeBytes, fromBytes, toBytes, amountBytes, memoBytes);
+        byte[] extensions = this.extensions.toBytes();
+        return Bytes.concat(feeBytes, fromBytes, toBytes, amountBytes, memoBytes, extensions);
     }
 
     @Override
@@ -140,7 +116,8 @@ public class TransferOperation extends BaseOperation {
         JsonArray array = new JsonArray();
         array.add(this.getId());
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add(KEY_FEE, fee.toJsonObject());
+        if(fee != null)
+            jsonObject.add(KEY_FEE, fee.toJsonObject());
         jsonObject.addProperty(KEY_FROM, from.toJsonString());
         jsonObject.addProperty(KEY_TO, to.toJsonString());
         jsonObject.add(KEY_AMOUNT, amount.toJsonObject());
@@ -194,7 +171,7 @@ public class TransferOperation extends BaseOperation {
                 // This block is used just to check if we are in the first step of the deserialization
                 // when we are dealing with an array.
                 JsonArray serializedTransfer = json.getAsJsonArray();
-                if(serializedTransfer.get(0).getAsInt() != OperationType.transfer_operation.ordinal()){
+                if(serializedTransfer.get(0).getAsInt() != OperationType.TRANSFER_OPERATION.ordinal()){
                     // If the operation type does not correspond to a transfer operation, we return null
                     return null;
                 }else{
@@ -210,26 +187,10 @@ public class TransferOperation extends BaseOperation {
                 AssetAmount amount = context.deserialize(jsonObject.get(KEY_AMOUNT), AssetAmount.class);
                 AssetAmount fee = context.deserialize(jsonObject.get(KEY_FEE), AssetAmount.class);
 
-
                 // Deserializing UserAccount objects
                 UserAccount from = new UserAccount(jsonObject.get(KEY_FROM).getAsString());
                 UserAccount to = new UserAccount(jsonObject.get(KEY_TO).getAsString());
                 TransferOperation transfer = new TransferOperation(from, to, amount, fee);
-
-                // Deserializing Memo if it exists
-                if(jsonObject.get(KEY_MEMO) != null){
-                    JsonObject memoObj = jsonObject.get(KEY_MEMO).getAsJsonObject();
-                    try{
-                        Address memoFrom = new Address(memoObj.get(Memo.KEY_FROM).getAsString());
-                        Address memoTo = new Address(memoObj.get(KEY_TO).getAsString());
-                        long nonce = UnsignedLong.valueOf(memoObj.get(Memo.KEY_NONCE).getAsString()).longValue();
-                        byte[] message = Util.hexToBytes(memoObj.get(Memo.KEY_MESSAGE).getAsString());
-                        Memo memo = new Memo(memoFrom, memoTo, nonce, message);
-                        transfer.setMemo(memo);
-                    }catch(MalformedAddressException e){
-                        System.out.println("MalformedAddressException. Msg: "+e.getMessage());
-                    }
-                }
                 return transfer;
             }
         }

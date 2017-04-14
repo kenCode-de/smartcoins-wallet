@@ -3,9 +3,7 @@ package de.bitsharesmunich.graphenej.api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.BaseOperation;
 import de.bitsharesmunich.graphenej.RPC;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.ApiCall;
@@ -15,6 +13,8 @@ import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.BaseOperation;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
@@ -42,19 +42,18 @@ public class GetRequiredFees extends WebSocketAdapter {
         ArrayList<Serializable> accountParams = new ArrayList<>();
         accountParams.add((Serializable) this.operations);
         accountParams.add(this.asset.getObjectId());
-        ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_REQUIRED_FEES, accountParams, "2.0", 1);
+        ApiCall getRequiredFees = new ApiCall(0, RPC.CALL_GET_REQUIRED_FEES, accountParams, RPC.VERSION, 1);
         websocket.sendText(getRequiredFees.toJsonString());
     }
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        try{
         String response = frame.getPayloadText();
         Gson gson = new Gson();
 
         Type GetRequiredFeesResponse = new TypeToken<WitnessResponse<List<AssetAmount>>>(){}.getType();
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetDeserializer());
+        gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetAmountDeserializer());
         WitnessResponse<List<AssetAmount>> witnessResponse = gsonBuilder.create().fromJson(response, GetRequiredFeesResponse);
 
         if(witnessResponse.error != null){
@@ -62,8 +61,6 @@ public class GetRequiredFees extends WebSocketAdapter {
         }else{
             mListener.onSuccess(witnessResponse);
         }
-        }catch(Exception e){}
-        websocket.disconnect();
     }
 
     @Override

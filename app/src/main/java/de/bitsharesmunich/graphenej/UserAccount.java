@@ -1,20 +1,15 @@
 package de.bitsharesmunich.graphenej;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
+import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
+import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-
-import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
-import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
+import java.util.ArrayList;
 
 /**
  * Class tha represents a graphene user account.
@@ -53,6 +48,7 @@ public class UserAccount extends GrapheneObject implements ByteSerializable, Jso
         return accountName;
     }
 
+
     /**
      * Setter for the account name field.
      * @param accountName: The account name.
@@ -61,6 +57,16 @@ public class UserAccount extends GrapheneObject implements ByteSerializable, Jso
         this.accountName = accountName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return this.getObjectId().equals(((UserAccount)o).getObjectId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getObjectId().hashCode();
+    }
+    
     @Override
     public byte[] toBytes() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -117,7 +123,6 @@ public class UserAccount extends GrapheneObject implements ByteSerializable, Jso
         @Override
         public UserAccount deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             String id = json.getAsString();
-            System.out.println("id: "+id);
             return new UserAccount(id);
         }
     }

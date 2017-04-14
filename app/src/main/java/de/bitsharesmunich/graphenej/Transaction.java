@@ -1,21 +1,18 @@
 package de.bitsharesmunich.graphenej;
 
 import com.google.common.primitives.Bytes;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
 import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
 
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 
 import java.lang.reflect.Type;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,9 +23,11 @@ import java.util.TimeZone;
  * Class used to represent a generic Graphene transaction.
  */
 public class Transaction implements ByteSerializable, JsonSerializable {
-    private final String TAG = this.getClass().getName();
 
+    /* Default expiration time */
     public static final int DEFAULT_EXPIRATION_TIME = 30;
+
+    /* Constant field names used for serialization/deserialization purposes */
     public static final String KEY_EXPIRATION = "expiration";
     public static final String KEY_SIGNATURES = "signatures";
     public static final String KEY_OPERATIONS = "operations";
@@ -39,7 +38,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
     private ECKey privateKey;
     private BlockData blockData;
     private List<BaseOperation> operations;
-    private List<Extensions> extensions;
+    private Extensions extensions;
 
     /**
      * Transaction constructor.
@@ -51,7 +50,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         this.privateKey = privateKey;
         this.blockData = blockData;
         this.operations = operationList;
-        this.extensions = new ArrayList<Extensions>();
+        this.extensions = new Extensions();
     }
 
     /**
@@ -62,6 +61,17 @@ public class Transaction implements ByteSerializable, JsonSerializable {
      */
     public Transaction(String wif, BlockData block_data, List<BaseOperation> operation_list){
         this(DumpedPrivateKey.fromBase58(null, wif).getKey(), block_data, operation_list);
+    }
+
+    /**
+     * Constructor used to build a Transaction object without a private key. This kind of object
+     * is used to represent a transaction data that we don't intend to serialize and sign.
+     * @param blockData: Block data instance, containing information about the location of this transaction in the blockchain.
+     * @param operationList: The list of operations included in this transaction.
+     */
+    public Transaction(BlockData blockData, List<BaseOperation> operationList){
+        this.blockData = blockData;
+        this.operations = operationList;
     }
 
     /**
@@ -86,6 +96,14 @@ public class Transaction implements ByteSerializable, JsonSerializable {
     }
 
     public List<BaseOperation> getOperations(){ return this.operations; }
+
+    /**
+     * This method is used to query whether the instance has a private key.
+     * @return
+     */
+    public boolean hasPrivateKey(){
+        return this.privateKey != null;
+    }
 
     /**
      * Obtains a signature of this transaction. Please note that due to the current reliance on
@@ -125,7 +143,7 @@ public class Transaction implements ByteSerializable, JsonSerializable {
             if(((sigData[0] & 0x80) != 0) || (sigData[0] == 0) ||
                     ((sigData[1] & 0x80) != 0) || ((sigData[32] & 0x80) != 0) ||
                     (sigData[32] == 0) || ((sigData[33] & 0x80)  != 0)){
-                this.blockData.setRelativeExpiration(this.blockData.getRelativeExpiration() + 1);
+                this.blockData.setExpiration(this.blockData.getExpiration() + 1);
             }else{
                 isGrapheneCanonical = true;
             }
@@ -155,17 +173,8 @@ public class Transaction implements ByteSerializable, JsonSerializable {
             byteArray.addAll(Bytes.asList(operation.toBytes()));
         }
 
-        //Adding the number of extensions
-        byteArray.add((byte) this.extensions.size());
-
-        for(Extensions extensions : this.extensions){
-            //TODO: Implement the extensions serialization
-        }
-        // Adding a last zero byte to match the result obtained by the python-graphenelib code
-        // I'm not exactly sure what's the meaning of this last zero byte, but for now I'll just
-        // leave it here and work on signing the transaction.
-        //TODO: Investigate the origin and meaning of this last byte.
-        byteArray.add((byte) 0 );
+        // Adding extensions byte
+        byteArray.addAll(Bytes.asList(this.extensions.toBytes()));
 
         return Bytes.toArray(byteArray);
     }
@@ -186,8 +195,8 @@ public class Transaction implements ByteSerializable, JsonSerializable {
         byte[] signature = getGrapheneSignature();
 
         // Formatting expiration time
-        Date expirationTime = new Date(blockData.getRelativeExpiration() * 1000);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date expirationTime = new Date(blockData.getExpiration() * 1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Util.TIME_DATE_FORMAT);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         // Adding expiration
@@ -216,11 +225,144 @@ public class Transaction implements ByteSerializable, JsonSerializable {
 
     }
 
-    class TransactionSerializer implements JsonSerializer<Transaction> {
+    /**
+     * Class used to encapsulate the procedure to be followed when converting a transaction from a
+     * java object to its JSON string format representation.
+     */
+    public static class TransactionSerializer implements JsonSerializer<Transaction> {
 
         @Override
         public JsonElement serialize(Transaction transaction, Type type, JsonSerializationContext jsonSerializationContext) {
             return transaction.toJsonObject();
+        }
+    }
+
+    /**
+     * Static inner class used to encapsulate the procedure to be followed when converting a transaction from its
+     * JSON string format representation into a java object instance.
+     */
+    public static class TransactionDeserializer implements JsonDeserializer<Transaction> {
+
+        @Override
+        public Transaction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+
+            // Parsing block data information
+            int refBlockNum = jsonObject.get(KEY_REF_BLOCK_NUM).getAsInt();
+            long refBlockPrefix = jsonObject.get(KEY_REF_BLOCK_PREFIX).getAsLong();
+            String expiration = jsonObject.get(KEY_EXPIRATION).getAsString();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Util.TIME_DATE_FORMAT);
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+            Date expirationDate = dateFormat.parse(expiration, new ParsePosition(0));
+            BlockData blockData = new BlockData(refBlockNum, refBlockPrefix, expirationDate.getTime());
+
+            // Parsing operation list
+            BaseOperation operation = null;
+            ArrayList<BaseOperation> operationList = new ArrayList<>();
+            try {
+                for (JsonElement jsonOperation : jsonObject.get(KEY_OPERATIONS).getAsJsonArray()) {
+                    int operationId = jsonOperation.getAsJsonArray().get(0).getAsInt();
+                    if (operationId == OperationType.TRANSFER_OPERATION.ordinal()) {
+                        System.out.println("Transfer operation detected!");
+                        operation = context.deserialize(jsonOperation, TransferOperation.class);
+                    } else if (operationId == OperationType.LIMIT_ORDER_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.LIMIT_ORDER_CANCEL_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.CALL_ORDER_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.FILL_ORDER_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ACCOUNT_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ACCOUNT_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ACCOUNT_WHITELIST_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ACCOUNT_UPGRADE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ACCOUNT_TRANSFER_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_UPDATE_BITASSET_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_UPDATE_FEED_PRODUCERS_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_ISSUE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_RESERVE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_FUND_FEE_POOL_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_SETTLE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_GLOBAL_SETTLE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_PUBLISH_FEED_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITNESS_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITNESS_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.PROPOSAL_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.PROPOSAL_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.PROPOSAL_DELETE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITHDRAW_PERMISSION_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITHDRAW_PERMISSION_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITHDRAW_PERMISSION_CLAIM_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WITHDRAW_PERMISSION_DELETE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.COMMITTEE_MEMBER_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.COMMITTEE_MEMBER_UPDATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.COMMITTEE_MEMBER_UPDATE_GLOBAL_PARAMETERS_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.VESTING_BALANCE_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.VESTING_BALANCE_WITHDRAW_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.WORKER_CREATE_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.CUSTOM_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSERT_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.BALANCE_CLAIM_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.OVERRIDE_TRANSFER_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.TRANSFER_TO_BLIND_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.BLIND_TRANSFER_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.TRANSFER_FROM_BLIND_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_SETTLE_CANCEL_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    } else if (operationId == OperationType.ASSET_CLAIM_FEES_OPERATION.ordinal()) {
+                        //TODO: Add operation deserialization support
+                    }
+                    if (operation != null) operationList.add(operation);
+                    operation = null;
+                }
+                return new Transaction(blockData, operationList);
+            }catch(Exception e){
+                System.out.println("Exception. Msg: "+e.getMessage());
+                for(StackTraceElement el : e.getStackTrace()){
+                    System.out.println(el.getFileName()+"#"+el.getMethodName()+":"+el.getLineNumber());
+                }
+            }
+            return new Transaction(blockData, operationList);
         }
     }
 }

@@ -1,7 +1,6 @@
 package de.bitsharesmunich.graphenej;
 
 import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
-
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.math.ec.ECPoint;
 

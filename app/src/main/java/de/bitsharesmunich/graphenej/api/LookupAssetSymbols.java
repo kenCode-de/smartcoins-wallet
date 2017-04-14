@@ -3,7 +3,6 @@ package de.bitsharesmunich.graphenej.api;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.io.Serializable;
@@ -21,11 +20,12 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
 /**
  * Created by nelson on 12/12/16.
  */
-public class LookupAssetSymbols extends WebSocketAdapter {
+public class LookupAssetSymbols extends BaseGrapheneHandler {
     private WitnessResponseListener mListener;
     private List<Asset> assets;
 
     public LookupAssetSymbols(List<Asset> assets, WitnessResponseListener listener){
+        super(listener);
         this.assets = assets;
         this.mListener = listener;
     }

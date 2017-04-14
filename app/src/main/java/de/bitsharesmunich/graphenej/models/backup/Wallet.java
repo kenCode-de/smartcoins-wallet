@@ -1,13 +1,9 @@
 package de.bitsharesmunich.graphenej.models.backup;
 
-import de.bitshares_munich.utils.Crypt;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
-
-import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.spongycastle.crypto.digests.SHA256Digest;
 

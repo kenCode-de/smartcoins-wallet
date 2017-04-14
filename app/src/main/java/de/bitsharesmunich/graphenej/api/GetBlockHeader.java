@@ -2,15 +2,7 @@ package de.bitsharesmunich.graphenej.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.BlockHeader;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.io.Serializable;
@@ -19,10 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.BlockHeader;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+
 /**
  * Created by nelson on 12/13/16.
  */
-public class GetBlockHeader extends WebSocketAdapter {
+public class GetBlockHeader extends BaseGrapheneHandler {
+
     // Sequence of message ids
     private final static int LOGIN_ID = 1;
     private final static int GET_DATABASE_ID = 2;
@@ -35,6 +35,7 @@ public class GetBlockHeader extends WebSocketAdapter {
     private int apiId = -1;
 
     public GetBlockHeader(long blockNumber, WitnessResponseListener listener){
+        super(listener);
         this.blockNumber = blockNumber;
         this.mListener = listener;
     }
@@ -89,17 +90,5 @@ public class GetBlockHeader extends WebSocketAdapter {
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame())
             System.out.println(">>> "+frame.getPayloadText());
-    }
-
-    @Override
-    public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        System.out.println("onError. Msg: "+cause.getMessage());
-        websocket.disconnect();
-    }
-
-    @Override
-    public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        System.out.println("handleCallbackError. Msg: "+cause.getMessage());
-        websocket.disconnect();
     }
 }

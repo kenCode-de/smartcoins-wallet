@@ -1,15 +1,8 @@
 package de.bitsharesmunich.graphenej.api;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.models.Market;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
@@ -19,10 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.LimitOrder;
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.UserAccount;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+
 /**
- * Created by hvarona on 12/12/16.
+ * Created by nelson on 11/15/16.
  */
-public class GetLimitOrders extends WebSocketAdapter {
+public class GetLimitOrders extends BaseGrapheneHandler {
 
     private String a;
     private String b;
@@ -30,6 +32,7 @@ public class GetLimitOrders extends WebSocketAdapter {
     private WitnessResponseListener mListener;
 
     public GetLimitOrders(String a, String b, int limit, WitnessResponseListener mListener) {
+        super(mListener);
         this.a = a;
         this.b = b;
         this.limit = limit;
@@ -42,19 +45,23 @@ public class GetLimitOrders extends WebSocketAdapter {
         accountParams.add(this.a);
         accountParams.add(this.b);
         accountParams.add(this.limit);
-        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_LIMIT_ORDERS, accountParams, "2.0", 1);
+        ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_LIMIT_ORDERS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByName.toJsonString());
     }
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame())
+            System.out.println("<<< "+frame.getPayloadText());
         try {
             String response = frame.getPayloadText();
-            Gson gson = new Gson();
+            GsonBuilder builder = new GsonBuilder();
 
-            Type GetLimitiOrdersResponse = new TypeToken<WitnessResponse<ArrayList<Market>>>() {
-            }.getType();
-            WitnessResponse<ArrayList<Market>> witnessResponse = gson.fromJson(response, GetLimitiOrdersResponse);
+            Type GetLimitOrdersResponse = new TypeToken<WitnessResponse<List<LimitOrder>>>() {}.getType();
+            builder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetAmountDeserializer());
+            builder.registerTypeAdapter(UserAccount.class, new UserAccount.UserAccountSimpleDeserializer());
+            builder.registerTypeAdapter(LimitOrder.class, new LimitOrder.LimitOrderDeserializer());
+            WitnessResponse<List<LimitOrder>> witnessResponse = builder.create().fromJson(response, GetLimitOrdersResponse);
             if (witnessResponse.error != null) {
                 this.mListener.onError(witnessResponse.error);
             } else {
@@ -64,6 +71,13 @@ public class GetLimitOrders extends WebSocketAdapter {
             e.printStackTrace();
         }
         websocket.disconnect();
+    }
+
+    @Override
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame()){
+            System.out.println(">>> "+frame.getPayloadText());
+        }
     }
 
     @Override

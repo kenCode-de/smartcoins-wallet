@@ -288,6 +288,11 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private WebsocketWorkerThread getMissingEquivalentValues;
 
     /**
+     * Handler used with the getMarketHistoryThread thread
+     */
+    private GetRelativeAccountHistory mGetRelativeAccountHistory;
+
+    /**
      * Callback activated once we get a block header response.
      */
     private WitnessResponseListener mGetMissingTimesListener = new WitnessResponseListener() {
@@ -629,39 +634,24 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 // If we got a repeated historical transfer, it means we are done importing old
                 // transactions. We can proceed to get other missing attributes like transaction
                 // timestamps, asset references and equivalent values.
-                Log.d(TAG, String.format("Got %d transfers, which is less than what we asked for, so that must be it", resp.result.size()));
-                List<UserAccount> missingAccountNames = database.getMissingAccountNames();
-                if (missingAccountNames.size() > 0) {
-                    // Got some missing user names, so we request them to the network.
-                    getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
-                    getMissingAccountsThread.start();
-                }
-
-                List<Asset> missingAssets = database.getMissingAssets();
-                if (missingAssets.size() > 0) {
-                    // Got some missing asset symbols, so we request them to the network.
-                    getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
-                    getMissingAssets.start();
-                }
-
-                missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
-                if (missingTimes.size() > 0) {
-                    Long blockNum = missingTimes.peek();
-                    getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
-                    getMissingTimes.start();
-                }
-
-                missingEquivalentValues = database.getMissingEquivalentValues();
-                processNextEquivalentValue();
+                handleMissingTransferData();
             } else{
-                // If we got exactly the requested amount of historical transfers, it means we
-                // MUST have more to fetch.
+                Log.d(TAG,"Got all new operations, requesting again..");
                 Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
                 Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-                transferHistoryThread.start();
+
+
+                start += HISTORICAL_TRANSFER_BATCH_SIZE;
+                mGetRelativeAccountHistory.retry(0, HISTORICAL_TRANSFER_BATCH_SIZE, start);
+                /*transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();*/
+
+                // Storing the first historical transfer we got in a sort of cache used to know when to
+                // stop requesting new historical transfers to the network. Basically we keep asking for
+                // new transaction batches until we get a repeated HistoricalTransfer instance
+                lastHistoricalTransfer = resp.result.get(0);
             }
 
         }
@@ -671,6 +661,33 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             Log.e(TAG, "mTransferHistoryListener. onError. Msg: " + error.message);
         }
     };
+
+    /**
+     * Checks the transfers table in order to find a potentially incomplete transfer information.
+     * In case a missing information is found, we start a worker thread that will fetch that information.
+     */
+    private void handleMissingTransferData(){
+        List<UserAccount> missingAccountNames = database.getMissingAccountNames();
+        if (missingAccountNames.size() > 0) {
+            // Got some missing user names, so we request them to the network.
+            getMissingAccountsThread = new WebsocketWorkerThread(new GetAccounts(missingAccountNames, mGetmissingAccountsListener));
+            getMissingAccountsThread.start();
+        }
+
+        List<Asset> missingAssets = database.getMissingAssets();
+        if (missingAssets.size() > 0) {
+            // Got some missing asset symbols, so we request them to the network.
+            getMissingAssets = new WebsocketWorkerThread(new LookupAssetSymbols(missingAssets, mLookupAssetsSymbolsListener));
+            getMissingAssets.start();
+        }
+
+        missingTimes = database.getMissingTransferTimes(SECONDARY_LOAD_BATCH_SIZE);
+        if (missingTimes.size() > 0) {
+            Long blockNum = missingTimes.peek();
+            getMissingTimes = new WebsocketWorkerThread(new GetBlockHeader(blockNum, mGetMissingTimesListener));
+            getMissingTimes.start();
+        }
+    }
 
     public BalancesFragment() {
         // Required empty public constructor
@@ -957,11 +974,19 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         if (!accountId.equals("")) {
             //Update database with transaction list from the graphene blockchain
-            UserAccount me = new UserAccount(accountId);
+            // Retrieving account transactions
             start = (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
-            stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
-            Log.i(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-            transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(me, start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+            UserAccount currentUser = new UserAccount(accountId);
+            List<HistoricalTransferEntry> transactions = database.getTransactions(currentUser, -1);
+            if(transactions != null){
+                Log.d(TAG, String.format("Got %d from database", transactions.size()));
+                start += transactions.size() + HISTORICAL_TRANSFER_BATCH_SIZE;
+            }else{
+                Log.w(TAG,"transaction list is null");
+            }
+            Log.d(TAG,"GetRelativeAccountHistory. start: "+start);
+            mGetRelativeAccountHistory = new GetRelativeAccountHistory(currentUser, 0, HISTORICAL_TRANSFER_BATCH_SIZE, start, mTransferHistoryListener);
+            transferHistoryThread = new WebsocketWorkerThread(mGetRelativeAccountHistory);
             transferHistoryThread.start();
         } else {
             Log.d(TAG, "account id is empty");

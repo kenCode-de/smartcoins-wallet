@@ -1,13 +1,9 @@
 package de.bitsharesmunich.graphenej.api;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.io.Serializable;
@@ -29,8 +25,8 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
 /**
  * Created by nelson on 12/22/16.
  */
-public class GetMarketHistory extends WebSocketAdapter {
-    private String TAG = this.getClass().getName();
+public class GetMarketHistory extends BaseGrapheneHandler {
+
     // Sequence of message ids
     private final static int LOGIN_ID = 1;
     private final static int GET_HISTORY_ID = 2;
@@ -42,8 +38,6 @@ public class GetMarketHistory extends WebSocketAdapter {
     private long bucket;
     private Date start;
     private Date end;
-
-    // Internal attributes
     private WitnessResponseListener mListener;
     private WebSocket mWebsocket;
     private int currentId = 1;
@@ -51,6 +45,7 @@ public class GetMarketHistory extends WebSocketAdapter {
     private int counter = 0;
 
     public GetMarketHistory(Asset base, Asset quote, long bucket, Date start, Date end, WitnessResponseListener listener){
+        super(listener);
         this.base = base;
         this.quote = quote;
         this.bucket = bucket;
@@ -117,6 +112,7 @@ public class GetMarketHistory extends WebSocketAdapter {
         sendHistoricalMarketDataRequest();
     }
 
+
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         mWebsocket = websocket;
@@ -130,7 +126,7 @@ public class GetMarketHistory extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         String response = frame.getPayloadText();
-        Log.d(TAG, "<<< "+response);
+        System.out.println("<<< "+response);
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
         if(baseResponse.error != null){
@@ -146,7 +142,18 @@ public class GetMarketHistory extends WebSocketAdapter {
                 Type ApiIdResponse = new TypeToken<WitnessResponse<Integer>>() {}.getType();
                 WitnessResponse<Integer> witnessResponse = gson.fromJson(response, ApiIdResponse);
                 apiId = witnessResponse.result.intValue();
-                sendHistoricalMarketDataRequest();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+
+                ArrayList<Serializable> params = new ArrayList<>();
+                params.add(this.base.getObjectId());
+                params.add(this.quote.getObjectId());
+                params.add(this.bucket);
+                params.add(dateFormat.format(this.start));
+                params.add(dateFormat.format(this.end));
+
+                ApiCall getRelativeAccountHistoryCall = new ApiCall(apiId, RPC.CALL_GET_MARKET_HISTORY, params, RPC.VERSION, currentId);
+                websocket.sendText(getRelativeAccountHistoryCall.toJsonString());
             }else if(baseResponse.id >= GET_HISTORY_DATA){
                 GsonBuilder builder = new GsonBuilder();
                 Type MarketHistoryResponse = new TypeToken<WitnessResponse<List<BucketObject>>>(){}.getType();
@@ -181,23 +188,6 @@ public class GetMarketHistory extends WebSocketAdapter {
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame())
-            Log.d(TAG, ">>> "+frame.getPayloadText());
-    }
-
-    @Override
-    public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        System.out.println("onError. Msg: "+cause.getMessage());
-        mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
-    }
-
-    @Override
-    public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        System.out.println("handleCallbackError. cause: "+cause.getMessage()+", error: "+cause.getClass());
-        for (StackTraceElement element : cause.getStackTrace()){
-            System.out.println(element.getFileName()+"#"+element.getClassName()+":"+element.getLineNumber());
-        }
-        mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
+            System.out.println(">>> "+frame.getPayloadText());
     }
 }

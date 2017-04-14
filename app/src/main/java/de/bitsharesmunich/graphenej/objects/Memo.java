@@ -1,6 +1,5 @@
 package de.bitsharesmunich.graphenej.objects;
 
-
 import com.google.common.primitives.Bytes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,7 +9,6 @@ import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.errors.ChecksumException;
 import de.bitsharesmunich.graphenej.interfaces.ByteSerializable;
 import de.bitsharesmunich.graphenej.interfaces.JsonSerializable;
-
 import org.bitcoinj.core.ECKey;
 import org.spongycastle.math.ec.ECPoint;
 

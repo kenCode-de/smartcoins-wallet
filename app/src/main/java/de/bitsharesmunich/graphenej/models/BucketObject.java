@@ -1,18 +1,13 @@
 package de.bitsharesmunich.graphenej.models;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
+import de.bitsharesmunich.graphenej.Asset;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import de.bitsharesmunich.graphenej.Asset;
 
 /**
  * Created by nelson on 12/22/16.

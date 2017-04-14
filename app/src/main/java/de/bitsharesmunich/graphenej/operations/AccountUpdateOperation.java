@@ -1,4 +1,4 @@
-package de.bitsharesmunich.graphenej;
+package de.bitsharesmunich.graphenej.operations;
 
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.UnsignedLong;
@@ -6,9 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.bitsharesmunich.graphenej.*;
 
 /**
- * Class used to encapsulate operations related to the account_update_operation.
+ * Class used to encapsulate operations related to the ACCOUNT_UPDATE_OPERATION.
  */
 public class AccountUpdateOperation extends BaseOperation {
     public static final String KEY_ACCOUNT = "account";
@@ -34,7 +35,7 @@ public class AccountUpdateOperation extends BaseOperation {
      * @param fee The fee to pay. Can be null.
      */
     public AccountUpdateOperation(UserAccount account, Authority owner, Authority active, AccountOptions options, AssetAmount fee){
-        super(OperationType.account_update_operation);
+        super(OperationType.ACCOUNT_UPDATE_OPERATION);
         this.fee = fee;
         this.account = account;
         this.owner = new Optional<>(owner);

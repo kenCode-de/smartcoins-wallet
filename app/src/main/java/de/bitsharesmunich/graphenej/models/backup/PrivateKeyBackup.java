@@ -1,12 +1,8 @@
 package de.bitsharesmunich.graphenej.models.backup;
 
-import de.bitshares_munich.utils.Crypt;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Util;
-
-import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
 
 /**
  * Class used to represent an entry in the "private_keys" array field in the JSON-formatted
@@ -28,7 +24,7 @@ public class PrivateKeyBackup {
     }
 
     public byte[] decryptPrivateKey(byte[] encryptionKey){
-        return Util.decryptAES(Util.hexToBytes(this.encrypted_key), encryptionKey);
+        return Util.decryptAES(Util.hexToBytes(encrypted_key), encryptionKey);
     }
 
     public String encryptPrivateKey(byte[] data, byte[] encryptionKey){

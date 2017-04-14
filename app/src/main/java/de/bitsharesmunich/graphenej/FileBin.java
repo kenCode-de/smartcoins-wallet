@@ -4,8 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import org.bitcoinj.core.ECKey;
+import de.bitsharesmunich.graphenej.crypto.SecureRandomStrengthener;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -13,8 +12,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import de.bitsharesmunich.graphenej.crypto.SecureRandomStrengthener;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
+import org.bitcoinj.core.ECKey;
 
 /**
  * Class to manage the backup files
@@ -93,7 +92,7 @@ public abstract class FileBin {
             byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
-            checksummed = Util.encryptAES(checksummed, Util.bytesToHex(finalKey).getBytes());
+            checksummed = Util.encryptAES(checksummed, Util.byteToString(finalKey).getBytes());
 
             byte[] finalPayload = new byte[checksummed.length + randPubKey.length];
             System.arraycopy(randPubKey, 0, finalPayload, 0, randPubKey.length);
@@ -134,7 +133,7 @@ public abstract class FileBin {
             byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
-            byte[] rawData = Util.decryptAES(rawDataEncripted, Util.bytesToHex(finalKey).getBytes());
+            byte[] rawData = Util.decryptAES(rawDataEncripted, Util.byteToString(finalKey).getBytes());
             if(rawData == null) return null;
 
             byte[] checksum = new byte[4];
@@ -201,8 +200,8 @@ public abstract class FileBin {
              * Data to Store
              */
             JsonObject wallet = new JsonObject();
-            wallet.add("encryption_key", new JsonParser().parse(Util.bytesToHex(encKey_enc)));
-            wallet.add("encrypted_brainkey", new JsonParser().parse(Util.bytesToHex(encBrain)));
+            wallet.add("encryption_key", new JsonParser().parse(Util.byteToString(encKey_enc)));
+            wallet.add("encrypted_brainkey", new JsonParser().parse(Util.byteToString(encBrain)));
             JsonObject wallet_object = new JsonObject();
             wallet_object.add("wallet", wallet);
             JsonArray accountNames = new JsonArray();
@@ -223,7 +222,7 @@ public abstract class FileBin {
             byte[] finalKey = randomECKey.getPubKeyPoint().multiply(ECKey.fromPrivate(md.digest(password.getBytes("UTF-8"))).getPrivKey()).normalize().getXCoord().getEncoded();
             MessageDigest md1 = MessageDigest.getInstance("SHA-512");
             finalKey = md1.digest(finalKey);
-            rawData = Util.encryptAES(rawData, Util.bytesToHex(finalKey).getBytes());
+            rawData = Util.encryptAES(rawData, Util.byteToString(finalKey).getBytes());
             
             byte[] result = new byte[rawData.length + randPubKey.length];
             System.arraycopy(randPubKey, 0, result, 0, randPubKey.length);

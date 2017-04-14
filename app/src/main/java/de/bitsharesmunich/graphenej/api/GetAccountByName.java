@@ -2,17 +2,7 @@ package de.bitsharesmunich.graphenej.api;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.AccountOptions;
-import de.bitsharesmunich.graphenej.Authority;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.AccountProperties;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
 import java.io.Serializable;
@@ -21,15 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.AccountProperties;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+
 /**
  * Created by nelson on 11/15/16.
  */
-public class GetAccountByName extends WebSocketAdapter {
+public class GetAccountByName extends BaseGrapheneHandler {
 
     private String accountName;
     private WitnessResponseListener mListener;
 
     public GetAccountByName(String accountName, WitnessResponseListener listener){
+        super(listener);
         this.accountName = accountName;
         this.mListener = listener;
     }
@@ -44,35 +43,29 @@ public class GetAccountByName extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        try {
-            String response = frame.getPayloadText();
-            GsonBuilder builder = new GsonBuilder();
+        if(frame.isTextFrame())
+            System.out.println("<<< "+frame.getPayloadText());
+        String response = frame.getPayloadText();
+        GsonBuilder builder = new GsonBuilder();
 
-            Type GetAccountByNameResponse = new TypeToken<WitnessResponse<AccountProperties>>() {
-            }.getType();
-            builder.registerTypeAdapter(Authority.class, new Authority.AuthorityDeserializer());
-            builder.registerTypeAdapter(AccountOptions.class, new AccountOptions.AccountOptionsDeserializer());
-            WitnessResponse<AccountProperties> witnessResponse = builder.create().fromJson(response, GetAccountByNameResponse);
+        Type GetAccountByNameResponse = new TypeToken<WitnessResponse<AccountProperties>>(){}.getType();
+        builder.registerTypeAdapter(Authority.class, new Authority.AuthorityDeserializer());
+        builder.registerTypeAdapter(AccountOptions.class, new AccountOptions.AccountOptionsDeserializer());
+        WitnessResponse<AccountProperties> witnessResponse = builder.create().fromJson(response, GetAccountByNameResponse);
 
-            if (witnessResponse.error != null) {
-                this.mListener.onError(witnessResponse.error);
-            } else {
-                this.mListener.onSuccess(witnessResponse);
-            }
-        }catch(Exception e){}
+        if(witnessResponse.error != null){
+            this.mListener.onError(witnessResponse.error);
+        }else{
+            this.mListener.onSuccess(witnessResponse);
+        }
 
         websocket.disconnect();
     }
 
     @Override
-    public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
-    }
-
-    @Override
-    public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
+    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        if(frame.isTextFrame()){
+            System.out.println(">>> "+frame.getPayloadText());
+        }
     }
 }

@@ -1,22 +1,9 @@
 package de.bitsharesmunich.graphenej.api;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.Asset;
-import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.BlockData;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.Transaction;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.DynamicGlobalProperties;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
@@ -29,10 +16,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import de.bitsharesmunich.graphenej.Asset;
+import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.BlockData;
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.Transaction;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.DynamicGlobalProperties;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
+
 /**
  * Class that will handle the transaction publication procedure.
  */
-public class TransactionBroadcastSequence extends WebSocketAdapter {
+public class TransactionBroadcastSequence extends BaseGrapheneHandler {
     private final String TAG = this.getClass().getName();
 
     private final static int LOGIN_ID = 1;
@@ -56,6 +54,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
      *                of the transaction broadcast operation.
      */
     public TransactionBroadcastSequence(Transaction transaction, Asset feeAsset, WitnessResponseListener listener){
+        super(listener);
         this.transaction = transaction;
         this.feeAsset = feeAsset;
         this.mListener = listener;
@@ -73,7 +72,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame())
-            Log.d(TAG, "<<< "+frame.getPayloadText());
+            System.out.println("<<< "+frame.getPayloadText());
         String response = frame.getPayloadText();
         Gson gson = new Gson();
         BaseResponse baseResponse = gson.fromJson(response, BaseResponse.class);
@@ -126,13 +125,14 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
             }else if(baseResponse.id ==  GET_REQUIRED_FEES){
                 Type GetRequiredFeesResponse = new TypeToken<WitnessResponse<List<AssetAmount>>>(){}.getType();
                 GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetDeserializer());
+                gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetAmountDeserializer());
                 WitnessResponse<List<AssetAmount>> requiredFeesResponse = gsonBuilder.create().fromJson(response, GetRequiredFeesResponse);
 
                 // Setting fees
                 transaction.setFees(requiredFeesResponse.result);
                 ArrayList<Serializable> transactions = new ArrayList<>();
                 transactions.add(transaction);
+
                 ApiCall call = new ApiCall(broadcastApiId,
                         RPC.CALL_BROADCAST_TRANSACTION,
                         transactions,
@@ -143,7 +143,7 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
                 websocket.sendText(call.toJsonString());
             }else if(baseResponse.id >= BROADCAST_TRANSACTION){
                 Type WitnessResponseType = new TypeToken<WitnessResponse<String>>(){}.getType();
-                WitnessResponse<WitnessResponse<String>> witnessResponse = gson.fromJson(response, WitnessResponseType);
+                WitnessResponse<String> witnessResponse = gson.fromJson(response, WitnessResponseType);
                 mListener.onSuccess(witnessResponse);
                 websocket.disconnect();
             }
@@ -153,22 +153,22 @@ public class TransactionBroadcastSequence extends WebSocketAdapter {
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
         if(frame.isTextFrame()){
-            Log.d(TAG, ">>> "+frame.getPayloadText());
+            System.out.println(">>> "+frame.getPayloadText());
         }
     }
 
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        Log.e(TAG, "onError. cause: "+cause.getMessage());
+        System.out.println("onError. cause: "+cause.getMessage());
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
     }
 
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        Log.e(TAG, "handleCallbackError. cause: "+cause.getMessage()+", error: "+cause.getClass());
+        System.out.println("handleCallbackError. cause: "+cause.getMessage()+", error: "+cause.getClass());
         for (StackTraceElement element : cause.getStackTrace()){
-            Log.e(TAG, element.getFileName()+"#"+element.getClassName()+":"+element.getLineNumber());
+            System.out.println(element.getFileName()+"#"+element.getClassName()+":"+element.getLineNumber());
         }
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
         websocket.disconnect();
