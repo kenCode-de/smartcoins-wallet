@@ -606,14 +606,14 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             // If we got exactly the requested amount of historical transfers, it means we
             // MUST have more to fetch.
-            if (false){//(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
-            //if (resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
+            //if (false){//(resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
+            if (resp.result.size() == HISTORICAL_TRANSFER_BATCH_SIZE && historicalTransferCount < HISTORICAL_TRANSFER_MAX) {
                 Log.v(TAG, String.format("Got %d transactions, which is exactly the requested amount, so we might have more.", resp.result.size()));
                 start = transactions.size() + (historicalTransferCount * HISTORICAL_TRANSFER_BATCH_SIZE);
                 stop = start + HISTORICAL_TRANSFER_BATCH_SIZE + 1;
                 Log.v(TAG, String.format("Calling get_relative_account_history. start: %d, limit: %d, stop: %d", start, HISTORICAL_TRANSFER_BATCH_SIZE, stop));
-                //transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
-                //transferHistoryThread.start();
+                transferHistoryThread = new WebsocketWorkerThread(new GetRelativeAccountHistory(new UserAccount(accountId), start, HISTORICAL_TRANSFER_BATCH_SIZE, stop, mTransferHistoryListener));
+                transferHistoryThread.start();
             } else {
                 // If we got less than the requested amount of historical transfers, it means we
                 // are done importing old transactions. We can proceed to get other missing attributes
