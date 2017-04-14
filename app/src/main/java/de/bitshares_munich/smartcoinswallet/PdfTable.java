@@ -32,9 +32,9 @@ import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.interfaces.PdfGeneratorListener;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 
 /**
  * Created by developer on 5/23/16.
@@ -136,7 +136,7 @@ public class PdfTable {
                 table.addCell(detailsCell);
 
                 String amountText = "";
-                AssetAmount assetAmount = operation.getTransferAmount();
+                AssetAmount assetAmount = operation.getAssetAmount();
                 String preFormat = "%%.%df %%s";
                 String format = String.format(preFormat, assetAmount.getAsset().getPrecision());
                 if (operation.getFrom().getObjectId().equals(me.getObjectId())) {

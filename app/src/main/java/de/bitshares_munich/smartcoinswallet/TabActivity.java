@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,21 +54,23 @@ import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.graphenej.AccountOptions;
-import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BaseOperation;
+import de.bitsharesmunich.graphenej.BlockData;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.operations.AccountUpdateOperation;
+import de.bitsharesmunich.graphenej.operations.AccountUpdateOperationBuilder;
 
 public class TabActivity extends BaseActivity implements BackupBinDelegate, PromptUpdateDialog.UpdateAccountsListListener, LockListener {
     private final String TAG_DIALOG_PROMPT_ACCOUNT_UPDATE = "prompt_account_update";
@@ -520,26 +524,31 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             authMap.put(address.getPublicKey(), 1);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
-            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, brainKey.getWalletImportFormat()).getKey())
-                    .setAccont(currentTask.getAccount())
+            AccountUpdateOperationBuilder builder = new AccountUpdateOperationBuilder()
+                    .setAccount(currentTask.getAccount())
                     .setActive(authority)
                     .setOptions(options);
 
+            AccountUpdateOperation op = builder.build();
+
             if (currentTask.isUpdateOwner()) {
                 // Only changing the "owner" authority in some cases.
-                builder.setOwner(authority);
+                op.setOwner(authority);
             }
 //            if(currentTask.isUpdateMemo()){
 //                // Only changing the "memo" authority if it is the same as the active.
 //                builder.setOptions(options);
 //            }
 
-            Transaction transaction = builder.build();
+            ArrayList<BaseOperation> operations = new ArrayList<>();
+            operations.add(op);
+            Date date = Calendar.getInstance().getTime();
+            long expirationTime = (date.getTime() / 1000) + Transaction.DEFAULT_EXPIRATION_TIME;
+            BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime);
+            Transaction transaction = new Transaction(DumpedPrivateKey.fromBase58(null, brainKey.getWalletImportFormat()).getKey(), blockData, operations);
 
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), refreshKeysListener), nodeIndex);
             refreshKeyWorker.start();
-        } catch (MalformedTransactionException e) {
-            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         } catch (IOException e) {
             Log.e(TAG, "IOException. Msg: " + e.getMessage());
         }
