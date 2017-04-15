@@ -1,12 +1,9 @@
 package de.bitshares_munich.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.text.SpannableString;
-import android.text.style.StyleSpan;
-import android.text.Spannable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +23,9 @@ import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import de.codecrafters.tableview.TableDataAdapter;
 
 
@@ -160,7 +157,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
         TextView transferAmountTextView = (TextView) root.findViewById(R.id.asset_amount);
-        AssetAmount transferAmount = operation.getTransferAmount();
+        AssetAmount transferAmount = operation.getAssetAmount();
 
         TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
         AssetAmount smartcoinAmount = historicalTransfer.getEquivalentValue();

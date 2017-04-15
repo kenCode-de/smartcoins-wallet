@@ -47,6 +47,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,21 +77,23 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.graphenej.AccountOptions;
-import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.Authority;
+import de.bitsharesmunich.graphenej.BaseOperation;
+import de.bitsharesmunich.graphenej.BlockData;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
+import de.bitsharesmunich.graphenej.operations.AccountUpdateOperation;
+import de.bitsharesmunich.graphenej.operations.AccountUpdateOperationBuilder;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String check_for_updates = "check_for_updates";
@@ -937,20 +940,30 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             authMap.put(address.getPublicKey(), 1);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
-            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
-                    .setAccont(new UserAccount(accountDetails.account_id))
+
+            AccountUpdateOperationBuilder builder = new AccountUpdateOperationBuilder()
+                    .setAccount(new UserAccount(accountDetails.account_id))
                     .setActive(authority)
                     .setOptions(options);
+
+            AccountUpdateOperation op = builder.build();
+            ArrayList<BaseOperation> operations = new ArrayList<>();
+            operations.add(op);
+
+//            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
+//                    .setAccont(new UserAccount(accountDetails.account_id))
+//                    .setActive(authority)
+//                    .setOptions(options);
 
             if (updateAllRoles) {
                 builder.setOwner(authority);
             }
-
-            Transaction transaction = builder.build();
+            Date date = Calendar.getInstance().getTime();
+            long expirationTime = (date.getTime() / 1000) + Transaction.DEFAULT_EXPIRATION_TIME;
+            BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime);
+            Transaction transaction = new Transaction(DumpedPrivateKey.fromBase58(null, currentWif).getKey(), blockData, operations);
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mAuthorityChangeListener), nodeIndex);
             refreshKeyWorker.start();
-        } catch (MalformedTransactionException e) {
-            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "NoSuchAlgorithmException. Msg: " + e.getMessage());
         } catch (IOException e) {

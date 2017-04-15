@@ -60,10 +60,10 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
@@ -275,9 +275,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
         tvBlockNumber.setText(String.format("%d", historicalTransfer.getBlockNum()));
         tvTrxInBlock.setText(String.format("%s", historicalTransfer.getId()));
 
-        double amount = Util.fromBase(historicalTransfer.getOperation().getTransferAmount());
-        String symbol = historicalTransfer.getOperation().getTransferAmount().getAsset().getSymbol();
-        int precision = historicalTransfer.getOperation().getTransferAmount().getAsset().getPrecision();
+        double amount = Util.fromBase(historicalTransfer.getOperation().getAssetAmount());
+        String symbol = historicalTransfer.getOperation().getAssetAmount().getAsset().getSymbol();
+        int precision = historicalTransfer.getOperation().getAssetAmount().getAsset().getPrecision();
         String textFormat = String.format("%%.%df %%s", precision);
         tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
 
