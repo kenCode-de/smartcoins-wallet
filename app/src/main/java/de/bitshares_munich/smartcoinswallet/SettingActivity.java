@@ -185,6 +185,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
+    private WebsocketWorkerThread getKeyReferencesWorker;
 
     /* Database interface */
     private SCWallDatabase database;
@@ -1053,6 +1054,18 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     void setImport_new_account() {
         Intent intent = new Intent(getApplicationContext(), ExistingAccountActivity.class);
         startActivity(intent);
+    }
+
+    @OnClick(R.id.recover_keys)
+    void onRecoverKeys(){
+        ArrayList<Address> addressList = new ArrayList<>();
+        ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+        for(String suggestion : suggestionList){
+            BrainKey brainKey = new BrainKey(suggestion, 0);
+            Address address = new Address(ECKey.fromPublicOnly(brainKey.getPublicKey()));
+            addressList.add(address);
+        }
+        getKeyReferencesWorker = new WebsocketWorkerThread(new GetK)
     }
 
     @OnClick(R.id.upgrade_account)

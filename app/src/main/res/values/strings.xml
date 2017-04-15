@@ -328,6 +328,7 @@
     <string name="upgrading">Upgrading...</string>
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
+    <string name="recover_keys">RECOVER KEYS</string>
     <string name="remove_account">REMOVE ACCOUNT</string>
     <string name="txt_alertmsg">Are you sure to delete this account</string>
     <string name="delete">Delete</string>

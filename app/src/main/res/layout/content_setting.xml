@@ -375,19 +375,31 @@
                         android:layout_height="45dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.33"
                         android:background="@drawable/button_border"
                         android:stateListAnimator="@animator/my_animated_button"
                         android:text="@string/upgrade_account"
                         android:textColor="@drawable/btn_txt"
                         android:textStyle="normal" />
+                    <Button
+                        android:id="@+id/recover_keys"
+                        android:layout_width="0dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.33"
+                        android:background="@drawable/button_border"
+                        android:stateListAnimator="@animator/my_animated_button"
+                        android:text="@string/recover_keys"
+                        android:textColor="@drawable/btn_txt"
+                        android:textStyle="normal"/>
 
                     <Button
                         android:id="@+id/remove_account"
                         android:layout_width="0dp"
                         android:layout_height="45dp"
                         android:layout_gravity="center"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.33"
                         android:background="@drawable/button_border"
                         android:stateListAnimator="@animator/my_animated_button"
                         android:text="@string/remove_account"
