@@ -273,22 +273,6 @@ public class Helper {
 
     }
 
-    public static ArrayList<String> getCountriesArray1() {
-        Locale[] locales = Locale.getAvailableLocales();
-        ArrayList<String> countries = new ArrayList<String>();
-        for (Locale locale : locales) {
-            String country = locale.getDisplayCountry();
-            Currency currency = Currency.getInstance(locale);
-            if (country.trim().length() > 0 && !countries.contains(country) && !country.trim().equals("World")) {
-                countries.add(country + " (" + currency + ")");
-            }
-        }
-        Collections.sort(countries);
-        setCountriesISOMap();
-        return countries;
-    }
-
-
     public static ArrayList<String> getCountriesArray() {
         String[] locales = Locale.getISOCountries();
         ArrayList<String> countries = new ArrayList<String>();
@@ -380,7 +364,15 @@ public class Helper {
     }
 
     /*
-     * Setup app Country LOCALE and app Contry PREFERENCES.
+     * Get app Country LOCALE/PREFERENCES.
+     */
+    public static String getCountry(Context context) {
+        //Setup locale
+        return Helper.fetchStringSharePref(context, context.getString(R.string.pref_country));
+    }
+
+    /*
+     * Setup app Country LOCALE and app Country PREFERENCES.
      */
     public static void setCountry(Context context, String country) {
         //Setup locale

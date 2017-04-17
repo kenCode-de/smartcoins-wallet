@@ -74,6 +74,10 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -101,6 +105,7 @@ dependencies {
     compile 'com.google.guava:guava:19.0'
     compile project(':zxing')
     compile project(':aFileDialog')
+    compile('com.github.kenCode-de:graphenej:0.4.1-SNAPSHOT') { changing = true }
 }
 
 afterEvaluate {

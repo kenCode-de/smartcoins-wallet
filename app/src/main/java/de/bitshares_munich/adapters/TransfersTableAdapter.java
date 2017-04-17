@@ -2,6 +2,7 @@ package de.bitshares_munich.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,9 @@ import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
 import de.bitsharesmunich.graphenej.AssetAmount;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import de.codecrafters.tableview.TableDataAdapter;
 
 
@@ -46,15 +47,19 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         View renderedView = null;
         HistoricalTransferEntry transferEntry = getRowData(rowIndex);
         switch (columnIndex) {
+            //Datetime
             case 0:
                 renderedView = renderDateView(transferEntry);
                 break;
+            //Image send/receive drawable
             case 1:
-                renderedView = renderSendRecieve(transferEntry);
+                renderedView = renderSendReceive(transferEntry);
                 break;
+            //Transfer details
             case 2:
                 renderedView = renderDetails(transferEntry);
                 break;
+            //Amount
             case 3:
                 renderedView = renderAmount(transferEntry);
                 break;
@@ -98,10 +103,10 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         return v;
     }
 
-    private View renderSendRecieve(HistoricalTransferEntry historicalTransfer) {
+    private View renderSendReceive(HistoricalTransferEntry historicalTransfer) {
         TransferOperation operation = historicalTransfer.getHistoricalTransfer().getOperation();
         LayoutInflater layoutInflater = getLayoutInflater();
-        View v = layoutInflater.inflate(R.layout.transactionssendrecieve, null);
+        View v = layoutInflater.inflate(R.layout.transactionssendreceive, null);
         ImageView imgView = (ImageView) v.findViewById(R.id.iv);
         if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
             imgView.setImageResource(R.drawable.send);
@@ -116,17 +121,33 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         LayoutInflater me = getLayoutInflater();
         View v = me.inflate(R.layout.transactiondetailsview, null);
 
-        String toMessage = getContext().getText(R.string.to_capital) + ": " + operation.getTo().getAccountName();
-        TextView toUser = (TextView) v.findViewById(R.id.destination_account);
-        toUser.setText(toMessage);
+        //Setup Account Name Sender/Receiver
+        String accountNameText;
+        String accountMessageText;
+        if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
+            //If it is a SEND event
+            accountNameText = operation.getTo().getAccountName();
+            accountMessageText = getContext().getText(R.string.to_capital) + ": ";
+        } else {
+            //If it is a RECEIVE event
+            accountNameText = operation.getFrom().getAccountName();
+            accountMessageText = getContext().getText(R.string.from_capital) + ": ";
+        }
+        SpannableString accountMessage = new SpannableString(accountMessageText + accountNameText);
+        //accountMessage.setSpan(new StyleSpan(Typeface.BOLD), accountMessageText.length(), accountMessageText.length() + accountNameText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        TextView accountName = (TextView) v.findViewById(R.id.transaction_account);
+        accountName.setText(accountMessage);
+        Log.d(TAG,"accountMessage: " + accountMessage);
 
-        String fromMessage = getContext().getText(R.string.from_capital) + ": " + operation.getFrom().getAccountName();
-        TextView fromUser = (TextView) v.findViewById(R.id.origin_account);
-        fromUser.setText(fromMessage);
-
+        //Setup Memo
+        Log.d(TAG,"memo: " + operation.getMemo().getPlaintextMessage());
+        TextView memoTextView = (TextView) v.findViewById(R.id.memo);
         if (!operation.getMemo().getPlaintextMessage().equals("")) {
-            TextView memoTextView = (TextView) v.findViewById(R.id.memo);
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
+        }
+        else{
+            //If no memo, hide it so the account name will be vertically centered
+            memoTextView.setVisibility(View.GONE);
         }
         return v;
     }
@@ -136,7 +157,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
         TextView transferAmountTextView = (TextView) root.findViewById(R.id.asset_amount);
-        AssetAmount transferAmount = operation.getTransferAmount();
+        AssetAmount transferAmount = operation.getAssetAmount();
 
         TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
         AssetAmount smartcoinAmount = historicalTransfer.getEquivalentValue();

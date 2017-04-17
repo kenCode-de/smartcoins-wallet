@@ -242,6 +242,7 @@
                 android:background="@color/whiteColor"
                 android:backgroundTint="@color/whiteColor"
                 android:nestedScrollingEnabled="true"
+                android:transcriptMode="alwaysScroll"
                 android:scrollbars="vertical"
                 table:tableView_columnCount="4"
                 table:tableView_headerColor="@color/transactionsHeader"

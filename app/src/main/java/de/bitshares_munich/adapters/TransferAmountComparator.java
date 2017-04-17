@@ -14,8 +14,8 @@ public class TransferAmountComparator implements Comparator<HistoricalTransferEn
 
     @Override
     public int compare(HistoricalTransferEntry lhs, HistoricalTransferEntry rhs) {
-        UnsignedLong lhsAmount = lhs.getHistoricalTransfer().getOperation().getTransferAmount().getAmount();
-        UnsignedLong rhsAmount = rhs.getHistoricalTransfer().getOperation().getTransferAmount().getAmount();
+        UnsignedLong lhsAmount = lhs.getHistoricalTransfer().getOperation().getAssetAmount().getAmount();
+        UnsignedLong rhsAmount = rhs.getHistoricalTransfer().getOperation().getAssetAmount().getAmount();
         return lhsAmount.compareTo(rhsAmount);
     }
 }

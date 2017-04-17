@@ -1,13 +1,7 @@
-package de.bitsharesmunich.graphenej.api;
+package de.bitsharesmunich.graphenej.models.api;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import de.bitsharesmunich.graphenej.models.Market;
-import de.bitsharesmunich.graphenej.RPC;
-import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
-import de.bitsharesmunich.graphenej.models.ApiCall;
-import de.bitsharesmunich.graphenej.models.BaseResponse;
-import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -18,6 +12,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import de.bitsharesmunich.graphenej.RPC;
+import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
+import de.bitsharesmunich.graphenej.models.ApiCall;
+import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.Market;
+import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 /**
  * Created by hvarona on 12/12/16.

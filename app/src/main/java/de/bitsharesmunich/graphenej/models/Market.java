@@ -1,6 +1,5 @@
 package de.bitsharesmunich.graphenej.models;
 
-
 /**
  *
  * @author hvarona 12/12/16

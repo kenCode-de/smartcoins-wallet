@@ -12,7 +12,7 @@ import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.fragments.BalancesFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.smartcoinswallet.eReceipt;
-import de.bitsharesmunich.graphenej.TransferOperation;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import de.codecrafters.tableview.listeners.TableDataClickListener;
 
 /**

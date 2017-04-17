@@ -387,6 +387,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
             Log.d(TAG, "brain key: " + brainKeySuggestion);
             Log.d(TAG, "address would be: " + address.toString());
+            Log.d(TAG, "WIF would be: " + brainKey.getWalletImportFormat());
             mAddress = address.toString();
             brainPrivKey = brainKeySuggestion;
             try {

@@ -22,12 +22,12 @@ import de.bitshares_munich.models.TransactionDetails;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
 import de.bitsharesmunich.graphenej.BrainKey;
-import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BlockHeader;
 import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 import de.bitsharesmunich.graphenej.objects.Memo;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
 
 /**
  * Database wrapper class, providing access to the underlying database.
@@ -79,8 +79,8 @@ public class SCWallDatabase {
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FEE_ASSET_ID, operation.getFee().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_FROM, operation.getFrom().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TO, operation.getTo().getObjectId());
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT, operation.getTransferAmount().getAmount().longValue());
-            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID, operation.getTransferAmount().getAsset().getObjectId());
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT, operation.getAssetAmount().getAmount().longValue());
+            contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID, operation.getAssetAmount().getAsset().getObjectId());
             contentValues.put(SCWallDatabaseContract.Transfers.COLUMN_BLOCK_NUM, historicalTransfer.getBlockNum());
 
             if (transferEntry.getEquivalentValue() != null) {
@@ -150,7 +150,7 @@ public class SCWallDatabase {
                 String toId = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TO));
 
                 // Skipping transfer if we are missing users information
-                if (userMap.get(fromId) == null || userMap.get(toId) == null) {
+                /*if (userMap.get(fromId) == null || userMap.get(toId) == null) {
                     cursor.moveToNext();
                     continue;
                 }
@@ -160,7 +160,7 @@ public class SCWallDatabase {
                 if (t == 0) {
                     cursor.moveToNext();
                     continue;
-                }
+                }*/
 
                 // Building UserAccount instances
                 UserAccount from = new UserAccount(fromId, userMap.get(fromId));
@@ -174,10 +174,10 @@ public class SCWallDatabase {
                 Asset feeAsset = assetMap.get(feeAssetId);
 
                 // Skipping transfer if we are missing transfer and fee asset information
-                if (transferAsset == null || feeAsset == null) {
+                /*if (transferAsset == null || feeAsset == null) {
                     cursor.moveToNext();
                     continue;
-                }
+                }*/
 
                 // Transfer and fee amounts
                 AssetAmount transferAmount = new AssetAmount(UnsignedLong.valueOf(cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT))), transferAsset);
@@ -226,8 +226,8 @@ public class SCWallDatabase {
                     }
                     assetCursor.close();
                 } else {
-                    cursor.moveToNext();
-                    continue;
+                    Date date = new Date(transferEntry.getTimestamp() * 1000);
+                    Log.w(TAG,String.format("Got no eq value for transaction at %s", date.toString()));
                 }
 
                 // Adding historical transfer entry to array
@@ -354,6 +354,54 @@ public class SCWallDatabase {
     }
 
     /**
+     * Returns a given Asset instance, given only its symbol
+     * @param symbol: The symbol used by the desired Asset
+     * @return
+     */
+    public Asset getAssetBySymbol(String symbol){
+        return this.getAssetByProperty(SCWallDatabaseContract.Assets.COLUMN_SYMBOL, symbol);
+    }
+
+    /**
+     * Generic method that receives a specific column and value pair and returns any asset that
+     * matches that paired condition.
+     * @param column: The column to use
+     * @param value: The desired value of the previously specified column.
+     * @return: An Asset instance, if there is one, null otherwise.
+     */
+    private Asset getAssetByProperty(String column, String value){
+        String table = SCWallDatabaseContract.Assets.TABLE_NAME;
+        String selection = column + "=?";
+        String[] selectionArgs = new String[]{ value };
+        Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
+        Asset asset = null;
+        if(cursor.moveToFirst()){
+            asset = buildAsset(cursor);
+        }
+        cursor.close();
+        return asset;
+    }
+
+    /**
+     * Internal method used to take the data from the cursor and create a representative Asset instance.
+     * This method will not modify the cursor state neither close it.
+     * @param cursor: The cursor from where to read the data.
+     * @return: An Asset instance.
+     */
+    private Asset buildAsset(Cursor cursor){
+        String id = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_ID));
+        String symbol = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_SYMBOL));
+        int precision = cursor.getInt(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_PRECISION));
+        String issuer = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_ISSUER));
+        Asset asset = new Asset(id, symbol, precision, issuer);
+//        AssetOptions options = new AssetOptions();
+//        options.setMaxSupply(UnsignedLong.valueOf(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_MAX_SUPPLY))));
+//        options.setDescription(cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Assets.COLUMN_DESCRIPTION)));
+//        asset.setAssetOptions(options);
+        return asset;
+    }
+
+    /**
      * Returns all missing asset references from the transfers table.
      *
      * @return: List of Asset instances.
@@ -445,7 +493,9 @@ public class SCWallDatabase {
                 SCWallDatabaseContract.Transfers.COLUMN_ID,
                 SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP,
                 SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_ASSET_ID,
-                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT
+                SCWallDatabaseContract.Transfers.COLUMN_TRANSFER_AMOUNT,
+                SCWallDatabaseContract.Transfers.COLUMN_FROM,
+                SCWallDatabaseContract.Transfers.COLUMN_TO
         };
         String selection = SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID + " is null and " +
                 SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP + " != 0";
@@ -458,9 +508,13 @@ public class SCWallDatabase {
                 long timestamp = cursor.getLong(1);
                 String assetId = cursor.getString(2);
                 long amount = cursor.getLong(3);
+                String sourceId = cursor.getString(4);
+                String destinationId = cursor.getString(5);
 
-                TransferOperation operation = new TransferOperation();
-                operation.setAmount(new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId)));
+                UserAccount from = new UserAccount(sourceId);
+                UserAccount to = new UserAccount(destinationId);
+                AssetAmount transferAmount = new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId));
+                TransferOperation operation = new TransferOperation(from, to, transferAmount);
 
                 HistoricalTransfer transfer = new HistoricalTransfer();
                 transfer.setId(historicalTransferId);
