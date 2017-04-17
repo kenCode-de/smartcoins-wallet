@@ -27,4 +27,10 @@ public class ContactAddress {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public ContactAddress clone(){
+        ContactAddress clon = new ContactAddress(this.coin,this.address);
+
+        return clon;
+    }
 }

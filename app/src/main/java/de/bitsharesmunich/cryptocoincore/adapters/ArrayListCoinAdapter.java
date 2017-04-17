@@ -5,6 +5,8 @@ package de.bitsharesmunich.cryptocoincore.adapters;
  */
 
 import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -22,14 +24,18 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
 
     private Activity activity;
     private ArrayList data;
+    private List<Coin> coinsUsed;
     public Resources res;
     LayoutInflater inflater;
 
-    public ArrayListCoinAdapter(Activity activity, int textViewResourceId, ArrayList objects, Resources resLocal){
+    public ArrayListCoinAdapter(Activity activity, int textViewResourceId, ArrayList objects, List<Coin> coinsUsed, Resources resLocal){
         super(activity, textViewResourceId, objects);
+
+        objects.add(0,null);
 
         this.activity = activity;
         this.data = objects;
+        this.coinsUsed = coinsUsed;
         this.res = resLocal;
 
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,16 +51,37 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
         return getCustomView(position, convertView, parent);
     }
 
+    @Override
+    public boolean isEnabled(int position) {
+        Coin nextCoin = (Coin) data.get(position);
+
+        if (nextCoin != null) {
+            if (coinsUsed.contains(nextCoin)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     public View getCustomView(int position, View convertView, ViewGroup parent) {
         View row = inflater.inflate(R.layout.coin_spinner_row, parent, false);
 
         Coin nextCoin = (Coin) data.get(position);
+        TextView coinLabel = (TextView) row.findViewById(R.id.coin_label);
+        ImageView coinIcon = (ImageView) row.findViewById(R.id.coin_icon);
 
-        TextView coinLabel = (TextView)row.findViewById(R.id.coin_label);
-        ImageView coinIcon = (ImageView)row.findViewById(R.id.coin_icon);
+        if (nextCoin != null) {
+            if (coinsUsed.contains(nextCoin)) {
+                coinLabel.setTextColor(res.getColor(R.color.gray));
+            }
 
-        coinLabel.setText(nextCoin.getLabel());
-        coinIcon.setImageResource(nextCoin.getIcon());
+            coinLabel.setText(nextCoin.getLabel());
+            coinIcon.setImageResource(nextCoin.getIcon());
+        } else {
+            coinIcon.setImageResource(R.mipmap.coin_unknown);
+        }
 
         return row;
     }

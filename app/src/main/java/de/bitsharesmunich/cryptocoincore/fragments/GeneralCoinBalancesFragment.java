@@ -262,6 +262,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
     public static ISound iSound;
 
+    List<Coin> coinsUsed = new ArrayList<Coin>(); //this will be used for enabling/disabling coins in spinner selector
+
     public GeneralCoinBalancesFragment() {
         // Required empty public constructor
     }
@@ -1413,7 +1415,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
 
         Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
-
+        this.coinsUsed.add(account.getCoin());
 
         //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
         AccountActivityWatcher watcher = new AccountActivityWatcher(account, getContext());
@@ -1737,7 +1739,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             data.add(coin);
         }
 
-        final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this.getActivity(),R.layout.coin_spinner_row,data,getResources());
+        final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this.getActivity(),R.layout.coin_spinner_row,data,coinsUsed,getResources());
         coinSpinner.setAdapter(coinAdapter);
 
         createButton.setOnClickListener(new View.OnClickListener() {

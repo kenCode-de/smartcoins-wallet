@@ -131,6 +131,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
     ContactsDelegate contactsDelegate;
     webSocketCallHelper myWebSocketHelper;
 
+    List<Coin> coinsUsed = new ArrayList<Coin>(); //this will be used for enabling/disabling coins in spinner selector
 
     ContactAddress lastContactAddressAdded; //this is used to prevent reinserting addressView when the user types a new address
 
@@ -360,7 +361,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
     public void onContactAddressModified(final ContactEvent event) {
         this.runOnUiThread(new Runnable() {
             public void run() {
-                updateAddressView(event.getContactAddress(), event.getIndex());
+                updateAddressView(event.getOldAddress(), event.getContactAddress(), event.getIndex());
             }
         });
     }
@@ -387,12 +388,16 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                 data.add(coin);
             }
 
-            final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this, R.layout.coin_spinner_row, data, getResources());
+            final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this, R.layout.coin_spinner_row, data, coinsUsed, getResources());
             coinSpinner.setAdapter(coinAdapter);
 
             if (address != null) {
                 addressEdit.setText(address.getAddress());
                 coinSpinner.setSelection(data.indexOf(address.getCoin()));
+
+                if (!coinsUsed.contains(address.getCoin())){
+                    coinsUsed.add(address.getCoin());
+                }
             }
 
             addressEdit.addTextChangedListener(new TextWatcher() {
@@ -416,25 +421,31 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
     }
 
-    public void updateAddressView(ContactAddress address, int index){
+    public void updateAddressView(ContactAddress oldAddress, ContactAddress newAddress, int index){
         final View addressView = accountsLayout.getChildAt(index);
         EditText addressEdit = (EditText)addressView.findViewById(R.id.Accountname);
         Spinner coinSpinner = (Spinner)addressView.findViewById(R.id.address_coin_spinner);
 
-        if (address != null){
-            addressEdit.setText(address.getAddress());
-            coinSpinner.setSelection(((ArrayListCoinAdapter)coinSpinner.getAdapter()).getPosition(address.getCoin().getLabel()));
+        if (newAddress != null){
+            addressEdit.setText(newAddress.getAddress());
+            coinSpinner.setSelection(((ArrayListCoinAdapter)coinSpinner.getAdapter()).getPosition(newAddress.getCoin().getLabel()));
+            coinsUsed.remove(oldAddress.getCoin());
+            if (!coinsUsed.contains(newAddress.getCoin())) {
+                coinsUsed.add(newAddress.getCoin());
+            }
         }
     }
 
     public void removeAddressView(ContactAddress address, int index){
         accountsLayout.removeViewAt(index);
+        coinsUsed.remove(address.getCoin());
     }
 
     public void loadAddresses(){
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (this.contact != null) {
+            //getContactsAddress loads into the contact the addresses and for every address the onNewContactAddress event gets called
             db.getContactAddresses(this.contact);
         }
 
