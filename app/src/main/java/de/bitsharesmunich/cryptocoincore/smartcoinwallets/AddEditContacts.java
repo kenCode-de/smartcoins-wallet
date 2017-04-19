@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -329,18 +330,22 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         final Coin coinSelected = (Coin)addressCoinSpinner.getSelectedItem();
 
         if (childIndex == accountsLayout.getChildCount()-1) {//If it is the last child
-            ContactAddress newContactAddress = new ContactAddress(coinSelected,accountName.getText().toString());
-            lastContactAddressAdded = newContactAddress;
-            this.contact.addAddress(newContactAddress);
-            validateAddress(newContactAddress, contactAddressView);
+            if ((coinSelected != null) && (!accountNameString.isEmpty()) && (!coinsUsed.contains(coinSelected))) {
+                ContactAddress newContactAddress = new ContactAddress(coinSelected, accountName.getText().toString());
+                lastContactAddressAdded = newContactAddress;
+                this.contact.addAddress(newContactAddress);
+                coinsUsed.add(coinSelected);
+                validateAddress(newContactAddress, contactAddressView);
+            }
         } else { //then is an address already added to contact
             ContactAddress contactAddress = this.contact.getAddressByIndex(childIndex);
 
             if (accountNameString.equals("")){
                 this.contact.removeAddress(contactAddress);
             } else {
-                contactAddress.setAddress(accountNameString);
-                contactAddress.setCoin(coinSelected);
+                //contactAddress.setAddress(accountNameString);
+                //contactAddress.setCoin(coinSelected);
+                this.contact.updateAddress(contactAddress,coinSelected, accountNameString);
                 validateAddress(contactAddress, contactAddressView);
             }
         }
@@ -399,6 +404,18 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                     coinsUsed.add(address.getCoin());
                 }
             }
+
+            coinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    onContactAddressViewChange(newAddress);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
 
             addressEdit.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -461,9 +478,23 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         } else {
             LinearLayout lastAddress = (LinearLayout)accountsLayout.getChildAt(accountsLayout.getChildCount()-1);
             EditText addressEdit = (EditText)lastAddress.findViewById(R.id.Accountname);
+            Spinner lastAddressCoinSpinner = (Spinner) lastAddress.findViewById(R.id.address_coin_spinner);
+            final Coin lastCoinSelected = (Coin)lastAddressCoinSpinner.getSelectedItem();
 
             if (!addressEdit.getText().toString().equals("")) {
                 addNewView = true;
+            }
+
+            View nextLayout = null;
+            Spinner addressCoinSpinner = null;
+            for (int i=0;i<accountsLayout.getChildCount()-1;i++){
+                nextLayout = accountsLayout.getChildAt(i);
+                addressCoinSpinner = (Spinner) nextLayout.findViewById(R.id.address_coin_spinner);
+                final Coin coinSelected = (Coin)addressCoinSpinner.getSelectedItem();
+                if (coinSelected == lastCoinSelected){
+                    addNewView = false;
+                    break;
+                }
             }
         }
 
@@ -525,15 +556,17 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                     myAccountNameValidationTimer.start();
 
                 } else {
-                    GeneralCoinValidator validator = GeneralCoinFactory.getValidator(contactAddress.getCoin());
-                    validReceiver = validator.validateAddress(contactAddress.getAddress());
+                    if (contactAddress.getCoin() != null) {
+                        GeneralCoinValidator validator = GeneralCoinFactory.getValidator(contactAddress.getCoin());
+                        validReceiver = validator.validateAddress(contactAddress.getAddress());
 
-                    if (!validReceiver){
-                        warning.setTextColor(getColorWrapper(context, R.color.red));
-                        warning.setText(getString(R.string.address_invalid_format));
-                        warning.setVisibility(View.VISIBLE);
-                    } else {
-                        warning.setText("");
+                        if (!validReceiver) {
+                            warning.setTextColor(getColorWrapper(context, R.color.red));
+                            warning.setText(getString(R.string.address_invalid_format));
+                            warning.setVisibility(View.VISIBLE);
+                        } else {
+                            warning.setText("");
+                        }
                     }
                 }
             }

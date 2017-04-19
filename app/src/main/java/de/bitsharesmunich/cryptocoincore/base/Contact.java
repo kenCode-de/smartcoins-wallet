@@ -122,10 +122,12 @@ public class Contact {
         int index = addresses.indexOf(contactAddress);
 
         if (index >= 0) {
-            ContactAddress oldContactAddress = contactAddress.clone();
-            contactAddress.setAddress(newAddress);
-            contactAddress.setCoin(newCoin);
-            this._fireOnContactAddressModifiedEvent(oldContactAddress, contactAddress, index);
+            if ((newCoin != contactAddress.getCoin()) || (!newAddress.equals(contactAddress.getAddress()))) {
+                ContactAddress oldContactAddress = contactAddress.clone();
+                contactAddress.setAddress(newAddress);
+                contactAddress.setCoin(newCoin);
+                this._fireOnContactAddressModifiedEvent(oldContactAddress, contactAddress, index);
+            }
         }
     }
 
