@@ -86,7 +86,6 @@ import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccountByName;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
 import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
-import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
@@ -310,7 +309,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                 public void run() {
                     hideDialog();
                     etAmount.setText("");
-                    Toast.makeText(SendScreen.this, getResources().getString(R.string.send_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SendScreen.this, getResources().getString(R.string.success), Toast.LENGTH_SHORT).show();
                 }
             });
         }

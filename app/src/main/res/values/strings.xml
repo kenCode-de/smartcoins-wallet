@@ -2,7 +2,8 @@
     <string name="app_name" translatable="false">Smartcoins Wallet</string>
     <string name="dialog_positive">Ok</string>
     <string name="send_capital">Send</string>
-    <string name="send_success">Success!</string>
+    <string name="success">Success!</string>
+    <string name="error">Error</string>
 
     <string name="import_wif">"Import from private key (WIF)"</string>
     <string name="txt_wif_activity">Wallet Import Format - WIF</string>
@@ -86,6 +87,11 @@
     <string name="imported_created_accounts">Imported/Created Accounts</string>
     <string name="register_new_account">REGISTER NEW ACCOUNT</string>
     <string name="refresh_keys">REFRESH ACCOUNT KEYS</string>
+    <string name="dialog_refresh_keys_title">Contacting network</string>
+    <string name="dialog_refresh_keys_message">Please wait until the operation is completed</string>
+    <string name="dialog_refresh_keys_result_message">The keys were successfully restored</string>
+    <string name="dialog_refresh_keys_success_message">A valid key was found for the current account in the historical archive and the settings were updated.</string>
+    <string name="dialog_refresh_keys_error_message">No valid key was found in the local historical records for this account</string>
     <string name="refresh_keys_title">Update account keys</string>
     <string name="refresh_keys_summary">This procedure will update you currently active account keys. You\'ll be required to backup the new keys after the procedure is done and discard your last backup, since it will no longer be valid.\n\nPlease handle this operation with care and don\'t forget to keep your new brain key in a safe and accessible place.</string>
     <string name="dialog_proceed">Proceed</string>
@@ -329,6 +335,10 @@
     <string name="import_new_account">IMPORT ACCOUNT</string>
     <string name="upgrade_account">UPGRADE ACCOUNT</string>
     <string name="recover_keys">RECOVER KEYS</string>
+    <string name="title_recover_keys">Recover keys</string>
+    <string name="message_recover_keys">This will look up old stored keys in order to see if one of them matches your current active role</string>
+    <string name="error_retrieving_account_properties">Error while contacting the network in order to retrieve current account\'s keys. Can\'t proceed. Please verify your connectivity</string>
+    <string name="error_multiple_keys">Multiple keys (%1$d to be exact) controlling the active role of this account. The recovery process only supports 1 key right now</string>
     <string name="remove_account">REMOVE ACCOUNT</string>
     <string name="txt_alertmsg">Are you sure to delete this account</string>
     <string name="delete">Delete</string>

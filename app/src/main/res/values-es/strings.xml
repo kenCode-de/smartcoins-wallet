@@ -96,7 +96,7 @@
 
 <string name="txt_brain_key">Brainkey</string>
 
-<string name="txt_brain_key_info">Imprima esto, o anótelo. Cualquier persona con acceso a la clave de recuperación tendrá acceso a los fondos dentro de esta cartera.</string>
+<string name="txt_brain_key_info">Imprima esto, o anótelo y guardelo en algun lugar seguro. Cualquier persona con acceso a esta secuencia de palabras tendrá acceso a los fondos dentro de esta billetera.</string>
 
 <string name="create_wallet">IMPORTAR BILLETERA</string>
 
@@ -349,6 +349,11 @@
     <string name="import_new_account">CUENTA DE IMPORTACIÓN</string>
 
     <string name="upgrade_account">MEJORA TU CUENTA</string>
+    <string name="recover_keys">RECUPERAR LLAVE</string>
+    <string name="title_recover_keys">Recuperar llave</string>
+    <string name="message_recover_keys">Esta opción va a buscar el histórico local de llaves usadas de esta cuenta para ver si alguna corresponde al rol activo de la cuenta actual</string>
+    <string name="error_retrieving_account_properties">Error al contactar la red para obtener las versiones públicas de las llaves que controlan actualmente esta cuenta. El procedimiento no se tendrá que interrumpir, por favor verique su conectividad.</string>
+    <string name="error_multiple_keys">El rol activo de esta cuenta parece ser controlada por mas de una llave (%1$d para ser exacto). El proceso de recuperación actualmente solo es soportado para cuentas controladas por una llave por rol.</string>
 
     <string name="remove_account">ELIMINAR CUENTA</string>
 
@@ -485,6 +490,11 @@
     <string name="merchant_email_has_been_imported_successfully">email comercio se ha importado con éxito</string>
 
     <string name="refresh_keys">Actualizar llaves</string>
+    <string name="dialog_refresh_keys_title">Contactando a la red</string>
+    <string name="dialog_refresh_keys_message">Por favor espere mientras esta operación se completa</string>
+    <string name="dialog_refresh_keys_result_message">Se actualizó la llave con exito</string>
+    <string name="dialog_refresh_keys_success_message">Se encontró una llave válida para el rol activo de esta cuenta, y se procedió a actualizar los registros.</string>
+    <string name="dialog_refresh_keys_error_message">No se pudo encontrar una llave válida para esta cuenta en el registro histórico de este dispositivo</string>
 
 </resources>
 

@@ -355,6 +355,11 @@
     <string name="upgrading">Atualizando ...</string>
 
     <string name="import_new_account">IMPORTAR CONTA</string>
+    <string name="recover_keys">RECUPERAR CHAVE</string>
+    <string name="title_recover_keys">Recuperar chave</string>
+    <string name="message_recover_keys">Essa opção irá fazer uma busca no histórico local de chaves usadas por esta conta nesse aparelho a procura de alguma que controle o perfil (role) ativo da conta seleccionada</string>
+    <string name="error_retrieving_account_properties">Erro ao contatar a rede tentando obter as versões públicas das chaves que controlam esta conta. O procedimento terá que ser interrompido, por favor verique a sua conectividade.</string>
+    <string name="error_multiple_keys">O perfil ativo dessa conta parece estar sendo controlado por mais de uma chave (%1$d para ser exatos). O proceso de recuperação atualmente só é suportado para contas controladas por uma chave por perfil (role).</string>
 
     <string name="upgrade_account">ATUALIZA TIPO DE CONTA</string>
 

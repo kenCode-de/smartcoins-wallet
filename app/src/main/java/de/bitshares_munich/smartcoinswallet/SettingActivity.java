@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.transition.Explode;
 import android.util.Log;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,6 +67,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import de.bitshares_munich.database.SCWallDatabase;
+import de.bitshares_munich.fragments.GenericMessageDialog;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountAssets;
 import de.bitshares_munich.models.AccountDetails;
@@ -74,6 +77,7 @@ import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
+import de.bitshares_munich.utils.KeyRecoveryBucket;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.graphenej.AccountOptions;
@@ -95,7 +99,7 @@ import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import de.bitsharesmunich.graphenej.operations.AccountUpdateOperation;
 import de.bitsharesmunich.graphenej.operations.AccountUpdateOperationBuilder;
 
-public class SettingActivity extends BaseActivity implements BackupBinDelegate {
+public class SettingActivity extends BaseActivity implements BackupBinDelegate, GenericMessageDialog.GenericMessageDialogListener {
     final String check_for_updates = "check_for_updates";
     final String automatically_install = "automatically_install";
     final String require_pin = "require_pin";
@@ -185,7 +189,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
-    private WebsocketWorkerThread getKeyReferencesWorker;
 
     /* Database interface */
     private SCWallDatabase database;
@@ -267,6 +270,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 @Override
                 public void run() {
                     Log.d(TAG, "getAccounts. onSuccess");
+                    hideDialog();
                     ArrayList<AccountDetails> details = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
                     AccountDetails currentAccount = null;
                     for (AccountDetails accountDetails : details) {
@@ -292,6 +296,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         @Override
         public void onError(BaseResponse.Error error) {
             Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideDialog();
+                }
+            });
         }
     };
 
@@ -822,7 +832,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                 etBrainKey.setText(brainKey);
             }
         } catch (Exception e) {
-
+            Log.e(TAG,"Exception in displayBrainKeyBackup. Msg: "+e.getMessage());
         }
 
         Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
@@ -908,6 +918,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         /* Asking for all account details */
         getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountId, this.getAccountsListener));
         getAccountsWorker.start();
+        showDialog(getString(R.string.dialog_refresh_keys_title), getString(R.string.dialog_refresh_keys_message));
     }
 
     /**
@@ -1058,14 +1069,217 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     @OnClick(R.id.recover_keys)
     void onRecoverKeys(){
-        ArrayList<Address> addressList = new ArrayList<>();
-        ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
-        for(String suggestion : suggestionList){
-            BrainKey brainKey = new BrainKey(suggestion, 0);
-            Address address = new Address(ECKey.fromPublicOnly(brainKey.getPublicKey()));
-            addressList.add(address);
+        GenericMessageDialog dialog = GenericMessageDialog.newInstance(getString(R.string.title_recover_keys), getString(R.string.message_recover_keys));
+        FragmentManager fm = getSupportFragmentManager();
+        dialog.show(fm, "recover_keys");
+    }
+
+    @Override
+    public void onOptionSelected(boolean accepted){
+        if(accepted){
+            AccountDetails accountDetails = getCurrentlyAccountDetails();
+            Log.d(TAG,"Current account id: "+accountDetails.account_id);
+            Log.d(TAG,"Current controlling key: "+accountDetails.pub_key);
+
+            ArrayList<UserAccount> accountList = new ArrayList<>();
+            accountList.add(new UserAccount(accountDetails.account_id));
+
+            getAccountsWorker = new WebsocketWorkerThread(new GetAccounts(accountList, mActiveAccountDetails));
+            getAccountsWorker.start();
+            showDialog(getString(R.string.dialog_refresh_keys_title), getString(R.string.dialog_refresh_keys_message));
         }
-        getKeyReferencesWorker = new WebsocketWorkerThread(new GetK)
+    }
+
+    /**
+     * Retrieves the currently active account details
+     * @return: Currently active AccountDetails instance
+     */
+    private AccountDetails getCurrentlyAccountDetails(){
+        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        try {
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    return accountDetails.get(i);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG,"Exception. Msg: "+e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Handler function to be called whenever we get a response to the 'get_accounts' API call.
+     * The purpose of the call in this context was to get the updated list of public keys currently
+     * controlling the active account.
+     *
+     * We will then iterate over all of our stored private keys and if a match is found, it will
+     * be stored as the currently active account's private key.
+     */
+    private WitnessResponseListener mActiveAccountDetails = new WitnessResponseListener() {
+        @Override
+        public void onSuccess(final WitnessResponse response) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    List<AccountProperties> accountProperties = (List<AccountProperties>) response.result;
+                    updateAccountDetails(accountProperties.get(0));
+                    hideDialog();
+                }
+            });
+        }
+
+        @Override
+        public void onError(BaseResponse.Error error) {
+            Log.e(TAG,"onError. Msg: "+error.message);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideDialog();
+                    Toast.makeText(SettingActivity.this, getString(R.string.error_retrieving_account_properties), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    /**
+     * This method will only operate as a result of the 'recover keys' option, and will receive an
+     * updated copy of the account properties of the selected account.
+     *
+     * The idea here is to look for controlling keys in our historical key archive. If somehow the
+     * current settings ended up with the wrong key (either in the WIF or brain key format) transactions
+     * won't be able to be sent.
+     *
+     * This procedure should try to restore the correct account without loosing any information.
+     * @param accountProperties: Updated account properties
+     */
+    private void updateAccountDetails(AccountProperties accountProperties){
+        if(accountProperties.active.getKeyAuthList().size() == 1){
+            PublicKey activePublicKey = accountProperties.active.getKeyAuthList().get(0);
+            Address activeAddress = new Address(activePublicKey.getKey());
+
+            List<KeyRecoveryBucket> keyRecoveryBucketList = new ArrayList<>();
+
+            // Building a list of all private keys currently stored in the shared preferences as suggestions
+            ArrayList<String> suggestionList = tinyDB.getListString(Constants.KEY_SUGGESTED_BRAIN_KEY);
+            for(int i = 0; i < suggestionList.size(); i++){
+                String suggestion = suggestionList.get(i);
+                BrainKey brainKey = new BrainKey(suggestion, BrainKey.DEFAULT_SEQUENCE_NUMBER);
+                keyRecoveryBucketList.add(new KeyRecoveryBucket(null, brainKey));
+            }
+
+            // Adding to the list all private keys currently stored in the shared preferences in the WIF format
+            ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
+            for(String oldKey : oldKeys){
+                String wif = oldKey.split(":")[1];
+                keyRecoveryBucketList.add(new KeyRecoveryBucket(DumpedPrivateKey.fromBase58(null, wif).getKey(), null));
+            }
+
+            AccountDetails currentAccountDetails = null;
+
+            // Iterating over all private keys in order to find a match to the active role
+            boolean foundKey = false;
+            for(KeyRecoveryBucket bucket : keyRecoveryBucketList){
+                Address address = new Address(bucket.getPublicKey().getKey());
+
+                // If a match is found, we'll try to replace our currently active key for the old one
+                if(address.toString().equals(activeAddress.toString())){
+                    foundKey = true;
+                    Log.d(TAG,"Found a controlling key for the active role!");
+                    ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+                    try {
+                        // At first, we try to get the currently active account's details
+                        for (int i = 0; i < accountDetails.size(); i++) {
+                            if (accountDetails.get(i).isSelected) {
+                                currentAccountDetails = accountDetails.get(i);
+                                break;
+                            }
+                        }
+
+                        // If no account details have been found, there's a problem and we shouldn't proceed.
+                        // This is very unlikely to happen, but we put it here as a safeguard measurement
+                        if(currentAccountDetails == null){
+                            Toast.makeText(SettingActivity.this, "Could not find current account!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        // Storing the current WIF-formatted key in the old keys store, but only if it is not already there
+                        boolean foundOldKey = false;
+                        for(String oldKey : oldKeys){
+                            if(oldKey.split(":")[1].equals(currentAccountDetails.wif_key)){
+                                foundOldKey = true;
+                                break;
+                            }
+                        }
+                        if(!foundOldKey){
+                            Log.d(TAG,"Storing our previously current key in the old keys repository");
+                            try {
+                                oldKeys.add(String.format("%s:%s", currentAccountDetails.account_name, Crypt.getInstance().decrypt_string(currentAccountDetails.wif_key)));
+                                tinyDB.putListString(Constants.KEY_OLD_KEYS, oldKeys);
+                            } catch (Exception e) {
+                                Log.e(TAG,"Exception while encrypting old key. Msg: "+e.getMessage());
+                            }
+                        }
+
+                        // Storing the current brain key in the brain key suggestion's store, but only if it is not already there
+                        foundOldKey = false;
+                        for(String suggestion : suggestionList){
+                            currentAccountDetails.brain_key.equals(suggestion);
+                            foundOldKey = true;
+                        }
+                        if(!foundOldKey){
+                            suggestionList.add(currentAccountDetails.brain_key);
+                            tinyDB.putListString(Constants.KEY_SUGGESTED_BRAIN_KEY, suggestionList);
+                        }
+
+                        // Getting both the brainkey and the WIF representation from the bucket object
+                        BrainKey brainKey = bucket.getBrainKey();
+                        DumpedPrivateKey wif = bucket.getPrivateKey().decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+
+                        // Updating the WIF
+                        currentAccountDetails.wif_key = Crypt.getInstance().encrypt_string(wif.toString());
+
+                        // Updating the brainkey, in case it exists
+                        if(brainKey != null){
+                            currentAccountDetails.brain_key = brainKey.getBrainKey();
+                        }
+
+                        //Storing the updated account details
+                        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
+                    } catch (Exception e) {
+                        Log.e(TAG,"Exception. Msg: "+e.getMessage());
+                    }
+                    new AlertDialog.Builder(SettingActivity.this)
+                            .setTitle(getString(R.string.success))
+                            .setMessage(getString(R.string.dialog_refresh_keys_success_message))
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .show();
+                    break;
+                }
+            }
+            if(!foundKey){
+                new AlertDialog.Builder(SettingActivity.this)
+                        .setTitle(getString(R.string.error))
+                        .setMessage(getString(R.string.dialog_refresh_keys_error_message))
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        }else{
+            Log.w(TAG,"More than one active key");
+            Toast.makeText(SettingActivity.this,
+                    getString(R.string.error_multiple_keys, accountProperties.active.getKeyAuthList().size()),
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @OnClick(R.id.upgrade_account)
@@ -1116,6 +1330,7 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
                             }
                         }
                     } catch (Exception e) {
+                        Log.e(TAG,"Exception. Msg: "+e.getMessage());
                     }
                     if (balanceValid[0]) {
                         showDialog("", getString(R.string.upgrading));
