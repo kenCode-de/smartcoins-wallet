@@ -75,7 +75,10 @@ import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
+import de.bitsharesmunich.cryptocoincore.adapters.GeneralCoinSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.AccountOptions;
@@ -141,6 +144,9 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
     @Bind(R.id.tvMerchantPath)
     TextView tvMerchantPath;
+
+    @Bind(R.id.spCoinsSettings)
+    Spinner spCoinsSettings;
 
     @Bind(R.id.spFolderPath)
     Spinner spFolderPath;
@@ -1397,9 +1403,31 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
         adapterAccountAssets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spFolderPath.setAdapter(adapterAccountAssets);
 
+
+        ArrayList<Coin> data = new ArrayList<Coin>();
+
+        for (Coin coin : Coin.values()) {
+            data.add(coin);
+        }
+
+        final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this, R.layout.coin_spinner_row, data, null, getResources());
+        coinAdapter.setShowSelected(false);
+        spCoinsSettings.setAdapter(coinAdapter);
     }
 
     Boolean startup = false;
+
+    @OnItemSelected(R.id.spCoinsSettings)
+    public void onItemSelectedCoinsSettings() {
+        Coin coinSelected = (Coin)spCoinsSettings.getSelectedItem();
+
+        if (coinSelected != null) {
+            spCoinsSettings.setSelection(0); //whitout this line, the user can't select the same coin simultaneously
+            GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(coinSelected);
+            final Dialog dialog = dialogBuilder.createDialog(this,R.style.stylishDialog);
+            dialog.show();
+        }
+    }
 
     @OnItemSelected(R.id.spFolderPath)
     public void onItemSelectedAudio() {

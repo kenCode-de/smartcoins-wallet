@@ -278,6 +278,7 @@
     <string name="head_block_number">head_block_number</string>
     <string name="e_receipt">e_receipt</string>
     <string name="coin">coin</string>
+    <string name="precision">Precision</string>
 
     <string name="folder_name">SmartcoinsWallet</string>
     <string name="login_api">{\"id\":1,\"method\":\"call\",\"params\":[1,\"login\",[\"\",\"\"]]}</string>
@@ -469,4 +470,5 @@
     <!-- Import Backup activity -->
     <string name="txt_existing_password">Current backup password</string>
     <string name="txt_new_pin">New PIN (6+ digits)</string>
+    <string name="coins_settings">Coins Settings</string>
 </resources>

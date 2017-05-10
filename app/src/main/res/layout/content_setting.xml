@@ -238,10 +238,51 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/llFolderPath"
+                android:id="@+id/llCoinsSettings"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/l41"
+                android:layout_marginTop="10dp"
+                android:background="@color/whiteColor"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:focusable="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edittext_background_layer"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="left|center"
+                        android:paddingLeft="10dp"
+                        android:text="@string/coins_settings"
+                        android:textSize="13sp"
+
+                        />
+                    <Spinner
+                        android:id="@+id/spCoinsSettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:textColor="#002" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llFolderPath"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/llCoinsSettings"
                 android:layout_marginTop="10dp"
                 android:background="@color/whiteColor"
                 android:clickable="true"
@@ -289,13 +330,6 @@
                     <!--android:gravity="left|center"-->
 
                     <!--/>-->
-                    <Spinner
-                        android:id="@+id/spFolderPath"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:textColor="#002" />
                     <!--</LinearLayout>-->
                 </LinearLayout>
 
@@ -673,6 +707,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spFolderPath"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignTop="@+id/llFolderPath"
+                android:layout_gravity="center"
+                android:layout_marginStart="82dp"
+                android:layout_marginTop="31dp"
+                android:layout_toEndOf="@+id/tvEmptyl6"
+                android:layout_weight="2"
+                android:textColor="#002" />
 
 
         </RelativeLayout>

@@ -114,6 +114,13 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             " FOREIGN KEY(" + SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID + ") REFERENCES " + SCWallDatabaseContract.GeneralAccounts.TABLE_NAME + "(" + SCWallDatabaseContract.GeneralAccounts.COLUMN_ID + ")," +
             " CONSTRAINT "+SCWallDatabaseContract.GeneralTransaction.CONSTRAINT_TRANSACTION+" UNIQUE (" + SCWallDatabaseContract.GeneralTransaction.COLUMN_TXID + "," + SCWallDatabaseContract.GeneralTransaction.COLUMN_ACCOUNT_ID + "))";
 
+    private static final String SQL_CREATE_GENERAL_COIN_SETTING_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralCoinSetting.TABLE_NAME + " (" +
+            SCWallDatabaseContract.GeneralCoinSetting.COLUMN_ID + TYPE_ID +
+            SCWallDatabaseContract.GeneralCoinSetting.COLUMN_COIN_TYPE + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralCoinSetting.COLUMN_SETTING + TYPE_TEXT + ", " +
+            SCWallDatabaseContract.GeneralCoinSetting.COLUMN_VALUE + TYPE_TEXT + ", " +
+            " CONSTRAINT "+SCWallDatabaseContract.GeneralCoinSetting.CONSTRAINT_COIN_SETTING+" UNIQUE (" + SCWallDatabaseContract.GeneralCoinSetting.COLUMN_COIN_TYPE + "," + SCWallDatabaseContract.GeneralCoinSetting.COLUMN_SETTING + "))";
+
     /*private static final String SQL_CREATE_GENERAL_ACCOUNT_BALANCE_CACHE_TABLE = "CREATE TABLE " + SCWallDatabaseContract.GeneralTransactionBalanceCache.TABLE_NAME + " (" +
             SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_ACCOUNT_ID + TYPE_INTEGER + " PRIMARY KEY," +
             SCWallDatabaseContract.GeneralTransactionBalanceCache.COLUMN_BALANCE + TYPE_INTEGER + ", " +
@@ -203,6 +210,7 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
 
         db.execSQL(SQL_CREATE_CONTACT_TABLE);
         db.execSQL(SQL_CREATE_CONTACT_ADDRESS_TABLE);
+        db.execSQL(SQL_CREATE_GENERAL_COIN_SETTING_TABLE);
 
     }
 
@@ -252,6 +260,10 @@ public class SCWallSQLiteOpenHelper extends SQLiteOpenHelper {
             //db.execSQL("DROP TABLE IF EXISTS " + SCWallDatabaseContract.GeneralTransactionBalanceCache.TABLE_NAME);
             db.execSQL(SQL_CREATE_GENERAL_TRANSACTION_TABLE);
             //db.execSQL(SQL_CREATE_GENERAL_ACCOUNT_BALANCE_CACHE_TABLE);
+        }
+
+        if (oldVersion < 17) {
+            db.execSQL(SQL_CREATE_GENERAL_COIN_SETTING_TABLE);
         }
     }
 }

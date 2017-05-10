@@ -30,6 +30,21 @@ public class GeneralCoinFactory {
         return null;
     }
 
+    public static GeneralCoinSettings getSettings(Coin coin){
+        switch(coin){
+            case BITCOIN:
+                //return BitcoinSettings.getInstance();
+            case DASH:
+                //return DashSettings.getInstance();
+            case LITECOIN:
+                //return LiteCoinSettings.getInstance();
+            case DOGECOIN:
+                //return DogeCoinSettings.getInstance();
+        }
+
+        return null;
+    }
+
     public static GeneralCoinAccount getGeneralCoinAccount(Coin coin, final AccountSeed seed, String name){
         switch (coin){
             case BITCOIN:

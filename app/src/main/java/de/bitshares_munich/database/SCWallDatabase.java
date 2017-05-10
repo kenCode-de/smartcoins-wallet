@@ -29,6 +29,7 @@ import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
@@ -1357,6 +1358,75 @@ public class SCWallDatabase {
         return gtxos;
     }
 
+    public GeneralCoinSettings getGeneralCoinSettings(Coin coin){
+        String[] columns = {
+                SCWallDatabaseContract.GeneralCoinSetting.COLUMN_ID,
+                SCWallDatabaseContract.GeneralCoinSetting.COLUMN_COIN_TYPE,
+                SCWallDatabaseContract.GeneralCoinSetting.COLUMN_SETTING,
+                SCWallDatabaseContract.GeneralCoinSetting.COLUMN_VALUE,
+        };
+
+        Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralCoinSetting.TABLE_NAME, columns,
+                SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE+ " = '" + coin.name() + "'", null, null, null, null, null);
+
+        if(cursor.moveToFirst()){
+            GeneralCoinSettings settings = new GeneralCoinSettings(coin);
+            do{
+                long id = cursor.getLong(0);
+                String setting = cursor.getString(2);
+                String value = cursor.getString(3);
+
+                settings.addSetting(id, setting, value);
+            }while(cursor.moveToNext());
+
+            return settings;
+        }
+
+        return null;
+    }
+
+    public boolean putGeneralCoinSetting(Coin coin, GeneralCoinSettings.GeneralCoinSetting setting) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SCWallDatabaseContract.GeneralCoinSetting.COLUMN_COIN_TYPE, coin.name());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinSetting.COLUMN_SETTING, setting.getSetting());
+        contentValues.put(SCWallDatabaseContract.GeneralCoinSetting.COLUMN_VALUE, setting.getValue());
+
+        if (setting.getId() >= 0) {
+            String whereClause = SCWallDatabaseContract.GeneralCoinSetting.COLUMN_ID + "=?";
+            String[] whereArgs = new String[]{"" + setting.getId()};
+
+            db.beginTransaction();
+            int affected = db.update(SCWallDatabaseContract.GeneralCoinSetting.TABLE_NAME,contentValues,whereClause,whereArgs);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            if (affected <= 0) {
+                return false;
+            }
+        } else {
+            try {
+                long newId = db.insertOrThrow(SCWallDatabaseContract.GeneralCoinSetting.TABLE_NAME, null, contentValues);
+                setting.setId(newId);
+
+                Log.d(TAG, String.format("Inserted General Coin Setting succesfully in database", newId));
+            } catch (SQLException ignored) {
+                Log.d(TAG,"Error inserting General Coin Settings in database");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean putGeneralCoinSettings(final GeneralCoinSettings settings){
+        for (GeneralCoinSettings.GeneralCoinSetting nextSetting : settings.getSettings()){
+            if (!putGeneralCoinSetting(settings.getCoinType(),nextSetting)){
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 
     public enum GeneralTransactionOrder{DATE, IN_OUT, AMOUNT};

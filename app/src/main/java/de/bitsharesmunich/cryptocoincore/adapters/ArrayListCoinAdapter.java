@@ -27,6 +27,7 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
     private List<Coin> coinsUsed;
     public Resources res;
     LayoutInflater inflater;
+    public boolean showSelected;
 
     public ArrayListCoinAdapter(Activity activity, int textViewResourceId, ArrayList objects, List<Coin> coinsUsed, Resources resLocal){
         super(activity, textViewResourceId, objects);
@@ -37,8 +38,13 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
         this.data = objects;
         this.coinsUsed = coinsUsed;
         this.res = resLocal;
+        this.showSelected = true;
 
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setShowSelected(boolean newValue){
+        this.showSelected = newValue;
     }
 
     @Override
@@ -48,7 +54,13 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+        View result = getCustomView(position, convertView, parent);
+
+        if (!showSelected) {
+            result.setVisibility(View.GONE);
+        }
+
+        return result;
     }
 
     @Override
@@ -56,8 +68,10 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
         Coin nextCoin = (Coin) data.get(position);
 
         if (nextCoin != null) {
-            if (coinsUsed.contains(nextCoin)) {
-                return false;
+            if (coinsUsed != null) {
+                if (coinsUsed.contains(nextCoin)) {
+                    return false;
+                }
             }
         } else {
             return false;
@@ -73,8 +87,10 @@ public class ArrayListCoinAdapter extends ArrayAdapter<String>{
         ImageView coinIcon = (ImageView) row.findViewById(R.id.coin_icon);
 
         if (nextCoin != null) {
-            if (coinsUsed.contains(nextCoin)) {
-                coinLabel.setTextColor(res.getColor(R.color.gray));
+            if (coinsUsed != null) {
+                if (coinsUsed.contains(nextCoin)) {
+                    coinLabel.setTextColor(res.getColor(R.color.gray));
+                }
             }
 
             coinLabel.setText(nextCoin.getLabel());

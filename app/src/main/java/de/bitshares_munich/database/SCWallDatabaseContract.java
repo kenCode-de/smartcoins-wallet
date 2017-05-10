@@ -159,6 +159,15 @@ public class SCWallDatabaseContract {
         public static final String CONSTRAINT_TRANSACTION = "generalTransactionContraint";
     }
 
+    public static class GeneralCoinSetting implements BaseColumns {
+        public static final String TABLE_NAME = "general_coin_setting";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_COIN_TYPE = "coin_type"; // Bitcoin,LiteCoin,Dash,DogeCoin
+        public static final String COLUMN_SETTING = "setting";
+        public static final String COLUMN_VALUE = "value";
+        public static final String CONSTRAINT_COIN_SETTING = "generalCoinSettingConstraint";
+    }
+
     /*public static class GeneralTransactionBalanceCache implements BaseColumns {
         public static final String TABLE_NAME = "general_account_balance_cache";
         public static final String COLUMN_ACCOUNT_ID = "account_id";
