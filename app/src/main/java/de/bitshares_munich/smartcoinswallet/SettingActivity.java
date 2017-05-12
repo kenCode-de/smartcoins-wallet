@@ -47,7 +47,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -77,23 +76,21 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitsharesmunich.graphenej.AccountOptions;
+import de.bitsharesmunich.graphenej.AccountUpdateTransactionBuilder;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.Authority;
-import de.bitsharesmunich.graphenej.BaseOperation;
-import de.bitsharesmunich.graphenej.BlockData;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.Transaction;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
+import de.bitsharesmunich.graphenej.errors.MalformedTransactionException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
-import de.bitsharesmunich.graphenej.operations.AccountUpdateOperation;
-import de.bitsharesmunich.graphenej.operations.AccountUpdateOperationBuilder;
 
 public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     final String check_for_updates = "check_for_updates";
@@ -172,23 +169,18 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
     String itemSelected;
     String selected;
     Boolean startup = false;
-
     /* Boolean variable set to true if the key update is meant for all 3 roles of the currently active account */
     private boolean updateAllRoles;
-
     private String oldKey;
     private AccountDetails updatedAccount;
     private int UPDATE_KEY_MAX_RETRIES = 2;
     private int updateKeyRetryCount = 0;
     private int nodeIndex = 0;
-
     /* Background worker threads, called in sequence */
     private WebsocketWorkerThread refreshKeyWorker;
     private WebsocketWorkerThread getAccountsWorker;
-
     /* Database interface */
     private SCWallDatabase database;
-
     /**
      * Listener called upon the 'account_update_operation' response.
      */
@@ -253,7 +245,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             });
         }
     };
-
     /**
      * Listener called with the account data. This is done before the account authorities update
      * just to know what keys to update for each account.
@@ -293,7 +284,6 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             Log.e(TAG, "getAccounts.onError. Msg: " + error.message);
         }
     };
-
     private FileChooserDialog.OnFileSelectedListener onFileSelectedListener = new FileChooserDialog.OnFileSelectedListener() {
         public void onFileSelected(Dialog source, File file) {
             source.hide();
@@ -947,30 +937,20 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             authMap.put(address.getPublicKey(), 1);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
-
-            AccountUpdateOperationBuilder builder = new AccountUpdateOperationBuilder()
-                    .setAccount(new UserAccount(accountDetails.account_id))
+            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
+                    .setAccont(new UserAccount(accountDetails.account_id))
                     .setActive(authority)
                     .setOptions(options);
-
-            AccountUpdateOperation op = builder.build();
-            ArrayList<BaseOperation> operations = new ArrayList<>();
-            operations.add(op);
-
-//            AccountUpdateTransactionBuilder builder = new AccountUpdateTransactionBuilder(DumpedPrivateKey.fromBase58(null, currentWif).getKey())
-//                    .setAccont(new UserAccount(accountDetails.account_id))
-//                    .setActive(authority)
-//                    .setOptions(options);
 
             if (updateAllRoles) {
                 builder.setOwner(authority);
             }
-            Date date = Calendar.getInstance().getTime();
-            long expirationTime = (date.getTime() / 1000) + Transaction.DEFAULT_EXPIRATION_TIME;
-            BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime);
-            Transaction transaction = new Transaction(DumpedPrivateKey.fromBase58(null, currentWif).getKey(), blockData, operations);
+
+            Transaction transaction = builder.build();
             refreshKeyWorker = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, new Asset("1.3.0"), mAuthorityChangeListener), nodeIndex);
             refreshKeyWorker.start();
+        } catch (MalformedTransactionException e) {
+            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "NoSuchAlgorithmException. Msg: " + e.getMessage());
         } catch (IOException e) {

@@ -60,101 +60,72 @@ import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TableViewClickListener;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
-import de.bitsharesmunich.graphenej.operations.TransferOperation;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/26/16.
  */
 public class eReceipt extends BaseActivity implements IBalancesDelegate, GravatarDelegate {
-
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
     public final String TAG = this.getClass().getName();
-
     @Bind(R.id.ivOtherGravatar)
     ImageView ivOtherGravatar;
-
     @Bind(R.id.tvOtherCompany)
     TextView tvOtherCompany;
-
     @Bind(R.id.tvTime)
     TextView tvTime;
-
     @Bind(R.id.tvOtherName)
     TextView tvOtherName;
-
     @Bind(R.id.tvUserName)
     TextView tvUserName;
-
     @Bind(R.id.tvUserId)
     TextView tvUserId;
-
     @Bind(R.id.memo)
     TextView memo;
-
     @Bind(R.id.tvAmount)
     TextView tvAmount;
-
     @Bind(R.id.tvAddress)
     TextView tvAddress;
-
     @Bind(R.id.tvAmountEquivalent)
     TextView tvAmountEquivalent;
-
     @Bind(R.id.tvBlockNumber)
     TextView tvBlockNumber;
-
     @Bind(R.id.tvTrxInBlock)
     TextView tvTrxInBlock;
-
     @Bind(R.id.tvFee)
     TextView tvFee;
-
     @Bind(R.id.tvFeeEquivalent)
     TextView tvFeeEquivalent;
-
     @Bind(R.id.tvPaymentAmount)
     TextView tvPaymentAmount;
-
     @Bind(R.id.tvPaymentEquivalent)
     TextView tvPaymentEquivalent;
-
     @Bind(R.id.tvTotalEquivalent)
     TextView tvTotalEquivalent;
-
     @Bind(R.id.tvTotal)
     TextView tvTotal;
-
     @Bind(R.id.tvOtherStatus)
     TextView tvOtherStatus;
-
     @Bind(R.id.tvUserStatus)
     TextView tvUserStatus;
-
     @Bind(R.id.ivImageTag)
     ImageView ivImageTag;
-
     @Bind(R.id.buttonSend)
     ImageButton buttonSend;
-
     @Bind(R.id.scrollView)
     ScrollView scrollView;
-
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
-
     @Bind(R.id.llall)
     LinearLayout llall;
-
     int assets_id_in_work;
     int assets_id_total_size;
     HashMap<String, String> Freemap = new HashMap<>();
@@ -174,19 +145,15 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
     ProgressDialog progressDialog;
     boolean loadComplete = false;
     boolean btnPress = false;
-
     /* Transaction id */
     String transactionId = "";
-
+    String finalFiatCurrency;
     /* Reference to the class containing all blockchain details about this transaction */
     private HistoricalTransferEntry historicalTransferEntry;
-
     /* Legacy persistent storage */
     private TinyDB tinyDB;
-
     /* Database interface reference */
     private SCWallDatabase database;
-
     /* Current user */
     private UserAccount user;
 
@@ -308,9 +275,9 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
         tvBlockNumber.setText(String.format("%d", historicalTransfer.getBlockNum()));
         tvTrxInBlock.setText(String.format("%s", historicalTransfer.getId()));
 
-        double amount = Util.fromBase(historicalTransfer.getOperation().getAssetAmount());
-        String symbol = historicalTransfer.getOperation().getAssetAmount().getAsset().getSymbol();
-        int precision = historicalTransfer.getOperation().getAssetAmount().getAsset().getPrecision();
+        double amount = Util.fromBase(historicalTransfer.getOperation().getTransferAmount());
+        String symbol = historicalTransfer.getOperation().getTransferAmount().getAsset().getSymbol();
+        int precision = historicalTransfer.getOperation().getTransferAmount().getAsset().getPrecision();
         String textFormat = String.format("%%.%df %%s", precision);
         tvPaymentAmount.setText(String.format(textFormat, amount, symbol));
 

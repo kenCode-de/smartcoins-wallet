@@ -2,6 +2,7 @@ package de.bitshares_munich.utils;
 
 /**
  * @author Khurram
+ *
  */
 
 import android.content.Context;
@@ -44,7 +45,7 @@ public class AssetsPropertyReader {
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            Log.e("AssetsPropertyReader", e.toString());
+            Log.e("AssetsPropertyReader",e.toString());
         }
         return properties;
 

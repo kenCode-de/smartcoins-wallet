@@ -27,29 +27,35 @@ public class webSocketCallHelper {
         none
     }
 
-    public webSocketCallHelper(Context _context) {
+    public webSocketCallHelper(Context _context)
+    {
         transactionsHandler = new Handler(Looper.getMainLooper());
         context = _context;
     }
 
-    public void cleanUpTransactionsHandler() {
+    public void cleanUpTransactionsHandler()
+    {
         callInProgressForTransactions = false;
         callReceivedForTransactions = true;
         transactionsHandler.removeCallbacksAndMessages(null);
     }
 
-    public void make_websocket_call(final String call_string_before_identifier, final String call_string_after_identifier, final api_identifier identifer) {
+    public void make_websocket_call(final String call_string_before_identifier, final String call_string_after_identifier,final api_identifier identifer)
+    {
         transactionsHandler.removeCallbacksAndMessages(null);
 
         final Runnable checkifTransactionRecieved = new Runnable() {
             @Override
-            public void run() {
-                if (callInProgressForTransactions && !callReceivedForTransactions && Application.isReady) // if balances are not returned in one second
+            public void run()
+            {
+                if ( callInProgressForTransactions && !callReceivedForTransactions && Application.isReady) // if balances are not returned in one second
                 {
                     Application.disconnect();
-                    make_websocket_call(call_string_before_identifier, call_string_after_identifier, identifer);
-                } else if (callInProgressForTransactions && !callReceivedForTransactions) {
-                    make_websocket_call(call_string_before_identifier, call_string_after_identifier, identifer);
+                    make_websocket_call(call_string_before_identifier,call_string_after_identifier,identifer);
+                }
+                else if ( callInProgressForTransactions && !callReceivedForTransactions )
+                {
+                    make_websocket_call(call_string_before_identifier,call_string_after_identifier,identifer);
                 }
             }
         };
@@ -57,20 +63,29 @@ public class webSocketCallHelper {
 
         final Runnable initiateTransactionsFetch = new Runnable() {
             @Override
-            public void run() {
-                if (Application.isReady) {
+            public void run()
+            {
+                if ( Application.isReady )
+                {
                     String call;
 
-                    if (identifer == api_identifier.database) {
-                        int database_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_database));
+                    if ( identifer == api_identifier.database )
+                    {
+                        int database_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_database));
                         call = call_string_before_identifier + database_id + call_string_after_identifier;
-                    } else if (identifer == api_identifier.history) {
-                        int history_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_history));
+                    }
+                    else if ( identifer == api_identifier.history )
+                    {
+                        int history_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_history));
                         call = call_string_before_identifier + history_id + call_string_after_identifier;
-                    } else if (identifer == api_identifier.network) {
-                        int nw_id = Helper.fetchIntSharePref(context, context.getString(R.string.sharePref_network_broadcast));
+                    }
+                    else if ( identifer == api_identifier.network )
+                    {
+                        int nw_id = Helper.fetchIntSharePref(context,context.getString(R.string.sharePref_network_broadcast));
                         call = call_string_before_identifier + nw_id + call_string_after_identifier;
-                    } else {
+                    }
+                    else
+                    {
                         call = call_string_before_identifier;
                     }
 
@@ -78,12 +93,14 @@ public class webSocketCallHelper {
                     callReceivedForTransactions = false;
                     Application.send(call);
                     transactionsHandler.postDelayed(checkifTransactionRecieved, time);
-                } else {
-                    make_websocket_call(call_string_before_identifier, call_string_after_identifier, identifer);
+                }
+                else
+                {
+                    make_websocket_call(call_string_before_identifier,call_string_after_identifier,identifer);
                 }
             }
         };
 
-        transactionsHandler.postDelayed(initiateTransactionsFetch, 5);
+        transactionsHandler.postDelayed(initiateTransactionsFetch,5);
     }
 }

@@ -36,61 +36,69 @@ public class SupportMethods {
     public static String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
     public static File extStorageFile = new File(extStorage);
 
-    public static String ConvertValueintoPrecision(String precision, String number) {
+    public static String ConvertValueintoPrecision(String precision, String number){
         Double ok = 1.0;
         Double pre = Double.valueOf(precision);
         Double value = Double.valueOf(number);
-        for (int k = 0; k < pre; k++) {
-            ok = ok * 10;
+        for(int k = 0 ; k<pre ; k++ ){
+            ok = ok*10;
         }
-        return Double.toString(value / ok);
+        return  Double.toString(value/ok);
     }
 
-    public static double convertAssetAmountToDouble(String precision, String number) {
+    public static double convertAssetAmountToDouble(String precision,String number){
         Double ok = 1.0;
         Double pre = Double.valueOf(precision);
         Double value = Double.valueOf(number);
-        for (int k = 0; k < pre; k++) {
-            ok = ok * 10;
+        for(int k = 0 ; k<pre ; k++ ){
+            ok = ok*10;
         }
-        return value / ok;
+        return  value/ok;
     }
 
-    public static double convertAssetAmountToFiat(double amount, double exchanegrate) {
-        return amount * exchanegrate;
+    public static double convertAssetAmountToFiat(double amount,double exchanegrate){
+        return  amount*exchanegrate;
     }
 
-    public static double convertAssetAmountToFiat(double amount, String exchanegrate) {
+    public static double convertAssetAmountToFiat(double amount,String exchanegrate){
         double eR = Double.valueOf(exchanegrate);
-        return convertAssetAmountToFiat(amount, eR);
+        return  convertAssetAmountToFiat(amount,eR);
     }
 
-    public static String ParseJsonObject(String Json, String Req) {
-        try {
-            if (Json.contains(Req)) {
+    public static String ParseJsonObject(String Json , String Req)
+    {
+        try
+        {
+            if(Json.contains(Req))
+            {
                 JSONObject myJson = new JSONObject(Json);
-                return myJson.getString(Req);
+                return  myJson.getString(Req);
             }
-        } catch (Exception e) {
-            testing("SupportMethods", e, "ParseJsonObject");
+        }
+        catch (Exception e)
+        {
+            testing("SupportMethods",e,"ParseJsonObject");
         }
         return "";
     }
-
-    public static String ParseObjectFromJsonArray(String Json, int position) {
-        try {
+    public static String ParseObjectFromJsonArray(String Json , int position)
+    {
+        try
+        {
             JSONArray myArray = new JSONArray(Json);
-            if (myArray.length() >= position) {
-                return myArray.get(position).toString();
+            if(myArray.length()>=position){
+                return  myArray.get(position).toString();
             }
-        } catch (Exception e) {
-            testing("SupportMethods", e, "ParseObjectFromJsonArray");
+        }
+        catch (Exception e)
+        {
+            testing("SupportMethods",e,"ParseObjectFromJsonArray");
         }
         return "";
     }
 
     @Nullable
-    public static HashMap<String, ArrayList<String>> ParseJsonArray(String Json, String req) {
+    public static HashMap<String,ArrayList<String>> ParseJsonArray(String Json , String req){
         try {
             JSONArray myArray = new JSONArray(Json);
             ArrayList<String> array = new ArrayList<>();
@@ -108,13 +116,13 @@ public class SupportMethods {
 
             }
             return pairs;
-        } catch (Exception e) {
-            testing("SupportMethods", e, "ParseJsonArray");
+        }catch (Exception e){
+            testing("SupportMethods",e,"ParseJsonArray");
         }
         return null;
     }
 
-    public static void testing(String msg, Exception e, String nameOfObject) {
+    public static void testing(String msg , Exception e , String nameOfObject){
         try {
             StackTraceElement[] stackTrace = e.getStackTrace();
             String fullClassName = stackTrace[stackTrace.length - 1].getClassName();
@@ -123,48 +131,47 @@ public class SupportMethods {
             String methodName = stackTrace[stackTrace.length - 1].getMethodName();
             int lineNumber = stackTrace[stackTrace.length - 1].getLineNumber();
             Log.i("Saiyed_Testing", "=> Msg : " + msg + " : nameOfObject : " + nameOfObject + " : " + fullClassName + "--" + className + "--" + methodName + "--" + lineNumber);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
 
         }
     }
-
-    public static int CheckJsonFormat(String s) {
+    public static int CheckJsonFormat(String s){
         try {
             Object json = new JSONTokener(s).nextValue();
-            if (json instanceof JSONObject) {
+            if (json instanceof JSONObject){
                 return 0;
-            } else if (json instanceof JSONArray) {
+            }
+            else if(json instanceof JSONArray){
                 return 1;
             }
-        } catch (Exception e) {
-            testing("SupportMethods", e, "CheckJsonFormat");
+        }catch (Exception e){
+            testing("SupportMethods",e,"CheckJsonFormat");
         }
         return -1;
     }
-
-    public static int TotalArraysOfObj(String Json) {
+    public static int TotalArraysOfObj(String Json){
         try {
             JSONArray myArray = new JSONArray(Json);
             return myArray.length();
-        } catch (Exception e) {
-            testing("SupportMethods", e, "TotalArraysOfObj");
+        }catch (Exception e){            testing("SupportMethods",e,"TotalArraysOfObj");
         }
         return -1;
     }
-
-    public static void openPdf(Context context, String file) {
+    public static void openPdf(Context context,String file){
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.fromFile(new File(extStorageFile, file + ".pdf"));
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            context.startActivity(intent);
-        } catch (Exception e) {
-            testing("SupportMethods", e, "openPdf");
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.fromFile(new File(extStorageFile, file + ".pdf"));
+                intent.setDataAndType(uri, "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                context.startActivity(intent);
+                }
+        catch (Exception e){
+            testing("SupportMethods",e,"openPdf");
         }
     }
-
-    public static void sendPdfViaEmail(Context context, String file, String subject, String emailBody) {
+    public static void sendPdfViaEmail(Context context,String file,String subject , String emailBody ){
         try {
             Intent email = new Intent(Intent.ACTION_SEND);
             email.putExtra(Intent.EXTRA_EMAIL, "");
@@ -175,12 +182,12 @@ public class SupportMethods {
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(email);
-        } catch (Exception e) {
-            testing("SupportMethods", e, "sendPdfViaEmail");
+        }
+        catch (Exception e){
+            testing("SupportMethods",e,"sendPdfViaEmail");
         }
     }
-
-    public static void sendPngViaEmail(Context context, ImageView image) {
+    public static void sendPngViaEmail(Context context, ImageView image){
         image.buildDrawingCache();
         Bitmap bitmap = image.getDrawingCache();
         OutputStream outStream = null;
@@ -201,14 +208,14 @@ public class SupportMethods {
             sharingIntent.setType("image/png");
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             context.startActivity(Intent.createChooser(sharingIntent, "Hello Sir"));
-        } catch (Exception e) {
-            testing("SupportMethods", e, "sendPngViaEmail");
+        }
+        catch (Exception e){
+            testing("SupportMethods",e,"sendPngViaEmail");
         }
     }
-
-    public static Bitmap highlightImage(float radiusBlurMaskFilter, Bitmap src) {
+    public static Bitmap highlightImage(float radiusBlurMaskFilter , Bitmap src) {
         // create new bitmap, which will be painted and becomes result image
-        Bitmap bmOut = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bmOut = Bitmap.createBitmap(src.getWidth() , src.getHeight() , Bitmap.Config.ARGB_8888);
         // setup canvas for painting
         Canvas canvas = new Canvas(bmOut);
         // setup default color
@@ -233,7 +240,6 @@ public class SupportMethods {
         // return out final image
         return bmOut;
     }
-
     public static boolean isEmailValid(String emailAddress) {
         boolean isValid = false;
 
@@ -247,8 +253,7 @@ public class SupportMethods {
         }
         return isValid;
     }
-
-    public static void setLocale(Context base, String language) {
+    public static void setLocale(Context base ,String language){
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
         Configuration config = new Configuration();

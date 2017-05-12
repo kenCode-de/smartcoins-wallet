@@ -3,8 +3,8 @@ package de.bitshares_munich.adapters;
 import java.util.Comparator;
 
 import de.bitshares_munich.database.HistoricalTransferEntry;
+import de.bitsharesmunich.graphenej.TransferOperation;
 import de.bitsharesmunich.graphenej.UserAccount;
-import de.bitsharesmunich.graphenej.operations.TransferOperation;
 
 /**
  * Created by nelson on 12/14/16.

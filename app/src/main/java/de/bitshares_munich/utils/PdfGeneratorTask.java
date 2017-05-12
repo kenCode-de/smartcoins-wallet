@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.interfaces.PdfGeneratorListener;
+import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.PdfTable;
 import de.bitsharesmunich.graphenej.UserAccount;
 
 /**
  * AsyncTask subclass used to move the PDF generation procedure to a background thread
  * and inform the UI of the progress.
- * <p>
+ *
  * Created by nelson on 12/28/16.
  */
 public class PdfGeneratorTask extends AsyncTask<HistoricalTransferEntry, Float, String> {
@@ -23,7 +23,7 @@ public class PdfGeneratorTask extends AsyncTask<HistoricalTransferEntry, Float, 
     private UserAccount userAccount;
     private PdfGeneratorListener mListener;
 
-    public PdfGeneratorTask(Context context, UserAccount user, PdfGeneratorListener listener) {
+    public PdfGeneratorTask(Context context, UserAccount user, PdfGeneratorListener listener){
         this.mContext = context;
         this.userAccount = user;
         this.mListener = listener;
