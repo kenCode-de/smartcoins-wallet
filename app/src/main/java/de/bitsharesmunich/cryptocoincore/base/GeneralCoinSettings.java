@@ -2,6 +2,7 @@ package de.bitsharesmunich.cryptocoincore.base;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class GeneralCoinSettings {
 
     public GeneralCoinSettings(Coin coin){
         this.coinType = coin;
+        this.settings = new ArrayList<GeneralCoinSetting>();
     };
 
     public Coin getCoinType(){
@@ -28,12 +30,31 @@ public class GeneralCoinSettings {
         return this.settings.size();
     }
 
-    public void addSetting(long id, String setting, String value){
-        this.settings.add(new GeneralCoinSetting(id,setting,value));
+    public GeneralCoinSetting addSetting(long id, String setting, String value){
+        GeneralCoinSetting generalCoinSetting = this.getSetting(setting);
+
+        if (generalCoinSetting == null) {
+            generalCoinSetting = new GeneralCoinSetting(id, setting, value);
+            this.settings.add(generalCoinSetting);
+        } else {
+            generalCoinSetting.setId(id);
+            generalCoinSetting.setValue(value);
+        }
+
+        return generalCoinSetting;
     }
 
-    public void addSetting(String setting, String value){
-        this.settings.add(new GeneralCoinSetting(setting,value));
+    public GeneralCoinSetting addSetting(String setting, String value){
+        GeneralCoinSetting generalCoinSetting = getSetting(setting);
+
+        if (generalCoinSetting == null) {
+            generalCoinSetting = new GeneralCoinSetting(setting,value);
+            this.settings.add(generalCoinSetting);
+        } else {
+            generalCoinSetting.setValue(value);
+        }
+
+        return generalCoinSetting;
     }
 
     public List<GeneralCoinSetting> getSettings(){
@@ -48,6 +69,16 @@ public class GeneralCoinSettings {
         }
 
         return null;
+    }
+
+    public boolean settingExists(String setting){
+        for (GeneralCoinSetting nextSetting : this.settings){
+            if (nextSetting.getSetting().equals(setting)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public class GeneralCoinSetting {

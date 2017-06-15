@@ -23,19 +23,28 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 public class GeneralCoinSettingsDialogBuilder {
 
     private Coin coin;
+    protected int settingsLayout;
+    protected GeneralCoinSettings coinSettings;
+    final protected Context context;
 
-    public GeneralCoinSettingsDialogBuilder(Coin coin){
+    public GeneralCoinSettingsDialogBuilder(Context context, Coin coin){
+        this.context = context;
         this.coin = coin;
+        this.settingsLayout = R.layout.general_coin_setting;
+        this.coinSettings = GeneralCoinFactory.getSettings(this.coin);
+        SCWallDatabase db = new SCWallDatabase(context);
+        db.getGeneralCoinSettings(this.coinSettings);
     }
 
-    public Dialog createDialog(final Context context, int themeResId){
-        final Dialog dialog = new Dialog(context, themeResId);
-        dialog.setTitle(this.coin.getLabel() + " " + context.getString(R.string.action_settings));
-        dialog.setContentView(R.layout.general_coin_setting);
-        final Spinner spPrecision = (Spinner)dialog.findViewById(R.id.precision);
+    public void setPrecision(Dialog dialog){
+       final GeneralCoinSettings.GeneralCoinSetting precisionSetting;
+       if (coinSettings.settingExists("precision")) {
+           precisionSetting = coinSettings.getSetting("precision");
+       } else {
+           precisionSetting = coinSettings.addSetting("precision","0");
+       }
 
-        GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(this.coin);
-        final GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
+        final Spinner spPrecision = (Spinner)dialog.findViewById(R.id.precision);
 
         ArrayList<String> precisionArray = new ArrayList<String>();
         precisionArray.add(coin.getLabel());
@@ -49,7 +58,7 @@ public class GeneralCoinSettingsDialogBuilder {
         ArrayAdapter<String> precisionAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, precisionArray);
         spPrecision.setAdapter(precisionAdapter);
         if (precisionSetting != null){
-            spPrecision.setSelection(precisionAdapter.getPosition(precisionSetting.getValue()));
+            spPrecision.setSelection(precisionValueArray.indexOf(precisionSetting.getValue()));
         }
 
         spPrecision.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -62,15 +71,15 @@ public class GeneralCoinSettingsDialogBuilder {
                 if (initialized){
                     String valueSelected = (String)spPrecision.getSelectedItem();
 
-                    if (!setting.getValue().equals(valueSelected)){
-                        setting.setValue(precisionValueArray.get(position));
+                    if (!this.setting.getValue().equals(valueSelected)){
+                        this.setting.setValue(precisionValueArray.get(position));
                         SCWallDatabase db = new SCWallDatabase(context);
                         db.putGeneralCoinSetting(coin, setting);
                         //Save to db
                     }
                 } else {
                     initialized = true;
-                    setting = precisionSetting;
+                    this.setting = precisionSetting;
                 }
             }
 
@@ -79,7 +88,13 @@ public class GeneralCoinSettingsDialogBuilder {
 
             }
         });
+    }
 
+    public Dialog createDialog(int themeResId){
+        final Dialog dialog = new Dialog(context, themeResId);
+        dialog.setTitle(this.coin.getLabel() + " " + context.getString(R.string.action_settings));
+        dialog.setContentView(settingsLayout);
+        this.setPrecision(dialog);
         return dialog;
     }
 }

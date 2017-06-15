@@ -1,6 +1,10 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import android.content.Context;
+
+import de.bitsharesmunich.cryptocoincore.adapters.GeneralCoinSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
+import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinSettings;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinValidator;
 import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.dash.DashValidator;
@@ -30,10 +34,14 @@ public class GeneralCoinFactory {
         return null;
     }
 
+    public static GeneralCoinSettingsDialogBuilder getDialogBuilder(Context context, Coin coin){
+        return new GeneralCoinSettingsDialogBuilder(context, coin);
+    }
+
     public static GeneralCoinSettings getSettings(Coin coin){
         switch(coin){
             case BITCOIN:
-                //return BitcoinSettings.getInstance();
+                return BitcoinSettings.getInstance();
             case DASH:
                 //return DashSettings.getInstance();
             case LITECOIN:

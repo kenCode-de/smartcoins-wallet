@@ -1358,7 +1358,7 @@ public class SCWallDatabase {
         return gtxos;
     }
 
-    public GeneralCoinSettings getGeneralCoinSettings(Coin coin){
+    public void getGeneralCoinSettings(GeneralCoinSettings settings){
         String[] columns = {
                 SCWallDatabaseContract.GeneralCoinSetting.COLUMN_ID,
                 SCWallDatabaseContract.GeneralCoinSetting.COLUMN_COIN_TYPE,
@@ -1367,10 +1367,9 @@ public class SCWallDatabase {
         };
 
         Cursor cursor = db.query(true, SCWallDatabaseContract.GeneralCoinSetting.TABLE_NAME, columns,
-                SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE+ " = '" + coin.name() + "'", null, null, null, null, null);
+                SCWallDatabaseContract.Outputs.COLUMN_COIN_TYPE+ " = '" + settings.getCoinType().name() + "'", null, null, null, null, null);
 
         if(cursor.moveToFirst()){
-            GeneralCoinSettings settings = new GeneralCoinSettings(coin);
             do{
                 long id = cursor.getLong(0);
                 String setting = cursor.getString(2);
@@ -1378,11 +1377,7 @@ public class SCWallDatabase {
 
                 settings.addSetting(id, setting, value);
             }while(cursor.moveToNext());
-
-            return settings;
         }
-
-        return null;
     }
 
     public boolean putGeneralCoinSetting(Coin coin, GeneralCoinSettings.GeneralCoinSetting setting) {

@@ -1423,8 +1423,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         if (coinSelected != null) {
             spCoinsSettings.setSelection(0); //whitout this line, the user can't select the same coin simultaneously
-            GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(coinSelected);
-            final Dialog dialog = dialogBuilder.createDialog(this,R.style.stylishDialog);
+            GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(this, coinSelected);
+            final Dialog dialog = dialogBuilder.createDialog(R.style.stylishDialog);
             dialog.show();
         }
     }
