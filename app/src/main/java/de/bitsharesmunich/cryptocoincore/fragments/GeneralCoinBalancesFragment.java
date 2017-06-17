@@ -106,6 +106,7 @@ import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 import de.bitsharesmunich.cryptocoincore.base.TransactionLog;
 import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
 import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
@@ -1949,6 +1950,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
+        GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(getContext(),item.getCoin());
+        GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
+
         LinearLayout balanceGroup = null;
 
         //Find if coin section its already in llBalances
@@ -2032,13 +2036,31 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             finalSymbol = "bit" + item.getSymbol();
         } else {
             finalSymbol = item.getSymbol();
+
+            if (precisionSetting != null) {
+                switch (precisionSetting.getValue()) {
+                    case "5":
+                        finalSymbol = "m" + finalSymbol;
+                        break;
+                    case "2":
+                        finalSymbol = "μ" + finalSymbol;
+                        break;
+                }
+            }
         }
 
+        /*If the precision were set by the user, then we have to used that one */
+        String precision = "";
+        if (precisionSetting != null){
+            precision = precisionSetting.getValue();
+        } else {
+            precision = item.getPrecision();
+        }
 
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
-        float b = powerInFloat(item.getPrecision(), item.getAmmount());
+        float b = powerInFloat(precision, item.getAmmount());
         if ((item.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
         } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
@@ -2094,7 +2116,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             };
             animateNsoundHandler.postDelayed(rotateTask, 200);
             Log.d("Balances Update", "Animation initiated");
-            animateText(ammountTextView, 0, convertLocalizeStringToFloat(returnFromPower(item.getPrecision(), item.getAmmount())));
+            animateText(ammountTextView, 0, convertLocalizeStringToFloat(returnFromPower(precision, item.getAmmount())));
             Log.d("Balances Update", "Text Animated");
 
             final Runnable updateTask = new Runnable() {
@@ -2113,6 +2135,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
 
     public void updateBalanceItem(final BalanceItem oldItem, final BalanceItem newItem, final int index){
+        GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(getContext(),newItem.getCoin());
+        GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
+
         LinearLayout balanceGroup = null;
 
         //Find if coin section its already in llBalances
@@ -2151,6 +2176,17 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 finalSymbol = "bit" + newItem.getSymbol();
             } else {
                 finalSymbol = newItem.getSymbol();
+
+                if (precisionSetting != null) {
+                    switch (precisionSetting.getValue()) {
+                        case "5":
+                            finalSymbol = "m" + finalSymbol;
+                            break;
+                        case "2":
+                            finalSymbol = "μ" + finalSymbol;
+                            break;
+                    }
+                }
             }
 
             final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
@@ -2161,11 +2197,19 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             double oldAmmount = Double.parseDouble(oldItem.getAmmount());
             double newAmmount = Double.parseDouble(newItem.getAmmount());
 
+            /*If the precision were set by the user, then we have to used that one */
+            String precision = "";
+            if (precisionSetting != null){
+                precision = precisionSetting.getValue();
+            } else {
+                precision = newItem.getPrecision();
+            }
+
             if (oldAmmount > newAmmount) {
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(precision, newItem.getAmmount())));
 
                 final Runnable updateTask = new Runnable() {
                     @Override
@@ -2236,7 +2280,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 Log.d("Balances Update", "Animation initiated");
                 //}
 
-                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(newItem.getPrecision(), newItem.getAmmount())));
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(precision, newItem.getAmmount())));
 
                 Log.d("Balances Update", "Text Animated");
 

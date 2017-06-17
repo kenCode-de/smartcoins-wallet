@@ -22,6 +22,7 @@ import android.transition.Explode;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -1425,6 +1426,12 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             spCoinsSettings.setSelection(0); //whitout this line, the user can't select the same coin simultaneously
             GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(this, coinSelected);
             final Dialog dialog = dialogBuilder.createDialog(R.style.stylishDialog);
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            //lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setAttributes(lp);
             dialog.show();
         }
     }

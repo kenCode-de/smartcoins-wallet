@@ -3,6 +3,7 @@ package de.bitsharesmunich.cryptocoincore.adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -31,9 +32,7 @@ public class GeneralCoinSettingsDialogBuilder {
         this.context = context;
         this.coin = coin;
         this.settingsLayout = R.layout.general_coin_setting;
-        this.coinSettings = GeneralCoinFactory.getSettings(this.coin);
-        SCWallDatabase db = new SCWallDatabase(context);
-        db.getGeneralCoinSettings(this.coinSettings);
+        this.coinSettings = GeneralCoinFactory.getSettings(context, this.coin);
     }
 
     public void setPrecision(Dialog dialog){
@@ -41,7 +40,7 @@ public class GeneralCoinSettingsDialogBuilder {
        if (coinSettings.settingExists("precision")) {
            precisionSetting = coinSettings.getSetting("precision");
        } else {
-           precisionSetting = coinSettings.addSetting("precision","0");
+           precisionSetting = coinSettings.addSetting("precision","8");
        }
 
         final Spinner spPrecision = (Spinner)dialog.findViewById(R.id.precision);
@@ -51,9 +50,9 @@ public class GeneralCoinSettingsDialogBuilder {
         precisionArray.add("m"+coin.getLabel());
         precisionArray.add("μ"+coin.getLabel());
         final ArrayList<String> precisionValueArray = new ArrayList<String>();
-        precisionValueArray.add("0");
-        precisionValueArray.add("3");
-        precisionValueArray.add("6");
+        precisionValueArray.add("8");
+        precisionValueArray.add("5");
+        precisionValueArray.add("2");
 
         ArrayAdapter<String> precisionAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, precisionArray);
         spPrecision.setAdapter(precisionAdapter);

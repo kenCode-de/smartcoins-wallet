@@ -2,6 +2,9 @@ package de.bitsharesmunich.cryptocoincore.base;
 
 import android.content.Context;
 
+import java.util.HashMap;
+
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitsharesmunich.cryptocoincore.adapters.GeneralCoinSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinSettings;
@@ -18,6 +21,8 @@ import de.bitsharesmunich.cryptocoincore.litecoin.LiteCoinValidator;
  */
 
 public class GeneralCoinFactory {
+
+    private static HashMap<Coin,GeneralCoinSettings> settingsCache = new HashMap<Coin,GeneralCoinSettings>();
 
     public static GeneralCoinValidator getValidator(Coin coin){
         switch(coin){
@@ -38,19 +43,32 @@ public class GeneralCoinFactory {
         return new GeneralCoinSettingsDialogBuilder(context, coin);
     }
 
-    public static GeneralCoinSettings getSettings(Coin coin){
+    public static GeneralCoinSettings getSettings(Context context, Coin coin){
+        GeneralCoinSettings settings;
+
         switch(coin){
             case BITCOIN:
-                return BitcoinSettings.getInstance();
+                settings = BitcoinSettings.getInstance();
+                break;
             case DASH:
                 //return DashSettings.getInstance();
             case LITECOIN:
                 //return LiteCoinSettings.getInstance();
             case DOGECOIN:
                 //return DogeCoinSettings.getInstance();
+            default:
+                if (!settingsCache.containsKey(coin)) {
+                    settingsCache.put(coin,new GeneralCoinSettings(coin));
+                }
+                settings = settingsCache.get(coin);
         }
 
-        return null;
+        if (settings != null){
+            SCWallDatabase db = new SCWallDatabase(context);
+            db.getGeneralCoinSettings(settings);
+        }
+
+        return settings;
     }
 
     public static GeneralCoinAccount getGeneralCoinAccount(Coin coin, final AccountSeed seed, String name){
