@@ -22,7 +22,10 @@ import java.util.regex.Pattern;
 import de.bitshares_munich.database.HistoricalTransferEntry;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 import de.bitsharesmunich.cryptocoincore.base.GeneralTransaction;
 import de.bitsharesmunich.cryptocoincore.base.TransactionLog;
 import de.bitsharesmunich.graphenej.AssetAmount;
@@ -269,10 +272,33 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<Transactio
 
                 AssetAmount smartcoinAmount = historicalTransferEntry.getEquivalentValue();
 
+                GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(getContext(),Coin.BITSHARE);
+                GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
+
                 if(transferAmount.getAsset() != null){
                     symbol = transferAmount.getAsset().getSymbol();
+
+                    if (precisionSetting != null) {
+                        switch (precisionSetting.getValue()) {
+                            case "5":
+                                symbol = "m" + symbol;
+                                break;
+                            case "2":
+                                symbol = "μ" + symbol;
+                                break;
+                        }
+                    }
                 }
-                amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount));
+
+                /*If the precision were set by the user, then we have to used that one */
+                if (precisionSetting != null){
+                    int precision = Integer.parseInt(precisionSetting.getValue());
+
+                    amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount)*Math.pow(10,8-precision));
+                } else {
+                    amount = Helper.setLocaleNumberFormat(locale, Util.fromBase(transferAmount));
+                }
+
                 isSending = operation.getFrom().getObjectId().equals(historicalTransfer.getBitshareAccount().getObjectId());
 
                 if(smartcoinAmount != null){
@@ -293,15 +319,40 @@ public class CryptoCoinTransfersTableAdapter extends TableDataAdapter<Transactio
                 }
                 break;
             case TRANSACTION_TYPE_BITCOIN:
+
                 GeneralTransaction generalTransaction = historicalTransfer.getBitcoinTransactionLog();
+                coinSettings = GeneralCoinFactory.getSettings(getContext(),generalTransaction.getType());
+                precisionSetting = coinSettings.getSetting("precision");
+
                 symbol = generalTransaction.getType().getLabel();
+
+                if (precisionSetting != null) {
+                    switch (precisionSetting.getValue()) {
+                        case "5":
+                            symbol = "m" + symbol;
+                            break;
+                        case "2":
+                            symbol = "μ" + symbol;
+                            break;
+                    }
+                }
+
                 double balanceChange = generalTransaction.getAccountBalanceChange();
 
                 isSending = balanceChange < 0;
                 if (isSending){
                     balanceChange = -balanceChange;
                 }
-                amount = Helper.setLocaleNumberFormat(locale, balanceChange/Math.pow(10,generalTransaction.getType().getPrecision()));
+
+                /*If the precision were set by the user, then we have to used that one */
+                int precision = 0;
+                if (precisionSetting != null){
+                    precision = Integer.parseInt(precisionSetting.getValue());
+                } else {
+                    precision = generalTransaction.getType().getPrecision();
+                }
+
+                amount = Helper.setLocaleNumberFormat(locale, balanceChange/Math.pow(10,precision));
 
 
                 if (generalTransaction.getConfirm() < generalTransaction.getType().getConfirmationsNeeded()){

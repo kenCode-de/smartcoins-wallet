@@ -2053,6 +2053,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         String precision = "";
         if (precisionSetting != null){
             precision = precisionSetting.getValue();
+
+            if (item.getCoin() == Coin.BITSHARE){
+                precision = ""+(Integer.parseInt(precision)-3);
+            }
         } else {
             precision = item.getPrecision();
         }
@@ -2060,7 +2064,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         final AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.displaySpannable(symbolTextView, finalSymbol);
 
-        float b = powerInFloat(precision, item.getAmmount());
+        double b = powerInFloat(precision, item.getAmmount());
         if ((item.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol().replace("bit", "")))) {
             ammountTextView.setText(String.format(locale, "%.2f", b));
         } else if (assetsSymbols.isUiaSymbol(item.getSymbol()))
@@ -2451,14 +2455,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         return Double.toString(value / ok);
     }
 
-    float powerInFloat(String i, String str) {
-        float ok = 1.0f;
+    double powerInFloat(String i, String str) {
+        //float ok = 1.0f;
         float pre = Float.parseFloat(i);
         float value = Float.parseFloat(str);
-        for (int k = 0; k < pre; k++) {
-            ok = ok * 10;
-        }
-        return (value / ok);
+        //for (int k = 0; k < pre; k++) {
+        //}ok = ok * 10;
+        return (value / Math.pow(10,pre));
     }
 
     /**
