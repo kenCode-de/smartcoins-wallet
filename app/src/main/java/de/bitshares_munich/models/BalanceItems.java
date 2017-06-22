@@ -144,6 +144,13 @@ public class BalanceItems {
         _listeners.remove(listener);
     }
 
+    public void fireAllItemsUpdateEvent(){
+        for (int i=0;i<this.items.size();i++){
+            BalanceItem nextItem = this.items.get(i);
+            this._fireOnBalanceItemUpdatedEvent(nextItem,nextItem,i);
+        }
+    }
+
     private synchronized void _fireOnNewBalanceItemEvent(BalanceItem item, boolean initialLoad) {
         BalanceItemsEvent balanceItemsEvent = new BalanceItemsEvent( this, item );
         balanceItemsEvent.setInitialLoad(initialLoad);

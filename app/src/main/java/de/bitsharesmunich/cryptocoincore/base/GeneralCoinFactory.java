@@ -46,26 +46,28 @@ public class GeneralCoinFactory {
     public static GeneralCoinSettings getSettings(Context context, Coin coin){
         GeneralCoinSettings settings;
 
-        switch(coin){
-            case BITCOIN:
-                settings = BitcoinSettings.getInstance();
-                break;
-            case DASH:
-                //return DashSettings.getInstance();
-            case LITECOIN:
-                //return LiteCoinSettings.getInstance();
-            case DOGECOIN:
-                //return DogeCoinSettings.getInstance();
-            default:
-                if (!settingsCache.containsKey(coin)) {
-                    settingsCache.put(coin,new GeneralCoinSettings(coin));
-                }
-                settings = settingsCache.get(coin);
-        }
+        if (settingsCache.containsKey(coin)){
+            settings = settingsCache.get(coin);
+        } else {
+            switch (coin) {
+                case BITCOIN:
+                    settings = new BitcoinSettings();
+                    break;
+                case DASH:
+                    //return DashSettings.getInstance();
+                case LITECOIN:
+                    //return LiteCoinSettings.getInstance();
+                case DOGECOIN:
+                    //return DogeCoinSettings.getInstance();
+                default:
+                    settings = new GeneralCoinSettings(coin);
+            }
 
-        if (settings != null){
-            SCWallDatabase db = new SCWallDatabase(context);
-            db.getGeneralCoinSettings(settings);
+            if (settings != null){
+                SCWallDatabase db = new SCWallDatabase(context);
+                db.getGeneralCoinSettings(settings);
+                settingsCache.put(coin, settings);
+            }
         }
 
         return settings;

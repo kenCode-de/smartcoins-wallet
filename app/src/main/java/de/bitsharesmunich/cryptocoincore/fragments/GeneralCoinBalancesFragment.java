@@ -96,6 +96,7 @@ import de.bitshares_munich.models.BalanceItems;
 import de.bitshares_munich.models.BalanceItemsEvent;
 import de.bitshares_munich.models.BalanceItemsListener;
 import de.bitshares_munich.models.BalancesItems;
+import de.bitshares_munich.models.GeneralCoinSettingEvent;
 import de.bitshares_munich.models.Smartcoins;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.smartcoinswallet.AssestsActivty;
@@ -104,6 +105,7 @@ import de.bitshares_munich.smartcoinswallet.AudioFilePath;
 import de.bitshares_munich.smartcoinswallet.Constants;
 import de.bitshares_munich.smartcoinswallet.MediaService;
 import de.bitshares_munich.smartcoinswallet.R;
+import de.bitsharesmunich.cryptocoincore.base.ChangeSettingListener;
 import de.bitsharesmunich.cryptocoincore.base.CryptoCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
@@ -175,7 +177,7 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 /**
  * Created by qasim on 5/10/16.
  */
-public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener {
+public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener, ChangeSettingListener {
     public final String TAG = this.getClass().getName();
     public static Activity balanceActivity;
 
@@ -1415,6 +1417,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
         });
 
+        GeneralCoinSettings accountSettings = GeneralCoinFactory.getSettings(getContext(), account.getCoin());
+
+        accountSettings.addChangeSettingListener(this);
+
+
         Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
         this.coinsUsed.add(account.getCoin());
 
@@ -1693,6 +1700,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     private void updateBitshareBalanceArrays(final ArrayList<String> sym, final ArrayList<String> pre, final ArrayList<String> am, boolean startUp) {
         try {
             BalanceItems bitshareBalanceItems = this.getBalanceItems().addBalancesItems(Coin.BITSHARE);
+            GeneralCoinSettings accountSettings = GeneralCoinFactory.getSettings(getContext(), Coin.BITSHARE);
+            accountSettings.addChangeSettingListener(this);
+
             bitshareBalanceItems.clear();
 
             for (int i = 0; i < sym.size(); i++) {
@@ -2209,7 +2219,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 precision = newItem.getPrecision();
             }
 
-            if (oldAmmount > newAmmount) {
+            if (oldAmmount == newAmmount){ //This activates when a coin settings are set by the user
+                animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(precision, newItem.getAmmount())));
+            } else if (oldAmmount > newAmmount) {
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
@@ -3168,5 +3180,18 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     @Override
     public void onError(String message) {
         Toast.makeText(getContext(), getActivity().getText(R.string.pdf_generated_msg_error) + message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void settingChange(GeneralCoinSettingEvent e) {
+        final GeneralCoinSettings settings = (GeneralCoinSettings) e.getSource();
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                BalanceItems balanceItems = getBalanceItems().getBalancesItems(settings.getCoinType());
+                balanceItems.fireAllItemsUpdateEvent();
+                updateTableView(false);
+            }
+        });
     }
 }

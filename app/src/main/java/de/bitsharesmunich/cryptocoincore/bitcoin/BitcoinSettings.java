@@ -9,16 +9,6 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 
 public class BitcoinSettings extends GeneralCoinSettings {
 
-    static private BitcoinSettings instance = null;
-
-    public static BitcoinSettings getInstance() {
-        if (BitcoinSettings.instance == null) {
-            BitcoinSettings.instance = new BitcoinSettings();
-        }
-
-        return BitcoinSettings.instance;
-    }
-
     public BitcoinSettings(){
         super(Coin.BITCOIN);
     }

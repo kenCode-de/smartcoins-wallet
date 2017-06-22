@@ -4,10 +4,15 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.database.SCWallDatabaseContract;
+import de.bitshares_munich.models.BalanceItem;
+import de.bitshares_munich.models.BalanceItemsEvent;
+import de.bitshares_munich.models.BalanceItemsListener;
+import de.bitshares_munich.models.GeneralCoinSettingEvent;
 
 /**
  * Created by Henry Varona on 21/4/2017.
@@ -16,6 +21,8 @@ import de.bitshares_munich.database.SCWallDatabaseContract;
 public class GeneralCoinSettings {
     Coin coinType;
     List<GeneralCoinSetting> settings;
+    private List<ChangeSettingListener> _changeSettingListeners = new ArrayList<ChangeSettingListener>();
+
 
     public GeneralCoinSettings(Coin coin){
         this.coinType = coin;
@@ -81,6 +88,19 @@ public class GeneralCoinSettings {
         return false;
     }
 
+    public void addChangeSettingListener(ChangeSettingListener listener) {
+        this._changeSettingListeners.add(listener);
+    }
+
+
+    private synchronized void _fireOnSettingChangeEvent() {
+        GeneralCoinSettingEvent event = new GeneralCoinSettingEvent( this );
+        Iterator listeners = _changeSettingListeners.iterator();
+        while( listeners.hasNext() ) {
+            ( (ChangeSettingListener) listeners.next() ).settingChange( event );
+        }
+    }
+
     public class GeneralCoinSetting {
         String setting;
         String value;
@@ -113,6 +133,7 @@ public class GeneralCoinSettings {
         public void setValue(String value) {
             if (!this.value.equals(value)) {
                 this.value = value;
+                GeneralCoinSettings.this._fireOnSettingChangeEvent();
             }
         }
 
