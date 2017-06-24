@@ -2215,6 +2215,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             String precision = "";
             if (precisionSetting != null){
                 precision = precisionSetting.getValue();
+
+                if (newItem.getCoin() == Coin.BITSHARE){
+                    precision = ""+(Integer.parseInt(precision)-3);
+                }
             } else {
                 precision = newItem.getPrecision();
             }
