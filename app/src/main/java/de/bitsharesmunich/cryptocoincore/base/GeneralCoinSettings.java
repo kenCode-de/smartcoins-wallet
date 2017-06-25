@@ -27,6 +27,9 @@ public class GeneralCoinSettings {
     public GeneralCoinSettings(Coin coin){
         this.coinType = coin;
         this.settings = new ArrayList<GeneralCoinSetting>();
+
+        //adding defaults
+        this.addSetting("precision","8");
     };
 
     public Coin getCoinType(){

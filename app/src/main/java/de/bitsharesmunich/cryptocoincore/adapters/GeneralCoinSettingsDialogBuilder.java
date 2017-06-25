@@ -23,7 +23,7 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 
 public class GeneralCoinSettingsDialogBuilder {
 
-    private Coin coin;
+    protected Coin coin;
     protected int settingsLayout;
     protected GeneralCoinSettings coinSettings;
     final protected Context context;
@@ -37,11 +37,11 @@ public class GeneralCoinSettingsDialogBuilder {
 
     public void setPrecision(Dialog dialog){
        final GeneralCoinSettings.GeneralCoinSetting precisionSetting;
-       if (coinSettings.settingExists("precision")) {
+       //if (coinSettings.settingExists("precision")) {
            precisionSetting = coinSettings.getSetting("precision");
-       } else {
-           precisionSetting = coinSettings.addSetting("precision","8");
-       }
+       //} else {
+       //    precisionSetting = coinSettings.addSetting("precision","8");
+       //}
 
         final Spinner spPrecision = (Spinner)dialog.findViewById(R.id.precision);
 

@@ -80,6 +80,7 @@ import de.bitsharesmunich.cryptocoincore.adapters.ArrayListCoinAdapter;
 import de.bitsharesmunich.cryptocoincore.adapters.GeneralCoinSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
 import de.bitsharesmunich.cryptocoincore.base.SeedType;
 import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.AccountOptions;
@@ -1424,7 +1425,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
 
         if (coinSelected != null) {
             spCoinsSettings.setSelection(0); //whitout this line, the user can't select the same coin simultaneously
-            GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(this, coinSelected);
+            //GeneralCoinSettingsDialogBuilder dialogBuilder = new GeneralCoinSettingsDialogBuilder(this, coinSelected);
+            GeneralCoinSettingsDialogBuilder dialogBuilder = GeneralCoinFactory.getDialogBuilder(this, coinSelected);
             final Dialog dialog = dialogBuilder.createDialog(R.style.stylishDialog);
 
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();

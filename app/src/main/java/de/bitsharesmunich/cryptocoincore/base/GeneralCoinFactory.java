@@ -10,6 +10,8 @@ import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinAccount;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinSettings;
 import de.bitsharesmunich.cryptocoincore.bitcoin.BitcoinValidator;
 import de.bitsharesmunich.cryptocoincore.dash.DashAccount;
+import de.bitsharesmunich.cryptocoincore.dash.DashSettings;
+import de.bitsharesmunich.cryptocoincore.dash.DashSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.dash.DashValidator;
 import de.bitsharesmunich.cryptocoincore.dogecoin.DogeCoinAccount;
 import de.bitsharesmunich.cryptocoincore.dogecoin.DogeCoinValidator;
@@ -40,7 +42,12 @@ public class GeneralCoinFactory {
     }
 
     public static GeneralCoinSettingsDialogBuilder getDialogBuilder(Context context, Coin coin){
-        return new GeneralCoinSettingsDialogBuilder(context, coin);
+        switch (coin) {
+            case DASH:
+                return new DashSettingsDialogBuilder(context);
+            default:
+                return new GeneralCoinSettingsDialogBuilder(context, coin);
+        }
     }
 
     public static GeneralCoinSettings getSettings(Context context, Coin coin){
@@ -54,7 +61,8 @@ public class GeneralCoinFactory {
                     settings = new BitcoinSettings();
                     break;
                 case DASH:
-                    //return DashSettings.getInstance();
+                    settings = new DashSettings();
+                    break;
                 case LITECOIN:
                     //return LiteCoinSettings.getInstance();
                 case DOGECOIN:
