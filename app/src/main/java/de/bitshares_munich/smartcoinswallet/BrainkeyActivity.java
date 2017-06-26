@@ -40,7 +40,7 @@ import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccounts;
-import de.bitsharesmunich.graphenej.api.GetKeyReferences;
+import de.bitsharesmunich.graphenej.api.GetAccountsByAddress;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
@@ -172,7 +172,7 @@ public class BrainkeyActivity extends BaseActivity {
             Log.d(TAG, String.format("Brain key: '%s'", bKey.getBrainKey()));
             Log.d(TAG, String.format("Brainkey would generate address: %s", address.toString()));
 
-            new WebsocketWorkerThread(new GetKeyReferences(address, new WitnessResponseListener() {
+            new WebsocketWorkerThread(new GetAccountsByAddress(address, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
                     final List<List<UserAccount>> resp = (List<List<UserAccount>>) response.result;

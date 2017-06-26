@@ -18,8 +18,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.AddressFormatException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -653,7 +653,7 @@ public class Helper {
      */
     public static Boolean wifChecksumChecking(String wifText) {
 
-        Log.d(TAG, "Checksum Checking " + wifText);
+        Log.d(TAG, "Checksum Checking " + wifText );
 
         byte[] testbytes;
 
@@ -661,17 +661,17 @@ public class Helper {
         try {
             testbytes = Base58.decode(wifText);
         } catch (AddressFormatException e) {
-            Log.d(TAG, "WIF Format Invalid: " + e);
+            Log.d(TAG, "WIF Format Invalid: " + e );
             return false;
         }
         // Test decode of empty String.
-        if (testbytes.length == 0) return false;
+        if(testbytes.length == 0) return false;
 
         // Checksum should fail.
         try {
             Base58.decodeChecked(wifText);
         } catch (AddressFormatException e) {
-            Log.d(TAG, "WIF Checksum failed: " + e);
+            Log.d(TAG, "WIF Checksum failed: " + e );
             return false;
         }
 

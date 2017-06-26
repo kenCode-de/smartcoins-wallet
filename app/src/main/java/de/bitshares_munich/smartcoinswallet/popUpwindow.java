@@ -63,6 +63,7 @@ public class popUpwindow {
         optionsNewList.toArray(popUpContents);
 
         popupWindow = popupWindow();
+//add
     }
 
     public popUpwindow(Context c, TextView textview, List<String> optionsList) {
@@ -73,6 +74,7 @@ public class popUpwindow {
         optionsList.toArray(popUpContents);
 
         popupWindow = popupWindow();
+//add
     }
 
     public PopupWindow popupWindow() {
@@ -157,5 +159,14 @@ public class popUpwindow {
             textView.setText(selectedItemText);
         }
     }
+
+
+    //inialize in other activity like this
+//    popupwindow(v,selectBTSAmount);
+
+//    public void popupwindow(View v,TextView textview){
+//        popUpwindow p =new popUpwindow(this,textview);
+//        p.show(v);
+//    }
 
 }

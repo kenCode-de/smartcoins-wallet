@@ -51,30 +51,22 @@ import retrofit2.Response;
 public class ReceiveActivity extends BaseActivity {
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
-
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
     @Bind(R.id.username)
     TextView tvUsername;
-
     @Bind(R.id.notfound)
     TextView notfound;
-
     @Bind(R.id.qrimage)
     ImageView qrimage;
-
     @Bind(R.id.tvBlockNumberHead_rcv_screen_activity)
     TextView tvBlockNumberHead;
-
     @Bind(R.id.tvAppVersion_rcv_screen_activity)
     TextView tvAppVersion;
-
     @Bind(R.id.ivSocketConnected_rcv_screen_activity)
     ImageView ivSocketConnected;
-
     ProgressDialog progressDialog;
     String price = "";
     String currency = "";
