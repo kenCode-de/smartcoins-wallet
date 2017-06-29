@@ -3,6 +3,7 @@ package de.bitsharesmunich.cryptocoincore.adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,5 +96,9 @@ public class GeneralCoinSettingsDialogBuilder {
         dialog.setContentView(settingsLayout);
         this.setPrecision(dialog);
         return dialog;
+    }
+
+    public void addSendSettings(ViewGroup parent){
+        //Does nothing for general coins for now
     }
 }

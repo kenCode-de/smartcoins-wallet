@@ -84,6 +84,7 @@ import de.bitshares_munich.utils.ServiceGenerator;
 import de.bitshares_munich.utils.SupportMethods;
 import de.bitshares_munich.utils.TinyDB;
 import de.bitshares_munich.utils.webSocketCallHelper;
+import de.bitsharesmunich.cryptocoincore.adapters.GeneralCoinSettingsDialogBuilder;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinFactory;
@@ -422,6 +423,12 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                     }
                 }
             }
+
+
+
+            ViewGroup otherSettings = (ViewGroup) findViewById(R.id.otherSendSettings);
+            GeneralCoinSettingsDialogBuilder coinDialogBuilder = GeneralCoinFactory.getDialogBuilder(this, coin);
+            coinDialogBuilder.addSendSettings(otherSettings);
         }
 
         final Handler handler = new Handler();

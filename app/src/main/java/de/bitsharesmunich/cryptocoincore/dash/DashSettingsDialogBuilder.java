@@ -2,11 +2,14 @@ package de.bitsharesmunich.cryptocoincore.dash;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -60,5 +63,16 @@ public class DashSettingsDialogBuilder extends GeneralCoinSettingsDialogBuilder{
         this.setPrecision(dialog);
         this.setInstantsend(dialog);
         return dialog;
+    }
+
+    public void addSendSettings(ViewGroup parent){
+        //hay que revisar por qué no aparece la vista que se está agregando
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View sendPageDashSettings = (View)layoutInflater.inflate(R.layout.send_page_dash_settings, null);
+        CheckBox checkInstantsend = (CheckBox)sendPageDashSettings.findViewById(R.id.osInstantsend);
+
+        boolean defaultInstantsend = this.coinSettings.getSetting("instantsend").getValue().equals("true");
+        checkInstantsend.setChecked(defaultInstantsend);
+        parent.addView(sendPageDashSettings);
     }
 }
