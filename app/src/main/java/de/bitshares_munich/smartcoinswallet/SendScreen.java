@@ -76,12 +76,12 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.AssetAmount;
+import de.bitsharesmunich.graphenej.BaseOperation;
 import de.bitsharesmunich.graphenej.BlockData;
 import de.bitsharesmunich.graphenej.Invoice;
 import de.bitsharesmunich.graphenej.LineItem;
 import de.bitsharesmunich.graphenej.PublicKey;
 import de.bitsharesmunich.graphenej.Transaction;
-import de.bitsharesmunich.graphenej.TransferTransactionBuilder;
 import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.api.GetAccountByName;
 import de.bitsharesmunich.graphenej.api.TransactionBroadcastSequence;
@@ -93,6 +93,8 @@ import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.HistoricalTransfer;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 import de.bitsharesmunich.graphenej.objects.Memo;
+import de.bitsharesmunich.graphenej.operations.TransferOperation;
+import de.bitsharesmunich.graphenej.operations.TransferOperationBuilder;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/6/16.
@@ -117,59 +119,88 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
     ProgressDialog progressDialog;
     Double exchangeRate, requiredAmount, backAssetRate, sellAmount;
     String backupAsset, callbackURL;
+
     @Bind(R.id.llMemo)
     LinearLayout llMemo;
+
     @Bind(R.id.llLoyalty)
     LinearLayout llLoyalty;
+
     @Bind(R.id.llBackupAsset)
     LinearLayout llBackupAsset;
+
     @Bind(R.id.tvLoyaltyStatus)
     TextView tvLoyaltyStatus;
+
     @Bind(R.id.tvTotalStatus)
     TextView tvTotalStatus;
+
     @Bind(R.id.spAssets)
     Spinner spAssets;
+
     @Bind(R.id.tvLoyalty)
     TextView tvLoyalty;
+
     @Bind(R.id.tvBackupAsset)
     TextView tvBackupAsset;
+
     @Bind(R.id.tvBackupAssetBalanceValidate)
     TextView tvBackupAssetBalanceValidate;
+
     @Bind(R.id.webviewFrom)
     WebView webviewFrom;
+
     @Bind(R.id.webviewTo)
     WebView webviewTo;
+
     @Bind(R.id.etReceiverAccount)
     EditText etReceiverAccount;
+
     @Bind(R.id.tvErrorRecieverAccount)
     TextView tvErrorRecieverAccount;
+
     @Bind(R.id.tvAmountStatus)
     TextView tvAmountStatus;
+
     @Bind(R.id.cbAlwaysDonate)
     CheckBox cbAlwaysDonate;
+
     @Bind(R.id.etMemo)
     EditText etMemo;
+
     @Bind(R.id.etAmount)
     EditText etAmount;
+
     @Bind(R.id.etBackupAsset)
     EditText etBackupAsset;
+
     @Bind(R.id.spinnerFrom)
     Spinner spinnerFrom;
+
     @Bind(R.id.btnSend)
     Button btnSend;
+
     @Bind(R.id.etLoyalty)
     EditText etLoyalty;
+
     @Bind(R.id.tvFrom)
     TextView tvFrom;
-    int count = 0;
+
     @Bind(R.id.tvBlockNumberHead_send_screen_activity)
     TextView tvBlockNumberHead;
+
     @Bind(R.id.tvAppVersion_send_screen_activity)
     TextView tvAppVersion;
+
     @Bind(R.id.ivSocketConnected_send_screen_activity)
     ImageView ivSocketConnected;
+
+    int count = 0;
+
     webSocketCallHelper myWebSocketHelper;
+
     Boolean runningSpinerForFirstTime = true;
+
     CountDownTimer myLowerCaseTimer = new CountDownTimer(500, 500) {
         public void onTick(long millisUntilFinished) {
         }
@@ -181,32 +212,44 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             }
         }
     };
+
     Dialog contactListDialog;
+
     private boolean mSendAttemptFail = false;
+
     /**
      * Handler and delay
      */
     private int REQUEST_TRANSFER_HISTORY_DELAY = 1800;
+
     /**
      * Instance of the database interface
      */
     private SCWallDatabase database;
+
     /* Donation account and amount */
     private UserAccount bitsharesMunich = new UserAccount("1.2.90200");
+
     private AssetAmount donationAmount = new AssetAmount(UnsignedLong.valueOf(200000), new Asset("1.3.0"));
+
     /* Destination account */
     private UserAccount destinationAccount;
+
     /* Sender account */
     private UserAccount sourceAccount;
+
     /* Constant used to fix the number of historical transfers to fetch from the network in one batch */
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 50;
+
     /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
     private WebsocketWorkerThread donationBroadcaster;
     private WebsocketWorkerThread transferBroadcaster;
     private WebsocketWorkerThread getAccountByName;
+
     /* This is one of the of the recipient account's public key, it will be used for memo encoding */
     private PublicKey destinationPublicKey;
+
     /**
      * Callback fired when we get a response from the network with the transaction details.
      */
@@ -225,7 +268,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                 UserAccount from = database.fillUserDetails(historicalTransfer.getOperation().getFrom());
                 UserAccount to = database.fillUserDetails(historicalTransfer.getOperation().getTo());
                 String id = historicalTransfer.getId();
-                long value = historicalTransfer.getOperation().getTransferAmount().getAmount().longValue();
+                long value = historicalTransfer.getOperation().getAssetAmount().getAmount().longValue();
                 Log.d(TAG, String.format("transferred %d from %s -> %s, id: %s", value, from.getAccountName(), to.getAccountName(), id));
             }
             database.putTransactions(transferEntries);
@@ -475,7 +518,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     accountDetail.isSelected = false;
                 }
             }
-//            startupTasks();
         } else {
             this.runningSpinerForFirstTime = false;
         }
@@ -806,7 +848,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
     void setBackUpAsset() {
         try {
-//            backupAsset = Helper.fetchStringSharePref(this, getString(R.string.pref_backup_symbol));
             backupAsset = "";
             if (backupAsset.isEmpty()) {
                 llBackupAsset.setVisibility(View.GONE);
@@ -900,7 +941,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             df.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.ENGLISH));
             if (totalAmount != 0) {
                 etAmount.setText(df.format(totalAmount));
-//                etAmount.setEnabled(false);
             }
             String loyaltypoints = null;
             String selectedAccount = spinnerFrom.getSelectedItem().toString();
@@ -1094,97 +1134,130 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
             memoMessage = null;
         }
 
-        try {
-            long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
-            String assetId = selectedAccountAsset.id;
-            Asset transferAsset = new Asset(assetId);
-            long expirationTime = Application.blockTime + 30;
-            ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
+        long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
+        String assetId = selectedAccountAsset.id;
+        Asset transferAsset = new Asset(assetId);
+        long expirationTime = Application.blockTime + 30;
+        ECKey currentPrivKey = ECKey.fromPrivate(DumpedPrivateKey.fromBase58(null, wifKey).getKey().getPrivKeyBytes());
 
-            sourceAccount = new UserAccount(senderID);
+        sourceAccount = new UserAccount(senderID);
 
+        if (mSendAttemptFail) {
+            mSendAttemptFail = false;
+            TransferOperation op = new TransferOperationBuilder()
+                    .setSource(sourceAccount)
+                    .setDestination(destinationAccount)
+                    .setTransferAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
+                    .build();
 
-            if (mSendAttemptFail) {
-                mSendAttemptFail = false;
-                TransferTransactionBuilder builder = new TransferTransactionBuilder()
-                        .setSource(sourceAccount)
-                        .setDestination(destinationAccount)
-                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                        .setPrivateKey(currentPrivKey);
-                if (memoMessage != null) {
-                    SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
-                    long nonce = secureRandom.nextLong();
-                    byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
-                    Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
-                    Address to = new Address(destinationPublicKey.getKey());
-                    Memo memo = new Memo(from, to, nonce, encryptedMemo);
-                    builder.setMemo(memo);
-                }
-
-                Transaction transaction = builder.build();
-
-                transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
-                transferBroadcaster.start();
-
-                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-                            .setSource(new UserAccount(senderID))
-                            .setDestination(bitsharesMunich)
-                            .setAmount(donationAmount)
-                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
-                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                            .setPrivateKey(currentPrivKey);
-
-                    Transaction donationTransaction = donationBuilder.build();
-                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
-                    donationBroadcaster.start();
-                    Log.d(TAG, "started a donation message broadcast");
-                }
-            } else {
-                mSendAttemptFail = true;
-                TransferTransactionBuilder builder = new TransferTransactionBuilder()
-                        .setSource(sourceAccount)
-                        .setDestination(destinationAccount)
-                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
-                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                        .setPrivateKey(currentPrivKey);
-                if (memoMessage != null) {
-                    SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
-                    long nonce = secureRandom.nextLong();
-                    byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
-                    Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
-                    Address to = new Address(destinationPublicKey.getKey());
-                    Memo memo = new Memo(from, to, nonce, encryptedMemo);
-                    builder.setMemo(memo);
-                }
-                Transaction transaction = builder.build();
-
-                transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
-                transferBroadcaster.start();
-                Log.d(TAG, "started a funds transfer donation broadcast");
-
-                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-                            .setSource(new UserAccount(senderID))
-                            .setDestination(bitsharesMunich)
-                            .setAmount(donationAmount)
-                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
-                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-                            .setPrivateKey(currentPrivKey);
-
-                    Transaction donationTransaction = donationBuilder.build();
-                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
-                    donationBroadcaster.start();
-                    Log.d(TAG, "started a donation message broadcast");
-                }
+//                TransferTransactionBuilder builder = new TransferTransactionBuilder()
+//                        .setSource(sourceAccount)
+//                        .setDestination(destinationAccount)
+//                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
+//                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+//                        .setPrivateKey(currentPrivKey);
+            if (memoMessage != null) {
+                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+                long nonce = secureRandom.nextLong();
+                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
+                Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                Address to = new Address(destinationPublicKey.getKey());
+                Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                op.setMemo(memo);
             }
 
-        } catch (MalformedTransactionException e) {
-            hideDialog();
-            e.printStackTrace();
-            Log.e(TAG, "MalformedTransactionException. Msg: " + e.getMessage());
+            ArrayList<BaseOperation> operations = new ArrayList<>();
+            operations.add(op);
+
+            if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                Log.d(TAG, "Including a donation");
+                TransferOperation donation = new TransferOperationBuilder()
+                        .setSource(new UserAccount(senderID))
+                        .setDestination(bitsharesMunich)
+                        .setTransferAmount(donationAmount)
+                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+                        .build();
+                operations.add(donation);
+            }
+
+            BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime);
+            Transaction transaction = new Transaction(currentPrivKey, blockData, operations);
+
+            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
+            transferBroadcaster.start();
+
+//                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+//                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+//                            .setSource(new UserAccount(senderID))
+//                            .setDestination(bitsharesMunich)
+//                            .setAmount(donationAmount)
+//                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+//                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+//                            .setPrivateKey(currentPrivKey);
+//
+//                    Transaction donationTransaction = donationBuilder.build();
+//                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
+//                    donationBroadcaster.start();
+//                }
+        } else {
+            mSendAttemptFail = true;
+            TransferOperation op = new TransferOperationBuilder()
+                    .setSource(sourceAccount)
+                    .setDestination(destinationAccount)
+                    .setTransferAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
+                    .build();
+//                TransferTransactionBuilder builder = new TransferTransactionBuilder()
+//                        .setSource(sourceAccount)
+//                        .setDestination(destinationAccount)
+//                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
+//                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+//                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+//                        .setPrivateKey(currentPrivKey);
+            if (memoMessage != null) {
+                SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
+                long nonce = secureRandom.nextLong();
+                byte[] encryptedMemo = Memo.encryptMessage(currentPrivKey, destinationPublicKey, nonce, memoMessage);
+                Address from = new Address(ECKey.fromPublicOnly(currentPrivKey.getPubKey()));
+                Address to = new Address(destinationPublicKey.getKey());
+                Memo memo = new Memo(from, to, nonce, encryptedMemo);
+                op.setMemo(memo);
+            }
+
+            ArrayList<BaseOperation> operations = new ArrayList<>();
+            operations.add(op);
+
+            if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+                Log.d(TAG, "Including a donation");
+                TransferOperation donation = new TransferOperationBuilder()
+                        .setSource(new UserAccount(senderID))
+                        .setDestination(bitsharesMunich)
+                        .setTransferAmount(donationAmount)
+                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
+                        .build();
+                operations.add(donation);
+            }
+
+            BlockData blockData = new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime);
+            Transaction transaction = new Transaction(currentPrivKey, blockData, operations);
+
+            transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
+            transferBroadcaster.start();
+//                Log.d(TAG, "started a funds transfer donation broadcast");
+//
+//                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
+//                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
+//                            .setSource(new UserAccount(senderID))
+//                            .setDestination(bitsharesMunich)
+//                            .setAmount(donationAmount)
+//                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
+//                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
+//                            .setPrivateKey(currentPrivKey);
+//
+//                    Transaction donationTransaction = donationBuilder.build();
+//                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
+//                    donationBroadcaster.start();
+//                    Log.d(TAG, "started a donation message broadcast");
+//                }
         }
     }
 
