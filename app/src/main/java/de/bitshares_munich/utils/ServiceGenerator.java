@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by root on 1/21/16.
  */
-public class ServiceGenerator{
+public class ServiceGenerator {
     public static String TAG = "ServiceGenerator";
     public static String API_BASE_URL;
     private static HttpLoggingInterceptor logging;
@@ -24,7 +24,7 @@ public class ServiceGenerator{
     private static HashMap<Class<?>, Object> Services;
 
     public ServiceGenerator(String apiBaseUrl) {
-        API_BASE_URL= apiBaseUrl;
+        API_BASE_URL = apiBaseUrl;
         logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
         clientBuilder = new OkHttpClient.Builder().addInterceptor(logging);
         builder = new Retrofit.Builder().baseUrl(API_BASE_URL).addConverterFactory(GsonConverterFactory.create());
