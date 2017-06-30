@@ -33,34 +33,49 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     Locale locale;
     NumberFormat format;
     String language;
+
     @Bind(R.id.btnOne)
     Button btnOne;
+
     @Bind(R.id.btnTwo)
     Button btnTwo;
+
     @Bind(R.id.btnThree)
     Button btnThree;
+
     @Bind(R.id.btnFour)
     Button btnFour;
+
     @Bind(R.id.btnFive)
     Button btnFive;
+
     @Bind(R.id.btnSix)
     Button btnSix;
+
     @Bind(R.id.btnSeven)
     Button btnSeven;
+
     @Bind(R.id.btnEight)
     Button btnEight;
+
     @Bind(R.id.btnNine)
     Button btnNine;
+
     @Bind(R.id.btnZero)
     Button btnZero;
+
     @Bind(R.id.btnDot)
     Button btnDot;
+
     @Bind(R.id.btnDoubleZero)
     Button btnDoubleZero;
+
     @Bind(R.id.txtScreen)
     TextView txtScreen;
+
     @Bind(R.id.tvNext)
     TextView tvNext;
+
     @Bind(R.id.llNext)
     LinearLayout llNext;
 

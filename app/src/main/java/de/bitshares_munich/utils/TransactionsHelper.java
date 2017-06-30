@@ -24,6 +24,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.AssetDelegate;
 import de.bitshares_munich.interfaces.IBalancesDelegate;
 import de.bitshares_munich.models.EquivalentFiatStorage;
@@ -33,8 +34,8 @@ import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.PublicKey;
-import de.bitsharesmunich.graphenej.api.GetAssets;
-import de.bitsharesmunich.graphenej.api.GetLimitOrders;
+import de.bitsharesmunich.graphenej.models.api.GetLimitOrders;
+import de.bitsharesmunich.graphenej.api.LookupAssetSymbols;
 import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
@@ -77,6 +78,7 @@ public class TransactionsHelper implements IBalancesDelegate {
     int retryGetEquivalentRates = 0;
     int retryGetIndirectEquivalentRates = 0;
     private String TAG = this.getClass().getName();
+
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final long _numberOfTransactionsLoaded, final long _numberOfTransactionsToLoad, final ArrayList<TransactionDetails> _alreadyLoadedTransactions) {
         context = c;
         assetDelegate = instance;
@@ -106,6 +108,7 @@ public class TransactionsHelper implements IBalancesDelegate {
             get_relative_account_history(account_id, "8", _numberOfTransactionsLoaded, _numberOfTransactionsToLoad);
         }
     }
+
     public TransactionsHelper(Context c, final String account_id, AssetDelegate instance, String wif_key, final Date _transactionsTimeSpan) {
         context = c;
         assetDelegate = instance;
@@ -1186,6 +1189,8 @@ public class TransactionsHelper implements IBalancesDelegate {
     }
 
     public void getEquivalentComponent(final HashMap<String, ArrayList<String>> currencies, final String fiatCurrency) {
+        SCWallDatabase db = new SCWallDatabase(context);
+        ArrayList<Asset> assets = new ArrayList<>();
         ArrayList<String> assetList = new ArrayList();
         for (String key : currencies.keySet()) {
             if (!assetList.contains(key)) {
@@ -1197,8 +1202,11 @@ public class TransactionsHelper implements IBalancesDelegate {
                 }
             }
         }
-
-        WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new GetAssets(assetList, new WitnessResponseListener() {
+        for(String symbol : assetList){
+            assets.add(db.getAssetBySymbol(symbol));
+        }
+        db.close();
+        WebsocketWorkerThread wwThread = new WebsocketWorkerThread(new LookupAssetSymbols(assets, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
                 if (response.result.getClass() == ArrayList.class) {

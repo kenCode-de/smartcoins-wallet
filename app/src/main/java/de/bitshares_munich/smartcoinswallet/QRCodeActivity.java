@@ -20,6 +20,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
  * Created by Syed Muhammad Muzzammil on 5/10/16.
  */
 public class QRCodeActivity extends BaseActivity implements ZXingScannerView.ResultHandler {
+
     // Camera Permissions
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static String TAG = "QRCodeActivity";
@@ -29,10 +30,13 @@ public class QRCodeActivity extends BaseActivity implements ZXingScannerView.Res
     int id;
     ProgressDialog progressDialog;
     private ZXingScannerView mScannerView;
+
     /* Pin pinDialog */
     private Dialog pinDialog;
+
     /* Internal attribute used to keep track of the activity state */
     private boolean mRestarting;
+
     /* TinyDB instance */
     private TinyDB tinyDB;
 
