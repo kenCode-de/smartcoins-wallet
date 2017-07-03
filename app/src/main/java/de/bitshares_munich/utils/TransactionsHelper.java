@@ -34,10 +34,12 @@ import de.bitshares_munich.smartcoinswallet.WebsocketWorkerThread;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.Asset;
 import de.bitsharesmunich.graphenej.PublicKey;
+import de.bitsharesmunich.graphenej.models.api.GetLimitOrders;
 import de.bitsharesmunich.graphenej.api.LookupAssetSymbols;
 import de.bitsharesmunich.graphenej.errors.MalformedAddressException;
 import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
+import de.bitsharesmunich.graphenej.models.Market;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
 
 
