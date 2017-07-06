@@ -269,7 +269,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                 UserAccount to = database.fillUserDetails(historicalTransfer.getOperation().getTo());
                 String id = historicalTransfer.getId();
                 long value = historicalTransfer.getOperation().getAssetAmount().getAmount().longValue();
-                Log.d(TAG, String.format("transferred %d from %s -> %s, id: %s", value, from.getAccountName(), to.getAccountName(), id));
+                Log.d(TAG, String.format("transferred %d from %s -> %s, id: %s", value, from.getName(), to.getName(), id));
             }
             database.putTransactions(transferEntries);
         }

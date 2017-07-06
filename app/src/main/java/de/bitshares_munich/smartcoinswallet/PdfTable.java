@@ -130,7 +130,7 @@ public class PdfTable {
                 String to = myContext.getString(R.string.to_capital);
                 String memo = myContext.getString(R.string.memo_capital);
 
-                String detailsText = String.format("" + to + ": %s\n" + from + ": %s\n" + memo + ": %s", operation.getTo().getAccountName(), operation.getFrom().getAccountName(), operation.getMemo().getPlaintextMessage());
+                String detailsText = String.format("" + to + ": %s\n" + from + ": %s\n" + memo + ": %s", operation.getTo().getName(), operation.getFrom().getName(), operation.getMemo().getPlaintextMessage());
 
                 PdfPCell detailsCell = new PdfPCell(new Paragraph(detailsText));
                 table.addCell(detailsCell);

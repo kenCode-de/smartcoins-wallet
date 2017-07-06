@@ -84,10 +84,10 @@ public class UpdatingAccountsDialog extends DialogFragment implements UpdatedAcc
     @Override
     public void onUpdateStatusChange(UserAccount account, int resultCode) {
         UserAccount[] accounts = adapter.getAccounts();
-        Log.d(TAG, "onUpdateStatusChange. account: " + account.getAccountName());
+        Log.d(TAG, "onUpdateStatusChange. account: " + account.getName());
         for (int i = 0; i < accounts.length; i++) {
             UserAccount userAccount = accounts[i];
-            if (userAccount.getAccountName().equals(account.getAccountName())) {
+            if (userAccount.getName().equals(account.getName())) {
                 ImageView done = (ImageView) accountListView.getChildAt(i).findViewById(R.id.done);
                 ImageView error = (ImageView) accountListView.getChildAt(i).findViewById(R.id.error);
                 ProgressBar progress = (ProgressBar) accountListView.getChildAt(i).findViewById(R.id.progress);
@@ -130,7 +130,7 @@ public class UpdatingAccountsDialog extends DialogFragment implements UpdatedAcc
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.account_updating_item, null);
                 TextView accountName = (TextView) convertView.findViewById(R.id.account_name);
-                accountName.setText(getItem(position).getAccountName());
+                accountName.setText(getItem(position).getName());
             }
             return convertView;
         }

@@ -943,8 +943,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
             updatedAccount.securityUpdateFlag = AccountDetails.POST_SECURITY_UPDATE;
 
             // Building a transaction that will be used to update the account key
-            HashMap<PublicKey, Integer> authMap = new HashMap<>();
-            authMap.put(address.getPublicKey(), 1);
+            HashMap<PublicKey, Long> authMap = new HashMap<>();
+            authMap.put(address.getPublicKey(), 1L);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
 

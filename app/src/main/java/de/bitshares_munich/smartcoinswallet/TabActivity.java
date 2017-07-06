@@ -164,7 +164,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             Log.d(TAG, "recovery.onSuccess. current update account task: " + currentTask);
             AccountProperties account = ((List<AccountProperties>) response.result).get(0);
             for (PublicKey publicKey : account.active.getKeyAuths().keySet()) {
-                int weight = account.active.getKeyAuths().get(publicKey);
+                long weight = account.active.getKeyAuths().get(publicKey);
                 Address networkAddress = new Address(publicKey.getKey());
                 Log.d(TAG, String.format("Key controlling account: %s, weight: %d", networkAddress.toString(), weight));
 
@@ -179,7 +179,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                     // information.
                     ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getResources().getString(R.string.pref_wallet_accounts), AccountDetails.class);
                     for (AccountDetails accountDetail : accountDetails) {
-                        if (accountDetail.account_name.equals(currentlyActive.getAccountName())) {
+                        if (accountDetail.account_name.equals(currentlyActive.getName())) {
                             try {
                                 accountDetail.brain_key = currentTask.getBrainKey().getBrainKey();
                                 accountDetail.wif_key = Crypt.getInstance().encrypt_string(currentTask.getBrainKey().getWalletImportFormat());
@@ -194,7 +194,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
                     tinyDB.putListObject(getResources().getString(R.string.pref_wallet_accounts), accountDetails);
 
                     /* Updating store of old keys*/
-                    oldKey = String.format("%s:%s", currentTask.getAccount().getAccountName(), brainKey.getWalletImportFormat());
+                    oldKey = String.format("%s:%s", currentTask.getAccount().getName(), brainKey.getWalletImportFormat());
                     ArrayList<String> oldKeys = tinyDB.getListString(Constants.KEY_OLD_KEYS);
                     oldKeys.add(oldKey);
                     Log.d(TAG, String.format("Updating old keys, adding: %s. List is %d items long now", brainKey.getWalletImportFormat(), oldKeys.size()));
@@ -508,9 +508,9 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
     private void updateAccountAuthorities() {
         UserAccount account = currentTask.getAccount();
         BrainKey brainKey = currentTask.getBrainKey();
-        oldKey = String.format("%s:%s", account.getAccountName(), brainKey.getWalletImportFormat());
+        oldKey = String.format("%s:%s", account.getName(), brainKey.getWalletImportFormat());
 
-        Log.d(TAG, "updateAccountAuthorities. account to update: " + account.getAccountName() + ", id: " + account.getObjectId());
+        Log.d(TAG, "updateAccountAuthorities. account to update: " + account.getName() + ", id: " + account.getObjectId());
         Log.d(TAG, "current brain key: " + brainKey.getBrainKey());
         try {
             // Coming up with a new brain key suggestion
@@ -531,8 +531,8 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             Address address = new Address(ECKey.fromPublicOnly(newBrainKey.getPrivateKey().getPubKey()));
 
             // Building a transaction that will be used to update the account key
-            HashMap<PublicKey, Integer> authMap = new HashMap<>();
-            authMap.put(address.getPublicKey(), 1);
+            HashMap<PublicKey, Long> authMap = new HashMap<>();
+            authMap.put(address.getPublicKey(), 1L);
             Authority authority = new Authority(1, authMap, null);
             AccountOptions options = new AccountOptions(address.getPublicKey());
             AccountUpdateOperationBuilder builder = new AccountUpdateOperationBuilder()
@@ -715,7 +715,7 @@ public class TabActivity extends BaseActivity implements BackupBinDelegate, Prom
             return;
         } else {
             for (UserAccount account : accountList) {
-                Log.d(TAG, String.format("Account to update: %s", account.getAccountName()));
+                Log.d(TAG, String.format("Account to update: %s", account.getName()));
             }
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

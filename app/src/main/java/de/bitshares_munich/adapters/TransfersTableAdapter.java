@@ -126,11 +126,11 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         String accountMessageText;
         if (operation.getFrom().getObjectId().equals(userAccount.getObjectId())) {
             //If it is a SEND event
-            accountNameText = operation.getTo().getAccountName();
+            accountNameText = operation.getTo().getName();
             accountMessageText = getContext().getText(R.string.to_capital) + ": ";
         } else {
             //If it is a RECEIVE event
-            accountNameText = operation.getFrom().getAccountName();
+            accountNameText = operation.getFrom().getName();
             accountMessageText = getContext().getText(R.string.from_capital) + ": ";
         }
         SpannableString accountMessage = new SpannableString(accountMessageText + accountNameText);

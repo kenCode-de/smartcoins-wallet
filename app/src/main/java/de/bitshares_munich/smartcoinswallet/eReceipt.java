@@ -274,14 +274,14 @@ public class eReceipt extends BaseActivity implements IBalancesDelegate, Gravata
             ivImageTag.setImageResource(R.drawable.send);
             tvUserStatus.setText(getString(R.string.sender_account));
             tvOtherStatus.setText(getString(R.string.receiver_account));
-            otherName = toUser.getAccountName();
-            userName = fromUser.getAccountName();
+            otherName = toUser.getName();
+            userName = fromUser.getName();
         } else {
             tvUserStatus.setText(getString(R.string.receiver_account));
             tvOtherStatus.setText(getString(R.string.sender_account));
             ivImageTag.setImageResource(R.drawable.receive);
-            otherName = fromUser.getAccountName();
-            userName = toUser.getAccountName();
+            otherName = fromUser.getName();
+            userName = toUser.getName();
         }
 
         tvOtherName.setText(otherName);

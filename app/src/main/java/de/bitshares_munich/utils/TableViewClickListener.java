@@ -53,8 +53,8 @@ public class TableViewClickListener implements TableDataClickListener<Historical
             intent.putExtra("Date", Helper.convertDateToGMT(new Date(timestamp), myContext));
             intent.putExtra("Time", Helper.convertDateToGMTWithYear(new Date(timestamp), myContext));
             intent.putExtra("TimeZone", Helper.convertTimeToGMT(new Date(timestamp), myContext));
-            intent.putExtra("To", operation.getTo().getAccountName());
-            intent.putExtra("From", operation.getFrom().getAccountName());
+            intent.putExtra("To", operation.getTo().getName());
+            intent.putExtra("From", operation.getFrom().getName());
             intent.putExtra("Sent", true);
             intent.putExtra(KEY_OPERATION_ENTRY, jsonTransfer);
             myContext.startActivity(intent);

@@ -589,7 +589,7 @@ public class SCWallDatabase {
         Cursor cursor = db.query(table, null, selection, selectionArgs, null, null, null, null);
         if (cursor.moveToFirst()) {
             String accountName = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.UserAccounts.COLUMN_NAME));
-            account.setAccountName(accountName);
+            account.setName(accountName);
         }
         cursor.close();
         return account;

@@ -583,7 +583,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     public void checkAccount(List<UserAccount> existingAccounts) {
         boolean found = false;
         for (UserAccount existingAccount : existingAccounts) {
-            if (existingAccount.getAccountName().equals(etAccountName.getText().toString())) {
+            if (existingAccount.getName().equals(etAccountName.getText().toString())) {
                 found = true;
                 break;
             }
