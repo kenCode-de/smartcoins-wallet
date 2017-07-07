@@ -21,12 +21,12 @@ android {
         debug {
         }
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "de.bitsharesmunich.smartcoinswallet"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 25
         multiDexEnabled true
     }
     buildTypes {
@@ -82,12 +82,12 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.koushikdutta.async:androidasync:2.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
