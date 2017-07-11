@@ -27,6 +27,7 @@ import de.bitsharesmunich.graphenej.UserAccount;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import de.codecrafters.tableview.TableDataAdapter;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
 /**
@@ -157,6 +158,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         LayoutInflater me = getLayoutInflater();
         View root = me.inflate(R.layout.transactionsendamountview, null);
         TextView transferAmountTextView = (TextView) root.findViewById(R.id.asset_amount);
+        AVLoadingIndicatorView fiatLoadingView = (AVLoadingIndicatorView) root.findViewById(R.id.fiat_loading);
+
         AssetAmount transferAmount = operation.getAssetAmount();
 
         TextView fiatAmountTextView = (TextView) root.findViewById(R.id.fiat_amount);
@@ -188,9 +191,14 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         }
 
         if (smartcoinAmount != null) {
+            //fiatLoadingView.setVisibility(View.GONE);
+            //Hide the loading
+            fiatLoadingView.smoothToHide();
             String fiatSymbol = Smartcoins.getFiatSymbol(smartcoinAmount.getAsset());
             String eqValue = String.format("~ %s %.2f", fiatSymbol, Util.fromBase(smartcoinAmount));
             fiatAmountTextView.setText(eqValue);
+            //Show the Fiat view
+            fiatAmountTextView.setVisibility(View.VISIBLE);
         } else {
             Log.w(TAG, String.format("Fiat amount is null for transfer: %d %s", transferAmount.getAmount().longValue(), transferAmount.getAsset().getSymbol()));
         }

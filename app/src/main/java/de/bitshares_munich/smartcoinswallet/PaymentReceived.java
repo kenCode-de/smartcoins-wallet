@@ -69,7 +69,7 @@ public class PaymentReceived extends BaseActivity implements ITransactionObject,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.payment_recieved);
+        setContentView(R.layout.payment_received);
         ButterKnife.bind(this);
 
         setBackButton(true);
