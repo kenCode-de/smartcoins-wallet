@@ -56,10 +56,9 @@ public class Application extends android.app.Application implements de.bitshares
 // example: public_nodes_asia, public_nodes_africa, public_nodes_europe, etc
 
 //                    "ws://api.devling.xyz:8088",
-                    "wss://de.blockpay.ch/node",               // German node
-                    "wss://fr.blockpay.ch/node",               // France node
-                    "wss://bitshares.openledger.info/ws",      // Openledger node
-
+                      "wss://bitshares.openledger.info/ws",     // Openledger node
+                      "ws://128.0.69.157:8090",                 // Henry node
+                      "wss://de.blockpay.ch/node",              // German node
 //                    "wss://bit.btsabc.org/ws",
 //                    "wss://bts.transwiser.com/ws",
 //                    "wss://freedom.bts123.cc:15138",

@@ -989,9 +989,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             Log.d(TAG, "account id is empty");
         }
 
-        // Loading transfers from database
-        //updateTableView(true);
-
     }
 
     @Override
