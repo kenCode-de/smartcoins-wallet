@@ -179,7 +179,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         if (res != null) {
             if (res.containsKey("activity_id")) {
                 if (res.getInt("activity_id") == 919) {
-                    tvExistingAccount.setVisibility(View.GONE);
+                    tvOrAccount.setVisibility(View.GONE);
                     tvExistingAccount.setVisibility(View.GONE);
                     setBackButton(true);
                 }
