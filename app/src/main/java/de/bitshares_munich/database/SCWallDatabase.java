@@ -153,14 +153,14 @@ public class SCWallDatabase {
                 /*if (userMap.get(fromId) == null || userMap.get(toId) == null) {
                     cursor.moveToNext();
                     continue;
-                }
+                }*/
 
                 // Skipping transfer if we are missing timestamp information
                 long t = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_TIMESTAMP));
                 if (t == 0) {
                     cursor.moveToNext();
                     continue;
-                }*/
+                }
 
                 // Building UserAccount instances
                 UserAccount from = new UserAccount(fromId, userMap.get(fromId));
@@ -206,6 +206,11 @@ public class SCWallDatabase {
                 // Adding equivalent value data
                 String id = cursor.getString(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE_ASSET_ID));
                 long equivalentValue = cursor.getLong(cursor.getColumnIndex(SCWallDatabaseContract.Transfers.COLUMN_EQUIVALENT_VALUE));
+                // Skipping transfer if we are missing equivalent value
+                if (equivalentValue == 0) {
+                    cursor.moveToNext();
+                    continue;
+                }
                 if (id != null) {
                     Log.v(TAG, String.format("Eq value asset id: %s, value: %d", id, equivalentValue));
                     String table = SCWallDatabaseContract.Assets.TABLE_NAME;

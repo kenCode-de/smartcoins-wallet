@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         style="AVLoadingIndicatorView.Small"
-        android:visibility="visible"
+        android:visibility="gone"
         app:indicatorName="BallPulseIndicator"
         app:indicatorColor="@color/gray"
     />
@@ -46,6 +46,6 @@
         android:textColor="@color/send_amount_light"
         android:layout_gravity="end"
         android:textAlignment="textEnd"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textStyle="bold" />
 </LinearLayout>

@@ -138,10 +138,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         //accountMessage.setSpan(new StyleSpan(Typeface.BOLD), accountMessageText.length(), accountMessageText.length() + accountNameText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView accountName = (TextView) v.findViewById(R.id.transaction_account);
         accountName.setText(accountMessage);
-        Log.d(TAG,"accountMessage: " + accountMessage);
 
         //Setup Memo
-        Log.d(TAG,"memo: " + operation.getMemo().getPlaintextMessage());
         TextView memoTextView = (TextView) v.findViewById(R.id.memo);
         if (!operation.getMemo().getPlaintextMessage().equals("")) {
             memoTextView.setText(operation.getMemo().getPlaintextMessage());

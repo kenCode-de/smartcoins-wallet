@@ -153,7 +153,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public final String TAG = this.getClass().getName();
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = true;
+    private final boolean DEBUG_EQ_VALUES = false;
     int accountDetailsId;
     String accountId = "";
     DecimalFormat df = new DecimalFormat("0.0");
@@ -238,7 +238,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private ProgressDialog pdfProgress;
 
     /* Constant used to fix the number of historical transfers to fetch from the network in one batch */
-    private int HISTORICAL_TRANSFER_BATCH_SIZE = 5;
+    private int HISTORICAL_TRANSFER_BATCH_SIZE = 20;
 
     /* Parameters to be used as the start and stop arguments in the 'get_relative_account_history' API call */
     private int start = 1;
@@ -776,7 +776,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             // we can check if we have another batch of times and consequently missing equivalent
             // values to process.
             processNextMissingTime();
-
             Log.d(TAG,"updating table view");
             // Updating table view either way
             getActivity().runOnUiThread(new Runnable() {
@@ -785,7 +784,9 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                     updateTableView(false);
                 }
             });
+
         }
+
     }
 
     /**
@@ -2625,6 +2626,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 found = false;
             }
+            transfersView.setDataAdapter(tableAdapter);
 
         } else {
             tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
