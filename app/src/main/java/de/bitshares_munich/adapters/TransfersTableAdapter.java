@@ -148,6 +148,7 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
 
         //Setup Memo
         TextView memoTextView = (TextView) v.findViewById(R.id.memo);
+        Log.d(TAG,"Memo String: " + operation.getMemo().getPlaintextMessage());
         if (!operation.getMemo().getPlaintextMessage().equals("")) {
             memoTextView.setText(operation.getMemo().getPlaintextMessage());
         }

@@ -597,7 +597,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if (op != null) {
                     Memo memo = op.getMemo();
-
+                    Log.v(TAG, "Memo Encrypted: "+ memo.toString());
+                    Log.v(TAG, "Memo Bytes: "+ memo.getByteMessage());
                     if (memo.getByteMessage() != null) {
 
                         Address destinationAddress = memo.getDestination();
@@ -605,6 +606,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                             if (destinationAddress.toString().equals(myAddress.toString())) {
                                 String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                 memo.setPlaintextMessage(decryptedMessage);
+                                Log.v(TAG, "Memo Decrypted: "+ decryptedMessage);
                             }
                         } catch (ChecksumException e) {
                             Log.e(TAG, "ChecksumException. Msg: " + e.getMessage());

@@ -1130,8 +1130,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         String memoMessage = null;
         if (!etMemo.getText().toString().isEmpty()) {
             memoMessage = etMemo.getText().toString();
-        } else {
-            memoMessage = null;
         }
 
         long baseAmount = (long) (Double.valueOf(amount) * (long) Math.pow(10, Long.valueOf(selectedAccountAsset.precision)));
