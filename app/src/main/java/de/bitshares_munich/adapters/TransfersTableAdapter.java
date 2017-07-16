@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -74,8 +75,12 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
         TextView dateTextView = (TextView) v.findViewById(R.id.transactiondate);
         TextView timeTextView = (TextView) v.findViewById(R.id.transactiontime);
         TextView timeZoneTextView = (TextView) v.findViewById(R.id.transactionttimezone);
+        LinearLayout dateTimeView = (LinearLayout) v.findViewById(R.id.transaction_datetime);
+        AVLoadingIndicatorView dateTimeLoadingView = (AVLoadingIndicatorView) v.findViewById(R.id.datetime_loading);
 
         if (historicalTransfer.getTimestamp() > 0) {
+            //Hide loading
+            dateTimeLoadingView.smoothToHide();
 
             Date date = new Date(historicalTransfer.getTimestamp() * 1000);
 
@@ -100,6 +105,8 @@ public class TransfersTableAdapter extends TableDataAdapter<HistoricalTransferEn
             dateTextView.setText(dateFormat.format(date));
             timeTextView.setText(timeFormat.format(date));
             timeZoneTextView.setText(formattedTimeZone);
+            //Show datetime
+            dateTimeView.setVisibility(View.VISIBLE);
         }
         return v;
     }

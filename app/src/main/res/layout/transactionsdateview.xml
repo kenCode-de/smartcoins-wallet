@@ -1,43 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
-        android:id="@+id/transactiondate"
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/datetime_loading"
         android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="0dp"
-        android:paddingTop="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:textSize="6pt"
-        android:textColor="@color/blackColor"
-        android:textAlignment="viewStart"/>
-    <TextView
-        android:id="@+id/transactiontime"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="0dp"
+        android:paddingRight="5dp"
         android:paddingTop="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:textSize="6pt"
-        android:textColor="@color/blackColor"
-        android:textAlignment="viewStart"/>
-    <TextView
-        android:id="@+id/transactionttimezone"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="0dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:textSize="6pt"
-        android:textColor="@color/black"
-        android:textAlignment="viewStart"/>
+        android:layout_gravity="start"
+        style="AVLoadingIndicatorView.Small"
+        android:visibility="visible"
+        app:indicatorName="BallPulseIndicator"
+        app:indicatorColor="@color/gray"
+        />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/transaction_datetime"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/transactiondate"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:paddingTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textSize="6pt"
+            android:textColor="@color/blackColor"
+            android:textAlignment="viewStart"/>
+        <TextView
+            android:id="@+id/transactiontime"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            android:paddingTop="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textSize="6pt"
+            android:textColor="@color/blackColor"
+            android:textAlignment="viewStart"/>
+        <TextView
+            android:id="@+id/transactionttimezone"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textSize="6pt"
+            android:textColor="@color/black"
+            android:textAlignment="viewStart"/>
+    </LinearLayout>
 </LinearLayout>

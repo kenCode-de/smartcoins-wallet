@@ -153,7 +153,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public final String TAG = this.getClass().getName();
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = false;
+    private final boolean DEBUG_EQ_VALUES = true;
     int accountDetailsId;
     String accountId = "";
     DecimalFormat df = new DecimalFormat("0.0");
@@ -250,7 +250,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private int HISTORICAL_TRANSFER_MAX = 10;
 
     /* Constant used to split the missing times and equivalent values in batches of constant time */
-    private int SECONDARY_LOAD_BATCH_SIZE = 5;
+    private int SECONDARY_LOAD_BATCH_SIZE = 1;
 
     /**/
     private HistoricalTransfer lastHistoricalTransfer;
@@ -776,16 +776,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             // we can check if we have another batch of times and consequently missing equivalent
             // values to process.
             processNextMissingTime();
-            Log.d(TAG,"updating table view");
-            // Updating table view either way
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateTableView(false);
-                }
-            });
+
 
         }
+
+        Log.d(TAG,"updating table view");
+        // Updating table view either way
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateTableView(false);
+            }
+        });
 
     }
 
@@ -2626,6 +2628,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 found = false;
             }
+            tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
             transfersView.setDataAdapter(tableAdapter);
 
         } else {
