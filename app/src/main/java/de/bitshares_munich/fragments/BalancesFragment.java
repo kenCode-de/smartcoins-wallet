@@ -38,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ListView;
 
 import com.google.common.primitives.UnsignedLong;
 
@@ -134,6 +135,7 @@ import de.bitsharesmunich.graphenej.operations.TransferOperation;
 import de.codecrafters.tableview.SortableTableView;
 import de.codecrafters.tableview.toolkit.SimpleTableHeaderAdapter;
 import de.codecrafters.tableview.toolkit.SortStateViewProviders;
+import de.codecrafters.tableview.listeners.OnScrollListener;
 
 
 /**
@@ -153,7 +155,10 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public final String TAG = this.getClass().getName();
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = true;
+    private final boolean DEBUG_EQ_VALUES = false;
+
+    private int mTableViewCurrentCursor = 0;
+
     int accountDetailsId;
     String accountId = "";
     DecimalFormat df = new DecimalFormat("0.0");
@@ -586,6 +591,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
             // Getting decrypted private key in WIF format
             String wif = decryptWif();
+            Log.v(TAG, "WIF: "+ wif);
 
             ECKey privateKey = DumpedPrivateKey.fromBase58(null, wif).getKey();
             PublicKey publicKey = new PublicKey(ECKey.fromPublicOnly(privateKey.getPubKey()));
@@ -597,8 +603,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if (op != null) {
                     Memo memo = op.getMemo();
-                    Log.v(TAG, "Memo Encrypted: "+ memo.toString());
-                    Log.v(TAG, "Memo Bytes: "+ memo.getByteMessage());
                     if (memo.getByteMessage() != null) {
 
                         Address destinationAddress = memo.getDestination();
@@ -606,7 +610,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                             if (destinationAddress.toString().equals(myAddress.toString())) {
                                 String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                 memo.setPlaintextMessage(decryptedMessage);
-                                Log.v(TAG, "Memo Decrypted: "+ decryptedMessage);
                             }
                         } catch (ChecksumException e) {
                             Log.e(TAG, "ChecksumException. Msg: " + e.getMessage());
@@ -891,6 +894,18 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
 
         transfersView = (SortableTableView<HistoricalTransferEntry>) rootView.findViewById(R.id.tableView);
         transfersView.addDataClickListener(new TableViewClickListener(getContext()));
+        transfersView.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScroll(final ListView tableDataView, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+                // listen for scroll changes
+                Log.v(TAG,"TableView current visible item: "+firstVisibleItem);
+                mTableViewCurrentCursor = firstVisibleItem;
+            }
+            @Override
+            public void onScrollStateChanged(final ListView tableDateView, final ScrollState scrollState) {
+                // listen for scroll state changes
+            }
+        });
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
         assetsSymbols.getAssetsFromServer();
@@ -2592,9 +2607,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         return txtAmount_d;
     }
 
-
-
-    /**
+        /**
      * Refreshes table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
      *
@@ -2632,6 +2645,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             }
             tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
             transfersView.setDataAdapter(tableAdapter);
+            transfersView.getChildAt(mTableViewCurrentCursor);
 
         } else {
             tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
