@@ -155,7 +155,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public final String TAG = this.getClass().getName();
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = false;
+    private final boolean DEBUG_EQ_VALUES = true;
 
     private int mTableViewCurrentCursor = 0;
 
@@ -603,6 +603,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if (op != null) {
                     Memo memo = op.getMemo();
+                    Log.v(TAG, "Memo Encrypted: "+ memo.toString());
+                    Log.v(TAG, "Memo Bytes: "+ memo.getByteMessage());
                     if (memo.getByteMessage() != null) {
 
                         Address destinationAddress = memo.getDestination();
@@ -610,6 +612,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                             if (destinationAddress.toString().equals(myAddress.toString())) {
                                 String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                 memo.setPlaintextMessage(decryptedMessage);
+                                Log.v(TAG, "Memo Decrypted: "+ decryptedMessage);
                             }
                         } catch (ChecksumException e) {
                             Log.e(TAG, "ChecksumException. Msg: " + e.getMessage());
@@ -790,7 +793,13 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updateTableView(false);
+                try{
+                    updateTableView(true);
+                }
+                catch (Exception e) {
+                    Log.e(TAG, "Error updating transaction table: " + e.toString());
+                }
+
             }
         });
 
@@ -2643,9 +2652,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 }
                 found = false;
             }
-            tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
-            transfersView.setDataAdapter(tableAdapter);
-            transfersView.getChildAt(mTableViewCurrentCursor);
 
         } else {
             tableAdapter = new TransfersTableAdapter(getContext(), account, newData.toArray(new HistoricalTransferEntry[newData.size()]));
