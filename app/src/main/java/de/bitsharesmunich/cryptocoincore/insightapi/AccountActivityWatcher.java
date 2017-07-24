@@ -52,7 +52,7 @@ public class AccountActivityWatcher {
         public void call(Object... os) {
             try {
                 System.out.println("Receive accountActivtyWatcher " + os[0].toString() );
-                String txid = ((JSONObject) os[0]).getString(InsightApiConstants.txTag);
+                String txid = ((JSONObject) os[0]).getString(InsightApiConstants.sTxTag);
                 new GetTransactionData(txid, mAccount, mContext).start();
             } catch (JSONException ex) {
                 Logger.getLogger(AccountActivityWatcher.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,7 +71,7 @@ public class AccountActivityWatcher {
             for(String addr : mWatchAddress) {
                 array.put(addr);
             }
-            mSocket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, array);
+            mSocket.emit(InsightApiConstants.sSubscribeEmmit, InsightApiConstants.sChangeAddressRoom, array);
         }
     };
 
@@ -108,7 +108,7 @@ public class AccountActivityWatcher {
      */
     public AccountActivityWatcher(GeneralCoinAccount mAccount, Context mContext) {
         //String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(mAccount.getCoin()) + ":" + InsightApiConstants.getPort(mAccount.getCoin()) + "/"+InsightApiConstants.getRawPath(mAccount.getCoin())+"/mSocket.io/";
-        String serverUrl = InsightApiConstants.protocolSocketIO + "://" + InsightApiConstants.getAddress(mAccount.getCoin()) + ":" + InsightApiConstants.getPort(mAccount.getCoin()) + "/";
+        String serverUrl = InsightApiConstants.sProtocolSocketIO + "://" + InsightApiConstants.getAddress(mAccount.getCoin()) + ":" + InsightApiConstants.getPort(mAccount.getCoin()) + "/";
         this.mAccount = mAccount;
         this.mContext = mContext;
         System.out.println("accountActivityWatcher " + serverUrl);
@@ -121,7 +121,7 @@ public class AccountActivityWatcher {
             this.mSocket.on(Socket.EVENT_ERROR, onError);
             this.mSocket.on(Socket.EVENT_CONNECT_ERROR, onError);
             this.mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onError);
-            this.mSocket.on(InsightApiConstants.changeAddressRoom, onAddressTransaction);
+            this.mSocket.on(InsightApiConstants.sChangeAddressRoom, onAddressTransaction);
         } catch (URISyntaxException e) {
             //TODO change exception handler
             e.printStackTrace();
@@ -135,7 +135,7 @@ public class AccountActivityWatcher {
     public void addAddress(String address) {
         mWatchAddress.add(address);
         if (this.mSocket.connected()) {
-            mSocket.emit(InsightApiConstants.subscribeEmmit, InsightApiConstants.changeAddressRoom, new String[]{address});
+            mSocket.emit(InsightApiConstants.sSubscribeEmmit, InsightApiConstants.sChangeAddressRoom, new String[]{address});
         }
     }
 

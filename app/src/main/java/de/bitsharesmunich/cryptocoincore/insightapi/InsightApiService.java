@@ -13,7 +13,6 @@ import retrofit2.http.Path;
 
 /**
  * Holds each call to the insigh api server
- * Created by henry on 13/02/2017.
  */
 
 interface InsightApiService {
@@ -43,6 +42,10 @@ interface InsightApiService {
     @POST("{path}/tx/send")
     Call<Txi> broadcastTransaction(@Path(value = "path", encoded = true) String path, @Field("rawtx") String rawtx);
 
+    /**
+     * Get the estimate rate fee for a coin in the Insight API
+     * @param path The path of the insight api without the server address
+     */
     @GET("{path}/utils/estimatefee?nbBlocks=2")
     Call<JsonObject> estimateFee(@Path(value = "path", encoded = true) String path);
 

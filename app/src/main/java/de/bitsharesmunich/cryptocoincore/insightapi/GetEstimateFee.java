@@ -29,7 +29,7 @@ public abstract class GetEstimateFee {
      * @throws IOException If the server answer null, or the rate couldn't be calculated
      */
     public static long getEstimateFee(final Coin coin) throws IOException {
-        String serverUrl = InsightApiConstants.protocol + "://"
+        String serverUrl = InsightApiConstants.sProtocol + "://"
                 + InsightApiConstants.getAddress(coin) + "/";
         InsightApiServiceGenerator serviceGenerator = new InsightApiServiceGenerator(serverUrl);
         InsightApiService service = serviceGenerator.getService(InsightApiService.class);

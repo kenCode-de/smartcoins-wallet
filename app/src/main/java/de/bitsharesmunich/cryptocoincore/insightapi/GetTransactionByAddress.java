@@ -50,7 +50,7 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
      * @param context This app context
      */
     public GetTransactionByAddress(GeneralCoinAccount account, Context context) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
+        String serverUrl = InsightApiConstants.sProtocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
         this.mAccount = account;
         this.mServiceGenerator = new InsightApiServiceGenerator(serverUrl);
         this.mContext = context;
@@ -67,8 +67,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
     /**
      * Handle the response
-     * @param call
-     * @param response
+     * @param call The call with the addresTxi object
+     * @param response the response status object
      */
     @Override
     public void onResponse(Call<AddressTxi> call, Response<AddressTxi> response) {
@@ -178,8 +178,8 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
 
     /**
      * Failure of the call
-     * @param call
-     * @param t
+     * @param call The call object
+     * @param t The reason for the failure
      */
     @Override
     public void onFailure(Call<AddressTxi> call, Throwable t) {

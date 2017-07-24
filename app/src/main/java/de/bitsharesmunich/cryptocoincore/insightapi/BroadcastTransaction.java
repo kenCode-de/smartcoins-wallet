@@ -38,7 +38,7 @@ public class BroadcastTransaction extends Thread implements Callback<Txi> {
      * @param context This app context
      */
     public BroadcastTransaction(String RawTx, GeneralCoinAccount account, Context context){
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
+        String serverUrl = InsightApiConstants.sProtocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
         this.mServiceGenerator = new InsightApiServiceGenerator(serverUrl);
         this.mContext = context;
         this.mRawTx = RawTx;
