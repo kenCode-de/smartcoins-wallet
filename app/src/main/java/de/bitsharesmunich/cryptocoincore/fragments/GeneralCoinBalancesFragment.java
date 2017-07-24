@@ -1352,50 +1352,53 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
+    /**
+     * Loads the balances for all coins
+     */
     public void loadBalancesFromSharedPref() {
-        //if (this.coin == Coin.BITSHARE) {
-            try {
-                ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
+        //Loads the Bitshares balance
+        try {
+            ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
 
-                if (accountDetails.size() > 1) {
-                    ivMultiAccArrow.setVisibility(View.VISIBLE);
-                } else {
-                    ivMultiAccArrow.setVisibility(View.GONE);
-                }
+            if (accountDetails.size() > 1) {
+                ivMultiAccArrow.setVisibility(View.VISIBLE);
+            } else {
+                ivMultiAccArrow.setVisibility(View.GONE);
+            }
 
 
-                for (int i = 0; i < accountDetails.size(); i++) {
-                    if (accountDetails.get(i).isSelected) {
-                        ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
+            for (int i = 0; i < accountDetails.size(); i++) {
+                if (accountDetails.get(i).isSelected) {
+                    ArrayList<AccountAssets> accountAsset = accountDetails.get(i).AccountAssets;
 
-                        if ((accountAsset != null) && (accountAsset.size() > 0)) {
-                            ArrayList<String> sym = new ArrayList<>();
-                            ArrayList<String> pre = new ArrayList<>();
-                            ArrayList<String> am = new ArrayList<>();
+                    if ((accountAsset != null) && (accountAsset.size() > 0)) {
+                        ArrayList<String> sym = new ArrayList<>();
+                        ArrayList<String> pre = new ArrayList<>();
+                        ArrayList<String> am = new ArrayList<>();
 
-                            for (int j = 0; j < accountAsset.size(); j++) {
-                                pre.add(j, accountAsset.get(j).precision);
-                                sym.add(j, accountAsset.get(j).symbol);
-                                am.add(j, accountAsset.get(j).ammount);
-                            }
-
-                            BalanceAssetsUpdate(Coin.BITSHARE, sym, pre, am, true);
+                        for (int j = 0; j < accountAsset.size(); j++) {
+                            pre.add(j, accountAsset.get(j).precision);
+                            sym.add(j, accountAsset.get(j).symbol);
+                            am.add(j, accountAsset.get(j).ammount);
                         }
 
-                        break;
+                        BalanceAssetsUpdate(Coin.BITSHARE, sym, pre, am, true);
                     }
+
+                    break;
                 }
-            } catch (Exception e) {
-
             }
-        //} else {
-            SCWallDatabase db = new SCWallDatabase(getContext());
-            List<GeneralCoinAccount> accountList = db.getActiveAccounts();
+        } catch (Exception e) {
 
-            for (final GeneralCoinAccount account : accountList) {
-                loadGeneralCoinAccount(account);
-            }
-        //}
+        }
+
+        //Loads the balances from the rest of the coins (Bitcoin, Litecoin, Dash, etc)
+        SCWallDatabase db = new SCWallDatabase(getContext());
+        List<GeneralCoinAccount> accountList = db.getActiveAccounts();
+
+        for (final GeneralCoinAccount account : accountList) {
+            loadGeneralCoinAccount(account);
+        }
     }
 
     public void loadGeneralCoinAccount(final GeneralCoinAccount account){

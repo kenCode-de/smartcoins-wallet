@@ -864,7 +864,19 @@ public class SCWallDatabase {
         return affected > 0;
     }
 
+    /**
+     * Gets the active coins accounts for the user generated or imported seeds.
+     * For now, this function aims to return only one account per coin.
+     *
+     * @return A list with the active coin accounts
+     */
+
     public List<GeneralCoinAccount> getActiveAccounts(){
+
+        /**
+         * Extracts a list of coins for the active accounts
+         * It will be used to extract only one account for every coin
+         */
         ArrayList<Coin> activeCoins = new ArrayList<Coin>();
         ArrayList<GeneralCoinAccount> activeAccounts = new ArrayList<GeneralCoinAccount>();
 
@@ -881,6 +893,9 @@ public class SCWallDatabase {
         }
         cursor.close();
 
+        /**
+         * Reuses the getGeneralCoinAccount to return the list of accounts
+         */
         for (Coin coin : activeCoins) {
             activeAccounts.add(this.getGeneralCoinAccount(coin.name()));
         }
@@ -888,6 +903,12 @@ public class SCWallDatabase {
         return activeAccounts;
     }
 
+    /**
+     * Finds the first account in the database with the specified coin type
+     *
+     * @param coinType the coin of the account to find
+     * @return The first account in the database with the coin equal to coinType
+     */
     public GeneralCoinAccount getGeneralCoinAccount(String coinType) {
         String[] columns = {
                 SCWallDatabaseContract.GeneralAccounts.COLUMN_ID,
