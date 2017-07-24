@@ -69,7 +69,7 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
     }
 
     /**
-     *
+     * Function to start the insight api call
      */
     @Override
     public void run() {
