@@ -1,12 +1,24 @@
 package de.bitsharesmunich.cryptocoincore.insightapi.models;
 
 /**
- * Created by henry on 13/02/2017.
+ * The transasction Script public keym is used to validate
  */
 
 public class ScriptPubKey {
+    /**
+     * The code to validate in hex
+     */
     public String hex;
+    /**
+     * the code to validate this transaction
+     */
     public String asm;
+    /**
+     * the acoin address involved
+     */
     public String[] addresses;
+    /**
+     * The type of the hash
+     */
     public String type;
 }

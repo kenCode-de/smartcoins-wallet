@@ -1,99 +1,116 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 
 /**
- * Created by henry on 28/02/2017.
+ * Represents a Contact of the user, that can be send cryptocurrencie
  */
 
 public class Contact {
 
-    private long id;
-    private String name;
-    private String account;
-    private String note;
-    private String email;
-    private List<ContactAddress> addresses = new ArrayList<ContactAddress>();
+    /**
+     * The id on the database
+     */
+    private long mId;
+    /**
+     * The name of the Contact
+     */
+    private String mName;
+    /**
+     * The bitshares Account
+     */
+    private String mAccount;
+    /**
+     * Any notes about the contact
+     */
+    private String mNote;
+    /**
+     * The email of the contact
+     */
+    private String mEmail;
+    /**
+     * The list of address of differents cryptocurrencies, like bitcoin
+     */
+    private List<ContactAddress> mAddresses = new ArrayList<ContactAddress>();
 
-    private List<ContactListener> _listeners = new ArrayList<ContactListener>();
+    private List<ContactListener> mListeners = new ArrayList<ContactListener>();
 
     public Contact() {
     }
 
     public Contact(long id, String name, String account, String note, String email) {
-        this.id = id;
-        this.name = name;
-        this.account = account;
-        this.note = note;
-        this.email = email;
+        this.mId = id;
+        this.mName = name;
+        this.mAccount = account;
+        this.mNote = note;
+        this.mEmail = email;
     }
 
     public synchronized void addListener( ContactListener listener ) {
-        _listeners.add(listener);
+        mListeners.add(listener);
     }
 
     public synchronized void removeListener( ContactListener listener ) {
-        _listeners.remove(listener);
+        mListeners.remove(listener);
     }
 
     public long getId() {
-        return id;
+        return mId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public String getAccount() {
-        return account;
+        return mAccount;
     }
 
     public void setAccount(String account) {
-        this.account = account;
+        this.mAccount = account;
     }
 
     public String getNote() {
-        return note;
+        return mNote;
     }
 
     public void setNote(String note) {
-        this.note = note;
+        this.mNote = note;
     }
 
     public String getEmail() {
-        return email;
+        return mEmail;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.mEmail = email;
     }
 
     public List<ContactAddress> getAddresses() {
-        return addresses;
+        return mAddresses;
     }
 
     public void setAddresses(List<ContactAddress> addresses) {
-        this.addresses = addresses;
+        this.mAddresses = addresses;
     }
 
     public ContactAddress getAddressByIndex(int index) {
-        return this.addresses.get(index);
+        return this.mAddresses.get(index);
     }
 
     public ContactAddress getAddressByCoin(Coin coin){
-        for (ContactAddress address : addresses){
+        for (ContactAddress address : mAddresses){
             if (address.getCoin() == coin){
                 return address;
             }
@@ -114,12 +131,12 @@ public class Contact {
     }
 
     public void addAddress(ContactAddress contactAddress){
-        this.addresses.add(contactAddress);
+        this.mAddresses.add(contactAddress);
         this._fireOnNewContactAddressEvent(contactAddress);
     }
 
     public void updateAddress(ContactAddress contactAddress, Coin newCoin, String newAddress) {
-        int index = addresses.indexOf(contactAddress);
+        int index = mAddresses.indexOf(contactAddress);
 
         if (index >= 0) {
             if ((newCoin != contactAddress.getCoin()) || (!newAddress.equals(contactAddress.getAddress()))) {
@@ -132,14 +149,14 @@ public class Contact {
     }
 
     public void removeAddress(ContactAddress contactAddress) {
-        int index = addresses.indexOf(contactAddress);
-        this.addresses.remove(index);
+        int index = mAddresses.indexOf(contactAddress);
+        this.mAddresses.remove(index);
         this._fireOnContactAddressRemovedEvent(contactAddress, index);
     }
 
     private synchronized void _fireOnNewContactAddressEvent(ContactAddress contactAddress) {
         ContactEvent contactEvent = new ContactEvent( this, contactAddress );
-        Iterator listeners = _listeners.iterator();
+        Iterator listeners = mListeners.iterator();
         while( listeners.hasNext() ) {
             ( (ContactListener) listeners.next() ).onNewContactAddress( contactEvent );
         }
@@ -150,7 +167,7 @@ public class Contact {
         contactEvent.setOldAddress(oldContactAddress);
         contactEvent.setIndex(index);
 
-        Iterator listeners = _listeners.iterator();
+        Iterator listeners = mListeners.iterator();
         while( listeners.hasNext() ) {
             ( (ContactListener) listeners.next() ).onContactAddressModified( contactEvent );
         }
@@ -160,13 +177,13 @@ public class Contact {
         ContactEvent contactEvent = new ContactEvent( this, contactAddress );
         contactEvent.setIndex(index);
 
-        Iterator listeners = _listeners.iterator();
+        Iterator listeners = mListeners.iterator();
         while( listeners.hasNext() ) {
             ( (ContactListener) listeners.next() ).onContactAddressRemoved( contactEvent );
         }
     }
 
     public int getIndexOfAddress(ContactAddress contactAddress) {
-        return this.addresses.indexOf(contactAddress);
+        return this.mAddresses.indexOf(contactAddress);
     }
 }

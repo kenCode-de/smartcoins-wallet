@@ -2,45 +2,64 @@ package de.bitsharesmunich.cryptocoincore.base.seed;
 
 import org.bitcoinj.crypto.MnemonicCode;
 
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
-import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
-import de.bitsharesmunich.cryptocoincore.base.SeedType;
-import de.bitsharesmunich.graphenej.crypto.SecureRandomGenerator;
-
 /**
- * Created by henry on 05/02/2017.
+ * A BIP39 seed type
  */
 
 public class BIP39 extends AccountSeed {
 
-    private final int WORDNUMBER = 12;
+    /**
+     * Teh amount of words for this seed
+     */
+    private final int wmWordNumber = 12;
 
+    /**
+     * Constructor from the dataabse
+     * @param id The id on the database of this seed
+     * @param mnemonicCode A list of each word of the mnemonic Code
+     * @param additional The passPhrase if it has.
+     */
     public BIP39(long id, List<String> mnemonicCode, String additional) {
-        this.id = id;
-        this.type = SeedType.BIP39;
-        this.mnemonicCode = mnemonicCode;
-        this.additional = additional;
+        this.mId = id;
+        this.mType = SeedType.BIP39;
+        this.mMnemonicCode = mnemonicCode;
+        this.mAdditional = additional;
     }
 
+    /**
+     *  Contrcutor without database
+     * @param words The words separate by space
+     * @param passPhrase the pass phrase to be used, can be empty
+     */
     public BIP39(String words, String passPhrase) {
-        this.id = -1;
-        this.type = SeedType.BIP39;
+        this.mId = -1;
+        this.mType = SeedType.BIP39;
         words = words.toLowerCase();
-        this.mnemonicCode = Arrays.asList(words.split(" "));
-        this.additional = passPhrase;
+        this.mMnemonicCode = Arrays.asList(words.split(" "));
+        this.mAdditional = passPhrase;
     }
 
+    /**
+     * Constructor that generates the list of words
+     * @param wordList Dictionary to be used
+     */
     public BIP39(String[] wordList) {
         try {
-            this.id = -1;
-            this.type = SeedType.BIP39;
-            this.additional = "";
-            int entropySize = ((WORDNUMBER * 11) / 8) * 8;
+            this.mId = -1;
+            this.mType = SeedType.BIP39;
+            this.mAdditional = "";
+            int entropySize = ((this.wmWordNumber * 11) / 8) * 8;
+            // We get a true random number
             SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
             byte[] entropy = new byte[entropySize / 8];
             secureRandom.nextBytes(entropy);
@@ -81,11 +100,15 @@ public class BIP39 extends AccountSeed {
                 words.append(wordList[windex]).append(" ");
             }
             words.deleteCharAt(words.length() - 1);
-            this.mnemonicCode = Arrays.asList(words.toString().split(" "));
+            this.mMnemonicCode = Arrays.asList(words.toString().split(" "));
         } catch (NoSuchAlgorithmException ex) {
         }
     }
 
+    /**
+     *  Gets the seed generated to be used to create keys
+     * @return An array with the seed calculated
+     */
     @Override
     public byte[] getSeed() {
         return MnemonicCode.toSeed(this.getMnemonicCode(), this.getAdditional());

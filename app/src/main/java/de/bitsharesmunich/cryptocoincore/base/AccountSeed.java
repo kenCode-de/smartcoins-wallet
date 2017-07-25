@@ -2,8 +2,9 @@ package de.bitsharesmunich.cryptocoincore.base;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
+import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
+import de.bitsharesmunich.graphenej.Util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -12,33 +13,59 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
-import de.bitsharesmunich.cryptocoincore.base.seed.Brainkey;
-import de.bitsharesmunich.graphenej.Util;
-
 /**
- * Created by henry on 05/02/2017.
+ * This is the account Seed class.
+ *
+ * With this class we can obtain a seed to generate keys for generated addresses
  */
 
 public abstract class AccountSeed {
-    protected long id = -1;
-    protected SeedType type;
-    protected List<String> mnemonicCode;
-    protected String additional;
+    /**
+     * The id on the database
+     */
+    protected long mId = -1;
+    /**
+     * The seed type
+     */
+    protected SeedType mType;
+    /**
+     * the list of words
+     */
+    protected List<String> mMnemonicCode;
+    /**
+     * An additional value, it depends on the seed type
+     */
+    protected String mAdditional;
 
+    /**
+     * Gets the seed generated
+     * @return the seed to be used directly on the creation of keys
+     */
     public abstract byte[] getSeed();
 
+    /**
+     * Gets the seed type
+     * @return The seed type
+     */
     public SeedType getType() {
-        return type;
+        return this.mType;
     }
 
+    /**
+     * Get the list of words
+     * @return A list with each word
+     */
     public List<String> getMnemonicCode() {
-        return mnemonicCode;
+        return this.mMnemonicCode;
     }
 
+    /**
+     * Gets the list of words
+     * @return The words as Strign separated with space
+     */
     public String getMnemonicCodeString(){
         StringBuilder answer = new StringBuilder();
-        for(String word : mnemonicCode){
+        for(String word : this.mMnemonicCode){
             answer.append(word);
             answer.append(" ");
         }
@@ -46,18 +73,36 @@ public abstract class AccountSeed {
         return answer.toString();
     }
 
+    /**
+     * Get the additional value
+     * @return The additional value
+     */
     public String getAdditional() {
-        return additional;
+        return this.mAdditional;
     }
 
+    /**
+     * GEts the id of the database of this seed
+     * @return The id of the database
+     */
     public long getId() {
-        return id;
+        return this.mId;
     }
 
+    /**
+     * Changes the id of the database
+     * @param id The id of the database
+     */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
 
+    /**
+     * TRansform a json object into a seed object
+     * @param jsonObject The json object
+     * @param password the password to be used
+     * @return Teh Account Seed created
+     */
     public static AccountSeed fromJson(JsonObject jsonObject, String password) {
         try {
             String typeString = jsonObject.get("type").getAsString();
@@ -70,6 +115,7 @@ public abstract class AccountSeed {
                 byte[] temp = new byte[encKey_enc.length - (encKey_enc[0] == 0 ? 1 : 0)];
                 System.arraycopy(encKey_enc, (encKey_enc[0] == 0 ? 1 : 0), temp, 0, temp.length);
                 byte[] encKey = Util.decryptAES(temp, password.getBytes("UTF-8"));
+                assert encKey != null;
                 temp = new byte[encKey.length];
                 System.arraycopy(encKey, 0, temp, 0, temp.length);
 
@@ -79,6 +125,7 @@ public abstract class AccountSeed {
                     System.arraycopy(encBrain, 1, temp2, 0, temp2.length);
                     encBrain = temp2;
                 }
+                assert (Util.decryptAES(encBrain, temp)) != null;
                 mnemonic = new String((Util.decryptAES(encBrain, temp)), "UTF-8");
 
             }
@@ -93,17 +140,23 @@ public abstract class AccountSeed {
                     break;
             }
         } catch (UnsupportedEncodingException ex) {
+            //TODO handler best this exception
             Logger.getLogger(AccountSeed.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
+    /**
+     * Transform this seed to a json object, to be saved in the bin file
+     * @param password The password to be used to encrypt the json object
+     * @return The Json Object
+     */
     public JsonObject toJson(String password) {
         try {
             JsonObject answer = new JsonObject();
-            answer.addProperty("type", this.type.name());
+            answer.addProperty("type", this.mType.name());
             StringBuilder mnemonic = new StringBuilder();
-            for (String word : this.mnemonicCode) {
+            for (String word : this.mMnemonicCode) {
                 mnemonic.append(word);
                 mnemonic.append(" ");
             }
@@ -118,10 +171,10 @@ public abstract class AccountSeed {
                 answer.addProperty("encryption_key", Util.bytesToHex(encKey_enc));
                 answer.addProperty("encrypted_mnemonic", Util.bytesToHex(encMnem));
             }
-            answer.addProperty("additional", this.additional);
+            answer.addProperty("additional", this.mAdditional);
             return answer;
         } catch (UnsupportedEncodingException ex) {
-
+            //TODO this exception never rises
         }
         return null;
     }
