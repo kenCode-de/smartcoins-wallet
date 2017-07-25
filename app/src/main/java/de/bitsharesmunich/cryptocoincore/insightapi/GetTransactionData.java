@@ -2,8 +2,6 @@ package de.bitsharesmunich.cryptocoincore.insightapi;
 
 import android.content.Context;
 
-import java.util.Date;
-
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitsharesmunich.cryptocoincore.base.GTxIO;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
@@ -16,31 +14,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.Date;
+
 /**
- * Created by henry on 12/02/2017.
+ * CThis class retrieve the data of a single transaction
  */
 
 public class GetTransactionData extends Thread implements Callback<Txi> {
     /**
      * The account to be query
      */
-    private final GeneralCoinAccount account;
+    private final GeneralCoinAccount mAccount;
     /**
      * The transaction txid to be query
      */
-    private String txid;
+    private String mTxId;
     /**
      * The serviceGenerator to call
      */
-    private InsightApiServiceGenerator serviceGenerator;
+    private InsightApiServiceGenerator mServiceGenerator;
     /**
      * This app context, used to save on the DB
      */
-    private Context context;
+    private Context mContext;
     /**
      * If has to wait for another confirmation
      */
-    private boolean mustWait = false;
+    private boolean mMustWait = false;
 
     /**
      * Constructor used to query for a transaction with unknown confirmations
@@ -60,27 +60,30 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
      * @param mustWait If there is less confirmation that needed
      */
     public GetTransactionData(String txid, GeneralCoinAccount account, Context context, boolean mustWait) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
-        this.account = account;
-        this.txid = txid;
-        serviceGenerator = new InsightApiServiceGenerator(serverUrl);
-        this.context = context;
-        this.mustWait = mustWait;
+        String serverUrl = InsightApiConstants.sProtocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
+        this.mAccount = account;
+        this.mTxId= txid;
+        this.mServiceGenerator = new InsightApiServiceGenerator(serverUrl);
+        this.mContext = context;
+        this.mMustWait = mustWait;
     }
 
     /**
-     *
+     * Function to start the insight api call
      */
     @Override
     public void run() {
-        if (mustWait) {
+        if (this.mMustWait) {
+            //We are waiting for confirmation
             try {
-                Thread.sleep(InsightApiConstants.WAIT_TIME);
+                Thread.sleep(InsightApiConstants.sWaitTime);
             } catch (InterruptedException ignored) {
+                //TODO this exception never rises
             }
         }
-        InsightApiService service = serviceGenerator.getService(InsightApiService.class);
-        Call<Txi> txiCall = service.getTransaction(InsightApiConstants.getPath(account.getCoin()),txid);
+
+        InsightApiService service = this.mServiceGenerator.getService(InsightApiService.class);
+        Call<Txi> txiCall = service.getTransaction(InsightApiConstants.getPath(this.mAccount.getCoin()),this.mTxId);
         txiCall.enqueue(this);
     }
 
@@ -90,30 +93,30 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
             Txi txi = response.body();
 
             GeneralTransaction transaction = new GeneralTransaction();
-            transaction.setAccount(this.account);
+            transaction.setAccount(this.mAccount);
             transaction.setTxid(txi.txid);
             transaction.setBlock(txi.blockheight);
             transaction.setDate(new Date(txi.time * 1000));
-            transaction.setFee((long) (txi.fee * Math.pow(10,account.getCoin().getPrecision())));
+            transaction.setFee((long) (txi.fee * Math.pow(10,this.mAccount.getCoin().getPrecision())));
             transaction.setConfirm(txi.confirmations);
-            transaction.setType(account.getCoin());
+            transaction.setType(this.mAccount.getCoin());
             transaction.setBlockHeight(txi.blockheight);
 
             for (Vin vin : txi.vin) {
                 GTxIO input = new GTxIO();
-                input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
+                input.setAmount((long) (vin.value * Math.pow(10,this.mAccount.getCoin().getPrecision())));
                 input.setTransaction(transaction);
                 input.setOut(true);
-                input.setType(account.getCoin());
+                input.setType(this.mAccount.getCoin());
                 String addr = vin.addr;
                 input.setAddressString(addr);
                 input.setIndex(vin.n);
                 input.setScriptHex(vin.scriptSig.hex);
                 input.setOriginalTxid(vin.txid);
-                for (GeneralCoinAddress address : account.getAddresses()) {
-                    if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                for (GeneralCoinAddress address : this.mAccount.getAddresses()) {
+                    if (address.getAddressString(this.mAccount.getNetworkParam()).equals(addr)) {
                         input.setAddress(address);
-                        if (!address.hasTransactionOutput(input, account.getNetworkParam())) {
+                        if (!address.hasTransactionOutput(input, this.mAccount.getNetworkParam())) {
                             address.getTransactionOutput().add(input);
                         }
                     }
@@ -132,23 +135,23 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                             memoBytes[i] = Byte.parseByte(hex.substring(opReturnIndex+4+(i*2),opReturnIndex+6+(i*2)),16);
                         }
                         transaction.setMemo(new String(memoBytes));
-                        System.out.println("Memo read : " + transaction.getMemo());
+                        System.out.println("Memo read : " + transaction.getMemo()); //TODO log this line
                     }
 
                 }else {
                     GTxIO output = new GTxIO();
-                    output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
+                    output.setAmount((long) (vout.value * Math.pow(10, this.mAccount.getCoin().getPrecision())));
                     output.setTransaction(transaction);
                     output.setOut(false);
-                    output.setType(account.getCoin());
+                    output.setType(this.mAccount.getCoin());
                     String addr = vout.scriptPubKey.addresses[0];
                     output.setAddressString(addr);
                     output.setIndex(vout.n);
                     output.setScriptHex(vout.scriptPubKey.hex);
-                    for (GeneralCoinAddress address : account.getAddresses()) {
-                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                    for (GeneralCoinAddress address : this.mAccount.getAddresses()) {
+                        if (address.getAddressString(this.mAccount.getNetworkParam()).equals(addr)) {
                             output.setAddress(address);
-                            if (!address.hasTransactionInput(output, account.getNetworkParam())) {
+                            if (!address.hasTransactionInput(output, this.mAccount.getNetworkParam())) {
                                 address.getTransactionInput().add(output);
                             }
                         }
@@ -157,11 +160,12 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 }
             }
 
-            if(txi.txlock && txi.confirmations< account.getCoin().getConfirmationsNeeded()){
-                transaction.setConfirm(account.getCoin().getConfirmationsNeeded());
+            // This is for features like dash instantSend
+            if(txi.txlock && txi.confirmations< this.mAccount.getCoin().getConfirmationsNeeded()){
+                transaction.setConfirm(this.mAccount.getCoin().getConfirmationsNeeded());
             }
 
-            SCWallDatabase db = new SCWallDatabase(this.context);
+            SCWallDatabase db = new SCWallDatabase(this.mContext);
             long idTransaction = db.getGeneralTransactionId(transaction);
             if (idTransaction == -1) {
                 db.putGeneralTransaction(transaction);
@@ -169,14 +173,22 @@ public class GetTransactionData extends Thread implements Callback<Txi> {
                 transaction.setId(idTransaction);
                 db.updateGeneralTransaction(transaction);
             }
-            account.updateTransaction(transaction);
-            account.balanceChange();
-            if (transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
-                new GetTransactionData(txid, account, context, true).start();
+
+            this.mAccount.updateTransaction(transaction);
+            this.mAccount.balanceChange();
+
+            if (transaction.getConfirm() < this.mAccount.getCoin().getConfirmationsNeeded()) {
+                //If transaction weren't confirmed, add the transaction to watch for change on the confirmations
+                new GetTransactionData(this.mTxId, this.mAccount, this.mContext, true).start();
             }
         }
     }
 
+    /**
+     * TODO handle the failure response
+     * @param call the Call object
+     * @param t the reason of the failure
+     */
     @Override
     public void onFailure(Call<Txi> call, Throwable t) {
 

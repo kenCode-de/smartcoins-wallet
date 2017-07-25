@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.Map;
 
 /**
- * Created by hvarona on 14/03/2017.
+ * Coin definition to be used to sign transaction. is used to override values for using the bitcoinj library
  */
 
 public abstract class CoinDefinitions {

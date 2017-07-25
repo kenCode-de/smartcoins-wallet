@@ -1,12 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.insightapi;
 
 import android.content.Context;
-
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import de.bitshares_munich.database.SCWallDatabase;
 import de.bitsharesmunich.cryptocoincore.base.GTxIO;
@@ -21,6 +16,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Get all the transaction data of the addresses of an account
  *
@@ -30,19 +29,19 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
     /**
      * The account to be query
      */
-    private GeneralCoinAccount account;
+    private GeneralCoinAccount mAccount;
     /**
      * The list of address to query
      */
-    private List<GeneralCoinAddress> addresses = new ArrayList<>();
+    private List<GeneralCoinAddress> mAddresses = new ArrayList<>();
     /**
      * The serviceGenerator to call
      */
-    private InsightApiServiceGenerator serviceGenerator;
+    private InsightApiServiceGenerator mServiceGenerator;
     /**
      * This app context, used to save on the DB
      */
-    private Context context;
+    private Context mContext;
 
 
     /**
@@ -51,10 +50,10 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
      * @param context This app context
      */
     public GetTransactionByAddress(GeneralCoinAccount account, Context context) {
-        String serverUrl = InsightApiConstants.protocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
-        this.account = account;
-        serviceGenerator = new InsightApiServiceGenerator(serverUrl);
-        this.context = context;
+        String serverUrl = InsightApiConstants.sProtocol + "://" + InsightApiConstants.getAddress(account.getCoin()) +"/";
+        this.mAccount = account;
+        this.mServiceGenerator = new InsightApiServiceGenerator(serverUrl);
+        this.mContext = context;
     }
 
     /**
@@ -62,9 +61,15 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
      * @param address the address to be query
      */
     public void addAddress(GeneralCoinAddress address) {
-        addresses.add(address);
+        this.mAddresses.add(address);
     }
 
+
+    /**
+     * Handle the response
+     * @param call The call with the addresTxi object
+     * @param response the response status object
+     */
     @Override
     public void onResponse(Call<AddressTxi> call, Response<AddressTxi> response) {
         if (response.isSuccessful()) {
@@ -74,32 +79,32 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
             for (Txi txi : addressTxi.items) {
                 GeneralCoinAccount tempAccount = null;
                 GeneralTransaction transaction = new GeneralTransaction();
-                transaction.setAccount(this.account);
+                transaction.setAccount(this.mAccount);
                 transaction.setTxid(txi.txid);
                 transaction.setBlock(txi.blockheight);
                 transaction.setDate(new Date(txi.time * 1000));
-                transaction.setFee((long) (txi.fee * Math.pow(10,account.getCoin().getPrecision())));
+                transaction.setFee((long) (txi.fee * Math.pow(10,this.mAccount.getCoin().getPrecision())));
                 transaction.setConfirm(txi.confirmations);
-                transaction.setType(account.getCoin());
+                transaction.setType(this.mAccount.getCoin());
                 transaction.setBlockHeight(txi.blockheight);
 
                 for (Vin vin : txi.vin) {
                     GTxIO input = new GTxIO();
-                    input.setAmount((long) (vin.value * Math.pow(10,account.getCoin().getPrecision())));
+                    input.setAmount((long) (vin.value * Math.pow(10,this.mAccount.getCoin().getPrecision())));
                     input.setTransaction(transaction);
                     input.setOut(true);
-                    input.setType(account.getCoin());
+                    input.setType(this.mAccount.getCoin());
                     String addr = vin.addr;
                     input.setAddressString(addr);
                     input.setIndex(vin.n);
                     input.setScriptHex(vin.scriptSig.hex);
                     input.setOriginalTxid(vin.txid);
-                    for (GeneralCoinAddress address : addresses) {
-                        if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                    for (GeneralCoinAddress address : this.mAddresses) {
+                        if (address.getAddressString(this.mAccount.getNetworkParam()).equals(addr)) {
                             input.setAddress(address);
                             tempAccount = address.getAccount();
 
-                            if (!address.hasTransactionOutput(input, account.getNetworkParam())) {
+                            if (!address.hasTransactionOutput(input, this.mAccount.getNetworkParam())) {
                                 address.getTransactionOutput().add(input);
                             }
                             changed = true;
@@ -122,20 +127,20 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         }
                     }else {
                         GTxIO output = new GTxIO();
-                        output.setAmount((long) (vout.value * Math.pow(10, account.getCoin().getPrecision())));
+                        output.setAmount((long) (vout.value * Math.pow(10, this.mAccount.getCoin().getPrecision())));
                         output.setTransaction(transaction);
                         output.setOut(false);
-                        output.setType(account.getCoin());
+                        output.setType(this.mAccount.getCoin());
                         String addr = vout.scriptPubKey.addresses[0];
                         output.setAddressString(addr);
                         output.setIndex(vout.n);
                         output.setScriptHex(vout.scriptPubKey.hex);
-                        for (GeneralCoinAddress address : addresses) {
-                            if (address.getAddressString(account.getNetworkParam()).equals(addr)) {
+                        for (GeneralCoinAddress address : this.mAddresses) {
+                            if (address.getAddressString(this.mAccount.getNetworkParam()).equals(addr)) {
                                 output.setAddress(address);
                                 tempAccount = address.getAccount();
 
-                                if (!address.hasTransactionInput(output, account.getNetworkParam())) {
+                                if (!address.hasTransactionInput(output, this.mAccount.getNetworkParam())) {
                                     address.getTransactionInput().add(output);
                                 }
                                 changed = true;
@@ -145,10 +150,10 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                         transaction.getTxOutputs().add(output);
                     }
                 }
-                if(txi.txlock && txi.confirmations< account.getCoin().getConfirmationsNeeded()){
-                    transaction.setConfirm(account.getCoin().getConfirmationsNeeded());
+                if(txi.txlock && txi.confirmations< this.mAccount.getCoin().getConfirmationsNeeded()){
+                    transaction.setConfirm(this.mAccount.getCoin().getConfirmationsNeeded());
                 }
-                SCWallDatabase db = new SCWallDatabase(this.context);
+                SCWallDatabase db = new SCWallDatabase(this.mContext);
                 long idTransaction = db.getGeneralTransactionId(transaction);
                 if (idTransaction == -1) {
                     db.putGeneralTransaction(transaction);
@@ -156,36 +161,44 @@ public class GetTransactionByAddress extends Thread implements Callback<AddressT
                     transaction.setId(idTransaction);
                     db.updateGeneralTransaction(transaction);
                 }
-                if (tempAccount != null && transaction.getConfirm() < account.getCoin().getConfirmationsNeeded()) {
-                    new GetTransactionData(transaction.getTxid(), tempAccount, context, true).start();
+                if (tempAccount != null && transaction.getConfirm() < this.mAccount.getCoin().getConfirmationsNeeded()) {
+                    new GetTransactionData(transaction.getTxid(), tempAccount, this.mContext, true).start();
                 }
-                for (GeneralCoinAddress address : addresses) {
+                for (GeneralCoinAddress address : this.mAddresses) {
                     if (address.updateTransaction(transaction)) {
                         break;
                     }
                 }
             }
             if(changed) {
-                account.balanceChange();
+                this.mAccount.balanceChange();
             }
         }
     }
 
+    /**
+     * Failure of the call
+     * @param call The call object
+     * @param t The reason for the failure
+     */
     @Override
     public void onFailure(Call<AddressTxi> call, Throwable t) {
         Log.e("GetTransactionByAddress", "Error in json format");
     }
 
+    /**
+     * Function to start the insight api call
+     */
     @Override
     public void run() {
-        if (addresses.size() > 0) {
+        if (this.mAddresses.size() > 0) {
             StringBuilder addressToQuery = new StringBuilder();
-            for (GeneralCoinAddress address : addresses) {
-                addressToQuery.append(address.getAddressString(account.getNetworkParam())).append(",");
+            for (GeneralCoinAddress address : this.mAddresses) {
+                addressToQuery.append(address.getAddressString(this.mAccount.getNetworkParam())).append(",");
             }
             addressToQuery.deleteCharAt(addressToQuery.length() - 1);
-            InsightApiService service = serviceGenerator.getService(InsightApiService.class);
-            Call<AddressTxi> addressTxiCall = service.getTransactionByAddress(InsightApiConstants.getPath(account.getCoin()),addressToQuery.toString());
+            InsightApiService service = this.mServiceGenerator.getService(InsightApiService.class);
+            Call<AddressTxi> addressTxiCall = service.getTransactionByAddress(InsightApiConstants.getPath(this.mAccount.getCoin()),addressToQuery.toString());
             addressTxiCall.enqueue(this);
         }
     }
