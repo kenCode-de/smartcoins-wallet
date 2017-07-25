@@ -175,7 +175,10 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 
 
 /**
- * Created by qasim on 5/10/16.
+ * Shows the balances of all the user coin accounts and all the transactions made in this accounts.
+ *
+ * There are two types of accounts: Bitshares accounts and Bitcoin alike accounts.
+ * Must functions in this fragment take different actions for these two.
  */
 public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener, ChangeSettingListener {
     public final String TAG = this.getClass().getName();
@@ -271,6 +274,15 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         // Required empty public constructor
     }
 
+    /**
+     * Creates a new instance of this fragment specifying the coin type of the balances to show.
+     *
+     * NOTE: This method is still used by the ViewPagerAdapter to create an instance of this fragment, but
+     * the coin takes no effect since this fragment shows the balances of all the coin types
+     *
+     * @param coin the coin to associate with the balances in this fragment
+     * @return a instance of this fragment
+     */
     public static GeneralCoinBalancesFragment newInstance(Coin coin) {
         GeneralCoinBalancesFragment generalCoinBalancesFragment = new GeneralCoinBalancesFragment();
 
@@ -2484,49 +2496,38 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     /**
-     * Updating the sort strategy
+     * Initializes the transaction table view settings: adjusts the columns title and width,
+     * assigns the columns comparators and sets the onclick headers listeners
+     *
      */
     private void updateSortTable() {
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
 
-        /*if (this.coin == Coin.BITSHARE) {
-            transfersView.setHeaderAdapter(simpleTableHeaderAdapter);
+        cryptoCoinTransfersView.setHeaderAdapter(simpleTableHeaderAdapter);
 
-            transfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-            transfersView.setColumnWeight(0, 20);
-            transfersView.setColumnWeight(1, 12);
-            transfersView.setColumnWeight(2, 27);
-            transfersView.setColumnWeight(3, 22);
-            transfersView.setColumnComparator(0, new TransferDateComparator());
-            transfersView.setColumnComparator(1, new TransferSendReceiveComparator(new UserAccount(accountId)));
-            transfersView.setColumnComparator(3, new TransferAmountComparator());
-        } else {*/
-            cryptoCoinTransfersView.setHeaderAdapter(simpleTableHeaderAdapter);
-
-            cryptoCoinTransfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-            cryptoCoinTransfersView.setColumnWeight(0, 20);
-            cryptoCoinTransfersView.setColumnWeight(1, 12);
-            cryptoCoinTransfersView.setColumnWeight(2, 27);
-            cryptoCoinTransfersView.setColumnWeight(3, 22);
-            cryptoCoinTransfersView.setColumnComparator(0, new CryptoCoinTransferDateComparator());
-            cryptoCoinTransfersView.setColumnComparator(1, new CryptoCoinTransferSendReceiveComparator());
-            cryptoCoinTransfersView.setColumnComparator(3, new CryptoCoinTransferAmountComparator());
-            cryptoCoinTransfersView.addHeaderClickListener(new TableHeaderClickListener() {
-                @Override
-                public void onHeaderClicked(int columnIndex) {
-                    if (lastTransferTableColumnIndexPressed == columnIndex) {
-                        lastTransferTableColumnIndexSortUp = !lastTransferTableColumnIndexSortUp;
-                    } else {
-                        lastTransferTableColumnIndexSortUp = true;
-                    }
-
-                    lastTransferTableColumnIndexPressed = columnIndex;
-
-                    updateTableView(true);
+        cryptoCoinTransfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
+        cryptoCoinTransfersView.setColumnWeight(0, 20);
+        cryptoCoinTransfersView.setColumnWeight(1, 12);
+        cryptoCoinTransfersView.setColumnWeight(2, 27);
+        cryptoCoinTransfersView.setColumnWeight(3, 22);
+        cryptoCoinTransfersView.setColumnComparator(0, new CryptoCoinTransferDateComparator());
+        cryptoCoinTransfersView.setColumnComparator(1, new CryptoCoinTransferSendReceiveComparator());
+        cryptoCoinTransfersView.setColumnComparator(3, new CryptoCoinTransferAmountComparator());
+        cryptoCoinTransfersView.addHeaderClickListener(new TableHeaderClickListener() {
+            @Override
+            public void onHeaderClicked(int columnIndex) {
+                if (lastTransferTableColumnIndexPressed == columnIndex) {
+                    lastTransferTableColumnIndexSortUp = !lastTransferTableColumnIndexSortUp;
+                } else {
+                    lastTransferTableColumnIndexSortUp = true;
                 }
-            });
-        //}
+
+                lastTransferTableColumnIndexPressed = columnIndex;
+
+                updateTableView(true);
+            }
+        });
     }
 
     @Override
@@ -3047,114 +3048,112 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     /**
-     * Refreshes table data by assigning a new adapter.
+     * Refreshes the transaction table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
      * @param reset: If true, the current transfer list is discarded, and a new query is made to the database.
      */
     private void updateTableView(boolean reset) {
-        //if (this.coin == Coin.BITSHARE) {
-            SCWallDatabase.GeneralTransactionOrder order = SCWallDatabase.GeneralTransactionOrder.DATE;
+        SCWallDatabase.GeneralTransactionOrder order = SCWallDatabase.GeneralTransactionOrder.DATE;
 
-            switch (lastTransferTableColumnIndexPressed){
-                case 0:
-                    order = SCWallDatabase.GeneralTransactionOrder.DATE;
-                    break;
-                case 1:
-                    order = SCWallDatabase.GeneralTransactionOrder.IN_OUT;
-                    break;
-                case 4:
-                    order = SCWallDatabase.GeneralTransactionOrder.AMOUNT;
-                    break;
-            }
+        switch (lastTransferTableColumnIndexPressed){
+            case 0:
+                order = SCWallDatabase.GeneralTransactionOrder.DATE;
+                break;
+            case 1:
+                order = SCWallDatabase.GeneralTransactionOrder.IN_OUT;
+                break;
+            case 4:
+                order = SCWallDatabase.GeneralTransactionOrder.AMOUNT;
+                break;
+        }
 
 
-            UserAccount account = new UserAccount(accountId);
+        UserAccount account = new UserAccount(accountId);
 
-            if (reset) {
-                loadMoreCounter = 1;
-                loadMoreButton.setVisibility(View.VISIBLE);
-            }
+        if (reset) {
+            loadMoreCounter = 1;
+            loadMoreButton.setVisibility(View.VISIBLE);
+        }
 
-            // Calculate how many items to fetch depending on how many times
-            // the 'load more' button has been pressed. Maybe later we can modify the
-            // getTransactions method to accept ranges and simplify this code.
-            int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
-            List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
+        // Calculate how many items to fetch depending on how many times
+        // the 'load more' button has been pressed. Maybe later we can modify the
+        // getTransactions method to accept ranges and simplify this code.
+        int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
+        List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
 
-            // Here we check if the SortableTableView has its default adapter or our own instance.
-            if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter && !reset){
-                Log.d(TAG,"updating table view");
-                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
-                List<TransactionLog> existingData = cryptoCoinTableAdapter.getData();
-                boolean found = true;
-                for(HistoricalTransferEntry newEntry : newData){
-                    for(TransactionLog existingEntry : existingData){
-                        if (existingEntry.getType() == TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE) {
-                            if (newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())) {
-                                found = true;
-                                break;
-                            }
+        // Here we check if the SortableTableView has its default adapter or our own instance.
+        if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter && !reset){
+            Log.d(TAG,"updating table view");
+            cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+            List<TransactionLog> existingData = cryptoCoinTableAdapter.getData();
+            boolean found = true;
+            for(HistoricalTransferEntry newEntry : newData){
+                for(TransactionLog existingEntry : existingData){
+                    if (existingEntry.getType() == TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE) {
+                        if (newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())) {
+                            found = true;
+                            break;
                         }
                     }
-                    if(!found){
-                        existingData.add(new TransactionLog(newEntry, account));
-                    }
-                    found = false;
                 }
-
-            }else{
-                Log.d(TAG, "resetting table view");
-                TransactionLog newDataArray[] = new TransactionLog[newData.size()];
-
-                HistoricalTransferEntry hte;
-                for (int i=0;i<newData.size();i++){
-                    hte = newData.get(i);
-                    newDataArray[i] = new TransactionLog(hte,account);
+                if(!found){
+                    existingData.add(new TransactionLog(newEntry, account));
                 }
-
-                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
-                cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+                found = false;
             }
 
-            /*
-            * LOADING BITCOIN TYPE TRANSACTION HISTORY
-            *
-            * */
+        }else{
+            Log.d(TAG, "resetting table view");
+            TransactionLog newDataArray[] = new TransactionLog[newData.size()];
 
-            SCWallDatabase db = new SCWallDatabase(getContext());
-            List<GeneralCoinAccount> accountList = db.getActiveAccounts();
-
-            //If reset is false, then we start from the last transaction fetched from the database
-            int offset = 0;
-            if (!reset){
-                offset = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * (loadMoreCounter-1);
+            HistoricalTransferEntry hte;
+            for (int i=0;i<newData.size();i++){
+                hte = newData.get(i);
+                newDataArray[i] = new TransactionLog(hte,account);
             }
 
-            List<GeneralTransaction> transactions = db.getGeneralTransactions(accountList, order, lastTransferTableColumnIndexSortUp,offset,SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
-            TransactionLog newDataArray[] = new TransactionLog[transactions.size()];
+            cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
+            cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+        }
 
-            GeneralTransaction gt;
-            for (int i=0;i<transactions.size();i++){
-                gt = transactions.get(i);
-                newDataArray[i] = new TransactionLog(gt,gt.getAccount());
-            }
+        /*
+        * LOADING BITCOIN TYPE TRANSACTION HISTORY
+        *
+        * */
 
-            if (cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
-                Log.d(TAG, "updating " + this.coin.name() + " table view");
-                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
-                cryptoCoinTableAdapter.addOrReplaceData(newDataArray);
-            } else {
-                Log.d(TAG, "resetting " + this.coin.name() + " table view");
-                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
-                cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
-            }
+        SCWallDatabase db = new SCWallDatabase(getContext());
+        List<GeneralCoinAccount> accountList = db.getActiveAccounts();
 
-            cryptoCoinTableAdapter.notifyDataSetChanged();
+        //If reset is false, then we start from the last transaction fetched from the database
+        int offset = 0;
+        if (!reset){
+            offset = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * (loadMoreCounter-1);
+        }
 
-            if (cryptoCoinTransfersView.getColumnComparator(0) == null) {
-                updateSortTable();
-            }
-        //}
+        List<GeneralTransaction> transactions = db.getGeneralTransactions(accountList, order, lastTransferTableColumnIndexSortUp,offset,SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
+        TransactionLog newDataArray[] = new TransactionLog[transactions.size()];
+
+        GeneralTransaction gt;
+        for (int i=0;i<transactions.size();i++){
+            gt = transactions.get(i);
+            newDataArray[i] = new TransactionLog(gt,gt.getAccount());
+        }
+
+        if (cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
+            Log.d(TAG, "updating " + this.coin.name() + " table view");
+            cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+            cryptoCoinTableAdapter.addOrReplaceData(newDataArray);
+        } else {
+            Log.d(TAG, "resetting " + this.coin.name() + " table view");
+            cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
+            cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+        }
+
+        cryptoCoinTableAdapter.notifyDataSetChanged();
+
+        if (cryptoCoinTransfersView.getColumnComparator(0) == null) {
+            updateSortTable();
+        }
     }
 
     /**
