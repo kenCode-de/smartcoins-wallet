@@ -612,7 +612,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                             if (destinationAddress.toString().equals(myAddress.toString())) {
                                 String decryptedMessage = Memo.decryptMessage(privateKey, memo.getSource(), memo.getNonce(), memo.getByteMessage());
                                 memo.setPlaintextMessage(decryptedMessage);
-                                Log.v(TAG, "Memo Decrypted: "+ decryptedMessage);
+                                Log.v(TAG, "Memo Decrypted: " + decryptedMessage);
                             }
                         } catch (ChecksumException e) {
                             Log.e(TAG, "ChecksumException. Msg: " + e.getMessage());
@@ -917,7 +917,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         });
 
         AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-        assetsSymbols.getAssetsFromServer();
+
         final Handler handler = new Handler();
         final Runnable updateTask = new Runnable() {
             @Override
@@ -2109,27 +2109,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     private void putTransactions(List<TransactionDetails> transactionDetails, String accountName) {
         tinyDB.putTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, new ArrayList<>(transactionDetails));
     }
-
-    /**
-     * Retrieves the transaction list from the shared preferences storage.
-     *
-     * @param accountName: Account name.
-     * @return: List of transactions from a given account.
-     */
-    private ArrayList<TransactionDetails> getTransactions(String accountName) {
-        ArrayList<TransactionDetails> mySavedList = tinyDB.getTransactions(getResources().getString(R.string.pref_local_transactions) + accountName, TransactionDetails.class);
-
-        AssetsSymbols assetsSymbols = new AssetsSymbols(getContext());
-        assetsSymbols.updatedTransactionDetails(mySavedList);
-
-        for (TransactionDetails td : mySavedList) {
-            td.updateContext(getContext());
-        }
-
-        return mySavedList;
-    }
-
-
 
     /********************************************************************************
      *

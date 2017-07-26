@@ -270,47 +270,6 @@ public class ReceiveActivity extends BaseActivity {
         finish();
     }
 
-    public void callIPNSmartCoins(final Activity activity) {
-        Log.d(TAG, "callIPNSmartCoins. account id: " + account_id + ", order id: " + orderId);
-        ServiceGenerator sg = new ServiceGenerator(getString(R.string.node_server_url));
-        IWebService service = sg.getService(IWebService.class);
-        transactionSmartcoinService = service.getTransactionSmartCoin(account_id, orderId);
-        transactionSmartcoinService.enqueue(new Callback<TransactionSmartCoin[]>() {
-
-            @Override
-            public void onResponse(Call<TransactionSmartCoin[]> call, Response<TransactionSmartCoin[]> response) {
-                if (response.isSuccessful()) {
-                    if (response.body().length > 0) {
-                        TransactionSmartCoin[] transactions = response.body();
-                        Intent intent = new Intent(getApplicationContext(), PaymentReceived.class);
-                        intent.putExtra("block", transactions[0].block);
-                        intent.putExtra("trx", transactions[0].trx);
-                        intent.putExtra("receiver_id", transactions[0].account_id);
-                        intent.putExtra("sender_id", transactions[0].sender_id);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        if (!isFinishing()) {
-                            Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.failed_transaction, Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TransactionSmartCoin[]> call, Throwable t) {
-                if (!isFinishing()) {
-                    Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void updateBlockNumberHead() {
         final Handler handler = new Handler();
 

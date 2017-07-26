@@ -294,18 +294,6 @@
     <string name="url_bitshares_openledger">https://bitshares.openledger.info/ws</string>
     <string name="lookup_account_a">{\"method\":\"call\",\"params\":[</string>
     <string name="lookup_account_b">,\"lookup_accounts\",[</string>
-    <!--<string name="account_create_url">http://fr.blockpay.ch:5001</string>-->
-    <!--<string name="account_create_url">https://faucet.blockpay.ch</string>-->
-    <string name="account_create_url">http://128.0.69.157:5000</string>
-
-
-    <string name="account_from_brainkey_url">http://fr.blockpay.ch:9003</string>
-    <string name="decode_memos_array_url">http://fr.blockpay.ch:9004</string>
-    <string name="transfer_server_url">http://fr.blockpay.ch:9000</string>
-    <string name="qr_hash_url">http://fr.blockpay.ch:8000</string>
-    <string name="qr_callback_url">http://fr.blockpay.ch:8000/transaction/</string>
-    <string name="node_server_url">http://fr.blockpay.ch:8000</string>
-    <string name="hash_server_url">http://fr.blockpay.ch:9002</string>
 
     <string name="pre_ischecked_timezone">isCheckedTimeZone</string>
 

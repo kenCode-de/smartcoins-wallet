@@ -430,7 +430,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         hashMap.put("account", hm);
 
         try {
-            ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_create_url));
+            ServiceGenerator sg = new ServiceGenerator(Application.faucetUrl);
             IWebService service = sg.getService(IWebService.class);
             final Call<RegisterAccountResponse> postingService = service.getReg(hashMap);
             postingService.enqueue(new Callback<RegisterAccountResponse>() {

@@ -71,6 +71,7 @@ public class Application extends android.app.Application implements de.bitshares
 //                    "https://dele-puppy.com/ws",
 //                    "https://valen-tin.fr:8090"
             };
+    public static String faucetUrl = "http://128.0.69.157:5000";
     public static String monitorAccountId;
     public static int nodeIndex = 0;
     public static Boolean isReady = false;
