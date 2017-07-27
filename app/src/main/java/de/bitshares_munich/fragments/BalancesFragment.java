@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -2003,18 +2002,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         rcvBtn.startAnimation(rotAnim);
     }
 
-    public void playSound() {
-        Log.d(TAG, "playSound");
-        try {
-            AudioFilePath audioFilePath = new AudioFilePath(getContext());
-            MediaPlayer mediaPlayer = audioFilePath.fetchMediaPlayer();
-            if (mediaPlayer != null)
-                mediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void animateText(final TextView tvCounter, float startValue, float endValue) {
         ValueAnimator animator = new ValueAnimator();
         animator.setFloatValues(startValue, endValue);
@@ -2522,22 +2509,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         }
     }
 
-    private void updateLifeTimeModel(String accountName) {
-        ArrayList<AccountDetails> accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
-        try {
-            for (int i = 0; i < accountDetails.size(); i++) {
-                if (accountDetails.get(i).account_name.equals(accountName)) {
-                    accountDetails.get(i).isLifeTime = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-        }
-
-        tinyDB.putListObject(getString(R.string.pref_wallet_accounts), accountDetails);
-        showHideLifeTime(true);
-    }
-
     private float convertLocalizeStringToFloat(String text) {
         float txtAmount_d = 0;
         try {
@@ -2576,26 +2547,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         return txtAmount_d;
     }
 
-    private int convertLocalizeStringToInt(String text) {
-        int txtAmount_d = 0;
-        try {
-            NumberFormat format = NumberFormat.getInstance(Locale.ENGLISH);
-            Number number = format.parse(text);
-            txtAmount_d = number.intValue();
-        } catch (Exception e) {
-            try {
-                NumberFormat format = NumberFormat.getInstance(locale);
-                Number number = format.parse(text);
-                txtAmount_d = number.intValue();
-
-            } catch (Exception e1) {
-
-            }
-        }
-        return txtAmount_d;
-    }
-
-        /**
+     /**
      * Refreshes table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
      *

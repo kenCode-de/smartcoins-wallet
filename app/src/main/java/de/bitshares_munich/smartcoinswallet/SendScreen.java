@@ -1148,12 +1148,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     .setTransferAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                     .build();
 
-//                TransferTransactionBuilder builder = new TransferTransactionBuilder()
-//                        .setSource(sourceAccount)
-//                        .setDestination(destinationAccount)
-//                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-//                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-//                        .setPrivateKey(currentPrivKey);
             if (memoMessage != null) {
                 SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
@@ -1183,20 +1177,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
             transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, transferAsset, broadcastTransactionListener));
             transferBroadcaster.start();
-
-//                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-//                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-//                            .setSource(new UserAccount(senderID))
-//                            .setDestination(bitsharesMunich)
-//                            .setAmount(donationAmount)
-//                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), transferAsset))
-//                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-//                            .setPrivateKey(currentPrivKey);
-//
-//                    Transaction donationTransaction = donationBuilder.build();
-//                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, transferAsset, donationTransactionListener));
-//                    donationBroadcaster.start();
-//                }
         } else {
             mSendAttemptFail = true;
             TransferOperation op = new TransferOperationBuilder()
@@ -1204,13 +1184,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
                     .setDestination(destinationAccount)
                     .setTransferAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
                     .build();
-//                TransferTransactionBuilder builder = new TransferTransactionBuilder()
-//                        .setSource(sourceAccount)
-//                        .setDestination(destinationAccount)
-//                        .setAmount(new AssetAmount(UnsignedLong.valueOf(baseAmount), transferAsset))
-//                        .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
-//                        .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-//                        .setPrivateKey(currentPrivKey);
             if (memoMessage != null) {
                 SecureRandom secureRandom = SecureRandomGenerator.getSecureRandom();
                 long nonce = secureRandom.nextLong();
@@ -1240,22 +1213,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
 
             transferBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(transaction, FEE_ASSET, broadcastTransactionListener));
             transferBroadcaster.start();
-//                Log.d(TAG, "started a funds transfer donation broadcast");
-//
-//                if (alwaysDonate || cbAlwaysDonate.isChecked()) {
-//                    TransferTransactionBuilder donationBuilder = new TransferTransactionBuilder()
-//                            .setSource(new UserAccount(senderID))
-//                            .setDestination(bitsharesMunich)
-//                            .setAmount(donationAmount)
-//                            .setFee(new AssetAmount(UnsignedLong.valueOf(264174), FEE_ASSET))
-//                            .setBlockData(new BlockData(Application.refBlockNum, Application.refBlockPrefix, expirationTime))
-//                            .setPrivateKey(currentPrivKey);
-//
-//                    Transaction donationTransaction = donationBuilder.build();
-//                    donationBroadcaster = new WebsocketWorkerThread(new TransactionBroadcastSequence(donationTransaction, FEE_ASSET, donationTransactionListener));
-//                    donationBroadcaster.start();
-//                    Log.d(TAG, "started a donation message broadcast");
-//                }
         }
     }
 
@@ -1459,39 +1416,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, ContactSe
         hm.put("sell_symbol", backupAsset);
         hm.put("buy_amount", String.format(Locale.ENGLISH, "%.4f", buyAmount));
         hm.put("buy_symbol", selectedAccountAsset.symbol);
-        //Toast.makeText(context, R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
-        //TODO evaluate removal
-        /*ServiceGenerator sg = new ServiceGenerator(getString(R.string.account_from_brainkey_url));
-        IWebService service = sg.getService(IWebService.class);
-        final Call<TradeResponse> postingService = service.getTradeResponse(hm);
-        postingService.enqueue(new Callback<TradeResponse>() {
-            @Override
-            public void onResponse(Response<TradeResponse> response) {
-                if (response.isSuccess()) {
-                    TradeResponse resp = response.body();
-                    if (resp.status.equals("success")) {
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                getTrxBlock("161");
-                            }
-                        }, 15000);
-                    } else {
-                        hideDialog();
-                        Toast.makeText(context, R.string.str_transaction_failed, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, getString(R.string.unable_to_trade_bAssets), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                hideDialog();
-                Toast.makeText(context, getString(R.string.unable_to_trade_bAssets), Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     private void decodeInvoiceData(String encoded) {

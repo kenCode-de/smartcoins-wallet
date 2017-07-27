@@ -52,24 +52,11 @@ public class Application extends android.app.Application implements de.bitshares
     public static long blockTime;
     public static String urlsSocketConnection[] =
             {
-// i think we need to set the 7 regions here via the user country selection. see job doc
-// example: public_nodes_asia, public_nodes_africa, public_nodes_europe, etc
-
-//                    "ws://api.devling.xyz:8088",
-                      // "ws://128.0.69.157:8091",
                       "wss://bitshares.openledger.info/ws",     // Openledger node
                       "wss://eu.openledger.info/ws",              // Openledger EU node
-                      //"ws://128.0.69.157:8091",                 // Henry node
-                      "wss://de.blockpay.ch/node",              // German node
-//                    "wss://bit.btsabc.org/ws",
-//                    "wss://bts.transwiser.com/ws",
-//                    "wss://freedom.bts123.cc:15138",
-//                    "wss://okbtc.org:8089/ws",
-//                    "wss://ratebts.com:8089",
-//                    "wss://webber.tech:8089/ws",
-//                    "wss://bitshares.dacplay.org:8089/ws",
-//                    "https://dele-puppy.com/ws",
-//                    "https://valen-tin.fr:8090"
+                      "ws://128.0.69.157:8090",                 // Henry node
+                      "ws://128.0.69.157:8091",                 // Henry node
+                      "wss://de.blockpay.ch/node"              // German node
             };
     public static String faucetUrl = "http://128.0.69.157:5000";
     public static String monitorAccountId;
