@@ -218,8 +218,8 @@ public class LiteCoinAccount extends GeneralCoinAccount{
     @Override
     public String toString() {
         return "BitcoinAccount{"
-                + "name=" + name
-                + ", idSeed=" + seed.getId()
+                + "name=" + mName
+                + ", idSeed=" + mSeed.getId()
                 + ", AccountNumber=" + accountNumber
                 + ", nextAddress=" + getNextRecieveAddress()
                 + ", param=" + param + '}';

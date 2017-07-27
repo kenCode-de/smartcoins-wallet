@@ -10,8 +10,7 @@ import java.util.Map;
 
 /**
  * Coin definition to be used to sign transaction. is used to override values for using the bitcoinj library
- */
-
+  */
 public abstract class CoinDefinitions {
 
     public long genesisBlockDifficultyTarget;
@@ -28,13 +27,10 @@ public abstract class CoinDefinitions {
     public long PacketMagic;
     public int subsidyDecreaseBlockCount;
     public int spendableCoinbaseDepth;
-
     public String[] dnsSeeds;
     public int[] addrSeeds;
     public HttpDiscovery.Details[] httpSeeds;
-
     public String satoshiKey;
-
 
     public void initCheckpoints(Map<Integer, Sha256Hash> checkpoints) {
 

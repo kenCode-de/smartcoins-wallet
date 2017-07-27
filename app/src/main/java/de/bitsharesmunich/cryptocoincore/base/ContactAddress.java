@@ -1,36 +1,63 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
 /**
- * Created by Henry Varona on 25/3/2017.
+ * Represents a contact addres of one of the coin different of the bitshares account.
  */
 public class ContactAddress {
-    Coin coin;
-    String address;
+    /**
+     * The coin type of the address
+     */
+    Coin mCoin;
+    /**
+     * The address of the contact
+     */
+    String mAddress;
 
+    /**
+     * Basic Constructor
+     *
+     * @param coin The coin type
+     * @param address The address
+     */
     public ContactAddress(Coin coin, String address){
-        this.coin = coin;
-        this.address = address;
+        this.mCoin = coin;
+        this.mAddress = address;
     }
 
+    /**
+     * Getter fo the coin type
+     */
     public Coin getCoin() {
-        return coin;
+        return mCoin;
     }
 
+    /**
+     * The setter fo the coin type
+     */
     public void setCoin(Coin coin) {
-        this.coin = coin;
+        this.mCoin = coin;
     }
 
+    /**
+     * Getter of the Address
+     */
     public String getAddress() {
-        return address;
+        return mAddress;
     }
 
+    /**
+     * Setter fo the Address
+     */
     public void setAddress(String address) {
-        this.address = address;
+        this.mAddress = address;
     }
 
+    /**
+     * This creates a duplicate of this object
+     * @return
+     */
     public ContactAddress clone(){
-        ContactAddress clon = new ContactAddress(this.coin,this.address);
-
+        ContactAddress clon = new ContactAddress(this.mCoin,this.mAddress);
         return clon;
     }
 }

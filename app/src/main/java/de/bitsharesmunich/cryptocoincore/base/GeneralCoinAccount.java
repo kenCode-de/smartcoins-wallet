@@ -54,7 +54,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     private void calculateAddresses() {
         //BIP44
-        DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(seed.getSeed());
+        DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(mSeed.getSeed());
         DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(masterKey, new ChildNumber(44, true));
         DeterministicKey coinKey = HDKeyDerivation.deriveChildKey(purposeKey, new ChildNumber(coinNumber, true));
         accountKey = HDKeyDerivation.deriveChildKey(coinKey, new ChildNumber(accountNumber, true));
@@ -159,8 +159,8 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
-        answer.addProperty("type", this.coin.name());
-        answer.addProperty("name", this.name);
+        answer.addProperty("type", this.mCoin.name());
+        answer.addProperty("name", this.mName);
         answer.addProperty("accountNumber", this.accountNumber);
         answer.addProperty("changeIndex", this.lastChangeIndex);
         answer.addProperty("externalIndex", this.lastExternalIndex);
@@ -235,7 +235,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
         GeneralCoinAccount that = (GeneralCoinAccount) o;
 
-        if (coin != that.coin) return false;
+        if (mCoin != that.mCoin) return false;
         if (accountNumber != that.accountNumber) return false;
         return accountKey != null ? accountKey.equals(that.accountKey) : that.accountKey == null;
 

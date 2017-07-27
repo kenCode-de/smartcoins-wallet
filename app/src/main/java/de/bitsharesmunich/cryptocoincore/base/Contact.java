@@ -139,7 +139,8 @@ public class Contact {
         int index = mAddresses.indexOf(contactAddress);
 
         if (index >= 0) {
-            if ((newCoin != contactAddress.getCoin()) || (!newAddress.equals(contactAddress.getAddress()))) {
+            if ((newCoin != contactAddress.getCoin())
+                    || (!newAddress.equals(contactAddress.getAddress()))) {
                 ContactAddress oldContactAddress = contactAddress.clone();
                 contactAddress.setAddress(newAddress);
                 contactAddress.setCoin(newCoin);
@@ -162,7 +163,9 @@ public class Contact {
         }
     }
 
-    private synchronized void _fireOnContactAddressModifiedEvent(ContactAddress oldContactAddress, ContactAddress newContactAddress, int index) {
+    private synchronized void _fireOnContactAddressModifiedEvent(ContactAddress oldContactAddress,
+                                                                 ContactAddress newContactAddress,
+                                                                 int index) {
         ContactEvent contactEvent = new ContactEvent( this, newContactAddress );
         contactEvent.setOldAddress(oldContactAddress);
         contactEvent.setIndex(index);
@@ -173,7 +176,8 @@ public class Contact {
         }
     }
 
-    private synchronized void _fireOnContactAddressRemovedEvent(ContactAddress contactAddress, int index) {
+    private synchronized void _fireOnContactAddressRemovedEvent(ContactAddress contactAddress,
+                                                                int index) {
         ContactEvent contactEvent = new ContactEvent( this, contactAddress );
         contactEvent.setIndex(index);
 
