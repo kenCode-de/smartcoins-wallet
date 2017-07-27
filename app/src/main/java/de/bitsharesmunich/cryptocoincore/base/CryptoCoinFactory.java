@@ -38,28 +38,32 @@ public class CryptoCoinFactory {
                 int accountNumber = accountObject.get("accountNumber").getAsInt();
                 int externalIndex = accountObject.get("externalIndex").getAsInt();
                 int changeIndex = accountObject.get("changeIndex").getAsInt();
-                return BitcoinManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+                return BitcoinManager.getInstance().getAccount(-1, name, seed, accountNumber,
+                        externalIndex, changeIndex);
             }
             case DASH:
             {
                 int accountNumber = accountObject.get("accountNumber").getAsInt();
                 int externalIndex = accountObject.get("externalIndex").getAsInt();
                 int changeIndex = accountObject.get("changeIndex").getAsInt();
-                return DashManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+                return DashManager.getInstance().getAccount(-1, name, seed, accountNumber,
+                        externalIndex, changeIndex);
             }
             case LITECOIN:
             {
                 int accountNumber = accountObject.get("accountNumber").getAsInt();
                 int externalIndex = accountObject.get("externalIndex").getAsInt();
                 int changeIndex = accountObject.get("changeIndex").getAsInt();
-                return LiteCoinManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+                return LiteCoinManager.getInstance().getAccount(-1, name, seed, accountNumber,
+                        externalIndex, changeIndex);
             }
             case DOGECOIN:
             {
                 int accountNumber = accountObject.get("accountNumber").getAsInt();
                 int externalIndex = accountObject.get("externalIndex").getAsInt();
                 int changeIndex = accountObject.get("changeIndex").getAsInt();
-                return DogeCoinManager.getInstance().getAccount(-1, name, seed, accountNumber, externalIndex, changeIndex);
+                return DogeCoinManager.getInstance().getAccount(-1, name, seed, accountNumber,
+                        externalIndex, changeIndex);
             }
         }
         return null;

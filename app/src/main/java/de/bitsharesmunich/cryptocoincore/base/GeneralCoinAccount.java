@@ -171,6 +171,10 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return addresses;
     }
 
+    /**
+     * Get the list of all the address, external and change addresses
+     * @return a list with all the addresses of this account
+     */
     public List<GeneralCoinAddress> getAddresses() {
         List<GeneralCoinAddress> addresses = new ArrayList();
         addresses.addAll(this.mChangeKeys.values());
@@ -178,6 +182,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return addresses;
     }
 
+    /**
+     * Charges the list of addresse of this account, this is used from the database
+     */
     public void loadAddresses(List<GeneralCoinAddress> addresses) {
         for (GeneralCoinAddress address : addresses) {
             if (address.isIsChange()) {
@@ -188,6 +195,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
     }
 
+    /**
+     * Saves the addresses of this account into the database
+     */
     public void saveAddresses(SCWallDatabase db) {
         for (GeneralCoinAddress externalAddress : this.mExternalKeys.values()) {
             if (externalAddress.getId() == -1) {
@@ -213,25 +223,54 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         db.updateGeneralCoinAccount(this);
     }
 
+    /**
+     * Getter of the account number
+     */
     public int getAccountNumber() {
         return this.mAccountNumber;
     }
 
+    /**
+     * Getter of the last external address used index
+     */
     public int getLastExternalIndex() {
         return this.mLastExternalIndex;
     }
 
+    /**
+     * Getter of the last change address used index
+     */
     public int getLastChangeIndex() {
         return this.mLastChangeIndex;
     }
 
+    /**
+     * Getter of the next receive address
+     * @return The next unused recieve address to be used
+     */
     public abstract String getNextRecieveAddress();
 
+    /**
+     * Getter of the next change address
+     * @return The next unused change address to be used
+     */
     public abstract String getNextChangeAddress();
 
+    /**
+     * Transfer coin amount to another address
+     *
+     * @param toAddress The destination address
+     * @param coin the coin
+     * @param amount the amount to send in satoshi
+     * @param memo the memo, this can be empty
+     * @param context the android context
+     */
     public abstract void send(String toAddress, Coin coin, long amount, String memo,
                               Context context);
 
+    /**
+     * Transform this account into json object to be saved in the bin file, or any other file
+     */
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
         answer.addProperty("type", this.mCoin.name());
@@ -242,6 +281,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return answer;
     }
 
+    /**
+     * Getter of the list of transactions
+     */
     public List<GeneralTransaction> getTransactions() {
         List<GeneralTransaction> transactions = new ArrayList();
         for (GeneralCoinAddress address : this.mExternalKeys.values()) {
@@ -272,20 +314,40 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
 
         Collections.sort(transactions, new TransactionsCustomComparator());
-
         return transactions;
     }
 
+    /**
+     * Get the address as string of an adrees index
+     * @param index The index of the address
+     * @param change if it is change addres or is a external address
+     * @return The Address as string
+     */
     public abstract String getAddressString(int index, boolean change);
 
+    /**
+     * Get the GeneralCoinAddress object of an address
+     * @param index the index of the address
+     * @param change if it is change addres or is a external address
+     * @return The GeneralCoinAddress of the address
+     */
     public abstract GeneralCoinAddress getAddress(int index, boolean change);
 
+    /**
+     * Return the network parameters, this is used for the bitcoiinj library
+     */
     public abstract NetworkParameters getNetworkParam();
 
+    /**
+     * Triggers the event onBalanceChange
+     */
     public void balanceChange() {
         this._fireOnChangeBalance(this.getBalance().get(0)); //TODO make it more genertic
     }
 
+    /**
+     * Compare the transaction, to order it for the list of transaction
+     */
     public class TransactionsCustomComparator implements Comparator<GeneralTransaction> {
         @Override
         public int compare(GeneralTransaction o1, GeneralTransaction o2) {
@@ -293,10 +355,16 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         }
     }
 
+    /**
+     * Add listener for the onChangebalance Event
+     */
     public void addChangeBalanceListener(ChangeBalanceListener listener) {
         this.mChangeBalanceListeners.add(listener);
     }
 
+    /**
+     * Fire the onChangeBalance event
+     */
     protected void _fireOnChangeBalance(Balance balance) {
         for (ChangeBalanceListener listener : this.mChangeBalanceListeners) {
             listener.balanceChange(balance);
@@ -324,7 +392,13 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
         return result;
     }
 
+    /**
+     * Updates a transaction
+     *
+     * @param transaction The transaction to update
+     */
     public void updateTransaction(GeneralTransaction transaction){
+        // Checks if it has an external address
         for (GeneralCoinAddress address : this.mExternalKeys.values()) {
             if(address.updateTransaction(transaction)){
                 return;
