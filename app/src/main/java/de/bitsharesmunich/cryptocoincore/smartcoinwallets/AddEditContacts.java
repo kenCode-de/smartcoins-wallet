@@ -75,18 +75,22 @@ import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinContactsFragment;
  *
  * Modified by Henry Varona on 3/20/2017
  */
+
+/**
+ * Shows a form for the user to add a new contact or modify one
+ *
+ */
 public class AddEditContacts extends BaseActivity implements IAccount, ContactListener {
-    Boolean add = false;
-    Boolean edit = false;
-    TinyDB tinyDB;
-    SCWallDatabase db;
+    Boolean add = false; /**< whether or not this activity is for adding a contact*/
+    Boolean edit = false; /**< whether or not this activity is for modifying a existing contact*/
+    //TinyDB tinyDB;
+    SCWallDatabase db; /**< Database handler for retrieving contact data*/
     String contactname = "";
     String emailtxt = "";
     String accountid = "";
     String note = "";
-    Coin coin;
 
-    Contact contact;
+    Contact contact; /**< The contact object*/
 
     boolean validReceiver = false;
 
@@ -132,9 +136,9 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
     ContactsDelegate contactsDelegate;
     webSocketCallHelper myWebSocketHelper;
 
-    List<Coin> coinsUsed = new ArrayList<Coin>(); //this will be used for enabling/disabling coins in spinner selector
+    List<Coin> coinsUsed = new ArrayList<Coin>(); /**< this will be used for enabling/disabling coins in spinner selector*/
 
-    ContactAddress lastContactAddressAdded; //this is used to prevent reinserting addressView when the user types a new address
+    ContactAddress lastContactAddressAdded; /**< this is used to prevent reinserting addressView when the user types a new address*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +150,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
 
 
         context = this;
-        tinyDB = new TinyDB(context);
+        //tinyDB = new TinyDB(context);
         db = new SCWallDatabase(context);
         Application.registerCallback(this);
 
@@ -162,11 +166,11 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         Intent intent = getIntent();
         Bundle res = intent.getExtras();
 
-        this.coin = Coin.BITSHARE;//default value
+        //this.coin = Coin.BITSHARE;//default value
 
         if (res != null) {
             if (res.getString(getString(R.string.coin)) != null){
-                this.coin = Coin.valueOf(res.getString(getString(R.string.coin)));
+                //this.coin = Coin.valueOf(res.getString(getString(R.string.coin)));
             }
             if (res.containsKey("activity")) {
                 if (res.getInt("activity") == 99999) {
@@ -265,6 +269,9 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         loadAddresses();
     }
 
+    /**
+     * Saves the contact to the database
+     */
     @OnClick(R.id.SaveContact)
     public void AddContacts() {
 
@@ -322,6 +329,12 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         finish();
     }
 
+    /**
+     * this event fires when the user changes an address view by typing
+     * in its text field or setting its coin type spinner
+     *
+     * @param contactAddressView the changing address view in this contact
+     */
     public void onContactAddressViewChange(View contactAddressView){
         int childIndex = accountsLayout.indexOfChild(contactAddressView);
         EditText accountName = (EditText) contactAddressView.findViewById(R.id.Accountname);
@@ -329,27 +342,39 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         Spinner addressCoinSpinner = (Spinner) contactAddressView.findViewById(R.id.address_coin_spinner);
         final Coin coinSelected = (Coin)addressCoinSpinner.getSelectedItem();
 
-        if (childIndex == accountsLayout.getChildCount()-1) {//If it is the last child
+        /**
+         * this means that the user is editing the last child,
+         * so is adding a new address
+         */
+        if (childIndex == accountsLayout.getChildCount()-1) {
             if ((coinSelected != null) && (!accountNameString.isEmpty()) && (!coinsUsed.contains(coinSelected))) {
+                //The new address is created
                 ContactAddress newContactAddress = new ContactAddress(coinSelected, accountName.getText().toString());
+                //storing lastContactAddressAdded will prevent that the address view gets duplicated by
+                //firing the event OnNewAddress
                 lastContactAddressAdded = newContactAddress;
+                //Adds the new address. This will fire the OnNewAddress event
                 this.contact.addAddress(newContactAddress);
+                //Adds the address coin to the used coins list. This prevent the user to create other address with the same coin
                 coinsUsed.add(coinSelected);
+                //validates the recently added address
                 validateAddress(newContactAddress, contactAddressView);
             }
-        } else { //then is an address already added to contact
+        } else { //then is an address already added to contact. The user is modifying an address
             ContactAddress contactAddress = this.contact.getAddressByIndex(childIndex);
 
+            //If the user sets an address to "" then it gets removed
             if (accountNameString.equals("")){
                 this.contact.removeAddress(contactAddress);
             } else {
-                //contactAddress.setAddress(accountNameString);
-                //contactAddress.setCoin(coinSelected);
+                //modify the address
                 this.contact.updateAddress(contactAddress,coinSelected, accountNameString);
+                //validates the new address string
                 validateAddress(contactAddress, contactAddressView);
             }
         }
 
+        //this will add a new address form for this contact, onyl when is needed
         addNewAccountForm();
     }
 
@@ -380,13 +405,21 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         });
     }
 
+    /**
+     * Adds a new address view for a contact address
+     *
+     * @param address the contact address to add as a view
+     */
     public void addNewAddressView(ContactAddress address){
+        //this method gets called on every address insertion on the contact addresses
+        //for avoding duplicated views, it verifies if the address was already added as a view
         if ((lastContactAddressAdded == null) || (this.lastContactAddressAdded != address)) {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View newAddress = (LinearLayout) layoutInflater.inflate(R.layout.general_contact_account, null);
             EditText addressEdit = (EditText) newAddress.findViewById(R.id.Accountname);
             Spinner coinSpinner = (Spinner) newAddress.findViewById(R.id.address_coin_spinner);
 
+            //initializes the coin spinner selection with data
             ArrayList<Coin> data = new ArrayList<Coin>();
 
             for (Coin coin : Coin.values()) {
@@ -396,6 +429,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
             final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this, R.layout.coin_spinner_row, data, coinsUsed, getResources());
             coinSpinner.setAdapter(coinAdapter);
 
+            //fills the form inputs with the address data
             if (address != null) {
                 addressEdit.setText(address.getAddress());
                 coinSpinner.setSelection(data.indexOf(address.getCoin()));
@@ -405,6 +439,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                 }
             }
 
+            //prepares the listener for a change in the coin selection of this address
             coinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -417,6 +452,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                 }
             });
 
+            //prepares the listener for a change in the edit text of this address
             addressEdit.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -434,6 +470,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
                 }
             });
 
+            //adds the new address view to the addresses layout of this contact
             accountsLayout.addView(newAddress);
         }
     }
@@ -469,22 +506,31 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         addNewAccountForm();
     }
 
-    //Adds a new form to add a new address only if it's needed
+    /**
+     * Adds a new form for the user to add a new address only if it's needed
+     */
     public void addNewAccountForm(){
         Boolean addNewView = false;
         final Activity activity = this;
+
+        //If there aren't any addresses in this contact, then the form must be added
         if (accountsLayout.getChildCount() == 0){
             addNewView = true;
         } else {
+            //Verifies that the last address view is the new address form and
+            //not an already added address
             LinearLayout lastAddress = (LinearLayout)accountsLayout.getChildAt(accountsLayout.getChildCount()-1);
             EditText addressEdit = (EditText)lastAddress.findViewById(R.id.Accountname);
             Spinner lastAddressCoinSpinner = (Spinner) lastAddress.findViewById(R.id.address_coin_spinner);
             final Coin lastCoinSelected = (Coin)lastAddressCoinSpinner.getSelectedItem();
 
+            //If the last address view doesn't have an empty edit text
+            //then a new address form is needed...
             if (!addressEdit.getText().toString().equals("")) {
                 addNewView = true;
             }
 
+            //Unless the coin is repeated in any other address view
             View nextLayout = null;
             Spinner addressCoinSpinner = null;
             for (int i=0;i<accountsLayout.getChildCount()-1;i++){
@@ -499,6 +545,7 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
 
         if (addNewView){
+            //adds the new address form. Null means that the new view won't have a real contact address
             addNewAddressView(null);
         }
     }
