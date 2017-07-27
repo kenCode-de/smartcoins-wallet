@@ -59,7 +59,7 @@ public class DogeCoinAccount extends GeneralCoinAccount{
         long confirmedAmount = 0;
         int lessConfirmed = -1;
         Date lastDate = null;
-        for (GeneralCoinAddress key : externalKeys.values()) {
+        for (GeneralCoinAddress key : mExternalKeys.values()) {
             unconfirmedAmount += key.getUnconfirmedBalance();
             confirmedAmount += key.getConfirmedBalance();
             int keyLessConf = key.getLessConfirmed();
@@ -71,7 +71,7 @@ public class DogeCoinAccount extends GeneralCoinAccount{
             }
         }
 
-        for (GeneralCoinAddress key : changeKeys.values()) {
+        for (GeneralCoinAddress key : mChangeKeys.values()) {
             unconfirmedAmount += key.getUnconfirmedBalance();
             confirmedAmount += key.getConfirmedBalance();
             int keyLessConf = key.getLessConfirmed();
@@ -96,34 +96,34 @@ public class DogeCoinAccount extends GeneralCoinAccount{
 
     @Override
     public String getNextRecieveAddress() {
-        if (!externalKeys.containsKey(lastExternalIndex)) {
-            externalKeys.put(lastExternalIndex, new GeneralCoinAddress(this, false, lastExternalIndex, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false))));
+        if (!mExternalKeys.containsKey(mLastExternalIndex)) {
+            mExternalKeys.put(mLastExternalIndex, new GeneralCoinAddress(this, false, mLastExternalIndex, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(mLastExternalIndex, false))));
         }
 
         //Finding the next unused address
-        while(externalKeys.get(lastExternalIndex).getTransactionInput().size()>0){
-            ++lastExternalIndex;
-            if (!externalKeys.containsKey(lastExternalIndex)) {
-                externalKeys.put(lastExternalIndex, new GeneralCoinAddress(this, false, lastExternalIndex, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(lastExternalIndex, false))));
+        while(mExternalKeys.get(mLastExternalIndex).getTransactionInput().size()>0){
+            ++mLastExternalIndex;
+            if (!mExternalKeys.containsKey(mLastExternalIndex)) {
+                mExternalKeys.put(mLastExternalIndex, new GeneralCoinAddress(this, false, mLastExternalIndex, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(mLastExternalIndex, false))));
             }
         }
-        return externalKeys.get(lastExternalIndex).getAddressString(param);
+        return mExternalKeys.get(mLastExternalIndex).getAddressString(param);
     }
 
     @Override
     public String getNextChangeAddress() {
-        if (!changeKeys.containsKey(lastChangeIndex)) {
-            changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
+        if (!mChangeKeys.containsKey(mLastChangeIndex)) {
+            mChangeKeys.put(mLastChangeIndex, new GeneralCoinAddress(this, true, mLastChangeIndex, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(mLastChangeIndex, false))));
         }
 
         //Finding the next unused address
-        while(changeKeys.get(lastChangeIndex).getTransactionInput().size()>0){
-            ++lastChangeIndex;
-            if (!changeKeys.containsKey(lastChangeIndex)) {
-                changeKeys.put(lastChangeIndex, new GeneralCoinAddress(this, true, lastChangeIndex, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(lastChangeIndex, false))));
+        while(mChangeKeys.get(mLastChangeIndex).getTransactionInput().size()>0){
+            ++mLastChangeIndex;
+            if (!mChangeKeys.containsKey(mLastChangeIndex)) {
+                mChangeKeys.put(mLastChangeIndex, new GeneralCoinAddress(this, true, mLastChangeIndex, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(mLastChangeIndex, false))));
             }
         }
-        return changeKeys.get(lastChangeIndex).getAddressString(param);
+        return mChangeKeys.get(mLastChangeIndex).getAddressString(param);
     }
 
     @Override
@@ -195,9 +195,9 @@ public class DogeCoinAccount extends GeneralCoinAccount{
                 TransactionOutPoint outPoint = new TransactionOutPoint(param, utxo.getIndex(), txHash);
                 if(utxo.getAddress().getKey().isPubKeyOnly()){
                     if(utxo.getAddress().isIsChange()){
-                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
+                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
                     }else{
-                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
+                        utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
                     }
                 }
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
@@ -217,7 +217,7 @@ public class DogeCoinAccount extends GeneralCoinAccount{
     }
 
     public Address getAddress() {
-        return externalKeys.get(lastExternalIndex).getAddress(param);
+        return mExternalKeys.get(mLastExternalIndex).getAddress(param);
     }
 
     @Override
@@ -225,7 +225,7 @@ public class DogeCoinAccount extends GeneralCoinAccount{
         return "BitcoinAccount{"
                 + "name=" + mName
                 + ", idSeed=" + mSeed.getId()
-                + ", AccountNumber=" + accountNumber
+                + ", AccountNumber=" + mAccountNumber
                 + ", nextAddress=" + getNextRecieveAddress()
                 + ", param=" + param + '}';
     }
@@ -233,15 +233,15 @@ public class DogeCoinAccount extends GeneralCoinAccount{
     @Override
     public String getAddressString(int index, boolean change) {
         if (change) {
-            if (!changeKeys.containsKey(index)) {
-                changeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+            if (!mChangeKeys.containsKey(index)) {
+                mChangeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(index, false))));
             }
-            return changeKeys.get(index).getAddressString(param);
+            return mChangeKeys.get(index).getAddressString(param);
         } else {
-            if (!externalKeys.containsKey(index)) {
-                externalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(index, false))));
+            if (!mExternalKeys.containsKey(index)) {
+                mExternalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(index, false))));
             }
-            return externalKeys.get(index).getAddressString(param);
+            return mExternalKeys.get(index).getAddressString(param);
         }
     }
 
@@ -253,15 +253,15 @@ public class DogeCoinAccount extends GeneralCoinAccount{
     @Override
     public GeneralCoinAddress getAddress(int index, boolean change) {
         if (change) {
-            if (!changeKeys.containsKey(index)) {
-                changeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(index, false))));
+            if (!mChangeKeys.containsKey(index)) {
+                mChangeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(index, false))));
             }
-            return changeKeys.get(index);
+            return mChangeKeys.get(index);
         } else {
-            if (!externalKeys.containsKey(index)) {
-                externalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(index, false))));
+            if (!mExternalKeys.containsKey(index)) {
+                mExternalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(index, false))));
             }
-            return externalKeys.get(index);
+            return mExternalKeys.get(index);
         }
     }
     

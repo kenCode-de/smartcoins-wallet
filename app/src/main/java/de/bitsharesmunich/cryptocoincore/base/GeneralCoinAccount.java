@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
-
+import de.bitshares_munich.database.SCWallDatabase;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -16,106 +16,180 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import de.bitshares_munich.database.SCWallDatabase;
 
 /**
- * Created by henry on 05/02/2017.
+ * This represents the account Bitcoin-type, this uses the BIP 44 to generate keys
  */
 
 public abstract class GeneralCoinAccount extends CryptoCoinAccount {
-    protected int accountNumber;
-    protected int lastExternalIndex;
-    protected int lastChangeIndex;
-    protected DeterministicKey accountKey;
-    protected DeterministicKey externalKey;
-    protected DeterministicKey changeKey;
-    protected HashMap<Integer, GeneralCoinAddress> externalKeys = new HashMap();
-    protected HashMap<Integer, GeneralCoinAddress> changeKeys = new HashMap();
-    protected List<ChangeBalanceListener> changeBalanceListeners = new ArrayList();
+    /**
+     * The account number of the BIP-44
+     */
+    protected int mAccountNumber;
+    /**
+     * The index of the last used external address
+     */
+    protected int mLastExternalIndex;
+    /**
+     * The indes of the last used change address
+     */
+    protected int mLastChangeIndex;
+    /**
+     * The account key, this is calculated as a cache
+     */
+    protected DeterministicKey mAccountKey;
+    /**
+     * With this key we can calculate the external addresses
+     */
+    protected DeterministicKey mExternalKey;
+    /**
+     * With this key we can calculate the change address
+     */
+    protected DeterministicKey mChangeKey;
+    /**
+     * The keys for externals addresses
+     */
+    protected HashMap<Integer, GeneralCoinAddress> mExternalKeys = new HashMap<Integer,GeneralCoinAddress>();
+    /**
+     * The keys for the change addresses
+     */
+    protected HashMap<Integer, GeneralCoinAddress> mChangeKeys = new HashMap<Integer,GeneralCoinAddress>();
+    /**
+     * The listener for the balance change of this account
+     */
+    protected List<ChangeBalanceListener> mChangeBalanceListeners = new ArrayList<ChangeBalanceListener>();
+    /**
+     * The list of transaction that involves this account
+     */
+    protected List<GeneralTransaction> mTransactions = new ArrayList<GeneralTransaction>();
 
-    protected List<GeneralTransaction> transactions = new ArrayList();
+    /**
+     * The Limit gap define in the BIP-44
+     */
+    private final static int sAddressGap = 20;
 
-    private final static int ADDRESS_GAP = 20;
+    /**
+     * is the coin number defined by the SLIP-44
+     */
+    private final int mCoinNumber;
 
-    private final int coinNumber;
-
-    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed,int coinNumber, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
+    /**
+     * Basic consturctor, calculates each basic key.
+     *
+     * @param id The id on the database
+     * @param name The name of this account, is only for tag
+     * @param coin The coin network type
+     * @param seed The account seed used to calculate the keys
+     * @param coinNumber The coin number
+     * @param accountNumber The account number
+     * @param lastExternalIndex The last used external address index
+     * @param lastChangeIndex The last used change address index
+     */
+    public GeneralCoinAccount(long id, String name, Coin coin, final AccountSeed seed,
+                              int coinNumber, int accountNumber, int lastExternalIndex,
+                              int lastChangeIndex) {
         super(id, name, coin, seed);
-        this.coinNumber = coinNumber;
-        this.accountNumber = accountNumber;
-        this.lastExternalIndex = lastExternalIndex;
-        this.lastChangeIndex = lastChangeIndex;
+        this.mCoinNumber = coinNumber;
+        this.mAccountNumber = accountNumber;
+        this.mLastExternalIndex = lastExternalIndex;
+        this.mLastChangeIndex = lastChangeIndex;
         calculateAddresses();
     }
 
+    /**
+     * Setter for the transactions of this account, this is used from the database
+     */
     public void setTransactions(List<GeneralTransaction> transactions) {
-        this.transactions = transactions;
+        this.mTransactions = transactions;
     }
 
+    /**
+     * Calculates each basic key, not the addresses keys using the BIP-44
+     */
     private void calculateAddresses() {
-        //BIP44
-        DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(mSeed.getSeed());
-        DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(masterKey, new ChildNumber(44, true));
-        DeterministicKey coinKey = HDKeyDerivation.deriveChildKey(purposeKey, new ChildNumber(coinNumber, true));
-        accountKey = HDKeyDerivation.deriveChildKey(coinKey, new ChildNumber(accountNumber, true));
-        externalKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(0, false));
-        changeKey = HDKeyDerivation.deriveChildKey(accountKey, new ChildNumber(1, false));
+        DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(this.mSeed.getSeed());
+        DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(masterKey,
+                new ChildNumber(44, true));
+        DeterministicKey coinKey = HDKeyDerivation.deriveChildKey(purposeKey,
+                new ChildNumber(this.mCoinNumber, true));
+        this.mAccountKey = HDKeyDerivation.deriveChildKey(coinKey,
+                new ChildNumber(this.mAccountNumber, true));
+        this.mExternalKey = HDKeyDerivation.deriveChildKey(this.mAccountKey,
+                new ChildNumber(0, false));
+        this.mChangeKey = HDKeyDerivation.deriveChildKey(this.mAccountKey,
+                new ChildNumber(1, false));
     }
 
+    /**
+     * Calculate the external address keys until the index + gap
+     */
     public void calculateGapExternal() {
-        if (externalKey == null) {
+        if (this.mExternalKey == null) {
             calculateAddresses();
         }
-        for (int i = 0; i < lastExternalIndex + ADDRESS_GAP; i++) {
-            if (!externalKeys.containsKey(i)) {
-                externalKeys.put(i, new GeneralCoinAddress(this, false, i, HDKeyDerivation.deriveChildKey(externalKey, new ChildNumber(i, false))));
+        for (int i = 0; i < this.mLastExternalIndex + this.sAddressGap; i++) {
+            if (!this.mExternalKeys.containsKey(i)) {
+                this.mExternalKeys.put(i, new GeneralCoinAddress(this, false, i,
+                        HDKeyDerivation.deriveChildKey(this.mExternalKey,
+                                new ChildNumber(i, false))));
             }
         }
     }
 
+    /**
+     * Calculate the change address keys until the index + gap
+     */
     public void calculateGapChange() {
-        if (changeKey == null) {
+        if (this.mChangeKey == null) {
             calculateAddresses();
         }
-        for (int i = 0; i < lastChangeIndex + ADDRESS_GAP; i++) {
-            if (!changeKeys.containsKey(i)) {
-                changeKeys.put(i, new GeneralCoinAddress(this, true, i, HDKeyDerivation.deriveChildKey(changeKey, new ChildNumber(i, false))));
+        for (int i = 0; i < this.mLastChangeIndex + this.sAddressGap; i++) {
+            if (!this.mChangeKeys.containsKey(i)) {
+                this.mChangeKeys.put(i, new GeneralCoinAddress(this, true, i,
+                        HDKeyDerivation.deriveChildKey(this.mChangeKey,
+                                new ChildNumber(i, false))));
             }
         }
     }
 
+    /**
+     * Generates external and change address until the gap. then it saves it on the db for cache
+     * @param db The database to sabe the calculated address
+     * @return The list of the addresses avaible, this includes the address previously used
+     */
     public List<GeneralCoinAddress> getAddresses(SCWallDatabase db) {
+        //TODO check for used address
         this.getNextRecieveAddress();
         this.getNextChangeAddress();
-        calculateGapExternal();
-        calculateGapChange();
+        this.calculateGapExternal();
+        this.calculateGapChange();
 
         List<GeneralCoinAddress> addresses = new ArrayList();
-        addresses.addAll(changeKeys.values());
-        addresses.addAll(externalKeys.values());
+        addresses.addAll(this.mChangeKeys.values());
+        addresses.addAll(this.mExternalKeys.values());
         this.saveAddresses(db);
         return addresses;
     }
 
     public List<GeneralCoinAddress> getAddresses() {
         List<GeneralCoinAddress> addresses = new ArrayList();
-        addresses.addAll(changeKeys.values());
-        addresses.addAll(externalKeys.values());
+        addresses.addAll(this.mChangeKeys.values());
+        addresses.addAll(this.mExternalKeys.values());
         return addresses;
     }
 
     public void loadAddresses(List<GeneralCoinAddress> addresses) {
         for (GeneralCoinAddress address : addresses) {
             if (address.isIsChange()) {
-                changeKeys.put(address.getIndex(), address);
+                this.mChangeKeys.put(address.getIndex(), address);
             } else {
-                externalKeys.put(address.getIndex(), address);
+                this.mExternalKeys.put(address.getIndex(), address);
             }
         }
     }
 
     public void saveAddresses(SCWallDatabase db) {
-        for (GeneralCoinAddress externalAddress : externalKeys.values()) {
+        for (GeneralCoinAddress externalAddress : this.mExternalKeys.values()) {
             if (externalAddress.getId() == -1) {
                 long id = db.putGeneralCoinAddress(externalAddress);
                 if(id != -1)
@@ -125,7 +199,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
             }
         }
 
-        for (GeneralCoinAddress changeAddress : changeKeys.values()) {
+        for (GeneralCoinAddress changeAddress : this.mChangeKeys.values()) {
             if (changeAddress.getId() == -1) {
                 Log.i("SCW","change address id " + changeAddress.getId());
                 long id = db.putGeneralCoinAddress(changeAddress);
@@ -140,36 +214,37 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     }
 
     public int getAccountNumber() {
-        return accountNumber;
+        return this.mAccountNumber;
     }
 
     public int getLastExternalIndex() {
-        return lastExternalIndex;
+        return this.mLastExternalIndex;
     }
 
     public int getLastChangeIndex() {
-        return lastChangeIndex;
+        return this.mLastChangeIndex;
     }
 
     public abstract String getNextRecieveAddress();
 
     public abstract String getNextChangeAddress();
 
-    public abstract void send(String toAddress, Coin coin, long amount, String memo, Context context);
+    public abstract void send(String toAddress, Coin coin, long amount, String memo,
+                              Context context);
 
     public JsonObject toJson() {
         JsonObject answer = new JsonObject();
         answer.addProperty("type", this.mCoin.name());
         answer.addProperty("name", this.mName);
-        answer.addProperty("accountNumber", this.accountNumber);
-        answer.addProperty("changeIndex", this.lastChangeIndex);
-        answer.addProperty("externalIndex", this.lastExternalIndex);
+        answer.addProperty("accountNumber", this.mAccountNumber);
+        answer.addProperty("changeIndex", this.mLastChangeIndex);
+        answer.addProperty("externalIndex", this.mLastExternalIndex);
         return answer;
     }
 
     public List<GeneralTransaction> getTransactions() {
         List<GeneralTransaction> transactions = new ArrayList();
-        for (GeneralCoinAddress address : externalKeys.values()) {
+        for (GeneralCoinAddress address : this.mExternalKeys.values()) {
             for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
@@ -182,7 +257,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
             }
         }
 
-        for (GeneralCoinAddress address : changeKeys.values()) {
+        for (GeneralCoinAddress address : this.mChangeKeys.values()) {
             for (GTxIO giotx : address.getTransactionInput()) {
                 if (!transactions.contains(giotx.getTransaction())) {
                     transactions.add(giotx.getTransaction());
@@ -219,11 +294,11 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
     }
 
     public void addChangeBalanceListener(ChangeBalanceListener listener) {
-        this.changeBalanceListeners.add(listener);
+        this.mChangeBalanceListeners.add(listener);
     }
 
     protected void _fireOnChangeBalance(Balance balance) {
-        for (ChangeBalanceListener listener : this.changeBalanceListeners) {
+        for (ChangeBalanceListener listener : this.mChangeBalanceListeners) {
             listener.balanceChange(balance);
         }
     }
@@ -235,27 +310,28 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
         GeneralCoinAccount that = (GeneralCoinAccount) o;
 
-        if (mCoin != that.mCoin) return false;
-        if (accountNumber != that.accountNumber) return false;
-        return accountKey != null ? accountKey.equals(that.accountKey) : that.accountKey == null;
+        if (this.mCoin != that.mCoin) return false;
+        if (this.mAccountNumber != that.mAccountNumber) return false;
+        return this.mAccountKey != null ? this.mAccountKey.equals(that.mAccountKey)
+                : that.mAccountKey == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = accountNumber;
-        result = 31 * result + (accountKey != null ? accountKey.hashCode() : 0);
+        int result = this.mAccountNumber;
+        result = 31 * result + (this.mAccountKey != null ? this.mAccountKey.hashCode() : 0);
         return result;
     }
 
     public void updateTransaction(GeneralTransaction transaction){
-        for (GeneralCoinAddress address : externalKeys.values()) {
+        for (GeneralCoinAddress address : this.mExternalKeys.values()) {
             if(address.updateTransaction(transaction)){
                 return;
             }
         }
 
-        for (GeneralCoinAddress address : changeKeys.values()) {
+        for (GeneralCoinAddress address : this.mChangeKeys.values()) {
             if(address.updateTransaction(transaction)){
                 return;
             }
