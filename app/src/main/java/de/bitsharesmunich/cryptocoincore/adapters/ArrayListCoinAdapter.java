@@ -20,18 +20,25 @@ import android.widget.TextView;
 import de.bitshares_munich.smartcoinswallet.R;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 
+/**
+ * Create a selection with all the coins available
+ *
+ * It is used when the user is asked to select a type of coin for a
+ * specific purpose (like the creation of a new coin account)
+ */
 public class ArrayListCoinAdapter extends ArrayAdapter<String>{
 
-    private Activity activity;
-    private ArrayList data;
-    private List<Coin> coinsUsed;
+    private Activity activity; /**< the activity holding this adapter*/
+    private ArrayList data; /**< an array of Coins to be listed for selection*/
+    private List<Coin> coinsUsed; /**< a list of coins to be disable in the list*/
     public Resources res;
     LayoutInflater inflater;
-    public boolean showSelected;
+    public boolean showSelected; /**< Whether to show or not the selected item in the list*/
 
     public ArrayListCoinAdapter(Activity activity, int textViewResourceId, ArrayList objects, List<Coin> coinsUsed, Resources resLocal){
         super(activity, textViewResourceId, objects);
 
+        //This is for preventing the list to select a valid item in the initialization
         objects.add(0,null);
 
         this.activity = activity;

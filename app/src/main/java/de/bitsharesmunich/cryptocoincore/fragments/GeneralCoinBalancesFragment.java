@@ -175,7 +175,10 @@ import de.codecrafters.tableview.toolkit.SortStateViewProviders;
 
 
 /**
- * Created by qasim on 5/10/16.
+ * Shows the balances of all the user coin accounts and all the transactions made in this accounts.
+ *
+ * There are two types of accounts: Bitshares accounts and Bitcoin alike accounts.
+ * Must functions in this fragment take different actions for these two.
  */
 public class GeneralCoinBalancesFragment extends Fragment implements AssetDelegate, ISound, PdfGeneratorListener, BalanceItemsListener, ChangeSettingListener {
     public final String TAG = this.getClass().getName();
@@ -257,7 +260,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
     Boolean sentCallForTransactions = false;
 
-    BalancesItems balancesItems;
+    BalancesItems balancesItems; /**< the data of every coin balance. Every operation (creation, modification or removal)
+                                   *< with the balances must be with this object*/
 
     Locale locale;
     NumberFormat format;
@@ -271,6 +275,15 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         // Required empty public constructor
     }
 
+    /**
+     * Creates a new instance of this fragment specifying the coin type of the balances to show.
+     *
+     * NOTE: This method is still used by the ViewPagerAdapter to create an instance of this fragment, but
+     * the coin takes no effect since this fragment shows the balances of all the coin types
+     *
+     * @param coin the coin to associate with the balances in this fragment
+     * @return a instance of this fragment
+     */
     public static GeneralCoinBalancesFragment newInstance(Coin coin) {
         GeneralCoinBalancesFragment generalCoinBalancesFragment = new GeneralCoinBalancesFragment();
 
@@ -281,38 +294,15 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         return generalCoinBalancesFragment;
     }
 
-    //Cache for equivalent component BTS to EUR
-    double BTSCurrencyPriceCache;
-    Date BTSCurrencyPriceCacheDate;
+    double BTSCurrencyPriceCache; /**< cache for equivalent component BTS to EUR */
+    Date BTSCurrencyPriceCacheDate; /**< datetime of the BTS to EUR cache*/
 
 
     webSocketCallHelper myWebSocketHelper;
 
-    /**
-     * SortableTableView displaying the list of transactions.
-     */
-    //private SortableTableView<HistoricalTransferEntry> transfersView;
-
-    /**
-     * SortableTableView displaying the list of transactions of other coins different from BITSHARES.
-     */
-    private SortableTableView<TransactionLog> cryptoCoinTransfersView;
-
-    /**
-     * Adapter for the transaction list.
-     */
-    private TransfersTableAdapter tableAdapter;
-
-    /**
-     * Adapter for the transaction list of other coins different from BITSHARES.
-     */
-    private CryptoCoinTransfersTableAdapter cryptoCoinTableAdapter;
-
-
-    /**
-     * Counter used to keep track of how many times the 'load more' button was pressed
-     */
-    private int loadMoreCounter = 1;
+    private SortableTableView<TransactionLog> cryptoCoinTransfersView; /**< SortableTableView displaying the list of transactions.*/
+    private CryptoCoinTransfersTableAdapter cryptoCoinTableAdapter; /**< Adapter for the transaction list.*/
+    private int loadMoreCounter = 1; /**< Counter used to keep track of how many times the 'load more' button was pressed*/
 
     /* AsyncTask used to process the PDF generation job in the background */
     private PdfGeneratorTask pdfGeneratorTask;
@@ -352,8 +342,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     /* List of block numbers with missing date information in the database */
     private LinkedList<Long> missingTimes;
 
-    /* Smarcoins Wallet database instance */
-    private SCWallDatabase database;
+    private SCWallDatabase database; /**< Database instance that manages smartcoin wallets and
+                                       *< bitcoin alike accounts*/
 
     /* Websocket threads */
     private WebsocketWorkerThread transferHistoryThread;
@@ -365,11 +355,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     private final static List<String> SMARTCOINS = Arrays.asList(new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
             "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"});
 
-    private Coin coin;
+    private Coin coin; /**< The coin parameters passed in the instanciation of this fragment*/
 
 
-    private int lastTransferTableColumnIndexPressed = -1;
-    private boolean lastTransferTableColumnIndexSortUp = true;
+    private int lastTransferTableColumnIndexPressed = -1; /**< The index of the last column in the transaction list pressed by the user*/
+    private boolean lastTransferTableColumnIndexSortUp = true; /**< Indicates whether the last column pressed must be in ascending order*/
 
     private WitnessResponseListener mHistoricalMarketSecondStepListener = new WitnessResponseListener() {
         @Override
@@ -1389,7 +1379,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
             }
         } catch (Exception e) {
-
+            Log.e("","Error loading bitshares balance");
         }
 
         //Loads the balances from the rest of the coins (Bitcoin, Litecoin, Dash, etc)
@@ -1401,16 +1391,28 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
+    /**
+     * Initialize the balance of an existing account
+     *
+     * @param account the account from which the balance will be initialized     *
+     */
     public void loadGeneralCoinAccount(final GeneralCoinAccount account){
         SCWallDatabase db = new SCWallDatabase(getContext());
+        //Getting the addresses from the account (The already used and the next 20 available).
         List<GeneralCoinAddress> addresses = account.getAddresses(db);
 
+        //The balance is created with the cache info from the database
         getBalanceItems().addBalancesItems(account.getCoin()).addDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + account.getBalance().get(0).getConfirmedAmount(), account.getBalance().get(0).getLessConfirmed(), true);
+        Log.i("test", account.getCoin().name()+" account balance: " + account.getBalance().get(0).getAmmount());
+
+        //this listener will refresh the data of the balance item when the balance of the account has changed
         account.addChangeBalanceListener(new ChangeBalanceListener() {
             @Override
             public void balanceChange(Balance balance) {
                 if (account != null) {
+                    //Refresh the balance item data
                     getBalanceItems().getBalancesItems(account.getCoin()).addOrUpdateDetailedBalanceItem(account.getCoin().getLabel(), "" + account.getCoin().getPrecision(), "" + balance.getConfirmedAmount(), balance.getLessConfirmed());
+                    //Refresh the transfers history
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             updateTableView(false);
@@ -1420,24 +1422,24 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
         });
 
+        //loads the settings from the specific account and sets a listener in case the user changes them
         GeneralCoinSettings accountSettings = GeneralCoinFactory.getSettings(getContext(), account.getCoin());
-
         accountSettings.addChangeSettingListener(this);
 
-
-        Log.i("test", "account balance " + account.getBalance().get(0).getAmmount());
+        //adds the coin of the account in the used list. This is for when the user wants to open a new coin account,
+        //so the list won't show coins of accounts already open
         this.coinsUsed.add(account.getCoin());
 
-        //Start the AccountActivityWatcher to get new transaction from the server (Real Time)
+        //creates the watcher to get new transaction for every address of this account from the server (Real Time)
         AccountActivityWatcher watcher = new AccountActivityWatcher(account, getContext());
-
         for (GeneralCoinAddress address : addresses) {
-            Log.i("test", "address : " + address.getAddressString(account.getNetworkParam()));
             watcher.addAddress(address.getAddressString(account.getNetworkParam()));
         }
+        //and starts the watcher
         watcher.connect();
 
-        //Start the GetTransactionByAddress to get the transaction previously obtained by the server
+        //Once the watcher is active, new transactions will be notified.
+        //Now the GetTransactionByAddress is started to get the old transaction obtained by the server
         GetTransactionByAddress getTransactionByAddress = new GetTransactionByAddress(account, getContext());
         for (GeneralCoinAddress address : addresses) {
             getTransactionByAddress.addAddress(address);
@@ -1483,9 +1485,15 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         BalanceAssetsUpdate(Coin.BITSHARE, sym, pre, am, false);
     }
 
+    /**
+     * Singleton for BalancesItems.
+     *
+     * @return the balances items for this fragment
+     */
     public BalancesItems getBalanceItems(){
         if (this.balancesItems == null){
             this.balancesItems = new BalancesItems();
+            //Listen to every change in the balances items, so the fragment can change the views respectively
             this.balancesItems.addListener(this);
         }
 
@@ -1496,6 +1504,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
         int count = 0;
 
+        //if there's no balances items then the fragment view has not been created yet
         if (this.balancesItems != null) {
             BalanceItems bitshareBalanceItems = this.balancesItems.getBalancesItems(Coin.BITSHARE);
         if (bitshareBalanceItems != null)
@@ -1666,9 +1675,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
 
         Date now = new Date();
+        //If the BTS to EUR cache is valid, then starts the calculation of the equivalent component right away
         if ((BTSCurrencyPriceCacheDate != null) && (now.getTime() - BTSCurrencyPriceCacheDate.getTime() <= 300000)) { //if the cache date of the asset is too old, 300000 = 5 minutes
             glo.start();
-        } else {
+        } else { //If not, then the value of BTS to EUR must be calculated first
             WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getObjectId(), faitCurrency.getObjectId(), 20, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
@@ -1721,6 +1731,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
+    //Links the "Add Account" button click to led the user to add new coin accounts
     @OnClick(R.id.addCoinAccountButton)
     public void onAddCoinAccountButton() {
         this.showNewCoinAccountDialog();
@@ -1739,6 +1750,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         return "";
     }
 
+    /**
+     * Show a dialog to led the user decide the new coin account to create
+     */
     public void showNewCoinAccountDialog(){
         final Dialog dialogNewCoin = new Dialog(getContext(), R.style.stylishDialog);
         dialogNewCoin.setTitle(getString(R.string.add_new_coin_account_dialog));
@@ -1753,6 +1767,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             data.add(coin);
         }
 
+        //The adapter is initialized with all the coins and disabling those that are already used (used - the coin account is already created)
         final ArrayListCoinAdapter coinAdapter = new ArrayListCoinAdapter(this.getActivity(),R.layout.coin_spinner_row,data,coinsUsed,getResources());
         coinSpinner.setAdapter(coinAdapter);
 
@@ -1760,10 +1775,12 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             @Override
             public void onClick(View view) {
                 final SCWallDatabase db = new SCWallDatabase(getContext());
-                List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
-
                 final Coin coinSelected = (Coin)coinSpinner.getSelectedItem();
 
+                //gets the bip39 seed already created in the database
+                List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+
+                //if there's no seed, then it must be created
                 if (seeds.size() == 0) {
                     final Dialog dialog = new Dialog(getContext(), R.style.stylishDialog);
                     dialog.setTitle(getString(R.string.backup_master_seed));
@@ -1771,12 +1788,16 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                     final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
                     final AccountSeed newSeed;
                     try {
+                        //using the bip39 dictionary, the new seed is created along with a new mnemonic
                         BufferedReader reader = new BufferedReader(new InputStreamReader(getContext().getAssets().open("bip39dict.txt"), "UTF-8"));
                         String dictionary = reader.readLine();
                         newSeed = new BIP39(dictionary.split(","));
-
                         String masterSeedWords = newSeed.getMnemonicCodeString().toUpperCase();
+
+                        //the bitshares brainkey is obtained also
                         String brainKey = getBrainKey();
+
+                        //both mnemonic and brain key are concatenated
                         if (masterSeedWords.isEmpty() || brainKey.isEmpty()) {
                             Toast.makeText(getContext(), getResources().getString(R.string.unable_to_create_master_seed), Toast.LENGTH_LONG).show();
                             return;
@@ -1796,8 +1817,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                         btnCopy.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                //if the user agreeds and saves the new set of words, then the seed and the new account are created and stored in the db
                                 db.putSeed(newSeed);
-
                                 GeneralCoinAccount generalAccount = GeneralCoinFactory.getGeneralCoinAccount(coinSelected, newSeed, coinSelected.getLabel()+" Account");
                                 db.putGeneralCoinAccount(generalAccount);
 
@@ -1807,6 +1828,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                                 clipboard.setPrimaryClip(clip);
                                 dialog.cancel();
                                 dialogNewCoin.cancel();
+
+                                //the account is loaded in the fragment
                                 loadGeneralCoinAccount(generalAccount);
                             }
                         });
@@ -1817,9 +1840,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
                     }
                 } else {
+                    //if there is a seed then it is used to create the new account and save it into the database
                     GeneralCoinAccount generalAccount = GeneralCoinFactory.getGeneralCoinAccount(coinSelected, seeds.get(0), coinSelected.getLabel()+" Account");
                     db.putGeneralCoinAccount(generalAccount);
                     dialogNewCoin.cancel();
+                    //the account is loaded in the fragment
                     loadGeneralCoinAccount(generalAccount);
                 }
             }
@@ -1829,6 +1854,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         dialogNewCoin.show();
     }
 
+    /**
+     * This event gets fired when a new balance item is added to BalanceItems
+     *
+     * @param event event data with the new item added
+     */
     public void onNewBalanceItem(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
         final boolean isInitialLoad = event.isInitialLoad();
@@ -1842,6 +1872,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
     }
 
+    /**
+     * This event gets fired when a balance item is removed from BalanceItems
+     *
+     * @param event event data with the item removed
+     */
     public void onBalanceItemRemoved(BalanceItemsEvent event){
         final BalanceItem item = event.getBalanceItem();
         final int index = event.getIndex();
@@ -1856,6 +1891,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
     }
 
+    /**
+     * This event gets fired when all balances items from a specific coin are removed from BalanceItems
+     *
+     * @param coin the coin from which the balances were removed
+     */
     @Override
     public void onBalanceItemsRemoved(final Coin coin) {
         getActivity().runOnUiThread(new Runnable() {
@@ -1868,6 +1908,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
     }
 
+    /**
+     * This event gets fired when a balance item is modified in BalanceItems
+     *
+     * @param event event data with the item modified
+     */
     public void onBalanceItemUpdated(BalanceItemsEvent event){
         final BalanceItem oldItem = event.getOldItem();
         final BalanceItem newItem = event.getBalanceItem();
@@ -1883,6 +1928,11 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         });
     }
 
+    /**
+     * Removes a balance item view from a specific coin from the fragment
+     *
+     * @param coin the coin from which the balance item view will be removed
+     */
     public void removeBalanceItemsView(Coin coin){
         LinearLayout balanceGroup = null;
 
@@ -1899,6 +1949,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
+    /**
+     * Removes a balance item view from the fragment
+     *
+     * @param item the balance item removed from BalanceItems
+     * @param index the index where the balance item was in BalanceItems
+     * @param newSize the new size of BalanceItems after the removal
+     */
     public void removeBalanceItemView(BalanceItem item, int index, int newSize){
         LinearLayout balanceGroup = null;
 
@@ -1910,6 +1967,8 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
         }
 
+        //the balance items view are distributed in two columns
+        //if one item is removed, the next items must be relocated
         if (index < balanceGroup.getChildCount()*2){
             TextView symbolTextViewToOccupy;
             TextView ammountTextViewToOccupy;
@@ -1951,6 +2010,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 faitTextViewToMoveOut.setVisibility(View.INVISIBLE);
             }
 
+            //the new size tells if the last row of views must be eliminated
             if (newSize % 2 == 0){
                 View rowView = balanceGroup.getChildAt(balanceGroup.getChildCount()-1);
                 balanceGroup.removeView(rowView);
@@ -1962,6 +2022,12 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
+    /**
+     * Adds a new balance item view to the fragment
+     *
+     * @param item the new item to add as a view
+     * @param initialLoad is true if the view has not been initialized, false if it was already initialized
+     */
     public void addNewBalanceView(final BalanceItem item, boolean initialLoad){
         GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(getContext(),item.getCoin());
         GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
@@ -1976,6 +2042,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             }
         }
 
+        //If the balance group view for the new balance item coin doesn't exists, then it's created
         if (balanceGroup == null){
             LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             balanceGroup = (LinearLayout)layoutInflater.inflate(R.layout.items_balances_box, null);
@@ -1985,6 +2052,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
             ImageView coinSendButton = (ImageView)balanceGroup.findViewById(R.id.coin_send_btn);
             ImageView coinReceiveButton = (ImageView)balanceGroup.findViewById(R.id.coin_receive_btn);
 
+            //Adds the button "Send coins" to this specific coin group view
             coinSendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1992,6 +2060,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
             });
 
+            //Adds the button "Receive coins" to this specific coin group view
             coinReceiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -2013,14 +2082,15 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         View lastChild = null;
         boolean theresNoChild = true;
 
-        if (balanceGroup.getChildCount() > 0) {//if there's items in balances
-            //we take the right side of the last child of the balances
+        //if there are items in the balance group view
+        //we take the right side of the last child of the balances
+        if (balanceGroup.getChildCount() > 0) {
             lastChild = balanceGroup.getChildAt(balanceGroup.getChildCount() - 1);
             textView2 = (TextView) lastChild.findViewById(R.id.symbol_child_two);
             theresNoChild = false;
         }
 
-        //if there's no items in the balances or the right side of the last child
+        //if there are no items in the balances or the right side of the last child
         //is already occupied, then we have to create a new View and occupy the left side
         if (theresNoChild || !textView2.getText().equals("")) {
             LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -2046,10 +2116,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
         String finalSymbol = "";
         if ((item.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(item.getSymbol()))) {
+            //adding "bit" if the coin group is Bitshares and the item is a Smartcoin
             finalSymbol = "bit" + item.getSymbol();
         } else {
             finalSymbol = item.getSymbol();
 
+            //this adds "m" or "μ" to the coin label according to the user settings
+            //for the precision of this specific coin
             if (precisionSetting != null) {
                 switch (precisionSetting.getValue()) {
                     case "5":
@@ -2067,6 +2140,9 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         if (precisionSetting != null){
             precision = precisionSetting.getValue();
 
+            //Adjusting bitshares precision to be equal to the user setting.
+            //When the user selects precision "8", due to bitshares having already a precision of "3",
+            //this precision must be reduced to 3 less, ergo "5"
             if (item.getCoin() == Coin.BITSHARE){
                 precision = ""+(Integer.parseInt(precision)-3);
             }
@@ -2104,7 +2180,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
         }
 
-        //if it's not the initial load, then is a balance received, then we must show an animation and sound
+        //if it's not the initial load, then is a balance received, so it must show an animation and sound
         if (!initialLoad){
             Log.d("Balances Update", "Balance received");
 
@@ -2150,7 +2226,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         }
     }
 
-
+    /**
+     * Modifies a balance item view in the fragment
+     *
+     * @param oldItem a copy of how the balance item was
+     * @param newItem the balance item changed
+     * @param index the index of the balance item that must be changed
+     */
     public void updateBalanceItem(final BalanceItem oldItem, final BalanceItem newItem, final int index){
         GeneralCoinSettings coinSettings = GeneralCoinFactory.getSettings(getContext(),newItem.getCoin());
         GeneralCoinSettings.GeneralCoinSetting precisionSetting = coinSettings.getSetting("precision");
@@ -2190,10 +2272,13 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
 
             String finalSymbol = "";
             if ((newItem.getCoin() == Coin.BITSHARE) && (SMARTCOINS.contains(newItem.getSymbol()))) {
+                //adding "bit" if the coin group is Bitshares and the item is a Smartcoin
                 finalSymbol = "bit" + newItem.getSymbol();
             } else {
                 finalSymbol = newItem.getSymbol();
 
+                //this adds "m" or "μ" to the coin label according to the user settings
+                //for the precision of this specific coin
                 if (precisionSetting != null) {
                     switch (precisionSetting.getValue()) {
                         case "5":
@@ -2226,9 +2311,12 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 precision = newItem.getPrecision();
             }
 
-            if (oldAmmount == newAmmount){ //This activates when a coin settings are set by the user
+            //This activates when a coin settings are set by the user
+            //because even when the oldAmount is equal to the newAmount
+            //the precisions are not
+            if (oldAmmount == newAmmount){
                 animateText(ammountTextView, convertLocalizeStringToFloat(ammountTextView.getText().toString()), convertLocalizeStringToFloat(returnFromPower(precision, newItem.getAmmount())));
-            } else if (oldAmmount > newAmmount) {
+            } else if (oldAmmount > newAmmount) { //loosing money (because the user send some)
                 ammountTextView.setTypeface(ammountTextView.getTypeface(), Typeface.BOLD);
                 ammountTextView.setTextColor(getResources().getColor(R.color.red));
 
@@ -2265,7 +2353,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
 
                 Log.d("Balances Update", "Animation initiated");
-            } else if (oldAmmount < newAmmount) {
+            } else if (oldAmmount < newAmmount) { //gaining money
 
                 Log.d("Balances Update", "Balance received");
 
@@ -2338,6 +2426,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 }
             }
 
+            //The confirmations labels are updated here when confirmations are still needed
             if ((newItem.getConfirmations() != -1) && (newItem.getConfirmations() < newItem.getCoin().getConfirmationsNeeded())) {
                 int percentageDone = (newItem.getConfirmations() + 1) * 100 / newItem.getCoin().getConfirmationsNeeded();
                 int confirmationColor = 0;
@@ -2353,7 +2442,7 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
                 faitTextView.setTextColor(confirmationColor);
                 faitTextView.setText(newItem.getConfirmations() + " of " + newItem.getCoin().getConfirmationsNeeded() + " conf");
 
-            } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//Now, we update the fait (EquivalentComponent)
+            } else if ((newAmmount != 0) && (!newItem.getFait().equals(""))) {//If there aren't confirmations to show, the fait (EquivalentComponent) gets updated then
                 faitTextView.setText("");
                 faitTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.receive_amount));
 
@@ -2447,6 +2536,10 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
         animator.start();
     }
 
+    /**
+     * Removes all balances items from a specified coin having zero balance
+     * @param coin the coin from which to remove zero balances items
+     */
     public void removeZeroedBalanceViews(Coin coin) {
         this.getBalanceItems().getBalancesItems(coin).removeZeroBalanceItems();
     }
@@ -2484,49 +2577,38 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     /**
-     * Updating the sort strategy
+     * Initializes the transaction table view settings: adjusts the columns title and width,
+     * assigns the columns comparators and sets the onclick headers listeners
+     *
      */
     private void updateSortTable() {
         SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(getContext(), getContext().getString(R.string.date), getContext().getString(R.string.all), getContext().getString(R.string.to_from), getContext().getString(R.string.amount));
         simpleTableHeaderAdapter.setPaddingLeft(getResources().getDimensionPixelSize(R.dimen.transactionsheaderpading));
 
-        /*if (this.coin == Coin.BITSHARE) {
-            transfersView.setHeaderAdapter(simpleTableHeaderAdapter);
+        cryptoCoinTransfersView.setHeaderAdapter(simpleTableHeaderAdapter);
 
-            transfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-            transfersView.setColumnWeight(0, 20);
-            transfersView.setColumnWeight(1, 12);
-            transfersView.setColumnWeight(2, 27);
-            transfersView.setColumnWeight(3, 22);
-            transfersView.setColumnComparator(0, new TransferDateComparator());
-            transfersView.setColumnComparator(1, new TransferSendReceiveComparator(new UserAccount(accountId)));
-            transfersView.setColumnComparator(3, new TransferAmountComparator());
-        } else {*/
-            cryptoCoinTransfersView.setHeaderAdapter(simpleTableHeaderAdapter);
-
-            cryptoCoinTransfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
-            cryptoCoinTransfersView.setColumnWeight(0, 20);
-            cryptoCoinTransfersView.setColumnWeight(1, 12);
-            cryptoCoinTransfersView.setColumnWeight(2, 27);
-            cryptoCoinTransfersView.setColumnWeight(3, 22);
-            cryptoCoinTransfersView.setColumnComparator(0, new CryptoCoinTransferDateComparator());
-            cryptoCoinTransfersView.setColumnComparator(1, new CryptoCoinTransferSendReceiveComparator());
-            cryptoCoinTransfersView.setColumnComparator(3, new CryptoCoinTransferAmountComparator());
-            cryptoCoinTransfersView.addHeaderClickListener(new TableHeaderClickListener() {
-                @Override
-                public void onHeaderClicked(int columnIndex) {
-                    if (lastTransferTableColumnIndexPressed == columnIndex) {
-                        lastTransferTableColumnIndexSortUp = !lastTransferTableColumnIndexSortUp;
-                    } else {
-                        lastTransferTableColumnIndexSortUp = true;
-                    }
-
-                    lastTransferTableColumnIndexPressed = columnIndex;
-
-                    updateTableView(true);
+        cryptoCoinTransfersView.setHeaderSortStateViewProvider(SortStateViewProviders.darkArrows());
+        cryptoCoinTransfersView.setColumnWeight(0, 20);
+        cryptoCoinTransfersView.setColumnWeight(1, 12);
+        cryptoCoinTransfersView.setColumnWeight(2, 27);
+        cryptoCoinTransfersView.setColumnWeight(3, 22);
+        cryptoCoinTransfersView.setColumnComparator(0, new CryptoCoinTransferDateComparator());
+        cryptoCoinTransfersView.setColumnComparator(1, new CryptoCoinTransferSendReceiveComparator());
+        cryptoCoinTransfersView.setColumnComparator(3, new CryptoCoinTransferAmountComparator());
+        cryptoCoinTransfersView.addHeaderClickListener(new TableHeaderClickListener() {
+            @Override
+            public void onHeaderClicked(int columnIndex) {
+                if (lastTransferTableColumnIndexPressed == columnIndex) {
+                    lastTransferTableColumnIndexSortUp = !lastTransferTableColumnIndexSortUp;
+                } else {
+                    lastTransferTableColumnIndexSortUp = true;
                 }
-            });
-        //}
+
+                lastTransferTableColumnIndexPressed = columnIndex;
+
+                updateTableView(true);
+            }
+        });
     }
 
     @Override
@@ -3047,114 +3129,112 @@ public class GeneralCoinBalancesFragment extends Fragment implements AssetDelega
     }
 
     /**
-     * Refreshes table data by assigning a new adapter.
+     * Refreshes the transaction table data by assigning a new adapter.
      * This method should be called whenever there is fresh data in the transfers database table.
      * @param reset: If true, the current transfer list is discarded, and a new query is made to the database.
      */
     private void updateTableView(boolean reset) {
-        //if (this.coin == Coin.BITSHARE) {
-            SCWallDatabase.GeneralTransactionOrder order = SCWallDatabase.GeneralTransactionOrder.DATE;
+        SCWallDatabase.GeneralTransactionOrder order = SCWallDatabase.GeneralTransactionOrder.DATE;
 
-            switch (lastTransferTableColumnIndexPressed){
-                case 0:
-                    order = SCWallDatabase.GeneralTransactionOrder.DATE;
-                    break;
-                case 1:
-                    order = SCWallDatabase.GeneralTransactionOrder.IN_OUT;
-                    break;
-                case 4:
-                    order = SCWallDatabase.GeneralTransactionOrder.AMOUNT;
-                    break;
-            }
+        switch (lastTransferTableColumnIndexPressed){
+            case 0:
+                order = SCWallDatabase.GeneralTransactionOrder.DATE;
+                break;
+            case 1:
+                order = SCWallDatabase.GeneralTransactionOrder.IN_OUT;
+                break;
+            case 4:
+                order = SCWallDatabase.GeneralTransactionOrder.AMOUNT;
+                break;
+        }
 
 
-            UserAccount account = new UserAccount(accountId);
+        UserAccount account = new UserAccount(accountId);
 
-            if (reset) {
-                loadMoreCounter = 1;
-                loadMoreButton.setVisibility(View.VISIBLE);
-            }
+        if (reset) {
+            loadMoreCounter = 1;
+            loadMoreButton.setVisibility(View.VISIBLE);
+        }
 
-            // Calculate how many items to fetch depending on how many times
-            // the 'load more' button has been pressed. Maybe later we can modify the
-            // getTransactions method to accept ranges and simplify this code.
-            int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
-            List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
+        // Calculate how many items to fetch depending on how many times
+        // the 'load more' button has been pressed. Maybe later we can modify the
+        // getTransactions method to accept ranges and simplify this code.
+        int limit = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * loadMoreCounter;
+        List<HistoricalTransferEntry> newData = database.getTransactions(account, limit);
 
-            // Here we check if the SortableTableView has its default adapter or our own instance.
-            if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter && !reset){
-                Log.d(TAG,"updating table view");
-                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
-                List<TransactionLog> existingData = cryptoCoinTableAdapter.getData();
-                boolean found = true;
-                for(HistoricalTransferEntry newEntry : newData){
-                    for(TransactionLog existingEntry : existingData){
-                        if (existingEntry.getType() == TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE) {
-                            if (newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())) {
-                                found = true;
-                                break;
-                            }
+        // Here we check if the SortableTableView has its default adapter or our own instance.
+        if(cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter && !reset){
+            Log.d(TAG,"updating table view");
+            cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+            List<TransactionLog> existingData = cryptoCoinTableAdapter.getData();
+            boolean found = true;
+            for(HistoricalTransferEntry newEntry : newData){
+                for(TransactionLog existingEntry : existingData){
+                    if (existingEntry.getType() == TransactionLog.TransactionType.TRANSACTION_TYPE_BITSHARE) {
+                        if (newEntry.getHistoricalTransfer().getId().equals(existingEntry.getBitshareTransactionLog().getHistoricalTransfer().getId())) {
+                            found = true;
+                            break;
                         }
                     }
-                    if(!found){
-                        existingData.add(new TransactionLog(newEntry, account));
-                    }
-                    found = false;
                 }
-
-            }else{
-                Log.d(TAG, "resetting table view");
-                TransactionLog newDataArray[] = new TransactionLog[newData.size()];
-
-                HistoricalTransferEntry hte;
-                for (int i=0;i<newData.size();i++){
-                    hte = newData.get(i);
-                    newDataArray[i] = new TransactionLog(hte,account);
+                if(!found){
+                    existingData.add(new TransactionLog(newEntry, account));
                 }
-
-                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
-                cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+                found = false;
             }
 
-            /*
-            * LOADING BITCOIN TYPE TRANSACTION HISTORY
-            *
-            * */
+        }else{
+            Log.d(TAG, "resetting table view");
+            TransactionLog newDataArray[] = new TransactionLog[newData.size()];
 
-            SCWallDatabase db = new SCWallDatabase(getContext());
-            List<GeneralCoinAccount> accountList = db.getActiveAccounts();
-
-            //If reset is false, then we start from the last transaction fetched from the database
-            int offset = 0;
-            if (!reset){
-                offset = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * (loadMoreCounter-1);
+            HistoricalTransferEntry hte;
+            for (int i=0;i<newData.size();i++){
+                hte = newData.get(i);
+                newDataArray[i] = new TransactionLog(hte,account);
             }
 
-            List<GeneralTransaction> transactions = db.getGeneralTransactions(accountList, order, lastTransferTableColumnIndexSortUp,offset,SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
-            TransactionLog newDataArray[] = new TransactionLog[transactions.size()];
+            cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
+            cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+        }
 
-            GeneralTransaction gt;
-            for (int i=0;i<transactions.size();i++){
-                gt = transactions.get(i);
-                newDataArray[i] = new TransactionLog(gt,gt.getAccount());
-            }
+        /*
+        * LOADING BITCOIN TYPE TRANSACTION HISTORY
+        *
+        * */
 
-            if (cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
-                Log.d(TAG, "updating " + this.coin.name() + " table view");
-                cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
-                cryptoCoinTableAdapter.addOrReplaceData(newDataArray);
-            } else {
-                Log.d(TAG, "resetting " + this.coin.name() + " table view");
-                cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
-                cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
-            }
+        SCWallDatabase db = new SCWallDatabase(getContext());
+        List<GeneralCoinAccount> accountList = db.getActiveAccounts();
 
-            cryptoCoinTableAdapter.notifyDataSetChanged();
+        //If reset is false, then we start from the last transaction fetched from the database
+        int offset = 0;
+        if (!reset){
+            offset = SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE * (loadMoreCounter-1);
+        }
 
-            if (cryptoCoinTransfersView.getColumnComparator(0) == null) {
-                updateSortTable();
-            }
-        //}
+        List<GeneralTransaction> transactions = db.getGeneralTransactions(accountList, order, lastTransferTableColumnIndexSortUp,offset,SCWallDatabase.DEFAULT_TRANSACTION_BATCH_SIZE);
+        TransactionLog newDataArray[] = new TransactionLog[transactions.size()];
+
+        GeneralTransaction gt;
+        for (int i=0;i<transactions.size();i++){
+            gt = transactions.get(i);
+            newDataArray[i] = new TransactionLog(gt,gt.getAccount());
+        }
+
+        if (cryptoCoinTransfersView.getDataAdapter() instanceof CryptoCoinTransfersTableAdapter) {
+            Log.d(TAG, "updating " + this.coin.name() + " table view");
+            cryptoCoinTableAdapter = (CryptoCoinTransfersTableAdapter) cryptoCoinTransfersView.getDataAdapter();
+            cryptoCoinTableAdapter.addOrReplaceData(newDataArray);
+        } else {
+            Log.d(TAG, "resetting " + this.coin.name() + " table view");
+            cryptoCoinTableAdapter = new CryptoCoinTransfersTableAdapter(getContext(), locale, newDataArray);
+            cryptoCoinTransfersView.setDataAdapter(cryptoCoinTableAdapter);
+        }
+
+        cryptoCoinTableAdapter.notifyDataSetChanged();
+
+        if (cryptoCoinTransfersView.getColumnComparator(0) == null) {
+            updateSortTable();
+        }
     }
 
     /**
