@@ -1,5 +1,7 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
+import de.bitsharesmunich.graphenej.Util;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -9,124 +11,211 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.bitsharesmunich.graphenej.Util;
-
 /**
- * Created by henry on 06/02/2017.
+ * Represents an Address of a General Coin Account
  */
-
 public class GeneralCoinAddress {
+    /**
+     * The id on the database
+     */
+    private long mId = -1;
+    /**
+     * The account that this address belongs
+     */
+    private final GeneralCoinAccount mAccount;
+    /**
+     * If this is change or external
+     */
+    private final boolean mIsChange;
+    /**
+     * The index fo this address in the account
+     */
+    private final int mIndex;
+    /**
+     * The ky used to calculate the address
+     */
+    private ECKey mKey;
+    /**
+     * The list of the transactions that used this address as input
+     */
+    private List<GTxIO> mTransactionInput = new ArrayList<>();
+    /**
+     * The list of the transactions that used this address as output
+     */
+    private List<GTxIO> mTransactionOutput = new ArrayList<>();
 
-    private long id = -1;
-    private final GeneralCoinAccount account;
-    private final boolean isChange;
-    private final int index;
-    private ECKey key;
-
-    private List<GTxIO> transactionInput = new ArrayList();
-    private List<GTxIO> transactionOutput = new ArrayList();
-
-
+    /**
+     * Contrsutcotr used from the database
+     * @param id The id on the database
+     * @param account The account of this address
+     * @param isChange if it is change or external address
+     * @param index the index on the account of this address
+     * @param publicHexKey The public Address String
+     */
     public GeneralCoinAddress(long id, GeneralCoinAccount account, boolean isChange, int index, String publicHexKey) {
-        this.id = id;
-        this.account = account;
-        this.isChange = isChange;
-        this.index = index;
-        this.key = ECKey.fromPublicOnly(Util.hexToBytes(publicHexKey));
+        this.mId = id;
+        this.mAccount = account;
+        this.mIsChange = isChange;
+        this.mIndex = index;
+        this.mKey = ECKey.fromPublicOnly(Util.hexToBytes(publicHexKey));
     }
 
+    /**
+     * Basic constructor
+     * @param account The account of this address
+     * @param isChange if it is change or external address
+     * @param index The index on the account of this address
+     * @param key The key to generate the private and the public key of this address
+     */
     public GeneralCoinAddress(GeneralCoinAccount account, boolean isChange, int index, DeterministicKey key) {
-        this.id = -1;
-        this.account = account;
-        this.isChange = isChange;
-        this.index = index;
-        this.key = key;
+        this.mId = -1;
+        this.mAccount = account;
+        this.mIsChange = isChange;
+        this.mIndex = index;
+        this.mKey = key;
     }
 
+    /**
+     * Getter of the database id
+     */
     public long getId() {
-        return id;
+        return mId;
     }
 
+    /**
+     * Setter of the database id
+     */
     public void setId(long id) {
-        this.id = id;
+        this.mId = id;
     }
-
+    /**
+     * Getter for he account
+     */
     public GeneralCoinAccount getAccount() {
-        return account;
+        return mAccount;
     }
 
+    /**
+     * Indicates if this addres is change, if not is external
+     */
     public boolean isIsChange() {
-        return isChange;
+        return mIsChange;
     }
 
+    /**
+     * Getter for the index on the account of this address
+     */
     public int getIndex() {
-        return index;
+        return mIndex;
     }
 
+    /**
+     * Getter for the key of this address
+     */
     public ECKey getKey() {
-        return key;
+        return mKey;
     }
 
+    /**
+     * Set the key for generate private key, this is used when this address is loaded from the database
+     * and want to be used to send transactions
+     * @param key The key that generates the private and the public key
+     */
     public void setKey(DeterministicKey key) {
-        this.key = key;
+        this.mKey = key;
     }
 
+    /**
+     * Get the address as a String
+     * @param param The network param of this address
+     */
     public String getAddressString(NetworkParameters param) {
-        return key.toAddress(param).toString();
+        return mKey.toAddress(param).toString();
     }
 
+    /**
+     * Returns the bitcoinj Address representing this address
+     * @param param The network parameter of this address
+     */
     public Address getAddress(NetworkParameters param) {
-        return key.toAddress(param);
+        return mKey.toAddress(param);
     }
 
+    /**
+     * Gets the list of transaction that this address is input
+     */
     public List<GTxIO> getTransactionInput() {
-        return transactionInput;
+        return mTransactionInput;
     }
 
+    /**
+     * Set the transactions that this address is input
+     */
     public void setTransactionInput(List<GTxIO> transactionInput) {
-        this.transactionInput = transactionInput;
+        this.mTransactionInput = transactionInput;
     }
 
+    /**
+     * Find if this address is input of a transaction
+     * @param inputToFind The GTxIO to find
+     * @param param The network parameter of this address
+     * @return if this address belongs to the transaction
+     */
     public boolean hasTransactionInput(GTxIO inputToFind, NetworkParameters param) {
-        for (GTxIO input : transactionInput) {
+        for (GTxIO input : mTransactionInput) {
             if ((input.getTransaction().getTxid().equals(inputToFind.getTransaction().getTxid()))
-                    && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress().getAddressString(param)))
-                    ) {
+                    && (input.getAddress().getAddressString(param).equals(inputToFind.getAddress()
+                    .getAddressString(param)))) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Gets the list of transaction that this address is output
+     */
     public List<GTxIO> getTransactionOutput() {
-        return transactionOutput;
+        return mTransactionOutput;
     }
 
+    /**
+     * Find if this address is output of a transaction
+     * @param outputToFind The GTxIO to find
+     * @param param the network parameter of this address
+     * @return if this address belongs to the transaction
+     */
     public boolean hasTransactionOutput(GTxIO outputToFind, NetworkParameters param) {
-        for (GTxIO output : transactionOutput) {
+        for (GTxIO output : mTransactionOutput) {
             if ((output.getTransaction().getTxid().equals(outputToFind.getTransaction().getTxid()))
-                    && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress().getAddressString(param)))
-                    ) {
+                    && (output.getAddress().getAddressString(param).equals(outputToFind.getAddress()
+                    .getAddressString(param)))) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Sets the list of transaction that this address is output
+     */
     public void setTransactionOutput(List<GTxIO> outputTransaction) {
-        this.transactionOutput = outputTransaction;
+        this.mTransactionOutput = outputTransaction;
     }
 
+    /**
+     * Get the amount of uncofirmed balance
+     */
     public long getUnconfirmedBalance() {
         long answer = 0;
-        for (GTxIO input : transactionInput) {
-            if (input.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
+        for (GTxIO input : mTransactionInput) {
+            if (input.getTransaction().getConfirm() < mAccount.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
-        for (GTxIO output : transactionOutput) {
-            if (output.getTransaction().getConfirm() < account.getCoin().getConfirmationsNeeded()) {
+        for (GTxIO output : mTransactionOutput) {
+            if (output.getTransaction().getConfirm() < mAccount.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
         }
@@ -134,16 +223,19 @@ public class GeneralCoinAddress {
         return answer;
     }
 
+    /**
+     * Get the amount of confirmed balance
+     */
     public long getConfirmedBalance() {
         long answer = 0;
-        for (GTxIO input : transactionInput) {
-            if (input.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
+        for (GTxIO input : mTransactionInput) {
+            if (input.getTransaction().getConfirm() >= mAccount.getCoin().getConfirmationsNeeded()) {
                 answer += input.getAmount();
             }
         }
 
-        for (GTxIO output : transactionOutput) {
-            if (output.getTransaction().getConfirm() >= account.getCoin().getConfirmationsNeeded()) {
+        for (GTxIO output : mTransactionOutput) {
+            if (output.getTransaction().getConfirm() >= mAccount.getCoin().getConfirmationsNeeded()) {
                 answer -= output.getAmount();
             }
         }
@@ -151,14 +243,17 @@ public class GeneralCoinAddress {
         return answer;
     }
 
+    /**
+     * Get the date of the last transaction or null if there is no transaction
+     */
     public Date getLastDate() {
         Date lastDate = null;
-        for (GTxIO input : transactionInput) {
+        for (GTxIO input : mTransactionInput) {
             if (lastDate == null || lastDate.before(input.getTransaction().getDate())) {
                 lastDate = input.getTransaction().getDate();
             }
         }
-        for (GTxIO output : transactionOutput) {
+        for (GTxIO output : mTransactionOutput) {
             if (lastDate == null || lastDate.before(output.getTransaction().getDate())) {
                 lastDate = output.getTransaction().getDate();
             }
@@ -166,15 +261,19 @@ public class GeneralCoinAddress {
         return lastDate;
     }
 
+    /**
+     * Get the amount of the less cofnirmed transaction, this is used to set how confirmations are
+     * left
+     */
     public int getLessConfirmed(){
         int lessConfirm = -1;
-        for (GTxIO input : transactionInput) {
+        for (GTxIO input : mTransactionInput) {
             if (lessConfirm == -1 || input.getTransaction().getConfirm() < lessConfirm) {
                 lessConfirm = input.getTransaction().getConfirm();
             }
         }
 
-        for (GTxIO output : transactionOutput) {
+        for (GTxIO output : mTransactionOutput) {
             if (lessConfirm == -1 || output.getTransaction().getConfirm() < lessConfirm) {
                 lessConfirm = output.getTransaction().getConfirm();
             }
@@ -182,11 +281,15 @@ public class GeneralCoinAddress {
         return lessConfirm;
     }
 
+    /**
+     * Gets the unspend transactions input
+     * @return The list with the unspend transasctions
+     */
     public List<GTxIO> getUTXos(){
-        List<GTxIO> utxo = new ArrayList();
-        for(GTxIO gitx : transactionInput){
+        List<GTxIO> utxo = new ArrayList<>();
+        for(GTxIO gitx : mTransactionInput){
             boolean find = false;
-            for(GTxIO gotx : transactionOutput){
+            for(GTxIO gotx : mTransactionOutput){
                 if(gitx.getTransaction().getTxid().equals(gotx.getOriginalTxid())){
                     find = true;
                     break;
@@ -199,6 +302,9 @@ public class GeneralCoinAddress {
         return utxo;
     }
 
+    /**
+     * Fire the onBalanceChange event
+     */
     public void BalanceChange() {
         this.getAccount().balanceChange();
     }
@@ -210,31 +316,35 @@ public class GeneralCoinAddress {
 
         GeneralCoinAddress that = (GeneralCoinAddress) o;
 
-        if (isChange != that.isChange) return false;
-        if (index != that.index) return false;
-        if (id != -1) return false;
-        if (account != null ? !account.equals(that.account) : that.account != null) return false;
-        if (key != null ? !key.equals(that.key) : that.key != null) return false;
-        if (transactionInput != null ? !transactionInput.equals(that.transactionInput) : that.transactionInput != null)
-            return false;
-        return transactionOutput != null ? transactionOutput.equals(that.transactionOutput) : that.transactionOutput == null;
+        return mIsChange == that.mIsChange && mIndex == that.mIndex && mId == -1
+                && (mAccount != null ? mAccount.equals(that.mAccount) : that.mAccount == null
+                && (mKey != null ? mKey.equals(that.mKey) : that.mKey == null
+                && (mTransactionInput != null ? mTransactionInput.equals(that.mTransactionInput)
+                : that.mTransactionInput == null && (mTransactionOutput != null
+                ? mTransactionOutput.equals(that.mTransactionOutput)
+                : that.mTransactionOutput == null))));
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) id;
-        result = 31 * result + (account != null ? account.hashCode() : 0);
-        result = 31 * result + (isChange ? 1 : 0);
-        result = 31 * result + index;
-        result = 31 * result + (key != null ? key.hashCode() : 0);
-        result = 31 * result + (transactionInput != null ? transactionInput.hashCode() : 0);
-        result = 31 * result + (transactionOutput != null ? transactionOutput.hashCode() : 0);
+        int result = (int) mId;
+        result = 31 * result + (mAccount != null ? mAccount.hashCode() : 0);
+        result = 31 * result + (mIsChange ? 1 : 0);
+        result = 31 * result + mIndex;
+        result = 31 * result + (mKey != null ? mKey.hashCode() : 0);
+        result = 31 * result + (mTransactionInput != null ? mTransactionInput.hashCode() : 0);
+        result = 31 * result + (mTransactionOutput != null ? mTransactionOutput.hashCode() : 0);
         return result;
     }
 
+    /**
+     * Update the transactions of this Address
+     * @param transaction The transaction to update
+     * @return true if this address has the transaction false otherwise
+     */
     public boolean updateTransaction(GeneralTransaction transaction){
-        for(GTxIO gitx : transactionInput){
+        for(GTxIO gitx : mTransactionInput){
             if(gitx.getTransaction().equals(transaction)){
                 gitx.getTransaction().setConfirm(transaction.getConfirm());
                 gitx.getTransaction().setBlock(transaction.getBlock());
@@ -245,7 +355,7 @@ public class GeneralCoinAddress {
             }
         }
 
-        for(GTxIO gotx : transactionOutput){
+        for(GTxIO gotx : mTransactionOutput){
             if(gotx.getTransaction().equals(transaction)){
                 gotx.getTransaction().setConfirm(transaction.getConfirm());
                 gotx.getTransaction().setBlock(transaction.getBlock());
@@ -257,7 +367,5 @@ public class GeneralCoinAddress {
         }
         return false;
     }
-
-
 }
 

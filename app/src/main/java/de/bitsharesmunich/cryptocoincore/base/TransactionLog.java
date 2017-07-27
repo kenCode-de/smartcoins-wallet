@@ -8,43 +8,83 @@ import de.bitsharesmunich.graphenej.UserAccount;
  */
 public class TransactionLog {
 
+    /**
+     * The types of transactions supported
+     */
     public enum TransactionType {TRANSACTION_TYPE_BITSHARE, TRANSACTION_TYPE_BITCOIN};
 
+    /**
+     * The type of transasction
+     */
+    public TransactionType type;
+    /**
+     *  
+     */
+    Object mTransaction;
+    /**
+     *
+     */
+    Object mAccount;
+
+    /**
+     *
+     * @param transaction
+     * @param account
+     */
+    public TransactionLog(GeneralTransaction transaction, GeneralCoinAccount account){
+        this.type = TransactionType.TRANSACTION_TYPE_BITCOIN;
+        this.mTransaction = transaction;
+        this.mAccount = account;
+    }
+
+    /**
+     *
+     * @param transaction
+     * @param userAccount
+     */
+    public TransactionLog(HistoricalTransferEntry transaction, UserAccount userAccount){
+        this.type = TransactionType.TRANSACTION_TYPE_BITSHARE;
+        this.mTransaction = transaction;
+        this.mAccount = userAccount;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public GeneralTransaction getBitcoinTransactionLog(){
+        return (GeneralTransaction) this.mTransaction;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public HistoricalTransferEntry getBitshareTransactionLog(){
+        return (HistoricalTransferEntry) this.mTransaction;
+    }
+
+    /**
+     * Getter of the type of transaction
+     */
     public TransactionType getType() {
         return type;
     }
 
-    public TransactionType type;
-
-    Object transaction;
-    Object account;
-
-    public TransactionLog(GeneralTransaction transaction, GeneralCoinAccount account){
-        this.type = TransactionType.TRANSACTION_TYPE_BITCOIN;
-        this.transaction = transaction;
-        this.account = account;
-    }
-
-    public TransactionLog(HistoricalTransferEntry transaction, UserAccount userAccount){
-        this.type = TransactionType.TRANSACTION_TYPE_BITSHARE;
-        this.transaction = transaction;
-        this.account = userAccount;
-    }
-
-    public GeneralTransaction getBitcoinTransactionLog(){
-        return (GeneralTransaction) this.transaction;
-    }
-
-    public HistoricalTransferEntry getBitshareTransactionLog(){
-        return (HistoricalTransferEntry) this.transaction;
-    }
-
+    /**
+     *
+     * @return
+     */
     public GeneralCoinAccount getBitcoinAccount(){
-        return (GeneralCoinAccount) this.account;
+        return (GeneralCoinAccount) this.mAccount;
     }
 
+    /**
+     *
+     * @return
+     */
     public UserAccount getBitshareAccount(){
-        return (UserAccount) this.account;
+        return (UserAccount) this.mAccount;
     }
 
     @Override
@@ -62,9 +102,11 @@ public class TransactionLog {
 
         switch(this.type){
             case TRANSACTION_TYPE_BITSHARE:
-                return this.getBitshareTransactionLog().equals(objTransactionLog.getBitshareTransactionLog());
+                return this.getBitshareTransactionLog().equals(objTransactionLog
+                        .getBitshareTransactionLog());
             case TRANSACTION_TYPE_BITCOIN:
-                return this.getBitcoinTransactionLog().equals(objTransactionLog.getBitcoinTransactionLog());
+                return this.getBitcoinTransactionLog().equals(objTransactionLog
+                        .getBitcoinTransactionLog());
             default:
                 return false;
         }

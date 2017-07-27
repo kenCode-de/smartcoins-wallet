@@ -1,17 +1,9 @@
 package de.bitsharesmunich.cryptocoincore.base;
 
-import android.content.Context;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import de.bitshares_munich.database.SCWallDatabase;
-import de.bitshares_munich.database.SCWallDatabaseContract;
-import de.bitshares_munich.models.BalanceItem;
-import de.bitshares_munich.models.BalanceItemsEvent;
-import de.bitshares_munich.models.BalanceItemsListener;
 import de.bitshares_munich.models.GeneralCoinSettingEvent;
 
 /**
@@ -19,25 +11,25 @@ import de.bitshares_munich.models.GeneralCoinSettingEvent;
  */
 
 public class GeneralCoinSettings {
-    Coin coinType;
-    List<GeneralCoinSetting> settings;
-    private List<ChangeSettingListener> _changeSettingListeners = new ArrayList<ChangeSettingListener>();
+    Coin mCoinType;
+    List<GeneralCoinSetting> mSettings;
+    private List<ChangeSettingListener> mChangeSettingListeners = new ArrayList<ChangeSettingListener>();
 
 
     public GeneralCoinSettings(Coin coin){
-        this.coinType = coin;
-        this.settings = new ArrayList<GeneralCoinSetting>();
+        this.mCoinType = coin;
+        this.mSettings = new ArrayList<GeneralCoinSetting>();
 
         //adding defaults
         this.addSetting("precision","8");
     };
 
     public Coin getCoinType(){
-        return this.coinType;
+        return this.mCoinType;
     }
 
     public int getSettingsCount(){
-        return this.settings.size();
+        return this.mSettings.size();
     }
 
     public GeneralCoinSetting addSetting(long id, String setting, String value){
@@ -45,7 +37,7 @@ public class GeneralCoinSettings {
 
         if (generalCoinSetting == null) {
             generalCoinSetting = new GeneralCoinSetting(id, setting, value);
-            this.settings.add(generalCoinSetting);
+            this.mSettings.add(generalCoinSetting);
         } else {
             generalCoinSetting.setId(id);
             generalCoinSetting.setValue(value);
@@ -59,7 +51,7 @@ public class GeneralCoinSettings {
 
         if (generalCoinSetting == null) {
             generalCoinSetting = new GeneralCoinSetting(setting,value);
-            this.settings.add(generalCoinSetting);
+            this.mSettings.add(generalCoinSetting);
         } else {
             generalCoinSetting.setValue(value);
         }
@@ -68,11 +60,11 @@ public class GeneralCoinSettings {
     }
 
     public List<GeneralCoinSetting> getSettings(){
-        return this.settings;
+        return this.mSettings;
     }
 
     public GeneralCoinSetting getSetting(String setting){
-        for (GeneralCoinSetting nextSetting : this.settings){
+        for (GeneralCoinSetting nextSetting : this.mSettings){
             if (nextSetting.getSetting().equals(setting)){
                 return nextSetting;
             }
@@ -82,7 +74,7 @@ public class GeneralCoinSettings {
     }
 
     public boolean settingExists(String setting){
-        for (GeneralCoinSetting nextSetting : this.settings){
+        for (GeneralCoinSetting nextSetting : this.mSettings){
             if (nextSetting.getSetting().equals(setting)){
                 return true;
             }
@@ -92,13 +84,13 @@ public class GeneralCoinSettings {
     }
 
     public void addChangeSettingListener(ChangeSettingListener listener) {
-        this._changeSettingListeners.add(listener);
+        this.mChangeSettingListeners.add(listener);
     }
 
 
     private synchronized void _fireOnSettingChangeEvent() {
         GeneralCoinSettingEvent event = new GeneralCoinSettingEvent( this );
-        Iterator listeners = _changeSettingListeners.iterator();
+        Iterator listeners = mChangeSettingListeners.iterator();
         while( listeners.hasNext() ) {
             ( (ChangeSettingListener) listeners.next() ).settingChange( event );
         }
