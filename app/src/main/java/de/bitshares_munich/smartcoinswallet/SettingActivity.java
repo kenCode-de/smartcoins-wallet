@@ -805,7 +805,8 @@ public class SettingActivity extends BaseActivity implements BackupBinDelegate {
      * Will display a dialog prompting the user to make a backup of the brain key.
      */
     private void displayBrainKeyBackup() {
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        //final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        final Dialog dialog = new Dialog(this);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
