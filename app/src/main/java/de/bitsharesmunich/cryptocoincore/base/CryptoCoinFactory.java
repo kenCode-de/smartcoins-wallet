@@ -11,6 +11,9 @@ import de.bitsharesmunich.cryptocoincore.litecoin.LiteCoinManager;
  * Created by henry on 05/02/2017.
  */
 
+/**
+ * Returns the related objects of every coin
+ */
 public class CryptoCoinFactory {
 
 
@@ -30,6 +33,13 @@ public class CryptoCoinFactory {
         return null;
     }
 
+    /**
+     * loads a json account using the type attribute of the json to determine the coin type
+     *
+     * @param accountObject the json object of the account to load
+     * @param seed the master seed of the account
+     * @return an account with the attributes loaded from the json object
+     */
     public static CryptoCoinAccount getAccountFromJson(JsonObject accountObject, AccountSeed seed){
         Coin coin = Coin.valueOf(accountObject.get("type").getAsString());
         String name = accountObject.get("name").getAsString();

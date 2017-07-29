@@ -475,6 +475,13 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
     }
 
+    /**
+     * Updates an address view of this contact
+     *
+     * @param oldAddress a copy of the address before the change
+     * @param newAddress the address after the change
+     * @param index the index of the address in this contact
+     */
     public void updateAddressView(ContactAddress oldAddress, ContactAddress newAddress, int index){
         final View addressView = accountsLayout.getChildAt(index);
         EditText addressEdit = (EditText)addressView.findViewById(R.id.Accountname);
@@ -490,11 +497,20 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
     }
 
+    /**
+     * Removes an address view from this contact
+     *
+     * @param address the address removed
+     * @param index the index of the address before the removal
+     */
     public void removeAddressView(ContactAddress address, int index){
         accountsLayout.removeViewAt(index);
         coinsUsed.remove(address.getCoin());
     }
 
+    /**
+     * loads the addresses of this contact
+     */
     public void loadAddresses(){
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -573,7 +589,13 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         web.loadData(htmlShareAccountName, "text/html", "UTF-8");
     }
 
-    //@OnTextChanged(R.id.Accountname)
+    /**
+     * validate the address inserted by the user in a specific address view
+     * and shows a message if there are errors
+     *
+     * @param contactAddress the address object to validate
+     * @param contactAddressView the address view to validate
+     */
     void validateAddress(ContactAddress contactAddress, View contactAddressView) {
         WebView web = (WebView)contactAddressView.findViewById(R.id.web);
         TextView warning = (TextView)contactAddressView.findViewById(R.id.address_warning);
@@ -584,11 +606,12 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         SaveContact.setBackgroundColor(getColorWrapper(context, R.color.gray));
         SaveContact.setEnabled(false);
 
+        // trims the address
         if (!contactAddress.getAddress().toString().equals(contactAddress.getAddress().toString().trim())) {
             contactAddress.setAddress(contactAddress.getAddress().trim());
         }
 
-
+        // the user can't add himself to the contacts
         if (!contactAddress.getAddress().equals(accountid)) {
             if (contactAddress.getAddress().length() > 0) {
 
@@ -604,9 +627,11 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
 
                 } else {
                     if (contactAddress.getCoin() != null) {
+                        //gets the validator for the coin type of the address and validates
                         GeneralCoinValidator validator = GeneralCoinFactory.getValidator(contactAddress.getCoin());
                         validReceiver = validator.validateAddress(contactAddress.getAddress());
 
+                        //if it isn't valid, then shows a message
                         if (!validReceiver) {
                             warning.setTextColor(getColorWrapper(context, R.color.red));
                             warning.setText(getString(R.string.address_invalid_format));
@@ -758,6 +783,12 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
     }
 
+    /**
+     * checks if a bitshares account inserted by the user is valid.
+     * this function receives the result of a previous call
+     *
+     * @param jsonObject the result of the previous call
+     */
     @Override
     public void checkAccount(JSONObject jsonObject) {
         final ContactAddress contactAddress = contact.getAddressByCoin(Coin.BITSHARE);
@@ -863,6 +894,12 @@ public class AddEditContacts extends BaseActivity implements IAccount, ContactLi
         }
     }
 
+    /**
+     * loads the gravatar for the contact, using the email provided by the user
+     *
+     * @param email the email to search for the avatar
+     * @param imageEmail the image container component to load the gravatar
+     */
     void setGravator(String email, ImageView imageEmail) {
         String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
         new DownloadImageTask(imageEmail)

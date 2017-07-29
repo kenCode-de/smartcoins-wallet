@@ -5,11 +5,16 @@ import java.util.EventObject;
 /**
  * Created by Henry Varona on 25/3/2017.
  */
+
+/**
+ * This event object is used when a Contact fires
+ * the insertion, modification and removal events of its addresses
+ */
 public class ContactEvent extends EventObject {
-    private ContactAddress mAddress;
-    private ContactAddress mOldAddress;
-    private int mIndex;
-    private int mNewSize;
+    private ContactAddress mAddress; /**< the new, modified o removed address*/
+    private ContactAddress mOldAddress; /**< the old address before the modification event*/
+    private int mIndex; /**< the index of the address when modified or removed*/
+    private int mNewSize; /**< the new count of addresses after a modification o removal*/
 
     public ContactEvent( Object source, ContactAddress address ) {
         super( source );
