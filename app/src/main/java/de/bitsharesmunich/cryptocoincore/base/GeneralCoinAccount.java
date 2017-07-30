@@ -159,7 +159,7 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
      */
     public List<GeneralCoinAddress> getAddresses(SCWallDatabase db) {
         //TODO check for used address
-        this.getNextRecieveAddress();
+        this.getNextReceiveAddress();
         this.getNextChangeAddress();
         this.calculateGapExternal();
         this.calculateGapChange();
@@ -246,9 +246,9 @@ public abstract class GeneralCoinAccount extends CryptoCoinAccount {
 
     /**
      * Getter of the next receive address
-     * @return The next unused recieve address to be used
+     * @return The next unused receive address to be used
      */
-    public abstract String getNextRecieveAddress();
+    public abstract String getNextReceiveAddress();
 
     /**
      * Getter of the next change address

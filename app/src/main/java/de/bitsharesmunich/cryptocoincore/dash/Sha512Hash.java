@@ -1,11 +1,12 @@
 package de.bitsharesmunich.cryptocoincore.dash;
 
 import com.google.common.io.ByteStreams;
+import static com.google.common.base.Preconditions.checkArgument;
 
+import org.spongycastle.util.encoders.Hex;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,14 +15,18 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import org.spongycastle.util.encoders.Hex;
+
 
 /**
- * Created by hvarona on 14/03/2017.
+ * Calculates the hash of a byte array. This is used in the dash address calculations
+ *
  */
 
 class Sha512Hash implements Serializable, Comparable{
-    private byte[] bytes;
+    /**
+     * The byte array
+     */
+    private byte[] mBytes;
     public static final Sha512Hash ZERO_HASH = new Sha512Hash(new byte[64]);
 
     /**
@@ -29,7 +34,7 @@ class Sha512Hash implements Serializable, Comparable{
      */
     public Sha512Hash(byte[] rawHashBytes) {
         checkArgument(rawHashBytes.length == 64);
-        this.bytes = rawHashBytes;
+        this.mBytes = rawHashBytes;
 
     }
 
@@ -38,7 +43,7 @@ class Sha512Hash implements Serializable, Comparable{
      */
     public Sha512Hash(String hexString) {
         checkArgument(hexString.length() == 64);
-        this.bytes = Hex.decode(hexString);
+        this.mBytes = Hex.decode(hexString);
     }
 
     /**
@@ -73,7 +78,7 @@ class Sha512Hash implements Serializable, Comparable{
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof Sha512Hash)) return false;
-        return Arrays.equals(bytes, ((Sha512Hash) other).bytes);
+        return Arrays.equals(mBytes, ((Sha512Hash) other).mBytes);
     }
 
     /**
@@ -84,27 +89,33 @@ class Sha512Hash implements Serializable, Comparable{
     @Override
     public int hashCode() {
         // Use the last 4 bytes, not the first 4 which are often zeros in Bitcoin.
-        return (bytes[63] & 0xFF) | ((bytes[62] & 0xFF) << 8) | ((bytes[61] & 0xFF) << 16) | ((bytes[60] & 0xFF) << 24);
+        return (mBytes[63] & 0xFF) | ((mBytes[62] & 0xFF) << 8) | ((mBytes[61] & 0xFF) << 16) | ((mBytes[60] & 0xFF) << 24);
     }
 
     @Override
     public String toString() {
-        return Utils.HEX.encode(bytes);
+        return Utils.HEX.encode(mBytes);
     }
 
     /**
      * Returns the bytes interpreted as a positive integer.
      */
     public BigInteger toBigInteger() {
-        return new BigInteger(1, bytes);
+        return new BigInteger(1, mBytes);
     }
 
+    /**
+     * Gets the raw bytes
+     */
     public byte[] getBytes() {
-        return bytes;
+        return mBytes;
     }
 
+    /**
+     * Gets a duplicate of this object
+     */
     public Sha512Hash duplicate() {
-        return new Sha512Hash(bytes);
+        return new Sha512Hash(mBytes);
     }
 
     @Override
@@ -115,11 +126,14 @@ class Sha512Hash implements Serializable, Comparable{
         return thisCode > oCode ? 1 : (thisCode == oCode ? 0 : -1);
     }
 
+    /**
+     * Gets a trim of the first 256 bits of the array
+     */
     public Sha256Hash trim256()
     {
         byte [] result = new byte[32];
         for (int i = 0; i < 32; i++){
-            result[i] = bytes[i];
+            result[i] = mBytes[i];
         }
         return new Sha256Hash(result);
     }

@@ -1,8 +1,5 @@
 package de.bitsharesmunich.cryptocoincore.dash;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import fr.cryptohash.BLAKE512;
 import fr.cryptohash.BMW512;
 import fr.cryptohash.CubeHash512;
@@ -16,11 +13,9 @@ import fr.cryptohash.SIMD512;
 import fr.cryptohash.Skein512;
 
 /**
- * Created by hvarona on 14/03/2017.
+ *
  */
-
 public class X11 {
-    private static final Logger log = LoggerFactory.getLogger(X11.class);
     private static boolean native_library_loaded = false;
 
     static {
@@ -54,10 +49,6 @@ public class X11 {
             return native_library_loaded ? x11_native(input) : x11(input);
         } catch (Exception e) {
             return null;
-        }
-        finally {
-            //long time = System.currentTimeMillis()-start;
-            //log.info("X11 Hash time: {} ms per block", time);
         }
     }
 

@@ -1,17 +1,15 @@
 package de.bitsharesmunich.cryptocoincore.litecoin;
 
 import com.google.common.base.Stopwatch;
+import static com.google.common.base.Preconditions.checkState;
+
 import de.bitsharesmunich.cryptocoincore.base.CoinDefinitions;
-import java.math.BigInteger;
-import java.util.concurrent.TimeUnit;
+
 import org.bitcoinj.core.BitcoinSerializer;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.CustomNetworkParameters;
 import org.bitcoinj.core.NetworkParameters;
-import static org.bitcoinj.core.NetworkParameters.ID_MAINNET;
-import static org.bitcoinj.core.NetworkParameters.MAX_MONEY;
-import static org.bitcoinj.core.NetworkParameters.PAYMENT_PROTOCOL_ID_MAINNET;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Utils;
@@ -19,23 +17,36 @@ import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.utils.MonetaryFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.google.common.base.Preconditions.checkState;
+
+import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
 
 /**
+ * he network parameters for the LiteCoin Network
  *
  */
 public class LiteCoinNetworkParameters extends CustomNetworkParameters {
 
+    /**
+     * The schema for the LiteCoin network
+     */
     public static final String LITECOIN_SCHEME = "litecoin";
     public static final int MAINNET_MAJORITY_WINDOW = 1000;
     public static final int MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED = 950;
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
-
+    /**
+     * Constant for the LiteCoin network
+     */
     public static final CoinDefinitions liteCoinDefinitions = new LiteCoinDefinitions();
-    private static final Logger log = LoggerFactory.getLogger(LiteCoinNetworkParameters.class);
+    private static final Logger mLog = LoggerFactory.getLogger(LiteCoinNetworkParameters.class);
+    private static LiteCoinNetworkParameters mInstance;
 
+    /**
+     * Basic Consturctor
+     */
     public LiteCoinNetworkParameters() {
         super(liteCoinDefinitions);
         interval = (int) (2016);
@@ -72,13 +83,11 @@ public class LiteCoinNetworkParameters extends CustomNetworkParameters {
         addrSeeds = liteCoinDefinitions.addrSeeds;
     }
 
-    private static LiteCoinNetworkParameters instance;
-
     public static synchronized LiteCoinNetworkParameters get() {
-        if (instance == null) {
-            instance = new LiteCoinNetworkParameters();
+        if (mInstance == null) {
+            mInstance = new LiteCoinNetworkParameters();
         }
-        return instance;
+        return mInstance;
     }
 
     @Override
@@ -121,7 +130,7 @@ public class LiteCoinNetworkParameters extends CustomNetworkParameters {
         }
         watch.stop();
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50) {
-            log.info("Difficulty transition traversal took {}", watch);
+            mLog.info("Difficulty transition traversal took {}", watch);
         }
 
         Block blockIntervalAgo = cursor.getHeader();
@@ -140,7 +149,7 @@ public class LiteCoinNetworkParameters extends CustomNetworkParameters {
         newTarget = newTarget.divide(BigInteger.valueOf(targetTimespan));
 
         if (newTarget.compareTo(this.getMaxTarget()) > 0) {
-            log.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
+            mLog.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
             newTarget = this.getMaxTarget();
         }
 

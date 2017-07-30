@@ -2,6 +2,15 @@ package de.bitsharesmunich.cryptocoincore.bitcoin;
 
 import android.content.Context;
 
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.Balance;
+import de.bitsharesmunich.cryptocoincore.base.GTxIO;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
+import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
+import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
+import de.bitsharesmunich.cryptocoincore.insightapi.GetEstimateFee;
+import de.bitsharesmunich.graphenej.Util;
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
@@ -17,43 +26,75 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
-import de.bitsharesmunich.cryptocoincore.base.Balance;
-import de.bitsharesmunich.cryptocoincore.base.GTxIO;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAccount;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
-import de.bitsharesmunich.cryptocoincore.insightapi.BroadcastTransaction;
-import de.bitsharesmunich.cryptocoincore.insightapi.GetEstimateFee;
-import de.bitsharesmunich.graphenej.Util;
-
 import static de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN;
 
 /**
+ * Represents a bitocin account, of the BIP 44, each account has many addresses, extenral and change
+ *
+ *
  * Created by henry on 05/02/2017.
  */
 
 public class BitcoinAccount extends GeneralCoinAccount {
 
-    private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
+    /**
+     * The network parameters to calculate the address string and the transasciton
+     */
+    private NetworkParameters mParam = NetworkParameters.fromID(NetworkParameters.ID_MAINNET);
 
-    private final static int BITCOIN_ACCOUNT_NUMBER =0;
+    /**
+     * This is the account number assigned to bitcoin see BIP-44
+     */
+    private final static int sBitcoinAccountNumber =0;
 
-    BitcoinAccount(long id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex, int lastChangeIndex) {
-        super(id, name, BITCOIN, seed, BITCOIN_ACCOUNT_NUMBER, accountNumber, lastExternalIndex, lastChangeIndex);
+    /**
+     * Constructor used when loading this account from the database
+     *
+     * @param id Id on the database
+     * @param name The name of this account, used only for tag
+     * @param seed The seed used to calculate the master key
+     * @param accountNumber The account number of the BIP-44
+     * @param lastExternalIndex The index of the last external address used
+     * @param lastChangeIndex The index of the last change address used
+     */
+    BitcoinAccount(long id, String name, AccountSeed seed, int accountNumber, int lastExternalIndex,
+                   int lastChangeIndex) {
+        super(id, name, BITCOIN, seed, sBitcoinAccountNumber, accountNumber, lastExternalIndex,
+                lastChangeIndex);
 
     }
 
+    /**
+     * Basic constructor, used to then save this account onto the database.
+     *
+     * @param seed The seed used to calculate the master key
+     * @param name The name of this account, used only for tag
+     */
     public BitcoinAccount(final AccountSeed seed, String name) {
         this(seed, name, false);
     }
 
+    /**
+     * Constructor to be used when need to the seed to used in another wallet
+     *
+     * @param seed The seed used to calculate the master key
+     * @param name The name of this account, used only for tag
+     * @param importing true if this is importing from another wallet
+     */
     BitcoinAccount(final AccountSeed seed, String name, boolean importing) {
-        super(-1, name, BITCOIN, seed, BITCOIN_ACCOUNT_NUMBER, 0, 0, 0);
+        super(-1, name, BITCOIN, seed, sBitcoinAccountNumber, 0, 0, 0);
         if (importing) {
-            //TODO calculate the number of account
+            //TODO calculate the number of account BIP44
         }
     }
 
+    /**
+     * Gets the balance of this account.
+     *
+     * The balance is calculate by usiong all the confirmed transaction input minus all transaction output
+     *
+     * @return This list only contains one balance, that is for the Bitcoin coin
+     */
     @Override
     public List<Balance> getBalance() {
         long unconfirmedAmount = 0;
@@ -84,6 +125,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
             }
         }
 
+        // Creates the only balance
         Balance balance = new Balance();
         balance.setType(BITCOIN);
         balance.setDate(lastDate);
@@ -95,7 +137,11 @@ public class BitcoinAccount extends GeneralCoinAccount {
         return balances;
     }
 
-    public String getNextRecieveAddress() {
+    /**
+     * Gets the next unused receive address as a String
+     */
+    @Override
+    public String getNextReceiveAddress() {
         if (!mExternalKeys.containsKey(mLastExternalIndex)) {
             mExternalKeys.put(mLastExternalIndex, new GeneralCoinAddress(this, false, mLastExternalIndex, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(mLastExternalIndex, false))));
         }
@@ -107,9 +153,12 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 mExternalKeys.put(mLastExternalIndex, new GeneralCoinAddress(this, false, mLastExternalIndex, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(mLastExternalIndex, false))));
             }
         }
-        return mExternalKeys.get(mLastExternalIndex).getAddressString(param);
+        return mExternalKeys.get(mLastExternalIndex).getAddressString(mParam);
     }
 
+    /**
+     * Gets the next unused change address as String
+     */
     public String getNextChangeAddress() {
         if (!mChangeKeys.containsKey(mLastChangeIndex)) {
             mChangeKeys.put(mLastChangeIndex, new GeneralCoinAddress(this, true, mLastChangeIndex, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(mLastChangeIndex, false))));
@@ -122,14 +171,23 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 mChangeKeys.put(mLastChangeIndex, new GeneralCoinAddress(this, true, mLastChangeIndex, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(mLastChangeIndex, false))));
             }
         }
-        return mChangeKeys.get(mLastChangeIndex).getAddressString(param);
+        return mChangeKeys.get(mLastChangeIndex).getAddressString(mParam);
     }
 
+    /**
+     * Creates a transaction and broadcast it to the bitcoin network
+     *
+     * @param toAddress The destination address
+     * @param coin the coin
+     * @param amount the amount to send in satoshi
+     * @param memo the memo, this can be empty
+     * @param context the android context
+     */
     @Override
     public void send(String toAddress, de.bitsharesmunich.cryptocoincore.base.Coin coin, long amount, String memo, Context context) {
-        if(coin.name().equalsIgnoreCase("bitcoin")){
-            Transaction tx = new Transaction(param);
+        if(coin.equals(de.bitsharesmunich.cryptocoincore.base.Coin.BITCOIN)){ //There is only a coin for Bitcoin
 
+            Transaction tx = new Transaction(mParam);
             long currentAmount = 0;
             long fee = -1;
             try {
@@ -164,7 +222,7 @@ public class BitcoinAccount extends GeneralCoinAccount {
             }
 
             //String to an address
-            Address toAddr = Address.fromBase58(param, toAddress);
+            Address toAddr = Address.fromBase58(mParam, toAddress);
             tx.addOutput(Coin.valueOf(amount), toAddr);
 
             if(memo != null && !memo.isEmpty()){
@@ -182,16 +240,14 @@ public class BitcoinAccount extends GeneralCoinAccount {
             //Change address
             long remain = currentAmount - amount - fee;
             if( remain > 0 ) {
-                System.out.println("SENDTEST: remain : " + remain);
-                Address changeAddr = Address.fromBase58(param, getNextChangeAddress());
-                System.out.println("SENDTEST: NC " + changeAddr.toBase58());
+                Address changeAddr = Address.fromBase58(mParam, getNextChangeAddress());
                 tx.addOutput(Coin.valueOf(remain), changeAddr);
             }
 
             for(GTxIO utxo: utxos) {
                 Sha256Hash txHash = Sha256Hash.wrap(utxo.getTransaction().getTxid());
                 Script script = new Script(Util.hexToBytes(utxo.getScriptHex()));
-                TransactionOutPoint outPoint = new TransactionOutPoint(param, utxo.getIndex(), txHash);
+                TransactionOutPoint outPoint = new TransactionOutPoint(mParam, utxo.getIndex(), txHash);
                 if(utxo.getAddress().getKey().isPubKeyOnly()){
                     if(utxo.getAddress().isIsChange()){
                         utxo.getAddress().setKey(HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(utxo.getAddress().getIndex(), false)));
@@ -202,10 +258,6 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 tx.addSignedInput(outPoint, script, utxo.getAddress().getKey(), Transaction.SigHash.ALL, true);
             }
 
-
-
-            System.out.println("SENDTEST: " + Util.bytesToHex(tx.bitcoinSerialize()));
-
             BroadcastTransaction brTrans = new BroadcastTransaction(Util.bytesToHex(tx.bitcoinSerialize()),this,context);
             brTrans.start();
 
@@ -214,8 +266,11 @@ public class BitcoinAccount extends GeneralCoinAccount {
         }
     }
 
+    /**
+     * Get the current unused address
+     */
     public Address getAddress() {
-        return mExternalKeys.get(mLastExternalIndex).getAddress(param);
+        return mExternalKeys.get(mLastExternalIndex).getAddress(mParam);
     }
 
     @Override
@@ -224,40 +279,57 @@ public class BitcoinAccount extends GeneralCoinAccount {
                 + "name=" + mName
                 + ", idSeed=" + mSeed.getId()
                 + ", AccountNumber=" + mAccountNumber
-                + ", nextAddress=" + getNextRecieveAddress()
-                + ", param=" + param + '}';
+                + ", nextAddress=" + getNextReceiveAddress()
+                + ", param=" + mParam + '}';
     }
 
+    /**
+     * Gets the external or change address as String
+     *
+     * @param index The index of the address
+     * @param change if it is change addres or is a external address
+     */
     @Override
     public String getAddressString(int index, boolean change) {
         if (change) {
             if (!mChangeKeys.containsKey(index)) {
                 mChangeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(index, false))));
             }
-            return mChangeKeys.get(index).getAddressString(param);
+            return mChangeKeys.get(index).getAddressString(mParam);
         } else {
             if (!mExternalKeys.containsKey(index)) {
                 mExternalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(index, false))));
             }
-            return mExternalKeys.get(index).getAddressString(param);
+            return mExternalKeys.get(index).getAddressString(mParam);
         }
     }
 
+    /**
+     * Gets the network param of this coin, used by the bitcoinj library
+     */
     @Override
     public NetworkParameters getNetworkParam() {
-        return param;
+        return mParam;
     }
 
+    /**
+     * Get the external or change address
+     *
+     * @param index the index of the address
+     * @param change if it is change addres or is a external address
+     */
     @Override
     public GeneralCoinAddress getAddress(int index, boolean change) {
         if (change) {
             if (!mChangeKeys.containsKey(index)) {
-                mChangeKeys.put(index, new GeneralCoinAddress(this, true, index, HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(index, false))));
+                mChangeKeys.put(index, new GeneralCoinAddress(this, true, index,
+                        HDKeyDerivation.deriveChildKey(mChangeKey, new ChildNumber(index, false))));
             }
             return mChangeKeys.get(index);
         } else {
             if (!mExternalKeys.containsKey(index)) {
-                mExternalKeys.put(index, new GeneralCoinAddress(this, false, index, HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(index, false))));
+                mExternalKeys.put(index, new GeneralCoinAddress(this, false, index,
+                        HDKeyDerivation.deriveChildKey(mExternalKey, new ChildNumber(index, false))));
             }
             return mExternalKeys.get(index);
         }

@@ -1,16 +1,20 @@
 package de.bitsharesmunich.cryptocoincore.dogecoin;
 
 import de.bitsharesmunich.cryptocoincore.base.CoinDefinitions;
+
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.CustomBlock;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Utils;
 
 /**
- *
+ * Constant to define the DogeCoin network
  */
 public class DogeCoinDefinitions extends CoinDefinitions {
 
+    /**
+     * Consturctor
+     */
     public DogeCoinDefinitions() {
         genesisBlockDifficultyTarget = (0x1e0ffff0L);
         genesisTxInBytes = "04ffff001d0104084e696e746f6e646f";
@@ -37,6 +41,10 @@ public class DogeCoinDefinitions extends CoinDefinitions {
         };
     }
 
+    /**
+     * Return the block for this Network coin
+     * @param n The network parameter
+     */
     @Override
     public Block getCoinBlock(NetworkParameters n) {
         return new CustomBlock(n);

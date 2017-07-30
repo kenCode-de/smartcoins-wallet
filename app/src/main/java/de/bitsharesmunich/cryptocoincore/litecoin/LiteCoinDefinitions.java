@@ -9,10 +9,13 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 
 /**
- *
+ * The LiteCoin Network constants definitions
  */
 public class LiteCoinDefinitions extends CoinDefinitions {
 
+    /**
+     * Constructor
+     */
     public LiteCoinDefinitions() {
         genesisBlockDifficultyTarget = (0x1e0ffff0L);
         genesisTxInBytes = "04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536";
@@ -48,6 +51,10 @@ public class LiteCoinDefinitions extends CoinDefinitions {
         checkpoints.put(200000, Sha256Hash.wrap("000000000000034a7dedef4a161fa058a2d67a173a90155f3a2fe6fc132e0ebf"));
     }
 
+    /**
+     * Return the block for this Network coin
+     * @param n The network parameter
+     */
     @Override
     public Block getCoinBlock(NetworkParameters n) {
         return new CustomBlock(n);

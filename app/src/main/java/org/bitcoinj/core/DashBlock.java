@@ -5,8 +5,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
+import static de.bitsharesmunich.cryptocoincore.dash.X11.*;
+
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
+
+import static org.bitcoinj.core.Sha256Hash.hashTwice;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,13 +24,11 @@ import java.util.Locale;
 
 import javax.annotation.Nullable;
 
-import static de.bitsharesmunich.cryptocoincore.dash.X11.*;
-import static org.bitcoinj.core.Sha256Hash.hashTwice;
-
 /**
+ * Dash block, the differences in the dash block make it necessary to create a different class to be
+ * able to use the bitcoinj. This is necesarry for the calculation of the address as the signing of
+ * each transaction.
  *
- *
- * Created by hvarona on 14/03/2017.
  */
 
 public class DashBlock extends Block {
@@ -66,7 +68,6 @@ public class DashBlock extends Block {
     private long difficultyTarget; // "nBits"
     private long nonce;
 
-    // TODO: Get rid of all the direct accesses to this field. It's a long-since unnecessary holdover from the Dalvik days.
     /** If null, it means this object holds only the headers. */
     @Nullable
     private

@@ -1,5 +1,9 @@
 package org.bitcoinj.core;
 
+import static org.bitcoinj.core.Utils.HEX;
+import static org.bitcoinj.core.Utils.readUint32;
+import static org.bitcoinj.core.Utils.uint32ToByteArrayBE;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,59 +14,50 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.bitcoinj.core.Utils.HEX;
-import static org.bitcoinj.core.Utils.readUint32;
-import static org.bitcoinj.core.Utils.uint32ToByteArrayBE;
+
 
 /**
- * Created by hvarona on 14/03/2017.
+ * This overrides the bitcoinSerializer used in bitcoinj, to be able to signing transaction using
+ * the bitcoinj library
  */
 
 public class DashSerializer extends BitcoinSerializer {
-    private static final Logger log = LoggerFactory.getLogger(DashSerializer.class);
-    private static final int COMMAND_LEN = 12;
+    private static final Logger sLog = LoggerFactory.getLogger(DashSerializer.class);
+    private static final int sCommandLen = 12;
 
-    private final NetworkParameters params;
-    private final boolean parseRetain;
+    private final NetworkParameters mParams;
+    private final boolean mParseRetain;
 
-    private static final Map<Class<? extends Message>, String> names = new HashMap<>();
+    /**
+     * The list of each type of message on the Dash Network
+     */
+    private static final Map<Class<? extends Message>, String> sNames = new HashMap<>();
 
+    /**
+     * Fill the list of the type of message the Dash Network has
+     */
     static {
-        names.put(VersionMessage.class, "version");
-        names.put(InventoryMessage.class, "inv");
-        names.put(Block.class, "block");
-        names.put(GetDataMessage.class, "getdata");
-        names.put(Transaction.class, "tx");
-        names.put(AddressMessage.class, "addr");
-        names.put(Ping.class, "ping");
-        names.put(Pong.class, "pong");
-        names.put(VersionAck.class, "verack");
-        names.put(GetBlocksMessage.class, "getblocks");
-        names.put(GetHeadersMessage.class, "getheaders");
-        names.put(GetAddrMessage.class, "getaddr");
-        names.put(HeadersMessage.class, "headers");
-        names.put(BloomFilter.class, "filterload");
-        names.put(FilteredBlock.class, "merkleblock");
-        names.put(NotFoundMessage.class, "notfound");
-        names.put(MemoryPoolMessage.class, "mempool");
-        names.put(RejectMessage.class, "reject");
-        names.put(GetUTXOsMessage.class, "getutxos");
-        names.put(UTXOsMessage.class, "utxos");
-        //Dash specific messages
-        /*names.put(DarkSendElectionEntryPingMessage.class, "dseep");
-
-        names.put(TransactionLockRequest.class, "ix");
-        names.put(TransactionLockVote.class, "txlvote");
-
-        names.put(MasternodeBroadcast.class, "mnb");
-        names.put(MasternodePing.class, "mnp");
-        names.put(SporkMessage.class, "spork");
-        names.put(GetSporksMessage.class, "getsporks");
-        names.put(DarkSendEntryGetMessage.class, "dseg");
-        names.put(SyncStatusCount.class, "ssc");*/
-
-
-    }
+        sNames.put(VersionMessage.class, "version");
+        sNames.put(InventoryMessage.class, "inv");
+        sNames.put(Block.class, "block");
+        sNames.put(GetDataMessage.class, "getdata");
+        sNames.put(Transaction.class, "tx");
+        sNames.put(AddressMessage.class, "addr");
+        sNames.put(Ping.class, "ping");
+        sNames.put(Pong.class, "pong");
+        sNames.put(VersionAck.class, "verack");
+        sNames.put(GetBlocksMessage.class, "getblocks");
+        sNames.put(GetHeadersMessage.class, "getheaders");
+        sNames.put(GetAddrMessage.class, "getaddr");
+        sNames.put(HeadersMessage.class, "headers");
+        sNames.put(BloomFilter.class, "filterload");
+        sNames.put(FilteredBlock.class, "merkleblock");
+        sNames.put(NotFoundMessage.class, "notfound");
+        sNames.put(MemoryPoolMessage.class, "mempool");
+        sNames.put(RejectMessage.class, "reject");
+        sNames.put(GetUTXOsMessage.class, "getutxos");
+        sNames.put(UTXOsMessage.class, "utxos");
+        }
 
     /**
      * Constructs a BitcoinSerializer with the given behavior.
@@ -72,8 +67,8 @@ public class DashSerializer extends BitcoinSerializer {
      */
     public DashSerializer(NetworkParameters params, boolean parseRetain) {
         super(params, parseRetain);
-        this.params = params;
-        this.parseRetain = parseRetain;
+        this.mParams = params;
+        this.mParseRetain = parseRetain;
     }
 
     /**
@@ -81,24 +76,24 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public void serialize(String name, byte[] message, OutputStream out) throws IOException {
-        byte[] header = new byte[4 + COMMAND_LEN + 4 + 4 /* checksum */];
-        uint32ToByteArrayBE(params.getPacketMagic(), header, 0);
+        byte[] header = new byte[4 + sCommandLen + 4 + 4 /* checksum */];
+        uint32ToByteArrayBE(mParams.getPacketMagic(), header, 0);
 
         // The header array is initialized to zero by Java so we don't have to worry about
         // NULL terminating the string here.
-        for (int i = 0; i < name.length() && i < COMMAND_LEN; i++) {
+        for (int i = 0; i < name.length() && i < sCommandLen; i++) {
             header[4 + i] = (byte) (name.codePointAt(i) & 0xFF);
         }
 
-        Utils.uint32ToByteArrayLE(message.length, header, 4 + COMMAND_LEN);
+        Utils.uint32ToByteArrayLE(message.length, header, 4 + sCommandLen);
 
         byte[] hash = Sha256Hash.hashTwice(message);
-        System.arraycopy(hash, 0, header, 4 + COMMAND_LEN + 4, 4);
+        System.arraycopy(hash, 0, header, 4 + sCommandLen + 4, 4);
         out.write(header);
         out.write(message);
 
-        if (log.isDebugEnabled())
-            log.debug("Sending {} message: {}", name, HEX.encode(header) + HEX.encode(message));
+        if (sLog.isDebugEnabled())
+            sLog.debug("Sending {} message: {}", name, HEX.encode(header) + HEX.encode(message));
     }
 
     /**
@@ -106,7 +101,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public void serialize(Message message, OutputStream out) throws IOException {
-        String name = names.get(message.getClass());
+        String name = sNames.get(message.getClass());
         if (name == null) {
             throw new Error("BitcoinSerializer doesn't currently know how to serialize " + message.getClass());
         }
@@ -117,7 +112,7 @@ public class DashSerializer extends BitcoinSerializer {
         // We use an if ladder rather than reflection because reflection is very slow on Android.
         Message message;
         if (command.equals("version")) {
-            return new VersionMessage(params, payloadBytes);
+            return new VersionMessage(mParams, payloadBytes);
         } else if (command.equals("inv")) {
             message = makeInventoryMessage(payloadBytes, length);
         } else if (command.equals("block")) {
@@ -125,63 +120,41 @@ public class DashSerializer extends BitcoinSerializer {
         } else if (command.equals("merkleblock")) {
             message = makeFilteredBlock(payloadBytes);
         } else if (command.equals("getdata")) {
-            message = new GetDataMessage(params, payloadBytes, this, length);
+            message = new GetDataMessage(mParams, payloadBytes, this, length);
         } else if (command.equals("getblocks")) {
-            message = new GetBlocksMessage(params, payloadBytes);
+            message = new GetBlocksMessage(mParams, payloadBytes);
         } else if (command.equals("getheaders")) {
-            message = new GetHeadersMessage(params, payloadBytes);
+            message = new GetHeadersMessage(mParams, payloadBytes);
         } else if (command.equals("tx")) {
             message = makeTransaction(payloadBytes, 0, length, hash);
         } else if (command.equals("addr")) {
             message = makeAddressMessage(payloadBytes, length);
         } else if (command.equals("ping")) {
-            message = new Ping(params, payloadBytes);
+            message = new Ping(mParams, payloadBytes);
         } else if (command.equals("pong")) {
-            message = new Pong(params, payloadBytes);
+            message = new Pong(mParams, payloadBytes);
         } else if (command.equals("verack")) {
-            return new VersionAck(params, payloadBytes);
+            return new VersionAck(mParams, payloadBytes);
         } else if (command.equals("headers")) {
-            return new HeadersMessage(params, payloadBytes);
+            return new HeadersMessage(mParams, payloadBytes);
         } else if (command.equals("alert")) {
             return makeAlertMessage(payloadBytes);
         } else if (command.equals("filterload")) {
             return makeBloomFilter(payloadBytes);
         } else if (command.equals("notfound")) {
-            return new NotFoundMessage(params, payloadBytes);
+            return new NotFoundMessage(mParams, payloadBytes);
         } else if (command.equals("mempool")) {
             return new MemoryPoolMessage();
         } else if (command.equals("reject")) {
-            return new RejectMessage(params, payloadBytes);
+            return new RejectMessage(mParams, payloadBytes);
         } else if (command.equals("utxos")) {
-            return new UTXOsMessage(params, payloadBytes);
+            return new UTXOsMessage(mParams, payloadBytes);
         } else if (command.equals("getutxos")) {
-            return new GetUTXOsMessage(params, payloadBytes);
-        } /*else if (command.equals("dseep")) {
-            return new DarkSendElectionEntryPingMessage(params, payloadBytes);
-        } else if (command.equals("ix")) {
-            return new TransactionLockRequest(params, payloadBytes);
-        } else if (command.equals("txlvote")) {
-            return new TransactionLockVote(params, payloadBytes);
-        } else if (command.equals("dsq")) {
-            return new DarkSendQueue(params, payloadBytes);
-        } else if (command.equals("mnb")) {
-            return new MasternodeBroadcast(params, payloadBytes);
-        } else if( command.equals("mnp")) {
-            return new MasternodePing(params, payloadBytes);
-        } else if (command.equals("spork")) {
-            return new SporkMessage(params, payloadBytes, 0);
-        } else if(command.equals("ssc")) {
-            return new SyncStatusCount(params, payloadBytes);
-        } else if(command.equals("sendheaders")) {
-            return new SendHeadersMessage(params);
-        } else if(command.equals("getsporks")) {
-            return new GetSporksMessage(params);
-        }else if(command.equals("govsync")) {
-            return new GovernanceSyncMessage(params);
-        }*/
+            return new GetUTXOsMessage(mParams, payloadBytes);
+        }
         else{
-            log.warn("No support for deserializing message with name {}", command);
-            return new UnknownMessage(params, command, payloadBytes);
+            sLog.warn("No support for deserializing message with name {}", command);
+            return new UnknownMessage(mParams, command, payloadBytes);
         }
         return message;
     }
@@ -190,7 +163,7 @@ public class DashSerializer extends BitcoinSerializer {
      * Get the network parameters for this serializer.
      */
     public NetworkParameters getParameters() {
-        return params;
+        return mParams;
     }
 
     /**
@@ -199,7 +172,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public AddressMessage makeAddressMessage(byte[] payloadBytes, int length) throws ProtocolException {
-        return new AddressMessage(params, payloadBytes, this, length);
+        return new AddressMessage(mParams, payloadBytes, this, length);
     }
 
     /**
@@ -208,7 +181,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public Message makeAlertMessage(byte[] payloadBytes) throws ProtocolException {
-        return new AlertMessage(params, payloadBytes);
+        return new AlertMessage(mParams, payloadBytes);
     }
 
     /**
@@ -217,7 +190,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public Block makeBlock(final byte[] payloadBytes, final int offset, final int length) throws ProtocolException {
-        return new Block(params, payloadBytes, offset, this, length);
+        return new Block(mParams, payloadBytes, offset, this, length);
     }
 
     /**
@@ -226,7 +199,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public Message makeBloomFilter(byte[] payloadBytes) throws ProtocolException {
-        return new BloomFilter(params, payloadBytes);
+        return new BloomFilter(mParams, payloadBytes);
     }
 
     /**
@@ -235,7 +208,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public FilteredBlock makeFilteredBlock(byte[] payloadBytes) throws ProtocolException {
-        return new FilteredBlock(params, payloadBytes);
+        return new FilteredBlock(mParams, payloadBytes);
     }
 
     /**
@@ -244,7 +217,7 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public InventoryMessage makeInventoryMessage(byte[] payloadBytes, int length) throws ProtocolException {
-        return new InventoryMessage(params, payloadBytes, this, length);
+        return new InventoryMessage(mParams, payloadBytes, this, length);
     }
 
     /**
@@ -254,7 +227,7 @@ public class DashSerializer extends BitcoinSerializer {
     @Override
     public Transaction makeTransaction(byte[] payloadBytes, int offset,
                                        int length, byte[] hash) throws ProtocolException {
-        Transaction tx = new Transaction(params, payloadBytes, offset, null, this, length);
+        Transaction tx = new Transaction(mParams, payloadBytes, offset, null, this, length);
         if (hash != null)
             tx.setHash(Sha256Hash.wrapReversed(hash));
         return tx;
@@ -267,7 +240,7 @@ public class DashSerializer extends BitcoinSerializer {
             byte b = in.get();
             // We're looking for a run of bytes that is the same as the packet magic but we want to ignore partial
             // magics that aren't complete. So we keep track of where we're up to with magicCursor.
-            byte expectedByte = (byte)(0xFF & params.getPacketMagic() >>> (magicCursor * 8));
+            byte expectedByte = (byte)(0xFF & mParams.getPacketMagic() >>> (magicCursor * 8));
             if (b == expectedByte) {
                 magicCursor--;
                 if (magicCursor < 0) {
@@ -287,13 +260,13 @@ public class DashSerializer extends BitcoinSerializer {
      */
     @Override
     public boolean isParseRetainMode() {
-        return parseRetain;
+        return mParseRetain;
     }
 
 
     public static class BitcoinPacketHeader {
         /** The largest number of bytes that a header can represent */
-        public static final int HEADER_LENGTH = COMMAND_LEN + 4 + 4;
+        public static final int HEADER_LENGTH = sCommandLen + 4 + 4;
 
         public final byte[] header;
         public final String command;
@@ -308,11 +281,11 @@ public class DashSerializer extends BitcoinSerializer {
 
             // The command is a NULL terminated string, unless the command fills all twelve bytes
             // in which case the termination is implicit.
-            for (; header[cursor] != 0 && cursor < COMMAND_LEN; cursor++) ;
+            for (; header[cursor] != 0 && cursor < sCommandLen; cursor++) ;
             byte[] commandBytes = new byte[cursor];
             System.arraycopy(header, 0, commandBytes, 0, cursor);
             command = Utils.toString(commandBytes, "US-ASCII");
-            cursor = COMMAND_LEN;
+            cursor = sCommandLen;
 
             size = (int) readUint32(header, cursor);
             cursor += 4;

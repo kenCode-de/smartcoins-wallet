@@ -1,32 +1,24 @@
 package de.bitsharesmunich.cryptocoincore.bitcoin;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.WrongNetworkException;
-
 import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinManager;
 
 /**
+ *
  * Created by henry on 05/02/2017.
  */
 
 public class BitcoinManager extends GeneralCoinManager<BitcoinAccount> {
 
-    static private BitcoinManager instance = null;
+    static private BitcoinManager sInstance = null;
 
-    private BitcoinManager() {
-
-    }
+    private BitcoinManager() {}
 
     public static BitcoinManager getInstance() {
-        if (BitcoinManager.instance == null) {
-            BitcoinManager.instance = new BitcoinManager();
+        if (BitcoinManager.sInstance == null) {
+            BitcoinManager.sInstance = new BitcoinManager();
         }
-
-        return BitcoinManager.instance;
+        return BitcoinManager.sInstance;
     }
 
     @Override

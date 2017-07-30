@@ -4,10 +4,9 @@ import org.bitcoinj.core.CustomNetworkParameters;
 
 import static com.google.common.base.Preconditions.checkState;
 import com.google.common.base.Stopwatch;
+
 import de.bitsharesmunich.cryptocoincore.base.CoinDefinitions;
-import org.bitcoinj.core.CustomNetworkParameters;
-import java.math.BigInteger;
-import java.util.concurrent.TimeUnit;
+
 import org.bitcoinj.core.BitcoinSerializer;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.Coin;
@@ -22,66 +21,82 @@ import org.bitcoinj.utils.MonetaryFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
+
 /**
  *
- * @author henry
  */
 public class DashNetworkParameters extends CustomNetworkParameters{
+
+    /**
+     * The schema used for this network
+     */
     public static final String DASH_SCHEME = "dash";
     public static final int MAINNET_MAJORITY_WINDOW = 1000;
     public static final int MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED = 950;
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
 
-    public static final CoinDefinitions dashDefinitions = new DashCoinDefinitions();
-    private static final Logger log = LoggerFactory.getLogger(DashNetworkParameters.class);
+    /**
+     * The constants definitions
+     */
+    public static final CoinDefinitions DASH_DEFINITIONS = new DashCoinDefinitions();
+    /**
+     * Logger
+     */
+    private static final Logger sLog = LoggerFactory.getLogger(DashNetworkParameters.class);
 
+    private static DashNetworkParameters sInstance;
+
+    /**
+     * Basic constructor, generates the dash genesis block
+     */
     public DashNetworkParameters() {
-        super(dashDefinitions);
+        super(DASH_DEFINITIONS);
         interval = (int)(576);
         targetTimespan = (int)(86400);
-        maxTarget = dashDefinitions.proofOfWorkLimit;
-        dumpedPrivateKeyHeader = 128 + dashDefinitions.AddressHeader;
-        addressHeader = dashDefinitions.AddressHeader;
-        p2shHeader = dashDefinitions.p2shHeader;
+        maxTarget = DASH_DEFINITIONS.proofOfWorkLimit;
+        dumpedPrivateKeyHeader = 128 + DASH_DEFINITIONS.AddressHeader;
+        addressHeader = DASH_DEFINITIONS.AddressHeader;
+        p2shHeader = DASH_DEFINITIONS.p2shHeader;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader};
-        port = dashDefinitions.Port;
-        packetMagic = dashDefinitions.PacketMagic;
+        port = DASH_DEFINITIONS.Port;
+        packetMagic = DASH_DEFINITIONS.PacketMagic;
         bip32HeaderPub = 0x0488B21E; //The 4 byte header that serializes in base58 to "xpub".
         bip32HeaderPriv = 0x0488ADE4; //The 4 byte header that serializes in base58 to "xprv"
-        genesisBlock.setDifficultyTarget(dashDefinitions.genesisBlockDifficultyTarget);
-        genesisBlock.setTime(dashDefinitions.genesisBlockTime);
-        genesisBlock.setNonce(dashDefinitions.genesisBlockNonce);
+        genesisBlock.setDifficultyTarget(DASH_DEFINITIONS.genesisBlockDifficultyTarget);
+        genesisBlock.setTime(DASH_DEFINITIONS.genesisBlockTime);
+        genesisBlock.setNonce(DASH_DEFINITIONS.genesisBlockNonce);
 
         majorityEnforceBlockUpgrade = MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED;
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
         id = ID_MAINNET;
-        subsidyDecreaseBlockCount = dashDefinitions.subsidyDecreaseBlockCount;
-        spendableCoinbaseDepth = dashDefinitions.spendableCoinbaseDepth;
+        subsidyDecreaseBlockCount = DASH_DEFINITIONS.subsidyDecreaseBlockCount;
+        spendableCoinbaseDepth = DASH_DEFINITIONS.spendableCoinbaseDepth;
         String genesisHash = genesisBlock.getHashAsString();
-        System.out.println(genesisHash);
-        checkState(genesisHash.equals(dashDefinitions.genesisHash),
+        checkState(genesisHash.equals(DASH_DEFINITIONS.genesisHash),
                 genesisHash);
 
-        dashDefinitions.initCheckpoints(checkpoints);
+        DASH_DEFINITIONS.initCheckpoints(checkpoints);
 
-        dnsSeeds = dashDefinitions.dnsSeeds;
+        dnsSeeds = DASH_DEFINITIONS.dnsSeeds;
 
-        httpSeeds = dashDefinitions.httpSeeds;
-        addrSeeds = dashDefinitions.addrSeeds;
-
-        //strSporkKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+        httpSeeds = DASH_DEFINITIONS.httpSeeds;
+        addrSeeds = DASH_DEFINITIONS.addrSeeds;
     }
 
-    private static DashNetworkParameters instance;
     public static synchronized DashNetworkParameters get() {
-        if (instance == null) {
-            instance = new DashNetworkParameters();
+        if (sInstance == null) {
+            sInstance = new DashNetworkParameters();
         }
-        return instance;
+        return sInstance;
     }
 
+    /**
+     * Gets the protocol id for the main dash net
+     */
     @Override
     public String getPaymentProtocolId() {
         return PAYMENT_PROTOCOL_ID_MAINNET;
@@ -121,7 +136,7 @@ public class DashNetworkParameters extends CustomNetworkParameters{
         }
         watch.stop();
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50)
-            log.info("Difficulty transition traversal took {}", watch);
+            sLog.info("Difficulty transition traversal took {}", watch);
 
         Block blockIntervalAgo = cursor.getHeader();
         int timespan = (int) (prev.getTimeSeconds() - blockIntervalAgo.getTimeSeconds());
@@ -137,7 +152,7 @@ public class DashNetworkParameters extends CustomNetworkParameters{
         newTarget = newTarget.divide(BigInteger.valueOf(targetTimespan));
 
         if (newTarget.compareTo(this.getMaxTarget()) > 0) {
-            log.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
+            sLog.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
             newTarget = this.getMaxTarget();
         }
 

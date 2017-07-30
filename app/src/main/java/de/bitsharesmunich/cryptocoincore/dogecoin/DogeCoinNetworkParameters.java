@@ -22,7 +22,6 @@ import static com.google.common.base.Preconditions.checkState;
 
 /**
  *
- * @author henry
  */
 public class DogeCoinNetworkParameters extends CustomNetworkParameters{
     public static final String DOGE_COIN_SCHEME = "dogecoin";
@@ -30,52 +29,53 @@ public class DogeCoinNetworkParameters extends CustomNetworkParameters{
     public static final int MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED = 950;
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
     
-    public static final CoinDefinitions dogecoinDefinitions = new DogeCoinDefinitions();
-    private static final Logger log = LoggerFactory.getLogger(DogeCoinNetworkParameters.class);
+    public static final CoinDefinitions DOGE_COIN_DEFINITIONS = new DogeCoinDefinitions();
+    private static final Logger sLog = LoggerFactory.getLogger(DogeCoinNetworkParameters.class);
+    private static DogeCoinNetworkParameters sInstance;
 
     public DogeCoinNetworkParameters() {
-        super(dogecoinDefinitions);
+        super(DOGE_COIN_DEFINITIONS);
         interval = (int)(576);
         targetTimespan = (int)(14400);
-        maxTarget = dogecoinDefinitions.proofOfWorkLimit;
-        dumpedPrivateKeyHeader = 128 + dogecoinDefinitions.AddressHeader;
-        addressHeader = dogecoinDefinitions.AddressHeader;
-        p2shHeader = dogecoinDefinitions.p2shHeader;
+        maxTarget = DOGE_COIN_DEFINITIONS.proofOfWorkLimit;
+        dumpedPrivateKeyHeader = 128 + DOGE_COIN_DEFINITIONS.AddressHeader;
+        addressHeader = DOGE_COIN_DEFINITIONS.AddressHeader;
+        p2shHeader = DOGE_COIN_DEFINITIONS.p2shHeader;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader};
-        port = dogecoinDefinitions.Port;
-        packetMagic = dogecoinDefinitions.PacketMagic;
+        port = DOGE_COIN_DEFINITIONS.Port;
+        packetMagic = DOGE_COIN_DEFINITIONS.PacketMagic;
         bip32HeaderPub = 0x0488B21E; //The 4 byte header that serializes in base58 to "xpub".
         bip32HeaderPriv = 0x0488ADE4; //The 4 byte header that serializes in base58 to "xprv"
-        genesisBlock.setDifficultyTarget(dogecoinDefinitions.genesisBlockDifficultyTarget);
-        genesisBlock.setTime(dogecoinDefinitions.genesisBlockTime);
-        genesisBlock.setNonce(dogecoinDefinitions.genesisBlockNonce);
+        genesisBlock.setDifficultyTarget(DOGE_COIN_DEFINITIONS.genesisBlockDifficultyTarget);
+        genesisBlock.setTime(DOGE_COIN_DEFINITIONS.genesisBlockTime);
+        genesisBlock.setNonce(DOGE_COIN_DEFINITIONS.genesisBlockNonce);
 
         majorityEnforceBlockUpgrade = MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED;
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
         id = ID_MAINNET;
-        subsidyDecreaseBlockCount = dogecoinDefinitions.subsidyDecreaseBlockCount;
-        spendableCoinbaseDepth = dogecoinDefinitions.spendableCoinbaseDepth;
+        subsidyDecreaseBlockCount = DOGE_COIN_DEFINITIONS.subsidyDecreaseBlockCount;
+        spendableCoinbaseDepth = DOGE_COIN_DEFINITIONS.spendableCoinbaseDepth;
         String genesisHash = genesisBlock.getHashAsString();
         System.out.println(genesisHash);
-        checkState(genesisHash.equals(dogecoinDefinitions.genesisHash),
+        checkState(genesisHash.equals(DOGE_COIN_DEFINITIONS.genesisHash),
                 genesisHash);
 
-        dogecoinDefinitions.initCheckpoints(checkpoints);
+        DOGE_COIN_DEFINITIONS.initCheckpoints(checkpoints);
 
-        dnsSeeds = dogecoinDefinitions.dnsSeeds;
+        dnsSeeds = DOGE_COIN_DEFINITIONS.dnsSeeds;
 
-        httpSeeds = dogecoinDefinitions.httpSeeds;
-        addrSeeds = dogecoinDefinitions.addrSeeds;
+        httpSeeds = DOGE_COIN_DEFINITIONS.httpSeeds;
+        addrSeeds = DOGE_COIN_DEFINITIONS.addrSeeds;
     }
 
-    private static DogeCoinNetworkParameters instance;
+
     public static synchronized DogeCoinNetworkParameters get() {
-        if (instance == null) {
-            instance = new DogeCoinNetworkParameters();
+        if (sInstance == null) {
+            sInstance = new DogeCoinNetworkParameters();
         }
-        return instance;
+        return sInstance;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class DogeCoinNetworkParameters extends CustomNetworkParameters{
         }
         watch.stop();
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50)
-            log.info("Difficulty transition traversal took {}", watch);
+            sLog.info("Difficulty transition traversal took {}", watch);
 
         Block blockIntervalAgo = cursor.getHeader();
         int timespan = (int) (prev.getTimeSeconds() - blockIntervalAgo.getTimeSeconds());
@@ -133,7 +133,7 @@ public class DogeCoinNetworkParameters extends CustomNetworkParameters{
         newTarget = newTarget.divide(BigInteger.valueOf(targetTimespan));
 
         if (newTarget.compareTo(this.getMaxTarget()) > 0) {
-            log.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
+            sLog.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
             newTarget = this.getMaxTarget();
         }
 

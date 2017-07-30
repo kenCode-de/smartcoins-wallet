@@ -71,4 +71,8 @@ public enum Coin implements Serializable{
     public int getIcon(){
         return this.mIcon;
     }
+
+
+
+
 }
