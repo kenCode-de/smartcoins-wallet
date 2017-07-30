@@ -114,6 +114,8 @@ public class RecieveActivity extends BaseActivity {
         orderId = UUID.randomUUID().toString();
         Intent intent = getIntent();
 
+        //Gets the "coin" parameter of the intent of this activity
+        //this will determine which coin type will be manage by the activity
         if (intent.hasExtra(getString(R.string.coin))){
             this.coin = Coin.valueOf(this.getIntent().getStringExtra(getString(R.string.coin)));
         } else {

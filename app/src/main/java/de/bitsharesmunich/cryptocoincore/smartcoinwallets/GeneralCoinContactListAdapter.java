@@ -44,18 +44,16 @@ import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.Contact;
 
 /**
- * Created by Syed Muhammad Muzzammil on 5/18/16.
+ * Adapter for the list of contacts showed in the contact fragment
  */
 public class GeneralCoinContactListAdapter extends BaseAdapter {
-    private ArrayList<ListviewContactItem> listContact;
-    private HashMap<String,Bitmap> images = new HashMap<String,Bitmap>();
-    private HashMap<String,Boolean> notEmail = new HashMap<String,Boolean>();
+    private ArrayList<ListviewContactItem> listContact; /**< contacts view list*/
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private int pos = 0;
     private Context context;
     private LayoutInflater mInflater;
-    private TinyDB tinyDB;
-    private SCWallDatabase db;
+    private TinyDB tinyDB; /**< Manages the bitshares contacts info*/
+    private SCWallDatabase db; /**< Manages contacts info of all the coin types*/
     private Coin coin;
 
     public GeneralCoinContactListAdapter(Context _context) {
@@ -91,6 +89,14 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         }
 
 
+    /**
+     * Creates a contact view in the list of contacts.
+     *
+     * @param position the index of the contact in the list
+     * @param convertView the view to return constructed
+     * @param parent the parent view of the convertView
+     * @return a view of the contact in the given position
+     */
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
         if(listContact.get(position).isImage) {
@@ -108,12 +114,15 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         String name = listContact.get(position).GetName();
         username.setText(name);
         txtnote.setText(listContact.get(position).GetNote());
+
+        //Creates the delete option
         delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showDialog(position);
             }
         });
 
+        //Creates the edit option
         ImageButton ibEdit = (ImageButton) convertView.findViewById(R.id.editcontact);
         ibEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -122,11 +131,7 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
 
                 intent.putExtra("coin", coin.name());
 
-                //if (coin == Coin.BITSHARE) {
-                //    intent.putExtra("id", (long)index);
-                //} else {
-                    intent.putExtra("id", listContact.get(index).GetId());
-                //}
+                intent.putExtra("id", listContact.get(index).GetId());
                 intent.putExtra("name", listContact.get(index).GetName());
                 intent.putExtra("account", listContact.get(index).GetAccount());
                 intent.putExtra("note", listContact.get(index).GetNote());
@@ -136,60 +141,50 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
             }
         });
 
-
+        //If the email of the contact is valid then the image could be retrieved
         if(listContact.get(position).isImage) {
             final ImageView ivEmail = (ImageView) convertView.findViewById(R.id.imageEmail);
             setGravator(listContact.get(position).GetEmail(),ivEmail);
         }else {
-            final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
+            //final WebView webView = (WebView) convertView.findViewById(R.id.webViewContacts);
             //loadWebView(webView, 40, Helper.hash(accountnm, Helper.SHA256));
         }
 
         return convertView;
     }
 
+    /**
+     * Initializes the contacts list data
+     *
+     * @return an array of user contacts as list items
+     */
     private ArrayList<ListviewContactItem> GetlistContact(){
         ArrayList<ListviewContactItem> contactlist = new ArrayList<ListviewContactItem>();
         ListviewContactItem contact;
 
-        /*if (this.coin == Coin.BITSHARE) {
+        List<Contact> contactsList = db.getContacts();
+        Contact nextContact;
+        for (int i = 0; i < contactsList.size(); i++) {
+            nextContact = contactsList.get(i);
             contact = new ListviewContactItem();
-
-            ArrayList<ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", ListviewContactItem.class);
-            for (int i = 0; i < contacts.size(); i++) {
-                contact = new ListviewContactItem();
-                contact.SetName(contacts.get(i).name);
-                contact.SetAccount(contacts.get(i).account);
-                contact.SaveNote(contacts.get(i).note);
-                if (!contacts.get(i).email.isEmpty()) {
-                    contact.isImage = true;
-                    contact.SaveEmail(contacts.get(i).email);
-                }
-                contactlist.add(contact);
+            contact.SetName(nextContact.getName());
+            contact.SetAccount(nextContact.getAccount());
+            contact.SaveNote(nextContact.getNote());
+            contact.SetId(nextContact.getId());
+            if (!nextContact.getEmail().isEmpty()) {
+                contact.isImage = true;
+                contact.SaveEmail(nextContact.getEmail());
             }
-
-        } else {*/
-            List<Contact> contactsList = db.getContacts();
-            Contact nextContact;
-            for (int i = 0; i < contactsList.size(); i++) {
-                nextContact = contactsList.get(i);
-                contact = new ListviewContactItem();
-                contact.SetName(nextContact.getName());
-                contact.SetAccount(nextContact.getAccount());
-                contact.SaveNote(nextContact.getNote());
-                contact.SetId(nextContact.getId());
-                if (!nextContact.getEmail().isEmpty()) {
-                    contact.isImage = true;
-                    contact.SaveEmail(nextContact.getEmail());
-                }
-                contactlist.add(contact);
-            }
-        //}
+            contactlist.add(contact);
+        }
 
         Collections.sort(contactlist, new ContactNameComparator());
         return contactlist;
     }
 
+    /**
+     * Represents an item in the list view of the contacts
+     */
     public static class ListviewContactItem {
         public String name;
         public String email;
@@ -240,6 +235,10 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
     }
 
 
+    /**
+     * Removes from the contacts list a contact with a specific id
+     * @param id id of the contact to remove
+     */
     void removeFromlist(long id){
         if (coin == Coin.BITSHARE) {
             ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> contacts = tinyDB.getGeneralCoinContactObject("Contacts", GeneralCoinContactListAdapter.ListviewContactItem.class);
@@ -257,6 +256,10 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         listContact.clear();
     }
 
+    /**
+     * Shows a dialog to confirm the elimination of a contact to the user
+     * @param position the index of the contact to remove
+     */
     public void showDialog(final int position){
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.alert_confirmation_dialog);
@@ -301,6 +304,9 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * downloads the image of a contact gravatar in an asynchronous manner
+     */
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
@@ -332,6 +338,12 @@ public class GeneralCoinContactListAdapter extends BaseAdapter {
             }
         }
     }
+
+    /**
+     * set the gravatar image of a user contact
+     * @param email the contact email associated with the gravatar
+     * @param imageView the image view container to put the image
+     */
     void setGravator(String email,ImageView imageView){
             String emailGravatarUrl = "https://www.gravatar.com/avatar/" + Helper.hash(email, Helper.MD5) + "?s=130&r=pg&d=404";
             new DownloadImageTask(imageView)

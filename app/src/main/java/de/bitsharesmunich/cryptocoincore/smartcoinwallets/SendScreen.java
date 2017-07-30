@@ -413,6 +413,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         } else {
             db = new SCWallDatabase(this);
 
+            //TODO adjust the donation of coins differents from bitshares in the send screen
             cbAlwaysDonate.setText(getString(R.string.checkbox_donate_general_coin,1.0,this.coin.getLabel()) + " BitShares Munich");
             Intent intent = getIntent();
             Bundle res = intent.getExtras();
