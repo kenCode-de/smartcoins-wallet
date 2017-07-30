@@ -7,6 +7,10 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
  * Created by Henry Varona on 12/6/2017.
  */
 
+/**
+ * Represents the user settings for the bitcoin coin
+ *
+ */
 public class BitcoinSettings extends GeneralCoinSettings {
 
     public BitcoinSettings(){

@@ -12,21 +12,29 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinValidator;
  * Created by Henry Varona on 26/2/2017.
  */
 
+/**
+ * Validates the addresses and URIs associated to the bitcoin coin
+ */
 public class BitcoinValidator extends GeneralCoinValidator {
 
-    private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET);
+    private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET); /**< The connection param (mainnet or testnet)*/
 
-    private final static String uriStart = "bitcoin:";
-    private final static String uriAmountStart = "amount=";
-    private final static String uriSeparator = "?";
-    private final static String uriAnd = "&";
+    private final static String uriStart = "bitcoin:"; /**< constant start for a bitcoin URI*/
+    private final static String uriAmountStart = "amount="; /**< constant amount parameter start for a bitcoin URI*/
+    private final static String uriSeparator = "?"; /**< constant separator for a bitcoin URI*/
+    private final static String uriAnd = "&"; /**< constant parameter union for a bitcoin URI*/
 
-    static private BitcoinValidator instance = null;
+    static private BitcoinValidator instance = null; /**< singleton instance of this class*/
 
     private BitcoinValidator() {
 
     }
 
+    /**
+     * Singleton constructor
+     *
+     * @return the only instance this class should have
+     */
     public static BitcoinValidator getInstance() {
         if (BitcoinValidator.instance == null) {
             BitcoinValidator.instance = new BitcoinValidator();
@@ -35,6 +43,11 @@ public class BitcoinValidator extends GeneralCoinValidator {
         return BitcoinValidator.instance;
     }
 
+    /**
+     * Validates if an address string is valid for a bitcoin address
+     * @param address the adress to validate
+     * @return true if the address is valid, false otherwise
+     */
     @Override
     public boolean validateAddress(String address) {
         try {
@@ -45,6 +58,12 @@ public class BitcoinValidator extends GeneralCoinValidator {
         }
     }
 
+    /**
+     * Returns a well formed bitcoin URI with an address and an amount
+     * @param address a coin address
+     * @param amount an amount for the coin address
+     * @return a well formed bitcoin URI with the given address and amount
+     */
     @Override
     public String toURI(String address, double amount) {
         StringBuilder URI = new StringBuilder();
@@ -57,6 +76,11 @@ public class BitcoinValidator extends GeneralCoinValidator {
         return URI.toString();
     }
 
+    /**
+     * Extract the address part of a bitcoin URI
+     * @param uri the URI from which to extract the address
+     * @return the address part of the given bitcoin URI
+     */
     @Override
     public String getAddressFromURI(String uri) {
         uri = uri.replace(" ","");
@@ -71,6 +95,11 @@ public class BitcoinValidator extends GeneralCoinValidator {
         return uri.substring(startAddress);
     }
 
+    /**
+     * Extract the amount part of a bitcoin URI
+     * @param uri the URI from which to extract the amount
+     * @return the amount part of the given bitcoin URI
+     */
     @Override
     public double getAmount(String uri) {
         uri = uri.replace(" ","");
