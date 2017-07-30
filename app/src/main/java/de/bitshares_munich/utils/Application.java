@@ -52,11 +52,11 @@ public class Application extends android.app.Application implements de.bitshares
     public static long blockTime;
     public static String urlsSocketConnection[] =
             {
-                      "wss://bitshares.openledger.info/ws",     // Openledger node
-                      "wss://eu.openledger.info/ws",              // Openledger EU node
-                      "ws://128.0.69.157:8090",                 // Henry node
-                      "ws://128.0.69.157:8091",                 // Henry node
-                      "wss://de.blockpay.ch/node"              // German node
+                    "wss://bitshares.openledger.info/ws",     // Openledger node
+                    "wss://eu.openledger.info/ws",              // Openledger EU node
+                    "ws://128.0.69.157:8090",                 // Henry node
+                    "ws://128.0.69.157:8091",                 // Henry node
+                    "wss://de.blockpay.ch/node"              // German node
             };
     public static String faucetUrl = "http://128.0.69.157:5000";
     public static String monitorAccountId;

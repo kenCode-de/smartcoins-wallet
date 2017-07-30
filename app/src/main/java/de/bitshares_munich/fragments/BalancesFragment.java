@@ -602,7 +602,8 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                 TransferOperation op = historicalTransfer.getOperation();
                 if (op != null) {
                     Memo memo = op.getMemo();
-                    Log.v(TAG, "Memo Encrypted: "+ memo.toString());
+                    Log.v(TAG, "OP: "+ historicalTransfer.getId());
+                    Log.v(TAG, "Memo Encrypted: "+ memo.getStringMessage());
                     Log.v(TAG, "Memo Bytes: "+ memo.getByteMessage());
                     if (memo.getByteMessage() != null) {
 
@@ -1495,16 +1496,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
         final WebsocketWorkerThread glo = new WebsocketWorkerThread(new GetLimitOrders(indirectAsset.getObjectId(), reference.getObjectId(), 20, new WitnessResponseListener() {
             @Override
             public void onSuccess(WitnessResponse response) {
-//                List<LimitOrder> orders = (List<LimitOrder>) response.result;
-//                for(LimitOrder order : orders){
-//                    if(order.getSellPrice().base.getAsset().getObjectId().equals(reference.getObjectId())){
-//                        double price = (double) order.getSellPrice().base.getAmount().longValue() / (double) order.getSellPrice().quote.getAmount().longValue();
-//                        int exp = indirectAsset.getPrecision() - reference.getPrecision();
-//                        price = price * Math.pow(10, exp) * BTSCurrencyPriceCache;
-//                        updateEquivalentValue(indirectAsset.getSymbol(), Double.toString(price), null);
-//                        return;
-//                    }
-//                }
 
                 if (response.result.getClass() == ArrayList.class) {
                     ArrayList list = (ArrayList) response.result;
@@ -1538,15 +1529,6 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
             WebsocketWorkerThread middle = new WebsocketWorkerThread(new GetLimitOrders(reference.getObjectId(), fiatCurrency.getObjectId(), 20, new WitnessResponseListener() {
                 @Override
                 public void onSuccess(WitnessResponse response) {
-//                    List<LimitOrder> orders = (List<LimitOrder>) response.result;
-//                    for(LimitOrder order : orders){
-//                        if(order.getSellPrice().base.getAsset().getObjectId().equals(reference.getObjectId())){
-//                            BTSCurrencyPriceCache = (double) order.getSellPrice().base.getAmount().longValue() / (double) order.getSellPrice().quote.getAmount().longValue();
-//                            int exp = reference.getPrecision() - fiatCurrency.getPrecision();
-//                            BTSCurrencyPriceCache = BTSCurrencyPriceCache * Math.pow(10, exp);
-//                            BTSCurrencyPriceCacheDate = new Date();
-//                        }
-//                    }
 
                     if (response.result.getClass() == ArrayList.class) {
                         ArrayList list = (ArrayList) response.result;
@@ -1989,9 +1971,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
                         Log.e(TAG,""+element.getClassName()+":"+element.getMethodName()+":"+element.getLineNumber());
                     }
                 }
-                /*}
 
-                whiteSpaceAfterBalances.setVisibility(View.GONE);*/
             }
         });
     }
