@@ -14,7 +14,6 @@ import de.bitshares_munich.fragments.ContactsFragment;
 import de.bitshares_munich.smartcoinswallet.R;
 
 import de.bitsharesmunich.cryptocoincore.fragments.GeneralCoinContactsFragment;
-import de.bitsharesmunich.cryptocoincore.fragments.NoCurrencyAccountFragment;
 import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 /**
@@ -58,17 +57,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         }
         return null;
     }
-
-
-    /*@Override
-    public int getItemPosition(Object object)
-    {
-        if (object instanceof NoCurrencyAccountFragment && this.fragmentAtBitcoin instanceof GeneralCoinBalancesFragment) {
-            return POSITION_NONE;
-        }
-
-        return POSITION_UNCHANGED;
-    }*/
 
 
     @Override

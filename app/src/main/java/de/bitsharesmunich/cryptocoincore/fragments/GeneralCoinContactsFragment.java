@@ -26,28 +26,40 @@ import de.bitsharesmunich.cryptocoincore.smartcoinwallets.GeneralCoinContactList
 /**
  * Created by qasim on 5/10/16.
  */
+
+/**
+ * Shows a list of user contacts. Allows the user to add, modify or remove contacts.
+ */
 public class GeneralCoinContactsFragment extends Fragment implements ContactsDelegate {
     public static ContactsDelegate contactsDelegate;
 
     @Bind(R.id.contactslist)
-    ListView contactslist;
-    GeneralCoinContactListAdapter adapter;
+    ListView contactslist; /**< List view for the contacts*/
+    GeneralCoinContactListAdapter adapter; /**< Adapter for the contacts list view*/
 
     @Bind(R.id.sharecontact)
-    ImageView sharecontact;
+    ImageView sharecontact; /**< Touchable option for sharing a contact*/
 
     @Bind(R.id.addcontact)
-    ImageView addcontact;
+    ImageView addcontact; /**< Touchable option for adding a contact*/
 
-    Coin coin;
+    Coin coin; /**< Coin parameters passed on this fragment instanciation*/
 
-    boolean viewCreated = false;
-    boolean isVisible = false;
+    boolean viewCreated = false; /**< tells if the fragment was already created*/
+    boolean isVisible = false; /**< tells if the fragment is already visible*/
 
     public GeneralCoinContactsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Creates an instance of this fragment passing a specific Coin.
+     * The coin parameter is no longer used, because the contacts have many addresses
+     * with different coins.
+     *
+     * @param coin the coin to pass to the fragment
+     * @return an instance of this fragment
+     */
     public static GeneralCoinContactsFragment newInstance(Coin coin) {
         GeneralCoinContactsFragment generalCoinContactsFragment = new GeneralCoinContactsFragment();
 
@@ -86,6 +98,10 @@ public class GeneralCoinContactsFragment extends Fragment implements ContactsDel
         return view;
 
     }
+
+    /**
+     * Captures when the user press the "Add Contact" button
+     */
     @OnClick(R.id.addcontact)
     public void AddContact(){
         Intent intent = new Intent(getActivity(), AddEditContacts.class);
@@ -99,6 +115,9 @@ public class GeneralCoinContactsFragment extends Fragment implements ContactsDel
         adapter = new GeneralCoinContactListAdapter(getActivity(), this.coin);
         contactslist.setAdapter(adapter);
     }
+    /**
+     * Captures when the user press the "Share Contact" button
+     */
     @OnClick(R.id.sharecontact)
     public void ShareContact() {
         Intent intent = new Intent(getActivity(), ShareContact.class);
@@ -119,6 +138,9 @@ public class GeneralCoinContactsFragment extends Fragment implements ContactsDel
         }
     }
 
+    /**
+     * Starts the animations whenever the fragment is created and visible to the user
+     */
     public void onInterfaceStartedAndVisible(){
         if (viewCreated && isVisible) {
             addcontact.setVisibility(View.INVISIBLE);

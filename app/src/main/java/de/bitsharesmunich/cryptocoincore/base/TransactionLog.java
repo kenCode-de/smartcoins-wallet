@@ -6,6 +6,10 @@ import de.bitsharesmunich.graphenej.UserAccount;
 /**
  * Created by Henry Varona on 19/3/2017.
  */
+
+/**
+ * Unification of HistoricalTransferEntry and GeneralTransaction in one class.
+ */
 public class TransactionLog {
 
     /**
@@ -14,34 +18,24 @@ public class TransactionLog {
     public enum TransactionType {TRANSACTION_TYPE_BITSHARE, TRANSACTION_TYPE_BITCOIN};
 
     /**
-     * The type of transasction
+     * the type of transaction
      */
     public TransactionType type;
     /**
-     *  
+     * the transaction object. Could be a HistoricalTransferEntry or a GeneralTransaction
      */
     Object mTransaction;
     /**
-     *
+     * the account object. Could be a UserAccount or a GeneralCoinAccount
      */
     Object mAccount;
 
-    /**
-     *
-     * @param transaction
-     * @param account
-     */
     public TransactionLog(GeneralTransaction transaction, GeneralCoinAccount account){
         this.type = TransactionType.TRANSACTION_TYPE_BITCOIN;
         this.mTransaction = transaction;
         this.mAccount = account;
     }
 
-    /**
-     *
-     * @param transaction
-     * @param userAccount
-     */
     public TransactionLog(HistoricalTransferEntry transaction, UserAccount userAccount){
         this.type = TransactionType.TRANSACTION_TYPE_BITSHARE;
         this.mTransaction = transaction;
@@ -50,7 +44,7 @@ public class TransactionLog {
 
     /**
      *
-     * @return
+     * @return The transaction object as a GeneralTransaction
      */
     public GeneralTransaction getBitcoinTransactionLog(){
         return (GeneralTransaction) this.mTransaction;
@@ -58,22 +52,19 @@ public class TransactionLog {
 
     /**
      *
-     * @return
+     * @return The transaction object as a HistoricalTransferEntry
      */
     public HistoricalTransferEntry getBitshareTransactionLog(){
         return (HistoricalTransferEntry) this.mTransaction;
     }
 
-    /**
-     * Getter of the type of transaction
-     */
     public TransactionType getType() {
         return type;
     }
 
     /**
      *
-     * @return
+     * @return The account object as a GeneralCoinAccount
      */
     public GeneralCoinAccount getBitcoinAccount(){
         return (GeneralCoinAccount) this.mAccount;
@@ -81,7 +72,7 @@ public class TransactionLog {
 
     /**
      *
-     * @return
+     * @return The account object as a UserAccount
      */
     public UserAccount getBitshareAccount(){
         return (UserAccount) this.mAccount;
