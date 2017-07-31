@@ -25,8 +25,7 @@ import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 /**
- * he network parameters for the LiteCoin Network
- *
+ * Singleton class for the litecoin networks parameters
  */
 public class LiteCoinNetworkParameters extends CustomNetworkParameters {
 
@@ -47,7 +46,7 @@ public class LiteCoinNetworkParameters extends CustomNetworkParameters {
     /**
      * Basic Consturctor
      */
-    public LiteCoinNetworkParameters() {
+    private LiteCoinNetworkParameters() {
         super(liteCoinDefinitions);
         interval = (int) (2016);
         targetTimespan = (int) (1209600);
@@ -83,6 +82,11 @@ public class LiteCoinNetworkParameters extends CustomNetworkParameters {
         addrSeeds = liteCoinDefinitions.addrSeeds;
     }
 
+    /**
+     * if there's no instance of this class, creates one, otherwise
+     * returns the already created
+     *
+     */
     public static synchronized LiteCoinNetworkParameters get() {
         if (mInstance == null) {
             mInstance = new LiteCoinNetworkParameters();

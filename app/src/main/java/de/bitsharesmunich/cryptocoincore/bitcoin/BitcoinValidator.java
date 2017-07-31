@@ -5,30 +5,41 @@ import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.NetworkParameters;
 
 import de.bitsharesmunich.cryptocoincore.base.Coin;
-import de.bitsharesmunich.cryptocoincore.base.GeneralCoinAddress;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinValidator;
-
-/**
- * Created by Henry Varona on 26/2/2017.
- */
 
 /**
  * Validates the addresses and URIs associated to the bitcoin coin
  */
 public class BitcoinValidator extends GeneralCoinValidator {
 
-    private NetworkParameters param = NetworkParameters.fromID(NetworkParameters.ID_TESTNET); /**< The connection param (mainnet or testnet)*/
+    /**
+     * The connection param (mainnet or testnet)
+     */
+    private NetworkParameters sParam = NetworkParameters.fromID(NetworkParameters.ID_MAINNET);
 
-    private final static String uriStart = "bitcoin:"; /**< constant start for a bitcoin URI*/
-    private final static String uriAmountStart = "amount="; /**< constant amount parameter start for a bitcoin URI*/
-    private final static String uriSeparator = "?"; /**< constant separator for a bitcoin URI*/
-    private final static String uriAnd = "&"; /**< constant parameter union for a bitcoin URI*/
+    /**
+     * Constant start for a bitcoin URI
+     */
+    private final static String sUriStart = "bitcoin:";
+    /**
+     * Constant amount parameter start for a bitcoin URI
+     */
+    private final static String sUriAmountStart = "amount=";
+    /**
+     * Constant separator for the bitcoin URI
+     */
+    private final static String sUriSeparator = "?";
+    /**
+     * constant parameter union for a bitcoin URI
+     */
+    private final static String sUriAnd = "&";
 
-    static private BitcoinValidator instance = null; /**< singleton instance of this class*/
+    /**
+     * Singleton instance of this class
+     */
+    private static BitcoinValidator sInstance = null;
 
-    private BitcoinValidator() {
-
-    }
+    private BitcoinValidator() {}
 
     /**
      * Singleton constructor
@@ -36,22 +47,22 @@ public class BitcoinValidator extends GeneralCoinValidator {
      * @return the only instance this class should have
      */
     public static BitcoinValidator getInstance() {
-        if (BitcoinValidator.instance == null) {
-            BitcoinValidator.instance = new BitcoinValidator();
+        if (BitcoinValidator.sInstance == null) {
+            BitcoinValidator.sInstance = new BitcoinValidator();
         }
 
-        return BitcoinValidator.instance;
+        return BitcoinValidator.sInstance;
     }
 
     /**
      * Validates if an address string is valid for a bitcoin address
-     * @param address the adress to validate
+     * @param address the address to validate
      * @return true if the address is valid, false otherwise
      */
     @Override
     public boolean validateAddress(String address) {
         try {
-            Address.fromBase58(this.param,address);
+            Address.fromBase58(this.sParam,address);
             return true;
         } catch (AddressFormatException e) {
             return false;
@@ -67,10 +78,10 @@ public class BitcoinValidator extends GeneralCoinValidator {
     @Override
     public String toURI(String address, double amount) {
         StringBuilder URI = new StringBuilder();
-        URI.append(uriStart);
+        URI.append(sUriStart);
         URI.append(address);
         if(amount >0){
-            URI.append(uriSeparator+uriAmountStart);
+            URI.append(sUriSeparator + sUriAmountStart);
             URI.append(Double.toString(amount));
         }
         return URI.toString();
@@ -84,13 +95,13 @@ public class BitcoinValidator extends GeneralCoinValidator {
     @Override
     public String getAddressFromURI(String uri) {
         uri = uri.replace(" ","");
-        int startAddress = uri.indexOf(uriStart);
+        int startAddress = uri.indexOf(sUriStart);
         if(startAddress == -1){
             return null;
         }
-        startAddress +=uriStart.length();
-        if(uri.contains(uriSeparator)){
-            return uri.substring(startAddress,uri.indexOf(uriSeparator));
+        startAddress += sUriStart.length();
+        if(uri.contains(sUriSeparator)){
+            return uri.substring(startAddress,uri.indexOf(sUriSeparator));
         }
         return uri.substring(startAddress);
     }
@@ -103,18 +114,18 @@ public class BitcoinValidator extends GeneralCoinValidator {
     @Override
     public double getAmount(String uri) {
         uri = uri.replace(" ","");
-        int startAddress = uri.indexOf(uriStart);
+        int startAddress = uri.indexOf(sUriStart);
         if(startAddress == -1){
             return -1;
         }
-        uri = uri.substring(startAddress + uriStart.length());
-        if(uri.contains(uriSeparator)){
-            uri = uri.substring(uri.indexOf(uriSeparator));
-            int amountIndex = uri.indexOf(uriAmountStart);
+        uri = uri.substring(startAddress + sUriStart.length());
+        if(uri.contains(sUriSeparator)){
+            uri = uri.substring(uri.indexOf(sUriSeparator));
+            int amountIndex = uri.indexOf(sUriAmountStart);
             if(amountIndex>=0){
-                uri = uri.substring(amountIndex+uriAmountStart.length());
-                if(uri.contains(uriAnd)){
-                    return Double.parseDouble(uri.substring(0,uri.indexOf(uriAnd)))* Math.pow(10,Coin.BITCOIN.getPrecision());
+                uri = uri.substring(amountIndex+ sUriAmountStart.length());
+                if(uri.contains(sUriAnd)){
+                    return Double.parseDouble(uri.substring(0,uri.indexOf(sUriAnd)))* Math.pow(10,Coin.BITCOIN.getPrecision());
                 }
                 return Double.parseDouble(uri)* Math.pow(10,Coin.BITCOIN.getPrecision());
             }

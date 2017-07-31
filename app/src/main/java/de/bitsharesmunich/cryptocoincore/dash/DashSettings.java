@@ -4,7 +4,7 @@ import de.bitsharesmunich.cryptocoincore.base.Coin;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
 
 /**
- * Created by Henry Varona on 24/6/2017.
+ * Define default settings for the dash coin
  */
 
 public class DashSettings extends GeneralCoinSettings {

@@ -4,17 +4,15 @@ import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
 import de.bitsharesmunich.cryptocoincore.base.GeneralCoinManager;
 
 /**
- *
- * Created by henry on 05/02/2017.
- */
-
-/**
  * Singleton to manage the creation, import and retrieval of bitcoin accounts.
  *
  */
 public class BitcoinManager extends GeneralCoinManager<BitcoinAccount> {
 
-    static private BitcoinManager sInstance = null; /**< the only instance of this singleton*/
+    /**
+     * The only instance of this singleton
+     */
+    private static BitcoinManager sInstance = null;
 
     private BitcoinManager() {}
 
@@ -22,7 +20,6 @@ public class BitcoinManager extends GeneralCoinManager<BitcoinAccount> {
      * if there's no instance of this class, creates one, otherwise
      * returns the already created
      *
-     * @return
      */
     public static BitcoinManager getInstance() {
         if (BitcoinManager.sInstance == null) {
