@@ -25,7 +25,7 @@ import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Singleton class for the dash networks parameters
  */
 public class DashNetworkParameters extends CustomNetworkParameters{
 
@@ -51,7 +51,7 @@ public class DashNetworkParameters extends CustomNetworkParameters{
     /**
      * Basic constructor, generates the dash genesis block
      */
-    public DashNetworkParameters() {
+    private DashNetworkParameters() {
         super(DASH_DEFINITIONS);
         interval = (int)(576);
         targetTimespan = (int)(86400);
@@ -87,6 +87,11 @@ public class DashNetworkParameters extends CustomNetworkParameters{
         addrSeeds = DASH_DEFINITIONS.addrSeeds;
     }
 
+    /**
+     * if there's no instance of this class, creates one, otherwise
+     * returns the already created
+     *
+     */
     public static synchronized DashNetworkParameters get() {
         if (sInstance == null) {
             sInstance = new DashNetworkParameters();

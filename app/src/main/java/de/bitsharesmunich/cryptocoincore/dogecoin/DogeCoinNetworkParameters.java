@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
- *
+ * Singleton class for the dogecoin networks parameters
  */
 public class DogeCoinNetworkParameters extends CustomNetworkParameters{
     public static final String DOGE_COIN_SCHEME = "dogecoin";
@@ -33,7 +33,7 @@ public class DogeCoinNetworkParameters extends CustomNetworkParameters{
     private static final Logger sLog = LoggerFactory.getLogger(DogeCoinNetworkParameters.class);
     private static DogeCoinNetworkParameters sInstance;
 
-    public DogeCoinNetworkParameters() {
+    private DogeCoinNetworkParameters() {
         super(DOGE_COIN_DEFINITIONS);
         interval = (int)(576);
         targetTimespan = (int)(14400);
@@ -70,7 +70,11 @@ public class DogeCoinNetworkParameters extends CustomNetworkParameters{
         addrSeeds = DOGE_COIN_DEFINITIONS.addrSeeds;
     }
 
-
+    /**
+     * if there's no instance of this class, creates one, otherwise
+     * returns the already created
+     *
+     */
     public static synchronized DogeCoinNetworkParameters get() {
         if (sInstance == null) {
             sInstance = new DogeCoinNetworkParameters();

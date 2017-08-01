@@ -77,11 +77,11 @@ public abstract class CustomNetworkParameters extends NetworkParameters {
             case BITCOIN:
                 return NetworkParameters.fromID(ID_MAINNET);
             case DASH:
-                return new DashNetworkParameters();
+                return DashNetworkParameters.get();
             case LITECOIN:
-                return new LiteCoinNetworkParameters();
+                return LiteCoinNetworkParameters.get();
             case DOGECOIN:
-                return new DogeCoinNetworkParameters();
+                return DogeCoinNetworkParameters.get();
         }
         return null;
     }
