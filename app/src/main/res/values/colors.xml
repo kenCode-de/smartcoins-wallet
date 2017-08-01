@@ -12,6 +12,7 @@
 
     <color name="black">#000000</color>
     <color name="skyblue">#BFD1FF</color>
+    <color name="light_blue">#f2f6ff</color>
     <color name="greencolor">#70882E</color>
     <color name="red">#ff0000</color>
     <color name="pinkColor">#FF4081</color>
@@ -29,10 +30,14 @@
     <color name="receive_amount_light">#c5e1a5</color>
     <color name="send_amount">#DC473A</color>
     <color name="send_amount_light">#ef9a9a</color>
-    <color name="transactionsHeader">#BFE5F5</color>
+    <color name="transactionsHeader">#bfe5f5</color>
     <color name="transactionsseparator">#CCCCCC</color>
 
     <color name="color_preloader_start">#000000</color>
     <color name="color_preloader_center">#000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
+
+    <color name="color_confirmations_starting">#FF0000</color>
+    <color name="color_confirmations_half">#ff9900</color>
+    <color name="color_confirmations_almost_complete">#f1c232</color>
 </resources>

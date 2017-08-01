@@ -1,236 +1,484 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string name="license">licenze</string>
+
+<resources>
+    <string name="license">licenze</string>
+    <string name="import_wif">"Importēt no privāto atslēgu (DAIF)"</string>
+    <string name="txt_wif_activity">Maku Import formāts - DAIF</string>
+    <string name="txt_wif_paste">Privātās atslēgas (DAIF)</string>
+    <string name="please_enter_wif">Ievadiet privāto atslēgu (DAIF)</string>
+    <string name="invalid_wif">Nederīga DAIF</string>
+    <string name="wif_error_invalid_account">Nederīga konts, lūdzu, pārbaudiet savu DAIF par drukas kļūdu</string>
+    <string name="unable_to_load_wif">Nevar ielādēt DAIF</string>
+    <string name="error_wif">Kļūda izveidojot DAIF taustiņu</string>
+    <string name="error_brainkey_wif_export">DAIF importēta kontu neatbalsta brainkey backup</string>
+ <string name="pin_number_warning">Pin skaitam jābūt vismaz 6 cipari</string>
+ <string name="old_pin_number_warning">Vecais pin skaitam jābūt vismaz 6 cipari</string>
+
 <string name="send_capital">Nosūtīt</string>
+
 <string name="account_create_register_or_import">Izveidot Kontu/Reģistrēties vai Ielādēt</string>
+
 <string name="txt_account_name">Konta Vārds</string>
+
 <string name="time_stamp">Laika Zīmogs</string>
+
 <string name="email_pdf">e-pasta adrese</string>
+
 <string name="account">Konts</string>
+
 <string name="friendly_name">Kontakta vārds</string>
+
 <string name="notes">Piezīmes</string>
+
     <string name="bts_will_be_deducted">BTS tiks atskaitīta no</string>
+
     <string name="note">Piezīme</string>
+
     <string name="please_make_sure_your_pin">Lūdzu pārliecinieties, ka jūsu PIN pareizs</string>
+
     <string name="please_make_sure_your_pin_file">Lūdzu pārliecinieties, ka jūsu PIN ir pareizs vai pareizais PIN fails ir izvēlēts</string>
+
 <string name="payment_received">Maksājums saņemts</string>
+
 <string name="import_brainkey">Ielādēt no BrainKey</string>
+
 <string name="import_backup_old">Ielādēt no Backup</string>
+
 <string name="choose_backup">Izvēlies Backup</string>
+
 <string name="choose_file">Izvēlēties failu</string>
+
 <string name="no_file_chosen">Fails nav izvēlēts</string>
+
 <string name="account_label">Izvēlēties Failu</string>
+
 <string name="loading_msg">Lūdzu uzgaidiet, kamēr notiek ielāde</string>
-<string name="txt_6_digits_pin">6-ciparu PIN</string>
-<string name="txt_6_digits_pin_confirm">Apstiprināt 6-ciparu PIN</string>
+
+ <string name="txt_6_digits_pin">PIN (6+ cipari)</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN Apstiprināt</string>
+ 
 <string name="create">izveidot</string>
+
 <string name="existing_account">Esošais konts</string>
+
 <string name="agreement">Vienošanās</string>
+
 <string name="cancel_and_exit">Atcelt un Iziet</string>
+
     <string name="unable_to_import_account_from_bin_file">Nevar ielādēt kontu no bin faila</string>
+
     <string name="importing_keys_from_bin_file">Atslēgas Importēšana no Bin faila</string>
+
     <string name="import_backup">Ielādēt Backup no .bin faila</string>
+
     <string name="is_already_added">jau ir pievienots</string>
+
     <string name="in_valid_email">Nepareizs e-pasts</string>
+
     <string name="select">atlasīt</string>
+
     <string name="are_you_sure">Vai Tu esi pārliecināts?</string>
 
+
+
     <string name="i_agree">Es piekrītu</string>
+
 <string name="kindly_create_account">Laipni izveidot kontu</string>
-<string name="please_enter_old_6_digit_pin">Lūdzu Ievadiet veco 6-ciparu PIN</string>
-<string name="please_enter_6_digit_pin">Lūdzu Ievadiet 6-ciparu PIN kodu</string>
-<string name="please_enter_6_digit_pin_confirm">Lūdzu Ievadiet 6-ciparu PIN apstiprinājums</string>
+
+ <string name="please_enter_old_6_digit_pin">Ievadiet veco PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">Ievadiet PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">Ievadiet PIN apstiprinājums</string>
+ 
 <string name="mismatch_pin">PIN nesaskan</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">Brainkey info</string>
+
 <string name="create_wallet">Izveidojiet maku</string>
+
 <string name="cance">ATCELT</string>
+
 <string name="save">SAGLABĀT</string>
+
 <string name="next">NĀKOŠĀ</string>
+
 <string name="please_enter_brainkey">Ievadiet brainkey</string>
+
 <string name="please_enter_correct_brainkey">Ievadiet pareizo brainkey</string>
+
 <string name="balances">Bilances</string>
+
 <string name="contacts">Kontakti</string>
+
 <string name="receive_uppercase">SAŅEMT</string>
+
 <string name="send_uppercase">SŪTĪT</string>
+
 <string name="transactions">Darījumi</string>
+
 <string name="title_activity_setting">Iestatījumi</string>
+
 <string name="backup_asset">Papildlīdzekļi</string>
+
 <string name="taxable_country">Ar nodokli apliekamā valsts</string>
+
 <string name="date_time">Uzrādied datumu un laiku</string>
+
 <string name="check_for_updates">Pārbaudīt atjauninājumus</string>
+
 <string name="automatically_install">Automātiski instalēt galveno versiju</string>
+
 <string name="require_pin">Prasa PIN /papildus parole lai sūtīt līdzekļus; apskatīt piezīmes</string>
+
 <string name="close_bitshare">Automātiski slēgt Bitshares maciņu pēc 3 minūšu bezdarbības</string>
+
 <string name="always_donate">Vienmēr Ziedot 2BTS lai atbalstītu izveidotājus BitShares Munich</string>
+
 <string name="hide_donations">Slēpt Ziedojumus</string>
+
 <string name="backup">ATPAKAĻ</string>
+
 <string name="checkbox_donate_old">Ziedot 2 BTS uz atbalstu izstrādātājiem Bitshares Minhenē</string>
+
 <string name="backup_brainkey">BACKUP BRAINKEY</string>
+
 <string name="imported_created_accounts">Ielādēt /Izveidot kontu</string>
+
 <string name="register_new_account">Reģistrēt jaunu kontu</string>
+
 <string name="secure_pin">mainīt PIN</string>
+
 <string name="export">lejupielādēt</string>
+
 <string name="show_more">Parādīt vairāk</string>
+
     <string name="checkbox_donate">Ziedot</string>
+
 <string name="share_text">Es tikko atklāju šo kolosālo Smartcoins maku, kas ļauj sūtīt un saņemt Smartcoins. Paskaties! Priekā</string>
+
 <string name="share_info">Uzaicināt vienu vai vairākus no draugiem izmēģināt Smartcoins maciņu! E-pasta adreses netiek saglabātas un viņu privātums ir nodrošināts.</string>
+
 <string name="share_subject">Kolosālais Smartcoins maciņš</string>
+
 <string name="share_heading">padalies ar draugu</string>
+
 <string name="share_btn_text">Atvērt pieteikuma e-pastu</string>
+
 <string name="action_settings">Iestatījums</string>
+
 <string name="txt_validating_account">Konta Apstiprināšana ...</string>
+
 <string name="validating_account">Notiek Konta apstiprināšana</string>
+
 <string name="account_name_should_be_longer">Konta nosaukumam ir jābūt garākam</string>
+
 <string name="account_name_already_exist">Konta nosaukums jau eksistē</string>
+
 <string name="account_name_not_exist">Konta nosaukums neeksistē</string>
+
 <string name="add_contact">pievienot kontaktu</string>
+
 <string name="edit_contact">rediģēt kontaktu</string>
+
 <string name="empty_list">Kontaktinformācijas saraksts ir tukšs</string>
+
 <string name="account_name_validate">Konta nosaukums ir derīgs</string>
+
 <string name="txt_no_internet_connection">Nav interneta pieslēgums</string>
+
 <string name="unable_to_create_account_from_brainkey">Nevar izveidot kontu brainkey</string>
+
 <string name="importing_your_wallet">Importēšana maku ...</string>
+
 <string name="str_trading_pair_not_exist">Tirdzniecība pāris neeksistē</string>
+
 <string name="unable_to_create_qr_code">Nevar radīt QR kodu</string>
+
 <string name="price">cena</string>
+
 <string name="currency">valūta</string>
+
 <string name="please_enter_amount">Ievadiet summu</string>
+
 <string name="amount_should_be_greater_than_zero">Summai ir jābūt lielākai par nulli</string>
+
 <string name="no_amount_requested">Nav prasītā summa</string>
+
 <string name="to_capital">Uz</string>
+
 <string name="from_capital">No</string>
+
 <string name="memo_capital">Piezīme</string>
+
 <string name="empty_file_created">Tukšs fails Izveidots</string>
+
 <string name="date">datums</string>
+
 <string name="all">visi</string>
+
 <string name="to_from">no līdz</string>
+
 <string name="amount">summa</string>
+
 <string name="message">ziņa</string>
+
 <string name="pdf_generated_msg">PDF ģenerēts un saglabāts:</string>
+
 <string name="pdf_generated_msg_error">Nevar radīt pdf. Lūdzu mēģiniet vēlreiz. kļūda : </string>
+
 <string name="raw_transactions">Raw Transaction : </string>
+
 <string name="extensions">paplašinājumi</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtualais_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">Nosūtīts/Saņemts</string>
+
 <string name="details">Sīkāka informācija</string>
+
 <string name="share_qr_code">Dalīties ar QR Code</string>
+
 <string name="done">Pabeigt</string>
+
 <string name="id_s">identifikācija</string>
+
 <string name="time">laiks</string>
+
 <string name="operations">operācijas</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">Simbols</string>
+
 <string name="fee_capital">samaksa</string>
+
 <string name="ok">labi</string>
+
 <string name="loading">Ielādējās ...</string>
+
 <string name="pay_to">Maksāt</string>
+
 <string name="requested">pieprasīts</string>
+
 <string name="failed_transaction">neizdevies darījumas</string>
 
+
+
 <string name="str_invalid_amount">Ievadiet derīgu summu</string>
+
 <string name="str_invalid_receiver">Ievadiet derīgu saņēmēja kontu</string>
+
 <string name="str_transaction_failed">darījums neizdevās</string>
+
 <string name="please_enter_valid_amount">Lūdzu ievadiet derīgu summu</string>
+
 <string name="select_timezone">Izvēlieties Laika Zonu</string>
-<string name="old_pin">Lūdzu ievadiet veco 6-ciparu PIN</string>
-<string name="pin_created_successfully">PIN izveidots veiksmīgi</string>
-<string name="edit_pin">rediģēt PIN</string>
+
+ <string name="old_pin">vecs PIN</string>
+ 
+ <string name="pin_created_successfully">PIN veiksmīgi izveidots</string>
+ 
+ <string name="edit_pin">rediģēt PIN</string>
+ 
 <string name="txt_edit">Saglabāt</string>
-<string name="create_pin">Izveidot PIN</string>
+
+ <string name="create_pin">Izveidot PIN</string>
+ 
 <string name="pin_changed_successfully">PIN apmainīts veiksmīgi</string>
+
 <string name="incorrect_old_pin">Nepareizs vecais PIN</string>
+
 <string name="copy">kopija</string>
+
 <string name="pin_verification">PIN apstiprināšana</string>
+
 <string name="send_screen_name">sūtīt</string>
+
 <string name="rcv_screen_name">saņemt</string>
+
 <string name="request_amount_screen_name">pieprasīt summu</string>
+
 <string name="payment_rcvd_screen_name">Paldies maksājums ir saņemts</string>
+
 <string name="e_receipt_activity_name">e-saņemšana</string>
+
 <string name="settings_activity_name">Settings</string>
+
 <string name="qr_code_activity_name">Ieskenēt QR</string>
+
 <string name="share_account_activity_name">Dalīties ar draugiem</string>
+
 <string name="add_contact_activity_name">Pievienot Kontaktu</string>
+
 <string name="str_trade_not_available">Tirdzniecība Nav pieejama</string>
+
 <string name="preferred_lang">vēlamā valoda</string>
+
 <string name="got_it">Sapratu</string>
+
 <string name="upgrade_to_ltm">Uzlabot</string>
+
     <string name="txt_back">atpakaļ</string>
+
     <string name="please_pay">Lūdzu apmaksāt</string>
+
     <string name="transfer_funds">pārskaitīt līdzekļus</string>
+
     <string name="unable_to_process">Nevar apstrādāt</string>
+
     <string name="cancel">atcelt</string>
+
     <string formatted="false" name="help_message">nepareizs vārds</string>
+
     <string name="txt_yes">Jā</string>
+
     <string name="txt_no">Nē</string>
+
     <string name="txt_confirmation">apstiprinājums</string>
+
     <string name="txt_confirmation_msg">Vai jūsu esat pārliecināts?</string>
+
     <string name="txt_folder_name">Mapes nosaukums</string>
+
     <string name="txt_folder_created">Mape Izveidota</string>
+
     <string name="upgrade_failed">Uzlabošana neizdevās</string>
+
     <string name="upgrading">Notiek Modernizācija ...</string>
+
     <string name="import_new_account">Ielādēt kontu</string>
+
     <string name="upgrade_account">Uzlabot kontu</string>
+
     <string name="remove_account">Noņemt kontu</string>
+
     <string name="txt_alertmsg">Vai tiešām dzēst šo kontu</string>
+
     <string name="validation_in_progress">Notiek Apstiprināšana...</string>
+
     <string name="last_letter_cannot">pēdējais burts nevar būt -</string>
+
     <string name="account_name_shoud_have">konta nosaukumā ir jābūt vismaz vienam -</string>
+
     <string name="default_currency">eiro</string>
+
     <string name="account_already_exist">Konts jau pastāv</string>
+
     <string name="donation">ziedojums</string>
+
     <string name="insufficient_funds">Nepietiek līdzekļu</string>
+
     <string name="txt_wallet_atleast_one_account">Atvainojiet, bet jūsu makā ir jābūt vismaz 1 kontam</string>
+
     <string name="updating_transaction_id">Notiek ID Atjaunināšana, lūdzu uzgaidiet</string>
+
     <string name="email_name">Lai uzrādītu fotoattēlu šai kontaktadresei, lūdzu ievadiet savu Gravatar e-pastu šeit</string>
+
     <string name="upgrade_success">Uzlabošana Veiksmīga!</string>
+
     <string name="copied_to_clipboard">Kopēts klaviatūrā</string>
 
+
+
     <string name="unable_to_load_brainkey">Nevar ielādēt brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">Nevar radīt bin formāta atslēgu</string>
+
     <string name="creating_backup_file">Radīt Backup Failu</string>
+
     <string name="fetching_key">Veido brainkey</string>
+
     <string name="generating_bin_format">Radīt bin formātu</string>
+
     <string name="invalid_pin">Nederīgs PIN</string>
+
     <string name="saving_bin_file_to">Ietaupot Bin failu</string>
+
     <string name="bin_file_saved_successfully_to">Bin Fails saglabāts veiksmīgi</string>
+
     <string name="unable_to_save_bin_file">Nevar saglabāt bin failu</string>
 
+
+
     <string name="txt_alertmsg_fr">Vai jūs tiešām vēlaties, lai novērstu</string>
+
     <string name="txt_alertmsg_la">kontu no maka?</string>
+
     <string name="bugs_or_errors">Problēmas vai kļūdas?</string>
+
     <string name="please_let_us_know">Lūdzu, dariet mums zināmu:</string>
+
     <string name="try_again">Lūdzu, mēģiniet vēlreiz pēc 5 minūtēm</string>
+
     <string name="warning_msg_same_account">Jūs nevarat sūtīt summu tajā pašā kontā</string>
 
+
+
     <string name="please_backup_your_brainkey">Lūdzu backup jūsu brainkey</string>
+
     <string name="backup_brainkey_msg">Backup jūsu .bin fails drošā vietā vai jūsu līdzekļi varētu pazust!</string>
+
     <string name="unable_to_trade_bAssets">Nevar tirgoties backup Aktīvi</string>
+
     <string name="unable_to_send_amount">Nevar nosūtīt apmēru.</string>
+
     <string name="unable_to_decode_QR">Nevar atšifrēt QR kodu.</string>
 
+
+
     <string name="loyalty_points">lojalitātes punkti</string>
+
     <string name="str_warning_only_available">Uzmanību! Tikai %1$s %2$s ir pieejams</string>
+
     <string name="str_balance_available">%1$s %2$s pieejams</string>
 
+
+
     <string name="select_backup_asset">Izvēlieties Backup Asset</string>
+
     <string name="sender_account">sūtītājs konts</string>
+
     <string name="receiver_account">uztvērējs konts</string>
+
     <string name="total">Kopā</string>
+
     <string name="payment_method">Apmaksas veids</string>
+
     <string name="thankyou_string">Thankyou izmantojot Smartcoins Wallet</string>
+
     <string name="audio_folder_path">Audio Folder Path</string>
+
     <string name="please_make_sure_your_bin_file">Lūdzu, pārliecinieties, ka jūsu pin ir pareizs vai pareiza bin fails ir izvēlēts</string>
+
     <string name="change">Mainīt ...</string>
 
+
+
     <string name="connected_to">Savienots ar</string>
+
     <string name="account_create_msg">Tikai viens konts ik pēc 10 minūtēm var reģistrēt</string>
+
     <string name="names_must_include_a_number">Nosaukumi ir jāiekļauj vairāki</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">Nosaukumi jāiekļauj domuzīme (-) un vairākas</string>
+
     <string name="import_gravatar">Import Gravatar</string>
+
     <string name="please_import_the_correct_file">Lūdzu importēt pareizo failu</string>
+
     <string name="merchant_email_has_been_imported_successfully">Komersants e-pasts ir veiksmīgi importēts</string>
+
 </resources>
+
+
 

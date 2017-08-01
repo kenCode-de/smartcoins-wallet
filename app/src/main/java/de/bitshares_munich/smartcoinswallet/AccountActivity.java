@@ -42,6 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTextChanged;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.IAccount;
 import de.bitshares_munich.interfaces.IAccountID;
 import de.bitshares_munich.models.AccountDetails;
@@ -69,6 +70,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 
 public class AccountActivity extends BaseActivity implements IAccount, IAccountID {
     private final String TAG = this.getClass().getName();
@@ -82,6 +84,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
     @Bind(R.id.etPin)
     EditText etPin;
+
+    @Bind(R.id.tvOrAccount)
+    TextView tvOrAccount;
 
     @Bind(R.id.tvExistingAccount)
     Button tvExistingAccount;
@@ -132,12 +137,16 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
     /* Agreement License Dialog */
     private Dialog mLicenseDialog;
 
+    /* Database interface */
+    private SCWallDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
         tinyDB = new TinyDB(this);
+        database = new SCWallDatabase(this);
         setTitle(getResources().getString(R.string.app_name));
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
 
@@ -166,6 +175,7 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         if (res != null) {
             if (res.containsKey("activity_id")) {
                 if (res.getInt("activity_id") == 919) {
+                    tvExistingAccount.setVisibility(View.GONE);
                     tvExistingAccount.setVisibility(View.GONE);
                     setBackButton(true);
                 }
@@ -382,6 +392,10 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
 
             String brainKeySuggestion = BrainKey.suggest(dictionary);
             BrainKey brainKey = new BrainKey(brainKeySuggestion, 0);
+
+            /* Storing the newly created brainky */
+            database.insertKey(brainKey);
+
             Address address = new Address(ECKey.fromPublicOnly(brainKey.getPrivateKey().getPubKey()));
             Log.d(TAG, "brain key: "+brainKeySuggestion);
             Log.d(TAG, "address would be: "+address.toString());
@@ -408,8 +422,9 @@ public class AccountActivity extends BaseActivity implements IAccount, IAccountI
         }
     }
 
+    
     /**
-     * Method that sends the account-creation request to the faucet server.
+      * Method that sends the account-creation request to the faucet server.
      * Only account name and public address is sent here.
      */
     private void createAccount(final Address address) {

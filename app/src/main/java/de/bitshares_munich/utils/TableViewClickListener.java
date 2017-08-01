@@ -2,6 +2,7 @@ package de.bitshares_munich.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -37,6 +38,7 @@ public class TableViewClickListener implements TableDataClickListener<Historical
 
     @Override
     public void onDataClicked(int rowIndex, HistoricalTransferEntry historicalTransferEntry) {
+        Log.i(TAG, "onDataClicked: " + !BalancesFragment.onClicked);
         if(!BalancesFragment.onClicked) {
             TransferOperation operation = historicalTransferEntry.getHistoricalTransfer().getOperation();
             BalancesFragment.onClicked = true;

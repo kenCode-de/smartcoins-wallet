@@ -88,7 +88,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/or"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:id="@+id/tvOrAccount" />
         <Button
             android:id="@+id/tvExistingAccount"
             android:layout_width="match_parent"

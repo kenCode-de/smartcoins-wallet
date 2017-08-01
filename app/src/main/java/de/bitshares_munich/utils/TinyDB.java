@@ -29,6 +29,7 @@ import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.models.TransactionDetails;
 import de.bitshares_munich.models.transactionsJsonSerializable;
 import de.bitshares_munich.smartcoinswallet.ContactListAdapter;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.GeneralCoinContactListAdapter;
 
 
 public class TinyDB {
@@ -420,6 +421,19 @@ public class TinyDB {
         return objects;
     }
 
+    public ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> getGeneralCoinContactObject(String key, Class<?> mClass) {
+        Gson gson = new Gson();
+
+        ArrayList<String> objStrings = getListString(key);
+        ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> objects = new ArrayList<>();
+
+        for (String jObjString : objStrings) {
+            GeneralCoinContactListAdapter.ListviewContactItem value = (GeneralCoinContactListAdapter.ListviewContactItem) gson.fromJson(jObjString, mClass);
+            objects.add(value);
+        }
+        return objects;
+    }
+
     public Object getObject(String key, Class<?> classOfT) {
 
         String json = getString(key);
@@ -631,6 +645,16 @@ public class TinyDB {
     }
 
     public void putContactsObject(String key, ArrayList<ContactListAdapter.ListviewContactItem> objArray ) {
+        checkForNullKey(key);
+        Gson gson = new Gson();
+        ArrayList<String> objStrings = new ArrayList<String>();
+        for (Object obj : objArray) {
+            objStrings.add(gson.toJson(obj));
+        }
+        putListString(key, objStrings);
+    }
+
+    public void putGeneralCoinContactsObject(String key, ArrayList<GeneralCoinContactListAdapter.ListviewContactItem> objArray ) {
         checkForNullKey(key);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();

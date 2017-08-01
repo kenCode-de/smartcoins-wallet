@@ -148,22 +148,22 @@ public class ContactListAdapter extends BaseAdapter {
     }
 
     public static class ListviewContactItem {
-        String name;
-        String email;
-        String account;
-        String note;
+        public String name;
+        public String email;
+        public String account;
+        public String note;
         public Boolean isImage = false;
 
-        void SetName(String n){
+        public void SetName(String n){
             name = n;
         }
-        void SetAccount(String n){
+        public void SetAccount(String n){
             account = n;
         }
-        void SaveNote(String n){
+        public void SaveNote(String n){
             note = n;
         }
-        void SaveEmail(String n){
+        public void SaveEmail(String n){
             email = n;
         }
 

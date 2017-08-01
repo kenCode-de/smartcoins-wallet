@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -32,11 +30,14 @@ import javax.crypto.NoSuchPaddingException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.Application;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Crypt;
 import de.bitshares_munich.utils.TinyDB;
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
 import de.bitsharesmunich.graphenej.Address;
 import de.bitsharesmunich.graphenej.BrainKey;
 import de.bitsharesmunich.graphenej.UserAccount;
@@ -46,6 +47,8 @@ import de.bitsharesmunich.graphenej.interfaces.WitnessResponseListener;
 import de.bitsharesmunich.graphenej.models.AccountProperties;
 import de.bitsharesmunich.graphenej.models.BaseResponse;
 import de.bitsharesmunich.graphenej.models.WitnessResponse;
+
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 
 public class BrainkeyActivity extends BaseActivity {
     private final String TAG = this.getClass().getName();
@@ -77,6 +80,9 @@ public class BrainkeyActivity extends BaseActivity {
     @Bind(R.id.tvPinConfirmation)
     TextView tvPinConfirmation;
 
+    /* Database interface */
+    private SCWallDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,28 +91,13 @@ public class BrainkeyActivity extends BaseActivity {
         setBackButton(true);
         setTitle(getResources().getString(R.string.app_name));
 
+        database = new SCWallDatabase(this);
+
         progressDialog = new ProgressDialog(this);
         tinyDB = new TinyDB(getApplicationContext());
         tvAppVersion.setText("v" + BuildConfig.VERSION_NAME + getString(R.string.beta));
         updateBlockNumberHead();
-        etBrainKey.addTextChangedListener(brainKeyWatcher);
-
     }
-
-    private final TextWatcher brainKeyWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {        }
-    };
 
     @OnClick(R.id.btnCancel)
     public void cancel(Button button) {
@@ -135,16 +126,55 @@ public class BrainkeyActivity extends BaseActivity {
     }
 
     void load(String pinCode) {
-        String temp = etBrainKey.getText().toString();
-        if (temp.contains(" ")) {
-            String arr[] = temp.split(" ");
-            if (arr.length >= 12 && arr.length <= 16) {
+        String brainKeyText = etBrainKey.getText().toString();
+        if (brainKeyText.contains(" ")) {
+            String arr[] = brainKeyText.split(" ");
+            if (arr.length >= 24 && arr.length <= 28) { //Importing brainkey (first 12 to 16 words) and master seed (last 12 words)
+                SCWallDatabase db = new SCWallDatabase(getApplicationContext());
 
-                if (checkBrainKeyExist(temp)) {
+                if (!checkBrainKeyExist(brainKeyText)) {
+                /*Extracting the brainkey*/
+                    String brainkeyString = "";
+                    for (int i = 0; i < arr.length - 12; i++) {
+                        brainkeyString += " " + arr[i];
+                    }
+                    brainkeyString = brainkeyString.trim();
+
+                /*Extracting the master seed*/
+                    String masterSeed = "";
+                    for (int i = arr.length - 12; i < arr.length; i++) {
+                        masterSeed += " " + arr[i];
+                    }
+                    masterSeed = masterSeed.trim().toLowerCase();
+
+                /*Checking if brainkey exists, if not, importing the account*/
+                    boolean brainkeyExists = false;
+                    if (checkBrainKeyExist(brainkeyString)) {
+                        brainkeyExists = true;
+                    } else {
+                        showDialog("", getString(R.string.importing_your_wallet));
+                        getAccountFromBrainkey(brainkeyString, pinCode);
+                    }
+
+                    /*Checking if master seed exists, if not, importing the account*/
+                    AccountSeed seed = new BIP39(masterSeed, "");
+                    if (db.getIdSeed(seed) != -1) {
+                        if (brainkeyExists) {//If this is true, then the brainkey and the master seed already exists
+                            Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (brainkeyExists) {//If this is true, then the brainkey exists but the master seed not, so lets show the dialog
+                            showDialog("", getString(R.string.importing_your_wallet));
+                        }
+                        db.putSeed(seed);
+                    }
+                }
+            } else if (arr.length >= 12 && arr.length <= 16) {//Importing only brainkey
+                if (checkBrainKeyExist(brainKeyText)) {
                     Toast.makeText(getApplicationContext(), R.string.account_already_exist, Toast.LENGTH_SHORT).show();
                 } else {
                     showDialog("", getString(R.string.importing_your_wallet));
-                    getAccountFromBrainkey(temp, pinCode);
+                    getAccountFromBrainkey(brainKeyText, pinCode);
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.please_enter_correct_brainkey, Toast.LENGTH_SHORT).show();
@@ -175,8 +205,12 @@ public class BrainkeyActivity extends BaseActivity {
     public void getAccountFromBrainkey(final String brainKey, final String pinCode) {
         try {
             BrainKey bKey = new BrainKey(brainKey, 0);
+
+            /* Storing brainkey in database */
+            database.insertKey(bKey);
+
             Address address = new Address(ECKey.fromPublicOnly(bKey.getPrivateKey().getPubKey()));
-            final String privkey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
+            final String encryptedPrivateKey = Crypt.getInstance().encrypt_string(bKey.getWalletImportFormat());
             final String pubkey = address.toString();
             Log.d(TAG,String.format("Brain key: '%s'", bKey.getBrainKey()));
             Log.d(TAG, String.format("Brainkey would generate address: %s", address.toString()));
@@ -193,7 +227,7 @@ public class BrainkeyActivity extends BaseActivity {
                                 List<UserAccount> accounts = resp.get(0);
                                 if(accounts.size() > 0){
                                     for(UserAccount account : accounts) {
-                                        getAccountById(account.getObjectId(), privkey, pubkey, brainKey, pinCode);
+                                        getAccountById(account.getObjectId(), encryptedPrivateKey, pubkey, brainKey, pinCode);
                                     }
                                 }else{
                                     hideDialog();
@@ -251,9 +285,12 @@ public class BrainkeyActivity extends BaseActivity {
                                 accountDetails.isSelected = true;
                                 accountDetails.status = "success";
                                 accountDetails.pinCode = pinCode;
+                                //Avoid window leak
+                                hideDialog();
                                 addWallet(accountDetails, brainkey, pinCode);
                             } else {
-                                Toast.makeText(getApplicationContext(), "Didn't get Account properties", Toast.LENGTH_SHORT).show();
+                                hideDialog();
+                                Toast.makeText(getApplicationContext(), R.string.unable_to_get_account_properties, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             hideDialog();
@@ -267,11 +304,13 @@ public class BrainkeyActivity extends BaseActivity {
 
                 @Override
                 public void onError(BaseResponse.Error error) {
+                    hideDialog();
                     Toast.makeText(getApplicationContext(), R.string.unable_to_load_brainkey, Toast.LENGTH_SHORT).show();
                 }
             })),0).start();
             //mWebSocket.connect();
         } catch (Exception e) {
+            hideDialog();
             Toast.makeText(getApplicationContext(), R.string.txt_no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }

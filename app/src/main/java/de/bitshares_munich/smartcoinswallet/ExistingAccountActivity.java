@@ -29,4 +29,10 @@ public class ExistingAccountActivity extends BaseActivity {
         Intent intent=new Intent(getApplicationContext(),ImportBackupActivity.class);
         startActivity(intent);
     }
+
+    @OnClick(R.id.btnWifBackup)
+    public void importWif(Button button) {
+        Intent intent=new Intent(getApplicationContext(),ImportWifActivity.class);
+        startActivity(intent);
+    }
 }

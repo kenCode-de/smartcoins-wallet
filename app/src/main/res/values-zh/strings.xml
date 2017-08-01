@@ -1,406 +1,823 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+    <string name="import_wif">“从导入私有密钥（WIF）”</string>
+    <string name="txt_wif_activity">钱包导入格式 -  WIF</string>
+    <string name="txt_wif_paste">私钥（WIF）</string>
+    <string name="please_enter_wif">请输入私有密钥（WIF）</string>
+    <string name="invalid_wif">WIF无效</string>
+    <string name="wif_error_invalid_account">无效帐户，请检查您的WIF打字错误</string>
+    <string name="unable_to_load_wif">无法加载WIF</string>
+    <string name="error_wif">错误创建WIF关键</string>
+    <string name="error_brainkey_wif_export">WIF进口的帐户不支持brainkey备份</string>
+ <string name="pin_number_warning">PIN号码必须至少6位数</string>
+ <string name="old_pin_number_warning">旧的针数必须至少6位数</string>
+
     <string name="txt_pay_with">使用。。支付</string>
+
     <string name="txt_amount_due">应付金额</string>
+
     <string name="txt_in">在</string>
+
     <string name="txt_cancel">取消</string>
+
     <string name="txt_next">下一个</string>
+
     <string name="txt_please_pay">请支付</string>
+
     <string name="txt_seconds_remaining">剩余时间</string>
+
     <string name="txt_thank_you">谢谢！</string>
+
     <string name="txt_paid_id">已支付</string>
+
     <string name="txt_todays_reward">今日奖励</string>
+
     <string name="txt_by">通过</string>
+
     <string name="txt_cool">酷！</string>
+
     <string name="txt_settings">设置</string>
+
     <string name="txt_type_email">输入您的Gravatar.com电子邮件地址</string>
+
     <string name="txt_change">更改</string>
+
     <string name="txt_delete">删除</string>
+
     <string name="txt_company_name">公司名</string>
+
     <!--<string name="txt_account_name">BitShares帐户名</string>-->
+
     <string name="txt_desired_smartcoin">想要的Smartcoin</string>
+
     <string name="txt_customer_loyalty">发行忠诚点数为...</string>
+
     <string name="txt_for_every">每</string>
+
     <string name="txt_spent">花费</string>
+
     <string name="txt_bitcoin_altcoin_deposited">Bitcoin和Altcoins</string>
+
     <string name="txt_example">例</string>
+
     <string name="txt_taxable_country">国家应纳税所得额</string>
+
     <string name="txt_preferred_language">首选语言</string>
+
     <!--<string name="txt_validating_account">验证帐户...</string>-->
+
     <string name="txt_please_wait">请稍候</string>
+
     <string name="txt_save">保存</string>
+
     <string name="txt_pay">工资</string>
+
     <string name="txt_network">网络</string>
+
     <string name="txt_transferring_reward">转移奖励积分</string>
+
     <string name="txt_loading">加载</string>
 
+
+
     <string name="txt_create_an_account">请创建一个帐户</string>
+
     <string name="txt_enter_private_key">请输入私钥</string>
+
     <!--<string name="txt_no_internet_connection">没有网络连接</string>-->
+
     <string name="txt_unable_to_get_market_cap">无法获得市场资金</string>
+
     <string name="txt_altcoins_should_not_more_than">Altcoins不应超过7</string>
+
     <string name="txt_agree">同意</string>
+
     <string name="txt_account_does_not_exist">帐户不存在</string>
+
     <string name="txt_invalid_email">输入一个有效的电子邮件地址</string>
+
     <string name="txt_please_select_smartcoin">请选择Smartcoin</string>
 
+
+
     <!--<string name="license">执照</string>-->
+
     <string name="exception_encountered_msg">请修正您的设置并取回</string>
+
     <string name="applicable_reward_points">“适用奖励积分</string>
+
     <string name="dismiss">“解雇</string>
+
     <string name="accept">“接受</string>
+
     <!--<string name="cancel">“取消</string>-->
+
     <!--<string name="select">“选择</string>-->
+
     <!--<string name="are_you_sure">“你确定？</string>-->
+
     <string name="Yes">“是</string>
+
     <string name="no">没有</string>
+
     <string name="gravatar">的Gravatar</string>
+
     <string name="dates_and_time_as">Les dates i el temps com</string>
+
     <string name="altcoin_address">altcoin地址</string>
+
     <string name="click_folder_to_change_its_location">点击文件夹来改变它的位置</string>
 
+
+
     <string name="txt_Exchanges">交易所</string>
+
     <string name="txt_Refunds_Returns">退款/回报 </string>
+
     <string name="txt_transactions">交易</string>
+
     <string name="txt_home">家</string>
+
     <string name="send">发送</string>
+
     <string name="screen_saver_time">启用后...</string>
 
+
+
     <!--<string name="unable_to_generate_bin_format_for_key">无法生成关键斌格式</string>-->
+
     <!--<string name="unable_to_import_account_from_bin_file">无法从bin文件导入帐户</string>-->
+
     <!--<string name="saving_bin_file_to">保存bin文件</string>-->
+
     <!--<string name="bin_file_saved_successfully_to">bin文件成功保存到</string>-->
+
     <!--<string name="unable_to_save_bin_file">无法保存bin文件</string>-->
+
     <!--<string name="creating_backup_file">创建备份文件</string>-->
+
     <!--<string name="fetching_key">取钥匙</string>-->
+
     <!--<string name="generating_bin_format">生成斌格式</string>-->
+
     <!--<string name="invalid_pin">无效的PIN码</string>-->
+
     <!--<string name="unable_to_load_brainkey">无法加载brainkey</string>-->
+
     <!--<string name="upgrade_account">升级帐户</string>-->
+
     <!--<string name="register_new_account">注册新帐户</string>-->
+
     <!--<string name="import_new_account">汇入帐户</string>-->
+
     <!--<string name="remove_account">删除帐户</string>-->
+
     <!--<string name="account_create_register_or_import">帐号创建/注册或进口</string>-->
+
     <!--<string name="txt_6_digits_pin">6位数字密码</string>-->
+
     <!--<string name="txt_6_digits_pin_confirm">6位数字密码确认</string>-->
+
     <!--<string name="create">创建</string>-->
+
     <!--<string name="existing_account">现有帐户</string>-->
+
     <!--<string name="txt_brain_key_info">打印出来，或把它写下来。任何人都可以访问恢复密钥都会有这个钱包内获得资金。</string>-->
+
     <!--<string name="create_wallet">CREATE钱包</string>-->
+
     <string name="v_1_0_beta">V 1.0测试版</string>
+
     <string name="block_number">块＃-------</string>
+
     <!--<string name="txt_brain_key">Brainkey</string>-->
+
     <!--<string name="import_brainkey">从BrainKey导入</string>-->
+
     <!--<string name="import_backup">从.bin文件导入备份</string>-->
+
     <!--<string name="no_file_chosen">没有选中任何文件</string>-->
+
     <!--<string name="choose_backup">选择备份</string>-->
+
     <!--<string name="choose_file">选择文件</string>-->
+
     <!--<string name="txt_folder_created">创建文件夹</string>-->
+
     <!--<string name="account_name_should_be_longer">账户名称应越长</string>-->
+
     <!--<string name="agreement">协议</string>-->
+
     <!--<string name="validation_in_progress">验证正在进行中..</string>-->
+
     <!--<string name="kindly_create_account">请创建账户</string>-->
+
     <!--<string name="last_letter_cannot">最后一个字母不能是 -</string>-->
+
     <!--<string name="account_name_shoud_have">账户名称768,16有用于至少一个 -</string>-->
+
     <!--<string name="please_enter_6_digit_pin">请输入6位数的PIN</string>-->
+
     <!--<string name="please_enter_6_digit_pin_confirm">请输入6位数的PIN确认</string>-->
+
     <!--<string name="mismatch_pin">错配销</string>-->
+
     <!--<string name="account_name_already_exist">账户名称％s已经存在</string>-->
+
     <!--<string name="try_again">请5分钟后再试</string>-->
+
     <!--<string name="please_enter_brainkey">请输入brainkey</string>-->
+
     <!--<string name="please_enter_correct_brainkey">请输入正确的brainkey</string>-->
+
     <!--<string name="importing_keys_from_bin_file">从.bin文件导入密钥</string>-->
+
     <!--<string name="ok">好</string>-->
+
     <!--<string name="txt_yes">是</string>-->
+
     <!--<string name="txt_no">没有</string>-->
+
     <!--<string name="please_make_sure_your_pin">请确保你的脚是正确的</string>-->
+
     <!--<string name="please_make_sure_your_pin_file">请确保您的密码是否正确，或正确的PIN文件被选中</string>-->
+
     <!--<string name="account_already_exist">帐户已经存在</string>-->
+
     <!--<string name="importing_your_wallet">导入你的​​钱包？</string>-->
+
     <!--<string name="unable_to_create_account_from_brainkey">无法从brainkey创建账户</string>-->
+
     <!--<string name="upgrade_failed">升级失败</string>-->
+
     <string name="Transactions">交易</string>
+
     <!--<string name="done">做</string>-->
+
     <!--<string name="txt_alertmsg_fr">您确定要删除</string>-->
+
     <!--<string name="txt_alertmsg_la">从这个钱包帐户？</string>-->
+
     <!--<string name="txt_wallet_atleast_one_account">很抱歉，但你的钱包必须在其中至少有1个账户</string>-->
+
     <!--<string name="imported_created_accounts">进口/创建账户</string>-->
+
     <!--<string formatted="false" name="help_message">获得80％的现金返还的费用！终身会员（LTM）获得他们支付每笔交易手续费80％的现金返还，并有资格从他们与注册或指网络用户赚取收入转诊。终身会员目前正在20000 BTS！</string>-->
+
     <!--<string name="txt_back">背部</string>-->
+
     <!--<string name="next">下一个</string>-->
+
     <!--<string name="insufficient_funds">不充足的资金</string>-->
+
     <!--<string name="upgrading">升级...</string>-->
+
     <!--<string name="upgrade_success">升级成功！</string>-->
+
     <string name="pref_ltm_amount">ltmAmount</string>
+
     <!--<string name="export">出口</string>-->
+
     <string name="export_transactions_for_the_last">在过去的出口交易</string>
+
     <string name="_24_hours">24小时</string>
+
     <string name="_1_week">1周</string>
+
     <string name="_1_month">1个月</string>
+
     <string name="_6_month">6个月</string>
+
     <string name="_3_months">3个月</string>
+
     <string name="_12_months">12个月</string>
+
     <string name="txt_continue">继续</string>
+
     <string name="download">下载</string>
+
     <!--<string name="date">日期</string>-->
+
     <!--<string name="sent_rcv">收到</string>-->
+
     <!--<string name="details">细节</string>-->
+
     <!--<string name="amount">量</string>-->
+
     <!--<string name="to_capital">至</string>-->
+
     <!--<string name="from_capital">从</string>-->
+
     <!--<string name="memo_capital">备忘录</string>-->
+
     <!--<string name="bugs_or_errors">错误或错误？</string>-->
+
     <!--<string name="please_let_us_know">请告诉我们：</string>-->
+
     <!--<string name="pdf_generated_msg">生成的PDF并保存：</string>-->
+
     <!--<string name="pdf_generated_msg_error">无法生成PDF格式。请重试。错误：</string>-->
+
     <string name="sorry_no_account_remove">对不起，你不\'吨有任何帐户删除。</string>
+
     <string name="loading_transactions">加载交易</string>
+
     <string name="getting_equivalent_flat_exchange_rate">获得相当于法定汇率</string>
+
     <string name="fetching_assets_in_transactions">获取资产交易...</string>
+
     <string name="assets_retrieved">资产检索：</string>
+
     <string name="resolving_account_names_in_transactions">解决交易帐户名</string>
+
     <string name="generating_list_of_transactions">生成交易清单：</string>
+
     <string name="fiat_exchange_rate_received">收到菲亚特汇率</string>
+
     <string name="account_names_retrieved">账户名称检索：</string>
+
     <string name="decrypting_memos">解密备忘录：</string>
+
     <string name="invalid_transactions">交易无效</string>
+
     <string name="failure">失败：</string>
+
     <string name="invalid_block_header">无效的块头</string>
+
     <string name="no_assets_found">找不到资产</string>
+
     <string name="invalid_assets">资产无效</string>
+
     <string name="invalid_accounts_name">无效的帐户名</string>
+
     <string name="invalid_input_for_fiat_conversion">菲亚特转换输入无效</string>
+
     <string name="account_names_not_found">帐户名未找到</string>
 
+
+
  // new
+
 <string name="license">许可证</string>
+
 <string name="send_capital">发送</string>
+
 <string name="account_create_register_or_import">创建账户/注册或导入</string>
+
 <string name="txt_account_name">用户名</string>
+
 <string name="time_stamp">时间戳</string>
+
 <string name="email_pdf">通过电子邮件发送PDF</string>
+
 <string name="account">账户</string>
+
 <string name="friendly_name">好记的名称</string>
+
 <string name="notes">备注信息</string>
+
     <string name="unable_to_import_account_from_bin_file">无法从 .bin 钱包备份文件导入账户</string>
+
     <string name="importing_keys_from_bin_file">从 .bin 钱包备份文件导入密钥</string>
+
     <string name="import_backup">从 .bin 钱包备份文件导入备份</string>
+
     <string name="is_already_added">已添加</string>
+
     <string name="in_valid_email">无效的电子邮件</string>
+
     <string name="select">选择</string>
+
     <string name="are_you_sure">你确定？</string>
+
     <string name="please_make_sure_your_pin">请确认你的 PIN 码输入正确</string>
+
     <string name="please_make_sure_your_pin_file">请确认您的PIN码输入正确，或加载了正确的 PIN 文件</string>
+
     <string name="note">备注</string>
+
 <string name="payment_received">已收到付款</string>
+
 <string name="import_brainkey">从 BrainKey 导入</string>
+
 <string name="import_backup_old">导入备份</string>
+
 <string name="choose_backup">选择备份文件</string>
+
 <string name="choose_file">选择文件</string>
+
 <string name="no_file_chosen">没有选中任何文件</string>
+
 <string name="account_label">选择文件</string>
+
 <string name="loading_msg">请等待，直到余额加载完毕</string>
-<string name="txt_6_digits_pin">6 位数字密码</string>
-<string name="txt_6_digits_pin_confirm">确认 6 位数字密码</string>
+
+ <string name="txt_6_digits_pin">PIN（6+位数）</string>
+ 
+ <string name="txt_6_digits_pin_confirm">PIN确认</string>
+ 
 <string name="create">创建</string>
+
 <string name="existing_account">已有账户？点我导入</string>
+
 <string name="agreement">协议</string>
+
 <string name="cancel_and_exit">取消并退出</string>
+
 <string name="i_agree">我同意</string>
+
 <string name="kindly_create_account">请创建账户</string>
-<string name="please_enter_old_6_digit_pin">请输入旧的 6 位数字 PIN 码</string>
-<string name="please_enter_6_digit_pin">请输入新的 6 位数字 PIN 码</string>
-<string name="please_enter_6_digit_pin_confirm">请再次输入 6 位数字 PIN 码</string>
+
+ <string name="please_enter_old_6_digit_pin">请输入旧的PIN</string>
+ 
+ <string name="please_enter_6_digit_pin">请输入PIN</string>
+ 
+ <string name="please_enter_6_digit_pin_confirm">请输入密码确认</string>
+ 
 <string name="mismatch_pin">两次输入的 PIN 码不一致</string>
+
 <string name="txt_brain_key">Brainkey</string>
+
 <string name="txt_brain_key_info">打印出来，或把它写下来。任何人得到该恢复密钥都能获得这个钱包以及里面的资金。</string>
+
 <string name="create_wallet">创建钱包</string>
+
 <string name="cance">取消</string>
+
 <string name="save">保存</string>
+
 <string name="next">下一个</string>
+
 <string name="please_enter_brainkey">请输入 Brainkey</string>
+
 <string name="please_enter_correct_brainkey">请输入正确的 Brainkey</string>
+
 <string name="balances">余额</string>
+
 <string name="contacts">联系人</string>
+
 <string name="receive_uppercase">接收</string>
+
 <string name="send_uppercase">发送</string>
+
 <string name="transactions">交易记录</string>
+
 <string name="title_activity_setting">设置</string>
+
 <string name="backup_asset">备用资产</string>
+
 <string name="taxable_country">应纳税的国家</string>
+
 <string name="date_time">显示日期和时间为</string>
+
 <string name="check_for_updates">启动时检查更新</string>
+
 <string name="automatically_install">自动安装重大更新</string>
+
 <string name="require_pin">需要PIN码才能发送资金和查看备忘录</string>
+
 <string name="close_bitshare">3 分钟无操作自动关闭 BitShares 钱包</string>
+
 <string name="always_donate">一直捐赠 2 BTS支持BitShares Munich（bitshares munich）的开发者</string>
+
 <string name="hide_donations">隐藏主页交易列表里的捐赠记录</string>
+
 <string name="backup">备份.bin</string>
+
     <string name="checkbox_donate">捐赠 2 BTS支持开发者</string>
+
 <string name="checkbox_donate_old">捐赠 2 BTS支持 BitShares Munich 的开发者 </string>
+
 <string name="backup_brainkey">备份 BRAINKEY</string>
+
 <string name="imported_created_accounts">已导入/已创建的账户</string>
+
 <string name="register_new_account">注册新账户</string>
+
 <string name="secure_pin">修改 PIN</string>
+
 <string name="export">导出</string>
+
 <string name="show_more">显示更多</string>
+
 <string name="share_text">我刚刚发现这个特棒的 Smartcoins Wallet，允许您发送和接收 Smartcoins。http://BitShares-Munich.de 一探究竟吧！</string>
+
 <string name="share_info">邀请你的朋友们来尝试 Smartcoins Wallet！电子邮件地址不会被任何人保存或收集，所以他们的隐私是有保证的。</string>
+
 <string name="share_subject">特棒的 Smartcoins Wallet</string>
+
 <string name="share_heading">与朋友分享</string>
+
 <string name="share_btn_text">打开电子邮件 APP</string>
+
 <string name="action_settings">设置</string>
+
 <string name="txt_validating_account">验证账户...</string>
+
 <string name="validating_account">验证账户...</string>
+
 <string name="account_name_should_be_longer">账户名称太短</string>
+
 <string name="account_name_already_exist">账户名称 %s 已经存在</string>
+
 <string name="account_name_not_exist">账户名称 %s 不存在</string>
+
 <string name="add_contact">添加</string>
+
 <string name="edit_contact">编辑</string>
+
 <string name="empty_list">联系人列表为空</string>
+
 <string name="account_name_validate">账户名是有效的</string>
+
 <string name="txt_no_internet_connection">没有网络连接</string>
+
 <string name="unable_to_create_account_from_brainkey">无法从 brainkey 创建账户</string>
+
 <string name="importing_your_wallet">导入你的钱包...</string>
+
 <string name="str_trading_pair_not_exist">交易对不存在</string>
+
 <string name="unable_to_create_qr_code">无法生成二维码</string>
+
 <string name="price">价格</string>
+
 <string name="currency">货币</string>
+
 <string name="please_enter_amount">请输入数额</string>
+
 <string name="amount_should_be_greater_than_zero">数额应当大于零</string>
+
 <string name="no_amount_requested">没有数额要求</string>
+
 <string name="to_capital">至</string>
+
 <string name="from_capital">从</string>
+
 <string name="memo_capital">备注</string>
+
 <string name="empty_file_created">创建了空文件</string>
+
 <string name="date">日期</string>
+
 <string name="all">所有</string>
+
 <string name="amount">数额</string>
+
 <string name="message">信息</string>
+
 <string name="pdf_generated_msg">生成 PDF 并保存：</string>
+
 <string name="pdf_generated_msg_error">无法生成 PDF。请重试。错误：</string>
+
 <string name="raw_transactions">原始交易：</string>
+
 <string name="extensions">扩展</string>
+
 <string name="op_in_trx">op_in_trx</string>
+
 <string name="virtual_op">virtual_op</string>
+
 <string name="operation_results">operation_results</string>
+
 <string name="sent_rcv">发送/接收</string>
+
 <string name="details">详细信息</string>
+
 <string name="share_qr_code">分享二维码</string>
+
 <string name="done">确定</string>
+
 <string name="id_s">ID</string>
+
 <string name="time">时间</string>
+
 <string name="operations">操作</string>
+
 <string name="trx_in_block">trx_in_block</string>
+
 <string name="symbol_capital">符号</string>
+
 <string name="fee_capital">费用</string>
+
 <string name="ok">OK</string>
+
 <string name="loading">载入中...</string>
+
 <string name="pay_to">支付</string>
+
 <string name="requested">要求</string>
+
 <string name="failed_transaction">交易失败</string>
 
+
+
 <string name="str_invalid_amount">请输入有效的数额</string>
+
 <string name="str_invalid_receiver">请输入正确的接收账号</string>
+
 <string name="str_transaction_failed">交易失败</string>
+
 <string name="please_enter_valid_amount">请输入有效的数额</string>
+
 <string name="select_timezone">选择时区</string>
-<string name="old_pin">旧的 6 位数字 PIN</string>
-<string name="pin_created_successfully">PIN 创建成功</string>
-<string name="edit_pin">编辑 PIN</string>
+
+ <string name="old_pin">旧的PIN</string>
+ 
+ <string name="pin_created_successfully">PIN成功创建</string>
+ 
+ <string name="edit_pin">编辑PIN</string>
+ 
 <string name="txt_edit">保存</string>
-<string name="create_pin">创建 PIN</string>
+
+ <string name="create_pin">创建PIN</string>
+ 
 <string name="pin_changed_successfully">PIN 已成功修改</string>
+
 <string name="incorrect_old_pin">旧的 PIN 不正确</string>
+
 <string name="copy">复制</string>
+
 <string name="pin_verification">解锁</string>
+
 <string name="send_screen_name">发送</string>
+
 <string name="rcv_screen_name">接收</string>
+
 <string name="request_amount_screen_name">数额</string>
+
 <string name="payment_rcvd_screen_name">谢谢</string>
+
 <string name="e_receipt_activity_name">电子收据</string>
+
 <string name="settings_activity_name">设置</string>
+
 <string name="qr_code_activity_name">扫描二维码</string>
+
 <string name="share_account_activity_name">和朋友分享</string>
+
 <string name="add_contact_activity_name">增加联系人</string>
+
 <string name="str_trade_not_available">无法交易</string>
+
     <string name="preferred_lang">首选语言</string>
+
     <string name="got_it">知道了</string>
+
     <string name="upgrade_to_ltm">升级到终身会员</string>
+
     <string formatted="false" name="help_message">支付的手续费可返现 80%！终身会员（LTM）支付的每笔交易手续费均可返现 80％，并有资格加入引荐计划，从注册或引荐到网络的用户所支付的每笔手续费中赚取收入。终身会员升级费用目前低于 20000 BTS！</string>
+
     <string name="txt_yes">Yes</string>
+
     <string name="txt_no">No</string>
+
     <string name="txt_confirmation">确认</string>
+
     <string name="txt_confirmation_msg">确定升级至终身会员吗？18000 BTS 将会从你的账户 %s 中扣除</string>
+
     <string name="txt_folder_name">Smartcoins</string>
+
     <string name="txt_folder_created">文件夹已创建</string>
+
     <string name="upgrade_failed">升级失败</string>
+
     <string name="upgrading">升级中...</string>
+
     <string name="import_new_account">导入账户</string>
+
     <string name="upgrade_account">升级账户</string>
+
     <string name="remove_account">删除账户</string>
+
     <string name="txt_alertmsg">你确定要删除该账户</string>
+
     <string name="validation_in_progress">正在验证...</string>
+
     <string name="last_letter_cannot">不能以“-”结尾</string>
+
     <string name="account_name_shoud_have">账户名称中至少应该有一个“-”</string>
+
     <string name="default_currency">欧元</string>
+
     <string name="account_already_exist">账户已经存在</string>
+
     <string name="txt_back">返回</string>
+
     <string name="please_pay">请支付</string>
+
     <string name="transfer_funds">转移资金</string>
+
     <string name="unable_to_process">无法处理</string>
+
     <string name="cancel">取消</string>
+
     <string name="donation">捐款</string>
+
     <string name="insufficient_funds">资金不足</string>
+
     <string name="txt_wallet_atleast_one_account">抱歉，你的钱包里至少要保留 1 个账户</string>
+
     <string name="updating_transaction_id">更新交易 ID，请稍候</string>
+
     <string name="email_name">要显示此联系人的照片，在此输入 TA 的 Gravatar 电子邮件</string>
+
     <string name="upgrade_success">升级成功！</string>
+
     <string name="copied_to_clipboard">已复制到剪贴板</string>
 
+
+
     <string name="unable_to_load_brainkey">无法加载 brainkey</string>
+
     <string name="unable_to_generate_bin_format_for_key">无法生成 .bin 格式的密钥</string>
+
     <string name="creating_backup_file">创建备份文件</string>
+
     <string name="fetching_key">正在读取密钥</string>
+
     <string name="generating_bin_format">生成 .bin 格式</string>
+
     <string name="invalid_pin">无效的 PIN 码</string>
+
     <string name="saving_bin_file_to">保存 .bin 文件到</string>
+
     <string name="bin_file_saved_successfully_to">.bin 文件成功保存到</string>
+
     <string name="unable_to_save_bin_file">无法保存 .bin 文件</string>
 
+
+
     <string name="txt_alertmsg_fr">您确定要删除</string>
+
     <string name="txt_alertmsg_la">从这个钱包？</string>
+
     <string name="bugs_or_errors">漏洞或错误？</string>
+
     <string name="please_let_us_know">请告诉我们：</string>
+
     <string name="try_again">请 5 分钟后再试</string>
+
     <string name="warning_msg_same_account">您不能发送数额到相同的账户</string>
 
+
+
     <string name="please_backup_your_brainkey">请备份您的 brainkey</string>
+
     <string name="backup_brainkey_msg">备份您的 .bin 文件到某个安全的地方否则你的资金可能会丢失！</string>
+
     <string name="unable_to_trade_bAssets">无法交易的备用资产</string>
+
     <string name="unable_to_send_amount">无法发送数额。</string>
+
     <string name="unable_to_decode_QR">无法解码的二维码。</string>
+
     <string name="select_backup_asset">选择备份资产</string>
 
+
+
     <string name="sender_account">发件人帐户</string>
+
     <string name="receiver_account">接收账户</string>
+
     <string name="total">总</string>
+
     <string name="bts_will_be_deducted">BTS将从中扣除</string>
+
     <string name="payment_method">付款方法</string>
+
     <string name="thankyou_string">三江源使用Smartcoins钱包</string>
+
     <string name="to_from">至/从</string>
+
     <string name="str_warning_only_available">警告！只有 %1$s %2$s 可用</string>
+
     <string name="str_balance_available">%1$s %2$s 可用</string>
+
     <string name="audio_folder_path">音频文件夹路径</string>
+
     <string name="please_make_sure_your_bin_file">请确保您的密码是否正确，或正确的bin文件被选中</string>
+
     <string name="change">更改...</string>
 
+
+
     <string name="connected_to">连接到</string>
+
     <string name="account_create_msg">只有一个帐户每10分钟可注册</string>
+
     <string name="names_must_include_a_number">名称必须包括一些</string>
 
+
+
     <string name="account_name_must_include_dash_and_a_number">名称必须包括一个破折号（ - ）和一个数字</string>
+
     <string name="import_gravatar">进口的Gravatar</string>
+
     <string name="please_import_the_correct_file">请输入正确的文件</string>
+
     <string name="merchant_email_has_been_imported_successfully">商家电子邮件已成功导入</string>
+
 </resources>
+

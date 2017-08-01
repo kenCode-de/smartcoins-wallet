@@ -22,7 +22,7 @@ import de.bitshares_munich.utils.webSocketCallHelper;
 /**
  * Created by Syed Muhammad Muzzammil on 5/19/16.
  */
-public class AssestsActivty  implements IBalancesDelegate {
+public class AssestsActivty implements IBalancesDelegate {
     ArrayList<String> ids;
     ArrayList<String> precisons;
     ArrayList<String> symbols;
@@ -32,7 +32,7 @@ public class AssestsActivty  implements IBalancesDelegate {
 
     webSocketCallHelper myWebSocketCallHelper;
 
-    public AssestsActivty(Context c,String account_name , AssetDelegate instance, Application app){
+    public AssestsActivty(Context c, String account_name, AssetDelegate instance, Application app) {
         context = c;
         ids = new ArrayList<>();
         precisons = new ArrayList<>();
@@ -42,14 +42,12 @@ public class AssestsActivty  implements IBalancesDelegate {
         myWebSocketCallHelper = new webSocketCallHelper(c);
     }
 
-    public void registerDelegate ()
-    {
+    public void registerDelegate() {
         Application.registerBalancesDelegateAssets(this);
     }
 
-    public void loadBalances(String account_name)
-    {
-        get_json_account_balances(account_name,"999");
+    public void loadBalances(String account_name) {
+        get_json_account_balances(account_name, "999");
     }
 
     final Handler handler = new Handler(Looper.getMainLooper());
@@ -57,31 +55,30 @@ public class AssestsActivty  implements IBalancesDelegate {
     Boolean sentCallForBalances = false;
     final int time = 5000;
 
-    void get_json_account_balances(final String account_name,final String id)
-    {
+    void get_json_account_balances(final String account_name, final String id) {
         String getDetails = "{\"id\":" + id + ",\"method\":\"get_named_account_balances\",\"params\":[\"" + account_name + "\",[]]}";
-        myWebSocketCallHelper.make_websocket_call(getDetails,"", webSocketCallHelper.api_identifier.none);
+        myWebSocketCallHelper.make_websocket_call(getDetails, "", webSocketCallHelper.api_identifier.none);
 
 
     }
 
     Boolean sentCallForAssets = false;
-    void get_asset(final String asset,final String id)
-    {
-        String getDetails ="{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\""+asset+"\"]]}";
-        myWebSocketCallHelper.make_websocket_call(getDetails,"", webSocketCallHelper.api_identifier.none);
+
+    void get_asset(final String asset, final String id) {
+        String getDetails = "{\"id\":" + id + ",\"method\":\"get_assets\",\"params\":[[\"" + asset + "\"]]}";
+        myWebSocketCallHelper.make_websocket_call(getDetails, "", webSocketCallHelper.api_identifier.none);
 
     }
 
     void get_asset(ArrayList<String> asset, String id) {
         //{"id":1,"method":"get_assets","params":[["1.3.0","1.3.120"]]}
         StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0 ;i<asset.size();i++){
+        for (int i = 0; i < asset.size(); i++) {
             stringBuilder.append(asset.get(i));
-            if((i+1)<asset.size())
+            if ((i + 1) < asset.size())
                 stringBuilder.append("\",\"");
         }
-        get_asset(stringBuilder.toString(),id);
+        get_asset(stringBuilder.toString(), id);
 
     }
 
@@ -91,15 +88,16 @@ public class AssestsActivty  implements IBalancesDelegate {
         JSONObject jObject = new JSONObject(t);
         Iterator<?> keys = jObject.keys();
 
-        while( keys.hasNext() ){
-            String key = (String)keys.next();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
             String value = jObject.getString(key);
-            if(key.equals("asset_id")){
+            if (key.equals("asset_id")) {
                 map.put(key, value);
             }
         }
         return map;
     }
+
     HashMap<String, ArrayList<String>> jsonArrayToMap(String t) throws JSONException {
         JSONArray myArray = new JSONArray(t);
         ArrayList<String> array = new ArrayList<>();
@@ -109,48 +107,46 @@ public class AssestsActivty  implements IBalancesDelegate {
             Iterator it = j.keys();
             while (it.hasNext()) {
                 String n = (String) it.next();
-                if(n.equals("amount")){
-                  ammount.add(j.getString(n));
+                if (n.equals("amount")) {
+                    ammount.add(j.getString(n));
                 }
-                if(n.equals("asset_id")){
+                if (n.equals("asset_id")) {
                     array.add(j.getString(n));
-                    pairs.put("asset_id",array);
+                    pairs.put("asset_id", array);
                 }
             }
         }
         return pairs;
     }
-    void getJson(String s){
+
+    void getJson(String s) {
         HashMap<String, String> pair = new HashMap<String, String>();
-        HashMap<String, ArrayList<String>>  pairs = new HashMap<String,ArrayList<String>>();
+        HashMap<String, ArrayList<String>> pairs = new HashMap<String, ArrayList<String>>();
         try {
             Object json = new JSONTokener(s).nextValue();
-            if (json instanceof JSONObject){
+            if (json instanceof JSONObject) {
                 pair = jsonToMap(s);
-                if(pair.containsKey("asset_id"))
-                    get_asset(pair.get("asset_id"),"99");
-            }
-            else if(json instanceof JSONArray){
+                if (pair.containsKey("asset_id"))
+                    get_asset(pair.get("asset_id"), "99");
+            } else if (json instanceof JSONArray) {
                 pairs = jsonArrayToMap(s);
-                if(pairs.containsKey("asset_id"))
-                    get_asset(pairs.get("asset_id"),"99");
+                if (pairs.containsKey("asset_id"))
+                    get_asset(pairs.get("asset_id"), "99");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
 
     @Override
-    public void OnUpdate(String s,int id){
+    public void OnUpdate(String s, int id) {
 
         myWebSocketCallHelper.cleanUpTransactionsHandler();
 
         String convert;
-        try
-        {
-            if (id == 999)
-            {
+        try {
+            if (id == 999) {
                 sentCallForBalances = false;
 
                 ids = new ArrayList<>();
@@ -160,28 +156,24 @@ public class AssestsActivty  implements IBalancesDelegate {
 
                 Log.d("Assets Activity", "Balances received");
                 JSONObject jsonObject = new JSONObject(s);
-                if (jsonObject.has("result"))
-                {
+                if (jsonObject.has("result")) {
                     convert = jsonObject.getString("result");
                     getJson(convert);
-                    if(convert.contains("[]")){
+                    if (convert.contains("[]")) {
                         assetDelegate.isAssets();
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            Log.d("Assets Activity",e.getMessage());
+        } catch (Exception e) {
+            Log.d("Assets Activity", e.getMessage());
         }
 
-        if(id==99)
-        {
+        if (id == 99) {
             sentCallForAssets = false;
             Log.d("Assets Activity", "Assets received");
-            String result = returnParse(s,"result");
-            if(checkJsonStatus(result)==1) {
-                ids = returnRootValues(result,"id");
+            String result = returnParse(s, "result");
+            if (checkJsonStatus(result) == 1) {
+                ids = returnRootValues(result, "id");
                 precisons = returnRootValues(result, "precision");
                 symbols = returnRootValues(result, "symbol");
                 AddinAssets();
@@ -189,15 +181,18 @@ public class AssestsActivty  implements IBalancesDelegate {
         }
     }
 
-    String returnParse(String Json , String req){
+    String returnParse(String Json, String req) {
         try {
-            if(Json.contains(req)){
+            if (Json.contains(req)) {
                 JSONObject myJson = new JSONObject(Json);
-                return  myJson.getString(req);}
-        }catch (Exception e){}
+                return myJson.getString(req);
+            }
+        } catch (Exception e) {
+        }
         return "";
     }
-    int checkJsonStatus(String Json){
+
+    int checkJsonStatus(String Json) {
         try {
             Object json = new JSONTokener(Json).nextValue();
             if (json instanceof JSONObject) {
@@ -205,12 +200,13 @@ public class AssestsActivty  implements IBalancesDelegate {
             } else if (json instanceof JSONArray) {
                 return 1;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return -1;
         }
         return -1;
     }
-    HashMap<String,ArrayList<String>> returnParseArray(String Json , String req){
+
+    HashMap<String, ArrayList<String>> returnParseArray(String Json, String req) {
         try {
             JSONArray myArray = new JSONArray(Json);
             ArrayList<String> array = new ArrayList<>();
@@ -228,16 +224,18 @@ public class AssestsActivty  implements IBalancesDelegate {
 
             }
             return pairs;
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         return null;
     }
-    ArrayList<String> returnRootValues(String json , String key) {
-        HashMap<String, ArrayList<String>> pairs = returnParseArray(json,key);
-        return  pairs.get(key);
+
+    ArrayList<String> returnRootValues(String json, String key) {
+        HashMap<String, ArrayList<String>> pairs = returnParseArray(json, key);
+        return pairs.get(key);
     }
+
     void AddinAssets() {
-        assetDelegate.isUpdate(ids,symbols,precisons,ammount);
+        assetDelegate.isUpdate(ids, symbols, precisons, ammount);
     }
 }

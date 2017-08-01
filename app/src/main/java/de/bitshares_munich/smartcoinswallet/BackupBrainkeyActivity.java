@@ -18,15 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.bitshares_munich.database.SCWallDatabase;
 import de.bitshares_munich.interfaces.BackupBinDelegate;
 import de.bitshares_munich.models.AccountDetails;
 import de.bitshares_munich.utils.BinHelper;
 import de.bitshares_munich.utils.Helper;
 import de.bitshares_munich.utils.TinyDB;
+
+import de.bitsharesmunich.cryptocoincore.base.AccountSeed;
+import de.bitsharesmunich.cryptocoincore.base.SeedType;
+import de.bitsharesmunich.cryptocoincore.base.seed.BIP39;
+import de.bitsharesmunich.cryptocoincore.smartcoinwallets.TabActivity;
 
 /**
  * Created by qasim on 7/13/16.
@@ -48,7 +55,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         ButterKnife.bind(this);
         tinyDB = new TinyDB(getApplicationContext());
         BinHelper myBinHelper = new BinHelper(this, this);
-        myBinHelper.createBackupBinFile();
+        myBinHelper.createBackupBinFile(getApplicationContext());
 
     }
 
@@ -56,6 +63,7 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
         accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_confirmation_dialog);
+        dialog.setTitle(R.string.title_important);
         dialog.setCancelable(false);
         final Button btnDone = (Button) dialog.findViewById(R.id.btnDone);
         final TextView alertMsg = (TextView) dialog.findViewById(R.id.alertMsg);
@@ -117,12 +125,23 @@ public class BackupBrainkeyActivity extends BaseActivity implements BackupBinDel
 
     private void showDialogCopyBrainKey() {
         isBackupKey = true;
-        final Dialog dialog = new Dialog(this, R.style.stylishDialog);
+        final Dialog dialog = new Dialog(this);
         dialog.setTitle(getString(R.string.backup_brainkey));
         dialog.setContentView(R.layout.activity_copybrainkey);
         final EditText etBrainKey = (EditText) dialog.findViewById(R.id.etBrainKey);
         try {
             String brainKey = getBrainKey();
+
+            /*If there is a master seed, then add it to the mnemonics*/
+            SCWallDatabase db = new SCWallDatabase(getApplicationContext());
+            List<AccountSeed> seeds = db.getSeeds(SeedType.BIP39);
+            if (seeds.size() > 0){
+                AccountSeed masterSeed = (BIP39)seeds.get(0);
+                if (!brainKey.isEmpty()) {
+                    brainKey += " "+masterSeed.getMnemonicCodeString().toUpperCase();
+                }
+            }
+
             if (brainKey.isEmpty()) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.unable_to_load_brainkey), Toast.LENGTH_LONG).show();
                 return;

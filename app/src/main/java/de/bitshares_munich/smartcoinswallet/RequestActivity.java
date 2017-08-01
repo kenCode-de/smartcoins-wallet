@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.bitshares_munich.utils.Helper;
+import de.bitsharesmunich.cryptocoincore.base.Coin;
 
 /**
  * Created by Syed Muhammad Muzzammil on 5/17/16.
@@ -141,7 +142,7 @@ public class RequestActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void popupwindow(View v, TextView textview) {
-        popUpwindow p = new popUpwindow(this, textview);
+        popUpwindow p = new popUpwindow(this, textview, Coin.BITSHARE);
         p.show(v);
     }
 
