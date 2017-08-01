@@ -114,19 +114,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Syed Muhammad Muzzammil on 5/6/16.
+ * Shows a form to send coin values to an address or account
  */
 public class SendScreen extends BaseActivity implements IExchangeRate, IAccount, IRelativeHistory, ContactSelectionListener {
     private static final String TAG = "SendScreen";
 
-    TinyDB tinyDB;
-    SCWallDatabase db;
+    TinyDB tinyDB; /**< db handler for determine wallet account preference*/
+    SCWallDatabase db; /**< db handler for user contacts and alter coins account data*/
     ArrayList<AccountDetails> accountDetails;
     AccountAssets selectedAccountAsset;
     AccountAssets loyaltyAsset;
     AccountAssets backupAssets;
 
-    GeneralCoinAccount generalCoinAccount;
+    GeneralCoinAccount generalCoinAccount; /**< account used when sending with a coin different from bitshares*/
 
     boolean validReceiver = false;
     boolean validAmount = false;
@@ -225,11 +225,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
     private int REQUEST_TRANSFER_HISTORY_DELAY = 1800;
     private Handler mHandler;
 
-    /**
-     * Instance of the database interface
-     */
-    private SCWallDatabase database;
-
     /* Donation account and amount */
     private UserAccount bitsharesMunich = new UserAccount("1.2.90200");
     private AssetAmount donationAmount = new AssetAmount(UnsignedLong.valueOf(200000), new Asset("1.3.0"));
@@ -269,13 +264,13 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 HistoricalTransferEntry entry = new HistoricalTransferEntry();
                 entry.setHistoricalTransfer(historicalTransfer);
 
-                UserAccount from = database.fillUserDetails(historicalTransfer.getOperation().getFrom());
-                UserAccount to = database.fillUserDetails(historicalTransfer.getOperation().getTo());
+                UserAccount from = db.fillUserDetails(historicalTransfer.getOperation().getFrom());
+                UserAccount to = db.fillUserDetails(historicalTransfer.getOperation().getTo());
                 String id = historicalTransfer.getId();
                 long value = historicalTransfer.getOperation().getTransferAmount().getAmount().longValue();
                 Log.d(TAG,String.format("transferred %d from %s -> %s, id: %s", value, from.getAccountName(), to.getAccountName(), id));
             }
-            database.putTransactions(transferEntries);
+            db.putTransactions(transferEntries);
         }
 
         @Override
@@ -351,7 +346,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
 //            mHandler.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
-//                    int start = database.getTransactionCount(sourceAccount);
+//                    int start = db.getTransactionCount(sourceAccount);
 //                    int stop = start + HISTORICAL_TRANSFER_BATCH_SIZE;
 //                    Log.d(TAG, String.format("Calling get_relative_account_history with start: %d, stop: %d", start, stop));
 //
@@ -426,7 +421,9 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
             }
 
 
-
+            /**
+             * Adds specific coins settings to the sendscreen form
+             */
             ViewGroup otherSettings = (ViewGroup) findViewById(R.id.otherSendSettings);
             GeneralCoinSettingsDialogBuilder coinDialogBuilder = GeneralCoinFactory.getDialogBuilder(this, coin);
             coinDialogBuilder.addSendSettings(otherSettings);
@@ -462,8 +459,6 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
                 handler.postDelayed(this, 200);
             }
         }, 100);
-
-        database = new SCWallDatabase(this);
     }
 
     void init() {
@@ -1869,7 +1864,7 @@ public class SendScreen extends BaseActivity implements IExchangeRate, IAccount,
         if (this.coin == Coin.BITSHARE) {
             accountDetails = tinyDB.getListObject(getString(R.string.pref_wallet_accounts), AccountDetails.class);
         } else {
-            generalCoinAccount = database.getGeneralCoinAccount(this.coin.name());
+            generalCoinAccount = db.getGeneralCoinAccount(this.coin.name());
         }
         init();
         populateAccountsSpinner();

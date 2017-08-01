@@ -25,9 +25,12 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
  * Created by Henry Varona on 22/4/2017.
  */
 
+/**
+ * Creates views for the Dash coin only. Such as forms.
+ */
 public class DashSettingsDialogBuilder extends GeneralCoinSettingsDialogBuilder{
 
-    protected int settingsLayout;
+    protected int settingsLayout; /**< layout for the dash settings*/
     //protected DashSettings coinSettings;
 
     public DashSettingsDialogBuilder(Context context){
@@ -36,6 +39,10 @@ public class DashSettingsDialogBuilder extends GeneralCoinSettingsDialogBuilder{
         this.settingsLayout = R.layout.dash_setting;
     }
 
+    /**
+     * Initializes the instantsend in the Dash settings form
+     * @param dialog
+     */
     public void setInstantsend(Dialog dialog){
         final GeneralCoinSettings.GeneralCoinSetting instantsendSetting;
         instantsendSetting = coinSettings.getSetting("instantsend");
@@ -56,6 +63,11 @@ public class DashSettingsDialogBuilder extends GeneralCoinSettingsDialogBuilder{
         });
     }
 
+    /**
+     * Creates the dialog for the Dash coin settings
+     * @param themeResId the theme resources
+     * @return a Dialog for setting dash coin preferences
+     */
     public Dialog createDialog(int themeResId){
         final Dialog dialog = new Dialog(context, themeResId);
         dialog.setTitle(this.coin.getLabel() + " " + context.getString(R.string.action_settings));
@@ -65,8 +77,12 @@ public class DashSettingsDialogBuilder extends GeneralCoinSettingsDialogBuilder{
         return dialog;
     }
 
+    /**
+     * Adds the instantsend checkbox option to a ViewGroup for the SendScreen
+     *
+     * @param parent
+     */
     public void addSendSettings(ViewGroup parent){
-        //hay que revisar por qué no aparece la vista que se está agregando
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sendPageDashSettings = (View)layoutInflater.inflate(R.layout.send_page_dash_settings, null);
         CheckBox checkInstantsend = (CheckBox)sendPageDashSettings.findViewById(R.id.osInstantsend);

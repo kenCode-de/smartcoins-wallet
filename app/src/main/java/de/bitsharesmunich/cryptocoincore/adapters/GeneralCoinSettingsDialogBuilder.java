@@ -22,12 +22,21 @@ import de.bitsharesmunich.cryptocoincore.base.GeneralCoinSettings;
  * Created by Henry Varona on 22/4/2017.
  */
 
+/**
+ * Base class that creates views for specific coins. Each coin
+ * with more or different options than "precision" should extends
+ * from this class and add its own options.
+ *
+ * If a coin doesn't extends this class, for default this class is used.
+ * So, any coin has for default the precision setting.
+ *
+ */
 public class GeneralCoinSettingsDialogBuilder {
 
-    protected Coin coin;
-    protected int settingsLayout;
-    protected GeneralCoinSettings coinSettings;
-    final protected Context context;
+    protected Coin coin; /**< the coin of the settings to build*/
+    protected int settingsLayout; /**< the layout that will be used to create the settings dialog*/
+    protected GeneralCoinSettings coinSettings; /**< the coin settings, usually loaded from database*/
+    final protected Context context; /**< the application context*/
 
     public GeneralCoinSettingsDialogBuilder(Context context, Coin coin){
         this.context = context;
@@ -36,16 +45,21 @@ public class GeneralCoinSettingsDialogBuilder {
         this.coinSettings = GeneralCoinFactory.getSettings(context, this.coin);
     }
 
+    /**
+     * Adds a spinner precision option to a dialog
+     *
+     * @param dialog the dialog to add the precision option
+     */
     public void setPrecision(Dialog dialog){
-       final GeneralCoinSettings.GeneralCoinSetting precisionSetting;
-       //if (coinSettings.settingExists("precision")) {
-           precisionSetting = coinSettings.getSetting("precision");
-       //} else {
-       //    precisionSetting = coinSettings.addSetting("precision","8");
-       //}
-
+        final GeneralCoinSettings.GeneralCoinSetting precisionSetting;
+        precisionSetting = coinSettings.getSetting("precision");
         final Spinner spPrecision = (Spinner)dialog.findViewById(R.id.precision);
 
+        /**
+         * The spinner of the precision will have 3 posible values:
+         * 8 digits precision, 5 digits precision and 2 digits precision.
+         * This last two values will have the prefixes: "m" and "μ" respectively.
+         */
         ArrayList<String> precisionArray = new ArrayList<String>();
         precisionArray.add(coin.getLabel());
         precisionArray.add("m"+coin.getLabel());
@@ -90,6 +104,9 @@ public class GeneralCoinSettingsDialogBuilder {
         });
     }
 
+    /**
+     * Creates the default settings Dialog for a coin
+     */
     public Dialog createDialog(int themeResId){
         final Dialog dialog = new Dialog(context, themeResId);
         dialog.setTitle(this.coin.getLabel() + " " + context.getString(R.string.action_settings));
@@ -98,6 +115,10 @@ public class GeneralCoinSettingsDialogBuilder {
         return dialog;
     }
 
+    /**
+     * Adds settings options to the ViewGroup of the SendScreen
+     * @param parent the container view of the SendScreen
+     */
     public void addSendSettings(ViewGroup parent){
         //Does nothing for general coins for now
     }
