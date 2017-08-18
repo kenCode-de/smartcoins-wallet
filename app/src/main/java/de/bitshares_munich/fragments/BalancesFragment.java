@@ -154,7 +154,7 @@ public class BalancesFragment extends Fragment implements AssetDelegate, ISound,
     public final String TAG = this.getClass().getName();
     // Debug flags
     private final boolean DEBUG_DATE_LOADING = false;
-    private final boolean DEBUG_EQ_VALUES = true;
+    private final boolean DEBUG_EQ_VALUES = false;
 
     private int mTableViewCurrentCursor = 0;
 
